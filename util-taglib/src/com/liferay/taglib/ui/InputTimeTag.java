@@ -74,7 +74,7 @@ public class InputTimeTag extends IncludeTag {
 	}
 
 	public void setTimeZoneOffset(int timeZoneOffset) {
-		this._timeZoneOffset = timeZoneOffset;
+		_timeZoneOffset = timeZoneOffset;
 	}
 
 	@Override
