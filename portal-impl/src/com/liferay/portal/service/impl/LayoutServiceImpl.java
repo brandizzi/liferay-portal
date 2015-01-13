@@ -1544,7 +1544,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	 *             found, or if the layout parameters were invalid
 	 * @deprecated As of 6.2.0, replaced by {@link #updateLayout(long, boolean,
 	 *             long, long, Map, Map, Map, Map, Map, String, boolean, Map,
-	 *             Boolean, byte[], ServiceContext)}
+	 *             boolean, byte[], ServiceContext)}
 	 */
 	@Deprecated
 	@Override
@@ -1878,7 +1878,7 @@ public class LayoutServiceImpl extends LayoutServiceBaseImpl {
 	protected List<Layout> filterLayouts(List<Layout> layouts)
 		throws PortalException {
 
-		List<Layout> filteredLayouts = new ArrayList<Layout>();
+		List<Layout> filteredLayouts = new ArrayList<>();
 
 		for (Layout layout : layouts) {
 			if (LayoutPermissionUtil.contains(

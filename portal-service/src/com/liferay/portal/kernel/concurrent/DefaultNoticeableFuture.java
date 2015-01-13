@@ -97,7 +97,7 @@ public class DefaultNoticeableFuture<T>
 		};
 
 	private final Set<FutureListener<T>> _futureListeners =
-		new CopyOnWriteArraySet<FutureListener<T>>();
+		new CopyOnWriteArraySet<>();
 
 	private static class OnceFutureListener<V> implements FutureListener<V> {
 
@@ -118,6 +118,11 @@ public class DefaultNoticeableFuture<T>
 				(OnceFutureListener<V>)obj;
 
 			return _futureListener.equals(onceFutureListener._futureListener);
+		}
+
+		@Override
+		public int hashCode() {
+			return _futureListener.hashCode();
 		}
 
 		private final FutureListener<V> _futureListener;

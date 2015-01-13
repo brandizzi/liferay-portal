@@ -231,7 +231,7 @@ public class LocalizationUtil {
 			return Collections.emptyList();
 		}
 
-		List<Locale> modifiedLocales = new ArrayList<Locale>();
+		List<Locale> modifiedLocales = new ArrayList<>();
 
 		Locale[] locales = LanguageUtil.getAvailableLocales();
 
@@ -248,8 +248,8 @@ public class LocalizationUtil {
 	}
 
 	/**
-	 * @deprecated As of 7.0.0 replaced by {@link
-	 *             #getLocalizedName(String, String)}
+	 * @deprecated As of 7.0.0 replaced by {@link #getLocalizedName(String,
+	 *             String)}
 	 */
 	@Deprecated
 	public static String getPreferencesKey(String key, String languageId) {

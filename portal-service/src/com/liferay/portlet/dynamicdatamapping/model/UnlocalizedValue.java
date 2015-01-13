@@ -81,6 +81,11 @@ public class UnlocalizedValue implements Value {
 	}
 
 	@Override
+	public int hashCode() {
+		return _values.hashCode();
+	}
+
+	@Override
 	public boolean isLocalized() {
 		return false;
 	}
@@ -90,6 +95,6 @@ public class UnlocalizedValue implements Value {
 		throw new UnsupportedOperationException();
 	}
 
-	private final Map<Locale, String> _values = new HashMap<Locale, String>();
+	private final Map<Locale, String> _values = new HashMap<>();
 
 }

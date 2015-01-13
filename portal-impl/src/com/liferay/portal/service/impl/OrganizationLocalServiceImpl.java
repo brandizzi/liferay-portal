@@ -538,7 +538,7 @@ public class OrganizationLocalServiceImpl
 			return Collections.emptyList();
 		}
 
-		List<Organization> organizations = new ArrayList<Organization>(
+		List<Organization> organizations = new ArrayList<>(
 			organizationIds.size());
 
 		for (Long organizationId : organizationIds) {
@@ -694,7 +694,7 @@ public class OrganizationLocalServiceImpl
 	public List<Organization> getOrganizations(long[] organizationIds)
 		throws PortalException {
 
-		List<Organization> organizations = new ArrayList<Organization>(
+		List<Organization> organizations = new ArrayList<>(
 			organizationIds.length);
 
 		for (long organizationId : organizationIds) {
@@ -745,7 +745,7 @@ public class OrganizationLocalServiceImpl
 		if (organizationId ==
 				OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID) {
 
-			return new ArrayList<Organization>();
+			return new ArrayList<>();
 		}
 
 		Organization organization = organizationPersistence.findByPrimaryKey(
@@ -765,7 +765,7 @@ public class OrganizationLocalServiceImpl
 	public List<Organization> getSuborganizations(
 		List<Organization> organizations) {
 
-		List<Organization> allSuborganizations = new ArrayList<Organization>();
+		List<Organization> allSuborganizations = new ArrayList<>();
 
 		for (int i = 0; i < organizations.size(); i++) {
 			Organization organization = organizations.get(i);
@@ -821,7 +821,7 @@ public class OrganizationLocalServiceImpl
 		List<Organization> allOrganizations,
 		List<Organization> availableOrganizations) {
 
-		List<Organization> subsetOrganizations = new ArrayList<Organization>();
+		List<Organization> subsetOrganizations = new ArrayList<>();
 
 		for (Organization organization : allOrganizations) {
 			if (availableOrganizations.contains(organization)) {
@@ -845,7 +845,6 @@ public class OrganizationLocalServiceImpl
 	 * @return the organization IDs of organizations associated with the user
 	 * @throws PortalException if a user with the primary key could not be found
 	 *         or if a portal exception occurred
-	 * @throws SystemException if a system exception occurred
 	 */
 	@Override
 	public long[] getUserOrganizationIds(
@@ -901,7 +900,7 @@ public class OrganizationLocalServiceImpl
 			return getUserOrganizations(userId);
 		}
 
-		Set<Organization> organizations = new HashSet<Organization>(
+		Set<Organization> organizations = new HashSet<>(
 			getUserOrganizations(userId));
 
 		List<UserGroupRole> userGroupRoles =
@@ -925,7 +924,7 @@ public class OrganizationLocalServiceImpl
 			}
 		}
 
-		return new ArrayList<Organization>(organizations);
+		return new ArrayList<>(organizations);
 	}
 
 	/**
@@ -1003,10 +1002,9 @@ public class OrganizationLocalServiceImpl
 			return userPersistence.containsOrganization(userId, organizationId);
 		}
 
-		LinkedHashMap<String, Object> params =
-			new LinkedHashMap<String, Object>();
+		LinkedHashMap<String, Object> params = new LinkedHashMap<>();
 
-		List<Organization> organizationsTree = new ArrayList<Organization>();
+		List<Organization> organizationsTree = new ArrayList<>();
 
 		Organization organization = organizationPersistence.findByPrimaryKey(
 			organizationId);
@@ -1954,7 +1952,7 @@ public class OrganizationLocalServiceImpl
 	 *             information was invalid
 	 * @deprecated As of 7.0.0, replaced by {@link #updateOrganization(long,
 	 *             long, long, String, String, long, long, int, String, boolean,
-	 *             boolean, byte[], ServiceContext)}
+	 *             byte[], boolean, ServiceContext)}
 	 */
 	@Deprecated
 	@Override
@@ -2025,8 +2023,7 @@ public class OrganizationLocalServiceImpl
 
 		searchContext.setAndSearch(andSearch);
 
-		Map<String, Serializable> attributes =
-			new HashMap<String, Serializable>();
+		Map<String, Serializable> attributes = new HashMap<>();
 
 		attributes.put("city", city);
 		attributes.put("country", country);

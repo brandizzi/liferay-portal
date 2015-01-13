@@ -21,12 +21,13 @@
 		<dirset dir="apps/quick-note" includes="*" />
 		<dirset dir="apps/rss" includes="*" />
 		<dirset dir="apps/social" includes="*" />
+		<dirset dir="apps/translator" includes="*" />
 		<dirset dir="apps/unit-converter" includes="*" />
 		<dirset dir="apps/web-proxy" includes="*" />
 		<dirset dir="apps/xsl-content" includes="*" />
 		<dirset dir="core" includes="*" />
 		<dirset dir="portal" excludes="portal-taglib-aui-form-extension-sample" includes="*" />
-		<dirset dir="util" includes="portal-tools" />
+		<dirset dir="util" includes="pmd,portal-tools" />
 	</path>
 
 	<pathconvert pathsep="," property="plugins.includes.path" refid="plugins.includes.path" targetos="unix" />

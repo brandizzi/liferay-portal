@@ -329,7 +329,7 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 	public List<WikiPage> getNodePages(long nodeId, int max)
 		throws PortalException {
 
-		List<WikiPage> pages = new ArrayList<WikiPage>();
+		List<WikiPage> pages = new ArrayList<>();
 
 		int lastIntervalStart = 0;
 		boolean listNotExhausted = true;
@@ -606,7 +606,7 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 
 	/**
 	 * @deprecated As of 6.2.0, replaced by {@link #renamePage(long, String,
-	 *             String, ServiceContext)} *
+	 *             String, ServiceContext)}
 	 */
 	@Deprecated
 	@Override
@@ -751,7 +751,7 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 
 		syndFeed.setDescription(description);
 
-		List<SyndEntry> syndEntries = new ArrayList<SyndEntry>();
+		List<SyndEntry> syndEntries = new ArrayList<>();
 
 		syndFeed.setEntries(syndEntries);
 
@@ -861,7 +861,7 @@ public class WikiPageServiceImpl extends WikiPageServiceBaseImpl {
 
 		syndFeed.setFeedType(RSSUtil.getFeedType(type, version));
 
-		List<SyndLink> syndLinks = new ArrayList<SyndLink>();
+		List<SyndLink> syndLinks = new ArrayList<>();
 
 		syndFeed.setLinks(syndLinks);
 

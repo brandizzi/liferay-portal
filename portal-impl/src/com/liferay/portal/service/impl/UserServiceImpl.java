@@ -1810,7 +1810,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 		long[] oldGroupIds = user.getGroupIds();
 
-		List<Long> addGroupIds = new ArrayList<Long>();
+		List<Long> addGroupIds = new ArrayList<>();
 		List<Long> removeGroupIds = ListUtil.toList(oldGroupIds);
 
 		if (groupIds != null) {
@@ -1836,7 +1836,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 		long[] oldOrganizationIds = user.getOrganizationIds();
 
-		List<Long> addOrganizationIds = new ArrayList<Long>();
+		List<Long> addOrganizationIds = new ArrayList<>();
 		List<Long> removeOrganizationIds = ListUtil.toList(oldOrganizationIds);
 
 		if (organizationIds != null) {
@@ -1865,7 +1865,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 		long[] oldRoleIds = user.getRoleIds();
 
-		List<Long> addRoleIds = new ArrayList<Long>();
+		List<Long> addRoleIds = new ArrayList<>();
 		List<Long> removeRoleIds = ListUtil.toList(oldRoleIds);
 
 		if (roleIds != null) {
@@ -1887,10 +1887,8 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			}
 		}
 
-		List<UserGroupRole> oldOrganizationUserGroupRoles =
-			new ArrayList<UserGroupRole>();
-		List<UserGroupRole> oldSiteUserGroupRoles =
-			new ArrayList<UserGroupRole>();
+		List<UserGroupRole> oldOrganizationUserGroupRoles = new ArrayList<>();
+		List<UserGroupRole> oldSiteUserGroupRoles = new ArrayList<>();
 
 		List<UserGroupRole> oldUserGroupRoles =
 			userGroupRolePersistence.findByUserId(userId);
@@ -1906,12 +1904,10 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			}
 		}
 
-		List<UserGroupRole> addOrganizationUserGroupRoles =
-			new ArrayList<UserGroupRole>();
+		List<UserGroupRole> addOrganizationUserGroupRoles = new ArrayList<>();
 		List<UserGroupRole> removeOrganizationUserGroupRoles = ListUtil.copy(
 			oldOrganizationUserGroupRoles);
-		List<UserGroupRole> addSiteUserGroupRoles =
-			new ArrayList<UserGroupRole>();
+		List<UserGroupRole> addSiteUserGroupRoles = new ArrayList<>();
 		List<UserGroupRole> removeSiteUserGroupRoles = ListUtil.copy(
 			oldSiteUserGroupRoles);
 
@@ -1959,7 +1955,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 
 		long[] oldUserGroupIds = user.getUserGroupIds();
 
-		List<Long> addUserGroupIds = new ArrayList<Long>();
+		List<Long> addUserGroupIds = new ArrayList<>();
 		List<Long> removeUserGroupIds = ListUtil.toList(oldUserGroupIds);
 
 		if (userGroupIds != null) {
@@ -2101,12 +2097,12 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 	 *             operation was not allowed by the membership policy
 	 * @deprecated As of 7.0.0, replaced by {@link #updateUser(long, String,
 	 *             String, String, boolean, String, String, String, String,
-	 *             long, String, String, String, String, String, String, String,
-	 *             String, int, int, boolean, int, int, int, String, String,
-	 *             String, String, String, String, String, String, String,
-	 *             String, String, long[], long[], long[], java.util.List,
-	 *             long[], java.util.List, java.util.List, java.util.List,
-	 *             java.util.List, java.util.List, boolean, byte[],
+	 *             long, String, boolean, byte[], String, String, String,
+	 *             String, String, String, String, int, int, boolean, int, int,
+	 *             int, String, String, String, String, String, String, String,
+	 *             String, String, String, String, long[], long[], long[],
+	 *             java.util.List, long[], java.util.List, java.util.List,
+	 *             java.util.List, java.util.List, java.util.List,
 	 *             com.liferay.portal.service.ServiceContext)}
 	 */
 	@Deprecated
@@ -2698,7 +2694,7 @@ public class UserServiceImpl extends UserServiceBaseImpl {
 			String jobTitle)
 		throws PortalException {
 
-		List<String> fields = new ArrayList<String>();
+		List<String> fields = new ArrayList<>();
 
 		Contact contact = user.getContact();
 

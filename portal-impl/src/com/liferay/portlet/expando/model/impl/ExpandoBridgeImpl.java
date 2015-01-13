@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.lar.ExportImportThreadLocal;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.util.HashUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.service.ServiceContext;
@@ -237,7 +238,7 @@ public class ExpandoBridgeImpl implements ExpandoBridge {
 
 	@Override
 	public Enumeration<String> getAttributeNames() {
-		List<String> columnNames = new ArrayList<String>();
+		List<String> columnNames = new ArrayList<>();
 
 		for (ExpandoColumn column : getAttributeColumns()) {
 			columnNames.add(column.getName());
@@ -274,8 +275,7 @@ public class ExpandoBridgeImpl implements ExpandoBridge {
 
 	@Override
 	public Map<String, Serializable> getAttributes(boolean secure) {
-		Map<String, Serializable> attributes =
-			new HashMap<String, Serializable>();
+		Map<String, Serializable> attributes = new HashMap<>();
 
 		for (ExpandoColumn column : getAttributeColumns()) {
 			attributes.put(
@@ -368,6 +368,19 @@ public class ExpandoBridgeImpl implements ExpandoBridge {
 		}
 
 		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 0;
+
+		try {
+			hash = HashUtil.hash(0, getTable());
+		}
+		catch (Exception e) {
+		}
+
+		return HashUtil.hash(hash, getAttributeColumns());
 	}
 
 	@Override
@@ -634,7 +647,7 @@ public class ExpandoBridgeImpl implements ExpandoBridge {
 	}
 
 	protected List<ExpandoColumn> getAttributeColumns() {
-		List<ExpandoColumn> columns = new ArrayList<ExpandoColumn>();
+		List<ExpandoColumn> columns = new ArrayList<>();
 
 		try {
 			columns = ExpandoColumnLocalServiceUtil.getDefaultTableColumns(
