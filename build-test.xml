@@ -1105,7 +1105,14 @@
 					</unzip>
 
 					<delete file="tomcat.zip" />
+				</then>
+			</if>
 
+			<if>
+				<not>
+					<available file="${app.server.tomcat.dir}/conf/tomcat-users.xml.orig" type="file" />
+				</not>
+				<then>
 					<copy
 						file="${app.server.tomcat.dir}/conf/tomcat-users.xml"
 						overwrite="true"
