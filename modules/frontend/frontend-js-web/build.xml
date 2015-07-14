@@ -206,6 +206,10 @@
 		</sequential>
 	</macrodef>
 
+	<target name="build-alloy-bootstrap">
+		<build-alloy-bootstrap />
+	</target>
+
 	<target name="compile">
 		<compile
 			module.dir="${basedir}"
