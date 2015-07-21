@@ -995,94 +995,15 @@
 					YEARLY: 'YEARLY'
 				},
 
-				INTERVAL_UNITS: {
-					DAILY: 'days',
-					MONTHLY: 'months',
-					WEEKLY: 'weeks',
-					YEARLY: 'years'
-				},
+				INTERVAL_UNITS: {},
 
-				MONTH_LABELS: [
-					Liferay.Language.get('january'),
-					Liferay.Language.get('february'),
-					Liferay.Language.get('march'),
-					Liferay.Language.get('april'),
-					Liferay.Language.get('may'),
-					Liferay.Language.get('june'),
-					Liferay.Language.get('july'),
-					Liferay.Language.get('august'),
-					Liferay.Language.get('september'),
-					Liferay.Language.get('october'),
-					Liferay.Language.get('november'),
-					Liferay.Language.get('december')
-				],
+				MONTH_LABELS: [],
 
-				POSITION_LABELS: {
-					'-1': Liferay.Language.get('position.last'),
-					'1': Liferay.Language.get('position.first'),
-					'2': Liferay.Language.get('position.second'),
-					'3': Liferay.Language.get('position.third'),
-					'4': Liferay.Language.get('position.fourth')
-				},
+				POSITION_LABELS: {},
 
-				RECURRENCE_SUMMARIES : {
-					'daily-until-x-x-x': Liferay.Language.get('daily-until-x-x-x'),
-					'daily-x-times': Liferay.Language.get('daily-x-times'),
-					'every-mon-wed-fri': Liferay.Language.get('every-mon-wed-fri'),
-					'every-tues-thurs': Liferay.Language.get('every-tues-thurs'),
-					'every-x-days': Liferay.Language.get('every-x-days'),
-					'every-x-days-until-x-x-x': Liferay.Language.get('every-x-days-until-x-x-x'),
-					'every-x-days-x-times': Liferay.Language.get('every-x-days-x-times'),
-					'every-x-months': Liferay.Language.get('every-x-months'),
-					'every-x-months-on-x-x': Liferay.Language.get('every-x-months-on-x-x'),
-					'every-x-months-on-x-x-until-x-x-x': Liferay.Language.get('every-x-months-on-x-x-until-x-x-x'),
-					'every-x-months-on-x-x-x-times': Liferay.Language.get('every-x-months-on-x-x-x-times'),
-					'every-x-months-until-x-x-x': Liferay.Language.get('every-x-months-until-x-x-x'),
-					'every-x-months-x-times': Liferay.Language.get('every-x-months-x-times'),
-					'every-x-weeks': Liferay.Language.get('every-x-weeks'),
-					'every-x-weeks-on-x': Liferay.Language.get('every-x-weeks-on-x'),
-					'every-x-weeks-on-x-until-x-x-x': Liferay.Language.get('every-x-weeks-on-x-until-x-x-x'),
-					'every-x-weeks-on-x-x-times': Liferay.Language.get('every-x-weeks-on-x-x-times'),
-					'every-x-weeks-until-x-x-x': Liferay.Language.get('every-x-weeks-until-x-x-x'),
-					'every-x-weeks-x-times': Liferay.Language.get('every-x-weeks-x-times'),
-					'every-x-years': Liferay.Language.get('every-x-years'),
-					'every-x-years-on-x-x-of-x': Liferay.Language.get('every-x-years-on-x-x-of-x'),
-					'every-x-years-on-x-x-of-x-until-x-x-x': Liferay.Language.get('every-x-years-on-x-x-of-x-until-x-x-x'),
-					'every-x-years-on-x-x-of-x-x-times': Liferay.Language.get('every-x-years-on-x-x-of-x-x-times'),
-					'every-x-years-until-x-x-x': Liferay.Language.get('every-x-years-until-x-x-x'),
-					'every-x-years-x-times': Liferay.Language.get('every-x-years-x-times'),
-					'monthly-on-x-x': Liferay.Language.get('monthly-on-x-x'),
-					'monthly-on-x-x-until-x-x-x': Liferay.Language.get('monthly-on-x-x-until-x-x-x'),
-					'monthly-on-x-x-x-times': Liferay.Language.get('monthly-on-x-x-x-times'),
-					'monthly-until-x-x-x': Liferay.Language.get('monthly-until-x-x-x'),
-					'monthly-x-times': Liferay.Language.get('monthly-x-times'),
-					'position.first': Liferay.Language.get('position.first'),
-					'position.fourth': Liferay.Language.get('position.fourth'),
-					'position.last': Liferay.Language.get('position.last'),
-					'position.second': Liferay.Language.get('position.second'),
-					'position.third': Liferay.Language.get('position.third'),
-					'weekly-on-x': Liferay.Language.get('weekly-on-x'),
-					'weekly-on-x-until-x-x-x': Liferay.Language.get('weekly-on-x-until-x-x-x'),
-					'weekly-on-x-x-times': Liferay.Language.get('weekly-on-x-x-times'),
-					'weekly-until-x-x-x': Liferay.Language.get('weekly-until-x-x-x'),
-					'weekly-x-times': Liferay.Language.get('weekly-x-times'),
-					'yearly-on-x-x-of-x': Liferay.Language.get('yearly-on-x-x-of-x'),
-					'yearly-on-x-x-of-x-until-x-x-x': Liferay.Language.get('yearly-on-x-x-of-x-until-x-x-x'),
-					'yearly-on-x-x-of-x-x-times': Liferay.Language.get('yearly-on-x-x-of-x-x-times'),
-					'yearly-until-x-x-x': Liferay.Language.get('yearly-until-x-x-x'),
-					'yearly-x-times': Liferay.Language.get('yearly-x-times'),
-					'you-are-about-to-make-changes-that-will-only-effect-your-calendar-x': Liferay.Language.get('you-are-about-to-make-changes-that-will-only-effect-your-calendar-x')
-				},
+				RECURRENCE_SUMMARIES : {},
 
-				WEEKDAY_LABELS: {
-					FR: Liferay.Language.get('weekday.FR'),
-					MO: Liferay.Language.get('weekday.MO'),
-					SA: Liferay.Language.get('weekday.SA'),
-					SU: Liferay.Language.get('weekday.SU'),
-					TH: Liferay.Language.get('weekday.TH'),
-					TU: Liferay.Language.get('weekday.TU'),
-					WE: Liferay.Language.get('weekday.WE')
-				},
+				WEEKDAY_LABELS: {},
 
 				getSummary: function(recurrence) {
 					var instance = this;
@@ -1141,7 +1062,14 @@
 					key = parts.join(STR_DASH);
 					mask = instance.RECURRENCE_SUMMARIES[key];
 
-					return A.Lang.sub(mask, params);
+					if (mask) {
+						summary = A.Lang.sub(mask, params);
+					}
+					else {
+						summary = Liferay.Language.get(key, params);
+					}
+
+					return summary;
 				},
 
 				openConfirmationPanel: function(actionName, onlyThisInstanceFn, allFollowingFn, allEventsInFn, cancelFn) {
