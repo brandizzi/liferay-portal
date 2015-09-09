@@ -19,11 +19,10 @@ if (calendarResource == null) {
 	calendarResource = calendar.getCalendarResource();
 }
 
+String calendarName = calendar.getName(locale);
 String calendarResourceName = calendarResource.getName(locale);
 
-String calendarName = calendar.getName(locale);
-
-if (!calendarResourceName.equals(calendarName)) {
+if (!calendarName.equals(calendarResourceName)) {
 	calendarName = calendarResourceName + StringPool.SPACE + StringPool.DASH + StringPool.SPACE + calendarName;
 }
 %>
