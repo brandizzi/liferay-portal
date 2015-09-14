@@ -35,10 +35,10 @@ String timeFormat = GetterUtil.getString((String)request.getAttribute("liferay-u
 
 boolean amPm = DateUtil.isFormatAmPm(locale);
 
-if (timeFormat.equals("ampm")) {
+if (timeFormat.equals("am-pm")) {
 	amPm = true;
 }
-else if (timeFormat.equals("24h")) {
+else if (timeFormat.equals("24-hour")) {
 	amPm = false;
 }
 
