@@ -50,6 +50,7 @@ public class CalendarWebUpgrade {
 
 		upgradeProcesses.add(new CalendarWebUpgrade_1_0_0());
 
+		upgradeProcesses.add(new CalendarWebUpgrade_1_1_0());
 
 		_releaseLocalService.updateRelease(
 			"com.liferay.calendar.web", upgradeProcesses, 1, 1, false);
