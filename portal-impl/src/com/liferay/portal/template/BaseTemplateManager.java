@@ -14,9 +14,11 @@
 
 package com.liferay.portal.template;
 
+import com.liferay.portal.kernel.security.pacl.NotPrivileged;
 import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateResource;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +27,26 @@ import java.util.Map;
  * @author Raymond Augé
  */
 public abstract class BaseTemplateManager extends BaseMultiTemplateManager {
+
+	@NotPrivileged
+	@Override
+	public Template getTemplate(
+		TemplateResource templateResource, boolean restricted) {
+
+		return super.getTemplates(Collections.singletonList(templateResource),
+			null, restricted);
+	}
+
+	@NotPrivileged
+	@Override
+	public Template getTemplate(
+		TemplateResource templateResource,
+		TemplateResource errorTemplateResource, boolean restricted) {
+
+		return super.getTemplates(Collections.singletonList(templateResource),
+			errorTemplateResource, restricted);
+	}
+
 
 	public Template getTemplates(
 		List<TemplateResource> templateResources, boolean restricted) {
