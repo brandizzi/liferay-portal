@@ -31,6 +31,7 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.model.BaseJSPAssetRenderer;
 
@@ -69,6 +70,16 @@ public class CalendarBookingAssetRenderer
 	@Override
 	public long getClassPK() {
 		return _calendarBooking.getCalendarBookingId();
+	}
+
+	@Override
+	public String getDiscussionPath() {
+		if (PropsValues.CALENDAR_EVENT_COMMENTS_ENABLED) {
+			return "edit_event_discussion";
+		}
+		else {
+			return null;
+		}
 	}
 
 	@Override
