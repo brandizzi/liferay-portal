@@ -336,6 +336,11 @@ public abstract class BaseAssetRenderer<T> implements AssetRenderer<T> {
 	}
 
 	@Override
+	public Boolean isEnableRatings() {
+		return true;
+	}
+
+	@Override
 	public boolean isLocalizable() {
 		return false;
 	}
