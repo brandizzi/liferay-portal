@@ -21,8 +21,14 @@ import com.google.ical.values.DateValue;
 import com.google.ical.values.DateValueImpl;
 
 import com.liferay.calendar.model.CalendarBooking;
+import com.liferay.calendar.recurrence.Frequency;
+import com.liferay.calendar.recurrence.PositionalWeekday;
+import com.liferay.calendar.recurrence.Recurrence;
+import com.liferay.calendar.recurrence.RecurrenceSerializer;
+import com.liferay.calendar.recurrence.Weekday;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.text.ParseException;
 
@@ -41,6 +47,17 @@ public class RecurrenceUtil {
 
 		List<CalendarBooking> expandedCalendarBookings = new ArrayList<>();
 
+		String recurrence = calendarBooking.getRecurrence();
+
+		Recurrence recurrenceObj = RecurrenceSerializer.deserialize(recurrence);
+
+		List<PositionalWeekday> positionalWeekdays =
+			recurrenceObj.getPositionalWeekdays();
+
+		boolean isEmpty = positionalWeekdays.isEmpty();
+
+		boolean isInWeekdays = true;
+
 		try {
 			CalendarBookingIterator calendarBookingIterator =
 				new CalendarBookingIterator(calendarBooking);
@@ -55,6 +72,15 @@ public class RecurrenceUtil {
 
 				if (newCalendarBooking.getStartTime() > endTime) {
 					break;
+				}
+
+				if (!isEmpty) {
+					isInWeekdays = isInWeekdays(
+						positionalWeekdays, newCalendarBooking, recurrenceObj);
+				}
+
+				if (!isInWeekdays) {
+					continue;
 				}
 
 				expandedCalendarBookings.add(newCalendarBooking);
@@ -149,6 +175,46 @@ public class RecurrenceUtil {
 		}
 
 		return count;
+	}
+
+	public static boolean isInWeekdays(
+		List<PositionalWeekday> positionalWeekdays,
+		CalendarBooking calendarBooking, Recurrence recurrence) {
+
+		Calendar startTimeJCalendar = JCalendarUtil.getJCalendar(
+			calendarBooking.getStartTime());
+
+		Weekday startTimeWeekday = Weekday.getWeekday(startTimeJCalendar);
+
+		List<Weekday> weekdays = new ArrayList<Weekday>();
+
+		for (PositionalWeekday positionalWeekday : positionalWeekdays) {
+			weekdays.add(positionalWeekday.getWeekday());
+		}
+
+		int position = startTimeJCalendar.get(Calendar.DAY_OF_WEEK_IN_MONTH);
+
+		PositionalWeekday positionalWeekday = new PositionalWeekday(
+			startTimeWeekday, position);
+
+		Frequency frequency = recurrence.getFrequency();
+
+		boolean isInWeekdays = true;
+
+		if (Validator.equals(frequency, Frequency.WEEKLY)) {
+			if (!weekdays.contains(startTimeWeekday)) {
+				isInWeekdays = false;
+			}
+		}
+		else if (Validator.equals(frequency, Frequency.YEARLY) ||
+				Validator.equals(frequency, Frequency.MONTHLY)) {
+
+			if (!positionalWeekdays.contains(positionalWeekday)) {
+				isInWeekdays = false;
+			}
+		}
+
+		return isInWeekdays;
 	}
 
 	private static DateValue _toDateValue(long time) {
