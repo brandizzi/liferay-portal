@@ -173,9 +173,19 @@ public abstract class AbstractTemplate implements Template {
 	protected abstract void handleException(Exception exception, Writer writer)
 		throws TemplateException;
 
-	protected abstract void processTemplate(
-			TemplateResource templateResource, Writer writer)
-		throws Exception;
+	protected void _write(Writer writer) throws TemplateException {
+		Writer oldWriter = (Writer) get(TemplateConstants.WRITER);
+
+		try {
+			doProcessTemplate(writer);
+		} catch (Exception e) {
+			put(TemplateConstants.WRITER, writer);
+
+			handleException(e, writer);
+		} finally {
+			put(TemplateConstants.WRITER, oldWriter);
+		}
+	}
 
 	protected Map<String, Object> context;
 	protected TemplateResource errorTemplateResource;

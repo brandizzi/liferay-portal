@@ -13,8 +13,11 @@
  */
 package com.liferay.portal.template;
 
+import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
+import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateException;
 import com.liferay.portal.kernel.template.TemplateResource;
+import com.liferay.portal.kernel.util.StringBundler;
 
 import java.io.Writer;
 import java.util.Collections;
@@ -44,19 +47,38 @@ public abstract class AbstractMultiResourceTemplate extends AbstractTemplate{
 
 	@Override
 	public void doProcessTemplate(Writer writer) throws Exception {
+		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
 
+		put(TemplateConstants.WRITER, unsyncStringWriter);
+
+		processTemplates(templateResources, unsyncStringWriter);
+
+		StringBundler sb = unsyncStringWriter.getStringBundler();
+
+		sb.writeTo(writer);
 	}
 
 	@Override
 	public void processTemplate(Writer writer) throws TemplateException {
+		if (errorTemplateResource == null) {
+			try {
+				processTemplates(templateResources, writer);
 
-	}
+				return;
+			} catch (Exception e) {
+				StringBuilder sb = new StringBuilder();
+				for (TemplateResource templateResource : templateResources) {
+					sb.append(templateResource.getTemplateId());
+					sb.append(",");
+				}
 
-	@Override
-	protected void processTemplate(TemplateResource templateResource,
-		Writer writer) throws Exception {
+				throw new TemplateException(
+					"Unable to process templates",
+					e);
+			}
+		}
 
-		processTemplates(Collections.singletonList(templateResource), writer);
+		_write(writer);
 	}
 
 	protected abstract void processTemplates(
