@@ -72,6 +72,22 @@ public class CalendarBookingAssetRenderer
 	}
 
 	@Override
+	public String getDiscussionPath() {
+		try {
+			Calendar calendar = _calendarBooking.getCalendar();
+
+			if (calendar.isEnableComments()) {
+				return "edit_event_discussion";
+			}
+		}
+		catch (Exception e) {
+			_log.error(e);
+		}
+
+		return null;
+	}
+
+	@Override
 	public long getGroupId() {
 		return _calendarBooking.getGroupId();
 	}
