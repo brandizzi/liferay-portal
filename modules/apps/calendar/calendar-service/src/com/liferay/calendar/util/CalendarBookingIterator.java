@@ -53,7 +53,11 @@ public class CalendarBookingIterator implements Iterator<CalendarBooking> {
 
 	@Override
 	public boolean hasNext() {
-		return _recurrenceIterator.hasNext() && !_countExceeded();
+		if (_recurrenceIterator.hasNext() && !_isExceededCount()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -82,22 +86,6 @@ public class CalendarBookingIterator implements Iterator<CalendarBooking> {
 	@Override
 	public void remove() {
 		throw new UnsupportedOperationException();
-	}
-
-	private boolean _countExceeded() {
-		Recurrence recurrence = _calendarBooking.getRecurrenceObj();
-
-		if (recurrence == null) {
-			return false;
-		}
-
-		int count = recurrence.getCount();
-
-		if ((count != 0) && (_instanceIndex >= count)) {
-			return true;
-		}
-
-		return false;
 	}
 
 	private Calendar _getStartTimeJCalendar(DateValue dateValue) {
@@ -135,6 +123,22 @@ public class CalendarBookingIterator implements Iterator<CalendarBooking> {
 		}
 
 		return TimeZoneUtil.getDefault();
+	}
+
+	private boolean _isExceededCount() {
+		Recurrence recurrence = _calendarBooking.getRecurrenceObj();
+
+		if (recurrence == null) {
+			return false;
+		}
+
+		int count = recurrence.getCount();
+
+		if ((count != 0) && (_instanceIndex >= count)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private DateValue _toDateValue(long time) {
