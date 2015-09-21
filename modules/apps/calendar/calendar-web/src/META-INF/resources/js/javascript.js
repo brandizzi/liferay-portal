@@ -1895,8 +1895,7 @@ AUI.add(
 									},
 									render: true
 								}
-							],
-							'header'
+							]
 						);
 
 						if (instance.popover.headerNode) {
