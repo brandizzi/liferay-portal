@@ -1895,11 +1895,12 @@ AUI.add(
 									},
 									render: true
 								}
-							],
-							'header'
+							]
 						);
 
-						instance.popover.headerNode.toggleClass('hide', !templateData.permissions.VIEW_BOOKING_DETAILS);
+						if (instance.popover.headerNode) {
+							instance.popover.headerNode.toggleClass('hide', !templateData.permissions.VIEW_BOOKING_DETAILS);
+						}
 
 						instance._showResources();
 					},
