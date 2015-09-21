@@ -53,13 +53,13 @@ public class CalendarBookingIteratorTest {
 		calendarBooking.setRecurrence(
 			"RRULE:FREQ=WEEKLY;COUNT=2;INTERVAL=1;BYDAY=MO");
 
-		CalendarBookingIterator iterator = new CalendarBookingIterator(
-			calendarBooking);
+		CalendarBookingIterator calendarBookingIterator =
+			new CalendarBookingIterator(calendarBooking);
 
 		int count = 0;
 
-		while (iterator.hasNext()) {
-			iterator.next();
+		while (calendarBookingIterator.hasNext()) {
+			calendarBookingIterator.next();
 
 			count++;
 		}
@@ -81,13 +81,13 @@ public class CalendarBookingIteratorTest {
 		calendarBooking.setRecurrence(
 			"RRULE:FREQ=WEEKLY;COUNT=2;INTERVAL=1;BYDAY=WE");
 
-		CalendarBookingIterator iterator = new CalendarBookingIterator(
-			calendarBooking);
+		CalendarBookingIterator calendarBookingIterator =
+			new CalendarBookingIterator(calendarBooking);
 
 		int count = 0;
 
-		while (iterator.hasNext()) {
-			iterator.next();
+		while (calendarBookingIterator.hasNext()) {
+			calendarBookingIterator.next();
 
 			count++;
 		}
@@ -104,13 +104,13 @@ public class CalendarBookingIteratorTest {
 		calendarBooking.setStartTime(calendar.getTimeInMillis());
 		calendarBooking.setRecurrence(null);
 
-		CalendarBookingIterator iterator = new CalendarBookingIterator(
-			calendarBooking);
+		CalendarBookingIterator calendarBookingIterator =
+			new CalendarBookingIterator(calendarBooking);
 
 		int count = 0;
 
-		while (iterator.hasNext()) {
-			iterator.next();
+		while (calendarBookingIterator.hasNext()) {
+			calendarBookingIterator.next();
 
 			count++;
 		}
