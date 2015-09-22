@@ -12,28 +12,16 @@
  * details.
  */
 
-package com.liferay.portlet.blogs;
-
-import com.liferay.portal.kernel.exception.PortalException;
+package com.liferay.blogs.web.upload;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Sergio González
  */
-public class CategoryNameException extends PortalException {
+public class CoverImageBlogsUploadHandler extends TempImageBlogsUploadHandler {
 
-	public CategoryNameException() {
-	}
-
-	public CategoryNameException(String msg) {
-		super(msg);
-	}
-
-	public CategoryNameException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
-
-	public CategoryNameException(Throwable cause) {
-		super(cause);
+	@Override
+	protected long getMaxFileSize() {
+		return 0;
 	}
 
 }
