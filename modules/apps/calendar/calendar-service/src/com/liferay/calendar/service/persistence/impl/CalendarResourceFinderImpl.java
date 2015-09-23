@@ -368,7 +368,7 @@ public class CalendarResourceFinderImpl
 
 			if (orderByComparator != null) {
 				appendOrderByComparator(
-					sb, "CalendarResource.", orderByComparator);
+					sb, "CalendarResource.", orderByComparator, true);
 			}
 
 			sql = StringUtil.replace(sql, "[$ORDER_BY$]", sb.toString());
