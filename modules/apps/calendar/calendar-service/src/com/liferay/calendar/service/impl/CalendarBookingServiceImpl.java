@@ -129,6 +129,10 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
+		CalendarPermission.check(
+			getPermissionChecker(), calendarBooking.getCalendarId(),
+			ActionKeys.DELETE);
+
 		return calendarBookingLocalService.deleteCalendarBooking(
 			calendarBookingId);
 	}
@@ -144,6 +148,10 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		CalendarPermission.check(
 			getPermissionChecker(), calendarBooking.getCalendarId(),
 			CalendarActionKeys.MANAGE_BOOKINGS);
+
+		CalendarPermission.check(
+			getPermissionChecker(), calendarBooking.getCalendarId(),
+			ActionKeys.DELETE);
 
 		calendarBookingLocalService.deleteCalendarBookingInstance(
 			calendarBookingId, startTime, allFollowing);

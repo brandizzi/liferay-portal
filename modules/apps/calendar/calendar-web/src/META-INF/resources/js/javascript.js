@@ -2103,7 +2103,7 @@ AUI.add(
 					},
 
 					_hasDeleteButton: function(permissions, calendar, status) {
-						return permissions.MANAGE_BOOKINGS && calendar;
+						return permissions.MANAGE_BOOKINGS && permissions.DELETE && calendar;
 					},
 
 					_hasEditButton: function(permissions, calendar, status) {
