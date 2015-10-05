@@ -786,6 +786,16 @@ public class CalendarBookingLocalServiceImpl
 			descriptionMap.put(locale, sanitizedDescription);
 		}
 
+		for (Locale locale : calendarBooking.getTitleMap().keySet()) {
+			String title = titleMap.get(locale);
+
+			if (title == null) {
+				title = calendarBooking.getTitle(locale);
+			}
+
+			titleMap.put(locale, title);
+		}
+
 		java.util.Calendar startTimeJCalendar = JCalendarUtil.getJCalendar(
 			startTime);
 		java.util.Calendar endTimeJCalendar = JCalendarUtil.getJCalendar(
@@ -928,6 +938,16 @@ public class CalendarBookingLocalServiceImpl
 		}
 		else {
 			recurrence = StringPool.BLANK;
+		}
+
+		for (Locale locale : calendarBooking.getTitleMap().keySet()) {
+			String title = titleMap.get(locale);
+
+			if (title == null) {
+				title = calendarBooking.getTitle(locale);
+			}
+
+			titleMap.put(locale, title);
 		}
 
 		return addCalendarBooking(
