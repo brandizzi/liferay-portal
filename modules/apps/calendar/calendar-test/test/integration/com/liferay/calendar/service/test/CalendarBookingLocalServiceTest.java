@@ -592,6 +592,67 @@ public class CalendarBookingLocalServiceTest {
 	}
 
 	@Test
+	public void testUpdateDescriptionCalendarBooking() throws PortalException {
+		ServiceContext serviceContext = createServiceContext();
+
+		CalendarResource calendarResource =
+				CalendarResourceUtil.getUserCalendarResource(
+					_user.getUserId(), serviceContext);
+
+		Calendar calendar = calendarResource.getDefaultCalendar();
+
+		long startTime = System.currentTimeMillis();
+
+		Map<Locale, String> descriptionMap = new HashMap<>();
+		String description_en_US = RandomTestUtil.randomString();
+		String description_pt_BR = RandomTestUtil.randomString();
+		String description_en_UK = RandomTestUtil.randomString();
+		String description_de_DE = RandomTestUtil.randomString();
+
+		descriptionMap.put(LocaleUtil.US, description_en_US);
+		descriptionMap.put(LocaleUtil.BRAZIL, description_pt_BR);
+		descriptionMap.put(LocaleUtil.UK, description_en_UK);
+		descriptionMap.put(LocaleUtil.GERMANY, description_de_DE);
+
+		CalendarBooking calendarBooking =
+				CalendarBookingLocalServiceUtil.addCalendarBooking(
+					_user.getUserId(), calendar.getCalendarId(), new long[0],
+					CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,
+					RandomTestUtil.randomLocaleStringMap(), descriptionMap,
+					RandomTestUtil.randomString(), startTime,
+					startTime + 36000000, false, null, 0, null, 0, null,
+					serviceContext);
+
+		descriptionMap = new HashMap<>();
+		descriptionMap.put(LocaleUtil.US, description_en_US);
+		descriptionMap.put(LocaleUtil.UK, description_en_UK);
+		descriptionMap.put(LocaleUtil.GERMANY, "");
+
+		calendarBooking = CalendarBookingLocalServiceUtil.updateCalendarBooking(
+				_user.getUserId(), calendarBooking.getCalendarBookingId(),
+				calendar.getCalendarId(), new long[0],
+				RandomTestUtil.randomLocaleStringMap(), descriptionMap,
+				RandomTestUtil.randomString(), startTime, startTime + 36000000,
+				false, null, 0, null, 0, null, serviceContext);
+
+		calendarBooking = CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+			calendarBooking.getCalendarBookingId());
+
+		Assert.assertEquals(
+				description_en_US,
+				calendarBooking.getDescription(LocaleUtil.US));
+		Assert.assertEquals(
+				description_pt_BR,
+				calendarBooking.getDescription(LocaleUtil.BRAZIL));
+		Assert.assertEquals(
+				description_en_UK,
+				calendarBooking.getDescription(LocaleUtil.UK));
+		Assert.assertNotEquals(
+				description_de_DE,
+				calendarBooking.getDescription(LocaleUtil.GERMANY));
+	}
+
+	@Test
 	public void testUpdateTitleCalendarBooking() throws PortalException {
 		ServiceContext serviceContext = createServiceContext();
 
