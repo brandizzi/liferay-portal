@@ -786,6 +786,16 @@ public class CalendarBookingLocalServiceImpl
 			descriptionMap.put(locale, sanitizedDescription);
 		}
 
+		for (Locale locale : calendarBooking.getDescriptionMap().keySet()) {
+			String description = descriptionMap.get(locale);
+
+			if (description == null) {
+				description = calendarBooking.getDescription(locale);
+			}
+
+			descriptionMap.put(locale, description);
+		}
+
 		for (Locale locale : calendarBooking.getTitleMap().keySet()) {
 			String title = titleMap.get(locale);
 
@@ -938,6 +948,16 @@ public class CalendarBookingLocalServiceImpl
 		}
 		else {
 			recurrence = StringPool.BLANK;
+		}
+
+		for (Locale locale : calendarBooking.getDescriptionMap().keySet()) {
+			String description = descriptionMap.get(locale);
+
+			if (description == null) {
+				description = calendarBooking.getDescription(locale);
+			}
+
+			descriptionMap.put(locale, description);
 		}
 
 		for (Locale locale : calendarBooking.getTitleMap().keySet()) {
