@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.User;
@@ -41,7 +42,10 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -585,6 +589,63 @@ public class CalendarBookingLocalServiceTest {
 			startTime + (Time.HOUR * 10), false,
 			RecurrenceSerializer.serialize(recurrence), 0, null, 0, null,
 			serviceContext);
+	}
+
+	@Test
+	public void testUpdateTitleCalendarBooking() throws PortalException {
+		ServiceContext serviceContext = createServiceContext();
+
+		CalendarResource calendarResource =
+			CalendarResourceUtil.getUserCalendarResource(
+				_user.getUserId(), serviceContext);
+
+		Calendar calendar = calendarResource.getDefaultCalendar();
+
+		long startTime = System.currentTimeMillis();
+
+		Map<Locale, String> titleMap = new HashMap<>();
+		String title_en_US = RandomTestUtil.randomString();
+		String title_pt_BR = RandomTestUtil.randomString();
+		String title_en_UK = RandomTestUtil.randomString();
+		String title_de_DE = RandomTestUtil.randomString();
+
+		titleMap.put(LocaleUtil.US, title_en_US);
+		titleMap.put(LocaleUtil.BRAZIL, title_pt_BR);
+		titleMap.put(LocaleUtil.UK, title_en_UK);
+		titleMap.put(LocaleUtil.GERMANY, title_de_DE);
+
+		CalendarBooking calendarBooking =
+			CalendarBookingLocalServiceUtil.addCalendarBooking(
+				_user.getUserId(), calendar.getCalendarId(), new long[0],
+				CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,
+				titleMap, RandomTestUtil.randomLocaleStringMap(),
+				RandomTestUtil.randomString(), startTime, startTime + 36000000,
+				false, null, 0, null, 0, null, serviceContext);
+
+		titleMap = new HashMap<>();
+		titleMap.put(LocaleUtil.US, title_en_US);
+		titleMap.put(LocaleUtil.UK, title_en_UK);
+		titleMap.put(LocaleUtil.GERMANY, "");
+
+		calendarBooking = CalendarBookingLocalServiceUtil.updateCalendarBooking(
+			_user.getUserId(), calendarBooking.getCalendarBookingId(),
+			calendar.getCalendarId(), new long[0], titleMap,
+			RandomTestUtil.randomLocaleStringMap(),
+			RandomTestUtil.randomString(), startTime, startTime + 36000000,
+			false, null, 0, null, 0, null, serviceContext);
+
+		calendarBooking = CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+			calendarBooking.getCalendarBookingId());
+
+		Assert.assertEquals(
+			title_en_US, calendarBooking.getTitle(LocaleUtil.US));
+		Assert.assertEquals(
+			title_pt_BR, calendarBooking.getTitle(LocaleUtil.BRAZIL));
+		Assert.assertEquals(
+			title_en_UK, calendarBooking.getTitle(LocaleUtil.UK));
+		Assert.assertNotEquals(
+				title_de_DE,
+				calendarBooking.getDescription(LocaleUtil.GERMANY));
 	}
 
 	protected ServiceContext createServiceContext() {
