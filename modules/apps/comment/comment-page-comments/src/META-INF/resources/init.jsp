@@ -26,6 +26,8 @@ page import="com.liferay.portal.security.permission.ActionKeys" %><%@
 page import="com.liferay.portal.service.permission.LayoutPermissionUtil" %><%@
 page import="com.liferay.portlet.PortletURLUtil" %>
 
+<%@ page import="javax.portlet.PortletURL" %>
+
 <portlet:defineObjects/>
 
 <liferay-theme:defineObjects />
