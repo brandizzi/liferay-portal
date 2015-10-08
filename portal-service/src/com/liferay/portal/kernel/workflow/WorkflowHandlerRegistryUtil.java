@@ -65,6 +65,29 @@ public class WorkflowHandlerRegistryUtil {
 		return _instance._getWorkflowHandlers();
 	}
 
+	public static boolean hasWorkflowInstanceInProgress(
+			long companyId, long groupId, String className, long classPK)
+		throws WorkflowException {
+
+		WorkflowInstanceLink workflowInstanceLink =
+			WorkflowInstanceLinkLocalServiceUtil.fetchWorkflowInstanceLink(
+				companyId, groupId, className, classPK);
+
+		if (workflowInstanceLink == null) {
+			return false;
+		}
+
+		WorkflowInstance workflowInstance =
+			WorkflowInstanceManagerUtil.getWorkflowInstance(
+				companyId, workflowInstanceLink.getWorkflowInstanceId());
+
+		if (!workflowInstance.isComplete()) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public static void register(List<WorkflowHandler<?>> workflowHandlers) {
 		for (WorkflowHandler<?> workflowHandler : workflowHandlers) {
 			register(workflowHandler);
@@ -119,7 +142,7 @@ public class WorkflowHandlerRegistryUtil {
 		}
 
 		boolean hasWorkflowInstanceInProgress =
-			_instance._hasWorkflowInstanceInProgress(
+			_instance.hasWorkflowInstanceInProgress(
 				companyId, groupId, className, classPK);
 
 		if (hasWorkflowInstanceInProgress) {
@@ -268,29 +291,6 @@ public class WorkflowHandlerRegistryUtil {
 
 	private List<WorkflowHandler<?>> _getWorkflowHandlers() {
 		return ListUtil.fromMapValues(_workflowHandlerMap);
-	}
-
-	private boolean _hasWorkflowInstanceInProgress(
-			long companyId, long groupId, String className, long classPK)
-		throws PortalException {
-
-		WorkflowInstanceLink workflowInstanceLink =
-			WorkflowInstanceLinkLocalServiceUtil.fetchWorkflowInstanceLink(
-				companyId, groupId, className, classPK);
-
-		if (workflowInstanceLink == null) {
-			return false;
-		}
-
-		WorkflowInstance workflowInstance =
-			WorkflowInstanceManagerUtil.getWorkflowInstance(
-				companyId, workflowInstanceLink.getWorkflowInstanceId());
-
-		if (!workflowInstance.isComplete()) {
-			return true;
-		}
-
-		return false;
 	}
 
 	private void _register(WorkflowHandler<?> workflowHandler) {

@@ -31,6 +31,8 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.workflow.WorkflowException;
+import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.WorkflowDefinitionLinkLocalServiceUtil;
@@ -257,6 +259,18 @@ public class CalendarUtil {
 
 		jsonObject.put(
 			"hasChildCalendarBookings", childCalendarBookings.size() > 1);
+
+		try {
+			jsonObject.put(
+				"hasWorkflowInstanceInProgress",
+				WorkflowHandlerRegistryUtil.hasWorkflowInstanceInProgress(
+					themeDisplay.getCompanyId(), calendarBooking.getGroupId(),
+					CalendarBooking.class.getName(),
+					calendarBooking.getCalendarBookingId()));
+		}
+		catch (WorkflowException e) {
+			jsonObject.put("hasWorkflowInstanceInProgress", false);
+		}
 
 		jsonObject.put("instanceIndex", calendarBooking.getInstanceIndex());
 		jsonObject.put("location", calendarBooking.getLocation());
