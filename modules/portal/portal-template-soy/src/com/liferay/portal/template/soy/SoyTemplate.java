@@ -20,7 +20,6 @@ import com.google.template.soy.SoyFileSet.Builder;
 import com.google.template.soy.data.SoyMapData;
 import com.google.template.soy.tofu.SoyTofu;
 import com.google.template.soy.tofu.SoyTofu.Renderer;
-
 import com.liferay.portal.kernel.template.StringTemplateResource;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateException;
@@ -33,11 +32,10 @@ import com.liferay.portal.template.TemplateResourceThreadLocal;
 
 import java.io.Reader;
 import java.io.Writer;
-
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -121,7 +119,7 @@ public class SoyTemplate extends AbstractMultiResourceTemplate {
 		put("script", sb.toString());
 
 		try {
-			processTemplate(errorTemplateResource, writer);
+			processTemplates(Arrays.asList(errorTemplateResource), writer);
 		}
 		catch (Exception e) {
 			throw new TemplateException(
