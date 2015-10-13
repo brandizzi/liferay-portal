@@ -30,6 +30,7 @@ boolean preventPersistence = ParamUtil.getBoolean(request, "preventPersistence")
 boolean readOnly = ParamUtil.getBoolean(request, "readOnly");
 boolean showAddEventBtn = ParamUtil.getBoolean(request, "showAddEventBtn");
 String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookingURL");
+boolean isoTime = timeFormat.equals("24-hour") || (timeFormat.equals("locale") && !DateUtil.isFormatAmPm(locale));
 %>
 
 <div class="calendar-portlet-wrapper" id="<portlet:namespace />scheduler"></div>
@@ -54,7 +55,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 					strings: showMoreStrings
 				},
 				height: 700,
-				isoTime: <%= isoTimeFormat %>,
+				isoTime: <%= isoTime %>,
 				readOnly: <%= readOnly %>,
 				strings: {
 					allDay: '<liferay-ui:message key="all-day" />'
@@ -72,7 +73,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 					strings: showMoreStrings
 				},
 				height: 700,
-				isoTime: <%= isoTimeFormat %>,
+				isoTime: <%= isoTime %>,
 				readOnly: <%= readOnly %>,
 				strings: {
 					allDay: '<liferay-ui:message key="all-day" />'
@@ -86,7 +87,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 			{
 				eventsOverlayConstrain: '#p_p_id<portlet:namespace />',
 				height: 'auto',
-				isoTime: <%= isoTimeFormat %>,
+				isoTime: <%= isoTime %>,
 				readOnly: <%= readOnly %>,
 				strings: showMoreStrings
 			}
@@ -97,7 +98,7 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 		window.<portlet:namespace />agendaView = new Liferay.SchedulerAgendaView(
 			{
 				height: 700,
-				isoTime: <%= isoTimeFormat %>,
+				isoTime: <%= isoTime %>,
 				readOnly: <%= readOnly %>,
 				strings: {
 					noEvents: '<liferay-ui:message key="no-events" />'
