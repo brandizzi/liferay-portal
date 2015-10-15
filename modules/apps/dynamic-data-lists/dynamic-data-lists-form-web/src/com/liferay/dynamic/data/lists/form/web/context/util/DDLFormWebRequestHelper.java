@@ -57,8 +57,7 @@ public class DDLFormWebRequestHelper extends BaseRequestHelper {
 					ConfigurationFactoryUtil.getConfiguration(
 						DDLFormWebConfiguration.class,
 						new GroupServiceSettingsLocator(
-							getSiteGroupId(),
-							DDLFormConstants.SERVICE_NAME));
+							getSiteGroupId(), DDLFormConstants.SERVICE_NAME));
 			}
 
 			return _ddlFormWebConfiguration;
