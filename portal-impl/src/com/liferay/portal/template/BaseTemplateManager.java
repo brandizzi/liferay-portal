@@ -109,16 +109,16 @@ public abstract class BaseTemplateManager implements TemplateManager {
 		return templateControlContext.getAccessControlContext();
 	}
 
-	protected ClassLoader getClassLoader() {
+	protected Map<String, Object> getHelperUtilities(boolean restricted) {
+		return templateContextHelper.getHelperUtilities(
+			getTemplateControlContextClassLoader(), restricted);
+	}
+
+	protected ClassLoader getTemplateControlContextClassLoader() {
 		TemplateControlContext templateControlContext =
 			templateContextHelper.getTemplateControlContext();
 
 		return templateControlContext.getClassLoader();
-	}
-
-	protected Map<String, Object> getHelperUtilities(boolean restricted) {
-		return templateContextHelper.getHelperUtilities(
-			getClassLoader(), restricted);
 	}
 
 	protected TemplateContextHelper templateContextHelper;

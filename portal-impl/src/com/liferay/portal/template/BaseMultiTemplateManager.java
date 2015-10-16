@@ -64,18 +64,19 @@ public abstract class BaseMultiTemplateManager extends BaseTemplateManager {
 		List<TemplateResource> templateResources,
 		TemplateResource errorTemplateResource, boolean restricted) {
 
-		if (getAccessControlContext() == null) {
+		AccessControlContext accessControlContext = getAccessControlContext();
+
+		if (accessControlContext == null) {
 			return doGetTemplate(
 				templateResources, errorTemplateResource, restricted,
 				getHelperUtilities(restricted), false);
 		}
 
-		AccessControlContext accessControlContext = getAccessControlContext();
-
 		Map<String, Object> helperUtilities = AccessController.doPrivileged(
 			new DoGetHelperUtilitiesPrivilegedAction(
-				templateContextHelper, getClassLoader(), restricted),
-				accessControlContext);
+				templateContextHelper, getTemplateControlContextClassLoader(),
+				restricted),
+			accessControlContext);
 
 		Template template = AccessController.doPrivileged(
 			new DoGetMultiTemplatePrivilegedAction(

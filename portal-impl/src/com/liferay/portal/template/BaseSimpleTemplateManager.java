@@ -43,18 +43,19 @@ public abstract class BaseSimpleTemplateManager extends BaseTemplateManager {
 		TemplateResource templateResource,
 		TemplateResource errorTemplateResource, boolean restricted) {
 
-		if (getAccessControlContext() == null) {
+		AccessControlContext accessControlContext = getAccessControlContext();
+
+		if (accessControlContext == null) {
 			return doGetTemplate(
 				templateResource, errorTemplateResource, restricted,
 				getHelperUtilities(restricted), false);
 		}
 
-		AccessControlContext accessControlContext = getAccessControlContext();
-
 		Map<String, Object> helperUtilities = AccessController.doPrivileged(
 			new DoGetHelperUtilitiesPrivilegedAction(
-				templateContextHelper, getClassLoader(), restricted),
-				accessControlContext);
+				templateContextHelper, getTemplateControlContextClassLoader(),
+				restricted),
+			accessControlContext);
 
 		Template template = AccessController.doPrivileged(
 			new DoGetSingleTemplatePrivilegedAction(
