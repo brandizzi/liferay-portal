@@ -1,16 +1,17 @@
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- * <p/>
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * <p/>
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.liferay.portal.template;
 
 import com.liferay.portal.kernel.security.pacl.NotPrivileged;
@@ -19,21 +20,22 @@ import com.liferay.portal.kernel.template.TemplateManager;
 import com.liferay.portal.kernel.template.TemplateResource;
 import com.liferay.portal.kernel.template.TemplateResourceLoader;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Miroslav Ligas
  */
 public abstract class BaseMultiTemplateManager implements TemplateManager {
-
 
 	@Override
 	public void addContextObjects(
@@ -97,8 +99,8 @@ public abstract class BaseMultiTemplateManager implements TemplateManager {
 	public Template getTemplate(
 		TemplateResource templateResource, boolean restricted) {
 
-		return getTemplates(Collections.singletonList(templateResource),
-			null, restricted);
+		return getTemplates(
+			Collections.singletonList(templateResource), null, restricted);
 	}
 
 	@NotPrivileged
@@ -107,12 +109,12 @@ public abstract class BaseMultiTemplateManager implements TemplateManager {
 		TemplateResource templateResource,
 		TemplateResource errorTemplateResource, boolean restricted) {
 
-		return getTemplates(Collections.singletonList(templateResource),
-			errorTemplateResource, restricted);
+		return getTemplates(
+			Collections.singletonList(templateResource), errorTemplateResource,
+			restricted);
 	}
 
-
-		@NotPrivileged
+	@NotPrivileged
 	@Override
 	public Template getTemplates(
 		List<TemplateResource> templateResources, boolean restricted) {
@@ -147,7 +149,7 @@ public abstract class BaseMultiTemplateManager implements TemplateManager {
 		Map<String, Object> helperUtilities = AccessController.doPrivileged(
 			new DoGetHelperUtilitiesPrivilegedAction(
 				templateContextHelper, classLoader, restricted),
-			accessControlContext);
+				accessControlContext);
 
 		Template template = AccessController.doPrivileged(
 			new DoGetTemplatePrivilegedAction(
@@ -225,7 +227,7 @@ public abstract class BaseMultiTemplateManager implements TemplateManager {
 		private final TemplateResource _errorTemplateResource;
 		private final Map<String, Object> _helperUtilities;
 		private boolean _restricted;
-		private List<TemplateResource> _templateResources;
+		private final List<TemplateResource> _templateResources;
 
 	}
 

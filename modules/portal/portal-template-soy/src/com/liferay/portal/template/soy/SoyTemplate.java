@@ -20,6 +20,7 @@ import com.google.template.soy.SoyFileSet.Builder;
 import com.google.template.soy.data.SoyMapData;
 import com.google.template.soy.tofu.SoyTofu;
 import com.google.template.soy.tofu.SoyTofu.Renderer;
+
 import com.liferay.portal.kernel.template.StringTemplateResource;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateException;
@@ -28,13 +29,14 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.template.AbstractMultiResourceTemplate;
 import com.liferay.portal.template.TemplateContextHelper;
-import com.liferay.portal.template.TemplateResourceThreadLocal;
 
 import java.io.Reader;
 import java.io.Writer;
+
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -67,12 +69,13 @@ public class SoyTemplate extends AbstractMultiResourceTemplate {
 		}
 		else {
 			Builder builder = new SoyFileSet.Builder();
-			
+
 			for (TemplateResource templateResource : templateResources) {
 				String templateContent = getTemplateContent(templateResource);
 
 				builder.add(templateContent, templateResource.getTemplateId());
 			}
+
 			soyFileSet = builder.build();
 		}
 
@@ -107,10 +110,11 @@ public class SoyTemplate extends AbstractMultiResourceTemplate {
 
 		put("exception", exception.getMessage());
 		StringBuilder sb = new StringBuilder();
+
 		for (TemplateResource templateResource : templateResources) {
 			if (templateResource instanceof StringTemplateResource) {
 				StringTemplateResource stringTemplateResource =
-					(StringTemplateResource) templateResource;
+					(StringTemplateResource)templateResource;
 
 				sb.append(stringTemplateResource.getContent());
 			}
@@ -134,9 +138,6 @@ public class SoyTemplate extends AbstractMultiResourceTemplate {
 			List<TemplateResource> templateResources, Writer writer)
 		throws Exception {
 
-//		TemplateResourceThreadLocal.setTemplateResource(
-//			TemplateConstants.LANG_TYPE_SOY, templateResource);
-
 		try {
 			String namespace = GetterUtil.getString(
 				get(TemplateConstants.NAMESPACE));
@@ -158,10 +159,6 @@ public class SoyTemplate extends AbstractMultiResourceTemplate {
 		catch (PrivilegedActionException pae) {
 			throw pae.getException();
 		}
-//		finally {
-//			TemplateResourceThreadLocal.setTemplateResource(
-//				TemplateConstants.LANG_TYPE_SOY, null);
-//		}
 	}
 
 	private final boolean _privileged;
@@ -178,11 +175,12 @@ public class SoyTemplate extends AbstractMultiResourceTemplate {
 		@Override
 		public SoyFileSet run() throws Exception {
 			Builder builder = new SoyFileSet.Builder();
-			
+
 			for (TemplateResource templateResource : _templateResources) {
 				String templateContent = getTemplateContent(templateResource);
 				builder.add(templateContent, templateResource.getTemplateId());
 			}
+
 			return builder.build();
 		}
 

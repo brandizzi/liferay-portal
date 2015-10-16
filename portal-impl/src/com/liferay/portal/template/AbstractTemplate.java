@@ -14,22 +14,12 @@
 
 package com.liferay.portal.template;
 
-import com.liferay.portal.deploy.sandbox.SandboxHandler;
-import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
-import com.liferay.portal.kernel.cache.PortalCache;
-import com.liferay.portal.kernel.cache.SingleVMPoolUtil;
-import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
-import com.liferay.portal.kernel.template.StringTemplateResource;
 import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateException;
 import com.liferay.portal.kernel.template.TemplateResource;
-import com.liferay.portal.kernel.template.TemplateResourceLoader;
-import com.liferay.portal.kernel.template.URLTemplateResource;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 
-import java.io.Serializable;
 import java.io.Writer;
 
 import java.util.Collection;
@@ -69,7 +59,6 @@ public abstract class AbstractTemplate implements Template {
 		}
 
 		_templateContextHelper = templateContextHelper;
-
 	}
 
 	@Override
@@ -86,7 +75,6 @@ public abstract class AbstractTemplate implements Template {
 	public boolean containsValue(Object value) {
 		return context.containsValue(value);
 	}
-
 
 	@Override
 	public Set<Entry<String, Object>> entrySet() {
@@ -133,7 +121,6 @@ public abstract class AbstractTemplate implements Template {
 		_templateContextHelper.prepare(this, request);
 	}
 
-
 	@Override
 	public Object put(String key, Object value) {
 		if ((key == null) || (value == null)) {
@@ -163,6 +150,22 @@ public abstract class AbstractTemplate implements Template {
 		return context.values();
 	}
 
+	protected void _write(Writer writer) throws TemplateException {
+		Writer oldWriter = (Writer)get(TemplateConstants.WRITER);
+
+		try {
+			doProcessTemplate(writer);
+		}
+		catch (Exception e) {
+			put(TemplateConstants.WRITER, writer);
+
+			handleException(e, writer);
+		}
+		finally {
+			put(TemplateConstants.WRITER, oldWriter);
+		}
+	}
+
 	protected String getTemplateResourceUUID(
 		TemplateResource templateResource) {
 
@@ -172,20 +175,6 @@ public abstract class AbstractTemplate implements Template {
 
 	protected abstract void handleException(Exception exception, Writer writer)
 		throws TemplateException;
-
-	protected void _write(Writer writer) throws TemplateException {
-		Writer oldWriter = (Writer) get(TemplateConstants.WRITER);
-
-		try {
-			doProcessTemplate(writer);
-		} catch (Exception e) {
-			put(TemplateConstants.WRITER, writer);
-
-			handleException(e, writer);
-		} finally {
-			put(TemplateConstants.WRITER, oldWriter);
-		}
-	}
 
 	protected Map<String, Object> context;
 	protected TemplateResource errorTemplateResource;

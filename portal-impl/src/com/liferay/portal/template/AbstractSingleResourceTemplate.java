@@ -1,16 +1,17 @@
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- * <p/>
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * <p/>
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.liferay.portal.template;
 
 import com.liferay.portal.deploy.sandbox.SandboxHandler;
@@ -29,6 +30,7 @@ import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.Serializable;
 import java.io.Writer;
+
 import java.util.Map;
 
 /**
@@ -36,12 +38,14 @@ import java.util.Map;
  */
 public abstract class AbstractSingleResourceTemplate extends AbstractTemplate {
 
-	public AbstractSingleResourceTemplate(TemplateResource templateResource,
+	public AbstractSingleResourceTemplate(
+		TemplateResource templateResource,
 		TemplateResource errorTemplateResource, Map<String, Object> context,
 		TemplateContextHelper templateContextHelper, String templateManagerName,
 		long interval) {
 
-		super(errorTemplateResource, context, templateContextHelper,
+		super(
+			errorTemplateResource, context, templateContextHelper,
 			templateManagerName);
 
 		if (templateResource == null) {
@@ -51,7 +55,7 @@ public abstract class AbstractSingleResourceTemplate extends AbstractTemplate {
 		this.templateResource = templateResource;
 
 		if (interval != 0) {
-			_cacheTemplateResource(templateManagerName);
+			cacheTemplateResource(templateManagerName);
 		}
 	}
 
@@ -75,7 +79,8 @@ public abstract class AbstractSingleResourceTemplate extends AbstractTemplate {
 				processTemplate(templateResource, writer);
 
 				return;
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				throw new TemplateException(
 					"Unable to process template " +
 						templateResource.getTemplateId(),
@@ -86,14 +91,7 @@ public abstract class AbstractSingleResourceTemplate extends AbstractTemplate {
 		_write(writer);
 	}
 
-	protected abstract void processTemplate(
-		TemplateResource templateResource, Writer writer)
-		throws Exception;
-
-	protected TemplateResource templateResource;
-
-
-	private void _cacheTemplateResource(String templateManagerName) {
+	protected void cacheTemplateResource(String templateManagerName) {
 		String templateId = templateResource.getTemplateId();
 
 		if (templateManagerName.equals(TemplateConstants.LANG_TYPE_VM) &&
@@ -113,7 +111,7 @@ public abstract class AbstractSingleResourceTemplate extends AbstractTemplate {
 		portalCacheName = portalCacheName.concat(StringPool.PERIOD).concat(
 			templateManagerName);
 
-		PortalCache<String, Serializable> portalCache = _getPortalCache(
+		PortalCache<String, Serializable> portalCache = getPortalCache(
 			templateResource, portalCacheName);
 
 		Object object = portalCache.get(templateResource.getTemplateId());
@@ -141,7 +139,7 @@ public abstract class AbstractSingleResourceTemplate extends AbstractTemplate {
 				errorTemplateResource);
 		}
 
-		portalCache = _getPortalCache(errorTemplateResource, portalCacheName);
+		portalCache = getPortalCache(errorTemplateResource, portalCacheName);
 
 		object = portalCache.get(errorTemplateResource.getTemplateId());
 
@@ -151,7 +149,7 @@ public abstract class AbstractSingleResourceTemplate extends AbstractTemplate {
 		}
 	}
 
-	private PortalCache<String, Serializable> _getPortalCache(
+	protected PortalCache<String, Serializable> getPortalCache(
 		TemplateResource templateResource, String portalCacheName) {
 
 		if (!(templateResource instanceof CacheTemplateResource)) {
@@ -159,7 +157,7 @@ public abstract class AbstractSingleResourceTemplate extends AbstractTemplate {
 		}
 
 		CacheTemplateResource cacheTemplateResource =
-			(CacheTemplateResource) templateResource;
+			(CacheTemplateResource)templateResource;
 
 		TemplateResource innerTemplateResource =
 			cacheTemplateResource.getInnerTemplateResource();
@@ -171,5 +169,10 @@ public abstract class AbstractSingleResourceTemplate extends AbstractTemplate {
 		return MultiVMPoolUtil.getPortalCache(portalCacheName);
 	}
 
+	protected abstract void processTemplate(
+			TemplateResource templateResource, Writer writer)
+		throws Exception;
+
+	protected TemplateResource templateResource;
 
 }

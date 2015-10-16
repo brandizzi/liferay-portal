@@ -1,33 +1,35 @@
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- * <p/>
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * <p/>
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.liferay.portal.template;
 
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateException;
 import com.liferay.portal.kernel.template.TemplateResource;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 
 import java.io.Writer;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author Miroslav Ligas
  */
-public abstract class AbstractMultiResourceTemplate extends AbstractTemplate{
+public abstract class AbstractMultiResourceTemplate extends AbstractTemplate {
 
 	public AbstractMultiResourceTemplate(
 		List<TemplateResource> templateResources,
@@ -35,10 +37,11 @@ public abstract class AbstractMultiResourceTemplate extends AbstractTemplate{
 		TemplateContextHelper templateContextHelper, String templateManagerName,
 		long interval) {
 
-		super(errorTemplateResource, context,
-			templateContextHelper, templateManagerName);
+		super(
+			errorTemplateResource, context, templateContextHelper,
+			templateManagerName);
 
-		if (templateResources == null || templateResources.isEmpty()) {
+		if (ListUtil.isEmpty(templateResources)) {
 			throw new IllegalArgumentException("Template resource is null");
 		}
 
@@ -65,16 +68,16 @@ public abstract class AbstractMultiResourceTemplate extends AbstractTemplate{
 				processTemplates(templateResources, writer);
 
 				return;
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				StringBuilder sb = new StringBuilder();
+
 				for (TemplateResource templateResource : templateResources) {
 					sb.append(templateResource.getTemplateId());
 					sb.append(",");
 				}
 
-				throw new TemplateException(
-					"Unable to process templates",
-					e);
+				throw new TemplateException("Unable to process templates", e);
 			}
 		}
 
@@ -82,8 +85,9 @@ public abstract class AbstractMultiResourceTemplate extends AbstractTemplate{
 	}
 
 	protected abstract void processTemplates(
-		List<TemplateResource> templateResource, Writer writer)
+			List<TemplateResource> templateResource, Writer writer)
 		throws Exception;
 
 	protected List<TemplateResource> templateResources;
+
 }

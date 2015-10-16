@@ -19,8 +19,8 @@ import com.liferay.portal.kernel.template.TemplateResource;
 import com.liferay.portal.kernel.template.URLTemplateResource;
 
 import java.net.URL;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,8 +36,7 @@ public class SoyManagerTestHelper {
 	}
 
 	public Template getTemplates(List<String> fileNames) {
-		List<TemplateResource> templateResources =
-			new ArrayList<TemplateResource>();
+		List<TemplateResource> templateResources = new ArrayList<>();
 
 		for (String fileName : fileNames) {
 			templateResources.add(getTemplateResource(fileName));
