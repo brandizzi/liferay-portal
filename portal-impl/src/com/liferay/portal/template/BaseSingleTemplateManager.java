@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * @author Leonardo Barros
  */
-public abstract class BaseSimpleTemplateManager extends BaseTemplateManager {
+public abstract class BaseSingleTemplateManager extends BaseTemplateManager {
 
 	@NotPrivileged
 	@Override
