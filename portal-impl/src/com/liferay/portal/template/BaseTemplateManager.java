@@ -14,72 +14,156 @@
 
 package com.liferay.portal.template;
 
-import com.liferay.portal.kernel.security.pacl.NotPrivileged;
 import com.liferay.portal.kernel.template.Template;
+import com.liferay.portal.kernel.template.TemplateManager;
 import com.liferay.portal.kernel.template.TemplateResource;
+import com.liferay.portal.kernel.template.TemplateResourceLoader;
 
-import java.util.Collections;
-import java.util.List;
+import java.security.AccessControlContext;
+import java.security.PrivilegedAction;
+
 import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Raymond Augé
  */
-public abstract class BaseTemplateManager extends BaseMultiTemplateManager {
+public abstract class BaseTemplateManager implements TemplateManager {
 
-	@NotPrivileged
 	@Override
-	public Template getTemplate(
-		TemplateResource templateResource, boolean restricted) {
+	public void addContextObjects(
+		Map<String, Object> contextObjects,
+		Map<String, Object> newContextObjects) {
 
-		return super.getTemplates(
-			Collections.singletonList(templateResource), null, restricted);
+		for (String variableName : newContextObjects.keySet()) {
+			if (contextObjects.containsKey(variableName)) {
+				continue;
+			}
+
+			Object object = newContextObjects.get(variableName);
+
+			if (object instanceof Class) {
+				addStaticClassSupport(
+					contextObjects, variableName, (Class<?>)object);
+			}
+			else {
+				contextObjects.put(variableName, object);
+			}
+		}
 	}
 
-	@NotPrivileged
 	@Override
-	public Template getTemplate(
-		TemplateResource templateResource,
-		TemplateResource errorTemplateResource, boolean restricted) {
-
-		return super.getTemplates(
-			Collections.singletonList(templateResource), errorTemplateResource,
-			restricted);
+	public void addStaticClassSupport(
+		Map<String, Object> contextObjects, String variableName,
+		Class<?> variableClass) {
 	}
 
-	public Template getTemplates(
-		List<TemplateResource> templateResources, boolean restricted) {
-
-		throw new UnsupportedOperationException(
-			"Template type does not support multi templates.");
+	@Override
+	public void addTaglibApplication(
+		Map<String, Object> contextObjects, String applicationName,
+		ServletContext servletContext) {
 	}
 
-	public Template getTemplates(
-		List<TemplateResource> templateResources,
-		TemplateResource errorTemplateResource, boolean restricted) {
-
-		throw new UnsupportedOperationException(
-			"Template type does not support multi templates.");
+	@Override
+	public void addTaglibFactory(
+		Map<String, Object> contextObjects, String taglibLiferayHash,
+		ServletContext servletContext) {
 	}
 
-	protected Template doGetTemplate(
-		List<TemplateResource> templateResources,
-		TemplateResource errorTemplateResource, boolean restricted,
-		Map<String, Object> helperUtilities, boolean privileged) {
+	@Override
+	public void addTaglibRequest(
+		Map<String, Object> contextObjects, String applicationName,
+		HttpServletRequest request, HttpServletResponse response) {
+	}
 
-		if ((templateResources == null) || templateResources.isEmpty()) {
-			throw new IllegalArgumentException(
-				"TemplateResource parameter is empty");
+	@Override
+	public void addTaglibTheme(
+		Map<String, Object> contextObjects, String themeName,
+		HttpServletRequest request, HttpServletResponse response) {
+	}
+
+	@Override
+	public String[] getRestrictedVariables() {
+		return new String[0];
+	}
+
+	public void setTemplateContextHelper(
+		TemplateContextHelper templateContextHelper) {
+
+		this.templateContextHelper = templateContextHelper;
+	}
+
+	public void setTemplateResourceLoader(
+		TemplateResourceLoader templateResourceLoader) {
+
+		this.templateResourceLoader = templateResourceLoader;
+	}
+
+	protected AccessControlContext getAccessControlContext() {
+		TemplateControlContext templateControlContext =
+			templateContextHelper.getTemplateControlContext();
+
+		return templateControlContext.getAccessControlContext();
+	}
+
+	protected ClassLoader getClassLoader() {
+		TemplateControlContext templateControlContext =
+			templateContextHelper.getTemplateControlContext();
+
+		return templateControlContext.getClassLoader();
+	}
+
+	protected Map<String, Object> getHelperUtilities(boolean restricted) {
+		return templateContextHelper.getHelperUtilities(
+			getClassLoader(), restricted);
+	}
+
+	protected TemplateContextHelper templateContextHelper;
+	protected TemplateResourceLoader templateResourceLoader;
+
+	protected abstract class DoGetAbstractTemplatePrivilegedAction
+		implements PrivilegedAction<Template> {
+
+		public DoGetAbstractTemplatePrivilegedAction(
+			TemplateResource errorTemplateResource, boolean restricted,
+			Map<String, Object> helperUtilities) {
+
+			this.errorTemplateResource = errorTemplateResource;
+			this.restricted = restricted;
+			this.helperUtilities = helperUtilities;
 		}
 
-		return doGetTemplate(
-			templateResources.get(0), errorTemplateResource, restricted,
-			helperUtilities, privileged);
+		protected final TemplateResource errorTemplateResource;
+		protected final Map<String, Object> helperUtilities;
+		protected boolean restricted;
+
 	}
 
-	protected abstract Template doGetTemplate(
-		TemplateResource templateResource,
-		TemplateResource errorTemplateResource, boolean restricted,
-		Map<String, Object> helperUtilities, boolean privileged);
+	protected class DoGetHelperUtilitiesPrivilegedAction
+		implements PrivilegedAction<Map<String, Object>> {
+
+		public DoGetHelperUtilitiesPrivilegedAction(
+			TemplateContextHelper templateContextHelper,
+			ClassLoader classLoader, boolean restricted) {
+
+			_templateContextHelper = templateContextHelper;
+			_classLoader = classLoader;
+			_restricted = restricted;
+		}
+
+		@Override
+		public Map<String, Object> run() {
+			return _templateContextHelper.getHelperUtilities(
+				_classLoader, _restricted);
+		}
+
+		private final ClassLoader _classLoader;
+		private final boolean _restricted;
+		private final TemplateContextHelper _templateContextHelper;
+
+	}
 
 }

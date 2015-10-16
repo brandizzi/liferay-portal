@@ -21,22 +21,20 @@ import com.liferay.portal.kernel.template.TemplateResource;
 import java.security.AccessControlContext;
 import java.security.AccessController;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 /**
- * @author Miroslav Ligas
+ * @author Leonardo Barros
  */
-public abstract class BaseMultiTemplateManager extends BaseTemplateManager {
+public abstract class BaseSimpleTemplateManager extends BaseTemplateManager {
 
 	@NotPrivileged
 	@Override
 	public Template getTemplate(
 		TemplateResource templateResource, boolean restricted) {
 
-		return getTemplates(
-			Collections.singletonList(templateResource), null, restricted);
+		return getTemplate(templateResource, null, restricted);
 	}
 
 	@NotPrivileged
@@ -45,9 +43,25 @@ public abstract class BaseMultiTemplateManager extends BaseTemplateManager {
 		TemplateResource templateResource,
 		TemplateResource errorTemplateResource, boolean restricted) {
 
-		return getTemplates(
-			Collections.singletonList(templateResource), errorTemplateResource,
-			restricted);
+		if (getAccessControlContext() == null) {
+			return doGetTemplate(
+				templateResource, errorTemplateResource, restricted,
+				getHelperUtilities(restricted), false);
+		}
+
+		AccessControlContext accessControlContext = getAccessControlContext();
+
+		Map<String, Object> helperUtilities = AccessController.doPrivileged(
+			new DoGetHelperUtilitiesPrivilegedAction(
+				templateContextHelper, getClassLoader(), restricted),
+				accessControlContext);
+
+		Template template = AccessController.doPrivileged(
+			new DoGetSingleTemplatePrivilegedAction(
+				templateResource, errorTemplateResource, restricted,
+				helperUtilities));
+
+		return new PrivilegedTemplateWrapper(accessControlContext, template);
 	}
 
 	@NotPrivileged
@@ -64,52 +78,35 @@ public abstract class BaseMultiTemplateManager extends BaseTemplateManager {
 		List<TemplateResource> templateResources,
 		TemplateResource errorTemplateResource, boolean restricted) {
 
-		if (getAccessControlContext() == null) {
-			return doGetTemplate(
-				templateResources, errorTemplateResource, restricted,
-				getHelperUtilities(restricted), false);
-		}
-
-		AccessControlContext accessControlContext = getAccessControlContext();
-
-		Map<String, Object> helperUtilities = AccessController.doPrivileged(
-			new DoGetHelperUtilitiesPrivilegedAction(
-				templateContextHelper, getClassLoader(), restricted),
-				accessControlContext);
-
-		Template template = AccessController.doPrivileged(
-			new DoGetMultiTemplatePrivilegedAction(
-				templateResources, errorTemplateResource, restricted,
-				helperUtilities));
-
-		return new PrivilegedTemplateWrapper(accessControlContext, template);
+		throw new UnsupportedOperationException(
+			"Template type does not support multi templates.");
 	}
 
 	protected abstract Template doGetTemplate(
-		List<TemplateResource> templateResources,
+		TemplateResource templateResource,
 		TemplateResource errorTemplateResource, boolean restricted,
 		Map<String, Object> helperUtilities, boolean privileged);
 
-	protected class DoGetMultiTemplatePrivilegedAction
+	protected class DoGetSingleTemplatePrivilegedAction
 		extends DoGetAbstractTemplatePrivilegedAction {
 
-		public DoGetMultiTemplatePrivilegedAction(
-			List<TemplateResource> templateResources,
+		public DoGetSingleTemplatePrivilegedAction(
+			TemplateResource templateResource,
 			TemplateResource errorTemplateResource, boolean restricted,
 			Map<String, Object> helperUtilities) {
 
 			super(errorTemplateResource, restricted, helperUtilities);
-			_templateResources = templateResources;
+			_templateResource = templateResource;
 		}
 
 		@Override
 		public Template run() {
 			return doGetTemplate(
-				_templateResources, errorTemplateResource, restricted,
+				_templateResource, errorTemplateResource, restricted,
 				helperUtilities, true);
 		}
 
-		private final List<TemplateResource> _templateResources;
+		private final TemplateResource _templateResource;
 
 	}
 
