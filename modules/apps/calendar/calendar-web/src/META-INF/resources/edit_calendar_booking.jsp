@@ -428,7 +428,7 @@ for (long otherCalendarId : otherCalendarIds) {
 
 				var index = A.Array.indexOf(childCalendarIds, calendarId);
 
-				if (index > -1) {
+				if (index != -1) {
 					A.Array.remove(childCalendarIds, index);
 				}
 
