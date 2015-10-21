@@ -776,11 +776,11 @@ AUI.add(
 
 						var datePicker = instance.getDatePicker();
 
-						var timestamp = datePicker.getDate().getTime();
+						var formattedDate = instance._format(datePicker.getDate());
 
 						var inputNode = instance.getInputNode();
 
-						return inputNode.val() ? String(timestamp) : '';
+						return inputNode.val() ? formattedDate : '';
 					},
 
 					setValue: function(value) {
@@ -793,7 +793,7 @@ AUI.add(
 						datePicker.deselectDates();
 
 						if (value) {
-							datePicker.selectDates(new Date(Lang.toInt(value)));
+							datePicker.selectDates(instance._parse(value));
 						}
 					}
 				}
