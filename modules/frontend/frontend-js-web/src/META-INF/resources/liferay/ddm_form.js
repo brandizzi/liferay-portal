@@ -157,18 +157,22 @@ AUI.add(
 			_getTemplate: function(callback) {
 				var instance = this;
 
-				A.io.request(
-					instance._getTemplateResourceURL(),
-					{
-						on: {
-							success: function(event, id, xhr) {
-								if (callback) {
-									callback.call(instance, xhr.responseText);
-								}
+				var config = {
+					data: {},
+					on: {
+						success: function(event, id, xhr) {
+							if (callback) {
+								callback.call(instance, xhr.responseText);
 							}
 						}
 					}
-				);
+				};
+
+				var key = Liferay.Util.getPortletNamespace(Liferay.PortletKeys.DYNAMIC_DATA_MAPPING) + 'definition';
+
+				config.data[key] = JSON.stringify(instance.get('definition'));
+
+				A.io.request(instance._getTemplateResourceURL(), config);
 			},
 
 			_getTemplateResourceURL: function() {
@@ -177,14 +181,13 @@ AUI.add(
 				var portletURL = Liferay.PortletURL.createResourceURL();
 
 				portletURL.setDoAsGroupId(instance.get('doAsGroupId'));
-				portletURL.setParameter('definition', JSON.stringify(instance.get('definition')));
 				portletURL.setParameter('fieldName', instance.get('name'));
 				portletURL.setParameter('mode', instance.get('mode'));
 				portletURL.setParameter('namespace', instance.get('namespace'));
 				portletURL.setParameter('portletNamespace', instance.get('portletNamespace'));
 				portletURL.setParameter('readOnly', instance.get('readOnly'));
 				portletURL.setPlid(instance.get('p_l_id'));
-				portletURL.setPortletId('com_liferay_dynamic_data_mapping_web_portlet_DDMPortlet');
+				portletURL.setPortletId(Liferay.PortletKeys.DYNAMIC_DATA_MAPPING);
 				portletURL.setResourceId('renderStructureField');
 				portletURL.setWindowState('pop_up');
 
@@ -752,11 +755,13 @@ AUI.add(
 
 						var datePicker = instance.getDatePicker();
 
-						var timestamp = datePicker.getDate().getTime();
+						var selectedDate = datePicker.getDate();
+
+						var formattedDate = A.DataType.Date.format(selectedDate);
 
 						var inputNode = instance.getInputNode();
 
-						return inputNode.val() ? String(timestamp) : '';
+						return inputNode.val() ? formattedDate : '';
 					},
 
 					setValue: function(value) {
@@ -769,7 +774,8 @@ AUI.add(
 						datePicker.deselectDates();
 
 						if (value) {
-							datePicker.selectDates(new Date(Lang.toInt(value)));
+							var date = A.DataType.Date.parse(value);
+							datePicker.selectDates(date);
 						}
 					}
 				}
