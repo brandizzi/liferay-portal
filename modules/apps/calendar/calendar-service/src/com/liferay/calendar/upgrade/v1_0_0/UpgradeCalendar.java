@@ -33,6 +33,27 @@ public class UpgradeCalendar extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
+		runSQL(
+			"alter table Calendar add timeZoneId STRING null after " +
+				"description");
+
+		updateCalendarTimeZoneIds();
+	}
+
+	protected void updateCalendarTimeZoneId(
+			Connection connection, long calendarId, String timeZoneId)
+		throws Exception {
+
+		PreparedStatement ps = connection.prepareStatement(
+			"update Calendar set timeZoneId = ? where calendarId = ?");
+
+		ps.setString(1, timeZoneId);
+		ps.setLong(2, calendarId);
+
+		ps.execute();
+	}
+
+	protected void updateCalendarTimeZoneIds() throws Exception {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -75,19 +96,6 @@ public class UpgradeCalendar extends UpgradeProcess {
 		finally {
 			DataAccess.cleanUp(con);
 		}
-	}
-
-	protected void updateCalendarTimeZoneId(
-			Connection connection, long calendarId, String timeZoneId)
-		throws Exception {
-
-		PreparedStatement ps = connection.prepareStatement(
-			"update Calendar set timeZoneId = ? where calendarId = ?");
-
-		ps.setString(1, timeZoneId);
-		ps.setLong(2, calendarId);
-
-		ps.execute();
 	}
 
 }
