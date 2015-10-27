@@ -386,7 +386,7 @@ boolean columnOptionsVisible = GetterUtil.getBoolean(SessionClicks.get(request, 
 
 		var todayDate = <portlet:namespace />scheduler.get('todayDate');
 
-		if ((selectedDates.length > 0) && DateMath.between(todayDate, selectedDates[0], selectedDates[total - 1])) {
+		if ((selectedDates.length > 0) && ((todayDate >= selectedDates[0]) && (todayDate <= selectedDates[total - 1]))) {
 			viewDate = todayDate;
 		}
 
