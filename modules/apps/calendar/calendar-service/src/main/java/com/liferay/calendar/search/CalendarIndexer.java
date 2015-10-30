@@ -25,18 +25,26 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 
+import java.io.Serializable;
+
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -89,6 +97,85 @@ public class CalendarIndexer extends BaseIndexer<Calendar> {
 		addSearchLocalizedTerm(searchQuery, searchContext, Field.NAME, true);
 		addSearchLocalizedTerm(
 			searchQuery, searchContext, "resourceName", true);
+	}
+
+	@Override
+	protected Map<String, Query> addSearchLocalizedTerm(
+			BooleanQuery searchQuery, SearchContext searchContext, String field,
+			boolean like)
+		throws Exception {
+
+		Map<String, Query> queries = new HashMap<>();
+
+		Query query = addSearchTerm(searchQuery, searchContext, field, like);
+
+		queries.put(field, query);
+
+		String localizedFieldName = DocumentImpl.getLocalizedName(
+			searchContext.getLocale(), field);
+
+		Query localizedQuery = addSearchTerm(
+			searchQuery, searchContext, localizedFieldName, like);
+
+		queries.put(localizedFieldName, localizedQuery);
+
+		return queries;
+	}
+
+	@Override
+	protected Query addSearchTerm(
+			BooleanQuery searchQuery, SearchContext searchContext, String field,
+			boolean like)
+		throws Exception {
+
+		if (Validator.isNull(field)) {
+			return null;
+		}
+
+		String value = null;
+
+		Serializable serializable = searchContext.getAttribute(field);
+
+		if (serializable != null) {
+			Class<?> clazz = serializable.getClass();
+
+			if (clazz.isArray()) {
+				value = StringUtil.merge((Object[])serializable);
+			}
+			else {
+				value = GetterUtil.getString(serializable);
+			}
+		}
+		else {
+			value = GetterUtil.getString(serializable);
+		}
+
+		if (Validator.isNotNull(value) &&
+			(searchContext.getFacet(field) != null)) {
+
+			return null;
+		}
+
+		if (Validator.isNull(value)) {
+			value = searchContext.getKeywords();
+		}
+
+		if (Validator.isNull(value)) {
+			return null;
+		}
+
+		value = StringUtil.toLowerCase(value);
+
+		Query query = null;
+
+		if (searchContext.isAndSearch()) {
+			query = searchQuery.addRequiredTerm(field, value, like);
+		}
+		else {
+			query = searchQuery.addTerm(field, value, like);
+		}
+
+		return query;
 	}
 
 	@Override
