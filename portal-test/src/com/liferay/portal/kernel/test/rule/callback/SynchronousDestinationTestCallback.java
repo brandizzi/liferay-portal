@@ -165,11 +165,13 @@ public class SynchronousDestinationTestCallback
 				DestinationNames.DOCUMENT_LIBRARY_RAW_METADATA_PROCESSOR);
 			Filter subscrpitionSenderFilter = _registerDestinationFilter(
 				DestinationNames.SUBSCRIPTION_SENDER);
+			
+			Filter kaleoGraphWalkerFilter = _registerDestinationFilter("liferay/kaleo_graph_walker");
 
 			serviceDependencyManager.registerDependencies(
 				asyncFilter, backgroundTaskFilter, backgroundTaskStatusFilter,
 				mailFilter, pdfProcessorFilter, rawMetaDataProcessorFilter,
-				subscrpitionSenderFilter);
+				subscrpitionSenderFilter, kaleoGraphWalkerFilter);
 
 			serviceDependencyManager.waitForDependencies();
 
@@ -188,6 +190,7 @@ public class SynchronousDestinationTestCallback
 			replaceDestination(DestinationNames.SEARCH_READER);
 			replaceDestination(DestinationNames.SEARCH_WRITER);
 			replaceDestination(DestinationNames.SUBSCRIPTION_SENDER);
+			replaceDestination("liferay/kaleo_graph_walker");
 		}
 
 		public void replaceDestination(String destinationName) {
