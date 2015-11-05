@@ -137,9 +137,16 @@ String backURL = PortalUtil.getCurrentURL(request);
 
 					var hiddenItems = [];
 
-					if (instance.calendarResourceId !== '<%= groupCalendarResource.getCalendarResourceId() %>') {
-						hiddenItems.push('permissions');
-					}
+					<c:choose>
+						<c:when test="<%= groupCalendarResource != null %>">
+							if (instance.calendarResourceId !== '<%= groupCalendarResource.getCalendarResourceId() %>') {
+								hiddenItems.push('permissions');
+							}
+						</c:when>
+						<c:otherwise>
+							hiddenItems.push('permissions');
+						</c:otherwise>
+					</c:choose>
 
 					instance.set('hiddenItems', hiddenItems);
 				}
