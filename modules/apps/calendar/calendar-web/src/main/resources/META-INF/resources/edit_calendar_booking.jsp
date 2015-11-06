@@ -725,7 +725,27 @@ for (long otherCalendarId : otherCalendarIds) {
 
 				calendar.disabled = true;
 
-				<portlet:namespace />calendarListPending.add(calendar);
+				var containsCalendar = function(calendarId, calendarJSONArray) {
+					for(var i = 0; i < calendarJSONArray.length; i++) {
+						if (calendarJSONArray[i].calendarId == calendarId) {
+							return true;
+						}
+					}
+					return false;
+				};
+
+				if (containsCalendar(calendar.calendarId, <%= acceptedCalendarsJSONArray %>) {
+					<portlet:namespace />calendarListAccepted.add(calendar);
+				}
+				else if (containsCalendar(calendar.calendarId, <%= maybeCalendarsJSONArray %>) {
+					<portlet:namespace />calendarListMaybe.add(calendar);
+				}
+				else if (containsCalendar(calendar.calendarId, <%= declinedCalendarsJSONArray %>) {
+					<portlet:namespace />calendarListDeclined.add(calendar);
+				}
+				else {
+					<portlet:namespace />calendarListPending.add(calendar);
+				}
 
 				inviteResourcesInput.val('');
 			}

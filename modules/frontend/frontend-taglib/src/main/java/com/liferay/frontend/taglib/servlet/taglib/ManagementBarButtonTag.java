@@ -15,7 +15,6 @@
 package com.liferay.frontend.taglib.servlet.taglib;
 
 import com.liferay.frontend.taglib.servlet.ServletContextUtil;
-import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.taglib.util.IncludeTag;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,6 +40,10 @@ public class ManagementBarButtonTag extends IncludeTag {
 		_active = active;
 	}
 
+	public void setCssClass(String cssClass) {
+		_cssClass = cssClass;
+	}
+
 	public void setHref(String href) {
 		_href = href;
 	}
@@ -63,9 +66,10 @@ public class ManagementBarButtonTag extends IncludeTag {
 	@Override
 	protected void cleanUp() {
 		_active = false;
+		_cssClass = null;
 		_href = null;
-		_iconCssClass = StringPool.BLANK;
-		_id = StringPool.BLANK;
+		_iconCssClass = null;
+		_id = null;
 	}
 
 	@Override
@@ -83,6 +87,8 @@ public class ManagementBarButtonTag extends IncludeTag {
 		request.setAttribute(
 			"liferay-frontend:management-bar-button:active", _active);
 		request.setAttribute(
+			"liferay-frontend:management-bar-button:cssClass", _cssClass);
+		request.setAttribute(
 			"liferay-frontend:management-bar-button:href", _href);
 		request.setAttribute(
 			"liferay-frontend:management-bar-button:iconCssClass",
@@ -95,6 +101,7 @@ public class ManagementBarButtonTag extends IncludeTag {
 	private static final String _PAGE = "/management_bar_button/page.jsp";
 
 	private boolean _active;
+	private String _cssClass;
 	private String _href;
 	private String _iconCssClass;
 	private String _id;
