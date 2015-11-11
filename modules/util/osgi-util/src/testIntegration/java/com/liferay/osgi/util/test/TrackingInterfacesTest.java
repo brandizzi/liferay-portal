@@ -199,9 +199,9 @@ public class TrackingInterfacesTest {
 			Assert.assertNotNull(testInterface.getTrackedTwo());
 
 			try {
-				TrackedOne trackedOne = testInterface.getTrackedOne();
+				InterfaceOne interfaceOne = testInterface.getTrackedOne();
 
-				trackedOne.noop1();
+				interfaceOne.noop1();
 
 				Assert.fail();
 			}
@@ -211,9 +211,9 @@ public class TrackingInterfacesTest {
 			}
 
 			try {
-				TrackedTwo trackedTwo = testInterface.getTrackedTwo();
+				InterfaceTwo interfaceTwo = testInterface.getTrackedTwo();
 
-				trackedTwo.noop2();
+				interfaceTwo.noop2();
 
 				Assert.fail();
 			}
@@ -251,9 +251,9 @@ public class TrackingInterfacesTest {
 			Assert.assertNotNull(testInterface.getTrackedTwo());
 
 			try {
-				TrackedOne trackedOne = testInterface.getTrackedOne();
+				InterfaceOne interfaceOne = testInterface.getTrackedOne();
 
-				trackedOne.noop1();
+				interfaceOne.noop1();
 
 				Assert.fail("Should throw UnavailableServiceException");
 			}
@@ -263,9 +263,9 @@ public class TrackingInterfacesTest {
 			}
 
 			try {
-				TrackedTwo trackedTwo = testInterface.getTrackedTwo();
+				InterfaceTwo interfaceTwo = testInterface.getTrackedTwo();
 
-				trackedTwo.noop2();
+				interfaceTwo.noop2();
 
 				Assert.fail("Should throw UnavailableServiceException");
 			}
@@ -319,9 +319,9 @@ public class TrackingInterfacesTest {
 			Assert.assertEquals(trackedTwo2, testInterface.getTrackedTwo());
 
 			serviceRegistration1.unregister();
-			
+
 			serviceRegistration2.unregister();
-			
+
 			serviceRegistration3.unregister();
 
 			serviceRegistration4.unregister();

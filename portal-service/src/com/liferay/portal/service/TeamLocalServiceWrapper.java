@@ -485,6 +485,12 @@ public class TeamLocalServiceWrapper implements TeamLocalService,
 		return _teamLocalService.getUserGroupTeamsCount(userGroupId);
 	}
 
+	@Override
+	public java.util.List<com.liferay.portal.model.Team> getUserOrUserGroupTeams(
+		long groupId, long userId) {
+		return _teamLocalService.getUserOrUserGroupTeams(groupId, userId);
+	}
+
 	/**
 	* Returns the userIds of the users associated with the team.
 	*

@@ -30,7 +30,6 @@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
 
 <%@ page import="com.liferay.portal.NoSuchOrganizationException" %><%@
-page import="com.liferay.portal.NoSuchUserException" %><%@
 page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
 page import="com.liferay.portal.kernel.bean.BeanPropertiesUtil" %><%@
 page import="com.liferay.portal.kernel.cal.Recurrence" %><%@
@@ -197,7 +196,6 @@ page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil" 
 page import="com.liferay.portlet.documentlibrary.util.DLUtil" %><%@
 page import="com.liferay.portlet.expando.model.ExpandoBridge" %><%@
 page import="com.liferay.portlet.exportimport.staging.LayoutStagingUtil" %><%@
-page import="com.liferay.portlet.messageboards.util.MBUtil" %><%@
 page import="com.liferay.portlet.portletconfiguration.util.PortletConfigurationUtil" %><%@
 page import="com.liferay.portlet.ratings.RatingsType" %><%@
 page import="com.liferay.portlet.sites.util.Sites" %><%@

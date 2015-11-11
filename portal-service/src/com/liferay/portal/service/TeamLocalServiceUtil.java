@@ -447,6 +447,11 @@ public class TeamLocalServiceUtil {
 		return getService().getUserGroupTeamsCount(userGroupId);
 	}
 
+	public static java.util.List<com.liferay.portal.model.Team> getUserOrUserGroupTeams(
+		long groupId, long userId) {
+		return getService().getUserOrUserGroupTeams(groupId, userId);
+	}
+
 	/**
 	* Returns the userIds of the users associated with the team.
 	*

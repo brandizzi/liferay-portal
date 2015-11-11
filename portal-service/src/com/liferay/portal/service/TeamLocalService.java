@@ -360,6 +360,10 @@ public interface TeamLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getUserGroupTeamsCount(long userGroupId);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.portal.model.Team> getUserOrUserGroupTeams(
+		long groupId, long userId);
+
 	/**
 	* Returns the userIds of the users associated with the team.
 	*

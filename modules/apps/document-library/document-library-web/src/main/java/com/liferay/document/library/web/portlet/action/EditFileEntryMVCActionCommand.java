@@ -116,7 +116,6 @@ import org.osgi.service.component.annotations.Reference;
 	property = {
 		"javax.portlet.name=" + DLPortletKeys.DOCUMENT_LIBRARY,
 		"javax.portlet.name=" + DLPortletKeys.DOCUMENT_LIBRARY_ADMIN,
-		"javax.portlet.name=" + DLPortletKeys.DOCUMENT_LIBRARY_DISPLAY,
 		"javax.portlet.name=" + DLPortletKeys.MEDIA_GALLERY_DISPLAY,
 		"mvc.command.name=/document_library/edit_file_entry",
 		"mvc.command.name=/document_library/upload_multiple_file_entries"
@@ -515,8 +514,7 @@ public class EditFileEntryMVCActionCommand extends BaseMVCActionCommand {
 			if (cmd.equals(Constants.ADD_TEMP) ||
 				cmd.equals(Constants.DELETE_TEMP)) {
 
-				actionResponse.setRenderParameter(
-					"mvcPath", "/html/common/null.jsp");
+				actionResponse.setRenderParameter("mvcPath", "/null.jsp");
 			}
 			else if (cmd.equals(Constants.PREVIEW)) {
 			}
@@ -704,13 +702,6 @@ public class EditFileEntryMVCActionCommand extends BaseMVCActionCommand {
 			"mvcRenderCommandName", "/document_library/edit_file_entry");
 		portletURL.setParameter(Constants.CMD, Constants.UPDATE, false);
 		portletURL.setParameter("redirect", redirect, false);
-
-		String referringPortletResource = ParamUtil.getString(
-			actionRequest, "referringPortletResource");
-
-		portletURL.setParameter(
-			"referringPortletResource", referringPortletResource, false);
-
 		portletURL.setParameter(
 			"groupId", String.valueOf(fileEntry.getGroupId()), false);
 		portletURL.setParameter(
