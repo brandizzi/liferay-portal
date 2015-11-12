@@ -15,6 +15,7 @@
 package com.liferay.calendar.web.activation;
 
 import com.liferay.calendar.service.CalendarImporterLocalService;
+import com.liferay.calendar.service.CalendarResourceLocalService;
 import com.liferay.calendar.web.configuration.CalendarWebConfigurationValues;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -67,6 +68,11 @@ public class CalendarActivationListener {
 		CalendarImporterLocalService calendarImporterLocalService) {
 
 		_calendarImporterLocalService = calendarImporterLocalService;
+	}
+
+	@Reference
+	protected void setCalendarResourceLocalService(
+		CalendarResourceLocalService calendarResourceLocalService) {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
