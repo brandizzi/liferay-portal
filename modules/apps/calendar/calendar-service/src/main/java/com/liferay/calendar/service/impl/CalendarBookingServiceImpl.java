@@ -17,11 +17,16 @@ package com.liferay.calendar.service.impl;
 import com.liferay.calendar.constants.CalendarActionKeys;
 import com.liferay.calendar.model.Calendar;
 import com.liferay.calendar.model.CalendarBooking;
+import com.liferay.calendar.recurrence.PositionalWeekday;
+import com.liferay.calendar.recurrence.Recurrence;
+import com.liferay.calendar.recurrence.RecurrenceSerializer;
+import com.liferay.calendar.recurrence.Weekday;
 import com.liferay.calendar.service.base.CalendarBookingServiceBaseImpl;
 import com.liferay.calendar.service.permission.CalendarPermission;
 import com.liferay.calendar.util.CalendarUtil;
 import com.liferay.calendar.util.JCalendarUtil;
 import com.liferay.calendar.util.RSSUtil;
+import com.liferay.calendar.util.RecurrenceUtil;
 import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -31,6 +36,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.ServiceContext;
@@ -592,6 +598,19 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			getPermissionChecker(), calendarId,
 			CalendarActionKeys.MANAGE_BOOKINGS);
 
+		CalendarBooking calendarBooking =
+			calendarBookingPersistence.fetchByPrimaryKey(calendarBookingId);
+
+		CalendarBooking calendarBookingInstance =
+			RecurrenceUtil.getCalendarBookingInstance(
+				calendarBooking, instanceIndex);
+
+		long offset = startTime - calendarBookingInstance.getStartTime();
+
+		if (!Validator.equals(recurrence, StringPool.BLANK)) {
+			recurrence = shiftRecurrence(calendarBooking, offset);
+		}
+
 		return calendarBookingLocalService.updateCalendarBookingInstance(
 			getUserId(), calendarBookingId, instanceIndex, calendarId, titleMap,
 			descriptionMap, location, startTime, endTime, allDay, recurrence,
@@ -616,6 +635,10 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			calendarBooking.getStartTime() + offset);
 		java.util.Calendar endTimeJCalendar = JCalendarUtil.getJCalendar(
 			startTimeJCalendar.getTimeInMillis() + duration);
+
+		if (!Validator.equals(recurrence, StringPool.BLANK)) {
+			recurrence = shiftRecurrence(calendarBooking, offset);
+		}
 
 		return calendarBookingService.updateCalendarBooking(
 			calendarBookingId, calendarId, childCalendarIds, titleMap,
@@ -775,6 +798,77 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		}
 
 		return false;
+	}
+
+	protected String shiftRecurrence(
+		CalendarBooking calendarBooking, long offset) {
+
+		Recurrence recurrenceObj = calendarBooking.getRecurrenceObj();
+
+		List<PositionalWeekday> positionalWeekdays =
+			recurrenceObj.getPositionalWeekdays();
+
+		if (!positionalWeekdays.isEmpty()) {
+			List<PositionalWeekday> newPositionalWeekdays = new ArrayList<>();
+
+			for (PositionalWeekday positionalWeekday : positionalWeekdays) {
+				java.util.Calendar startTimeJCalendar =
+					JCalendarUtil.getJCalendar(calendarBooking.getStartTime());
+
+				startTimeJCalendar.set(
+					java.util.Calendar.DAY_OF_WEEK,
+					positionalWeekday.getWeekday().getCalendarWeekday());
+
+				startTimeJCalendar.set(
+					java.util.Calendar.DAY_OF_WEEK_IN_MONTH,
+					positionalWeekday.getPosition());
+
+				startTimeJCalendar = JCalendarUtil.getJCalendar(
+					startTimeJCalendar.getTimeInMillis() + offset);
+
+				Weekday newWeekday = Weekday.getWeekday(startTimeJCalendar);
+
+				int newPosition = 0;
+
+				if (!Validator.equals(positionalWeekday.getPosition(), 0)) {
+					newPosition = startTimeJCalendar.get(
+						java.util.Calendar.DAY_OF_WEEK_IN_MONTH);
+				}
+
+				PositionalWeekday newPositionalWeekday = new PositionalWeekday(
+					newWeekday, newPosition);
+
+				newPositionalWeekdays.add(newPositionalWeekday);
+			}
+
+			recurrenceObj.setPositionalWeekdays(newPositionalWeekdays);
+		}
+
+		List<Integer> months = recurrenceObj.getMonths();
+
+		if (!months.isEmpty()) {
+			List<Integer> newMonths = new ArrayList<>();
+
+			for (Integer month : months) {
+				java.util.Calendar startTimeJCalendar =
+					JCalendarUtil.getJCalendar(calendarBooking.getStartTime());
+
+				startTimeJCalendar.set(java.util.Calendar.MONTH, month - 1);
+
+				startTimeJCalendar = JCalendarUtil.getJCalendar(
+					startTimeJCalendar.getTimeInMillis() + offset);
+
+				int newMonth = startTimeJCalendar.get(java.util.Calendar.MONTH);
+
+				newMonths.add(newMonth);
+			}
+
+			recurrenceObj.setMonths(newMonths);
+		}
+
+		String newRecurrence = RecurrenceSerializer.serialize(recurrenceObj);
+
+		return newRecurrence;
 	}
 
 }
