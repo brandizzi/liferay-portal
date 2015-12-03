@@ -1483,7 +1483,7 @@ AUI.add(
 
 						var recurrence = instance.parseRecurrence(schedulerEvent.get('recurrence'));
 
-						if (recurrence) {
+						if (recurrence && changedAttributes.startDate && changedAttributes.endDate) {
 							var rrule = recurrence.rrule;
 
 							var newDate = changedAttributes.startDate.newVal;
