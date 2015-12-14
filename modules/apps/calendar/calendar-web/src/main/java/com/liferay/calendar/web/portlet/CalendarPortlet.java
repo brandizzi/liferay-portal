@@ -359,8 +359,7 @@ public class CalendarPortlet extends MVCPortlet {
 		java.util.Calendar endTimeJCalendar = getJCalendar(
 			actionRequest, "endTime");
 		boolean allDay = ParamUtil.getBoolean(actionRequest, "allDay");
-		String recurrence = getRecurrence(
-			actionRequest, calendar.getTimeZone());
+		Recurrence recurrence = getRecurrence(actionRequest);
 		long[] reminders = getReminders(actionRequest);
 		String[] remindersType = getRemindersType(actionRequest);
 		int instanceIndex = ParamUtil.getInteger(
@@ -626,13 +625,12 @@ public class CalendarPortlet extends MVCPortlet {
 	}
 
 	protected CalendarBooking getFirstCalendarBookingInstance(
-		CalendarBooking calendarBooking, String recurrence, TimeZone timeZone) {
+		CalendarBooking calendarBooking, Recurrence recurrenceObj,
+		TimeZone timeZone) {
 
-		if (Validator.isNull(recurrence)) {
+		if (recurrenceObj == null) {
 			return calendarBooking;
 		}
-
-		Recurrence recurrenceObj = RecurrenceSerializer.deserialize(recurrence);
 
 		List<Integer> daysOfWeek = getDaysOfWeek(recurrenceObj);
 
@@ -645,7 +643,8 @@ public class CalendarPortlet extends MVCPortlet {
 		if ((recurrenceObj.getFrequency() == Frequency.WEEKLY) &&
 			!daysOfWeek.contains(startTimeDayOfWeek)) {
 
-			calendarBooking.setRecurrence(recurrence);
+			calendarBooking.setRecurrence(
+				RecurrenceSerializer.serialize(recurrenceObj));
 
 			calendarBooking = RecurrenceUtil.getCalendarBookingInstance(
 				calendarBooking, 1);
@@ -695,9 +694,41 @@ public class CalendarPortlet extends MVCPortlet {
 		return notificationTypeSettingsProperties.toString();
 	}
 
-	protected String getRecurrence(
-		ActionRequest actionRequest, TimeZone calendarTimeZone) {
+	protected long getOffset(
+			CalendarBooking calendarBooking, long startTime,
+			Recurrence recurrence)
+		throws PortalException {
 
+		Frequency frequency = null;
+
+		if ((recurrence != null) && (frequency == Frequency.WEEKLY)) {
+			CalendarBooking firstInstance =
+				_calendarBookingService.getCalendarBookingInstance(
+					calendarBooking.getCalendarBookingId(), 0);
+
+			java.util.Calendar startTimeJCalendar =
+				CalendarFactoryUtil.getCalendar(
+					startTime, calendarBooking.getTimeZone());
+
+			java.util.Calendar firstInstanceJCalendar =
+				CalendarFactoryUtil.getCalendar(
+					firstInstance.getStartTime(),
+					calendarBooking.getTimeZone());
+
+			if (!JCalendarUtil.isSameDayOfWeek(
+					startTimeJCalendar, firstInstanceJCalendar)) {
+
+				startTimeJCalendar = JCalendarUtil.mergeJCalendar(
+					firstInstanceJCalendar, startTimeJCalendar,
+					calendarBooking.getTimeZone());
+				startTime = startTimeJCalendar.getTimeInMillis();
+			}
+		}
+
+		return startTime - calendarBooking.getStartTime();
+	}
+
+	protected Recurrence getRecurrence(ActionRequest actionRequest) {
 		boolean repeat = ParamUtil.getBoolean(actionRequest, "repeat");
 
 		if (!repeat) {
@@ -725,6 +756,10 @@ public class CalendarPortlet extends MVCPortlet {
 
 		recurrence.setInterval(interval);
 
+		TimeZone timeZone = getTimeZone(actionRequest);
+
+		recurrence.setTimeZone(timeZone);
+
 		if (ends.equals("on")) {
 			java.util.Calendar untilJCalendar = getJCalendar(
 				actionRequest, "untilDate");
@@ -733,10 +768,7 @@ public class CalendarPortlet extends MVCPortlet {
 				actionRequest, "startTime");
 
 			untilJCalendar = JCalendarUtil.mergeJCalendar(
-				untilJCalendar, startTimeJCalendar, getTimeZone(actionRequest));
-
-			untilJCalendar = JCalendarUtil.getJCalendar(
-				untilJCalendar, calendarTimeZone);
+				untilJCalendar, startTimeJCalendar, timeZone);
 
 			recurrence.setUntilJCalendar(untilJCalendar);
 		}
@@ -755,15 +787,11 @@ public class CalendarPortlet extends MVCPortlet {
 
 				java.util.Calendar weekdayJCalendar =
 					JCalendarUtil.getJCalendar(
-						startTimeJCalendar.getTimeInMillis(),
-						getTimeZone(actionRequest));
+						startTimeJCalendar.getTimeInMillis(), timeZone);
 
 				weekdayJCalendar.set(
 					java.util.Calendar.DAY_OF_WEEK,
 					weekday.getCalendarWeekday());
-
-				weekdayJCalendar = JCalendarUtil.getJCalendar(
-					weekdayJCalendar, calendarTimeZone);
 
 				weekday = Weekday.getWeekday(weekdayJCalendar);
 
@@ -804,7 +832,7 @@ public class CalendarPortlet extends MVCPortlet {
 				JCalendarUtil.getJCalendar(Long.valueOf(exceptionDate)));
 		}
 
-		return RecurrenceSerializer.serialize(recurrence);
+		return recurrence;
 	}
 
 	protected long[] getReminders(PortletRequest portletRequest) {
@@ -1203,6 +1231,7 @@ public class CalendarPortlet extends MVCPortlet {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
+		TimeZone timeZone = getTimeZone(resourceRequest);
 
 		long calendarBookingId = ParamUtil.getLong(
 			resourceRequest, "calendarBookingId");
@@ -1223,7 +1252,8 @@ public class CalendarPortlet extends MVCPortlet {
 		java.util.Calendar endTimeJCalendar = getJCalendar(
 			resourceRequest, "endTime");
 		boolean allDay = ParamUtil.getBoolean(resourceRequest, "allDay");
-		String recurrence = ParamUtil.getString(resourceRequest, "recurrence");
+		Recurrence recurrence = RecurrenceSerializer.deserialize(
+			ParamUtil.getString(resourceRequest, "recurrence"), timeZone);
 		long[] reminders = {0, 0};
 		String[] remindersType = {"email", "email"};
 		int instanceIndex = ParamUtil.getInteger(
@@ -1264,7 +1294,7 @@ public class CalendarPortlet extends MVCPortlet {
 			serviceContext);
 
 		JSONObject jsonObject = CalendarUtil.toCalendarBookingJSONObject(
-			themeDisplay, calendarBooking, themeDisplay.getTimeZone());
+			themeDisplay, calendarBooking, timeZone);
 
 		writeJSON(resourceRequest, resourceResponse, jsonObject);
 	}
@@ -1330,20 +1360,35 @@ public class CalendarPortlet extends MVCPortlet {
 			long calendarBookingId, Calendar calendar, long[] childCalendarIds,
 			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
 			String location, long startTime, long endTime, boolean allDay,
-			String recurrence, long[] reminders, String[] remindersType,
+			Recurrence recurrence, long[] reminders, String[] remindersType,
 			int instanceIndex, boolean updateInstance, boolean allFollowing,
 			ServiceContext serviceContext)
 		throws PortalException {
 
 		CalendarBooking calendarBooking = null;
 
+		TimeZone timeZone = TimeZoneUtil.getTimeZone(StringPool.UTC);
+
+		if (!allDay) {
+			timeZone = calendar.getTimeZone();
+		}
+
+		if (recurrence != null) {
+			java.util.Calendar startTimeJCalendar = JCalendarUtil.getJCalendar(
+				startTime, timeZone);
+
+			recurrence = RecurrenceUtil.inTimeZone(
+				recurrence, startTimeJCalendar, timeZone);
+		}
+
 		if (calendarBookingId <= 0) {
 			calendarBooking = _calendarBookingService.addCalendarBooking(
 				calendar.getCalendarId(), childCalendarIds,
 				CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,
 				titleMap, descriptionMap, location, startTime, endTime, allDay,
-				recurrence, reminders[0], remindersType[0], reminders[1],
-				remindersType[1], serviceContext);
+				RecurrenceSerializer.serialize(recurrence), reminders[0],
+				remindersType[0], reminders[1], remindersType[1],
+				serviceContext);
 		}
 		else {
 			if (updateInstance) {
@@ -1352,9 +1397,9 @@ public class CalendarPortlet extends MVCPortlet {
 						calendarBookingId, instanceIndex,
 						calendar.getCalendarId(), childCalendarIds, titleMap,
 						descriptionMap, location, startTime, endTime, allDay,
-						recurrence, allFollowing, reminders[0],
-						remindersType[0], reminders[1], remindersType[1],
-						serviceContext);
+						RecurrenceSerializer.serialize(recurrence),
+						allFollowing, reminders[0], remindersType[0],
+						reminders[1], remindersType[1], serviceContext);
 			}
 			else {
 				calendarBooking =
@@ -1362,7 +1407,7 @@ public class CalendarPortlet extends MVCPortlet {
 						calendarBookingId, instanceIndex);
 
 				long duration = endTime - startTime;
-				long offset = startTime - calendarBooking.getStartTime();
+				long offset = getOffset(calendarBooking, startTime, recurrence);
 
 				calendarBooking =
 					_calendarBookingService.
@@ -1370,15 +1415,16 @@ public class CalendarPortlet extends MVCPortlet {
 							calendarBookingId, offset, duration);
 
 				calendarBooking = getFirstCalendarBookingInstance(
-					calendarBooking, recurrence, calendar.getTimeZone());
+					calendarBooking, recurrence, timeZone);
 
 				calendarBooking = _calendarBookingService.updateCalendarBooking(
 					calendarBookingId, calendar.getCalendarId(),
 					childCalendarIds, titleMap, descriptionMap, location,
 					calendarBooking.getStartTime(),
-					calendarBooking.getEndTime(), allDay, recurrence,
-					reminders[0], remindersType[0], reminders[1],
-					remindersType[1], serviceContext);
+					calendarBooking.getEndTime(), allDay,
+					RecurrenceSerializer.serialize(recurrence), reminders[0],
+					remindersType[0], reminders[1], remindersType[1],
+					serviceContext);
 			}
 		}
 
