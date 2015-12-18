@@ -498,6 +498,68 @@ public class CalendarPortlet extends MVCPortlet {
 		}
 	}
 
+	protected String adjustRecurrence(
+		PortletRequest portletRequest, TimeZone calendarTimeZone) {
+
+		String recurrence = ParamUtil.getString(portletRequest, "recurrence");
+
+		if (Validator.equals("", recurrence)) {
+			return recurrence;
+		}
+
+		Recurrence recurrenceObj = RecurrenceSerializer.deserialize(
+			recurrence, calendarTimeZone);
+
+		Frequency frequency = recurrenceObj.getFrequency();
+
+		java.util.Calendar untilJCalendar = recurrenceObj.getUntilJCalendar();
+
+		if (Validator.isNotNull(untilJCalendar)) {
+			java.util.Calendar startTimeJCalendar = getJCalendar(
+				portletRequest, "startTime");
+
+			untilJCalendar = JCalendarUtil.mergeJCalendar(
+				untilJCalendar, startTimeJCalendar,
+				getTimeZone(portletRequest));
+
+			untilJCalendar = JCalendarUtil.getJCalendar(
+				untilJCalendar, calendarTimeZone);
+
+			recurrenceObj.setUntilJCalendar(untilJCalendar);
+		}
+
+		List<PositionalWeekday> positionalWeekdays = new ArrayList<>();
+
+		if (frequency == Frequency.WEEKLY) {
+			List<Weekday> weekdays = recurrenceObj.getWeekdays();
+
+			for (Weekday weekday : weekdays) {
+				java.util.Calendar startTimeJCalendar = getJCalendar(
+					portletRequest, "startTime");
+
+				java.util.Calendar weekdayJCalendar =
+					JCalendarUtil.getJCalendar(
+						startTimeJCalendar.getTimeInMillis(),
+						getTimeZone(portletRequest));
+
+				weekdayJCalendar.set(
+					java.util.Calendar.DAY_OF_WEEK,
+					weekday.getCalendarWeekday());
+
+				weekdayJCalendar = JCalendarUtil.getJCalendar(
+					weekdayJCalendar, calendarTimeZone);
+
+				weekday = Weekday.getWeekday(weekdayJCalendar);
+
+				positionalWeekdays.add(new PositionalWeekday(weekday, 0));
+			}
+		}
+
+		recurrenceObj.setPositionalWeekdays(positionalWeekdays);
+
+		return RecurrenceSerializer.serialize(recurrenceObj);
+	}
+
 	@Override
 	protected void doDispatch(
 			RenderRequest renderRequest, RenderResponse renderResponse)
@@ -1224,7 +1286,8 @@ public class CalendarPortlet extends MVCPortlet {
 		java.util.Calendar endTimeJCalendar = getJCalendar(
 			resourceRequest, "endTime");
 		boolean allDay = ParamUtil.getBoolean(resourceRequest, "allDay");
-		String recurrence = ParamUtil.getString(resourceRequest, "recurrence");
+		String recurrence = adjustRecurrence(
+			resourceRequest, calendar.getTimeZone());
 		long[] reminders = {0, 0};
 		String[] remindersType = {"email", "email"};
 		int instanceIndex = ParamUtil.getInteger(
