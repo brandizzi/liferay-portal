@@ -26,10 +26,12 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.test.ContextUserReplace;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import org.junit.Assert;
@@ -63,8 +65,12 @@ public class CalendarServiceTest {
 
 		Group stagingGroup = liveGroup.getStagingGroup();
 
-		try (ContextUserReplace contextUserReplacer = new ContextUserReplace(
-				adminUser)) {
+		PermissionChecker permissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
+
+		try {
+			PermissionThreadLocal.setPermissionChecker(
+				PermissionCheckerFactoryUtil.create(adminUser));
 
 			Calendar notStagedCalendar = getGroupCalendar(notStagedGroup);
 
@@ -107,6 +113,8 @@ public class CalendarServiceTest {
 					stagingGroup.getGroupId()));
 		}
 		finally {
+			PermissionThreadLocal.setPermissionChecker(permissionChecker);
+
 			UserLocalServiceUtil.deleteUser(adminUser);
 
 			GroupLocalServiceUtil.deleteGroup(stagingGroup);
