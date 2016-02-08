@@ -573,6 +573,23 @@ public class CalendarPortlet extends MVCPortlet {
 			CalendarWebKeys.CALENDAR_RESOURCE, calendarResource);
 	}
 
+	protected Integer getDayOfWeekInTimeZone(
+		Integer dayOfWeek, java.util.Calendar startTimeJCalendar,
+		TimeZone sourceTimeZone, TimeZone targetTimeZone) {
+
+		java.util.Calendar jCalendar = JCalendarUtil.getJCalendar(
+			startTimeJCalendar, sourceTimeZone);
+
+		jCalendar.set(java.util.Calendar.DAY_OF_WEEK, dayOfWeek);
+
+		jCalendar = JCalendarUtil.getJCalendar(jCalendar, targetTimeZone);
+
+		Integer dayOfWeekInTimezone = jCalendar.get(
+			java.util.Calendar.DAY_OF_WEEK);
+
+		return dayOfWeekInTimezone;
+	}
+
 	protected List<Integer> getDaysOfWeek(Recurrence recurrenceObj) {
 		List<Integer> daysOfWeek = new ArrayList<>();
 
@@ -626,7 +643,7 @@ public class CalendarPortlet extends MVCPortlet {
 
 	protected CalendarBooking getFirstCalendarBookingInstance(
 		CalendarBooking calendarBooking, Recurrence recurrenceObj,
-		TimeZone timeZone) {
+		TimeZone timeZone, ServiceContext serviceContext) {
 
 		if (recurrenceObj == null) {
 			return calendarBooking;
@@ -646,17 +663,36 @@ public class CalendarPortlet extends MVCPortlet {
 			java.util.Calendar firstDayJCalendar = JCalendarUtil.getJCalendar(
 				calendarBooking.getStartTime(), timeZone);
 
-			firstDayJCalendar.set(
-				java.util.Calendar.DAY_OF_WEEK_IN_MONTH,
-				startTimeJCalendar.get(
-					java.util.Calendar.DAY_OF_WEEK_IN_MONTH));
+			TimeZone userTimeZone = serviceContext.getTimeZone();
 
-			firstDayJCalendar.set(java.util.Calendar.DAY_OF_WEEK, 7);
+			Integer startTimeDayOfWeekInTimeZone = getDayOfWeekInTimeZone(
+				startTimeDayOfWeek, startTimeJCalendar, timeZone, userTimeZone);
 
-			calendarBooking.setStartTime(firstDayJCalendar.getTimeInMillis());
+			Integer dayOfWeekInTimeZone = 0;
+
+			for (Integer day : daysOfWeek) {
+				dayOfWeekInTimeZone = getDayOfWeekInTimeZone(
+					day, startTimeJCalendar, timeZone, userTimeZone);
+
+				if (dayOfWeekInTimeZone < startTimeDayOfWeekInTimeZone) {
+					firstDayJCalendar.set(
+						java.util.Calendar.WEEK_OF_YEAR,
+						startTimeJCalendar.get(
+							java.util.Calendar.WEEK_OF_YEAR) - 1);
+				}
+				else {
+					firstDayJCalendar.set(
+						java.util.Calendar.WEEK_OF_YEAR,
+						startTimeJCalendar.get(
+							java.util.Calendar.WEEK_OF_YEAR));
+				}
+			}
+
 			calendarBooking.setEndTime(
 				firstDayJCalendar.getTimeInMillis() +
 					calendarBooking.getDuration());
+
+			calendarBooking.setStartTime(firstDayJCalendar.getTimeInMillis());
 
 			calendarBooking.setRecurrence(
 				RecurrenceSerializer.serialize(recurrenceObj));
@@ -1314,6 +1350,8 @@ public class CalendarPortlet extends MVCPortlet {
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			CalendarBooking.class.getName(), resourceRequest);
 
+		serviceContext.setTimeZone(timeZone);
+
 		calendarBooking = updateCalendarBooking(
 			calendarBookingId, calendar, childCalendarIds, titleMap,
 			descriptionMap, location, startTimeJCalendar.getTimeInMillis(),
@@ -1443,7 +1481,7 @@ public class CalendarPortlet extends MVCPortlet {
 							calendarBookingId, offset, duration);
 
 				calendarBooking = getFirstCalendarBookingInstance(
-					calendarBooking, recurrence, timeZone);
+					calendarBooking, recurrence, timeZone, serviceContext);
 
 				calendarBooking = _calendarBookingService.updateCalendarBooking(
 					calendarBookingId, calendar.getCalendarId(),
