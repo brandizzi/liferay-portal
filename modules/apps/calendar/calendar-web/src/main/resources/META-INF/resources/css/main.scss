@@ -1,6 +1,10 @@
 @import "bourbon";
 @import "mixins";
 
+.calendar-booking {
+	padding: 16px 24px;
+}
+
 .calendar-booking-invitations {
 	min-height: 110px;
 
