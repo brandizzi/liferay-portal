@@ -67,6 +67,8 @@ AUI.add(
 						instance.renderUI();
 
 						instance.bindUI();
+
+						instance.initialState = instance.getState();
 					},
 
 					renderUI: function() {
@@ -86,7 +88,8 @@ AUI.add(
 
 						instance._eventHandlers = [
 							instance.one('#publishCheckbox').on('change', A.bind('_onChangePublishCheckbox', instance)),
-							Liferay.on('destroyPortlet', A.bind('_onDestroyPortlet', instance))
+							Liferay.on('destroyPortlet', A.bind('_onDestroyPortlet', instance)),
+							instance.one('.btn-cancel').on('click', A.bind('_onCancel', instance))
 						];
 					},
 
@@ -96,6 +99,82 @@ AUI.add(
 						instance.get('formBuilder').destroy();
 
 						(new A.EventHandle(instance._eventHandlers)).detach();
+					},
+
+					getState: function() {
+						var instance = this;
+
+						var formBuilder = instance.get('formBuilder');
+
+						var pages = formBuilder.get('layouts');
+
+						instance.definitionSerializer.set('pages', pages);
+
+						var definition = JSON.parse(instance.definitionSerializer.serialize());
+
+						instance.layoutSerializer.set('pages', pages);
+
+						var layout = JSON.parse(instance.layoutSerializer.serialize());
+
+						return {
+							definition: definition,
+							description: window[instance.ns('descriptionEditor')].getHTML(),
+							layout: layout.pages,
+							name: window[instance.ns('nameEditor')].getHTML()
+						}
+					},
+
+					openConfirmDialog: function(params) {
+						var message = params.message || Liferay.Language.get('are-you-sure');
+
+						var title = params.title || Liferay.Language.get('confirm');
+
+						var confirm = params.confirm || A.Lang.emptyFn;
+
+						var confirmLabel = params.confirmLabel || Liferay.Language.get('confirm');
+
+						var cancel = params.cancel || A.Lang.emptyFn;
+
+						var cancelLabel = params.cancelLabel || Liferay.Language.get('cancel');
+
+						var dialog = Liferay.Util.Window.getWindow(
+							{
+								dialog: {
+									bodyContent: message,
+									destroyOnHide: true,
+									height: 200,
+									toolbars: {
+										footer: [
+											{
+												cssClass: 'btn-primary',
+												label: confirmLabel,
+												on: {
+													click: function() {
+														confirm();
+
+														dialog.hide();
+													}
+												}
+											},
+											{
+												label: cancelLabel,
+												on: {
+													click: function() {
+														cancel();
+
+														dialog.hide();
+													}
+												}
+											}
+										]
+									},
+									width: 300
+								},
+								title: title
+							}
+						);
+
+						dialog.render().show();
 					},
 
 					openPublishModal: function() {
@@ -179,6 +258,47 @@ AUI.add(
 						var editForm = instance.get('editForm');
 
 						submitForm(editForm.form);
+					},
+
+					_isSameState() {
+						var instance = this;
+
+						var currentState = instance.getState();
+
+						var ignoreInstanceId = function(value1, value2, key) {
+							var result = undefined;
+
+							if (key === 'instanceId') {
+								result = true;
+							}
+
+							return result;
+						}
+
+						return _.isEqual(currentState, instance.initialState, ignoreInstanceId);
+					},
+
+					_onCancel: function(event) {
+						var instance = this;
+
+						if (!instance._isSameState()) {
+							var url = event.currentTarget.get('href');
+
+							event.preventDefault();
+							event.stopPropagation();
+
+							instance.openConfirmDialog(
+								{
+									message: Liferay.Language.get('are-you-sure-you-want-to-cancel'),
+									cancelLabel: Liferay.Language.get('no-keep'),
+									confirm: function() {
+										window.location.href = url;
+									},
+									confirmLabel: Liferay.Language.get('yes-cancel'),
+									title: Liferay.Language.get('confirm')
+								}
+							);
+						}
 					},
 
 					_onChangePublishCheckbox: function(event) {
