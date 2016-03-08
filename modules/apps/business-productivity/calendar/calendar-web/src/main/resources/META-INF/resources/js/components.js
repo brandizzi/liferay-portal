@@ -130,6 +130,8 @@
 
 							var handler = getItemHandler(id, items);
 
+							instance._closeMenu();
+
 							if (handler) {
 								handler.apply(instance, arguments);
 							}
