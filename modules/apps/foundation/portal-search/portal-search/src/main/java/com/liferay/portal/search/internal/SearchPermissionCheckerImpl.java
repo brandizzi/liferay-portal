@@ -111,8 +111,14 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 				return;
 			}
 
+			String viewActionId = document.get(Field.VIEW_ACTION_ID);
+
+			if (Validator.isNull(viewActionId)) {
+				viewActionId = ActionKeys.VIEW;
+			}
+
 			doAddPermissionFields_6(
-				companyId, groupId, className, classPK, document);
+				companyId, groupId, className, classPK, viewActionId, document);
 		}
 		catch (NoSuchResourceException nsre) {
 			if (_log.isDebugEnabled()) {
@@ -189,16 +195,25 @@ public class SearchPermissionCheckerImpl implements SearchPermissionChecker {
 			Document doc)
 		throws Exception {
 
+		doAddPermissionFields_6(
+			companyId, groupId, className, classPK, ActionKeys.VIEW, doc);
+	}
+
+	protected void doAddPermissionFields_6(
+			long companyId, long groupId, String className, String classPK,
+			String actionId, Document doc)
+		throws Exception {
+
 		List<Role> roles = null;
 
 		if (_resourceBlockLocalService.isSupported(className)) {
 			roles = _resourceBlockLocalService.getRoles(
-				className, Long.valueOf(classPK), ActionKeys.VIEW);
+				className, Long.valueOf(classPK), actionId);
 		}
 		else {
 			roles = _resourcePermissionLocalService.getRoles(
 				companyId, className, ResourceConstants.SCOPE_INDIVIDUAL,
-				classPK, ActionKeys.VIEW);
+				classPK, actionId);
 		}
 
 		if (roles.isEmpty()) {
