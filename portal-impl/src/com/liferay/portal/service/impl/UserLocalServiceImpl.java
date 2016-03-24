@@ -198,6 +198,10 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 			Locale locale, String firstName, String middleName, String lastName)
 		throws PortalException {
 
+		if (_log.isInfoEnabled()) {
+			_log.info("This is a noop");
+		}
+
 		long creatorUserId = 0;
 		boolean autoPassword = false;
 		String password1 = PropsValues.DEFAULT_ADMIN_PASSWORD;
