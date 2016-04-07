@@ -86,6 +86,18 @@
 								'widget-stdmod'
 							]
 						},
+						'liferay-calendar-util': {
+							path: 'calendar_util.js',
+							requires: [
+								'aui-datatype',
+								'aui-io',
+								'aui-scheduler',
+								'aui-toolbar',
+								'autocomplete',
+								'autocomplete-highlighters',
+								'liferay-portlet-url'
+							]
+						},
 						'liferay-scheduler': {
 							path: 'scheduler.js',
 							requires: [
