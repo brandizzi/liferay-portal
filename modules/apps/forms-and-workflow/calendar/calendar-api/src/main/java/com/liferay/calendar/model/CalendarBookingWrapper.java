@@ -72,6 +72,8 @@ public class CalendarBookingWrapper implements CalendarBooking,
 		attributes.put("calendarId", getCalendarId());
 		attributes.put("calendarResourceId", getCalendarResourceId());
 		attributes.put("parentCalendarBookingId", getParentCalendarBookingId());
+		attributes.put("recurringCalendarBookingId",
+			getRecurringCalendarBookingId());
 		attributes.put("vEventUid", getVEventUid());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
@@ -166,6 +168,13 @@ public class CalendarBookingWrapper implements CalendarBooking,
 
 		if (parentCalendarBookingId != null) {
 			setParentCalendarBookingId(parentCalendarBookingId);
+		}
+
+		Long recurringCalendarBookingId = (Long)attributes.get(
+				"recurringCalendarBookingId");
+
+		if (recurringCalendarBookingId != null) {
+			setRecurringCalendarBookingId(recurringCalendarBookingId);
 		}
 
 		String vEventUid = (String)attributes.get("vEventUid");
@@ -584,6 +593,16 @@ public class CalendarBookingWrapper implements CalendarBooking,
 	}
 
 	/**
+	* Returns the recurring calendar booking ID of this calendar booking.
+	*
+	* @return the recurring calendar booking ID of this calendar booking
+	*/
+	@Override
+	public long getRecurringCalendarBookingId() {
+		return _calendarBooking.getRecurringCalendarBookingId();
+	}
+
+	/**
 	* Returns the resource block ID of this calendar booking.
 	*
 	* @return the resource block ID of this calendar booking
@@ -962,6 +981,11 @@ public class CalendarBookingWrapper implements CalendarBooking,
 	}
 
 	@Override
+	public boolean isMasterRecurringBooking() {
+		return _calendarBooking.isMasterRecurringBooking();
+	}
+
+	@Override
 	public boolean isNew() {
 		return _calendarBooking.isNew();
 	}
@@ -1267,6 +1291,16 @@ public class CalendarBookingWrapper implements CalendarBooking,
 	@Override
 	public void setRecurrence(java.lang.String recurrence) {
 		_calendarBooking.setRecurrence(recurrence);
+	}
+
+	/**
+	* Sets the recurring calendar booking ID of this calendar booking.
+	*
+	* @param recurringCalendarBookingId the recurring calendar booking ID of this calendar booking
+	*/
+	@Override
+	public void setRecurringCalendarBookingId(long recurringCalendarBookingId) {
+		_calendarBooking.setRecurringCalendarBookingId(recurringCalendarBookingId);
 	}
 
 	/**
