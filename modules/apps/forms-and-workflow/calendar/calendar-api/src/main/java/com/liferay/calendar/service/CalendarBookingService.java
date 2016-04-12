@@ -61,6 +61,7 @@ public interface CalendarBookingService extends BaseService {
 	 */
 	public CalendarBooking addCalendarBooking(long calendarId,
 		long[] childCalendarIds, long parentCalendarBookingId,
+		long recurringCalendarBookingId,
 		Map<Locale, java.lang.String> titleMap,
 		Map<Locale, java.lang.String> descriptionMap,
 		java.lang.String location, long startTime, long endTime,
@@ -71,6 +72,7 @@ public interface CalendarBookingService extends BaseService {
 
 	public CalendarBooking addCalendarBooking(long calendarId,
 		long[] childCalendarIds, long parentCalendarBookingId,
+		long recurringCalendarBookingId,
 		Map<Locale, java.lang.String> titleMap,
 		Map<Locale, java.lang.String> descriptionMap,
 		java.lang.String location, int startTimeYear, int startTimeMonth,

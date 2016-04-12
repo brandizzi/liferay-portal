@@ -71,6 +71,7 @@ import java.util.Map;
 public class CalendarBookingServiceSoap {
 	public static com.liferay.calendar.model.CalendarBookingSoap addCalendarBooking(
 		long calendarId, long[] childCalendarIds, long parentCalendarBookingId,
+		long recurringCalendarBookingId,
 		java.lang.String[] titleMapLanguageIds,
 		java.lang.String[] titleMapValues,
 		java.lang.String[] descriptionMapLanguageIds,
@@ -91,13 +92,13 @@ public class CalendarBookingServiceSoap {
 					descriptionMapValues);
 
 			com.liferay.calendar.model.CalendarBooking returnValue = CalendarBookingServiceUtil.addCalendarBooking(calendarId,
-					childCalendarIds, parentCalendarBookingId, titleMap,
-					descriptionMap, location, startTimeYear, startTimeMonth,
-					startTimeDay, startTimeHour, startTimeMinute, endTimeYear,
-					endTimeMonth, endTimeDay, endTimeHour, endTimeMinute,
-					timeZoneId, allDay, recurrence, firstReminder,
-					firstReminderType, secondReminder, secondReminderType,
-					serviceContext);
+					childCalendarIds, parentCalendarBookingId,
+					recurringCalendarBookingId, titleMap, descriptionMap,
+					location, startTimeYear, startTimeMonth, startTimeDay,
+					startTimeHour, startTimeMinute, endTimeYear, endTimeMonth,
+					endTimeDay, endTimeHour, endTimeMinute, timeZoneId, allDay,
+					recurrence, firstReminder, firstReminderType,
+					secondReminder, secondReminderType, serviceContext);
 
 			return com.liferay.calendar.model.CalendarBookingSoap.toSoapModel(returnValue);
 		}
@@ -110,6 +111,7 @@ public class CalendarBookingServiceSoap {
 
 	public static com.liferay.calendar.model.CalendarBookingSoap addCalendarBooking(
 		long calendarId, long[] childCalendarIds, long parentCalendarBookingId,
+		long recurringCalendarBookingId,
 		java.lang.String[] titleMapLanguageIds,
 		java.lang.String[] titleMapValues,
 		java.lang.String[] descriptionMapLanguageIds,
@@ -127,10 +129,11 @@ public class CalendarBookingServiceSoap {
 					descriptionMapValues);
 
 			com.liferay.calendar.model.CalendarBooking returnValue = CalendarBookingServiceUtil.addCalendarBooking(calendarId,
-					childCalendarIds, parentCalendarBookingId, titleMap,
-					descriptionMap, location, startTime, endTime, allDay,
-					recurrence, firstReminder, firstReminderType,
-					secondReminder, secondReminderType, serviceContext);
+					childCalendarIds, parentCalendarBookingId,
+					recurringCalendarBookingId, titleMap, descriptionMap,
+					location, startTime, endTime, allDay, recurrence,
+					firstReminder, firstReminderType, secondReminder,
+					secondReminderType, serviceContext);
 
 			return com.liferay.calendar.model.CalendarBookingSoap.toSoapModel(returnValue);
 		}
