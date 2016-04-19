@@ -1087,7 +1087,7 @@
 		<execute macro="CalendarEvent#add">
 			<var name="eventTitle" value="${eventTitle}" />
 			<var name="eventType" value="${eventType}" />
-			<var name="frequency" value="Monthly" />
+			<var name="frequency" value="MONTHLY" />
 			<var name="numberOfOccurrences" value="2" />
 			<var name="pageName" value="${pageName}" />
 		</execute>
