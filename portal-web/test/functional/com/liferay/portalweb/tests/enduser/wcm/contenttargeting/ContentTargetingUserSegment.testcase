@@ -1322,17 +1322,13 @@
 		</execute>
 
 		<execute macro="ContentTargetingUserSegment#viewReportContentViews">
-			<var name="reportCount" value="10" />
-			<var name="reportEvent" value="View" />
+			<var name="reportsContentTableList" value="Test Page Name,Page,View,10" />
 			<var name="reportTitle" value="Test Page Name" />
-			<var name="reportType" value="Page" />
 		</execute>
 
 		<execute macro="ContentTargetingUserSegment#viewReportContentViews">
-			<var name="reportCount" value="2" />
-			<var name="reportEvent" value="View" />
+			<var name="reportsContentTableList" value="WC Male View Title,Web Content Article,View,2" />
 			<var name="reportTitle" value="WC Male View Title" />
-			<var name="reportType" value="Web Content Article" />
 		</execute>
 	</command>
 

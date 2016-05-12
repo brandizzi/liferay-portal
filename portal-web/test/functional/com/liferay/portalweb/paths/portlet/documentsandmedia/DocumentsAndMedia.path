@@ -367,6 +367,17 @@
 	<td>//a[@class='entry-link' and contains(.,'${dmDocumentTitle}')]//dd</td>
 	<td></td>
 </tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--REPOSITORY-->
+<tr>
+	<td>REPOSITORY_FOLDER_NAME_DESCRIPTIVE_VIEW</td>
+	<td>//a[contains(.,'${key_dmRepositoryName}')]</td>
+	<td></td>
+</tr>
 </tbody>
 </table>
 </body>

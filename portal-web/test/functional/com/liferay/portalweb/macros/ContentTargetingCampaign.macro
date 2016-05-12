@@ -50,6 +50,8 @@
 
 		<execute function="AssertTextEquals#assertPartialText" locator1="EditCampaign#CAMPAIGN_TRACKING_ACTIONS_CONTENT_TRACKING_ACTION" value1="View" />
 
+		<execute function="AssertElementPresent" locator1="EditCampaign#CAMPAIGN_TRACKING_ACTIONS_CONTENT_SELECT_CONTENT_BUTTON" />
+
 		<execute function="Click" locator1="EditCampaign#CAMPAIGN_TRACKING_ACTIONS_CONTENT_SELECT_CONTENT_BUTTON" />
 
 		<var name="key_menuItem" value="${menulistContent}" />
@@ -369,7 +371,7 @@
 		<if>
 			<equals arg1="${notEnoughInfoTrackingAction}" arg2="true" />
 			<then>
-				<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="There is not enough data to generate a tracking actions report for the campaign ${campaignName}. Please make sure that at least one tracking action has been set for this campaign." />
+				<execute function="AssertTextEquals" locator1="Message#EMPTY_INFO" value1="There is not enough data to generate this report. Please, make sure that at least one metric has been set for this report." />
 			</then>
 		</if>
 	</command>
@@ -397,13 +399,15 @@
 	</command>
 
 	<command name="viewContentReportCP">
-		<var name="key_contentTitle" value="${contentTitle}" />
+		<var name="key_reportTitle" value="${reportTitle}" />
 
-		<execute function="AssertTextEquals" locator1="CampaignReports#CONTENT_GRAPH_CONTENT_TITLE" value1="${contentTitle}" />
-		<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_TITLE" value1="${contentTitle}" />
-		<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_TYPE" value1="${contentType}" />
-		<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_EVENT" value1="${contentEvent}" />
-		<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_COUNT" value1="${contentEventCount}" />
+		<execute function="AssertTextEquals" locator1="CampaignReports#CONTENT_GRAPH_CONTENT_TITLE" value1="${reportTitle}" />
+
+		<for list="${reportsContentTableList}" param="contentReports">
+			<var name="key_contentReports" value="${contentReports}" />
+
+			<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_CONTENT" value1="${contentReports}" />
+		</for>
 	</command>
 
 	<command name="viewImportContentTrackingActionContentEmpty">
@@ -422,9 +426,11 @@
 	<command name="viewMetricReport">
 		<var name="key_metricName" value="${metricName}" />
 
-		<execute function="AssertTextEquals" locator1="CampaignReports#METRIC_TABLE_NAME" value1="${metricName}" />
-		<execute function="AssertTextEquals" locator1="CampaignReports#METRIC_TABLE_EVENT" value1="${metricEvent}" />
-		<execute function="AssertTextEquals#assertPartialText" locator1="CampaignReports#METRIC_TABLE_COUNT" value1="${metricCount}" />
+		<for list="${metricReportsTableList}" param="metricReports">
+			<var name="key_metricReports" value="${metricReports}" />
+
+			<execute function="AssertTextEquals" locator1="CampaignReports#METRIC_TABLE_CONTENT" value1="${metricReports}" />
+		</for>
 	</command>
 
 	<command name="viewNotPresentCP">

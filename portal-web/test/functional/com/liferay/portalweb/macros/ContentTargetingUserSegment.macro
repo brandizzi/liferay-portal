@@ -402,10 +402,11 @@
 	<command name="viewReportContentViews">
 		<var name="key_rowEntry" value="${reportTitle}" />
 
-		<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_TITLE" value1="${reportTitle}" />
-		<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_TYPE" value1="${reportType}" />
-		<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_EVENT" value1="${reportEvent}" />
-		<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_COUNT" value1="${reportCount}" />
+		<for list="${reportsContentTableList}" param="contentReports">
+			<var name="key_contentReports" value="${contentReports}" />
+
+			<execute function="AssertTextEquals" locator1="ContentTargeting#REPORT_TABLE_CONTENT" value1="${contentReports}" />
+		</for>
 	</command>
 
 	<command name="viewRulesCP">

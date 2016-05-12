@@ -99,7 +99,7 @@
 <!--PREVIEW-->
 <tr>
 	<td>PREVIEW</td>
-	<td>//li[contains(@id,'PreviewContent')]//a[contains(.,'${key_previewEntry}')]</td>
+	<td>//div[//li[contains(@id,'PreviewContent')] and contains(@class,'open')]//a[contains(.,'${key_previewEntry}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -109,7 +109,7 @@
 </tr>
 <tr>
 	<td>PREVIEW_ENTRY_SELECTED</td>
-	<td>//li[@class='active'][contains(.,'${key_viewEntrySelected}')]</td>
+	<td>//div[//li[contains(@id,'active')] and contains(@class,'open')][contains(.,'${key_viewEntrySelected}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -118,6 +118,11 @@
 	<td></td>
 </tr>
 <!--REPORT_TABLE-->
+<tr>
+	<td>REPORT_TABLE_CONTENT</td>
+		<td>//*[@data-qa-id='row'][contains(.,'${key_reportTitle}')]/td[normalize-space(.//text())='${key_contentReports}']</td>
+	<td></td>
+</tr>
 <tr>
 	<td>REPORT_TABLE_TITLE</td>
 	<td>//*[@data-qa-id='row'][contains(.,'${key_reportTitle}')]/td[1]</td>

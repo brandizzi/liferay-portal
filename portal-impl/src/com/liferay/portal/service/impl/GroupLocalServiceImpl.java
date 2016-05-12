@@ -834,7 +834,10 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 							scopeableWorkflowHandler.getClassName(), 0, 0,
 							true);
 
-				if (workflowDefinitionLink == null) {
+				if ((workflowDefinitionLink == null) ||
+					(workflowDefinitionLink.getGroupId() ==
+						group.getLiveGroupId())) {
+
 					continue;
 				}
 

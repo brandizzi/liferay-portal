@@ -43,6 +43,8 @@
 		<var name="key_rowEntry" value="${contentTitle}" />
 
 		<execute function="ClickNoError" locator1="ContentRow#ENTRY_CONTENT_ENTRY_NAME_LINK" />
+
+		<execute function="SelectFrame" value1="relative=top" />
 	</command>
 
 	<command name="savePG">
@@ -61,35 +63,13 @@
 	</command>
 
 	<command name="viewPG">
-		<if>
-			<isset var="entryContentText" />
-			<then>
-				<execute function="AssertTextEquals" locator1="CampaignContentDisplay#ENTRY_CONTENT" value1="${entryContentText}" />
-			</then>
-		</if>
-
-		<if>
-			<equals arg1="viewDontDisplay" arg2="true" />
-			<then>
-				<execute function="AssertTextEquals" locator1="CampaignContentDisplay#ENTRY_CONTENT" value1="There are no matching rules" />
-			</then>
-		</if>
+		<execute macro="ContentTargeting#expandPreview">
+			<var name="portletName" value="Campaign Content Display" />
+		</execute>
 
 		<if>
 			<isset var="viewCampaignSelected" />
 			<then>
-				<if>
-					<condition function="IsElementNotPresent" locator1="ContentTargeting#PREVIEW_BUTTON_EXPANDED" />
-					<then>
-						<var name="key_portletName" value="Campaign Content Display" />
-
-						<execute function="Click#makeVisibleClickAt" locator1="BasePortlet#SPECIFIC_PORTLET_BORDERLESS_BAR" />
-						<execute function="Click" locator1="CampaignContentDisplay#PREVIEW_BUTTON" />
-
-						<execute function="AssertElementPresent" locator1="ContentTargeting#PREVIEW_BUTTON_EXPANDED" />
-					</then>
-				</if>
-
 				<var name="key_viewEntrySelected" value="${viewCampaignSelected}" />
 
 				<execute function="AssertElementPresent" locator1="ContentTargeting#PREVIEW_ENTRY_SELECTED" />
@@ -99,22 +79,36 @@
 		<if>
 			<isset var="previewCampaignList" />
 			<then>
-				<if>
-					<condition function="IsElementNotPresent" locator1="ContentTargeting#PREVIEW_BUTTON_EXPANDED" />
-					<then>
-						<var name="key_portletName" value="Campaign Content Display" />
-
-						<execute function="Click#makeVisibleClickAt" locator1="BasePortlet#SPECIFIC_PORTLET_BORDERLESS_BAR" />
-						<execute function="Click" locator1="CampaignContentDisplay#PREVIEW_BUTTON" />
-
-						<execute function="AssertElementPresent" locator1="ContentTargeting#PREVIEW_BUTTON_EXPANDED" />
-					</then>
-				</if>
-
 				<for list="${previewCampaignList}" param="previewEntry">
+					<execute macro="ContentTargeting#expandPreview">
+						<var name="portletName" value="Campaign Content Display" />
+					</execute>
+
 					<var name="key_previewEntry" value="${previewEntry}" />
 
-					<execute function="AssertTextEquals" locator1="ContentTargeting#PREVIEW" value1="${previewEntry}" />
+					<execute function="AssertClick" locator1="ContentTargeting#PREVIEW" value1="${previewEntry}" />
+
+					<if>
+						<and>
+							<isset var="entryContentText" />
+							<not>
+								<equals arg1="${previewEntry}" arg2="default" />
+							</not>
+						</and>
+						<then>
+							<execute function="AssertTextEquals" locator1="CampaignContentDisplay#ENTRY_CONTENT" value1="${entryContentText}" />
+						</then>
+					</if>
+
+					<if>
+						<and>
+							<equals arg1="viewDontDisplay" arg2="true" />
+							<equals arg1="${previewEntry}" arg2="default" />
+						</and>
+						<then>
+							<execute function="AssertTextEquals" locator1="CampaignContentDisplay#ENTRY_CONTENT" value1="There are no matching rules" />
+						</then>
+					</if>
 				</for>
 			</then>
 		</if>

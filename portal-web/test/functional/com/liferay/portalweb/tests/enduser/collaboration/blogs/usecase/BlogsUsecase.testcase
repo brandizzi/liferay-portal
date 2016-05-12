@@ -1559,7 +1559,7 @@
 		</execute>
 	</command>
 
-	<command name="ViewBlogsEntryWithCoverImageFromDMFolders">
+	<command name="ViewBlogsEntryWithCoverImageFromDMFolders" priority="3">
 		<execute macro="Page#add">
 			<var name="pageName" value="Documents and Media Page" />
 		</execute>

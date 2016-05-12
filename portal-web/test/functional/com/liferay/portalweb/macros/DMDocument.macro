@@ -684,7 +684,7 @@
 		<if>
 			<equals arg1="${dmRepositoryName}" arg2="true" />
 			<then>
-				<execute function="AssertTextEquals#assertPartialText" locator1="DocumentsAndMediaDocument#SUCCESS_MESSAGE_DOCUMENT_VIEW" value1="You now have an indefinite lock on this document. No one else can edit this document until you unlock it. This lock will never expire." />
+				<execute function="AssertElementNotPresent" locator1="DocumentsAndMediaDocument#SUCCESS_MESSAGE_DOCUMENT_VIEW" />
 			</then>
 			<else>
 				<execute function="AssertTextEquals#assertPartialText" locator1="DocumentsAndMediaDocument#SUCCESS_MESSAGE_DOCUMENT_VIEW" value1="You now have a lock on this document. No one else can edit this document until you unlock it. This lock will automatically expire in 1 day." />
@@ -1648,14 +1648,14 @@
 	</command>
 
 	<command name="viewCheckedoutCP">
-		<execute function="AssertVisible" locator1="DocumentsAndMediaDocument#DOCUMENT_DETAILS_VERSION_LOCKED" />
-
 		<if>
 			<equals arg1="${dmRepositoryName}" arg2="true" />
 			<then>
-				<execute function="AssertTextEquals#assertPartialText" locator1="DocumentsAndMediaDocument#SUCCESS_MESSAGE_DOCUMENT_VIEW" value1="You now have an indefinite lock on this document. No one else can edit this document until you unlock it. This lock will never expire." />
+				<execute function="AssertTextEquals#assertPartialText" locator1="Message#CHECKOUT_SUCCESS" value1="You now have an indefinite lock on this document. No one else can edit this document until you unlock it. This lock will never expire." />
 			</then>
 			<else>
+				<execute function="AssertVisible" locator1="DocumentsAndMediaDocument#DOCUMENT_DETAILS_VERSION_LOCKED" />
+
 				<execute function="AssertElementPresent" locator1="Message#SUCCESS" />
 			</else>
 		</if>
@@ -2127,7 +2127,16 @@
 		</execute>
 
 		<execute function="AssertElementPresent" locator1="DocumentsAndMediaDocument#DOCUMENT_INFO_THUMBNAIL" />
-		<execute function="AssertElementPresent" locator1="DocumentsAndMediaDocument#DOCUMENT_INFO_RATING" value1="Rating" />
+
+		<if>
+			<equals arg1="${dmRepositoryName}" arg2="true" />
+			<then>
+				<execute function="AssertElementNotPresent" locator1="DocumentsAndMediaDocument#DOCUMENT_INFO_RATING" value1="Rating" />
+			</then>
+			<else>
+				<execute function="AssertElementPresent" locator1="DocumentsAndMediaDocument#DOCUMENT_INFO_RATING" value1="Rating" />
+			</else>
+		</if>
 
 		<if>
 			<isset var="dmDocumentDescription" />

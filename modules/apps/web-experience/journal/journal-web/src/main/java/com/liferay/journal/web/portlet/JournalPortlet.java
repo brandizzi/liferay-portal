@@ -1112,6 +1112,11 @@ public class JournalPortlet extends MVCPortlet {
 	}
 
 	@Override
+	protected boolean isAlwaysSendRedirect() {
+		return true;
+	}
+
+	@Override
 	protected boolean isSessionErrorException(Throwable cause) {
 		if (cause instanceof ArticleContentException ||
 			cause instanceof ArticleContentSizeException ||
@@ -1236,9 +1241,7 @@ public class JournalPortlet extends MVCPortlet {
 			}
 		}
 
-		if (Validator.isNotNull(redirect)) {
-			actionResponse.sendRedirect(redirect);
-		}
+		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
 	}
 
 	protected void sendEditEntryRedirect(

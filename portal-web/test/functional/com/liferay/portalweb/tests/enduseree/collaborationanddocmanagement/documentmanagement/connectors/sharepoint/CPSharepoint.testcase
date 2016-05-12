@@ -48,6 +48,8 @@
 			<var name="portlet" value="Documents and Media" />
 		</execute>
 
+		<execute macro="DMPortlet#setDescriptiveView" />
+
 		<execute macro="DMNavigator#gotoAddRepositoryCP" />
 
 		<execute macro="DMRepository#edit">
@@ -773,7 +775,7 @@
 		</execute>
 
 		<execute macro="DMRepository#viewBreadcrumb">
-			<var name="dmRepositoryName" value="SHAREPOINT REPOSITORY NAME" />
+			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
 	</command>
 </definition>

@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1462938701142
+Bnd-LastModified: 1463070780244
 Bundle-ManifestVersion: 2
 Bundle-Name: portal-bootstrap
 Bundle-SymbolicName: portal-bootstrap
@@ -2596,7 +2596,7 @@ Export-Package: com.liferay.ibm.icu;version="4.0.1",com.liferay.ibm.ic
  portal.kernel.concurrent;version="7.0.0";uses:="com.liferay.portal.ke
  rnel.memory,com.liferay.portal.kernel.util",com.liferay.portal.kernel
  .configuration;version="6.2.0",com.liferay.portal.kernel.dao.db;versi
- on="7.0.0",com.liferay.portal.kernel.dao.jdbc;version="7.1.0",com.lif
+ on="7.1.0",com.liferay.portal.kernel.dao.jdbc;version="7.1.0",com.lif
  eray.portal.kernel.dao.jdbc.aop;version="6.3.0",com.liferay.portal.ke
  rnel.dao.jdbc.pool.metrics;version="1.0.0",com.liferay.portal.kernel.
  dao.orm;version="7.0.0";uses:="com.liferay.exportimport.kernel.lar,co
@@ -3040,7 +3040,7 @@ Export-Package: com.liferay.ibm.icu;version="4.0.1",com.liferay.ibm.ic
  n="7.0.0";uses:="com.liferay.portal.kernel.dao.db",com.liferay.portal
  .kernel.upgrade.util;version="7.0.0";uses:="com.liferay.portal.kernel
  .model,com.liferay.portal.kernel.upgrade",com.liferay.portal.kernel.u
- pgrade.v6_2_0;version="7.0.0";uses:="com.liferay.portal.kernel.upgrad
+ pgrade.v6_2_0;version="7.1.0";uses:="com.liferay.portal.kernel.upgrad
  e",com.liferay.portal.kernel.upload;version="6.3.0";uses:="com.lifera
  y.portal.kernel.exception,com.liferay.portal.kernel.json,com.liferay.
  portal.kernel.repository.model,com.liferay.portal.kernel.security.per

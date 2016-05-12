@@ -128,12 +128,13 @@
 
 		<execute macro="DMDocument#addPG">
 			<var name="dmDocumentFile" value="Document_1.doc" />
-			<var name="dmDocumentTitle" value="${dmDocumentFile}" />
+			<var name="dmDocumentTitle" value="Document_1.doc" />
 		</execute>
 
 		<execute macro="DMDocument#viewPG">
 			<var name="dmDocumentFile" value="Document_1.doc" />
-			<var name="dmDocumentTitle" value="${dmDocumentFile}" />
+			<var name="dmDocumentTitle" value="Document_1.doc" />
+			<var name="dmRepositoryName" value="true" />
 		</execute>
 
 		<execute macro="User#logoutPG" />
@@ -142,13 +143,16 @@
 			<var name="pageName" value="Documents and Media Page" />
 		</execute>
 
+		<execute macro="DMPortlet#setDescriptiveView" />
+
 		<execute macro="DMRepository#gotoCP">
 			<var name="dmRepositoryName" value="Sharepoint Repository Name" />
 		</execute>
 
 		<execute macro="DMDocument#viewPG">
 			<var name="dmDocumentFile" value="Document_1.doc" />
-			<var name="dmDocumentTitle" value="${dmDocumentFile}" />
+			<var name="dmDocumentTitle" value="Document_1.doc" />
+			<var name="dmRepositoryName" value="true" />
 		</execute>
 
 		<execute macro="User#loginPG">

@@ -322,9 +322,7 @@ AUI.add(
 
 								var elapsed = sessionLength;
 
-								var value = parseInt(timestamp, 10);
-
-								if (!isNaN(value)) {
+								if (Lang.toInt(timestamp)) {
 									timeOffset = Math.floor((Date.now() - timestamp) / 1000) * 1000;
 
 									elapsed = timeOffset;
@@ -360,14 +358,19 @@ AUI.add(
 									}
 
 									if (updateSessionState) {
-										if (expirationMoment) {
+										if (!instance.display._banner) {
+											if (hasExpired) {
+												instance.expire();
+											}
+											else if (hasWarned) {
+												instance.warn();
+											}
+											else if (extend) {
+												instance.extend();
+											}
+										}
+										else if (hasExpired) {
 											instance.expire();
-										}
-										else if (warningMoment) {
-											instance.warn();
-										}
-										else if (extend) {
-											instance.extend();
 										}
 									}
 								}
@@ -466,9 +469,21 @@ AUI.add(
 
 						var host = instance._host;
 
+						var sessionLength = host.get('sessionLength');
+						var timestamp = host.get('timestamp');
 						var warningLength = host.get('warningLength');
 
-						var remainingTime = warningLength;
+						var elapsed = sessionLength;
+
+						if (Lang.toInt(timestamp)) {
+							elapsed = Math.floor((Date.now() - timestamp) / 1000) * 1000;
+						}
+
+						var remainingTime = sessionLength - elapsed;
+
+						if (remainingTime > warningLength) {
+							remainingTime = warningLength;
+						}
 
 						var banner = instance._getBanner();
 
@@ -484,7 +499,11 @@ AUI.add(
 									instance._uiSetActivated();
 								}
 								else if (!hasExpired) {
-									if (warningMoment) {
+									if (hasWarned) {
+										elapsed = Math.floor((Date.now() - timestamp) / 1000) * 1000;
+
+										remainingTime = sessionLength - elapsed;
+
 										if (remainingTime <= 0) {
 											remainingTime = warningLength;
 										}

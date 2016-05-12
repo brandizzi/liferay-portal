@@ -1,6 +1,6 @@
 <definition>
 	<command name="configureDisplayContent">
-		<execute function="SelectFrame" locator1="IFrame#CONFIGURATION" />
+		<execute function="SelectFrame" locator1="IFrame#CONFIGURATION_DIALOG" />
 
 		<var method="selenium#getNumberDecrement('${rowNumber}')" name="rowIndexNumber" />
 
@@ -195,36 +195,13 @@
 	</command>
 
 	<command name="viewEntryPG">
-		<if>
-			<isset var="entryContentText" />
-			<then>
-				<execute function="AssertTextEquals" locator1="UserSegmentContentDisplay#ENTRY_CONTENT" value1="${entryContentText}" />
-			</then>
-		</if>
-
-		<if>
-			<equals arg1="viewDontDisplay" arg2="true" />
-			<then>
-				<execute function="AssertTextEquals" locator1="UserSegmentContentDisplay#ENTRY_CONTENT" value1="There are no matching rules" />
-			</then>
-		</if>
+		<execute macro="ContentTargeting#expandPreview">
+			<var name="portletName" value="User Segment Content Display" />
+		</execute>
 
 		<if>
 			<isset var="viewUserSegmentSelected" />
 			<then>
-				<if>
-					<condition function="IsElementNotPresent" locator1="ContentTargeting#PREVIEW_BUTTON_EXPANDED" />
-					<then>
-						<var name="key_portletName" value="User Segment Content Display" />
-
-						<execute function="Click#makeVisibleClickAt" locator1="BasePortlet#SPECIFIC_PORTLET_BORDERLESS_BAR" />
-
-						<execute function="Click" locator1="UserSegmentContentDisplay#PREVIEW_BUTTON" />
-
-						<execute function="AssertElementPresent" locator1="ContentTargeting#PREVIEW_BUTTON_EXPANDED" />
-					</then>
-				</if>
-
 				<var name="key_viewEntrySelected" value="${viewUserSegmentSelected}" />
 
 				<execute function="AssertElementPresent" locator1="ContentTargeting#PREVIEW_ENTRY_SELECTED" />
@@ -234,23 +211,36 @@
 		<if>
 			<isset var="previewUserSegmentList" />
 			<then>
-				<if>
-					<condition function="IsElementNotPresent" locator1="ContentTargeting#PREVIEW_BUTTON_EXPANDED" />
-					<then>
-						<var name="key_portletName" value="User Segment Content Display" />
-
-						<execute function="Click#makeVisibleClickAt" locator1="BasePortlet#SPECIFIC_PORTLET_BORDERLESS_BAR" />
-
-						<execute function="Click" locator1="UserSegmentContentDisplay#PREVIEW_BUTTON" />
-
-						<execute function="AssertElementPresent" locator1="ContentTargeting#PREVIEW_BUTTON_EXPANDED" />
-					</then>
-				</if>
-
 				<for list="${previewUserSegmentList}" param="previewEntry">
+					<execute macro="ContentTargeting#expandPreview">
+						<var name="portletName" value="User Segment Content Display" />
+					</execute>
+
 					<var name="key_previewEntry" value="${previewEntry}" />
 
-					<execute function="AssertTextEquals" locator1="ContentTargeting#PREVIEW" value1="${previewEntry}" />
+					<execute function="AssertClick" locator1="ContentTargeting#PREVIEW" value1="${previewEntry}" />
+
+					<if>
+						<and>
+							<isset var="entryContentText" />
+							<not>
+								<equals arg1="${previewEntry}" arg2="default" />
+							</not>
+						</and>
+						<then>
+							<execute function="AssertTextEquals" locator1="UserSegmentContentDisplay#ENTRY_CONTENT" value1="${entryContentText}" />
+						</then>
+					</if>
+
+					<if>
+						<and>
+							<equals arg1="viewDontDisplay" arg2="true" />
+							<equals arg1="${previewEntry}" arg2="default" />
+						</and>
+						<then>
+							<execute function="AssertTextEquals" locator1="UserSegmentContentDisplay#ENTRY_CONTENT" value1="There are no matching rules" />
+						</then>
+					</if>
 				</for>
 			</then>
 		</if>
