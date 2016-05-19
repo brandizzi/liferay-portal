@@ -534,11 +534,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>METADATA</td>
-	<td>//ul[contains(@class,'dropdown-menu')]/li/a[contains(.,'Metadata')]</td>
-	<td></td>
-</tr>
-<tr>
 	<td>METADATA_SETS</td>
 	<td>//a[@role='menuitem']//span[contains(.,'Metadata Sets')]</td>
 	<td></td>

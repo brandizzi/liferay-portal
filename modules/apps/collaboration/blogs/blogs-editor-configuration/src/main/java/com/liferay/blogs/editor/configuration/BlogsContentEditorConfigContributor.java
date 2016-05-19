@@ -65,12 +65,14 @@ public class BlogsContentEditorConfigContributor
 		ThemeDisplay themeDisplay,
 		RequestBackedPortletURLFactory requestBackedPortletURLFactory) {
 
-		StringBundler sb = new StringBundler(4);
+		StringBundler sb = new StringBundler(6);
 
-		sb.append("a[*]; b em hr h1 h2 h3 h4 h5 h6 i img[class, !src] ");
-		sb.append("{height, width}; li ol p{text-align}; pre strong ");
-		sb.append("table[border, cellpadding, cellspacing] {width}; tbody td ");
-		sb.append("th[scope]; thead tr[scope]; u ul;");
+		sb.append("a[*]; ");
+		sb.append(getAllowedContentText());
+		sb.append(" div[*]; img[class, !src] {height, width}; ");
+		sb.append(getAllowedContentLists());
+		sb.append(" p {text-align}; ");
+		sb.append(getAllowedContentTable());
 
 		jsonObject.put("allowedContent", sb.toString());
 
@@ -88,6 +90,19 @@ public class BlogsContentEditorConfigContributor
 	@Reference(unbind = "-")
 	public void setItemSelector(ItemSelector itemSelector) {
 		_itemSelector = itemSelector;
+	}
+
+	protected String getAllowedContentLists() {
+		return "li ol ul;";
+	}
+
+	protected String getAllowedContentTable() {
+		return "table[border, cellpadding, cellspacing] {width} thead tbody " +
+			"tr[scope] th[scope] td;";
+	}
+
+	protected String getAllowedContentText() {
+		return "b code em h1 h2 h3 h4 h5 h6 hr i pre strong u;";
 	}
 
 	protected void populateFileBrowserURL(

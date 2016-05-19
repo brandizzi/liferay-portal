@@ -156,11 +156,6 @@
 	<td></td>
 </tr>
 <tr>
-	<td>DOCUMENT_INFO_AUTOMATICALLY_EXTRACTED_METADATA</td>
-	<td>//div[@id='documentLibraryAssetMetadataPanel']/div/div</td>
-	<td></td>
-</tr>
-<tr>
 	<td></td>
 	<td></td>
 	<td></td>
