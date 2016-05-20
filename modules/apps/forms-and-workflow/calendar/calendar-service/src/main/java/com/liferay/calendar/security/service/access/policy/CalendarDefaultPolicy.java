@@ -23,13 +23,15 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.AggregateResourceBundleLoader;
+import com.liferay.portal.kernel.util.ResourceBundleLoader;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.language.LanguageResources;
 import com.liferay.portal.security.service.access.policy.model.SAPEntry;
 import com.liferay.portal.security.service.access.policy.service.SAPEntryLocalService;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -73,8 +75,16 @@ public class CalendarDefaultPolicy {
 		boolean defaultSAPEntry = true;
 		boolean enabled = true;
 
-		Map<Locale, String> titleMap = new HashMap<>();
-		titleMap.put(LocaleUtil.getDefault(), _CALENDAR_DEFAULT);
+		ResourceBundleLoader resourceBundleLoader =
+			new AggregateResourceBundleLoader(
+				ResourceBundleUtil.getResourceBundleLoader(
+					"content.Language",
+					CalendarDefaultPolicy.class.getClassLoader()),
+				LanguageResources.RESOURCE_BUNDLE_LOADER);
+
+		Map<Locale, String> titleMap = ResourceBundleUtil.getLocalizationMap(
+			resourceBundleLoader,
+			"calendar-default-service-access-policy-title");
 
 		_sapEntryLocalService.addSAPEntry(
 			_userLocalService.getDefaultUserId(companyId),
