@@ -156,6 +156,9 @@ public class UpgradePortalPreferences extends UpgradeProcess {
 	private static final Pattern _oldCalendarPreferenceVisiblePattern =
 		Pattern.compile(
 			_SESSION_CLICKS + "calendar-portlet-calendar-[0-9]+-visible");
+	private static final Pattern _preferencePattern = Pattern.compile(
+		"[a-z]+$");
+
 	static {
 		_newCalendarPreferences.put(
 			_SESSION_CLICKS + "calendar-portlet-default-view",
@@ -166,11 +169,6 @@ public class UpgradePortalPreferences extends UpgradeProcess {
 		_newCalendarPreferences.put(
 			_SESSION_CLICKS + "calendar-portlet-column-options-visible",
 			_SESSION_CLICKS + "com.liferay.calendar.web_columnOptionsVisible");
-	}
-
-	private static final Pattern _preferencePattern = Pattern.compile(
-		"[a-z]+$");
-	static {
 		_newCalendarPreferencesWithId.put(
 			"color",
 			_SESSION_CLICKS +
@@ -180,4 +178,5 @@ public class UpgradePortalPreferences extends UpgradeProcess {
 			_SESSION_CLICKS +
 				"com.liferay.calendar.web_calendar{calendarId}Visible");
 	}
+
 }
