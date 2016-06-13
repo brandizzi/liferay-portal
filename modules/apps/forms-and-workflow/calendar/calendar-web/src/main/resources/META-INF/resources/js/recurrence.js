@@ -32,7 +32,8 @@ AUI.add(
 					},
 
 					daysOfWeek: {
-						getter: '_getDaysOfWeek'
+						getter: '_getDaysOfWeek',
+						setter: '_setDaysOfWeek'
 					},
 
 					daysOfWeekCheckboxes: {
@@ -40,7 +41,8 @@ AUI.add(
 					},
 
 					frequency: {
-						getter: '_getFrequency'
+						getter: '_getFrequency',
+						setter: '_setFrequency'
 					},
 
 					frequencySelect: {
@@ -49,7 +51,8 @@ AUI.add(
 					},
 
 					interval: {
-						getter: '_getInterval'
+						getter: '_getInterval',
+						setter: '_setInterval'
 					},
 
 					intervalSelect: {
@@ -63,7 +66,8 @@ AUI.add(
 					},
 
 					limitCount: {
-						getter: '_getLimitCount'
+						getter: '_getLimitCount',
+						setter: '_setLimitCount'
 					},
 
 					limitCountInput: {
@@ -77,10 +81,12 @@ AUI.add(
 					},
 
 					limitDate: {
-						getter: '_getLimitDate'
+						getter: '_getLimitDate',
+						setter: '_setLimitDate'
 					},
 
 					limitDateDatePicker: {
+						setter: '_setDatePicker',
 						value: null
 					},
 
@@ -94,7 +100,8 @@ AUI.add(
 					},
 
 					limitType: {
-						getter: '_getLimitType'
+						getter: '_getLimitType',
+						setter: '_setLimitType'
 					},
 
 					monthlyRecurrenceOptions: {
@@ -112,7 +119,8 @@ AUI.add(
 					},
 
 					positionalDayOfWeek: {
-						getter: '_getPositionalDayOfWeek'
+						getter: '_getPositionalDayOfWeek',
+						setter: '_setPositionalDayOfWeek'
 					},
 
 					positionalDayOfWeekOptions: {
@@ -131,7 +139,8 @@ AUI.add(
 					},
 
 					recurrence: {
-						getter: '_getRecurrence'
+						getter: '_getRecurrence',
+						setter: '_setRecurrence'
 					},
 
 					repeatCheckbox: {
@@ -197,7 +206,6 @@ AUI.add(
 						container.delegate('keypress', A.bind(instance._onInputChange, instance), 'select');
 
 						limitDateDatePicker.after('selectionChange', A.bind(instance._onInputChange, instance));
-
 						startDateDatePicker.after('selectionChange', A.bind(instance._onStartDateDatePickerChange, instance));
 					},
 
@@ -393,37 +401,20 @@ AUI.add(
 
 						var currentTarget = event.currentTarget;
 
-						var limitCountInput = instance.get('limitCountInput');
-						var limitDateDatePicker = instance.get('limitDateDatePicker');
-						var limitType = instance.get('limitType');
-
 						if (currentTarget === instance.get('frequencySelect')) {
-							instance._toggleView('weeklyRecurrenceOptions', instance.get('frequency') === FREQUENCY_WEEKLY);
-							instance._toggleView('monthlyRecurrenceOptions', instance._isPositionalFrequency());
+							instance._toggleViewWeeklyRecurrence();
 						}
 
-						if (currentTarget === instance.get('repeatOnDayOfMonthRadioButton')) {
-							instance._toggleView('positionalDayOfWeekOptions', !currentTarget.get('checked'));
-						}
-						else if (currentTarget === instance.get('repeatOnDayOfWeekRadioButton')) {
-							instance._toggleView('positionalDayOfWeekOptions', currentTarget.get('checked') && instance._canChooseLastDayOfWeek());
+						if (currentTarget === instance.get('repeatOnDayOfMonthRadioButton') || currentTarget === instance.get('repeatOnDayOfWeekRadioButton')) {
+							instance._toggleViewPositionalDayOfWeek();
 						}
 
 						if (currentTarget === instance.get('lastPositionCheckbox')) {
-							var positionInput = instance.get('positionInput');
-
-							positionInput.val(instance._calculatePosition());
+							instance._setPositionInputValue();
 						}
 
-						var disableLimitCountInput = (limitType === LIMIT_UNLIMITED) || (limitType === LIMIT_DATE);
-
-						Liferay.Util.toggleDisabled(limitCountInput, disableLimitCountInput);
-
-						limitCountInput.selectText();
-
-						var disableLimitDateDatePicker = (limitType === LIMIT_UNLIMITED) || (limitType === LIMIT_COUNT);
-
-						limitDateDatePicker.set('disabled', disableLimitDateDatePicker);
+						instance._toggleDisabledLimitCountInput();
+						instance._toggleDisabledLimitDateDatePicker();
 
 						instance.fire('recurrenceChange');
 					},
@@ -478,6 +469,146 @@ AUI.add(
 						}
 					},
 
+					_setDatePicker: function(datePicker) {
+						datePicker.get('popover').zIndex = 30000;
+
+						return datePicker;
+					},
+
+					_setDaysOfWeek: function(value) {
+						var instance = this;
+
+						var dayOfWeekNodes = instance.get('daysOfWeekCheckboxes').filter(':not([disabled])');
+
+						dayOfWeekNodes.each(
+							function(node, index) {
+								var check = value.indexOf(node.get('value')) > -1;
+
+								node.set('checked', check);
+							}
+						);
+
+						return value;
+					},
+
+					_setFrequency: function(value) {
+						var instance = this;
+
+						var frequencySelect = instance.get('frequencySelect');
+
+						frequencySelect.set('value', value);
+
+						return value;
+					},
+
+					_setInterval: function(value) {
+						var instance = this;
+
+						var intervalSelect = instance.get('intervalSelect');
+
+						intervalSelect.set('value', value);
+
+						return value;
+					},
+
+					_setLimitCount: function(value) {
+						var instance = this;
+
+						instance.get('limitCountInput').set('value', value || '');
+
+						return value;
+					},
+
+					_setLimitDate: function(value) {
+						var instance = this;
+
+						var limitDateDatePicker = instance.get('limitDateDatePicker');
+
+						if (limitDateDatePicker.get('activeInput')) {
+							limitDateDatePicker.clearSelection('date');
+							limitDateDatePicker.selectDates([value]);
+						}
+
+						return value;
+					},
+
+					_setLimitType: function(value) {
+						var instance = this;
+
+						A.each(
+							instance.get('limitRadioButtons'),
+							function(node, index) {
+								if (node.get('value') === value) {
+									node.set('checked', true);
+								}
+							}
+						);
+
+						return value;
+					},
+
+					_setPositionalDayOfWeek: function(value) {
+						var instance = this;
+
+						var lastPositionCheckbox = instance.get('lastPositionCheckbox');
+						var repeatOnDayOfMonthRadioButton = instance.get('repeatOnDayOfMonthRadioButton');
+						var repeatOnDayOfWeekRadioButton = instance.get('repeatOnDayOfWeekRadioButton');
+
+						lastPositionCheckbox.set('checked', (value && value.position === '-1'));
+						repeatOnDayOfMonthRadioButton.set('checked', !value);
+						repeatOnDayOfWeekRadioButton.set('checked', !!value);
+
+						return value;
+					},
+
+					_setPositionInputValue: function() {
+						var instance = this;
+
+						var positionInput = instance.get('positionInput');
+
+						positionInput.val(instance._calculatePosition());
+					},
+
+					_setRecurrence: function(data) {
+						var instance = this;
+
+						if (data) {
+							instance.set('daysOfWeek', data.weekdays);
+							instance.set('frequency', data.frequency);
+							instance.set('interval', data.interval);
+							instance.set('limitCount', data.count);
+							instance.set('limitDate', data.untilDate);
+							instance.set('limitType', data.endValue);
+							instance.set('positionalDayOfWeek', data.positionalWeekday);
+
+							instance._updateUI();
+						}
+					},
+
+					_toggleDisabledLimitCountInput: function() {
+						var instance = this;
+
+						var limitCountInput = instance.get('limitCountInput');
+
+						var limitType = instance.get('limitType');
+
+						var disableLimitCountInput = (limitType === LIMIT_UNLIMITED) || (limitType === LIMIT_DATE);
+
+						Liferay.Util.toggleDisabled(limitCountInput, disableLimitCountInput);
+
+						limitCountInput.selectText();
+					},
+
+					_toggleDisabledLimitDateDatePicker: function() {
+						var instance = this;
+
+						var limitType = instance.get('limitType');
+
+						var disableLimitDateDatePicker = (limitType === LIMIT_UNLIMITED) || (limitType === LIMIT_COUNT);
+
+						instance.get('limitDateDatePicker').set('disabled', disableLimitDateDatePicker);
+					},
+
 					_toggleView: function(viewName, show) {
 						var instance = this;
 
@@ -486,6 +617,33 @@ AUI.add(
 						if (viewNode) {
 							viewNode.toggle(show);
 						}
+					},
+
+					_toggleViewPositionalDayOfWeek: function() {
+						var instance = this;
+
+						var repeatOnDayOfWeek = instance.get('repeatOnDayOfWeekRadioButton').get('checked');
+
+						instance._toggleView('positionalDayOfWeekOptions', repeatOnDayOfWeek && instance._canChooseLastDayOfWeek());
+					},
+
+					_toggleViewWeeklyRecurrence: function() {
+						var instance = this;
+
+						instance._toggleView('weeklyRecurrenceOptions', instance.get('frequency') === FREQUENCY_WEEKLY);
+						instance._toggleView('monthlyRecurrenceOptions', instance._isPositionalFrequency());
+					},
+
+					_updateUI: function() {
+						var instance = this;
+
+						instance._setPositionInputValue();
+						instance._toggleDisabledLimitCountInput();
+						instance._toggleDisabledLimitDateDatePicker();
+						instance._toggleViewPositionalDayOfWeek();
+						instance._toggleViewWeeklyRecurrence();
+
+						instance.fire('recurrenceChange');
 					}
 				}
 			}

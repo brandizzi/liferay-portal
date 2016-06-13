@@ -236,6 +236,7 @@ if (recurrence != null) {
 <%@ include file="/calendar_booking_recurrence_language_keys.jspf" %>
 
 <aui:script use="liferay-util-window,liferay-calendar-recurrence-dialog">
+	var currentRecurrence = null;
 	var recurrenceContainerNode = A.one('#<portlet:namespace />recurrenceContainer');
 	var repeatCheckboxNode = A.one('#<portlet:namespace />repeat');
 	var summaryNode = A.one('#<portlet:namespace />summary');
@@ -263,6 +264,10 @@ if (recurrence != null) {
 		}
 	);
 
+	if (repeatCheckboxNode.get('checked')) {
+		currentRecurrence = recurrenceDialogController.get('recurrence');
+	}
+
 	var getRecurrenceDialogTitle = function() {
 		var summary = recurrenceDialogController.get('summary');
 
@@ -277,9 +282,11 @@ if (recurrence != null) {
 				dialog: {
 					after: {
 						visibleChange: function(event) {
+							var instance = this;
+
 							recurrenceContainerNode.toggle(event.newVal);
 
-							window.<portlet:namespace />updateSummaries();
+							instance.fillHeight(instance.bodyNode);
 						}
 					},
 					bodyContent: recurrenceContainerNode,
@@ -292,8 +299,26 @@ if (recurrence != null) {
 						footer: [
 							{
 								label: '<liferay-ui:message key="done" />',
+								cssClass: 'btn-primary',
 								on: {
 									click: function() {
+										window.<portlet:namespace />recurrenceDialog.hide();
+									}
+								}
+							},
+							{
+								label: '<liferay-ui:message key="cancel" />',
+								on: {
+									click: function() {
+										if (currentRecurrence !== null) {
+											recurrenceDialogController.set('recurrence', currentRecurrence);
+										}
+										else {
+											repeatCheckboxNode.set('checked', false);
+
+											summaryNode.empty();
+										}
+
 										window.<portlet:namespace />recurrenceDialog.hide();
 									}
 								}
@@ -326,9 +351,13 @@ if (recurrence != null) {
 			var checked = event.currentTarget.get('checked');
 
 			if (!checked) {
+				currentRecurrence = recurrenceDialogController.get('recurrence');
+
 				summaryNode.empty();
 			}
 			else {
+				currentRecurrence = null;
+
 				window.<portlet:namespace />updateSummaries();
 			}
 
@@ -339,6 +368,8 @@ if (recurrence != null) {
 	summaryNode.on(
 		'click',
 		function(event) {
+			currentRecurrence = recurrenceDialogController.get('recurrence');
+
 			<portlet:namespace />openRecurrenceDialog(true);
 
 			event.halt();
@@ -366,8 +397,6 @@ if (recurrence != null) {
 
 		if (window.<portlet:namespace />recurrenceDialog) {
 			window.<portlet:namespace />recurrenceDialog.titleNode.html(getRecurrenceDialogTitle());
-
-			window.<portlet:namespace />recurrenceDialog.fillHeight(window.<portlet:namespace />recurrenceDialog.bodyNode);
 		}
 	};
 
