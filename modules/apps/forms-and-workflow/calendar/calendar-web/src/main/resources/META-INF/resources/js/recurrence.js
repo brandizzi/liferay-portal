@@ -233,6 +233,20 @@ AUI.add(
 						return dayOfWeekNodes.val();
 					},
 
+					_setDaysOfWeek: function(daysOfWeek) {
+						var instance = this;
+
+						var dayOfWeekCheckboxes = instance.get('daysOfWeekCheckboxes');
+
+						daysOfWeekCheckboxes.each(
+							function(checkbox) {
+								var isChecked = daysOfWeek.indexOf(checkbox.val()) !== 0;
+
+								checkbox.set('checked', isChecked);
+							}
+						);
+					}
+					
 					_getDaysOfWeekCheckboxes: function() {
 						var instance = this;
 
@@ -249,6 +263,23 @@ AUI.add(
 						return frequencySelect.val();
 					},
 
+
+					_setFrequency: function(frequency) {
+						var instance = this;
+
+						var frequencySelect = instance.get('frequencySelect');
+
+						frequencySelect.val(frequency);
+					},
+
+					_setInterval: function(interval) {
+						var instance = this;
+
+						var intervalSelect = instance.get('intervalSelect');
+
+						intervalSelect.val(interval);
+					},
+					
 					_getInterval: function() {
 						var instance = this;
 
@@ -265,12 +296,38 @@ AUI.add(
 						return parseInt(limitCountInput.val(), 10);
 					},
 
+					_setLimitCount: function(limitCount) {
+						var instance = this;
+
+						var limitCountInput = instance.get('limitCountInput');
+
+						limitCountInput.val(limitCount);
+					},
+					
+					_getLimitCount: function() {
+						var instance = this;
+
+						var limitCountInput = instance.get('limitCountInput');
+
+						return parseInt(limitCountInput.val(), 10);
+					},
+
 					_getLimitDate: function() {
 						var instance = this;
 
 						var limitDateDatePicker = instance.get('limitDateDatePicker');
 
 						return limitDateDatePicker.getDate();
+					},
+
+					_setLimitDate: function(limitDate) {
+						var instance = this;
+
+						var limitDateDatePicker = instance.get('limitDateDatePicker');
+
+						limitDateDatePicker.deselectDates();
+
+						limitDateDatePicker.selectDate(limitDate);
 					},
 
 					_getLimitRadioButtons: function() {
@@ -292,6 +349,19 @@ AUI.add(
 						return checkedLimitRadioButton && checkedLimitRadioButton.val();
 					},
 
+					_getLimitType: function(limitType) {
+						var instance = this;
+
+						var checkedLimitRadioButton = A.Array.find(
+							instance.get('limitRadioButtons'),
+							function(item) {
+								return item.val() === limitType;
+							}
+						);
+
+						checkedLimitRadioButton.set('checked', true);
+					},
+					
 					_getPosition: function() {
 						var instance = this;
 
@@ -300,6 +370,30 @@ AUI.add(
 						return positionInput.val();
 					},
 
+					positionalWeekday: instance.get('positionalDayOfWeek'),
+
+					_setPositionalDayOfWeek: function(positionalDayOfWeek) {
+						var instance = this;
+
+						var dayOfWeekInput = instance.get('dayOfWeekInput');
+
+						var positionalDayOfWeek = null;
+
+						var repeatOnDayOfWeek = instance.get('repeatOnDayOfWeekRadioButton').get('checked');
+
+						var startDate = instance.get('startDate');
+
+						if (instance._isPositionalFrequency() && repeatOnDayOfWeek) {
+							positionalDayOfWeek = {
+								month: startDate.getMonth(),
+								position: instance.get('position'),
+								weekday: dayOfWeekInput.val()
+							};
+						}
+
+						return positionalDayOfWeek;
+					},
+					
 					_getPositionalDayOfWeek: function() {
 						var instance = this;
 
@@ -323,6 +417,20 @@ AUI.add(
 					},
 
 					_getRecurrence: function() {
+						var instance = this;
+
+						return {
+							count: instance.get('limitCount'),
+							endValue: instance.get('limitType'),
+							frequency: instance.get('frequency'),
+							interval: instance.get('interval'),
+							positionalWeekday: instance.get('positionalDayOfWeek'),
+							untilDate: instance.get('limitDate'),
+							weekdays: instance.get('daysOfWeek')
+						};
+					},
+
+					_setRecurrence: function(recurrence) {
 						var instance = this;
 
 						return {
