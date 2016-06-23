@@ -14,29 +14,49 @@
 
 package com.liferay.portal.workflow.task.web.permission;
 
-import static org.mockito.Mockito.mock;
-
-import static org.powermock.api.mockito.PowerMockito.when;
-
+import com.liferay.asset.kernel.model.AssetRenderer;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.workflow.WorkflowHandler;
+import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.kernel.workflow.WorkflowTask;
 import com.liferay.portal.kernel.workflow.WorkflowTaskAssignee;
 
+import java.io.Serializable;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import org.mockito.Matchers;
+
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.core.classloader.annotations.SuppressStaticInitializationFor;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
  * @author Adam Brandizzi
  */
-public class WorkflowTaskPermissionCheckerTest {
+@PrepareForTest({WorkflowHandlerRegistryUtil.class})
+@RunWith(PowerMockRunner.class)
+@SuppressStaticInitializationFor(
+	{"com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil"}
+)
+public class WorkflowTaskPermissionCheckerTest extends PowerMockito {
+
+	@Before
+	public void setUp() {
+		setUpWorkflowHandlerRegistryUtil();
+	}
 
 	@Test
 	public void testAssigneeIsContentReviewerHasPermission() {
@@ -63,6 +83,47 @@ public class WorkflowTaskPermissionCheckerTest {
 			Role.class.getName(), roleIds[0]);
 
 		Assert.assertTrue(
+			_workflowTaskPermissionChecker.hasPermission(
+				RandomTestUtil.randomLong(), workflowTask, permissionChecker));
+	}
+
+	@Test
+	public void testAssigneeIsNotContentReviewerAndHasAssetViewPermissionHasPermission()
+		throws PortalException {
+
+		PermissionChecker permissionChecker = mockPermissionChecker(
+			false, false, false);
+
+		long[] roleIds = permissionChecker.getRoleIds(
+			RandomTestUtil.randomLong(), RandomTestUtil.randomLong());
+
+		WorkflowTask workflowTask = mockWorkflowTask(
+			Role.class.getName(), roleIds[0]);
+
+		mockAssetRendererPermissionChecker(true);
+
+		Assert.assertTrue(
+			_workflowTaskPermissionChecker.hasPermission(
+				RandomTestUtil.randomLong(), workflowTask, permissionChecker));
+	}
+
+	@Test
+	public void
+			testAssigneeIsNotContentReviewerAndHasNoAssetViewPermissionHasNoPermission()
+		throws PortalException {
+
+		PermissionChecker permissionChecker = mockPermissionChecker(
+			false, false, false);
+
+		long[] roleIds = permissionChecker.getRoleIds(
+			RandomTestUtil.randomLong(), RandomTestUtil.randomLong());
+
+		WorkflowTask workflowTask = mockWorkflowTask(
+			Role.class.getName(), roleIds[0]);
+
+		mockAssetRendererPermissionChecker(false);
+
+		Assert.assertFalse(
 			_workflowTaskPermissionChecker.hasPermission(
 				RandomTestUtil.randomLong(), workflowTask, permissionChecker));
 	}
@@ -98,6 +159,21 @@ public class WorkflowTaskPermissionCheckerTest {
 	}
 
 	@Test
+	public void testNotAssigneeAndNotContentReviewerAndHasAssetViewPermissionHasNoPermisssion()
+		throws PortalException {
+
+		PermissionChecker permissionChecker = mockPermissionChecker(
+			false, false, false);
+
+		mockAssetRendererPermissionChecker(true);
+
+		Assert.assertFalse(
+			_workflowTaskPermissionChecker.hasPermission(
+				RandomTestUtil.randomLong(), mockWorkflowTask(),
+				permissionChecker));
+	}
+
+	@Test
 	public void testNotContentReviewerHasNoPermission() {
 		PermissionChecker permissionChecker = mockPermissionChecker(
 			false, false, false);
@@ -114,6 +190,35 @@ public class WorkflowTaskPermissionCheckerTest {
 			_workflowTaskPermissionChecker.hasPermission(
 				RandomTestUtil.randomLong(), mockWorkflowTask(),
 				mockOmniadminPermissionChecker()));
+	}
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	protected void mockAssetRendererPermissionChecker(
+			boolean hasAssetViewPermission)
+		throws PortalException {
+
+		WorkflowHandler workflowHandler = mock(WorkflowHandler.class);
+
+		when(
+			WorkflowHandlerRegistryUtil.getWorkflowHandler(Matchers.anyString())
+		).thenReturn(
+			workflowHandler
+		);
+
+		AssetRenderer assetRenderer = mock(AssetRenderer.class);
+
+		when(
+			workflowHandler.getAssetRenderer(Matchers.anyLong())
+		).thenReturn(
+			assetRenderer
+		);
+
+		when(
+			assetRenderer.hasViewPermission(
+				Matchers.any(PermissionChecker.class))
+		).thenReturn(
+			hasAssetViewPermission
+		);
 	}
 
 	protected PermissionChecker mockCompanyAdminPermissionChecker() {
@@ -195,6 +300,12 @@ public class WorkflowTaskPermissionCheckerTest {
 			workflowTaskAssignees
 		);
 
+		when(
+			workflowTask.getOptionalAttributes()
+		).thenReturn(
+			new HashMap<String, Serializable>()
+		);
+
 		return workflowTask;
 	}
 
@@ -217,6 +328,10 @@ public class WorkflowTaskPermissionCheckerTest {
 		);
 
 		return workflowTaskAssignee;
+	}
+
+	protected void setUpWorkflowHandlerRegistryUtil() {
+		mockStatic(WorkflowHandlerRegistryUtil.class);
 	}
 
 	private final WorkflowTaskPermissionChecker _workflowTaskPermissionChecker =
