@@ -694,6 +694,20 @@
 		<execute function="AssertClick" locator1="Button#SUBMIT" value1="Publish" />
 	</command>
 
+	<command name="compareEventDateAndTimeToSchedulerDateAndTime">
+		<var locator="CalendarEditEvent#END_DATE" name="endDate" />
+		<var locator="CalendarEditEvent#END_DATE_TIME" name="endDateTime" />
+		<var locator="CalendarEditEvent#START_DATE" name="startDate" />
+		<var locator="CalendarEditEvent#START_DATE_TIME" name="startDateTime" />
+
+		<execute macro="CalendarScheduler#_viewRegularEventDateAndTime">
+			<var name="endDate" value="${endDate}" />
+			<var name="endDateTime" value="${endDateTime}" />
+			<var name="startDate" value="${startDate}" />
+			<var name="startDateTime" value="${startDateTime}" />
+		</execute>
+	</command>
+
 	<command name="configureReminders">
 		<execute macro="CalendarEvent#_expandPanel">
 			<var name="panelName" value="Reminders" />
@@ -1157,6 +1171,12 @@
 		<execute function="AssertTextEquals#assertPartialText" locator1="CalendarAgendaView#SCHEDULER_EVENT_SPECIFIC" value1="${eventTitleEdit}" />
 	</command>
 
+	<command name="gotoConfigureInvitations">
+		<execute macro="CalendarEvent#_expandPanel">
+			<var name="panelName" value="Invitations" />
+		</execute>
+	</command>
+
 	<command name="gotoConfigureRelatedAssets">
 		<execute macro="CalendarEvent#_expandPanel">
 			<var name="panelName" value="Related Assets" />
@@ -1412,13 +1432,46 @@
 	</command>
 
 	<command name="setTimes">
-		<execute function="Type" locator1="CalendarEditEvent#START_DATE_TIME" value1="${startDateTime}" />
-		<execute function="Type" locator1="CalendarEditEvent#END_DATE_TIME" value1="${endDateTime}" />
+		<execute function="Click" locator1="CalendarEditEvent#START_DATE_TIME" />
+
+		<var name="key_timeSpecific" value="${startDateTime}" />
+
+		<execute function="Click" locator1="CalendarEditEvent#TIME_SPECIFIC_IN_TIME_PICKER" />
+
+		<execute function="Click" locator1="CalendarEditEvent#END_DATE_TIME" />
+
+		<var name="key_timeSpecific" value="${endDateTime}" />
+
+		<execute function="Click" locator1="CalendarEditEvent#TIME_SPECIFIC_IN_TIME_PICKER" />
 
 		<execute macro="CalendarEvent#viewTimes">
 			<var name="endDateTime" value="${endDateTime}" />
 			<var name="startDateTime" value="${startDateTime}" />
 		</execute>
+	</command>
+
+	<command name="setTomorrowAsEndDate">
+		<execute function="Click" locator1="CalendarEditEvent#END_DATE" />
+
+		<var locator="CalendarEditEvent#DAY_SELECTED_IN_DATE_PICKER" name="daySelected" />
+
+		<var method="MathUtil#sum('${daySelected}', '1')" name="tomorrow" />
+
+		<var name="key_daySpecific" value="${tomorrow}" />
+
+		<if>
+			<condition function="IsElementPresent" locator1="CalendarEditEvent#DAY_SPECIFIC_IN_DATE_PICKER" />
+			<then>
+				<execute function="Click" locator1="CalendarEditEvent#DAY_SPECIFIC_IN_DATE_PICKER" />
+			</then>
+			<else>
+				<execute function="Click" locator1="CalendarEditEvent#DATE_PICKER_NEXT_MONTH_BUTTON" />
+
+				<var name="key_daySpecific" value="1" />
+
+				<execute function="Click" locator1="CalendarEditEvent#DAY_SPECIFIC_IN_DATE_PICKER" />
+			</else>
+		</if>
 	</command>
 
 	<command name="tag">
