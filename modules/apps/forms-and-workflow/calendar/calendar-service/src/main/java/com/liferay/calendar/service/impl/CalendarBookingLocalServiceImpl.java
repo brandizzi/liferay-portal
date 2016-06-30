@@ -82,6 +82,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -330,7 +331,7 @@ public class CalendarBookingLocalServiceImpl
 
 		// Calendar bookings
 
-		Set<CalendarBooking> relatedCalendarBookings = new HashSet<>();
+		Set<CalendarBooking> recurringCalendarBookings = new HashSet<>();
 
 		List<CalendarBooking> childCalendarBookings = new ArrayList<>();
 
@@ -341,63 +342,64 @@ public class CalendarBookingLocalServiceImpl
 
 		for (CalendarBooking childCalendarBooking : childCalendarBookings) {
 			if (allRecurringInstances) {
-				relatedCalendarBookings.addAll(
-					getRelatedCalendarBookings(childCalendarBooking));
+				recurringCalendarBookings.addAll(
+					getRecurringCalendarBookings(childCalendarBooking));
 			}
 			else {
-				relatedCalendarBookings.add(childCalendarBooking);
+				recurringCalendarBookings.add(childCalendarBooking);
 			}
 		}
 
-		for (CalendarBooking relatedCalendarBooking : relatedCalendarBookings) {
+		for (CalendarBooking recurringCalendarBooking :
+				recurringCalendarBookings) {
 
 			// Calendar booking
 
-			calendarBookingPersistence.remove(relatedCalendarBooking);
+			calendarBookingPersistence.remove(recurringCalendarBooking);
 
 			// Resources
 
 			resourceLocalService.deleteResource(
-				relatedCalendarBooking, ResourceConstants.SCOPE_INDIVIDUAL);
+				recurringCalendarBooking, ResourceConstants.SCOPE_INDIVIDUAL);
 
 			// Subscriptions
 
 			subscriptionLocalService.deleteSubscriptions(
-				relatedCalendarBooking.getCompanyId(),
+				recurringCalendarBooking.getCompanyId(),
 				CalendarBooking.class.getName(),
-				relatedCalendarBooking.getCalendarBookingId());
+				recurringCalendarBooking.getCalendarBookingId());
 
 			// Asset
 
 			assetEntryLocalService.deleteEntry(
 				CalendarBooking.class.getName(),
-				relatedCalendarBooking.getCalendarBookingId());
+				recurringCalendarBooking.getCalendarBookingId());
 
 			// Message boards
 
 			mbMessageLocalService.deleteDiscussionMessages(
 				CalendarBooking.class.getName(),
-				relatedCalendarBooking.getCalendarBookingId());
+				recurringCalendarBooking.getCalendarBookingId());
 
 			// Ratings
 
 			ratingsStatsLocalService.deleteStats(
 				CalendarBooking.class.getName(),
-				relatedCalendarBooking.getCalendarBookingId());
+				recurringCalendarBooking.getCalendarBookingId());
 
 			// Trash
 
 			trashEntryLocalService.deleteEntry(
 				CalendarBooking.class.getName(),
-				relatedCalendarBooking.getCalendarBookingId());
+				recurringCalendarBooking.getCalendarBookingId());
 
 			// Workflow
 
 			workflowInstanceLinkLocalService.deleteWorkflowInstanceLinks(
-				relatedCalendarBooking.getCompanyId(),
-				relatedCalendarBooking.getGroupId(),
+				recurringCalendarBooking.getCompanyId(),
+				recurringCalendarBooking.getGroupId(),
 				CalendarBooking.class.getName(),
-				relatedCalendarBooking.getCalendarBookingId());
+				recurringCalendarBooking.getCalendarBookingId());
 		}
 
 		return calendarBooking;
@@ -447,7 +449,7 @@ public class CalendarBookingLocalServiceImpl
 	@Override
 	public void deleteCalendarBookingInstance(
 			CalendarBooking calendarBooking, int instanceIndex,
-			boolean allFollowing, boolean relatedBookings)
+			boolean allFollowing, boolean deleteRecurringCalendarBookings)
 		throws PortalException {
 
 		CalendarBooking calendarBookingInstance =
@@ -456,7 +458,7 @@ public class CalendarBookingLocalServiceImpl
 
 		deleteCalendarBookingInstance(
 			calendarBooking, calendarBookingInstance.getStartTime(),
-			allFollowing, relatedBookings);
+			allFollowing, deleteRecurringCalendarBookings);
 	}
 
 	@Override
@@ -472,7 +474,7 @@ public class CalendarBookingLocalServiceImpl
 	@Override
 	public void deleteCalendarBookingInstance(
 			CalendarBooking calendarBooking, long startTime,
-			boolean allFollowing, boolean relatedBookings)
+			boolean allFollowing, boolean deleteRecurringCalendarBookings)
 		throws PortalException {
 
 		Date now = new Date();
@@ -483,16 +485,14 @@ public class CalendarBookingLocalServiceImpl
 		Recurrence recurrenceObj = calendarBooking.getRecurrenceObj();
 
 		if (allFollowing) {
-			if (relatedBookings) {
-				List<CalendarBooking> followingRelatedCalendarBookings =
-					getFollowingRelatedCalendarBookings(
-						calendarBooking, startTime);
+			if (deleteRecurringCalendarBookings) {
+				List<CalendarBooking> recurringCalendarBookings =
+					getRecurringCalendarBookings(calendarBooking, startTime);
 
-				for (CalendarBooking followingRelatedCalendarBooking :
-						followingRelatedCalendarBookings) {
+				for (CalendarBooking recurringCalendarBooking :
+						recurringCalendarBookings) {
 
-					deleteCalendarBooking(
-						followingRelatedCalendarBooking, false);
+					deleteCalendarBooking(recurringCalendarBooking, false);
 				}
 			}
 
@@ -708,26 +708,7 @@ public class CalendarBookingLocalServiceImpl
 	}
 
 	@Override
-	public List<CalendarBooking> getFollowingRelatedCalendarBookings(
-		CalendarBooking calendarBooking, long startTime) {
-
-		List<CalendarBooking> relatedCalendarBookings =
-			getRelatedCalendarBookings(calendarBooking);
-
-		List<CalendarBooking> followingRelatedCalendarBookings =
-			new ArrayList<>();
-
-		for (CalendarBooking relatedCalendarBooking : relatedCalendarBookings) {
-			if (relatedCalendarBooking.getStartTime() > startTime) {
-				followingRelatedCalendarBookings.add(relatedCalendarBooking);
-			}
-		}
-
-		return followingRelatedCalendarBookings;
-	}
-
-	@Override
-	public List<CalendarBooking> getRelatedCalendarBookings(
+	public List<CalendarBooking> getRecurringCalendarBookings(
 		CalendarBooking calendarBooking) {
 
 		long recurringCalendarBookingId =
@@ -735,6 +716,28 @@ public class CalendarBookingLocalServiceImpl
 
 		return calendarBookingPersistence.findByRecurringCalendarBookingId(
 			recurringCalendarBookingId);
+	}
+
+	@Override
+	public List<CalendarBooking> getRecurringCalendarBookings(
+		CalendarBooking calendarBooking, long startTime) {
+
+		List<CalendarBooking> recurringCalendarBookings =
+			getRecurringCalendarBookings(calendarBooking);
+
+		List<CalendarBooking> followingRecurringCalendarBookings =
+			new ArrayList<>();
+
+		for (CalendarBooking recurringCalendarBooking :
+				recurringCalendarBookings) {
+
+			if (recurringCalendarBooking.getStartTime() > startTime) {
+				followingRecurringCalendarBookings.add(
+					recurringCalendarBooking);
+			}
+		}
+
+		return followingRecurringCalendarBookings;
 	}
 
 	@Override
@@ -756,15 +759,16 @@ public class CalendarBookingLocalServiceImpl
 
 		serviceContext.setUserId(userId);
 
-		List<CalendarBooking> relatedCalendarBookings =
-			getRelatedCalendarBookings(calendarBooking);
+		List<CalendarBooking> recurringCalendarBookings =
+			getRecurringCalendarBookings(calendarBooking);
 
-		for (CalendarBooking relatedCalendarBooking : relatedCalendarBookings) {
+		for (CalendarBooking recurringCalendarBooking :
+				recurringCalendarBookings) {
 
 			// Calendar booking
 
 			calendarBookingLocalService.updateStatus(
-				userId, relatedCalendarBooking,
+				userId, recurringCalendarBooking,
 				CalendarBookingWorkflowConstants.STATUS_IN_TRASH,
 				serviceContext);
 
@@ -772,22 +776,22 @@ public class CalendarBookingLocalServiceImpl
 
 			socialActivityCounterLocalService.disableActivityCounters(
 				CalendarBooking.class.getName(),
-				relatedCalendarBooking.getCalendarBookingId());
+				recurringCalendarBooking.getCalendarBookingId());
 
 			socialActivityLocalService.addActivity(
-				userId, relatedCalendarBooking.getGroupId(),
+				userId, recurringCalendarBooking.getGroupId(),
 				CalendarBooking.class.getName(),
-				relatedCalendarBooking.getCalendarBookingId(),
+				recurringCalendarBooking.getCalendarBookingId(),
 				SocialActivityConstants.TYPE_MOVE_TO_TRASH,
-				getExtraDataJSON(relatedCalendarBooking), 0);
+				getExtraDataJSON(recurringCalendarBooking), 0);
 
 			// Workflow
 
 			workflowInstanceLinkLocalService.deleteWorkflowInstanceLinks(
-				relatedCalendarBooking.getCompanyId(),
-				relatedCalendarBooking.getGroupId(),
+				recurringCalendarBooking.getCompanyId(),
+				recurringCalendarBooking.getGroupId(),
 				CalendarBooking.class.getName(),
-				relatedCalendarBooking.getCalendarBookingId());
+				recurringCalendarBooking.getCalendarBookingId());
 		}
 
 		return calendarBooking;
@@ -852,18 +856,18 @@ public class CalendarBookingLocalServiceImpl
 			serviceContext);
 
 		if (calendarBooking.isMasterRecurringBooking()) {
-			List<CalendarBooking> relatedCalendarBookings =
-				getRelatedCalendarBookings(calendarBooking);
+			List<CalendarBooking> recurringCalendarBookings =
+				getRecurringCalendarBookings(calendarBooking);
 
-			for (CalendarBooking relatedCalendarBooking :
-					relatedCalendarBookings) {
+			for (CalendarBooking recurringCalendarBooking :
+					recurringCalendarBookings) {
 
-				if (relatedCalendarBooking.equals(calendarBooking)) {
+				if (recurringCalendarBooking.equals(calendarBooking)) {
 					continue;
 				}
 
 				calendarBookingLocalService.updateStatus(
-					userId, relatedCalendarBooking, trashEntry.getStatus(),
+					userId, recurringCalendarBooking, trashEntry.getStatus(),
 					serviceContext);
 			}
 		}
@@ -1152,8 +1156,8 @@ public class CalendarBookingLocalServiceImpl
 		if (allFollowing) {
 			Calendar calendar = calendarLocalService.getCalendar(calendarId);
 
-			List<CalendarBooking> followingRelatedCalendarBookings =
-				getFollowingRelatedCalendarBookings(calendarBooking, startTime);
+			List<CalendarBooking> recurringCalendarBookings =
+				getRecurringCalendarBookings(calendarBooking, startTime);
 
 			List<String> unchangedList = getUnchangedList(
 				calendarBooking, calendarId, titleMap, descriptionMap, location,
@@ -1176,8 +1180,8 @@ public class CalendarBookingLocalServiceImpl
 				userId, calendarId, childCalendarIds, updatedTitleMap,
 				updatedDescriptionMap, location, startTime, endTime, allDay,
 				firstReminder, firstReminderType, secondReminder,
-				secondReminderType, serviceContext,
-				followingRelatedCalendarBookings, unchangedList);
+				secondReminderType, serviceContext, recurringCalendarBookings,
+				unchangedList);
 		}
 		else {
 			recurrence = StringPool.BLANK;
@@ -1227,8 +1231,8 @@ public class CalendarBookingLocalServiceImpl
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		List<CalendarBooking> relatedCalendarBookings =
-			getRelatedCalendarBookings(calendarBooking);
+		List<CalendarBooking> recurringCalendarBookings =
+			getRecurringCalendarBookings(calendarBooking);
 
 		List<String> unchangedList = getUnchangedList(
 			calendarBooking, calendarId, titleMap, descriptionMap, location,
@@ -1239,7 +1243,7 @@ public class CalendarBookingLocalServiceImpl
 			userId, calendarId, childCalendarIds, titleMap, descriptionMap,
 			location, startTime, endTime, allDay, firstReminder,
 			firstReminderType, secondReminder, secondReminderType,
-			serviceContext, relatedCalendarBookings, unchangedList);
+			serviceContext, recurringCalendarBookings, unchangedList);
 
 		return calendarBooking;
 	}
@@ -1549,7 +1553,7 @@ public class CalendarBookingLocalServiceImpl
 			}
 		}
 
-		if (Validator.equals(updatedTitleMap, calendarBooking.getTitleMap())) {
+		if (Objects.equals(updatedTitleMap, calendarBooking.getTitleMap())) {
 			unchangedList.add(_TITLE_MAP);
 		}
 
@@ -1565,13 +1569,13 @@ public class CalendarBookingLocalServiceImpl
 			}
 		}
 
-		if (Validator.equals(
+		if (Objects.equals(
 				updatedDescriptionMap, calendarBooking.getDescriptionMap())) {
 
 			unchangedList.add(_DESCRIPTION_MAP);
 		}
 
-		if (Validator.equals(location, calendarBooking.getLocation())) {
+		if (Objects.equals(location, calendarBooking.getLocation())) {
 			unchangedList.add(_LOCATION);
 		}
 
@@ -1593,7 +1597,7 @@ public class CalendarBookingLocalServiceImpl
 			unchangedList.add(_FIRST_REMINDER);
 		}
 
-		if (Validator.equals(
+		if (Objects.equals(
 				firstReminderType, calendarBooking.getFirstReminderType())) {
 
 			unchangedList.add(_FIRST_REMINDER_TYPE);
@@ -1603,7 +1607,7 @@ public class CalendarBookingLocalServiceImpl
 			unchangedList.add(_SECOND_REMINDER);
 		}
 
-		if (Validator.equals(
+		if (Objects.equals(
 				secondReminderType, calendarBooking.getSecondReminderType())) {
 
 			unchangedList.add(_SECOND_REMINDER_TYPE);
@@ -1717,7 +1721,7 @@ public class CalendarBookingLocalServiceImpl
 
 		List<CalendarBooking> childCalendarBookings = new ArrayList<>();
 
-		List<CalendarBooking> relatedCalendarBookings = new ArrayList<>();
+		List<CalendarBooking> recurringCalendarBookings = new ArrayList<>();
 
 		if (calendarBooking.isMasterBooking()) {
 			childCalendarBookings = getChildCalendarBookings(
@@ -1728,10 +1732,10 @@ public class CalendarBookingLocalServiceImpl
 		}
 
 		for (CalendarBooking childCalendarBooking : childCalendarBookings) {
-			relatedCalendarBookings.addAll(
-				getRelatedCalendarBookings(childCalendarBooking));
+			recurringCalendarBookings.addAll(
+				getRecurringCalendarBookings(childCalendarBooking));
 
-			relatedCalendarBookings.remove(childCalendarBooking);
+			recurringCalendarBookings.remove(childCalendarBooking);
 
 			childCalendarBooking.setModifiedDate(modifiedDate);
 			childCalendarBooking.setRecurrence(recurrence);
