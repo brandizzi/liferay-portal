@@ -299,6 +299,18 @@ public class CalendarBookingLocalServiceImpl
 		}
 	}
 
+	/**
+	 * Deletes the calendar booking from the database.
+	 *
+	 * (If the calendar booking is recurring and some instances were forked
+	 * from it, this method will not remove them. For that, check
+	 * {@link #deleteRecurringCalendarBooking(CalendarBooking)}.
+	 *
+	 * @param 	calendarBooking the calendar booking to be removed.
+	 * @returns the same instance given as argument.
+	 * @throws	PortalException if a system error happened. This may signal
+	 * 			that something is corrupted.
+	 */
 	@Override
 	public CalendarBooking deleteCalendarBooking(
 			CalendarBooking calendarBooking)
@@ -307,6 +319,18 @@ public class CalendarBookingLocalServiceImpl
 		return deleteCalendarBooking(calendarBooking, false);
 	}
 
+	/**
+	 * Deletes the calendar booking from the database. If the second argument
+	 * is true, then all instances derived from this deleted booking will be
+	 * deleted, too.
+	 *
+	 * @param 	calendarBooking the calendar booking to be removed.
+	 * @param	allRecurringInstances a boolean signaling if forked instances
+	 * 			should be deleted as well.
+	 * @returns the same instance given as argument.
+	 * @throws	PortalException if a system error happened. This may signal
+	 * 			that something is corrupted.
+	 */
 	@Indexable(type = IndexableType.DELETE)
 	@Override
 	@SystemEvent(
@@ -393,6 +417,21 @@ public class CalendarBookingLocalServiceImpl
 		return calendarBooking;
 	}
 
+	/**
+	 * Deletes the calendar booking from the database.
+	 *
+	 * (If the calendar booking is recurring and some instances were forked
+	 * from it, this method will not remove them. For that, check
+	 * {@link #deleteRecurringCalendarBooking(long)}.
+	 *
+	 *
+	 * @param 	calendarBookingId primary key of the booking to be removed.
+	 * @param	allRecurringInstances a boolean signaling if forked instances
+	 * 			should be deleted as well.
+	 * @returns the same instance given as argument.
+	 * @throws	PortalException if a system error happened. This may signal
+	 * 			that something is corrupted.
+	 */
 	@Override
 	public CalendarBooking deleteCalendarBooking(long calendarBookingId)
 		throws PortalException {
@@ -400,6 +439,19 @@ public class CalendarBookingLocalServiceImpl
 		return deleteCalendarBooking(calendarBookingId, false);
 	}
 
+	/**
+	 * Deletes the calendar booking from the database. If the second argument
+	 * is true, then all instances derived from this deleted booking will be
+	 * deleted, too.
+	 *
+	 * @param 	calendarBookingId primary key of the calendar booking to be
+	 * 			removed.
+	 * @param	allRecurringInstances a boolean signaling if forked instances
+	 * 			should be deleted as well.
+	 * @returns the same instance given as argument.
+	 * @throws	PortalException if a system error happened. This may signal
+	 * 			that something is corrupted.
+	 */
 	@Override
 	public CalendarBooking deleteCalendarBooking(
 			long calendarBookingId, boolean allRecurringInstances)
@@ -414,6 +466,21 @@ public class CalendarBookingLocalServiceImpl
 		return calendarBooking;
 	}
 
+	/**
+	 * Removes an instance from a recurring calendar booking.
+	 *
+	 * If there is some instance that was removed from the series by editing,
+	 * it will not be removed. If you need it to be removed, use
+	 * {@link #deleteCalendarBookingInstance(CalendarBooking, int, boolean)}
+	 *
+	 * @param 	calendarBooking the calendar booking whose instnce will be
+	 * 			removed.
+	 * @param	instanceIndex the index of the instance
+	 * @param	allFollowing whether only one instance, or all following, should
+	 * 			be removed.
+	 * @throws	PortalException if a system error happened. This may signal
+	 * 			that something is corrupted.
+	 */
 	@Override
 	public void deleteCalendarBookingInstance(
 			CalendarBooking calendarBooking, int instanceIndex,
@@ -429,6 +496,20 @@ public class CalendarBookingLocalServiceImpl
 			allFollowing);
 	}
 
+	/**
+	 * Removes an instance from a recurring calendar booking. If the last
+	 * argument is true, then modified instances will be deleted as well.
+	 *
+	 * @param 	calendarBooking the calendar booking whose instance will be
+	 * 			removed.
+	 * @param	instanceIndex the index of the instance
+	 * @param	allFollowing whether only one instance, or all following, should
+	 * 			be removed.
+	 * @param	deleteRecurringCalendarBookings whether modified instances
+	 * 			should be deleted as well.
+	 * @throws	PortalException if a system error happened. This may signal
+	 * 			that something is corrupted.
+	 */
 	@Override
 	public void deleteCalendarBookingInstance(
 			CalendarBooking calendarBooking, int instanceIndex,
@@ -454,6 +535,21 @@ public class CalendarBookingLocalServiceImpl
 			calendarBooking, startTime, allFollowing, false);
 	}
 
+	/**
+	 * Removes instances form a recurring calendar booking at a specific date,
+	 * or after the specified date. If the last argument is true, then modified
+	 * instances will be deleted as well.
+	 *
+	 * @param 	calendarBooking the calendar booking whose instance will be
+	 * 			removed.
+	 * @param	startTime the time from which instances should be removed.
+	 * @param	allFollowing whether only one instance, or all following, should
+	 * 			be removed.
+	 * @param	deleteRecurringCalendarBookings whether modified instances
+	 * 			should be deleted as well.
+	 * @throws	PortalException if a system error happened. This may signal
+	 * 			that something is corrupted.
+	 */
 	@Override
 	public void deleteCalendarBookingInstance(
 			CalendarBooking calendarBooking, long startTime,
@@ -534,6 +630,17 @@ public class CalendarBookingLocalServiceImpl
 		}
 	}
 
+	/**
+	 * Deletes a recurring calendar booking from the database. If some instances
+	 * where edited and so removed from the series, they will be removed as
+	 * well. If you do not want taht, use
+	 * {@link #deleteCalendarBooking(CalendarBooking)}.
+	 *
+	 * @param 	calendarBooking the calendar booking to be removed.
+	 * @returns the same instance given as argument.
+	 * @throws	PortalException if a system error happened. This may signal
+	 * 			that something is corrupted.
+	 */
 	@Override
 	public CalendarBooking deleteRecurringCalendarBooking(
 			CalendarBooking calendarBooking)
@@ -542,6 +649,16 @@ public class CalendarBookingLocalServiceImpl
 		return deleteCalendarBooking(calendarBooking, true);
 	}
 
+	/**
+	 * Deletes a recurring calendar booking from the database. If some instances
+	 * where edited and so removed from the series, they will be removed as
+	 * well. If you do not want taht, use {@link #deleteCalendarBooking(long)}.
+	 *
+	 * @param 	calendarBooking the primary key of the booking to be removed.
+	 * @returns the same instance given as argument.
+	 * @throws	PortalException if a system error happened. This may signal
+	 * 			that something is corrupted.
+	 */
 	@Override
 	public CalendarBooking deleteRecurringCalendarBooking(
 			long calendarBookingId)
