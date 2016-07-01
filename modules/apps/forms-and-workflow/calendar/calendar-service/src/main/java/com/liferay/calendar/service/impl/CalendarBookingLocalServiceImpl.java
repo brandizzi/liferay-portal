@@ -978,6 +978,48 @@ public class CalendarBookingLocalServiceImpl
 			AssetLinkConstants.TYPE_RELATED);
 	}
 
+	/**
+	 * Updates the content of a calendar booking.It updates calendar bookings
+	 * from invited calendars.
+	 *
+	 * It does not update content of recurring bookings deriving from it,
+	 * however. For that, see {@link #updateRecurringCalendarBooking(
+	 * long, long, long, long[], Map, Map, String, long, long, boolean, long,
+	 * String, long, String, ServiceContext)}.
+	 *
+	 * @param  	userId the primary key of the calendar bookings's creator/owner
+	 * @param  	calendarBookingId the primary key of the calendar booking being
+	 * 			updated
+	 * @param  	calendarId the primary key of the calendar to which the calendar
+	 * 			booking is to be added.
+	 * @param	childCalendarIds primary keys of calendars to which invitations
+	 * 			are to be sent.
+	 * @param	titleMap the map with titles in different locales.
+	 * @param	descriptionMap a map with descriptions in different locales.
+	 * @param	location the location where the event will take place, as a
+	 * 			string.
+	 * @param	startTime the moment the event will start, as a timestamp
+	 * 			starting from Unix epoch.
+	 * @param	endTime the moment the event will end, as a timestamp starting
+	 * 			from Unix epoch.
+	 * @param	allDay a boolean. If true, the event will take all day.
+	 * @param	recurrence A string representing the recurrence of the event,
+	 * 			as defined by RFC-2445.
+	 * @param 	firstReminder the moment the first reminder notification will be
+	 * 			sent, in number of milliseconds before the event start.
+	 * @param	firstReminderType the type of the first notification to be sent.
+	 * 			So far, the only type is "email".
+	 * @param 	secondReminder the moment the second reminder notification will
+	 * 			be sent, in number of milliseconds before the event start.
+	 * @param	secondReminderType the type of the second notification to be
+	 * 	 		sent. So far, the only type is "email".
+	 * @param	serviceContext a service context. Can disable notifications
+	 * 			about the edit by setting the "sendNotification" attribute to
+	 * 			false.
+	 * @return 	a new calendar booking object.
+	 * @throws	PortalException if a systemic error happens. In this case, the
+	 * 			portal may be corrupted.
+	 */
 	@Override
 	public CalendarBooking updateCalendarBooking(
 			long userId, long calendarBookingId, long calendarId,
@@ -1214,6 +1256,46 @@ public class CalendarBookingLocalServiceImpl
 			serviceContext);
 	}
 
+	/**
+	 * Given a recurring calendar booking, update its content as well as the
+	 * content of every other calendar booking that was edited from the
+	 * recurring sequence. Only fields updated in the original instance are
+	 * effectively altered. For example, if an instance had its title edited,
+	 * and this method was called to change the original calendar booking's
+	 * start time, the edited instance will have its start time changed, but
+	 * not its title.
+	 *
+	 * @param  	userId the primary key of the calendar bookings's creator/owner
+	 * @param  	calendarBookingId the primary key of the calendar booking being
+	 * 			updated
+	 * @param  	calendarId the primary key of the calendar to which the calendar
+	 * 			booking is to be added.
+	 * @param	childCalendarIds primary keys of calendars to which invitations
+	 * 			are to be sent.
+	 * @param	titleMap the map with titles in different locales.
+	 * @param	descriptionMap a map with descriptions in different locales.
+	 * @param	location the location where the event will take place, as a
+	 * 			string.
+	 * @param	startTime the moment the event will start, as a timestamp
+	 * 			starting from Unix epoch.
+	 * @param	endTime the moment the event will end, as a timestamp starting
+	 * 			from Unix epoch.
+	 * @param	allDay a boolean. If true, the event will take all day.
+	 * @param 	firstReminder the moment the first reminder notification will be
+	 * 			sent, in number of milliseconds before the event start.
+	 * @param	firstReminderType the type of the first notification to be sent.
+	 * 			So far, the only type is "email".
+	 * @param 	secondReminder the moment the second reminder notification will
+	 * 			be sent, in number of milliseconds before the event start.
+	 * @param	secondReminderType the type of the second notification to be
+	 * 	 		sent. So far, the only type is "email".
+	 * @param	serviceContext a service context. Can disable notifications
+	 * 			about the edit by setting the "sendNotification" attribute to
+	 * 			false.
+	 * @return 	a new calendar booking object.
+	 * @throws	PortalException if a systemic error happens. In this case, the
+	 * 			portal may be corrupted.
+	 */
 	@Override
 	public CalendarBooking updateRecurringCalendarBooking(
 			long userId, long calendarBookingId, long calendarId,
