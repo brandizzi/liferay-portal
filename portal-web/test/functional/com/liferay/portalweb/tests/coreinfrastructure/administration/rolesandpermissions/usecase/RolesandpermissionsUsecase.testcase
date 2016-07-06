@@ -2548,11 +2548,6 @@
 			<var name="portlet" value="Users and Organizations" />
 		</execute>
 
-		<execute macro="User#unassignRegularRoleCP">
-			<var name="roleName" value="Power User" />
-			<var name="userScreenName" value="usersn" />
-		</execute>
-
 		<execute macro="User#logoutPG" />
 
 		<execute macro="User#loginUserPG">
