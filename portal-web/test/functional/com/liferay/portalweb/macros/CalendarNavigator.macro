@@ -11,6 +11,14 @@
 		<execute function="SelectFrame" locator1="CalendarPermissions#CALENDAR_PERMISSIONS_IFRAME" />
 	</command>
 
+	<command name="closeModal">
+		<execute function="SelectFrameTop" />
+
+		<var name="key_modalTitle" value="${modalTitle}" />
+
+		<execute function="Click" locator1="Button#CLOSE_MODAL" />
+	</command>
+
 	<command name="gotoAddCurrentSiteCalendars">
 		<execute macro="TestCase#getSiteName">
 			<return from="siteName" name="siteName" />
@@ -156,12 +164,12 @@
 
 		<!--
 		To ensure the desired month will always be reached, click "Previous"
-		until it reaches our baseline of February 2015. Then click "Next" until
+		until it reaches our baseline of February 2016. Then click "Next" until
 		it reaches ${dateMonth}.
 		-->
 
 		<while>
-			<condition function="IsTextNotEqual" locator1="PGCalendar#SMALL_CALENDAR_DATE" value1="February 2015" />
+			<condition function="IsTextNotEqual" locator1="PGCalendar#SMALL_CALENDAR_DATE" value1="February 2016" />
 			<then>
 				<execute function="Click" locator1="PGCalendar#SMALL_CALENDAR_PREVIOUS" />
 			</then>

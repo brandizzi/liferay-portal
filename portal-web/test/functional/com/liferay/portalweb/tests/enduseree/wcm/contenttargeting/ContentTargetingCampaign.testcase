@@ -288,6 +288,8 @@
 	</command>
 
 	<command name="AddCampaignDDLFormCP" priority="5">
+		<property name="content.targeting.release" value="true" />
+
 		<execute macro="ProductMenu#gotoSite">
 			<var name="site" value="Site Name" />
 		</execute>
@@ -344,7 +346,7 @@
 
 		<execute macro="FormFields#save" />
 
-		<execute macro="PortletEntry#save" />
+		<execute macro="Form#save" />
 
 		<execute macro="ProductMenu#gotoSitesConfiguration">
 			<var name="portlet" value="Audience Targeting" />
