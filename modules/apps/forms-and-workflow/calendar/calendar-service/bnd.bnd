@@ -7,6 +7,7 @@ Export-Package:\
 	com.liferay.calendar.search,\
 	com.liferay.calendar.service.configuration,\
 	com.liferay.calendar.service.permission,\
+	com.liferay.calendar.social,\
 	com.liferay.calendar.upgrade.v1_0_2,\
 	com.liferay.calendar.upgrade.v1_0_6,\
 	com.liferay.calendar.util,\

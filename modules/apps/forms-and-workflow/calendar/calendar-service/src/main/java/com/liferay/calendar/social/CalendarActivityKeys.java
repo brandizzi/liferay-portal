@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.calendar.internal.social;
+package com.liferay.calendar.social;
 
 /**
  * @author Marcellus Tavares
