@@ -153,6 +153,7 @@ import org.osgi.service.component.annotations.Reference;
 		"com.liferay.portlet.friendly-url-mapping=calendar",
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
 		"com.liferay.portlet.icon=/icons/calendar.png",
+		"com.liferay.portlet.instanceable=true",
 		"com.liferay.portlet.preferences-owned-by-group=true",
 		"com.liferay.portlet.preferences-unique-per-layout=false",
 		"javax.portlet.display-name=Calendar",
