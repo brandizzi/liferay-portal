@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.web.internal.display.context.SearchScope;
 import com.liferay.portal.search.web.internal.display.context.SearchScopePreference;
 
+import java.util.Optional;
+
 /**
  * @author André de Oliveira
  */
@@ -39,6 +41,12 @@ public class SearchBarPortletDisplayBuilder {
 		searchBarPortletDisplayContext.setKeywordsParameterName(
 			_keywordsParameterName);
 
+		_autocompleteURL.ifPresent(
+			s -> {
+				searchBarPortletDisplayContext.setAutocompleteURL(s);
+				searchBarPortletDisplayContext.setAutocompleteVisible(true);
+			});
+
 		if (_searchScopePreference ==
 				SearchScopePreference.LET_THE_USER_CHOOSE) {
 
@@ -54,6 +62,10 @@ public class SearchBarPortletDisplayBuilder {
 		setSelectedSearchScope(searchBarPortletDisplayContext);
 
 		return searchBarPortletDisplayContext;
+	}
+
+	public void setAutocompleteURL(Optional<String> autocompleteURL) {
+		_autocompleteURL = autocompleteURL;
 	}
 
 	public void setKeywords(String keywords) {
@@ -138,6 +150,7 @@ public class SearchBarPortletDisplayBuilder {
 		}
 	}
 
+	private Optional<String> _autocompleteURL;
 	private String _keywords;
 	private String _keywordsParameterName;
 	private String _scopeParameterName;

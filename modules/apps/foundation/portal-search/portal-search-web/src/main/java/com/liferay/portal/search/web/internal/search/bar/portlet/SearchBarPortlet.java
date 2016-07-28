@@ -117,6 +117,14 @@ public class SearchBarPortlet
 		SearchBarPortletDisplayBuilder searchBarPortletDisplayBuilder =
 			new SearchBarPortletDisplayBuilder();
 
+		// TODO Autocomplete
+
+		String fakeAutocompleteURL =
+			renderRequest.getContextPath() + "/search/bar/demo.json";
+
+		searchBarPortletDisplayBuilder.setAutocompleteURL(
+			searchBarPortletPreferences.getAutocompleteURL());
+
 		Optional<String> keywordsOptional =
 			portletSharedSearchResponse.getKeywords();
 

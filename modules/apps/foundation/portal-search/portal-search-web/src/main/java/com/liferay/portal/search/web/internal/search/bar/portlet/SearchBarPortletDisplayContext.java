@@ -19,6 +19,10 @@ package com.liferay.portal.search.web.internal.search.bar.portlet;
  */
 public class SearchBarPortletDisplayContext {
 
+	public String getAutocompleteURL() {
+		return _autocompleteURL;
+	}
+
 	public String getCurrentSiteSearchScopeParameterString() {
 		return _currentSiteSearchScopeParameterString;
 	}
@@ -43,6 +47,10 @@ public class SearchBarPortletDisplayContext {
 		return _scopeParameterValue;
 	}
 
+	public boolean isAutocompleteVisible() {
+		return _autocompleteVisible;
+	}
+
 	public boolean isAvailableEverythingSearchScope() {
 		return _availableEverythingSearchScope;
 	}
@@ -57,6 +65,14 @@ public class SearchBarPortletDisplayContext {
 
 	public boolean isSelectedEverythingSearchScope() {
 		return _selectedEverythingSearchScope;
+	}
+
+	public void setAutocompleteURL(String autocompleteURL) {
+		_autocompleteURL = autocompleteURL;
+	}
+
+	public void setAutocompleteVisible(boolean autocompleteVisible) {
+		_autocompleteVisible = autocompleteVisible;
 	}
 
 	public void setAvailableEverythingSearchScope(
@@ -113,6 +129,8 @@ public class SearchBarPortletDisplayContext {
 		_selectedEverythingSearchScope = selectedEverythingSearchScope;
 	}
 
+	private String _autocompleteURL;
+	private boolean _autocompleteVisible;
 	private boolean _availableEverythingSearchScope;
 	private String _currentSiteSearchScopeParameterString;
 	private String _everythingSearchScopeParameterString;

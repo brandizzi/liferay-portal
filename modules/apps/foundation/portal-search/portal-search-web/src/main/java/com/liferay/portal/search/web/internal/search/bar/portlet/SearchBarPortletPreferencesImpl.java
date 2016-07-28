@@ -36,6 +36,19 @@ public class SearchBarPortletPreferencesImpl
 	}
 
 	@Override
+	public Optional<String> getAutocompleteURL() {
+		return _portletPreferencesHelper.getString(
+			SearchBarPortletPreferences.PREFERENCE_KEY_AUTOCOMPLETE_URL);
+	}
+
+	@Override
+	public String getAutocompleteURLString() {
+		Optional<String> value = getAutocompleteURL();
+
+		return value.orElse(StringPool.BLANK);
+	}
+
+	@Override
 	public Optional<String> getDestination() {
 		return _portletPreferencesHelper.getString(
 			SearchBarPortletPreferences.PREFERENCE_KEY_DESTINATION);

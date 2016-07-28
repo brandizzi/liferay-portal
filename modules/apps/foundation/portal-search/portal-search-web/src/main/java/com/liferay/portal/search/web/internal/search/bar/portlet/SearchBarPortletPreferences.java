@@ -23,6 +23,9 @@ import java.util.Optional;
  */
 public interface SearchBarPortletPreferences {
 
+	public static final String PREFERENCE_KEY_AUTOCOMPLETE_URL =
+		"autocompleteURL";
+
 	public static final String PREFERENCE_KEY_DESTINATION = "destination";
 
 	public static final String PREFERENCE_KEY_KEYWORDS_PARAMETER_NAME =
@@ -32,6 +35,10 @@ public interface SearchBarPortletPreferences {
 		"scopeParameterName";
 
 	public static final String PREFERENCE_KEY_SEARCH_SCOPE = "searchScope";
+
+	public Optional<String> getAutocompleteURL();
+
+	public String getAutocompleteURLString();
 
 	public Optional<String> getDestination();
 

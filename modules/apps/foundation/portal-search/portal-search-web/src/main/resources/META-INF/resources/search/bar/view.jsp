@@ -70,3 +70,32 @@ SearchBarPortletDisplayContext searchBarPortletDisplayContext = (SearchBarPortle
 		</div>
 	</aui:fieldset>
 </aui:form>
+
+<aui:script use="aui-base,aui-request,autocomplete,autocomplete-filters,autocomplete-highlighters">
+if (<%= searchBarPortletDisplayContext.isAutocompleteVisible() %>) {
+	var A = AUI();
+
+	A.io.request(
+		'<%= searchBarPortletDisplayContext.getAutocompleteURL() %>',
+		{
+			dataType: 'json',
+			method: 'GET',
+			on: {
+				success: function(event, status, xhr) {
+					var response = this.get('responseData');
+
+					new A.AutoCompleteList(
+						{
+							inputNode: '.search-bar-input',
+							resultFilters: 'phraseMatch',
+							resultHighlighter: 'phraseMatch',
+							resultTextLocator: 'name',
+							source: response.data
+						}
+					).render();
+				}
+			}
+		}
+	);
+}
+</aui:script>

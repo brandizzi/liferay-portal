@@ -51,6 +51,8 @@ SearchBarPortletPreferences searchBarPortletPreferences = new com.liferay.portal
 				<aui:input label="scope-parameter-name" name="<%= PortletPreferencesJspUtil.getInputName(SearchBarPortletPreferences.PREFERENCE_KEY_SCOPE_PARAMETER_NAME) %>" value="<%= searchBarPortletPreferences.getScopeParameterName() %>" />
 
 				<aui:input label="destination-page" name="<%= PortletPreferencesJspUtil.getInputName(SearchBarPortletPreferences.PREFERENCE_KEY_DESTINATION) %>" value="<%= searchBarPortletPreferences.getDestinationString() %>" />
+
+				<aui:input label="auto-complete-url" name="<%= PortletPreferencesJspUtil.getInputName(SearchBarPortletPreferences.PREFERENCE_KEY_AUTOCOMPLETE_URL) %>" value="<%= searchBarPortletPreferences.getAutocompleteURLString() %>" />
 			</aui:fieldset>
 		</div>
 	</div>
