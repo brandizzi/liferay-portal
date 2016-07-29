@@ -13,6 +13,15 @@
 								'aui-base'
 							]
 						},
+						'liferay-calendar-container': {
+							path: 'calendar_container.js',
+							requires: [
+							    'aui-alert',
+								'aui-base',
+								'aui-component',
+								'liferay-portlet-base'
+							]
+						},
 						'liferay-calendar-interval-selector': {
 							path: 'interval_selector.js',
 							requires: [
@@ -111,8 +120,28 @@
 								'liferay-calendar-recurrence-util',
 								'liferay-calendar-util',
 								'liferay-node',
+								'liferay-scheduler-models',
+								'liferay-scheduler-event-recorder',
 								'liferay-store',
 								'promise',
+								'resize-plugin'
+							]
+						},
+						'liferay-scheduler-models': {
+							path: 'scheduler_models.js',
+							requires: [
+								'aui-datatype',
+								'dd-plugin',
+								'liferay-calendar-util',
+								'liferay-store'
+							]
+						},
+						'liferay-scheduler-event-recorder': {
+							path: 'scheduler_event_recorder.js',
+							requires: [
+								'dd-plugin',
+								'liferay-calendar-util',
+								'liferay-node',
 								'resize-plugin'
 							]
 						}

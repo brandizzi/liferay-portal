@@ -207,6 +207,14 @@ while (manageableCalendarsIterator.hasNext()) {
 }
 %>
 
+<aui:script use="liferay-calendar-container">
+	window.<portlet:namespace />calendarContainer = new Liferay.CalendarContainer(
+		{
+			namespace: '<portlet:namespace />'
+		}
+	);
+</aui:script>
+
 <liferay-portlet:actionURL name="updateFormCalendarBooking" var="updateFormCalendarBookingURL" />
 
 <aui:form action="<%= updateFormCalendarBookingURL %>" method="post" name="fm" onSubmit='<%= "event.preventDefault(); " + renderResponse.getNamespace() + "updateCalendarBooking();" %>'>
@@ -452,7 +460,7 @@ while (manageableCalendarsIterator.hasNext()) {
 
 			<c:if test="<%= invitable %>">
 				var calendarId = A.one('#<portlet:namespace />calendarId').val();
-				var childCalendarIds = A.Object.keys(Liferay.CalendarUtil.availableCalendars);
+				var childCalendarIds = A.Object.keys(window.<portlet:namespace />calendarContainer.get('availableCalendars'));
 
 				A.Array.remove(childCalendarIds, A.Array.indexOf(childCalendarIds, calendarId));
 
@@ -504,7 +512,7 @@ while (manageableCalendarsIterator.hasNext()) {
 	);
 
 	var syncCalendarsMap = function() {
-		Liferay.CalendarUtil.syncCalendarsMap(
+		window.<portlet:namespace />calendarContainer.syncCalendarsMap(
 			[
 				window.<portlet:namespace />calendarListAccepted,
 
@@ -518,14 +526,14 @@ while (manageableCalendarsIterator.hasNext()) {
 		);
 
 		A.each(
-			Liferay.CalendarUtil.availableCalendars,
+			window.<portlet:namespace />calendarContainer.get('availableCalendars'),
 			function(item, index) {
 				item.set('disabled', true);
 			}
 		);
 	};
 
-	var calendarsMenu = Liferay.CalendarUtil.getCalendarsMenu(
+	var calendarsMenu = window.<portlet:namespace />calendarContainer.getCalendarsMenu(
 		{
 			content: '#<portlet:namespace />schedulerContainer',
 			defaultCalendarId: defaultCalendarId,
@@ -737,7 +745,7 @@ while (manageableCalendarsIterator.hasNext()) {
 
 		<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="calendarResources" var="calendarResourcesURL"></liferay-portlet:resourceURL>
 
-		Liferay.CalendarUtil.createCalendarsAutoComplete(
+		window.<portlet:namespace />calendarContainer.createCalendarsAutoComplete(
 			'<%= calendarResourcesURL %>',
 			inviteResourcesInput,
 			function(event) {
