@@ -19,9 +19,9 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.UserNotificationEvent;
 import com.liferay.portal.kernel.notifications.BaseUserNotificationHandler;
 import com.liferay.portal.kernel.notifications.UserNotificationHandler;
-import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserNotificationEventLocalService;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.workflow.WorkflowHandler;
@@ -64,12 +64,11 @@ public class WorkflowTaskUserNotificationHandler
 		WorkflowTask workflowTask = WorkflowTaskManagerUtil.fetchWorkflowTask(
 			serviceContext.getCompanyId(), workflowTaskId);
 
-		long groupId = serviceContext.getThemeDisplay().getSiteGroupId();
-		PermissionChecker permissionChecker =
-			serviceContext.getThemeDisplay().getPermissionChecker();
+		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
 
 		boolean hasPermission = _workflowTaskPermissionChecker.hasPermission(
-			groupId, workflowTask, permissionChecker);
+			themeDisplay.getSiteGroupId(), workflowTask,
+			themeDisplay.getPermissionChecker());
 
 		if ((workflowTask == null) || !hasPermission) {
 			_userNotificationEventLocalService.deleteUserNotificationEvent(
