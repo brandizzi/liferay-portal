@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.UserNotificationEvent;
 import com.liferay.portal.kernel.notifications.BaseUserNotificationHandler;
 import com.liferay.portal.kernel.notifications.UserNotificationHandler;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserNotificationEventLocalService;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -27,6 +28,7 @@ import com.liferay.portal.kernel.workflow.WorkflowHandler;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 import com.liferay.portal.kernel.workflow.WorkflowTask;
 import com.liferay.portal.kernel.workflow.WorkflowTaskManagerUtil;
+import com.liferay.portal.workflow.task.web.internal.permission.WorkflowTaskPermissionChecker;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -62,7 +64,14 @@ public class WorkflowTaskUserNotificationHandler
 		WorkflowTask workflowTask = WorkflowTaskManagerUtil.fetchWorkflowTask(
 			serviceContext.getCompanyId(), workflowTaskId);
 
-		if (workflowTask == null) {
+		long groupId = serviceContext.getThemeDisplay().getSiteGroupId();
+		PermissionChecker permissionChecker =
+			serviceContext.getThemeDisplay().getPermissionChecker();
+
+		boolean hasPermission = _workflowTaskPermissionChecker.hasPermission(
+			groupId, workflowTask, permissionChecker);
+
+		if ((workflowTask == null) || !hasPermission) {
 			_userNotificationEventLocalService.deleteUserNotificationEvent(
 				userNotificationEvent.getUserNotificationEventId());
 
@@ -105,5 +114,7 @@ public class WorkflowTaskUserNotificationHandler
 
 	private UserNotificationEventLocalService
 		_userNotificationEventLocalService;
+	private final WorkflowTaskPermissionChecker _workflowTaskPermissionChecker =
+		new WorkflowTaskPermissionChecker();
 
 }
