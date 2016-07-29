@@ -13,6 +13,15 @@
 								'aui-base'
 							]
 						},
+						'liferay-calendar-container': {
+							path: 'calendar_container.js',
+							requires: [
+							    'aui-alert',
+								'aui-base',
+								'aui-component',
+								'liferay-portlet-base'
+							]
+						},
 						'liferay-calendar-interval-selector': {
 							path: 'interval_selector.js',
 							requires: [
