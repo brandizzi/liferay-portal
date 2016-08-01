@@ -975,7 +975,7 @@ public class CalendarPortlet extends MVCPortlet {
 			ParamUtil.getString(actionRequest, "exceptionDates"));
 
 		for (String exceptionDate : exceptionDates) {
-			recurrence.addExceptionDate(
+			recurrence.addExceptionJCalendar(
 				JCalendarUtil.getJCalendar(Long.valueOf(exceptionDate)));
 		}
 
