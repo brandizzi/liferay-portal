@@ -423,7 +423,7 @@ while (manageableCalendarsIterator.hasNext()) {
 				var="permissionsCalendarBookingURL"
 			/>
 
-			<aui:button href="<%= permissionsCalendarBookingURL %>" value="permissions" />
+			<aui:button cssClass="btn-lg" href="<%= permissionsCalendarBookingURL %>" value="permissions" />
 		</c:if>
 	</aui:button-row>
 </aui:form>
