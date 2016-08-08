@@ -45,6 +45,10 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class SocialOfficeUpgradeOSGiCommands {
 
+	public void convertEventsDisplayToCalendar() throws PortalException {
+		_updateLayouts();
+	}
+
 	public void executeAll() throws PortalException {
 		hideTasksLayout();
 		removeTasksPortlet();
@@ -163,6 +167,53 @@ public class SocialOfficeUpgradeOSGiCommands {
 		PortletPreferencesLocalService portletPreferencesLocalService) {
 
 		_portletPreferencesLocalService = portletPreferencesLocalService;
+	}
+
+	private void _updateLayouts() throws PortalException {
+		ActionableDynamicQuery actionableDynamicQuery =
+			_layoutLocalService.getActionableDynamicQuery();
+
+		actionableDynamicQuery.setAddCriteriaMethod(
+			new ActionableDynamicQuery.AddCriteriaMethod() {
+
+				public void addCriteria(DynamicQuery dynamicQuery) {
+					dynamicQuery.add(
+						RestrictionsFactoryUtil.like(
+							"typeSettings", "1_WAR_eventsdisplayportlet"));
+				}
+
+			});
+
+		final AtomicInteger atomicInteger = new AtomicInteger(0);
+
+		actionableDynamicQuery.setPerformActionMethod(
+			new ActionableDynamicQuery.
+				PerformActionMethod<Layout>() {
+
+				public void performAction(Layout layout)
+					throws PortalException {
+
+					String typeSettings = layout.getTypeSettings();
+
+					typeSettings = typeSettings.replace(
+						"1_WAR_eventsdisplayportlet",
+						"com_liferay_calendar_web_CalendarPortlet");
+
+					layout.setTypeSettings(typeSettings);
+
+					_layoutLocalService.updateLayout(layout);
+
+					atomicInteger.incrementAndGet();
+				}
+
+			});
+
+		actionableDynamicQuery.performActions();
+
+		System.out.printf(
+			"[socialOffice:convertEventsDisplayToCalendar] %d Events Display " +
+				"instances converted to Calendar.%n",
+			atomicInteger.get());
 	}
 
 	private int _updateLayoutSetTheme() throws PortalException {
