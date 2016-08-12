@@ -62,7 +62,6 @@ AUI.add(
 			INVOKER_URL: themeDisplay.getPathContext() + '/api/jsonws/invoke',
 			NOTIFICATION_DEFAULT_TYPE: 'email',
 			PORTLET_NAMESPACE: STR_BLANK,
-			USER_TIME_ZONE: 'UTC',
 
 			adjustSchedulerEventDisplayTime: function(schedulerEvent) {
 				var instance = this;
