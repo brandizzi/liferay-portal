@@ -57,7 +57,6 @@ AUI.add(
 
 		var CalendarUtil = {
 			NOTIFICATION_DEFAULT_TYPE: 'email',
-			PORTLET_NAMESPACE: STR_BLANK,
 
 			adjustSchedulerEventDisplayTime: function(schedulerEvent) {
 				var instance = this;
