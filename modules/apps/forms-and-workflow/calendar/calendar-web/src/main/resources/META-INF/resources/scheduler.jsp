@@ -39,7 +39,6 @@ String viewCalendarBookingURL = ParamUtil.getString(request, "viewCalendarBookin
 
 <aui:script use="aui-toggler,liferay-calendar-list,liferay-scheduler,liferay-store,json">
 	Liferay.CalendarUtil.PORTLET_NAMESPACE = '<portlet:namespace />';
-	Liferay.CalendarUtil.USER_TIME_ZONE = '<%= HtmlUtil.escapeJS(userTimeZone.getID()) %>';
 
 	var calendarContainer = Liferay.component('<portlet:namespace />calendarContainer');
 
