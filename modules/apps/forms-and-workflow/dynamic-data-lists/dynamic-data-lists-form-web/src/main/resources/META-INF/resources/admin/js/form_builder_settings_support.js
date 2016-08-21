@@ -21,6 +21,10 @@ AUI.add(
 				value: null
 			},
 
+			defaultLanguageId: {
+				value: themeDisplay.getLanguageId()
+			},
+
 			evaluatorURL: {
 			},
 
@@ -213,6 +217,7 @@ AUI.add(
 
 				return new Liferay.DDL.FormBuilderSettingsRetriever(
 					{
+						defaultLanguageId: instance.get('defaultLanguageId'),
 						getFieldTypeSettingFormContextURL: instance.get('getFieldTypeSettingFormContextURL'),
 						portletNamespace: instance.get('portletNamespace')
 					}

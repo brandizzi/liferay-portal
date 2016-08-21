@@ -59,6 +59,7 @@ import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -374,6 +375,13 @@ public class DDLFormAdminDisplayContext {
 		}
 
 		return _ddmFormLayoutJSONSerializer.serialize(ddmFormLayout);
+	}
+
+	public String getSiteDefaultLanguageId() {
+		ThemeDisplay themeDisplay =
+			_ddlFormAdminRequestHelper.getThemeDisplay();
+
+		return LocaleUtil.toLanguageId(themeDisplay.getSiteDefaultLocale());
 	}
 
 	public boolean isDDLRecordWorkflowHandlerDeployed() {
