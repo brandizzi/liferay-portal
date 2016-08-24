@@ -44,6 +44,7 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"osgi.command.function=executeAll",
+		"osgi.command.function=updateEventsDisplay",
 		"osgi.command.function=hideTasksLayout",
 		"osgi.command.function=removeTasksPortlet",
 		"osgi.command.function=updateEventsDisplay",
@@ -54,6 +55,7 @@ import org.osgi.service.component.annotations.Reference;
 public class SocialOfficeUpgradeOSGiCommands {
 
 	public void executeAll() throws PortalException {
+		updateEventsDisplay();
 		hideTasksLayout();
 		removeTasksPortlet();
 		updateEventsDisplay();
