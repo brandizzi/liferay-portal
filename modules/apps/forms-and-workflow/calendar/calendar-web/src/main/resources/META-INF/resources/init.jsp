@@ -53,7 +53,6 @@ page import="com.liferay.calendar.recurrence.Recurrence" %><%@
 page import="com.liferay.calendar.recurrence.Weekday" %><%@
 page import="com.liferay.calendar.service.CalendarBookingLocalServiceUtil" %><%@
 page import="com.liferay.calendar.service.CalendarBookingServiceUtil" %><%@
-page import="com.liferay.calendar.service.CalendarLocalServiceUtil" %><%@
 page import="com.liferay.calendar.service.CalendarNotificationTemplateLocalServiceUtil" %><%@
 page import="com.liferay.calendar.service.CalendarResourceServiceUtil" %><%@
 page import="com.liferay.calendar.service.CalendarServiceUtil" %><%@
@@ -67,6 +66,7 @@ page import="com.liferay.calendar.util.ColorUtil" %><%@
 page import="com.liferay.calendar.util.JCalendarUtil" %><%@
 page import="com.liferay.calendar.util.RecurrenceUtil" %><%@
 page import="com.liferay.calendar.util.comparator.CalendarNameComparator" %><%@
+page import="com.liferay.calendar.web.internal.display.context.CalendarDisplayContext" %><%@
 page import="com.liferay.calendar.web.internal.search.CalendarResourceDisplayTerms" %><%@
 page import="com.liferay.calendar.web.internal.search.CalendarResourceSearch" %><%@
 page import="com.liferay.calendar.workflow.CalendarBookingWorkflowConstants" %><%@
@@ -84,7 +84,6 @@ page import="com.liferay.portal.kernel.model.User" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@
 page import="com.liferay.portal.kernel.security.permission.ActionKeys" %><%@
 page import="com.liferay.portal.kernel.security.permission.ResourceActionsUtil" %><%@
-page import="com.liferay.portal.kernel.service.GroupLocalServiceUtil" %><%@
 page import="com.liferay.portal.kernel.service.GroupServiceUtil" %><%@
 page import="com.liferay.portal.kernel.service.UserLocalServiceUtil" %><%@
 page import="com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalServiceUtil" %><%@
@@ -207,32 +206,10 @@ long[] calendarIds = StringUtil.split(SessionClicks.get(request, "com.liferay.ca
 
 Calendar defaultCalendar = null;
 
-for (long calendarId : calendarIds) {
-	Calendar calendar = CalendarServiceUtil.fetchCalendar(calendarId);
+CalendarDisplayContext calendarDisplayContext = (CalendarDisplayContext)renderRequest.getAttribute(WebKeys.PORTLET_DISPLAY_CONTEXT);
 
-	if (calendar != null) {
-		CalendarResource calendarResource = calendar.getCalendarResource();
-
-		if (calendarResource.isActive()) {
-			Group scopeGroup = themeDisplay.getScopeGroup();
-			Group calendarGroup = GroupLocalServiceUtil.getGroup(calendar.getGroupId());
-
-			if (calendarGroup.isStagingGroup() && (!scopeGroup.isStagingGroup() || (scopeGroup.getGroupId() != calendarGroup.getGroupId()))) {
-				calendar = CalendarLocalServiceUtil.fetchCalendarByUuidAndGroupId(calendar.getUuid(), calendarGroup.getLiveGroupId());
-
-				if (calendar == null) {
-					continue;
-				}
-			}
-			else if (scopeGroup.isStagingGroup() && (scopeGroup.getLiveGroupId() == calendarGroup.getGroupId())) {
-				Group stagingGroup = calendarGroup.getStagingGroup();
-
-				calendar = CalendarLocalServiceUtil.fetchCalendarByUuidAndGroupId(calendar.getUuid(), stagingGroup.getGroupId());
-			}
-
-			otherCalendars.add(calendar);
-		}
-	}
+if (calendarDisplayContext != null) {
+	otherCalendars = calendarDisplayContext.getOtherCalendars(calendarIds);
 }
 
 for (Calendar groupCalendar : groupCalendars) {
