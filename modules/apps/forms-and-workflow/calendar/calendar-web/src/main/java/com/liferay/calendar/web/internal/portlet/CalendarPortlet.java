@@ -53,6 +53,7 @@ import com.liferay.calendar.util.CalendarUtil;
 import com.liferay.calendar.util.JCalendarUtil;
 import com.liferay.calendar.util.RSSUtil;
 import com.liferay.calendar.util.RecurrenceUtil;
+import com.liferay.calendar.web.internal.display.context.CalendarDisplayContext;
 import com.liferay.calendar.web.internal.upgrade.CalendarWebUpgrade;
 import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
 import com.liferay.portal.dao.orm.custom.sql.CustomSQLUtil;
@@ -278,6 +279,7 @@ public class CalendarPortlet extends MVCPortlet {
 		throws IOException, PortletException {
 
 		try {
+			setRenderRequestAttributes(renderRequest);
 			getCalendar(renderRequest);
 			getCalendarBooking(renderRequest);
 			getCalendarResource(renderRequest);
@@ -1471,6 +1473,19 @@ public class CalendarPortlet extends MVCPortlet {
 	@Reference(unbind = "-")
 	protected void setGroupLocalService(GroupLocalService groupLocalService) {
 		_groupLocalService = groupLocalService;
+	}
+
+	protected void setRenderRequestAttributes(RenderRequest renderRequest) {
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		CalendarDisplayContext calendarDisplayContext =
+			new CalendarDisplayContext(
+				_groupLocalService, _calendarService, _calendarLocalService,
+				themeDisplay);
+
+		renderRequest.setAttribute(
+			WebKeys.PORTLET_DISPLAY_CONTEXT, calendarDisplayContext);
 	}
 
 	@Reference(unbind = "-")
