@@ -219,6 +219,10 @@ for (long calendarId : calendarIds) {
 
 			if (calendarGroup.isStagingGroup() && (!scopeGroup.isStagingGroup() || (scopeGroup.getGroupId() != calendarGroup.getGroupId()))) {
 				calendar = CalendarLocalServiceUtil.fetchCalendarByUuidAndGroupId(calendar.getUuid(), calendarGroup.getLiveGroupId());
+
+				if (calendar == null) {
+					continue;
+				}
 			}
 
 			otherCalendars.add(calendar);
