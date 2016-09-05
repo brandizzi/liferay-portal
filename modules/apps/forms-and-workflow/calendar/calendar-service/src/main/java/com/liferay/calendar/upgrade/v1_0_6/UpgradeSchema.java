@@ -21,29 +21,10 @@ import com.liferay.portal.kernel.util.StringUtil;
 /**
  * @author Adam Brandizzi
  */
-public class UpgradeCalendarBooking extends UpgradeProcess {
+public class UpgradeSchema extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
-		upgradeSchema();
-		updateCalendarBooking();
-	}
-
-	protected void updateCalendarBooking() throws Exception {
-		try (LoggingTimer loggingTimer = new LoggingTimer()) {
-			if (!hasColumn("CalendarBooking", "recurringCalendarBookingId")) {
-				runSQL(
-					"alter table CalendarBooking add " +
-						"recurringCalendarBookingId LONG null");
-			}
-
-			runSQL(
-				"update CalendarBooking set recurringCalendarBookingId = " +
-					"calendarBookingId");
-		}
-	}
-
-	protected void upgradeSchema() throws Exception {
 		String template = StringUtil.read(
 			UpgradeCalendarBooking.class.getResourceAsStream(
 				"dependencies/update.sql"));

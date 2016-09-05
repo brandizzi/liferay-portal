@@ -68,7 +68,7 @@ public class CalendarServiceUpgrade implements UpgradeStepRegistrator {
 
 		registry.register(
 			"com.liferay.calendar.service", "1.0.5", "1.0.6",
-			new com.liferay.calendar.upgrade.v1_0_6.UpgradeCalendarBooking());
+			new com.liferay.calendar.upgrade.v1_0_6.UpgradeSchema());
 	}
 
 	@Reference(unbind = "-")
