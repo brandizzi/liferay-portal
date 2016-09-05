@@ -964,7 +964,7 @@ public class CalendarBookingLocalServiceTest {
 				calendar.getCalendarId(), instanceTitleMap,
 				calendarBooking.getDescriptionMap(),
 				calendarBooking.getLocation(), instanceStartTime,
-				instanceStartTime+ 36000000, false, null, false, 0, null, 0,
+				instanceStartTime + 36000000, false, null, false, 0, null, 0,
 				null, serviceContext);
 
 		Assert.assertEquals(
