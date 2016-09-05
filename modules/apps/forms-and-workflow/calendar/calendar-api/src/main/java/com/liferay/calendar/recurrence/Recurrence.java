@@ -29,12 +29,12 @@ public class Recurrence {
 	 * @deprecated As of 7.0.0
 	 */
 	@Deprecated
-	public void addExceptionDate(Calendar calendar) {
-		_exceptionJCalendars.add(calendar);
+	public void addExceptionDate(Calendar jCalendar) {
+		_exceptionJCalendars.add(jCalendar);
 	}
 
-	public void addExceptionJCalendar(Calendar calendar) {
-		_exceptionJCalendars.add(calendar);
+	public void addExceptionJCalendar(Calendar jCalendar) {
+		_exceptionJCalendars.add(jCalendar);
 	}
 
 	@Override
@@ -111,8 +111,8 @@ public class Recurrence {
 		return weekdays;
 	}
 
-	public void removeExceptionJCalendar(Calendar calendar) {
-		_exceptionJCalendars.remove(calendar);
+	public void removeExceptionJCalendar(Calendar jCalendar) {
+		_exceptionJCalendars.remove(jCalendar);
 	}
 
 	public void setCount(int count) {
