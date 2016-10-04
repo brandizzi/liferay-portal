@@ -234,25 +234,23 @@ AUI.add(
 				A.each(
 					schedulerEvents,
 					function(schedulerEvent) {
-						if (schedulerEvent.isRecurring()) {
+						if (schedulerEvent.isRecurring() || calendarBooking.status === CalendarWorkflow.STATUS_DENIED) {
 							var scheduler = schedulerEvent.get('scheduler');
 
 							var eventRecorder = scheduler.get('eventRecorder');
 
 							eventRecorder.hidePopover();
 
-							scheduler.load();
+							if (schedulerEvent.isRecurring()) {
+								scheduler.load();
+							}
+
+							if (calendarBooking.status === CalendarWorkflow.STATUS_DENIED) {
+								CalendarUtil.destroyEvent(schedulerEvent);
+							}
 						}
-						if (calendarBooking.status === CalendarWorkflow.STATUS_DENIED) {
-							var scheduler = schedulerEvent.get('scheduler');
 
-							var eventRecorder = scheduler.get('eventRecorder');
-
-							eventRecorder.hidePopover();
-
-							CalendarUtil.destroyEvent(schedulerEvent);
-						}
-						else {
+						if (calendarBooking.status !== CalendarWorkflow.STATUS_DENIED) {
 							schedulerEvent.set('status', calendarBooking.status);
 						}
 					}
