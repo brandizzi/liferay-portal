@@ -138,6 +138,11 @@ AUI.add(
 						value: STR_BLANK
 					},
 
+					recurringCalendarBookingId: {
+						setter: toInt,
+						value: 0
+					},
+
 					reminder: {
 						getter: function() {
 							var instance = this;
@@ -171,7 +176,7 @@ AUI.add(
 
 				NAME: 'scheduler-event',
 
-				PROPAGATE_ATTRS: A.SchedulerEvent.PROPAGATE_ATTRS.concat(['calendarBookingId', 'calendarId', 'calendarResourceId', 'parentCalendarBookingId', 'recurrence', 'status']),
+				PROPAGATE_ATTRS: A.SchedulerEvent.PROPAGATE_ATTRS.concat(['calendarBookingId', 'calendarId', 'calendarResourceId', 'parentCalendarBookingId', 'recurrence', 'recurringCalendarBookingId', 'status']),
 
 				prototype: {
 					eventModel: Liferay.SchedulerEvent,
@@ -204,8 +209,13 @@ AUI.add(
 
 					isRecurring: function() {
 						var instance = this;
+						var isRecurring = false;
 
-						return instance.get('recurrence') !== STR_BLANK;
+						if (instance.get('recurrence') !== STR_BLANK || instance.get('calendarBookingId') !== instance.get('recurringCalendarBookingId')) {
+							isRecurring = true;
+						}
+
+						return isRecurring;
 					},
 
 					syncNodeColorUI: function() {
