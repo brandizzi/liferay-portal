@@ -192,11 +192,11 @@ AUI.add(
 					instance._invokeService(
 						{
 							'/calendar.calendarbooking/invoke-transition': {
-								calendarBookingId: schedulerEvent.get('calendarBookingId'),
-								status: status,
-								instanceIndex: instanceIndex,
-								updateInstance: updateInstance,
 								allFollowing: allFollowing,
+								calendarBookingId: schedulerEvent.get('calendarBookingId'),
+								instanceIndex: instanceIndex,
+								status: status,
+								updateInstance: updateInstance,
 								userId: instance.get('userId')
 							}
 						},
