@@ -418,7 +418,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 
 	@Override
 	public CalendarBooking invokeTransition(
-			long calendarBookingId, int status, int instanceIndex,
+			long calendarBookingId, int instanceIndex, int status,
 			boolean updateInstance, boolean allFollowing,
 			ServiceContext serviceContext)
 		throws PortalException {
@@ -427,13 +427,27 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			calendarBookingId, instanceIndex);
 
 		return invokeTransition(
-			calendarBookingId, status, calendarBookingInstance.getStartTime(),
+			calendarBookingId, calendarBookingInstance.getStartTime(), status,
 			updateInstance, allFollowing, serviceContext);
+	}
+
+	/**
+	 * @deprecated As of 2.2.0, replaced by {@link #invokeTransition(long, int,
+	 *             long, boolean, boolean, ServiceContext)}
+	 */
+	@Deprecated
+	@Override
+	public void invokeTransition(
+			long calendarBookingId, int status, ServiceContext serviceContext)
+		throws PortalException {
+
+		invokeTransition(
+			calendarBookingId, status, 0, false, false, serviceContext);
 	}
 
 	@Override
 	public CalendarBooking invokeTransition(
-			long calendarBookingId, int status, long startTime,
+			long calendarBookingId, long startTime, int status,
 			boolean updateInstance, boolean allFollowing,
 			ServiceContext serviceContext)
 		throws PortalException {
@@ -495,20 +509,6 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			getUserId(), calendarBooking, status, serviceContext);
 
 		return calendarBooking;
-	}
-
-	/**
-	 * @deprecated As of 2.2.0, replaced by {@link #invokeTransition(long, int,
-	 *             long, boolean, boolean, ServiceContext)}
-	 */
-	@Deprecated
-	@Override
-	public void invokeTransition(
-			long calendarBookingId, int status, ServiceContext serviceContext)
-		throws PortalException {
-
-		invokeTransition(
-			calendarBookingId, status, 0, false, false, serviceContext);
 	}
 
 	@Override

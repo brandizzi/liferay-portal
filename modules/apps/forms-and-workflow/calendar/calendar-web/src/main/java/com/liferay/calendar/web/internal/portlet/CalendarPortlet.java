@@ -274,7 +274,7 @@ public class CalendarPortlet extends MVCPortlet {
 
 		CalendarBooking calendarBooking =
 			_calendarBookingService.invokeTransition(
-				calendarBookingId, status, startTime, updateInstance,
+				calendarBookingId, startTime, status, updateInstance,
 				allFollowing, serviceContext);
 
 		String redirect = getRedirect(actionRequest, actionResponse);
