@@ -1317,35 +1317,39 @@ public class CalendarPortlet extends MVCPortlet {
 			}
 		}
 
-		long groupClassNameId = PortalUtil.getClassNameId(Group.class);
+		Group scopeGroup = themeDisplay.getScopeGroup();
 
-		String name = StringUtil.merge(
-			CustomSQLUtil.keywords(keywords), StringPool.BLANK);
+		if (!scopeGroup.isStagingGroup()) {
+			long groupClassNameId = PortalUtil.getClassNameId(Group.class);
 
-		LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+			String name = StringUtil.merge(
+				CustomSQLUtil.keywords(keywords), StringPool.BLANK);
 
-		params.put("usersGroups", themeDisplay.getUserId());
+			LinkedHashMap<String, Object> params = new LinkedHashMap<>();
 
-		List<Group> groups = _groupLocalService.search(
-			themeDisplay.getCompanyId(), name, null, params, true, 0,
-			SearchContainer.DEFAULT_DELTA);
+			params.put("usersGroups", themeDisplay.getUserId());
 
-		for (Group group : groups) {
-			addCalendar(
-				resourceRequest, calendarsSet, groupClassNameId,
-				group.getGroupId());
-		}
+			List<Group> groups = _groupLocalService.search(
+				themeDisplay.getCompanyId(), name, null, params, true, 0,
+				SearchContainer.DEFAULT_DELTA);
 
-		long userClassNameId = PortalUtil.getClassNameId(User.class);
+			for (Group group : groups) {
+				addCalendar(
+					resourceRequest, calendarsSet, groupClassNameId,
+					group.getGroupId());
+			}
 
-		List<User> users = _userLocalService.search(
-			themeDisplay.getCompanyId(), keywords, 0, null, 0,
-			SearchContainer.DEFAULT_DELTA, new UserFirstNameComparator());
+			long userClassNameId = PortalUtil.getClassNameId(User.class);
 
-		for (User user : users) {
-			addCalendar(
-				resourceRequest, calendarsSet, userClassNameId,
-				user.getUserId());
+			List<User> users = _userLocalService.search(
+				themeDisplay.getCompanyId(), keywords, 0, null, 0,
+				SearchContainer.DEFAULT_DELTA, new UserFirstNameComparator());
+
+			for (User user : users) {
+				addCalendar(
+					resourceRequest, calendarsSet, userClassNameId,
+					user.getUserId());
+			}
 		}
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
