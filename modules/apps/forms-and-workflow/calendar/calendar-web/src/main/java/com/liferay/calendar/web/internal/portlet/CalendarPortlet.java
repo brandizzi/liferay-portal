@@ -1289,7 +1289,15 @@ public class CalendarPortlet extends MVCPortlet {
 			themeDisplay.getCompanyId(), name, null, params, true, 0,
 			SearchContainer.DEFAULT_DELTA);
 
+		Group scopeGroup = themeDisplay.getScopeGroup();
+
 		for (Group group : groups) {
+			if (scopeGroup.isStagingGroup() &&
+				(scopeGroup.getLiveGroupId() == group.getGroupId())) {
+
+				continue;
+			}
+
 			addCalendar(
 				resourceRequest, calendarsSet, groupClassNameId,
 				group.getGroupId());
