@@ -1317,39 +1317,43 @@ public class CalendarPortlet extends MVCPortlet {
 			}
 		}
 
+		long groupClassNameId = PortalUtil.getClassNameId(Group.class);
+
+		String name = StringUtil.merge(
+			CustomSQLUtil.keywords(keywords), StringPool.BLANK);
+
+		LinkedHashMap<String, Object> params = new LinkedHashMap<>();
+
+		params.put("usersGroups", themeDisplay.getUserId());
+
+		List<Group> groups = _groupLocalService.search(
+			themeDisplay.getCompanyId(), name, null, params, true, 0,
+			SearchContainer.DEFAULT_DELTA);
+
 		Group scopeGroup = themeDisplay.getScopeGroup();
 
-		if (!scopeGroup.isStagingGroup()) {
-			long groupClassNameId = PortalUtil.getClassNameId(Group.class);
+		for (Group group : groups) {
+			if (scopeGroup.isStagingGroup() &&
+				(scopeGroup.getLiveGroupId() == group.getGroupId())) {
 
-			String name = StringUtil.merge(
-				CustomSQLUtil.keywords(keywords), StringPool.BLANK);
-
-			LinkedHashMap<String, Object> params = new LinkedHashMap<>();
-
-			params.put("usersGroups", themeDisplay.getUserId());
-
-			List<Group> groups = _groupLocalService.search(
-				themeDisplay.getCompanyId(), name, null, params, true, 0,
-				SearchContainer.DEFAULT_DELTA);
-
-			for (Group group : groups) {
-				addCalendar(
-					resourceRequest, calendarsSet, groupClassNameId,
-					group.getGroupId());
+				continue;
 			}
 
-			long userClassNameId = PortalUtil.getClassNameId(User.class);
+			addCalendar(
+				resourceRequest, calendarsSet, groupClassNameId,
+				group.getGroupId());
+		}
 
-			List<User> users = _userLocalService.search(
-				themeDisplay.getCompanyId(), keywords, 0, null, 0,
-				SearchContainer.DEFAULT_DELTA, new UserFirstNameComparator());
+		long userClassNameId = PortalUtil.getClassNameId(User.class);
 
-			for (User user : users) {
-				addCalendar(
-					resourceRequest, calendarsSet, userClassNameId,
-					user.getUserId());
-			}
+		List<User> users = _userLocalService.search(
+			themeDisplay.getCompanyId(), keywords, 0, null, 0,
+			SearchContainer.DEFAULT_DELTA, new UserFirstNameComparator());
+
+		for (User user : users) {
+			addCalendar(
+				resourceRequest, calendarsSet, userClassNameId,
+				user.getUserId());
 		}
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
