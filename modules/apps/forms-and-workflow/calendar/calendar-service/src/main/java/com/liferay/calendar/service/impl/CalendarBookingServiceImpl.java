@@ -442,7 +442,7 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 		throws PortalException {
 
 		invokeTransition(
-			calendarBookingId, status, 0, false, false, serviceContext);
+			calendarBookingId, 0, status, false, false, serviceContext);
 	}
 
 	@Override

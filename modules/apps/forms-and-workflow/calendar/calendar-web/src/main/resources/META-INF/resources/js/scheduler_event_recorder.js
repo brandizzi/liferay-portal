@@ -365,18 +365,18 @@ AUI.add(
 								Liferay.RecurrenceUtil.openConfirmationPanel(
 									'invokeTransition',
 									function() {
-										remoteServices.invokeTransition(schedulerEvent, statusData, schedulerEvent.get('instanceIndex'), true, false);
+										remoteServices.invokeTransition(schedulerEvent, schedulerEvent.get('instanceIndex'), statusData, true, false);
 									},
 									function() {
-										remoteServices.invokeTransition(schedulerEvent, statusData, schedulerEvent.get('instanceIndex'), true, true);
+										remoteServices.invokeTransition(schedulerEvent, schedulerEvent.get('instanceIndex'), statusData, true, true);
 									},
 									function() {
-										remoteServices.invokeTransition(schedulerEvent, statusData, schedulerEvent.get('instanceIndex'), false, false);
+										remoteServices.invokeTransition(schedulerEvent, schedulerEvent.get('instanceIndex'), statusData, false, false);
 									}
 								);
 							}
 							else {
-								remoteServices.invokeTransition(schedulerEvent, statusData, 0, false, false);
+								remoteServices.invokeTransition(schedulerEvent, 0, statusData, false, false);
 							}
 						}
 					},

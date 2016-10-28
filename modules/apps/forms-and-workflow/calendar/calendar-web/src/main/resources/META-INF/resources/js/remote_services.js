@@ -184,7 +184,7 @@ AUI.add(
 					);
 				},
 
-				invokeTransition: function(schedulerEvent, status, instanceIndex, updateInstance, allFollowing) {
+				invokeTransition: function(schedulerEvent, instanceIndex, status, updateInstance, allFollowing) {
 					var instance = this;
 
 					var scheduler = schedulerEvent.get('scheduler');
