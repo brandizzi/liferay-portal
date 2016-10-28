@@ -287,7 +287,6 @@ AssetEntry layoutAssetEntry = AssetEntryLocalServiceUtil.getEntry(CalendarBookin
 					}
 				);
 			}
-
 			else {
 				submitForm(document.<portlet:namespace />fm);
 			}
