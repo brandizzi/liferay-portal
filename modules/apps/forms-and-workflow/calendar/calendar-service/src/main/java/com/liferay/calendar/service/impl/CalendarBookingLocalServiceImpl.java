@@ -1773,8 +1773,8 @@ public class CalendarBookingLocalServiceImpl
 
 		Recurrence laterRecurrenceObj = laterCalendarBooking.getRecurrenceObj();
 
-		List<java.util.Calendar> exceptionJCalendars =
-			new ArrayList<>(laterRecurrenceObj.getExceptionJCalendars());
+		List<java.util.Calendar> exceptionJCalendars = new ArrayList<>(
+			laterRecurrenceObj.getExceptionJCalendars());
 
 		for (java.util.Calendar exceptionJCalendar : exceptionJCalendars) {
 			if (!JCalendarUtil.isLaterDay(exceptionJCalendar, splitJCalendar)) {
