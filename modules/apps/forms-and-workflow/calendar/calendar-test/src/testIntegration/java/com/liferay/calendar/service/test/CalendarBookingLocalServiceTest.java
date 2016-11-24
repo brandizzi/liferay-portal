@@ -856,9 +856,6 @@ public class CalendarBookingLocalServiceTest {
 			_user.getUserId(), calendar.getCalendarId(), startTime, endTime,
 			recurrence, serviceContext);
 
-		Map<Locale, String> earlierDescriptionMap = new HashMap<>(
-			calendarBooking.getDescriptionMap());
-
 		long instanceStartTime = startTime + Time.DAY * 2;
 
 		long instanceEndTime = instanceStartTime + (Time.HOUR * 10);
@@ -904,6 +901,9 @@ public class CalendarBookingLocalServiceTest {
 
 		Assert.assertEquals(1, earlierCalendarBookings.size());
 		Assert.assertEquals(2, laterCalendarBookings.size());
+
+		Map<Locale, String> earlierDescriptionMap = new HashMap<>(
+			calendarBooking.getDescriptionMap());
 
 		for (CalendarBooking earlierCalendarBooking : earlierCalendarBookings) {
 			Assert.assertEquals(
