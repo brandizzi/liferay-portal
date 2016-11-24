@@ -856,7 +856,7 @@ public class CalendarBookingLocalServiceTest {
 			_user.getUserId(), calendar.getCalendarId(), startTime, endTime,
 			recurrence, serviceContext);
 
-		long instanceStartTime = startTime + Time.DAY * 2;
+		long instanceStartTime = startTime + (Time.DAY * 2);
 
 		long instanceEndTime = instanceStartTime + (Time.HOUR * 10);
 
@@ -877,9 +877,8 @@ public class CalendarBookingLocalServiceTest {
 		CalendarBookingLocalServiceUtil.updateCalendarBookingInstance(
 			_user.getUserId(), calendarBookingInstance.getCalendarBookingId(),
 			0, calendar.getCalendarId(), titleMap, laterDescriptionMap,
-			calendarBooking.getLocation(), instanceStartTime,
-			instanceEndTime, false, null, true, 0, null, 0, null,
-			serviceContext);
+			calendarBooking.getLocation(), instanceStartTime, instanceEndTime,
+			false, null, true, 0, null, 0, null, serviceContext);
 
 		List<CalendarBooking> earlierCalendarBookings = new ArrayList<>();
 		List<CalendarBooking> laterCalendarBookings = new ArrayList<>();
