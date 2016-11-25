@@ -1741,6 +1741,10 @@ public class CalendarBookingLocalServiceImpl
 			CalendarBooking calendarBooking, java.util.Calendar splitJCalendar)
 		throws PortalException {
 
+		long[] childCalendarIds = getChildCalendarIds(
+			calendarBooking.getCalendarBookingId(),
+			calendarBooking.getCalendarId());
+
 		long laterStartTime = JCalendarUtil.convertTimeToNewDay(
 			calendarBooking.getStartTime(),
 			splitJCalendar.getTimeInMillis() + Time.DAY);
@@ -1752,9 +1756,7 @@ public class CalendarBookingLocalServiceImpl
 
 		CalendarBooking laterCalendarBooking = addCalendarBooking(
 			calendarBooking.getUserId(), calendarBooking.getCalendarId(),
-			getChildCalendarIds(
-				calendarBooking.getCalendarBookingId(),
-				calendarBooking.getCalendarId()),
+			childCalendarIds,
 			CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,
 			calendarBooking.getRecurringCalendarBookingId(),
 			calendarBooking.getTitleMap(), calendarBooking.getDescriptionMap(),
@@ -1771,9 +1773,10 @@ public class CalendarBookingLocalServiceImpl
 
 		Recurrence laterRecurrenceObj = laterCalendarBooking.getRecurrenceObj();
 
-		for (java.util.Calendar exceptionJCalendar :
-				new ArrayList<>(laterRecurrenceObj.getExceptionJCalendars())) {
+		List<java.util.Calendar> exceptionJCalendars =
+			new ArrayList<>(laterRecurrenceObj.getExceptionJCalendars());
 
+		for (java.util.Calendar exceptionJCalendar : exceptionJCalendars) {
 			if (!JCalendarUtil.isLaterDay(exceptionJCalendar, splitJCalendar)) {
 				laterRecurrenceObj.removeExceptionJCalendar(exceptionJCalendar);
 			}
