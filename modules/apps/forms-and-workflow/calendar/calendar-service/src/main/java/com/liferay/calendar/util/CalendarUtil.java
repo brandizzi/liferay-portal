@@ -340,10 +340,12 @@ public class CalendarUtil {
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		for (CalendarBooking calendarBooking : calendarBookings) {
-			JSONObject jsonObject = toCalendarBookingJSONObject(
-				themeDisplay, calendarBooking, timeZone);
+			if (calendarBooking.getUserId() == themeDisplay.getUserId()) {
+				JSONObject jsonObject = toCalendarBookingJSONObject(
+					themeDisplay, calendarBooking, timeZone);
 
-			jsonArray.put(jsonObject);
+				jsonArray.put(jsonObject);
+			}
 		}
 
 		return jsonArray;
