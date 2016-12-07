@@ -53,11 +53,18 @@ public class AddDefaultSharedFormLayoutPortalInstanceLifecycleListener
 			group = addFormsGroup(company.getCompanyId());
 		}
 
-		Layout layout = _layoutLocalService.fetchLayoutByFriendlyURL(
+		Layout sharedLayout = _layoutLocalService.fetchLayoutByFriendlyURL(
 			group.getGroupId(), false, "/shared");
 
-		if (layout == null) {
+		if (sharedLayout == null) {
 			addSharedLayout(company.getCompanyId(), group.getGroupId());
+		}
+
+		Layout privateLayout = _layoutLocalService.fetchLayoutByFriendlyURL(
+			group.getGroupId(), false, "/restricted");
+
+		if (privateLayout == null) {
+			addPrivateLayout(company.getCompanyId(), group.getGroupId());
 		}
 	}
 
@@ -74,6 +81,31 @@ public class AddDefaultSharedFormLayoutPortalInstanceLifecycleListener
 			GroupConstants.TYPE_SITE_PRIVATE, true,
 			GroupConstants.DEFAULT_MEMBERSHIP_RESTRICTION,
 			GroupConstants.FORMS_FRIENDLY_URL, false, false, true, null);
+	}
+
+	protected void addPrivateLayout(long companyId, long groupId)
+		throws PortalException {
+
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setAddGuestPermissions(false);
+		serviceContext.setAddGroupPermissions(true);
+		serviceContext.setAttribute(
+			"layout.instanceable.allowed", Boolean.TRUE);
+		serviceContext.setAttribute("layoutUpdateable", Boolean.FALSE);
+
+		serviceContext.setScopeGroupId(groupId);
+
+		long defaultUserId = _userLocalService.getDefaultUserId(companyId);
+
+		serviceContext.setUserId(defaultUserId);
+
+		_layoutLocalService.addLayout(
+			defaultUserId, groupId, true,
+			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID, "Restricted",
+			StringPool.BLANK, StringPool.BLANK,
+			LayoutConstants.TYPE_SHARED_PORTLET, true, "/restricted",
+			serviceContext);
 	}
 
 	protected void addSharedLayout(long companyId, long groupId)

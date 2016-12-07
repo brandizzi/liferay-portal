@@ -694,6 +694,40 @@ version if the `com.liferay.app.defaults.plugin` is applied.
 ### Changed
 - [LPS-69445]: Update the [Liferay Gradle Plugins] dependency to version 3.0.43.
 
+## 2.0.7 - 2016-11-30 [YANKED]
+
+### Changed
+- [LPS-69470]: Update the [Liferay Gradle Plugins Baseline] dependency to
+version 1.1.0.
+
+## 2.0.8 - 2016-12-01
+
+### Changed
+- [LPS-69488]: Update the [Liferay Gradle Plugins] dependency to version 3.0.44.
+
+### Removed
+- [LPS-69488]: Remove the default Node.js version configuration, as it has been
+moved to [Liferay Gradle Plugins].
+
+## 2.0.9 - 2016-12-01
+
+### Changed
+- [LPS-69492]: Update the [Liferay Gradle Plugins] dependency to version 3.0.45.
+
+## 2.1.0 - 2016-12-03
+
+### Added
+- [LPS-68289]: Add module agent support for aspect in the `test` and
+`testIntegration` tasks.
+
+### Changed
+- [LPS-69518]: Update the [Liferay Gradle Plugins] dependency to version 3.0.46.
+
+## 2.1.1 - 2016-12-05
+
+### Changed
+- [LPS-69501]: Update the [Liferay Gradle Plugins] dependency to version 3.0.47.
+
 [Liferay CDN]: https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public
 [Liferay Gradle Plugins]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins
 [Liferay Gradle Plugins App Javadoc Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-app-javadoc-builder
@@ -722,6 +756,7 @@ version if the `com.liferay.app.defaults.plugin` is applied.
 [LPS-68014]: https://issues.liferay.com/browse/LPS-68014
 [LPS-68131]: https://issues.liferay.com/browse/LPS-68131
 [LPS-68230]: https://issues.liferay.com/browse/LPS-68230
+[LPS-68289]: https://issues.liferay.com/browse/LPS-68289
 [LPS-68293]: https://issues.liferay.com/browse/LPS-68293
 [LPS-68297]: https://issues.liferay.com/browse/LPS-68297
 [LPS-68298]: https://issues.liferay.com/browse/LPS-68298
@@ -756,6 +791,11 @@ version if the `com.liferay.app.defaults.plugin` is applied.
 [LPS-69271]: https://issues.liferay.com/browse/LPS-69271
 [LPS-69288]: https://issues.liferay.com/browse/LPS-69288
 [LPS-69445]: https://issues.liferay.com/browse/LPS-69445
+[LPS-69470]: https://issues.liferay.com/browse/LPS-69470
+[LPS-69488]: https://issues.liferay.com/browse/LPS-69488
+[LPS-69492]: https://issues.liferay.com/browse/LPS-69492
+[LPS-69501]: https://issues.liferay.com/browse/LPS-69501
+[LPS-69518]: https://issues.liferay.com/browse/LPS-69518
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981
