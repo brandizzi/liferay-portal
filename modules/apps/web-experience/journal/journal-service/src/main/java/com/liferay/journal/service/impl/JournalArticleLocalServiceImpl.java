@@ -6206,10 +6206,10 @@ public class JournalArticleLocalServiceImpl
 			FileEntry fileEntry =
 				dlAppLocalService.getFileEntryByUuidAndGroupId(uuid, groupId);
 
-			boolean isTempFile = fileEntry.isRepositoryCapabilityProvided(
+			boolean tempFile = fileEntry.isRepositoryCapabilityProvided(
 				TemporaryFileEntriesCapability.class);
 
-			if (isTempFile) {
+			if (tempFile) {
 				FileEntry tempFileEntry = fileEntry;
 
 				Folder folder = article.addImagesFolder();
