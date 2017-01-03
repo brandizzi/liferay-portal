@@ -125,9 +125,9 @@ public class CalendarBookingLocalServiceImpl
 		}
 
 		java.util.Calendar startTimeJCalendar = JCalendarUtil.getJCalendar(
-			startTime);
+			startTime, calendar.getTimeZone());
 		java.util.Calendar endTimeJCalendar = JCalendarUtil.getJCalendar(
-			endTime);
+			endTime, calendar.getTimeZone());
 
 		if (allDay) {
 			startTimeJCalendar = JCalendarUtil.toMidnightJCalendar(
@@ -1099,9 +1099,9 @@ public class CalendarBookingLocalServiceImpl
 		}
 
 		java.util.Calendar startTimeJCalendar = JCalendarUtil.getJCalendar(
-			startTime);
+			startTime, calendar.getTimeZone());
 		java.util.Calendar endTimeJCalendar = JCalendarUtil.getJCalendar(
-			endTime);
+			endTime, calendar.getTimeZone());
 
 		if (allDay) {
 			startTimeJCalendar = JCalendarUtil.toMidnightJCalendar(
