@@ -1772,7 +1772,8 @@ public class CalendarBookingLocalServiceImpl
 	}
 
 	protected CalendarBooking splitCalendarBooking(
-			CalendarBooking calendarBooking, java.util.Calendar splitJCalendar)
+			CalendarBooking calendarBooking, java.util.Calendar splitJCalendar,
+			Recurrence recurrence)
 		throws PortalException {
 
 		long[] childCalendarIds = getChildCalendarIds(
@@ -1795,7 +1796,8 @@ public class CalendarBookingLocalServiceImpl
 			calendarBooking.getRecurringCalendarBookingId(),
 			calendarBooking.getTitleMap(), calendarBooking.getDescriptionMap(),
 			calendarBooking.getLocation(), laterStartTime, laterEndTime,
-			calendarBooking.getAllDay(), calendarBooking.getRecurrence(),
+			calendarBooking.getAllDay(),
+			RecurrenceSerializer.serialize(recurrence),
 			calendarBooking.getFirstReminder(),
 			calendarBooking.getFirstReminderType(),
 			calendarBooking.getSecondReminder(),
@@ -1804,22 +1806,6 @@ public class CalendarBookingLocalServiceImpl
 
 		deleteCalendarBookingInstance(
 			calendarBooking, splitJCalendar.getTimeInMillis(), true, false);
-
-		Recurrence laterRecurrenceObj = laterCalendarBooking.getRecurrenceObj();
-
-		List<java.util.Calendar> exceptionJCalendars = new ArrayList<>(
-			laterRecurrenceObj.getExceptionJCalendars());
-
-		for (java.util.Calendar exceptionJCalendar : exceptionJCalendars) {
-			if (!JCalendarUtil.isLaterDay(exceptionJCalendar, splitJCalendar)) {
-				laterRecurrenceObj.removeExceptionJCalendar(exceptionJCalendar);
-			}
-		}
-
-		laterCalendarBooking.setRecurrence(
-			RecurrenceSerializer.serialize(laterRecurrenceObj));
-
-		calendarBookingPersistence.update(laterCalendarBooking);
 
 		return laterCalendarBooking;
 	}
@@ -1869,7 +1855,8 @@ public class CalendarBookingLocalServiceImpl
 					if (recurrenceSplit.isSplit()) {
 						CalendarBooking newCalendarBooking =
 							splitCalendarBooking(
-								recurringCalendarBooking, splitJCalendar);
+								recurringCalendarBooking, splitJCalendar,
+								recurrenceSplit.getSecondRecurrence());
 
 						followingRecurringCalendarBookings.add(
 							newCalendarBooking);
