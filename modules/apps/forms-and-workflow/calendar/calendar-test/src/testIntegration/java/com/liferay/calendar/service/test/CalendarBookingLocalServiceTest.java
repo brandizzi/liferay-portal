@@ -28,6 +28,7 @@ import com.liferay.calendar.service.CalendarLocalServiceUtil;
 import com.liferay.calendar.test.util.CalendarBookingTestUtil;
 import com.liferay.calendar.test.util.RecurrenceTestUtil;
 import com.liferay.calendar.util.CalendarResourceUtil;
+import com.liferay.calendar.util.JCalendarUtil;
 import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
@@ -94,6 +95,56 @@ public class CalendarBookingLocalServiceTest {
 	@After
 	public void tearDown() {
 		tearDownCheckBookingMessageListener();
+	}
+
+	@Test
+	public void testAddAllDayCalendarBooking() throws Exception {
+		ServiceContext serviceContext = createServiceContext();
+
+		Calendar calendar = addCalendar(
+			_user, _losAngelesTimeZone, serviceContext);
+
+		java.util.Calendar nowJCalendar = JCalendarUtil.getJCalendar(
+			System.currentTimeMillis(), calendar.getTimeZone());
+
+		CalendarBooking calendarBooking =
+			CalendarBookingTestUtil.addAllDayCalendarBooking(
+				_user, calendar, nowJCalendar.getTimeInMillis(),
+				nowJCalendar.getTimeInMillis(), serviceContext);
+
+		java.util.Calendar startTimeJCalendar = JCalendarUtil.getJCalendar(
+			calendarBooking.getStartTime(), calendarBooking.getTimeZone());
+
+		java.util.Calendar endTimeJCalendar = JCalendarUtil.getJCalendar(
+			calendarBooking.getEndTime(), calendarBooking.getTimeZone());
+
+		Assert.assertEquals(
+			nowJCalendar.get(java.util.Calendar.YEAR),
+			startTimeJCalendar.get(java.util.Calendar.YEAR));
+
+		Assert.assertEquals(
+			nowJCalendar.get(java.util.Calendar.MONTH),
+			startTimeJCalendar.get(java.util.Calendar.MONTH));
+
+		Assert.assertEquals(
+			nowJCalendar.get(java.util.Calendar.DAY_OF_MONTH),
+			startTimeJCalendar.get(java.util.Calendar.DAY_OF_MONTH));
+
+		Assert.assertEquals(
+			nowJCalendar.get(java.util.Calendar.YEAR),
+			endTimeJCalendar.get(java.util.Calendar.YEAR));
+
+		Assert.assertEquals(
+			nowJCalendar.get(java.util.Calendar.MONTH),
+			endTimeJCalendar.get(java.util.Calendar.MONTH));
+
+		Assert.assertEquals(
+			nowJCalendar.get(java.util.Calendar.DAY_OF_MONTH),
+			endTimeJCalendar.get(java.util.Calendar.DAY_OF_MONTH));
+
+		assertEqualsTime(0, 0, startTimeJCalendar);
+
+		assertEqualsTime(23, 59, endTimeJCalendar);
 	}
 
 	@Test
@@ -1407,6 +1458,15 @@ public class CalendarBookingLocalServiceTest {
 				calendarBookingId, count);
 
 		Assert.assertNull(calendarBookingInstance);
+	}
+
+	protected void assertEqualsTime(
+		int hour, int minute, java.util.Calendar jCalendar) {
+
+		Assert.assertEquals(
+			hour, jCalendar.get(java.util.Calendar.HOUR_OF_DAY));
+
+		Assert.assertEquals(minute, jCalendar.get(java.util.Calendar.MINUTE));
 	}
 
 	protected ServiceContext createServiceContext() {
