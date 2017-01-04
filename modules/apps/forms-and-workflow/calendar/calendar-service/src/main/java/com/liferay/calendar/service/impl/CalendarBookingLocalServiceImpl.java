@@ -1780,9 +1780,7 @@ public class CalendarBookingLocalServiceImpl
 			calendarBooking.getCalendarBookingId(),
 			calendarBooking.getCalendarId());
 
-		long laterStartTime = JCalendarUtil.convertTimeToNewDay(
-			calendarBooking.getStartTime(),
-			splitJCalendar.getTimeInMillis() + Time.DAY);
+		long laterStartTime = splitJCalendar.getTimeInMillis();
 
 		long duration =
 			calendarBooking.getEndTime() - calendarBooking.getStartTime();
