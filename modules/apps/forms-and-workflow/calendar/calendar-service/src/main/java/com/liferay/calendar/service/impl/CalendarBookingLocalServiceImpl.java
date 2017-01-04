@@ -1287,6 +1287,9 @@ public class CalendarBookingLocalServiceImpl
 			recurrence = StringPool.BLANK;
 		}
 
+		/// THIS INSTANCE WAS ALREADY CREATED BY THE SPLIT! WHAT SHJOULD WE DO
+		//// HERE?!?!?!
+		
 		return addCalendarBooking(
 			userId, calendarId, childCalendarIds,
 			CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,
