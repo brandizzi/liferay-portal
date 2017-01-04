@@ -1628,6 +1628,40 @@ public class CalendarBookingLocalServiceImpl
 		}
 	}
 
+	protected CalendarBooking addFollowingCalendarBookingInstance(
+			CalendarBooking calendarBooking,
+			java.util.Calendar startTimeJCalendar, Recurrence recurrence)
+		throws PortalException {
+
+		long[] childCalendarIds = getChildCalendarIds(
+			calendarBooking.getCalendarBookingId(),
+			calendarBooking.getCalendarId());
+
+		long startTime = startTimeJCalendar.getTimeInMillis();
+
+		long duration =
+			calendarBooking.getEndTime() - calendarBooking.getStartTime();
+
+		long endTime = startTime + duration;
+
+		CalendarBooking calendarBookingInstance = addCalendarBooking(
+			calendarBooking.getUserId(), calendarBooking.getCalendarId(),
+			childCalendarIds,
+			CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,
+			calendarBooking.getRecurringCalendarBookingId(),
+			calendarBooking.getTitleMap(), calendarBooking.getDescriptionMap(),
+			calendarBooking.getLocation(), startTime, endTime,
+			calendarBooking.getAllDay(),
+			RecurrenceSerializer.serialize(recurrence),
+			calendarBooking.getFirstReminder(),
+			calendarBooking.getFirstReminderType(),
+			calendarBooking.getSecondReminder(),
+			calendarBooking.getSecondReminderType(),
+			ServiceContextThreadLocal.getServiceContext());
+
+		return calendarBookingInstance;
+	}
+
 	protected String getExtraDataJSON(CalendarBooking calendarBooking) {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -1771,43 +1805,6 @@ public class CalendarBookingLocalServiceImpl
 		}
 	}
 
-	protected CalendarBooking splitCalendarBooking(
-			CalendarBooking calendarBooking, java.util.Calendar splitJCalendar,
-			Recurrence recurrence)
-		throws PortalException {
-
-		long[] childCalendarIds = getChildCalendarIds(
-			calendarBooking.getCalendarBookingId(),
-			calendarBooking.getCalendarId());
-
-		long laterStartTime = splitJCalendar.getTimeInMillis();
-
-		long duration =
-			calendarBooking.getEndTime() - calendarBooking.getStartTime();
-
-		long laterEndTime = laterStartTime + duration;
-
-		CalendarBooking laterCalendarBooking = addCalendarBooking(
-			calendarBooking.getUserId(), calendarBooking.getCalendarId(),
-			childCalendarIds,
-			CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT,
-			calendarBooking.getRecurringCalendarBookingId(),
-			calendarBooking.getTitleMap(), calendarBooking.getDescriptionMap(),
-			calendarBooking.getLocation(), laterStartTime, laterEndTime,
-			calendarBooking.getAllDay(),
-			RecurrenceSerializer.serialize(recurrence),
-			calendarBooking.getFirstReminder(),
-			calendarBooking.getFirstReminderType(),
-			calendarBooking.getSecondReminder(),
-			calendarBooking.getSecondReminderType(),
-			ServiceContextThreadLocal.getServiceContext());
-
-		deleteCalendarBookingInstance(
-			calendarBooking, splitJCalendar.getTimeInMillis(), true, false);
-
-		return laterCalendarBooking;
-	}
-
 	protected List<CalendarBooking> splitCalendarBooking(
 			CalendarBooking calendarBooking, long startTime)
 		throws PortalException {
@@ -1851,8 +1848,12 @@ public class CalendarBookingLocalServiceImpl
 						recurrenceObj, startTimeJCalendar, splitJCalendar);
 
 					if (recurrenceSplit.isSplit()) {
+						deleteCalendarBookingInstance(
+							recurringCalendarBooking,
+							splitJCalendar.getTimeInMillis(), true, false);
+
 						CalendarBooking newCalendarBooking =
-							splitCalendarBooking(
+							addFollowingCalendarBookingInstance(
 								recurringCalendarBooking, splitJCalendar,
 								recurrenceSplit.getSecondRecurrence());
 
