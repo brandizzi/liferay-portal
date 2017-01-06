@@ -105,7 +105,8 @@ public class CalendarBookingLocalServiceTest {
 			_user, _losAngelesTimeZone, serviceContext);
 
 		java.util.Calendar nowJCalendar = JCalendarUtil.getJCalendar(
-			System.currentTimeMillis(), calendar.getTimeZone());
+			2017, java.util.Calendar.JANUARY, 5, 22, 0, 0, 0,
+			calendar.getTimeZone());
 
 		CalendarBooking calendarBooking =
 			CalendarBookingTestUtil.addAllDayCalendarBooking(
