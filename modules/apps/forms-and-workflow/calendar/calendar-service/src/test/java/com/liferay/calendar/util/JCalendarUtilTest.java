@@ -158,6 +158,116 @@ public class JCalendarUtilTest {
 		Assert.assertEquals(_calcuttaTimeZone, jCalendar.getTimeZone());
 	}
 
+	@Test
+	public void testToLastHourJCalendar() {
+		Calendar jCalendar = CalendarFactoryUtil.getCalendar(
+			randomYear(), randomMonth(), randomDayOfMonth(), randomHour(),
+			randomMinute(), randomSecond(), randomMillisecond(),
+			_losAngelesTimeZone);
+
+		Calendar midnightJCalendar = JCalendarUtil.toLastHourJCalendar(
+			jCalendar);
+
+		Assert.assertEquals(
+			jCalendar.get(Calendar.YEAR), midnightJCalendar.get(Calendar.YEAR));
+		Assert.assertEquals(
+			jCalendar.get(Calendar.MONTH),
+			midnightJCalendar.get(Calendar.MONTH));
+		Assert.assertEquals(
+			jCalendar.get(Calendar.DAY_OF_MONTH),
+			midnightJCalendar.get(Calendar.DAY_OF_MONTH));
+
+		Assert.assertEquals(23, midnightJCalendar.get(Calendar.HOUR_OF_DAY));
+		Assert.assertEquals(59, midnightJCalendar.get(Calendar.MINUTE));
+		Assert.assertEquals(59, midnightJCalendar.get(Calendar.SECOND));
+		Assert.assertEquals(999, midnightJCalendar.get(Calendar.MILLISECOND));
+
+		Assert.assertEquals(
+			_losAngelesTimeZone, midnightJCalendar.getTimeZone());
+	}
+
+	@Test
+	public void testToLastHourJCalendarWithTimeZone() {
+		Calendar jCalendar = CalendarFactoryUtil.getCalendar(
+			randomYear(), randomMonth(), randomDayOfMonth(), randomHour(),
+			randomMinute(), randomSecond(), randomMillisecond(),
+			_losAngelesTimeZone);
+
+		Calendar midnightJCalendar = JCalendarUtil.toLastHourJCalendar(
+			jCalendar, _calcuttaTimeZone);
+
+		Assert.assertEquals(
+			jCalendar.get(Calendar.YEAR), midnightJCalendar.get(Calendar.YEAR));
+		Assert.assertEquals(
+			jCalendar.get(Calendar.MONTH),
+			midnightJCalendar.get(Calendar.MONTH));
+		Assert.assertEquals(
+			jCalendar.get(Calendar.DAY_OF_MONTH),
+			midnightJCalendar.get(Calendar.DAY_OF_MONTH));
+
+		Assert.assertEquals(23, midnightJCalendar.get(Calendar.HOUR_OF_DAY));
+		Assert.assertEquals(59, midnightJCalendar.get(Calendar.MINUTE));
+		Assert.assertEquals(59, midnightJCalendar.get(Calendar.SECOND));
+		Assert.assertEquals(999, midnightJCalendar.get(Calendar.MILLISECOND));
+
+		Assert.assertEquals(_calcuttaTimeZone, midnightJCalendar.getTimeZone());
+	}
+
+	@Test
+	public void testToMidnightJCalendar() {
+		Calendar jCalendar = CalendarFactoryUtil.getCalendar(
+			randomYear(), randomMonth(), randomDayOfMonth(), randomHour(),
+			randomMinute(), randomSecond(), randomMillisecond(),
+			_losAngelesTimeZone);
+
+		Calendar midnightJCalendar = JCalendarUtil.toMidnightJCalendar(
+			jCalendar);
+
+		Assert.assertEquals(
+			jCalendar.get(Calendar.YEAR), midnightJCalendar.get(Calendar.YEAR));
+		Assert.assertEquals(
+			jCalendar.get(Calendar.MONTH),
+			midnightJCalendar.get(Calendar.MONTH));
+		Assert.assertEquals(
+			jCalendar.get(Calendar.DAY_OF_MONTH),
+			midnightJCalendar.get(Calendar.DAY_OF_MONTH));
+
+		Assert.assertEquals(0, midnightJCalendar.get(Calendar.HOUR_OF_DAY));
+		Assert.assertEquals(0, midnightJCalendar.get(Calendar.MINUTE));
+		Assert.assertEquals(0, midnightJCalendar.get(Calendar.SECOND));
+		Assert.assertEquals(0, midnightJCalendar.get(Calendar.MILLISECOND));
+
+		Assert.assertEquals(
+			_losAngelesTimeZone, midnightJCalendar.getTimeZone());
+	}
+
+	@Test
+	public void testToMidnightJCalendarWithTimeZone() {
+		Calendar jCalendar = CalendarFactoryUtil.getCalendar(
+			randomYear(), randomMonth(), randomDayOfMonth(), randomHour(),
+			randomMinute(), randomSecond(), randomMillisecond(),
+			_losAngelesTimeZone);
+
+		Calendar midnightJCalendar = JCalendarUtil.toMidnightJCalendar(
+			jCalendar, _calcuttaTimeZone);
+
+		Assert.assertEquals(
+			jCalendar.get(Calendar.YEAR), midnightJCalendar.get(Calendar.YEAR));
+		Assert.assertEquals(
+			jCalendar.get(Calendar.MONTH),
+			midnightJCalendar.get(Calendar.MONTH));
+		Assert.assertEquals(
+			jCalendar.get(Calendar.DAY_OF_MONTH),
+			midnightJCalendar.get(Calendar.DAY_OF_MONTH));
+
+		Assert.assertEquals(0, midnightJCalendar.get(Calendar.HOUR_OF_DAY));
+		Assert.assertEquals(0, midnightJCalendar.get(Calendar.MINUTE));
+		Assert.assertEquals(0, midnightJCalendar.get(Calendar.SECOND));
+		Assert.assertEquals(0, midnightJCalendar.get(Calendar.MILLISECOND));
+
+		Assert.assertEquals(_calcuttaTimeZone, midnightJCalendar.getTimeZone());
+	}
+
 	protected int randomDayOfMonth() {
 		return RandomTestUtil.randomInt(1, 29);
 	}

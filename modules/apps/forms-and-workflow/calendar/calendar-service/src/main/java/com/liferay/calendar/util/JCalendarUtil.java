@@ -158,25 +158,27 @@ public class JCalendarUtil {
 	}
 
 	public static Calendar toLastHourJCalendar(Calendar jCalendar) {
-		Calendar lastHourJCalendar = (Calendar)jCalendar.clone();
+		return toLastHourJCalendar(jCalendar, jCalendar.getTimeZone());
+	}
 
-		lastHourJCalendar.set(Calendar.HOUR_OF_DAY, 23);
-		lastHourJCalendar.set(Calendar.MINUTE, 59);
-		lastHourJCalendar.set(Calendar.SECOND, 59);
-		lastHourJCalendar.set(Calendar.MILLISECOND, 999);
+	public static Calendar toLastHourJCalendar(
+		Calendar jCalendar, TimeZone timeZone) {
 
-		return lastHourJCalendar;
+		return CalendarFactoryUtil.getCalendar(
+			jCalendar.get(Calendar.YEAR), jCalendar.get(Calendar.MONTH),
+			jCalendar.get(Calendar.DAY_OF_MONTH), 23, 59, 59, 999, timeZone);
 	}
 
 	public static Calendar toMidnightJCalendar(Calendar jCalendar) {
-		Calendar midnightJCalendar = (Calendar)jCalendar.clone();
+		return toMidnightJCalendar(jCalendar, jCalendar.getTimeZone());
+	}
 
-		midnightJCalendar.set(Calendar.HOUR_OF_DAY, 0);
-		midnightJCalendar.set(Calendar.MINUTE, 0);
-		midnightJCalendar.set(Calendar.SECOND, 0);
-		midnightJCalendar.set(Calendar.MILLISECOND, 0);
+	public static Calendar toMidnightJCalendar(
+		Calendar jCalendar, TimeZone timeZone) {
 
-		return midnightJCalendar;
+		return CalendarFactoryUtil.getCalendar(
+			jCalendar.get(Calendar.YEAR), jCalendar.get(Calendar.MONTH),
+			jCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0, 0, timeZone);
 	}
 
 	private static final TimeZone _utcTimeZone = TimeZone.getTimeZone(
