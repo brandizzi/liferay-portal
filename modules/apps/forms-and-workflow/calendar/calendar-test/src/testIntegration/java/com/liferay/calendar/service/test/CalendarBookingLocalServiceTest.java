@@ -20,6 +20,8 @@ import com.liferay.calendar.model.Calendar;
 import com.liferay.calendar.model.CalendarBooking;
 import com.liferay.calendar.model.CalendarResource;
 import com.liferay.calendar.notification.NotificationType;
+import com.liferay.calendar.recurrence.Frequency;
+import com.liferay.calendar.recurrence.PositionalWeekday;
 import com.liferay.calendar.recurrence.Recurrence;
 import com.liferay.calendar.recurrence.RecurrenceSerializer;
 import com.liferay.calendar.service.CalendarBookingLocalService;
@@ -54,6 +56,7 @@ import com.liferay.portal.util.test.MailServiceTestUtil;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -878,6 +881,86 @@ public class CalendarBookingLocalServiceTest {
 	}
 
 	@Test
+	public void testUpdateAllFollowingFromSingleInstance() throws Exception {
+		ServiceContext serviceContext = createServiceContext();
+
+		Calendar calendar = addCalendar(_user, serviceContext);
+
+		long startTime = System.currentTimeMillis();
+
+		long endTime = startTime + (Time.HOUR * 10);
+
+		Recurrence recurrence = new Recurrence();
+
+		recurrence.setFrequency(Frequency.DAILY);
+		recurrence.setPositionalWeekdays(new ArrayList<PositionalWeekday>());
+
+		CalendarBooking calendarBooking =
+			CalendarBookingTestUtil.addRecurringCalendarBooking(
+				_user, calendar, startTime, endTime, recurrence,
+				serviceContext);
+
+		Map<Locale, String> earlierDescriptionMap = new HashMap<>(
+			calendarBooking.getDescriptionMap());
+
+		long instanceStartTime = startTime + Time.DAY * 2;
+
+		long instanceEndTime = instanceStartTime + (Time.HOUR * 10);
+
+		Map<Locale, String> titleMap = RandomTestUtil.randomLocaleStringMap();
+
+		CalendarBooking calendarBookingInstance =
+			CalendarBookingLocalServiceUtil.updateCalendarBookingInstance(
+				_user.getUserId(), calendarBooking.getCalendarBookingId(), 2,
+				calendar.getCalendarId(), titleMap,
+				calendarBooking.getDescriptionMap(),
+				calendarBooking.getLocation(), instanceStartTime,
+				instanceEndTime, false, null, false, 0, null, 0, null,
+				serviceContext);
+
+		Map<Locale, String> laterDescriptionMap =
+			RandomTestUtil.randomLocaleStringMap();
+
+		CalendarBookingLocalServiceUtil.updateCalendarBookingInstance(
+			_user.getUserId(), calendarBookingInstance.getCalendarBookingId(),
+			0, calendar.getCalendarId(), titleMap, laterDescriptionMap,
+			calendarBooking.getLocation(), instanceStartTime, instanceEndTime,
+			false, null, true, 0, null, 0, null, serviceContext);
+
+		List<CalendarBooking> earlierCalendarBookings = new ArrayList<>();
+		List<CalendarBooking> laterCalendarBookings = new ArrayList<>();
+
+		List<CalendarBooking> recurringCalendarBookings =
+			CalendarBookingLocalServiceUtil.getRecurringCalendarBookings(
+				calendarBooking);
+
+		for (CalendarBooking recurringCalendarBooking :
+				recurringCalendarBookings) {
+
+			if (recurringCalendarBooking.getStartTime() >= instanceStartTime) {
+				laterCalendarBookings.add(recurringCalendarBooking);
+			}
+			else {
+				earlierCalendarBookings.add(recurringCalendarBooking);
+			}
+		}
+
+		Assert.assertEquals(1, earlierCalendarBookings.size());
+		Assert.assertEquals(2, laterCalendarBookings.size());
+
+		for (CalendarBooking earlierCalendarBooking : earlierCalendarBookings) {
+			Assert.assertEquals(
+				earlierDescriptionMap,
+				earlierCalendarBooking.getDescriptionMap());
+		}
+
+		for (CalendarBooking laterCalendarBooking : laterCalendarBookings) {
+			Assert.assertEquals(
+				laterDescriptionMap, laterCalendarBooking.getDescriptionMap());
+		}
+	}
+
+	@Test
 	public void testUpdateCalendarBookingAndAllRecurringInstancesStatus()
 		throws Exception {
 
@@ -889,7 +972,10 @@ public class CalendarBookingLocalServiceTest {
 
 		long endTime = startTime + (Time.HOUR * 10);
 
-		Recurrence recurrence = RecurrenceTestUtil.getDailyRecurrence();
+		Recurrence recurrence = new Recurrence();
+
+		recurrence.setFrequency(Frequency.DAILY);
+		recurrence.setPositionalWeekdays(new ArrayList<PositionalWeekday>());
 
 		CalendarBooking calendarBooking =
 			CalendarBookingTestUtil.addRecurringCalendarBooking(
