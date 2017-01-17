@@ -80,9 +80,9 @@ public class UpgradeCalendarResource extends UpgradeProcess {
 		throws SQLException {
 
 		try (PreparedStatement ps = connection.prepareStatement(
-				"select Calendar.calendarId from Calendar, CalendarResource " +
-					"where CalendarResource.classNameId = ? and " +
-						"CalendarResource.userId = ?")) {
+				"select Calendar.calendarId from Calendar join " +
+					"CalendarResource on CalendarResource.classNameId = " +
+						"? and CalendarResource.userId = ?")) {
 
 			ps.setLong(1, groupClassNameId);
 			ps.setLong(2, defaultUserId);
