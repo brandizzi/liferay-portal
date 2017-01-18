@@ -211,9 +211,10 @@ public class AxisBuild extends BaseBuild {
 		sb.append(topLevelBuild.getMaster());
 		sb.append("/");
 
-		Map<String, String> startPropertiesMap = getStartPropertiesMap();
+		Map<String, String> startPropertiesTempMap =
+			getStartPropertiesTempMap();
 
-		sb.append(startPropertiesMap.get("TOP_LEVEL_START_TIME"));
+		sb.append(startPropertiesTempMap.get("TOP_LEVEL_START_TIME"));
 
 		sb.append("/");
 		sb.append(topLevelBuild.getJobName());
@@ -290,21 +291,28 @@ public class AxisBuild extends BaseBuild {
 	@Override
 	protected void setBuildURL(String buildURL) {
 		try {
-			JenkinsResultsParserUtil.toString(
-				buildURL + "/archive-marker", false, 0, 0, 0);
-
-			fromArchive = true;
-		}
-		catch (IOException ioe) {
-			fromArchive = false;
-		}
-
-		try {
 			buildURL = JenkinsResultsParserUtil.decode(buildURL);
 		}
 		catch (UnsupportedEncodingException uee) {
 			throw new IllegalArgumentException(
 				"Unable to decode " + buildURL, uee);
+		}
+
+		try {
+			String archiveMarkerContent = JenkinsResultsParserUtil.toString(
+				buildURL + "/archive-marker", false, 0, 0, 0);
+
+			if ((archiveMarkerContent != null) &&
+				!archiveMarkerContent.isEmpty()) {
+
+				fromArchive = true;
+			}
+			else {
+				fromArchive = false;
+			}
+		}
+		catch (IOException ioe) {
+			fromArchive = false;
 		}
 
 		Matcher matcher = buildURLPattern.matcher(buildURL);
