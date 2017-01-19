@@ -910,6 +910,28 @@ versions of Git.
 ### Changed
 - [LPS-70084]: Update the [Liferay Gradle Plugins] dependency to version 3.0.71.
 
+## 2.4.13 - 2017-01-12
+
+### Changed
+- [LPS-70092]: Update the [Liferay Gradle Plugins] dependency to version 3.1.0.
+
+## 2.4.14 - 2017-01-13
+
+### Added
+- [LPS-70146]: Add the `printDependentArtifact` task to print the project
+directory if the project contains dependencies to other projects.
+
+### Changed
+- [LPS-70036]: Update the [Liferay Gradle Plugins] dependency to version 3.1.1.
+
+## 2.4.15 - 2017-01-17
+
+### Changed
+- [LPS-70170]: Always use the deployed JAR file of Liferay taglib dependencies
+for JSP compilation.
+- [LPS-70170]: Always use the latest snapshot of the `com.liferay.util.taglib`
+dependency for JSP compilation.
+
 [Liferay CDN]: https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public
 [Liferay Gradle Plugins]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins
 [Liferay Gradle Plugins App Javadoc Builder]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/gradle-plugins-app-javadoc-builder
@@ -994,7 +1016,11 @@ versions of Git.
 [LPS-69847]: https://issues.liferay.com/browse/LPS-69847
 [LPS-69899]: https://issues.liferay.com/browse/LPS-69899
 [LPS-69920]: https://issues.liferay.com/browse/LPS-69920
+[LPS-70036]: https://issues.liferay.com/browse/LPS-70036
 [LPS-70084]: https://issues.liferay.com/browse/LPS-70084
+[LPS-70092]: https://issues.liferay.com/browse/LPS-70092
+[LPS-70146]: https://issues.liferay.com/browse/LPS-70146
+[LPS-70170]: https://issues.liferay.com/browse/LPS-70170
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981
