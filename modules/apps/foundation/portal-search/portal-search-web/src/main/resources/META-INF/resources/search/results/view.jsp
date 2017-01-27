@@ -67,6 +67,40 @@ com.liferay.portal.kernel.dao.search.SearchContainer<com.liferay.portal.kernel.s
 	}
 </style>
 
+<c:if test="<%= false %>">
+
+	<%
+	javax.portlet.PortletURL portletURL = null;//renderResponse.createRenderURL();
+	%>
+
+	<liferay-frontend:management-bar
+		searchContainerId="resultsContainer"
+	>
+		<liferay-frontend:management-bar-buttons>
+			<liferay-frontend:management-bar-display-buttons
+				displayViews='<%= new String[] {"icon", "descriptive"} %>'
+				portletURL="<%= portletURL %>"
+				selectedDisplayStyle="descriptive"
+			/>
+		</liferay-frontend:management-bar-buttons>
+
+		<liferay-frontend:management-bar-filters>
+			<liferay-frontend:management-bar-navigation
+				navigationKeys='<%= new String[] {"category", "asset-type"} %>'
+				navigationParam=""
+				portletURL="<%= portletURL %>"
+			/>
+
+			<liferay-frontend:management-bar-sort
+				orderByCol=""
+				orderByType=""
+				orderColumns='<%= new String[] {"title", "display-date"} %>'
+				portletURL="<%= portletURL %>"
+			/>
+		</liferay-frontend:management-bar-filters>
+	</liferay-frontend:management-bar>
+</c:if>
+
 <p class="search-total-label text-default">
 	<%= searchContainer1.getTotal() %> results for <strong><%= searchResultsPortletDisplayContext.getKeywords() %></strong>
 </p>
