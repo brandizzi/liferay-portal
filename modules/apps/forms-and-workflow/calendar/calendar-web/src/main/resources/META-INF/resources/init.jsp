@@ -125,6 +125,7 @@ page import="java.util.Collections" %><%@
 page import="java.util.Date" %><%@
 page import="java.util.Iterator" %><%@
 page import="java.util.List" %><%@
+page import="java.util.Locale" %><%@
 page import="java.util.Objects" %><%@
 page import="java.util.TimeZone" %>
 
@@ -235,6 +236,8 @@ TimeZone userTimeZone = CalendarUtil.getCalendarBookingDisplayTimeZone(calendarB
 TimeZone utcTimeZone = TimeZone.getTimeZone(StringPool.UTC);
 
 Format dateFormatLongDate = FastDateFormatFactoryUtil.getDate(FastDateFormatConstants.LONG, locale, userTimeZone);
+
+Format genericDateFormatLongDate = FastDateFormatFactoryUtil.getDate(FastDateFormatConstants.LONG, Locale.ENGLISH, userTimeZone);
 
 Format dateFormatTime = null;
 
