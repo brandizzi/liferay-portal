@@ -231,6 +231,14 @@ if (defaultCalendar == null) {
 	}
 }
 
+if (defaultCalendar == null && !groupCalendars.isEmpty()) {
+	for (Calendar groupCalendar : groupCalendars) {
+		if (groupCalendar.isDefaultCalendar() && CalendarPermission.contains(themeDisplay.getPermissionChecker(), groupCalendar, CalendarActionKeys.VIEW_BOOKING_DETAILS)) {
+			defaultCalendar = groupCalendar;
+		}
+	}
+}
+
 TimeZone userTimeZone = CalendarUtil.getCalendarBookingDisplayTimeZone(calendarBooking, TimeZone.getTimeZone(timeZoneId));
 TimeZone utcTimeZone = TimeZone.getTimeZone(StringPool.UTC);
 
