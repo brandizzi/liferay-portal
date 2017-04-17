@@ -3,6 +3,8 @@ AUI.add(
 	function(A) {
 		var STR_DASH = '-';
 
+		var CalendarUtil = Liferay.CalendarUtil;
+
 		Liferay.RecurrenceUtil = {
 			FREQUENCY: {
 				DAILY: 'DAILY',
@@ -90,7 +92,7 @@ AUI.add(
 
 				key = parts.join(STR_DASH);
 
-				return A.Lang.sub(instance.RECURRENCE_SUMMARIES[key], params);
+				return CalendarUtil.sub(instance.RECURRENCE_SUMMARIES[key], params);
 			},
 
 			openConfirmationPanel: function(actionName, onlyThisInstanceFn, allFollowingFn, allEventsInFn, cancelFn) {
@@ -146,7 +148,7 @@ AUI.add(
 				var instance = this;
 
 				var contentNode = A.Node.create(
-					A.Lang.sub(
+					CalendarUtil.sub(
 						instance.RECURRING_EVENT_MODAL_TEMPLATE,
 						{
 							description: description
@@ -157,7 +159,7 @@ AUI.add(
 				A.each(
 					options,
 					function(option) {
-						var optionRow = A.Lang.sub(
+						var optionRow = CalendarUtil.sub(
 							instance.RECURRING_EVENT_MODAL_ITEM_TEMPLATE,
 							{
 								confirmationDescription: option.confirmationDescription,
@@ -223,6 +225,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-base', 'liferay-util-window']
+		requires: ['aui-base', 'liferay-calendar-util', 'liferay-util-window']
 	}
 );

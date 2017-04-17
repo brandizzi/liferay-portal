@@ -12,6 +12,8 @@ AUI.add(
 			return Lang.toInt(value, 10, 0);
 		};
 
+		var REGEX_SUB = /\{\s*([^|}]+?)\s*(?:\|([^}]*))?\s*\}/g;
+
 		var STR_DASH = '-';
 
 		var STR_SPACE = ' ';
@@ -185,6 +187,14 @@ AUI.add(
 
 					scheduler.syncEventsUI();
 				}
+			},
+
+			sub: function(url, data) {
+				var instance = this;
+
+				url = Lang.sub(url, data);
+
+				return url.replace(REGEX_SUB, '');
 			},
 
 			toLocalTime: function(utc) {

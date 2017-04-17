@@ -343,7 +343,7 @@ AUI.add(
 								},
 								refreshWindow: window,
 								title: Liferay.Language.get('edit-calendar-booking'),
-								uri: Lang.sub(editCalendarBookingURL, data)
+								uri: CalendarUtil.sub(editCalendarBookingURL, data)
 							}
 						);
 
@@ -408,7 +408,7 @@ AUI.add(
 								},
 								refreshWindow: window,
 								title: Liferay.Language.get('view-calendar-booking-details'),
-								uri: Lang.sub(viewCalendarBookingURL, data)
+								uri: CalendarUtil.sub(viewCalendarBookingURL, data)
 							}
 						);
 

@@ -27,6 +27,8 @@ AUI.add(
 
 		var TPL_SIMPLE_MENU_ITEM = '<li class="{cssClass}" data-id="{id}">{icon} {caption}</li>';
 
+		var CalendarUtil = Liferay.CalendarUtil;
+
 		var getItemHandler = A.cached(
 			function(id, items) {
 				var found = null;
@@ -231,7 +233,7 @@ AUI.add(
 								var icon = STR_BLANK;
 
 								if (item.icon) {
-									icon = Lang.sub(
+									icon = CalendarUtil.sub(
 										TPL_ICON,
 										{
 											iconClass: item.icon
@@ -242,7 +244,7 @@ AUI.add(
 								}
 
 								var li = A.Node.create(
-									Lang.sub(
+									CalendarUtil.sub(
 										TPL_SIMPLE_MENU_ITEM,
 										{
 											cssClass: cssClass,
@@ -290,6 +292,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: ['aui-base', 'aui-template-deprecated', 'event-outside', 'event-touch', 'widget-modality', 'widget-position', 'widget-position-align', 'widget-position-constrain', 'widget-stack', 'widget-stdmod']
+		requires: ['aui-base', 'aui-template-deprecated', 'event-outside', 'event-touch', 'liferay-calendar-util', 'widget-modality', 'widget-position', 'widget-position-align', 'widget-position-constrain', 'widget-stack', 'widget-stdmod']
 	}
 );
