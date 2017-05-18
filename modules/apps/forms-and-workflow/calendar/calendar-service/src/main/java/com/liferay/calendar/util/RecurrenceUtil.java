@@ -169,7 +169,14 @@ public class RecurrenceUtil {
 		List<Calendar> exceptionJCalendars =
 			recurrence.getExceptionJCalendars();
 
+		Calendar recurrenceStartTimeJCalendar = JCalendarUtil.getJCalendar(
+			startTimeJCalendar, recurrence.getTimeZone());
+
 		for (Calendar exceptionJCalendar : exceptionJCalendars) {
+			exceptionJCalendar = JCalendarUtil.mergeJCalendar(
+				exceptionJCalendar, recurrenceStartTimeJCalendar,
+				recurrence.getTimeZone());
+
 			exceptionJCalendar = JCalendarUtil.getJCalendar(
 				exceptionJCalendar, timeZone);
 
