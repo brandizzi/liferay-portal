@@ -55,6 +55,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1174,6 +1175,96 @@ public class CalendarBookingLocalServiceTest {
 		assertSameDay(expectedEndTimeJCalendar, instanceEndTimeJCalendar);
 
 		assertSameTime(expectedEndTimeJCalendar, instanceEndTimeJCalendar);
+	}
+
+	@Test
+	public void testUpdateAllFollowingWhenRecurrenceIsInSpecificTimeZone()
+		throws Exception {
+
+		ServiceContext serviceContext = createServiceContext();
+
+		Calendar calendar = CalendarTestUtil.addCalendar(_user, serviceContext);
+
+		java.util.Calendar startTimeJCalendar = new GregorianCalendar(
+			_losAngelesTimeZone);
+
+		startTimeJCalendar.set(java.util.Calendar.YEAR, 2017);
+		startTimeJCalendar.set(
+			java.util.Calendar.MONTH, java.util.Calendar.MAY);
+		startTimeJCalendar.set(
+			java.util.Calendar.DAY_OF_WEEK, java.util.Calendar.SUNDAY);
+		startTimeJCalendar.set(java.util.Calendar.HOUR_OF_DAY, 20);
+		startTimeJCalendar.set(java.util.Calendar.MINUTE, 0);
+
+		long startTime = startTimeJCalendar.getTimeInMillis();
+
+		long endTime = startTime + (Time.HOUR * 1);
+
+		Recurrence recurrence = RecurrenceTestUtil.getDailyRecurrence(
+			_losAngelesTimeZone);
+
+		recurrence.setInterval(1);
+
+		CalendarBooking calendarBooking =
+			CalendarBookingTestUtil.addRecurringCalendarBooking(
+				_user, calendar, startTime, endTime, recurrence,
+				serviceContext);
+
+		int instanceIndex = 2;
+
+		Map<Locale, String> titleMap = RandomTestUtil.randomLocaleStringMap();
+
+		long instanceStartTime = startTime + (Time.DAY * 2) + (Time.HOUR * 1);
+
+		long instanceEndTime = instanceStartTime + (Time.HOUR * 1);
+
+		CalendarBookingTestUtil.updateCalendarBookingInstance(
+			_user, calendarBooking, instanceIndex, titleMap,
+			calendarBooking.getDescriptionMap(), instanceStartTime,
+			instanceEndTime, serviceContext);
+
+		instanceIndex = 1;
+
+		instanceStartTime = startTime + (Time.DAY * 1) + (Time.HOUR * 1);
+
+		instanceEndTime = instanceStartTime + (Time.HOUR * 1);
+
+		calendarBooking = CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+			calendarBooking.getCalendarBookingId());
+
+		CalendarBooking expectedCalendarBookingInstance =
+			CalendarBookingTestUtil.
+				updateRecurringCalendarBookingInstanceAndAllFollowing(
+					_user, calendarBooking, instanceIndex,
+					calendarBooking.getTitleMap(),
+					calendarBooking.getDescriptionMap(), instanceStartTime,
+					instanceEndTime, calendarBooking.getRecurrence(),
+					serviceContext);
+
+		java.util.Calendar expectedJCalendar = new GregorianCalendar(
+			_losAngelesTimeZone);
+
+		expectedJCalendar.setTimeInMillis(
+			expectedCalendarBookingInstance.getStartTime());
+
+		Assert.assertEquals(
+			expectedJCalendar.get(java.util.Calendar.DAY_OF_WEEK),
+			java.util.Calendar.MONDAY);
+
+		Assert.assertEquals(
+			expectedJCalendar.get(java.util.Calendar.HOUR_OF_DAY),
+			startTimeJCalendar.get(java.util.Calendar.HOUR_OF_DAY) + 1);
+
+		expectedJCalendar.setTimeInMillis(
+			expectedCalendarBookingInstance.getEndTime());
+
+		Assert.assertEquals(
+			expectedJCalendar.get(java.util.Calendar.DAY_OF_WEEK),
+			java.util.Calendar.MONDAY);
+
+		Assert.assertEquals(
+			expectedJCalendar.get(java.util.Calendar.HOUR_OF_DAY),
+			startTimeJCalendar.get(java.util.Calendar.HOUR_OF_DAY) + 2);
 	}
 
 	@Test
