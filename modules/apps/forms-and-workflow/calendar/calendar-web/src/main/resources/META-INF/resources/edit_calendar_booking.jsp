@@ -374,7 +374,7 @@ while (manageableCalendarsIterator.hasNext()) {
 					</c:if>
 
 					<aui:row cssClass="calendar-booking-invitations">
-						<aui:col width="<%= (calendarBooking != null) ? 25 : 50 %>">
+						<aui:col width="<%= (calendarBooking != null) ? 25 : 33 %>">
 							<label class="field-label">
 								<liferay-ui:message key="pending" /> (<span id="<portlet:namespace />pendingCounter"><%= pendingCalendarsJSONArray.length() %></span>)
 							</label>
@@ -382,12 +382,20 @@ while (manageableCalendarsIterator.hasNext()) {
 							<div class="calendar-portlet-calendar-list" id="<portlet:namespace />calendarListPending"></div>
 						</aui:col>
 
-						<aui:col width="<%= (calendarBooking != null) ? 25 : 50 %>">
+						<aui:col width="<%= (calendarBooking != null) ? 25 : 33 %>">
 							<label class="field-label">
 								<liferay-ui:message key="accepted" /> (<span id="<portlet:namespace />acceptedCounter"><%= acceptedCalendarsJSONArray.length() %></span>)
 							</label>
 
 							<div class="calendar-portlet-calendar-list" id="<portlet:namespace />calendarListAccepted"></div>
+						</aui:col>
+
+						<aui:col width="<%= (calendarBooking != null) ? 25 : 33 %>">
+							<label class="field-label">
+								<liferay-ui:message key="declined" /> (<span id="<portlet:namespace />declinedCounter"><%= declinedCalendarsJSONArray.length() %></span>)
+							</label>
+
+							<div class="calendar-portlet-calendar-list" id="<portlet:namespace />calendarListDeclined"></div>
 						</aui:col>
 
 						<c:if test="<%= calendarBooking != null %>">
@@ -397,14 +405,6 @@ while (manageableCalendarsIterator.hasNext()) {
 								</label>
 
 								<div class="calendar-portlet-calendar-list" id="<portlet:namespace />calendarListMaybe"></div>
-							</aui:col>
-
-							<aui:col width="<%= 25 %>">
-								<label class="field-label">
-									<liferay-ui:message key="declined" /> (<span id="<portlet:namespace />declinedCounter"><%= declinedCalendarsJSONArray.length() %></span>)
-								</label>
-
-								<div class="calendar-portlet-calendar-list" id="<portlet:namespace />calendarListDeclined"></div>
 							</aui:col>
 						</c:if>
 
@@ -574,9 +574,9 @@ while (manageableCalendarsIterator.hasNext()) {
 		calendarContainer.syncCalendarsMap(
 			[
 				window.<portlet:namespace />calendarListAccepted,
+				window.<portlet:namespace />calendarListDeclined,
 
 				<c:if test="<%= calendarBooking != null %>">
-					window.<portlet:namespace />calendarListDeclined,
 					window.<portlet:namespace />calendarListMaybe,
 				</c:if>
 
@@ -650,31 +650,31 @@ while (manageableCalendarsIterator.hasNext()) {
 		}
 	).render();
 
-	<c:if test="<%= calendarBooking != null %>">
-		window.<portlet:namespace />calendarListDeclined = new Liferay.CalendarList(
-			{
-				after: {
-					calendarsChange: function(event) {
-						var instance = this;
+	window.<portlet:namespace />calendarListDeclined = new Liferay.CalendarList(
+		{
+			after: {
+				calendarsChange: function(event) {
+					var instance = this;
 
-						A.one('#<portlet:namespace />declinedCounter').html(event.newVal.length);
+					A.one('#<portlet:namespace />declinedCounter').html(event.newVal.length);
 
-						syncCalendarsMap();
+					syncCalendarsMap();
 
-						scheduler.load();
-					},
-					'scheduler-calendar:visibleChange': syncCalendarsMap
+					scheduler.load();
 				},
-				boundingBox: '#<portlet:namespace />calendarListDeclined',
-				calendars: <%= declinedCalendarsJSONArray %>,
-				scheduler: <portlet:namespace />scheduler,
-				simpleMenu: calendarsMenu,
-				strings: {
-					emptyMessage: '<liferay-ui:message key="no-declined-invites" />'
-				}
+				'scheduler-calendar:visibleChange': syncCalendarsMap
+			},
+			boundingBox: '#<portlet:namespace />calendarListDeclined',
+			calendars: <%= declinedCalendarsJSONArray %>,
+			scheduler: <portlet:namespace />scheduler,
+			simpleMenu: calendarsMenu,
+			strings: {
+				emptyMessage: '<liferay-ui:message key="no-declined-invites" />'
 			}
-		).render();
+		}
+	).render();
 
+	<c:if test="<%= calendarBooking != null %>">
 		window.<portlet:namespace />calendarListMaybe = new Liferay.CalendarList(
 			{
 				after: {
@@ -760,9 +760,10 @@ while (manageableCalendarsIterator.hasNext()) {
 
 				[
 					<portlet:namespace />calendarListAccepted,
+					<portlet:namespace />calendarListDeclined,
 
 					<c:if test="<%= calendarBooking != null %>">
-						<portlet:namespace />calendarListDeclined, <portlet:namespace />calendarListMaybe,
+						<portlet:namespace />calendarListMaybe,
 					</c:if>
 
 					<portlet:namespace />calendarListPending
@@ -800,7 +801,12 @@ while (manageableCalendarsIterator.hasNext()) {
 
 				calendar.disabled = true;
 
-				<portlet:namespace />calendarListPending.add(calendar);
+				if (calendar.classNameId == <%= ClassNameLocalServiceUtil.getClassNameId(CalendarResource.class) %>) {
+					addToPendingOrDeclinedList(calendar);
+				}
+				else {
+					<portlet:namespace />calendarListPending.add(calendar);
+				}
 
 				inviteResourcesInput.val('');
 			}
@@ -849,6 +855,40 @@ while (manageableCalendarsIterator.hasNext()) {
 			scheduler.syncEventsUI();
 		}
 	);
+
+	var addToPendingOrDeclinedList = function(calendar) {
+		var startDate = placeholderSchedulerEvent.get('startDate');
+		var endDate = placeholderSchedulerEvent.get('endDate');
+
+		var offset = startDate.getTimezoneOffset() * 60000;
+
+		var startTime = startDate.getTime() - offset;
+		var endTime = endDate.getTime() - offset;
+
+		var calendarId = calendar.calendarId;
+
+		var statuses = [
+			<%= CalendarBookingWorkflowConstants.STATUS_PENDING %>
+		];
+
+		Liferay.Service(
+			'/calendar.calendarbooking/get-calendar-bookings',
+			{
+				calendarId: calendarId,
+				statuses: statuses
+			},
+			function(results) {
+				for (var i = 0; i < results.length; i++) {
+					if ((startTime < results[i].endTime) && (results[i].startTime < endTime)) {
+							<portlet:namespace />calendarListDeclined.add(calendar);
+
+							return;
+					}
+				}
+				<portlet:namespace />calendarListPending.add(calendar);
+			}
+		);
+	};
 
 	scheduler.load();
 </aui:script>
