@@ -68,6 +68,29 @@ public class RecurrenceUtilTest {
 	}
 
 	@Test
+	public void testGetLastCalendarBookingInstanceReturnsUnboundRecurring() {
+		Calendar lastInstanceStartTimeJCalendar = getJan2016Calendar(23);
+
+		List<CalendarBooking> calendarBookings = getRecurringCalendarBookings(
+			getJan2016Calendar(1), "RRULE:FREQ=DAILY;INTERVAL=1;UNTIL=20160116",
+			getJan2016Calendar(17), "RRULE:FREQ=DAILY;INTERVAL=1;COUNT=5",
+			lastInstanceStartTimeJCalendar, "RRULE:FREQ=DAILY;INTERVAL=1");
+
+		CalendarBooking calendarBooking =
+			RecurrenceUtil.getLastInstanceCalendarBooking(calendarBookings);
+
+		Assert.assertEquals(
+			calendarBooking.getStartTime(),
+			lastInstanceStartTimeJCalendar.getTimeInMillis());
+
+		Recurrence recurrence = calendarBooking.getRecurrenceObj();
+
+		Assert.assertNull(recurrence.getUntilJCalendar());
+
+		Assert.assertTrue(recurrence.getCount() == 0);
+	}
+
+	@Test
 	public void testInTimeZoneDoesNotUpdateExceptionJCalendarsInSameDay() {
 		Recurrence recurrence = RecurrenceSerializer.deserialize(
 			"RRULE:FREQ=DAILY;INTERVAL=1\n" +
