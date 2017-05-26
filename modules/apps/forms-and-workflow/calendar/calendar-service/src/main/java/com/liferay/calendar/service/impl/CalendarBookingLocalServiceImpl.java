@@ -213,6 +213,14 @@ public class CalendarBookingLocalServiceImpl
 			if (checkIfOccupied(calendarBooking)) {
 				calendarBooking.setStatus(
 					CalendarBookingWorkflowConstants.STATUS_DENIED);
+
+				serviceContext.setAttribute("sendNotification", Boolean.TRUE);
+
+				sendNotification(
+					calendarBooking, NotificationTemplateType.DECLINE,
+					serviceContext);
+
+				serviceContext.setAttribute("sendNotification", Boolean.FALSE);
 			}
 			else {
 				calendarBooking.setStatus(
