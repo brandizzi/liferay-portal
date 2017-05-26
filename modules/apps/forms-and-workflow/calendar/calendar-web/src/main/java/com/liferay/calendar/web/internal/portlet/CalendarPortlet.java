@@ -1538,8 +1538,8 @@ public class CalendarPortlet extends MVCPortlet {
 
 		CalendarDisplayContext calendarDisplayContext =
 			new CalendarDisplayContext(
-				_groupLocalService, _calendarService, _calendarLocalService,
-				themeDisplay);
+				_groupLocalService, _calendarBookingLocalService,
+				_calendarService, _calendarLocalService, themeDisplay);
 
 		renderRequest.setAttribute(
 			CalendarWebKeys.CALENDAR_DISPLAY_CONTEXT, calendarDisplayContext);
