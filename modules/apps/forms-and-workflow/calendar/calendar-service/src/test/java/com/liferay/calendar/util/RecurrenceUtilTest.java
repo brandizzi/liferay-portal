@@ -118,6 +118,30 @@ public class RecurrenceUtilTest {
 	}
 
 	@Test
+	public void testGetLastCalendarBookingInstanceWithExceptionOnLast() {
+		Calendar lastInstanceStartTimeJCalendar = getJan2016Calendar(1);
+
+		List<CalendarBooking> calendarBookings = getRecurringCalendarBookings(
+			lastInstanceStartTimeJCalendar,
+			"RRULE:FREQ=DAILY;INTERVAL=1;UNTIL=20160116\n" +
+				"EXDATE;TZID=\"UTC\";VALUE=DATE:20160105",
+			getJan2016Calendar(5), null);
+
+		CalendarBooking calendarBooking =
+			RecurrenceUtil.getLastInstanceCalendarBooking(calendarBookings);
+
+		Assert.assertEquals(
+			calendarBooking.getStartTime(),
+			lastInstanceStartTimeJCalendar.getTimeInMillis());
+
+		Recurrence recurrence = calendarBooking.getRecurrenceObj();
+
+		assertSameDay(getJan2016Calendar(16), recurrence.getUntilJCalendar());
+
+		Assert.assertTrue(recurrence.getCount() == 0);
+	}
+
+	@Test
 	public void testInTimeZoneDoesNotUpdateExceptionJCalendarsInSameDay() {
 		Recurrence recurrence = RecurrenceSerializer.deserialize(
 			"RRULE:FREQ=DAILY;INTERVAL=1\n" +
@@ -296,6 +320,22 @@ public class RecurrenceUtilTest {
 		Assert.assertTrue(weekdays.contains(Weekday.SUNDAY));
 		Assert.assertTrue(weekdays.contains(Weekday.TUESDAY));
 		Assert.assertTrue(weekdays.contains(Weekday.THURSDAY));
+	}
+
+	protected void assertSameDay(
+		Calendar expectedJCalendar, Calendar actualJCalendar) {
+
+		Assert.assertEquals(
+			expectedJCalendar.get(Calendar.YEAR),
+			actualJCalendar.get(Calendar.YEAR));
+
+		Assert.assertEquals(
+			expectedJCalendar.get(Calendar.MONTH),
+			actualJCalendar.get(Calendar.MONTH));
+
+		Assert.assertEquals(
+			expectedJCalendar.get(Calendar.DAY_OF_MONTH),
+			actualJCalendar.get(Calendar.DAY_OF_MONTH));
 	}
 
 	protected Calendar getJan2016Calendar(int dayOfMonth) {
