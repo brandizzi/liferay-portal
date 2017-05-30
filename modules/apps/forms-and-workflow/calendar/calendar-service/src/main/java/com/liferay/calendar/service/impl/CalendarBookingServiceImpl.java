@@ -399,6 +399,22 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 	}
 
 	@Override
+	public CalendarBooking getLastInstanceCalendarBooking(
+			long calendarBookingId)
+		throws PortalException {
+
+		CalendarBooking calendarBooking =
+			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+
+		CalendarPermission.check(
+			getPermissionChecker(), calendarBooking.getCalendarId(),
+			CalendarActionKeys.MANAGE_BOOKINGS);
+
+		return calendarBookingLocalService.getLastInstanceCalendarBooking(
+			calendarBooking);
+	}
+
+	@Override
 	public CalendarBooking getNewStartTimeAndDurationCalendarBooking(
 			long calendarBookingId, long offset, long duration)
 		throws PortalException {
@@ -703,6 +719,22 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			descriptionMap, location, startTime, endTime, allDay, recurrence,
 			allFollowing, firstReminder, firstReminderType, secondReminder,
 			secondReminderType, serviceContext);
+	}
+
+	@Override
+	public void updateLastInstanceCalendarBookingRecurrence(
+			long calendarBookingId, String recurrence)
+		throws PortalException {
+
+		CalendarBooking calendarBooking =
+			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+
+		CalendarPermission.check(
+			getPermissionChecker(), calendarBooking.getCalendarId(),
+			CalendarActionKeys.MANAGE_BOOKINGS);
+
+		calendarBookingLocalService.updateLastInstanceCalendarBookingRecurrence(
+			calendarBooking, recurrence);
 	}
 
 	@Override

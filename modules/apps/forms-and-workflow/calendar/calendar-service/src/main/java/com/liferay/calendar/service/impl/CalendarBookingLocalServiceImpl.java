@@ -728,6 +728,16 @@ public class CalendarBookingLocalServiceImpl
 	}
 
 	@Override
+	public CalendarBooking getLastInstanceCalendarBooking(
+		CalendarBooking calendarBooking) {
+
+		List<CalendarBooking> calendarBookings = getRecurringCalendarBookings(
+			calendarBooking);
+
+		return RecurrenceUtil.getLastInstanceCalendarBooking(calendarBookings);
+	}
+
+	@Override
 	public List<CalendarBooking> getRecurringCalendarBookings(
 		CalendarBooking calendarBooking) {
 
@@ -1321,6 +1331,38 @@ public class CalendarBookingLocalServiceImpl
 			endTime, allDay, recurrence, allFollowing, firstReminder,
 			firstReminderType, secondReminder, secondReminderType,
 			serviceContext);
+	}
+
+	@Override
+	public void updateLastInstanceCalendarBookingRecurrence(
+		CalendarBooking calendarBooking, String recurrence) {
+
+		CalendarBooking lastInstanceCalendarBooking =
+			getLastInstanceCalendarBooking(calendarBooking);
+
+		if (recurrence == null) {
+			recurrence = StringPool.BLANK;
+		}
+		else {
+			Recurrence oldRecurrenceObj =
+				lastInstanceCalendarBooking.getRecurrenceObj();
+
+			Recurrence recurrenceObj = RecurrenceSerializer.deserialize(
+				recurrence, calendarBooking.getTimeZone());
+
+			if ((oldRecurrenceObj != null) && (recurrenceObj != null)) {
+				recurrenceObj.setExceptionJCalendars(
+					oldRecurrenceObj.getExceptionJCalendars());
+
+				recurrence = RecurrenceSerializer.serialize(recurrenceObj);
+			}
+		}
+
+		if (!recurrence.equals(lastInstanceCalendarBooking.getRecurrence())) {
+			lastInstanceCalendarBooking.setRecurrence(recurrence);
+
+			calendarBookingPersistence.update(lastInstanceCalendarBooking);
+		}
 	}
 
 	@Override
