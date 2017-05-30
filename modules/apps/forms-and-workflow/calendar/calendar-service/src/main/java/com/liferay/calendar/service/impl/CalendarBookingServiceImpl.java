@@ -706,6 +706,22 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 	}
 
 	@Override
+	public void updateLastInstanceCalendarBookingRecurrence(
+			long calendarBookingId, String recurrence)
+		throws PortalException {
+
+		CalendarBooking calendarBooking =
+			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
+
+		CalendarPermission.check(
+			getPermissionChecker(), calendarBooking.getCalendarId(),
+			CalendarActionKeys.MANAGE_BOOKINGS);
+
+		calendarBookingLocalService.updateLastInstanceCalendarBookingRecurrence(
+			calendarBooking, recurrence);
+	}
+
+	@Override
 	public CalendarBooking updateOffsetAndDuration(
 			long calendarBookingId, long calendarId, long[] childCalendarIds,
 			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
