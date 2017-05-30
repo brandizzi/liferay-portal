@@ -799,9 +799,8 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			long calendarBookingId, long calendarId, long[] childCalendarIds,
 			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
 			String location, long startTime, long endTime, boolean allDay,
-			String recurrence, long firstReminder, String firstReminderType,
-			long secondReminder, String secondReminderType,
-			ServiceContext serviceContext)
+			long firstReminder, String firstReminderType, long secondReminder,
+			String secondReminderType, ServiceContext serviceContext)
 		throws PortalException {
 
 		CalendarPermission.check(
@@ -813,6 +812,34 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 			titleMap, descriptionMap, location, startTime, endTime, allDay,
 			firstReminder, firstReminderType, secondReminder,
 			secondReminderType, serviceContext);
+	}
+
+	/**
+	 * @deprecated As of 2.2.0, replaced by {@link
+	 *             #updateRecurringCalendarBooking(long, long, long[], Map, Map,
+	 *             String, long, long, boolean, long, String, long, String,
+	 *             ServiceContext)
+	 */
+	@Deprecated
+	@Override
+	public CalendarBooking updateRecurringCalendarBooking(
+			long calendarBookingId, long calendarId, long[] childCalendarIds,
+			Map<Locale, String> titleMap, Map<Locale, String> descriptionMap,
+			String location, long startTime, long endTime, boolean allDay,
+			String recurrence, long firstReminder, String firstReminderType,
+			long secondReminder, String secondReminderType,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		CalendarPermission.check(
+			getPermissionChecker(), calendarId,
+			CalendarActionKeys.MANAGE_BOOKINGS);
+
+		return updateRecurringCalendarBooking(
+			calendarBookingId, calendarId, childCalendarIds, titleMap,
+			descriptionMap, location, startTime, endTime, allDay, firstReminder,
+			firstReminderType, secondReminder, secondReminderType,
+			serviceContext);
 	}
 
 	protected String exportToRSS(
