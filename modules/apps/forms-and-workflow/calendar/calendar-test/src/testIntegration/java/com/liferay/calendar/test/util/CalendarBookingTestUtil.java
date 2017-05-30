@@ -124,6 +124,21 @@ public class CalendarBookingTestUtil {
 			serviceContext);
 	}
 
+	public static CalendarBooking addDailyRecurringCalendarBooking(
+			User user, ServiceContext serviceContext)
+		throws PortalException {
+
+		Calendar calendar = CalendarTestUtil.addCalendar(user, serviceContext);
+
+		Recurrence recurrence = RecurrenceTestUtil.getDailyRecurrence();
+
+		long startTime = System.currentTimeMillis();
+
+		return addRecurringCalendarBooking(
+			user, calendar, startTime, startTime + (Time.HOUR * 10), recurrence,
+			serviceContext);
+	}
+
 	public static CalendarBooking addDraftCalendarBooking(User user)
 		throws PortalException {
 
