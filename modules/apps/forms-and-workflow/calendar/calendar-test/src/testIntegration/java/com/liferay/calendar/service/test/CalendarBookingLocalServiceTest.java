@@ -1369,6 +1369,58 @@ public class CalendarBookingLocalServiceTest {
 	}
 
 	@Test
+	public void testUpdateCalendarBookingInstanceWithoutRecurrence()
+		throws Exception {
+
+		ServiceContext serviceContext = createServiceContext();
+
+		Calendar calendar = CalendarTestUtil.addCalendar(_user, serviceContext);
+
+		long startTime = System.currentTimeMillis();
+
+		Recurrence recurrence = RecurrenceTestUtil.getDailyRecurrence();
+
+		CalendarBooking calendarBooking =
+			CalendarBookingTestUtil.addRecurringCalendarBooking(
+				_user, calendar, startTime, startTime + (Time.HOUR * 10),
+				recurrence, serviceContext);
+
+		Map<Locale, String> instanceTitleMap =
+			RandomTestUtil.randomLocaleStringMap();
+
+		long instanceStartTime = startTime + Time.DAY * 2;
+
+		CalendarBooking calendarBookingInstance =
+			CalendarBookingLocalServiceUtil.updateCalendarBookingInstance(
+				_user.getUserId(), calendarBooking.getCalendarBookingId(), 2,
+				calendar.getCalendarId(), new long[0], instanceTitleMap,
+				calendarBooking.getDescriptionMap(),
+				calendarBooking.getLocation(), instanceStartTime,
+				instanceStartTime + (Time.HOUR * 10), false, false, 0, null, 0,
+				null, serviceContext);
+
+		Assert.assertEquals(
+			instanceTitleMap, calendarBookingInstance.getTitleMap());
+
+		Map<Locale, String> newTitleMap =
+			RandomTestUtil.randomLocaleStringMap();
+
+		CalendarBookingLocalServiceUtil.updateCalendarBookingInstance(
+			_user.getUserId(), calendarBooking.getCalendarBookingId(), 1,
+			calendar.getCalendarId(), newTitleMap,
+			calendarBooking.getDescriptionMap(), calendarBooking.getLocation(),
+			startTime, startTime + (Time.HOUR * 10), false,
+			calendarBooking.getRecurrence(), true, 0, null, 0, null,
+			serviceContext);
+
+		calendarBookingInstance =
+			CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+				calendarBookingInstance.getCalendarBookingId());
+
+		Assert.assertEquals(newTitleMap, calendarBookingInstance.getTitleMap());
+	}
+
+	@Test
 	public void testUpdateCalendarBookingPreservesChildReminders()
 		throws Exception {
 
