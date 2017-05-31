@@ -321,7 +321,7 @@ AUI.add(
 					_getNewRecurrence: function(schedulerEvent, changedAttributes) {
 						var instance = this;
 
-						var recurrence = instance.parseRecurrence(schedulerEvent.get('recurrence'));
+						var recurrence = instance.parseRecurrence(schedulerEvent.get('lastInstanceRecurrence'));
 
 						if (recurrence && changedAttributes.startDate && changedAttributes.endDate) {
 							var rrule = recurrence.rrule;
@@ -481,7 +481,7 @@ AUI.add(
 						var showNextQuestion = A.bind(instance.load, instance);
 
 						if (newRecurrence && (!answers.updateInstance || answers.allFollowing)) {
-							schedulerEvent.set('recurrence', instance.encodeRecurrence(newRecurrence));
+							schedulerEvent.set('lastInstanceRecurrence', instance.encodeRecurrence(newRecurrence));
 						}
 
 						if (answers.cancel) {

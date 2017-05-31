@@ -289,7 +289,7 @@ AUI.add(
 								endTimeMonth: endDate.getMonth(),
 								endTimeYear: endDate.getFullYear(),
 								instanceIndex: schedulerEvent.get('instanceIndex'),
-								recurrence: schedulerEvent.get('recurrence'),
+								recurrence: schedulerEvent.get('lastInstanceRecurrence'),
 								startTimeDay: startDate.getDate(),
 								startTimeHour: startDate.getHours(),
 								startTimeMinute: startDate.getMinutes(),
