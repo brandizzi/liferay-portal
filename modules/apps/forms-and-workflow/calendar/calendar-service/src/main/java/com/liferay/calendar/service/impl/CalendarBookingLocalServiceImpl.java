@@ -1304,7 +1304,7 @@ public class CalendarBookingLocalServiceImpl
 			Recurrence recurrenceObj = RecurrenceSerializer.deserialize(
 				recurrence, calendar.getTimeZone());
 
-			if (oldRecurrence.equals(recurrence) &&
+			if ((recurrenceObj != null) && oldRecurrence.equals(recurrence) &&
 				(recurrenceObj.getCount() > 0)) {
 
 				recurrenceObj.setCount(
