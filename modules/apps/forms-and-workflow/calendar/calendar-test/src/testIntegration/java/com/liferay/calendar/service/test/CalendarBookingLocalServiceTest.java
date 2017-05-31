@@ -1899,6 +1899,9 @@ public class CalendarBookingLocalServiceTest {
 		java.util.Calendar expectedJCalendar,
 		java.util.Calendar actualJCalendar) {
 
+		Assert.assertNotNull(expectedJCalendar);
+		Assert.assertNotNull(actualJCalendar);
+
 		Assert.assertEquals(
 			expectedJCalendar.get(java.util.Calendar.YEAR),
 			actualJCalendar.get(java.util.Calendar.YEAR));
@@ -1915,6 +1918,9 @@ public class CalendarBookingLocalServiceTest {
 	protected void assertSameTime(
 		java.util.Calendar expectedJCalendar,
 		java.util.Calendar actualJCalendar) {
+
+		Assert.assertNotNull(expectedJCalendar);
+		Assert.assertNotNull(actualJCalendar);
 
 		Assert.assertEquals(
 			expectedJCalendar.get(java.util.Calendar.HOUR),
