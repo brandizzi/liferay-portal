@@ -239,8 +239,9 @@ public class CalendarUtil {
 	}
 
 	public static JSONObject toCalendarBookingJSONObject(
-		ThemeDisplay themeDisplay, CalendarBooking calendarBooking,
-		TimeZone timeZone) {
+			ThemeDisplay themeDisplay, CalendarBooking calendarBooking,
+			TimeZone timeZone)
+		throws PortalException {
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -278,6 +279,15 @@ public class CalendarUtil {
 				CalendarBooking.class.getName(),
 				calendarBooking.getCalendarBookingId()));
 		jsonObject.put("instanceIndex", calendarBooking.getInstanceIndex());
+
+		CalendarBooking lastInstanceCalendarBooking =
+			CalendarBookingServiceUtil.getLastInstanceCalendarBooking(
+				calendarBooking.getCalendarBookingId());
+
+		jsonObject.put(
+			"lastInstanceCalendarBookingRecurrence",
+			lastInstanceCalendarBooking.getRecurrence());
+
 		jsonObject.put("location", calendarBooking.getLocation());
 		jsonObject.put(
 			"parentCalendarBookingId",
@@ -335,8 +345,9 @@ public class CalendarUtil {
 	}
 
 	public static JSONArray toCalendarBookingsJSONArray(
-		ThemeDisplay themeDisplay, List<CalendarBooking> calendarBookings,
-		TimeZone timeZone) {
+			ThemeDisplay themeDisplay, List<CalendarBooking> calendarBookings,
+			TimeZone timeZone)
+		throws PortalException {
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 

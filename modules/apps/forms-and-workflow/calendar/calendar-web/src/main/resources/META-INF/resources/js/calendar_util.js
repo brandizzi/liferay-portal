@@ -77,6 +77,7 @@ AUI.add(
 						hasChildCalendarBookings: calendarBooking.hasChildCalendarBookings,
 						hasWorkflowInstanceLink: calendarBooking.hasWorkflowInstanceLink,
 						instanceIndex: calendarBooking.instanceIndex,
+						lastInstanceRecurrence: calendarBooking.lastInstanceCalendarBookingRecurrence,
 						location: calendarBooking.location,
 						parentCalendarBookingId: calendarBooking.parentCalendarBookingId,
 						recurrence: calendarBooking.recurrence,
