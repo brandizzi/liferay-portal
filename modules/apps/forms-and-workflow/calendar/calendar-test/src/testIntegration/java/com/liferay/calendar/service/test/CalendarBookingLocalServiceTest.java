@@ -222,6 +222,32 @@ public class CalendarBookingLocalServiceTest {
 	}
 
 	@Test
+	public void testAddCalendarBookingResourceRequestedEndOverlapsStart()
+		throws PortalException {
+
+		Calendar calendar = CalendarTestUtil.addCalendar(_user);
+
+		Calendar resourceCalendar =
+			CalendarTestUtil.addCalendarResourceCalendar(_user);
+
+		CalendarBooking firstChildCalendarBooking =
+			CalendarBookingTestUtil.addChildCalendarBooking(
+				calendar, resourceCalendar);
+
+		Assert.assertTrue(firstChildCalendarBooking.isPending());
+
+		long startTime = firstChildCalendarBooking.getEndTime();
+
+		long endTime = startTime + Time.HOUR;
+
+		CalendarBooking secondChildCalendarBooking =
+			CalendarBookingTestUtil.addChildCalendarBooking(
+				calendar, resourceCalendar, startTime, endTime);
+
+		Assert.assertTrue(secondChildCalendarBooking.isPending());
+	}
+
+	@Test
 	public void testAddCalendarBookingResourceRequestedOverlappingStart()
 		throws PortalException {
 
@@ -252,6 +278,32 @@ public class CalendarBookingLocalServiceTest {
 	}
 
 	@Test
+	public void testAddCalendarBookingResourceRequestedStartOverlapsEnd()
+		throws PortalException {
+
+		Calendar calendar = CalendarTestUtil.addCalendar(_user);
+
+		Calendar resourceCalendar =
+			CalendarTestUtil.addCalendarResourceCalendar(_user);
+
+		CalendarBooking firstChildCalendarBooking =
+			CalendarBookingTestUtil.addChildCalendarBooking(
+				calendar, resourceCalendar);
+
+		Assert.assertTrue(firstChildCalendarBooking.isPending());
+
+		long endTime = firstChildCalendarBooking.getStartTime();
+
+		long startTime = endTime - Time.HOUR;
+
+		CalendarBooking secondChildCalendarBooking =
+			CalendarBookingTestUtil.addChildCalendarBooking(
+				calendar, resourceCalendar, startTime, endTime);
+
+		Assert.assertTrue(secondChildCalendarBooking.isPending());
+	}
+
+	@Test
 	public void testAddCalendarBookingResourceReserved()
 		throws PortalException {
 
@@ -271,6 +323,31 @@ public class CalendarBookingLocalServiceTest {
 				firstCalendarBooking.getEndTime());
 
 		Assert.assertTrue(secondChildCalendarBooking.isDenied());
+	}
+
+	@Test
+	public void testAddCalendarBookingResourceReservedEndOverlapsStart()
+		throws PortalException {
+
+		Calendar resourceCalendar =
+			CalendarTestUtil.addCalendarResourceCalendar(_user);
+
+		CalendarBooking firstCalendarBooking =
+			CalendarBookingTestUtil.addRegularCalendarBooking(resourceCalendar);
+
+		Assert.assertTrue(firstCalendarBooking.isApproved());
+
+		long endTime = firstCalendarBooking.getStartTime();
+
+		long startTime = endTime - Time.HOUR;
+
+		Calendar calendar = CalendarTestUtil.addCalendar(_user);
+
+		CalendarBooking secondChildCalendarBooking =
+			CalendarBookingTestUtil.addChildCalendarBooking(
+				calendar, resourceCalendar, startTime, endTime);
+
+		Assert.assertTrue(secondChildCalendarBooking.isPending());
 	}
 
 	@Test
@@ -321,6 +398,31 @@ public class CalendarBookingLocalServiceTest {
 				calendar, resourceCalendar, startTime, endTime);
 
 		Assert.assertTrue(secondChildCalendarBooking.isDenied());
+	}
+
+	@Test
+	public void testAddCalendarBookingResourceReservedStartOverlapsEnd()
+		throws PortalException {
+
+		Calendar resourceCalendar =
+			CalendarTestUtil.addCalendarResourceCalendar(_user);
+
+		CalendarBooking firstCalendarBooking =
+			CalendarBookingTestUtil.addRegularCalendarBooking(resourceCalendar);
+
+		Assert.assertTrue(firstCalendarBooking.isApproved());
+
+		long startTime = firstCalendarBooking.getEndTime();
+
+		long endTime = startTime + Time.HOUR;
+
+		Calendar calendar = CalendarTestUtil.addCalendar(_user);
+
+		CalendarBooking secondChildCalendarBooking =
+			CalendarBookingTestUtil.addChildCalendarBooking(
+				calendar, resourceCalendar, startTime, endTime);
+
+		Assert.assertTrue(secondChildCalendarBooking.isPending());
 	}
 
 	@Test
