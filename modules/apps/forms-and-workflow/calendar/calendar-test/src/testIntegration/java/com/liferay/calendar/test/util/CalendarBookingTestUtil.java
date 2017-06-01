@@ -195,6 +195,20 @@ public class CalendarBookingTestUtil {
 			null, 0, null, serviceContext);
 	}
 
+	public static CalendarBooking addMasterCalendarBooking(
+			User user, Calendar calendar, long[] childCalendarIds,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		long startTime = System.currentTimeMillis();
+
+		long endTime = startTime + Time.HOUR * 10;
+
+		return addMasterCalendarBooking(
+			user, calendar, childCalendarIds, startTime, endTime,
+			serviceContext);
+	}
+
 	public static CalendarBooking addPublishedCalendarBooking(User user)
 		throws PortalException {
 

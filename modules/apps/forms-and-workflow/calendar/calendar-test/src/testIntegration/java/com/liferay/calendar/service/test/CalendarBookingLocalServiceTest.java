@@ -200,6 +200,50 @@ public class CalendarBookingLocalServiceTest {
 	}
 
 	@Test
+	public void testAddCalendarBookingResourceRequested()
+		throws PortalException {
+
+		Calendar calendar = CalendarTestUtil.addCalendar(_user);
+
+		Calendar resourceCalendar =
+			CalendarTestUtil.addCalendarResourceCalendar(_user);
+
+		CalendarBooking firstChildCalendarBooking =
+			CalendarBookingTestUtil.addChildCalendarBooking(
+				calendar, resourceCalendar);
+
+		Assert.assertTrue(firstChildCalendarBooking.isPending());
+
+		CalendarBooking secondChildCalendarBooking =
+			CalendarBookingTestUtil.addChildCalendarBooking(
+				calendar, resourceCalendar);
+
+		Assert.assertTrue(secondChildCalendarBooking.isDenied());
+	}
+
+	@Test
+	public void testAddCalendarBookingResourceReserved()
+		throws PortalException {
+
+		Calendar resourceCalendar =
+			CalendarTestUtil.addCalendarResourceCalendar(_user);
+
+		CalendarBooking firstCalendarBooking =
+			CalendarBookingTestUtil.addRegularCalendarBooking(resourceCalendar);
+
+		Assert.assertTrue(firstCalendarBooking.isApproved());
+
+		Calendar calendar = CalendarTestUtil.addCalendar(_user);
+
+		CalendarBooking secondChildCalendarBooking =
+			CalendarBookingTestUtil.addChildCalendarBooking(
+				calendar, resourceCalendar, firstCalendarBooking.getStartTime(),
+				firstCalendarBooking.getEndTime());
+
+		Assert.assertTrue(secondChildCalendarBooking.isDenied());
+	}
+
+	@Test
 	public void testAddRecurringCalendarBookingUntilStartTime()
 		throws Exception {
 
