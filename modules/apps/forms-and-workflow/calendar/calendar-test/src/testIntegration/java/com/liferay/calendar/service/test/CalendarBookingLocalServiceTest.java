@@ -278,6 +278,30 @@ public class CalendarBookingLocalServiceTest {
 	}
 
 	@Test
+	public void testAddCalendarBookingResourceRequestedSendNotification()
+		throws Exception {
+
+		Calendar calendar = CalendarTestUtil.addCalendar(_user);
+
+		Calendar resourceCalendar =
+			CalendarTestUtil.addCalendarResourceCalendar(_user);
+
+		CalendarBooking firstChildCalendarBooking =
+			CalendarBookingTestUtil.addChildCalendarBooking(
+				calendar, resourceCalendar);
+
+		CalendarBookingTestUtil.addChildCalendarBooking(
+			calendar, resourceCalendar,
+			firstChildCalendarBooking.getStartTime(),
+			firstChildCalendarBooking.getEndTime());
+
+		String messageBodySnippet = "has declined this invitation";
+
+		Assert.assertTrue(
+			MailServiceTestUtil.lastMailMessageContains(messageBodySnippet));
+	}
+
+	@Test
 	public void testAddCalendarBookingResourceRequestedStartOverlapsEnd()
 		throws PortalException {
 
@@ -2059,6 +2083,8 @@ public class CalendarBookingLocalServiceTest {
 		ServiceContext serviceContext = new ServiceContext();
 
 		serviceContext.setCompanyId(_user.getCompanyId());
+
+		serviceContext.setUserId(_user.getUserId());
 
 		return serviceContext;
 	}
