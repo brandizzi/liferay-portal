@@ -1720,7 +1720,10 @@ public class CalendarBookingLocalServiceImpl
 		long startTime = calendarBooking.getStartTime();
 		long endTime = calendarBooking.getEndTime();
 
-		int[] statuses = {CalendarBookingWorkflowConstants.STATUS_PENDING};
+		int[] statuses = {
+			CalendarBookingWorkflowConstants.STATUS_APPROVED,
+			CalendarBookingWorkflowConstants.STATUS_PENDING
+		};
 
 		List<CalendarBooking> calendarEvents = getCalendarBookings(
 			calendarBooking.getCalendarId(), statuses);
