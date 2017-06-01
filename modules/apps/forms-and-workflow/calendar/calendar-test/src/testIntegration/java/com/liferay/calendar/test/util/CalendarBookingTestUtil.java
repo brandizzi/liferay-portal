@@ -26,11 +26,13 @@ import com.liferay.calendar.util.CalendarResourceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -124,6 +126,41 @@ public class CalendarBookingTestUtil {
 			serviceContext);
 	}
 
+	public static CalendarBooking addChildCalendarBooking(
+			Calendar invitingCalendar, Calendar invitedCalendar)
+		throws PortalException {
+
+		User user = UserLocalServiceUtil.fetchUser(
+			invitingCalendar.getUserId());
+
+		long startTime = System.currentTimeMillis();
+
+		long endTime = startTime + Time.HOUR;
+
+		CalendarBooking masterCalendarBooking = addMasterCalendarBooking(
+			user, invitingCalendar,
+			new long[] {invitedCalendar.getCalendarId()}, startTime, endTime,
+			createServiceContext(user));
+
+		return getChildCalendarBooking(masterCalendarBooking);
+	}
+
+	public static CalendarBooking addChildCalendarBooking(
+			Calendar invitingCalendar, Calendar invitedCalendar, long startTime,
+			long endTime)
+		throws PortalException {
+
+		User user = UserLocalServiceUtil.fetchUser(
+			invitingCalendar.getUserId());
+
+		CalendarBooking masterCalendarBooking = addMasterCalendarBooking(
+			user, invitingCalendar,
+			new long[] {invitedCalendar.getCalendarId()}, startTime, endTime,
+			createServiceContext(user));
+
+		return getChildCalendarBooking(masterCalendarBooking);
+	}
+
 	public static CalendarBooking addDailyRecurringCalendarBooking(
 			User user, ServiceContext serviceContext)
 		throws PortalException {
@@ -204,6 +241,15 @@ public class CalendarBookingTestUtil {
 			serviceContext);
 	}
 
+	public static CalendarBooking addRegularCalendarBooking(Calendar calendar)
+		throws PortalException {
+
+		User user = UserLocalServiceUtil.fetchUser(calendar.getUserId());
+
+		return addRegularCalendarBooking(
+			user, calendar, createServiceContext(user));
+	}
+
 	public static CalendarBooking addRegularCalendarBooking(
 			User user, Calendar calendar, long startTime, long endTime,
 			ServiceContext serviceContext)
@@ -260,6 +306,31 @@ public class CalendarBookingTestUtil {
 		finally {
 			WorkflowThreadLocal.setEnabled(workflowEnabled);
 		}
+	}
+
+	public static ServiceContext createServiceContext(User user) {
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setCompanyId(user.getCompanyId());
+
+		serviceContext.setUserId(user.getUserId());
+
+		return serviceContext;
+	}
+
+	public static CalendarBooking getChildCalendarBooking(
+		CalendarBooking calendarBooking) {
+
+		List<CalendarBooking> childCalendarBookings =
+			calendarBooking.getChildCalendarBookings();
+
+		CalendarBooking childCalendarBooking = childCalendarBookings.get(0);
+
+		if (childCalendarBooking.isMasterBooking()) {
+			childCalendarBooking = childCalendarBookings.get(1);
+		}
+
+		return childCalendarBooking;
 	}
 
 	public static CalendarBooking updateCalendarBookingInstance(
