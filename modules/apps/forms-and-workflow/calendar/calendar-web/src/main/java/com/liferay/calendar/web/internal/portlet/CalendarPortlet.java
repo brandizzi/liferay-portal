@@ -15,6 +15,7 @@
 package com.liferay.calendar.web.internal.portlet;
 
 import com.liferay.asset.kernel.exception.AssetCategoryException;
+import com.liferay.asset.kernel.exception.AssetTagException;
 import com.liferay.calendar.constants.CalendarPortletKeys;
 import com.liferay.calendar.exception.CalendarBookingDurationException;
 import com.liferay.calendar.exception.CalendarBookingRecurrenceException;
@@ -1084,6 +1085,7 @@ public class CalendarPortlet extends MVCPortlet {
 	@Override
 	protected boolean isSessionErrorException(Throwable cause) {
 		if (cause instanceof AssetCategoryException ||
+			cause instanceof AssetTagException ||
 			cause instanceof CalendarBookingDurationException ||
 			cause instanceof CalendarBookingRecurrenceException ||
 			cause instanceof CalendarNameException ||
