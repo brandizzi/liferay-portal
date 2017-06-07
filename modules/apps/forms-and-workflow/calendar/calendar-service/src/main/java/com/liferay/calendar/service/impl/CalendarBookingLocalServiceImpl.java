@@ -39,11 +39,13 @@ import com.liferay.calendar.util.JCalendarUtil;
 import com.liferay.calendar.util.RecurrenceUtil;
 import com.liferay.calendar.workflow.CalendarBookingWorkflowConstants;
 import com.liferay.exportimport.kernel.lar.ExportImportThreadLocal;
+import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -210,8 +212,22 @@ public class CalendarBookingLocalServiceImpl
 				CalendarBookingWorkflowConstants.STATUS_DRAFT);
 		}
 		else {
-			calendarBooking.setStatus(
-				CalendarBookingWorkflowConstants.STATUS_MASTER_PENDING);
+			if (isCalendarReserved(calendar, startTime, endTime)) {
+				calendarBooking.setStatus(
+					CalendarBookingWorkflowConstants.STATUS_DENIED);
+
+				serviceContext.setAttribute("sendNotification", Boolean.TRUE);
+
+				sendNotification(
+					calendarBooking, NotificationTemplateType.DECLINE,
+					serviceContext);
+
+				serviceContext.setAttribute("sendNotification", Boolean.FALSE);
+			}
+			else {
+				calendarBooking.setStatus(
+					CalendarBookingWorkflowConstants.STATUS_MASTER_PENDING);
+			}
 		}
 
 		calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
@@ -1701,6 +1717,32 @@ public class CalendarBookingLocalServiceImpl
 		return jsonObject.toString();
 	}
 
+	protected List<CalendarBooking> getOverlappingCalendarBookings(
+		long calendarId, long startTime, long endTime, int[] statuses) {
+
+		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
+			CalendarBooking.class, getClassLoader());
+
+		Property property = PropertyFactoryUtil.forName("calendarId");
+
+		dynamicQuery.add(property.eq(calendarId));
+
+		Property endTimeProperty = PropertyFactoryUtil.forName("endTime");
+
+		Property startTimeProperty = PropertyFactoryUtil.forName("startTime");
+
+		Criterion intervalCriterion = RestrictionsFactoryUtil.and(
+			startTimeProperty.lt(endTime), endTimeProperty.gt(startTime));
+
+		dynamicQuery.add(intervalCriterion);
+
+		Property statusProperty = PropertyFactoryUtil.forName("status");
+
+		dynamicQuery.add(statusProperty.in(statuses));
+
+		return dynamicQuery(dynamicQuery);
+	}
+
 	protected TimeZone getTimeZone(Calendar calendar, boolean allDay) {
 		TimeZone timeZone = calendar.getTimeZone();
 
@@ -1794,6 +1836,31 @@ public class CalendarBookingLocalServiceImpl
 		}
 
 		return unmodifiedAttributesNames;
+	}
+
+	protected boolean isCalendarReserved(
+			Calendar calendar, long startTime, long endTime)
+		throws PortalException {
+
+		CalendarResource calendarResource = calendar.getCalendarResource();
+
+		if (calendarResource.isGroup() && calendarResource.isUser()) {
+			return false;
+		}
+
+		int[] statuses = {
+			CalendarBookingWorkflowConstants.STATUS_APPROVED,
+			CalendarBookingWorkflowConstants.STATUS_PENDING
+		};
+
+		List<CalendarBooking> calendarBookings = getOverlappingCalendarBookings(
+			calendar.getCalendarId(), startTime, endTime, statuses);
+
+		if (!calendarBookings.isEmpty()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	protected void sendNotification(
