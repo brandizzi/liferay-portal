@@ -210,8 +210,22 @@ public class CalendarBookingLocalServiceImpl
 				CalendarBookingWorkflowConstants.STATUS_DRAFT);
 		}
 		else {
-			calendarBooking.setStatus(
-				CalendarBookingWorkflowConstants.STATUS_MASTER_PENDING);
+			if (checkIfOccupied(calendarBooking)) {
+				calendarBooking.setStatus(
+					CalendarBookingWorkflowConstants.STATUS_DENIED);
+
+				serviceContext.setAttribute("sendNotification", Boolean.TRUE);
+
+				sendNotification(
+					calendarBooking, NotificationTemplateType.DECLINE,
+					serviceContext);
+
+				serviceContext.setAttribute("sendNotification", Boolean.FALSE);
+			}
+			else {
+				calendarBooking.setStatus(
+					CalendarBookingWorkflowConstants.STATUS_MASTER_PENDING);
+			}
 		}
 
 		calendarBooking.setStatusDate(serviceContext.getModifiedDate(now));
@@ -1691,6 +1705,35 @@ public class CalendarBookingLocalServiceImpl
 			sendNotification(
 				childCalendarBooking, notificationTemplateType, serviceContext);
 		}
+	}
+
+	protected boolean checkIfOccupied(CalendarBooking calendarBooking)
+		throws PortalException {
+
+		CalendarResource calendarResource =
+			calendarBooking.getCalendarResource();
+
+		if (calendarResource.isGroup() && calendarResource.isUser()) {
+			return false;
+		}
+
+		long startTime = calendarBooking.getStartTime();
+		long endTime = calendarBooking.getEndTime();
+
+		int[] statuses = {CalendarBookingWorkflowConstants.STATUS_PENDING};
+
+		List<CalendarBooking> calendarEvents = getCalendarBookings(
+			calendarBooking.getCalendarId(), statuses);
+
+		for (CalendarBooking calendarEvent : calendarEvents) {
+			if ((startTime < calendarEvent.getEndTime()) &&
+				(calendarEvent.getStartTime() < endTime)) {
+
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	protected String getExtraDataJSON(CalendarBooking calendarBooking) {
