@@ -45,9 +45,10 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.mail.test.MailMessage;
+import com.liferay.portal.mail.test.MailServiceTestUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.SynchronousMailTestRule;
-import com.liferay.portal.util.test.MailServiceTestUtil;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -193,8 +194,8 @@ public class CalendarBookingLocalServiceTest {
 				calendarBooking.getTitle(LocaleUtil.getDefault()) +
 					StringPool.QUOTE;
 
-		List<com.dumbster.smtp.MailMessage> mailMessages =
-			MailServiceTestUtil.getMailMessages("Subject", mailMessageSubject);
+		List<MailMessage> mailMessages = MailServiceTestUtil.getMailMessages(
+			"Subject", mailMessageSubject);
 
 		Assert.assertEquals(mailMessages.toString(), 2, mailMessages.size());
 	}
@@ -789,10 +790,14 @@ public class CalendarBookingLocalServiceTest {
 				calendarBooking.getTitle(LocaleUtil.getDefault()) +
 					StringPool.QUOTE;
 
-		List<com.dumbster.smtp.MailMessage> mailMessages =
-			MailServiceTestUtil.getMailMessages("Subject", mailMessageSubject);
+		List<MailMessage> mailMessages = MailServiceTestUtil.getMailMessages(
+			"Subject", mailMessageSubject);
 
 		Assert.assertEquals(mailMessages.toString(), 1, mailMessages.size());
+
+		MailMessage mailMessage = mailMessages.get(0);
+
+		Assert.assertNotNull(mailMessage.getBody());
 	}
 
 	@Test
@@ -2140,8 +2145,8 @@ public class CalendarBookingLocalServiceTest {
 	}
 
 	protected void assertSentEmail(String to) {
-		List<com.dumbster.smtp.MailMessage> mailMessages =
-			MailServiceTestUtil.getMailMessages("To", to);
+		List<MailMessage> mailMessages = MailServiceTestUtil.getMailMessages(
+			"To", to);
 
 		Assert.assertFalse(mailMessages.toString(), mailMessages.isEmpty());
 	}
