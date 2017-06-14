@@ -40,6 +40,8 @@ import com.liferay.portal.kernel.xml.Element;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -188,6 +190,8 @@ public class CalendarBookingStagedModelDataHandler
 		long parentCalendarBookingId =
 			CalendarBookingConstants.PARENT_CALENDAR_BOOKING_ID_DEFAULT;
 
+		long[] childCalendarIds = new long[0];
+
 		if (!calendarBooking.isMasterBooking()) {
 			Map<Long, Long> calendarBookingIds =
 				(Map<Long, Long>)portletDataContext.getNewPrimaryKeysMap(
@@ -197,6 +201,19 @@ public class CalendarBookingStagedModelDataHandler
 				calendarBookingIds,
 				calendarBooking.getParentCalendarBookingId(),
 				calendarBooking.getParentCalendarBookingId());
+		}
+		else {
+			Set<Long> calendarLiveIds = calendarIds.keySet();
+
+			Stream<Long> calendarLiveIdStream = calendarLiveIds.stream();
+
+			calendarLiveIdStream = calendarLiveIdStream.filter(
+				childCalendarId ->
+					childCalendarId != calendarBooking.getCalendarId());
+
+			childCalendarIds = calendarLiveIdStream.mapToLong(
+				Long::longValue
+			).toArray();
 		}
 
 		long recurringCalendarBookingId =
@@ -223,7 +240,7 @@ public class CalendarBookingStagedModelDataHandler
 
 				importedCalendarBooking =
 					_calendarBookingLocalService.addCalendarBooking(
-						userId, calendarId, new long[0],
+						userId, calendarId, childCalendarIds,
 						parentCalendarBookingId, recurringCalendarBookingId,
 						calendarBooking.getTitleMap(),
 						calendarBooking.getDescriptionMap(),
@@ -242,7 +259,8 @@ public class CalendarBookingStagedModelDataHandler
 				importedCalendarBooking =
 					_calendarBookingLocalService.updateCalendarBooking(
 						userId, existingCalendarBooking.getCalendarBookingId(),
-						calendarId, calendarBooking.getTitleMap(),
+						calendarId, childCalendarIds,
+						calendarBooking.getTitleMap(),
 						calendarBooking.getDescriptionMap(),
 						calendarBooking.getLocation(),
 						calendarBooking.getStartTime(),
@@ -259,8 +277,9 @@ public class CalendarBookingStagedModelDataHandler
 		else {
 			importedCalendarBooking =
 				_calendarBookingLocalService.addCalendarBooking(
-					userId, calendarId, new long[0], parentCalendarBookingId,
-					recurringCalendarBookingId, calendarBooking.getTitleMap(),
+					userId, calendarId, childCalendarIds,
+					parentCalendarBookingId, recurringCalendarBookingId,
+					calendarBooking.getTitleMap(),
 					calendarBooking.getDescriptionMap(),
 					calendarBooking.getLocation(),
 					calendarBooking.getStartTime(),
