@@ -126,6 +126,15 @@ public class CalendarBookingStagedModelDataHandler
 			StagedModelDataHandlerUtil.exportReferenceStagedModel(
 				portletDataContext, calendarBooking,
 				calendarBooking.getParentCalendarBooking(),
+				PortletDataContext.REFERENCE_TYPE_PARENT);
+		}
+
+		for (CalendarBooking childCalendarBooking :
+				calendarBooking.getChildCalendarBookings()) {
+
+			StagedModelDataHandlerUtil.exportReferenceStagedModel(
+				portletDataContext, calendarBooking,
+				childCalendarBooking.getCalendar(),
 				PortletDataContext.REFERENCE_TYPE_STRONG);
 		}
 
