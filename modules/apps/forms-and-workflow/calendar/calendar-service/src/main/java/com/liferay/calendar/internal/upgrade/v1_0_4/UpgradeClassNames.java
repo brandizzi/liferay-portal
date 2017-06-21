@@ -30,9 +30,8 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 	@Override
 	public void doUpgrade() throws UpgradeException {
 		deleteCalEventClassName();
-
-		deleteDuplicateResources();
 		deleteDuplicateResourcePermissions();
+		deleteDuplicateResources();
 
 		super.doUpgrade();
 	}
@@ -42,19 +41,15 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 			runSQL(
 				"delete from Counter where name like '" +
 					_CAL_EVENT_CLASS_NAME + "%'");
-
 			runSQL(
 				"delete from ClassName_ where value like '" +
 					_CAL_EVENT_CLASS_NAME + "%'");
-
 			runSQL(
 				"delete from ResourceAction where name like '" +
 					_CAL_EVENT_CLASS_NAME + "%'");
-
 			runSQL(
 				"delete from ResourceBlock where name like '" +
 					_CAL_EVENT_CLASS_NAME + "%'");
-
 			runSQL(
 				"delete from ResourcePermission where name like '" +
 					_CAL_EVENT_CLASS_NAME + "%'");
@@ -70,11 +65,11 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 		try (LoggingTimer loggingTimer = new LoggingTimer()) {
 			StringBundler sb = new StringBundler(6);
 
-			sb.append("SELECT orp.resourcePermissionId FROM ");
-			sb.append("ResourcePermission orp, ResourcePermission nrp WHERE ");
-			sb.append("orp.companyId = nrp.companyId AND orp.scope = ");
-			sb.append("nrp.scope AND orp.primKey = nrp.primKey AND ");
-			sb.append("orp.roleId = nrp.roleId AND orp.name = ? AND nrp.name ");
+			sb.append("select orp.resourcePermissionId from ");
+			sb.append("ResourcePermission orp, ResourcePermission nrp where ");
+			sb.append("orp.companyId = nrp.companyId and orp.scope = ");
+			sb.append("nrp.scope and orp.primKey = nrp.primKey and ");
+			sb.append("orp.roleId = nrp.roleId and orp.name = ? and nrp.name ");
 			sb.append("= ?");
 
 			try (PreparedStatement ps = connection.prepareStatement(
