@@ -516,7 +516,7 @@ AUI.add(
 						instance.getEventsPerPage(activeView, eventsPerPage),
 						instance.getLoadStartDate(activeView),
 						instance.getLoadEndDate(activeView, maxDaysDisplayed),
-						[CalendarWorkflow.STATUS_APPROVED, CalendarWorkflow.STATUS_DRAFT, CalendarWorkflow.STATUS_MAYBE, CalendarWorkflow.STATUS_PENDING],
+						[CalendarWorkflow.STATUS_APPROVED, CalendarWorkflow.STATUS_DENIED, CalendarWorkflow.STATUS_DRAFT, CalendarWorkflow.STATUS_MAYBE, CalendarWorkflow.STATUS_PENDING],
 						function(calendarBookings) {
 							if (filterCalendarBookings) {
 								calendarBookings = calendarBookings.filter(filterCalendarBookings);
