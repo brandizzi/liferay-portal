@@ -55,7 +55,7 @@ public class UpgradeResourcePermissions extends UpgradeProcess {
 
 	@Override
 	protected void doUpgrade() throws Exception {
-		upgradeGuestResourcePermissions();
+		upgradeGuestResourceBlockPermissions();
 	}
 
 	protected long getCalendarResourceUnsupportedActionsBitwiseValue()
@@ -101,7 +101,7 @@ public class UpgradeResourcePermissions extends UpgradeProcess {
 		}
 	}
 
-	protected void upgradeGuestResourcePermissions() throws Exception {
+	protected void upgradeGuestResourceBlockPermissions() throws Exception {
 		long unsupportedBitwiseValue =
 			getCalendarResourceUnsupportedActionsBitwiseValue();
 
@@ -114,69 +114,63 @@ public class UpgradeResourcePermissions extends UpgradeProcess {
 		sb.append("select companyId, groupId, calendarResourceId, ");
 		sb.append("resourceBlockId from CalendarResource");
 
-		try (PreparedStatement ps =
-				connection.prepareStatement(sb.toString())) {
+		try (PreparedStatement ps = connection.prepareStatement(sb.toString());
+			ResultSet rs = ps.executeQuery()) {
 
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					long companyId = rs.getLong(1);
-					long groupId = rs.getLong(2);
-					final long primaryKey = rs.getLong(3);
-					final long resourceBlockId = rs.getLong(4);
+			while (rs.next()) {
+				long companyId = rs.getLong(1);
+				long groupId = rs.getLong(2);
+				final long calendarResourceId = rs.getLong(3);
+				final long resourceBlockId = rs.getLong(4);
 
-					Role guestRole = _roleLocalService.getRole(
-						companyId, RoleConstants.GUEST);
+				Role guestRole = _roleLocalService.getRole(
+					companyId, RoleConstants.GUEST);
 
-					PermissionedModel permissionedModel =
-						new PermissionedModel() {
+				PermissionedModel permissionedModel = new PermissionedModel() {
 
-							@Override
-							public long getResourceBlockId() {
-								return resourceBlockId;
-							}
+					@Override
+					public long getResourceBlockId() {
+						return resourceBlockId;
+					}
 
-							@Override
-							public void persist() {
-								if (newResourceBlockId == -1) {
-									return;
-								}
+					@Override
+					public void persist() {
+						if (newResourceBlockId == -1) {
+							return;
+						}
 
-								StringBundler sbUpdate = new StringBundler(3);
+						StringBundler sbUpdate = new StringBundler(3);
 
-								sbUpdate.append("update CalendarResource ");
-								sbUpdate.append("set resourceBlockId = ? ");
-								sbUpdate.append("where calendarResourceId = ?");
+						sbUpdate.append("update CalendarResource ");
+						sbUpdate.append("set resourceBlockId = ? ");
+						sbUpdate.append("where calendarResourceId = ?");
 
-								try (PreparedStatement ps =
-										connection.prepareStatement(
-											sbUpdate.toString())) {
+						try (PreparedStatement ps = connection.prepareStatement(
+								sbUpdate.toString())) {
 
-									ps.setLong(1, newResourceBlockId);
-									ps.setLong(2, primaryKey);
-									ps.execute();
-								}
-								catch (SQLException sqle) {
-									throw new SystemException(sqle);
-								}
-							}
+							ps.setLong(1, newResourceBlockId);
+							ps.setLong(2, calendarResourceId);
+							ps.execute();
+						}
+						catch (SQLException sqle) {
+							throw new SystemException(sqle);
+						}
+					}
 
-							@Override
-							public void setResourceBlockId(
-								long resourceBlockId) {
+					@Override
+					public void setResourceBlockId(long resourceBlockId) {
+						newResourceBlockId = resourceBlockId;
+					}
 
-								newResourceBlockId = resourceBlockId;
-							}
+					protected long newResourceBlockId = -1;
 
-							protected long newResourceBlockId = -1;
+				};
 
-						};
-
-					_resourceBlockLocalService.updateIndividualScopePermissions(
-						companyId, groupId, _CALENDAR_RESOURCE_NAME,
-						permissionedModel, guestRole.getRoleId(),
-						unsupportedBitwiseValue,
-						ResourceBlockConstants.OPERATOR_REMOVE);
-				}
+				_resourceBlockLocalService.updateIndividualScopePermissions(
+					companyId, groupId, _CALENDAR_RESOURCE_NAME,
+					permissionedModel, guestRole.getRoleId(),
+					unsupportedBitwiseValue,
+					ResourceBlockConstants.OPERATOR_REMOVE);
 			}
 		}
 	}
