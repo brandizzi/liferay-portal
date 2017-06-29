@@ -1702,12 +1702,22 @@ public class CalendarPortlet extends MVCPortlet {
 			for (CalendarBooking childCalendarBooking : childCalendarBookings) {
 				long childCalendarId = childCalendarBooking.getCalendarId();
 
-				if (reinvitedCalendarIds.contains(childCalendarId)) {
-					_calendarBookingLocalService.updateStatus(
-						childCalendarBooking.getUserId(), childCalendarBooking,
-						CalendarBookingWorkflowConstants.STATUS_PENDING,
-						serviceContext);
+				if (!reinvitedCalendarIds.contains(childCalendarId)) {
+					continue;
 				}
+
+				Calendar childCalendar = childCalendarBooking.getCalendar();
+
+				if (_calendarBookingLocalService.hasExclusiveCalendarBooking(
+						childCalendar, startTime, endTime)) {
+
+					continue;
+				}
+
+				_calendarBookingLocalService.updateStatus(
+					childCalendarBooking.getUserId(), childCalendarBooking,
+					CalendarBookingWorkflowConstants.STATUS_PENDING,
+					serviceContext);
 			}
 		}
 
