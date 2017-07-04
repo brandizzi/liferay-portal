@@ -1768,7 +1768,8 @@ dependency to version 1.0.8.
 `clean` task.
 
 ### Removed
-- [LPS-73147]: Remove unnecessary default Bnd instruction `-dsannotations: *`.
+- [LPS-73147]: Remove the unnecessary default Bnd instruction `-dsannotations:
+*`.
 
 ## 3.3.30 - 2017-06-19
 
@@ -1805,6 +1806,14 @@ to version 2.0.23.
 to version 2.0.24.
 - [LPS-72705]: Update the [Liferay Source Formatter] dependency to version
 1.0.412.
+
+## 3.3.34 - 2017-06-30
+
+### Changed
+- [LPS-65930]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.0.25.
+- [LPS-65930]: Update the [Liferay Source Formatter] dependency to version
+1.0.413.
 
 [Gradle Bundle Plugin]: https://github.com/TomDmitriev/gradle-bundle-plugin
 [Liferay Alloy Taglib]: https://github.com/liferay/alloy-taglibs
@@ -1845,6 +1854,7 @@ to version 2.0.24.
 [LPS-61099]: https://issues.liferay.com/browse/LPS-61099
 [LPS-62970]: https://issues.liferay.com/browse/LPS-62970
 [LPS-64098]: https://issues.liferay.com/browse/LPS-64098
+[LPS-65930]: https://issues.liferay.com/browse/LPS-65930
 [LPS-66222]: https://issues.liferay.com/browse/LPS-66222
 [LPS-66396]: https://issues.liferay.com/browse/LPS-66396
 [LPS-66853]: https://issues.liferay.com/browse/LPS-66853
