@@ -1572,8 +1572,8 @@ Gradle Daemon:
 - [LPS-72705]: Update the [Liferay Gradle Plugins] dependency to version 3.3.26.
 
 ### Fixed
-- [LPS-71201]: Allow to publish projects with a `.lfrbuild-releng-ignore` marker
-file from the master branch.
+- [LPS-71201]: Allow projects with a `.lfrbuild-releng-ignore` marker file to be
+published from the master branch.
 
 ## 3.7.5 - 2017-06-13
 
@@ -1610,11 +1610,11 @@ confidence warnings.
 ## 3.7.10 - 2017-06-23
 
 ### Added
-- [LPS-73271]: Set [Find Security Bugs] exit code, but ignore it by default.
+- [LPS-73271]: Set the [Find Security Bugs] exit code, but ignore it by default.
 
 ### Changed
 - [LPS-72705]: Update the [Liferay Gradle Plugins] dependency to version 3.3.32.
-- [LPS-73271]: Print the [Find Security Bugs] report location even in case of
+- [LPS-73271]: Print the [Find Security Bugs] report location, even in case of
 failure.
 
 ## 3.7.11 - 2017-06-27
@@ -1628,6 +1628,28 @@ failure.
 
 ### Changed
 - [LPS-73327]: Disable JVM assertions for unit tests.
+
+## 3.8.0 - 2017-06-30
+
+### Added
+- [LPS-73141]: Add the `.m2-tmp` directory in the portal root as a temporary
+Maven repository.
+- [LPS-73141]: Add the ability for `InstallCacheTask` to install the project's
+artifact in a Maven repository.
+- [LPS-73141]: Configure the `installCache` task to install the project's
+artifact in the `.m2-tmp` directory by default.
+- [LPS-73352]: Add JaCoCo Java Agent to the `test` and `testIntegration` tasks,
+if the system property `jacoco.code.coverage` is set to `true`.
+
+## 3.8.1 - 2017-06-30
+
+### Changed
+- [LPS-65930]: Update the [Liferay Gradle Plugins] dependency to version 3.3.34.
+
+## 3.8.2 - 2017-07-03
+
+### Changed
+- [LPS-73352]: Rename classes and configuration names from `Jacoco` to `JaCoCo`.
 
 [Find Security Bugs]: https://github.com/liferay/liferay-portal/tree/master/modules/third-party/com-h3xstream-findsecbugs
 [Liferay CDN]: https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public
@@ -1646,6 +1668,7 @@ failure.
 [LPS-63943]: https://issues.liferay.com/browse/LPS-63943
 [LPS-64098]: https://issues.liferay.com/browse/LPS-64098
 [LPS-65179]: https://issues.liferay.com/browse/LPS-65179
+[LPS-65930]: https://issues.liferay.com/browse/LPS-65930
 [LPS-66396]: https://issues.liferay.com/browse/LPS-66396
 [LPS-66762]: https://issues.liferay.com/browse/LPS-66762
 [LPS-66853]: https://issues.liferay.com/browse/LPS-66853
@@ -1797,12 +1820,14 @@ failure.
 [LPS-72989]: https://issues.liferay.com/browse/LPS-72989
 [LPS-73058]: https://issues.liferay.com/browse/LPS-73058
 [LPS-73128]: https://issues.liferay.com/browse/LPS-73128
+[LPS-73141]: https://issues.liferay.com/browse/LPS-73141
 [LPS-73148]: https://issues.liferay.com/browse/LPS-73148
 [LPS-73156]: https://issues.liferay.com/browse/LPS-73156
 [LPS-73235]: https://issues.liferay.com/browse/LPS-73235
 [LPS-73271]: https://issues.liferay.com/browse/LPS-73271
 [LPS-73289]: https://issues.liferay.com/browse/LPS-73289
 [LPS-73327]: https://issues.liferay.com/browse/LPS-73327
+[LPS-73352]: https://issues.liferay.com/browse/LPS-73352
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981
