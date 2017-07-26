@@ -833,13 +833,33 @@ public interface PropsKeys {
 
 	public static final String EHCACHE_BOOTSTRAP_CACHE_LOADER_PROPERTIES_DEFAULT = "ehcache.bootstrap.cache.loader.properties.default";
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #EHCACHE_REPLICATOR_PROPERTIES}
+	 */
+	@Deprecated
 	public static final String EHCACHE_CLUSTER_LINK_REPLICATOR_PROPERTIES = "ehcache.cluster.link.replicator.properties";
 
+	/**
+	 * @deprecated As of 7.0.0, replaced by {@link #EHCACHE_REPLICATOR_PROPERTIES_DEFAULT}
+	 */
+	@Deprecated
 	public static final String EHCACHE_CLUSTER_LINK_REPLICATOR_PROPERTIES_DEFAULT = "ehcache.cluster.link.replicator.properties.default";
 
 	public static final String EHCACHE_MULTI_VM_CONFIG_LOCATION = "ehcache.multi.vm.config.location";
 
 	public static final String EHCACHE_PORTAL_CACHE_MANAGER_JMX_ENABLED = "ehcache.portal.cache.manager.jmx.enabled";
+
+	public static final String EHCACHE_REPLICATOR_PROPERTIES = "ehcache.replicator.properties";
+
+	public static final String EHCACHE_REPLICATOR_PROPERTIES_DEFAULT = "ehcache.replicator.properties.default";
+
+	public static final String EHCACHE_RMI_PEER_LISTENER_FACTORY_CLASS = "ehcache.rmi.peer.listener.factory.class";
+
+	public static final String EHCACHE_RMI_PEER_LISTENER_FACTORY_PROPERTIES = "ehcache.rmi.peer.listener.factory.properties";
+
+	public static final String EHCACHE_RMI_PEER_PROVIDER_FACTORY_CLASS = "ehcache.rmi.peer.provider.factory.class";
+
+	public static final String EHCACHE_RMI_PEER_PROVIDER_FACTORY_PROPERTIES = "ehcache.rmi.peer.provider.factory.properties";
 
 	public static final String EHCACHE_SINGLE_VM_CONFIG_LOCATION = "ehcache.single.vm.config.location";
 
@@ -2371,6 +2391,8 @@ public interface PropsKeys {
 	public static final String TUNNELING_SERVLET_SHARED_SECRET = "tunneling.servlet.shared.secret";
 
 	public static final String TUNNELING_SERVLET_SHARED_SECRET_HEX = "tunneling.servlet.shared.secret.hex";
+
+	public static final String TUNNELING_SERVLET_TIMEOUT = "tunneling.servlet.timeout";
 
 	public static final String UPGRADE_DATABASE_TRANSACTIONS_DISABLED = "upgrade.database.transactions.disabled";
 
