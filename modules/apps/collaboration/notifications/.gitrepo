@@ -4,8 +4,8 @@
 [subrepo]
 	autopull = false
 	cmdver = liferay
-	commit = fa3dc9f1e2662e06af9055cf3ebecca1e9e6db14
+	commit = ec6071a440d62da4c3650b8c3db2ad46177afc15
 	mergebuttonmergecommits = false
 	mode = push
-	parent = 18ebddb842338469295333652a2c2ff84ac2ac33
+	parent = 02db628b6952efabe6916261b087246629d2374e
 	remote = git@github.com:liferay/com-liferay-notifications.git
