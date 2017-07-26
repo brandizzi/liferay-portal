@@ -1924,7 +1924,8 @@ to version 2.0.35.
 
 ### Added
 - [LPS-73642]: Apply the [Liferay Gradle Plugins Lang Builder] to theme
-projects. By default, the language directory is set as `src/WEB-INF/src/content`.
+projects. By default, the language directory is set to
+`src/WEB-INF/src/content`.
 
 ### Changed
 - [LPS-73472]: Update the [Liferay Gradle Plugins Gulp] dependency to version
@@ -1965,6 +1966,35 @@ to version 2.0.38.
 to version 2.0.39.
 - [LPS-73600]: Update the [Liferay Source Formatter] dependency to version
 1.0.428.
+
+## 3.4.11 - 2017-07-21
+
+### Changed
+- [LPS-72705]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.0.40.
+- [LPS-72705]: Update the [Liferay Source Formatter] dependency to version
+1.0.429.
+
+## 3.4.12 - 2017-07-24
+
+### Changed
+- [LPS-72705]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.0.41.
+- [LPS-72705]: Update the [Liferay Source Formatter] dependency to version
+1.0.430.
+
+## 3.4.13 - 2017-07-24
+
+### Added
+- [LPS-73353]: Add the ability to configure the `setUpTestableTomcat` task's
+`jaCoCoAgentConfiguration` property by setting the project property
+`jacoco.agent.configuration`.
+- [LPS-73525]: Add the ability to configure the `setUpTestableTomcat` task's
+`jaCoCoAgentFile` property by setting the project property `jacoco.agent.jar`.
+
+### Changed
+- [LPS-73353]: Update the [Liferay Gradle Plugins Test Integration] dependency
+to version 2.1.0.
 
 [Gradle Bundle Plugin]: https://github.com/TomDmitriev/gradle-bundle-plugin
 [Liferay Alloy Taglib]: https://github.com/liferay/alloy-taglibs
@@ -2132,6 +2162,7 @@ to version 2.0.39.
 [LPS-73148]: https://issues.liferay.com/browse/LPS-73148
 [LPS-73156]: https://issues.liferay.com/browse/LPS-73156
 [LPS-73261]: https://issues.liferay.com/browse/LPS-73261
+[LPS-73353]: https://issues.liferay.com/browse/LPS-73353
 [LPS-73383]: https://issues.liferay.com/browse/LPS-73383
 [LPS-73470]: https://issues.liferay.com/browse/LPS-73470
 [LPS-73472]: https://issues.liferay.com/browse/LPS-73472
