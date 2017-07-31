@@ -60,7 +60,7 @@ public class CalendarBookingServiceTest {
 	}
 
 	@Test
-	public void testgetUnapprovedCalendarBookingsForBookingManager()
+	public void testGetUnapprovedCalendarBookingsForBookingManager()
 		throws Exception {
 
 		ServiceContext serviceContext = createServiceContext();
@@ -94,7 +94,7 @@ public class CalendarBookingServiceTest {
 	}
 
 	@Test
-	public void testgetUnapprovedCalendarBookingsForRegularUser()
+	public void testGetUnapprovedCalendarBookingsForRegularUser()
 		throws Exception {
 
 		ServiceContext serviceContext = createServiceContext();
