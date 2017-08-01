@@ -30,7 +30,7 @@ AUI.add(
 					}
 				);
 
-				FacetUtil.setURLParameters(form, selections);
+				FacetUtil.selectTerms(form, selections);
 			},
 
 			clearSelections: function(event) {
@@ -42,44 +42,81 @@ AUI.add(
 
 				var selections = [];
 
-				FacetUtil.setURLParameters(form, selections);
+				FacetUtil.selectTerms(form, selections);
 			},
 
 			removeURLParameters: function(key, parameterArray) {
 				key = encodeURI(key);
 
-				var newParameters = [];
+				var newParameters = parameterArray.filter(
+					function(item) {
+						var result = true;
 
-				AUI.$.each(
-					parameterArray,
-					function(index, item) {
 						var itemSplit = item.split('=');
 
-						if (itemSplit) {
-							if (itemSplit[0] != key) {
-								newParameters.push(item);
-							}
+						if (itemSplit && (itemSplit[0] === key)) {
+							result = false;
 						}
+
+						return result;
 					}
 				);
 
 				return newParameters;
 			},
 
-			setURLParameters: function(form, selections) {
+			selectTerms: function(form, selections) {
 				var formParameterName = $('#' + form.id + ' input.facet-parameter-name');
 
 				var key = formParameterName[0].value;
 
-				var parameterArray = document.location.search.substr(1).split('&');
+				document.location.search = FacetUtil.updateQueryString(key, selections, document.location.search);
+			},
 
-				var newParameters = FacetUtil.removeURLParameters(key, parameterArray);
+			setURLParameter: function(url, name, value) {
+				var parts = url.split('?');
 
-				for (var i = 0; i < selections.length; i++) {
-					newParameters = FacetUtil.addURLParameter(key, selections[i], newParameters);
+				var address = parts[0];
+
+				var queryString = parts[1];
+
+				if (!queryString) {
+					queryString = '';
 				}
 
-				document.location.search = newParameters.join('&');
+				queryString = Liferay.Search.FacetUtil.updateQueryString(name, [value], queryString);
+
+				return address + '?' + queryString;
+			},
+
+			setURLParameters: function(key, values, parameterArray) {
+				var newParameters = FacetUtil.removeURLParameters(key, parameterArray);
+
+				values.forEach(
+					function(item) {
+						newParameters = FacetUtil.addURLParameter(key, item, newParameters);
+					}
+				);
+
+				return newParameters;
+			},
+
+			updateQueryString: function(key, selections, queryString) {
+				var search = queryString;
+
+				if (queryString[0] === '?') {
+					search = search.substr(1);
+				}
+
+				var parameterArray = search.split('&').filter(
+					function(item) {
+						return item.trim() !== '';
+					}
+				);
+
+				var newParameters = FacetUtil.setURLParameters(key, selections, parameterArray);
+
+				return newParameters.join('&');
 			}
 		};
 
