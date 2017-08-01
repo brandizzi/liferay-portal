@@ -76,10 +76,7 @@ public class CalendarBookingServiceTest {
 
 		CalendarBookingLocalServiceUtil.updateCalendarBooking(calendarBooking);
 
-		int[] statuses = {
-			WorkflowConstants.STATUS_PENDING, WorkflowConstants.STATUS_DRAFT,
-			WorkflowConstants.STATUS_ANY
-		};
+		int[] statuses = {WorkflowConstants.STATUS_PENDING};
 
 		List<CalendarBooking> calendarBookings = Collections.emptyList();
 
@@ -110,10 +107,7 @@ public class CalendarBookingServiceTest {
 
 		CalendarBookingLocalServiceUtil.updateCalendarBooking(calendarBooking);
 
-		int[] statuses = {
-			WorkflowConstants.STATUS_PENDING, WorkflowConstants.STATUS_DRAFT,
-			WorkflowConstants.STATUS_ANY
-		};
+		int[] statuses = {WorkflowConstants.STATUS_PENDING};
 
 		List<CalendarBooking> calendarBookings = Collections.emptyList();
 
