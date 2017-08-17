@@ -63,7 +63,7 @@ public class UpgradeCalendarTest {
 		_upgradeDatabaseTestHelper =
 			CalendarUpgradeTestUtil.getUpgradeDatabaseTestHelper();
 		_upgradeCalendar = CalendarUpgradeTestUtil.getUpgradeStep(
-			"com.liferay.calendar.upgrade.v1_0_2.UpgradeCalendar");
+			"com.liferay.calendar.internal.upgrade.v1_0_2.UpgradeCalendar");
 	}
 
 	@After
