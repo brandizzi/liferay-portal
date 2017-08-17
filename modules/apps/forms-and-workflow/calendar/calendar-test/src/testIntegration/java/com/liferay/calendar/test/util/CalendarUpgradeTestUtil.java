@@ -20,10 +20,18 @@ import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 
+import java.sql.SQLException;
+
 /**
  * @author Adam Brandizzi
  */
 public class CalendarUpgradeTestUtil {
+
+	public static UpgradeDatabaseTestHelper getUpgradeDatabaseTestHelper()
+		throws SQLException {
+
+		return new UpgradeDatabaseTestHelperImpl();
+	}
 
 	public static UpgradeProcess getUpgradeStep(String upgradeStepClassName) {
 		Registry registry = RegistryUtil.getRegistry();
