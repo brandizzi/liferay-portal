@@ -12,22 +12,13 @@
  * details.
  */
 
-package com.liferay.calendar.upgrade.v2_0_0;
-
-import com.liferay.portal.kernel.upgrade.UpgradeProcess;
-import com.liferay.portal.kernel.util.StringUtil;
+package com.liferay.portal.configuration.upgrade.util;
 
 /**
- * @author Adam Brandizzi
+ * @author Drew Brokke
  */
-public class UpgradeSchema extends UpgradeProcess {
+public enum PrefsPropsValueType {
 
-	@Override
-	protected void doUpgrade() throws Exception {
-		String template = StringUtil.read(
-			UpgradeSchema.class.getResourceAsStream("dependencies/update.sql"));
-
-		runSQLTemplateString(template, false, false);
-	}
+	BOOLEAN, DOUBLE, INT, LONG, SHORT, STRING, STRING_ARRAY
 
 }
