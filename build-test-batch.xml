@@ -450,6 +450,8 @@ app.server.type=@{app.server.type}]]></echo>
 /tools/tck
 /tools/zip_tmpl/license</echo>
 
+			<delete file="${project.dir}/lib/.gitignore" />
+
 			<echo file="${project.dir}/modules/.gitignore">tmp
 /*/*/ivy.xml.MD5
 /*/*/javadoc
@@ -2858,6 +2860,10 @@ information. Make sure to commit in all build services results.
 				</if>
 			</test-set-up>
 		</run-batch-test>
+	</target>
+
+	<target name="setup-testable-tomcat-gc">
+		<setup-testable-tomcat-gc />
 	</target>
 
 	<target name="slim-profile-jdk8">

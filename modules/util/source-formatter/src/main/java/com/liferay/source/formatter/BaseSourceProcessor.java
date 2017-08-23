@@ -43,6 +43,7 @@ import java.nio.charset.CodingErrorAction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -238,7 +239,8 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		}
 
 		return SourceFormatterUtil.filterFileNames(
-			_allFileNames, excludes, includes, _sourceFormatterExcludes);
+			_allFileNames, excludes, includes, _sourceFormatterExcludes,
+			forceIncludeAllFiles);
 	}
 
 	protected List<String> getPluginsInsideModulesDirectoryNames()
@@ -462,7 +464,8 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 	}
 
 	private final String _format(
-			File file, String fileName, String absolutePath, String content)
+			File file, String fileName, String absolutePath, String content,
+			String originalContent, Set<String> modifiedContents, int count)
 		throws Exception {
 
 		_sourceFormatterMessagesMap.remove(fileName);
@@ -476,7 +479,28 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 			return content;
 		}
 
-		return _format(file, fileName, absolutePath, newContent);
+		if (!modifiedContents.add(newContent)) {
+			processMessage(fileName, "Infinite loop in SourceFormatter");
+
+			return originalContent;
+		}
+
+		if (newContent.length() > content.length()) {
+			count++;
+
+			if (count > 100) {
+				processMessage(fileName, "Infinite loop in SourceFormatter");
+
+				return originalContent;
+			}
+		}
+		else {
+			count = 0;
+		}
+
+		return _format(
+			file, fileName, absolutePath, newContent, originalContent,
+			modifiedContents, count);
 	}
 
 	private final void _format(String fileName) throws Exception {
@@ -493,7 +517,11 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 		String content = FileUtil.read(file);
 
-		String newContent = _format(file, fileName, absolutePath, content);
+		Set<String> modifiedContents = new HashSet<>();
+
+		String newContent = _format(
+			file, fileName, absolutePath, content, content, modifiedContents,
+			0);
 
 		processFormattedFile(file, fileName, content, newContent);
 	}
