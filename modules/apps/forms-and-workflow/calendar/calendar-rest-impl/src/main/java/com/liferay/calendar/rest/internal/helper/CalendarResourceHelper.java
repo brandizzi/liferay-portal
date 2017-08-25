@@ -16,7 +16,7 @@ package com.liferay.calendar.rest.internal.helper;
 
 import com.liferay.calendar.model.CalendarResource;
 import com.liferay.calendar.rest.internal.conversor.CalendarResourceConverter;
-import com.liferay.calendar.rest.internal.model.CalendarResourceModel;
+import com.liferay.calendar.rest.internal.model.CalendarResourceModelImpl;
 import com.liferay.calendar.service.CalendarResourceService;
 import com.liferay.portal.kernel.exception.PortalException;
 
@@ -31,7 +31,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true, service = CalendarResourceHelper.class)
 public class CalendarResourceHelper {
 
-	public CalendarResourceModel getCalendarResourceModel(
+	public CalendarResourceModelImpl getCalendarResourceModel(
 			long calendarResourceId, Locale locale)
 		throws PortalException {
 

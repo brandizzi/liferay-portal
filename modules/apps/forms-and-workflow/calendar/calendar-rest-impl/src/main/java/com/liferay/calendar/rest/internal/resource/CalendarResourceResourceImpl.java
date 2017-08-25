@@ -15,7 +15,8 @@
 package com.liferay.calendar.rest.internal.resource;
 
 import com.liferay.calendar.rest.internal.helper.CalendarResourceHelper;
-import com.liferay.calendar.rest.internal.model.CalendarResourceModel;
+import com.liferay.calendar.rest.internal.model.CalendarResourceModelImpl;
+import com.liferay.calendar.rest.resource.CalendarResourceResource;
 import com.liferay.portal.kernel.exception.PortalException;
 
 import java.util.Locale;
@@ -34,12 +35,13 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(immediate = true, service = CalendarResourceResource.class)
 @Path("/calendar-resource")
-public class CalendarResourceResource {
+public class CalendarResourceResourceImpl implements CalendarResourceResource {
 
 	@GET
+	@Override
 	@Path("/{calendarResourceId}")
 	@Produces("application/json")
-	public CalendarResourceModel getCalendar(
+	public CalendarResourceModelImpl getCalendarResource(
 			@Context Locale locale,
 			@PathParam("calendarResourceId") long calendarResourceId)
 		throws PortalException {

@@ -15,7 +15,7 @@
 package com.liferay.calendar.rest.internal.conversor;
 
 import com.liferay.calendar.model.CalendarResource;
-import com.liferay.calendar.rest.internal.model.CalendarResourceModel;
+import com.liferay.calendar.rest.internal.model.CalendarResourceModelImpl;
 
 import java.util.Locale;
 
@@ -27,10 +27,10 @@ import org.osgi.service.component.annotations.Component;
 @Component(immediate = true, service = CalendarResourceConverter.class)
 public class CalendarResourceConverter {
 
-	public CalendarResourceModel toCalendarResourceModel(
+	public CalendarResourceModelImpl toCalendarResourceModel(
 		CalendarResource calendarResource, Locale locale) {
 
-		return new CalendarResourceModel(
+		return new CalendarResourceModelImpl(
 			calendarResource.getGroupId(), calendarResource.getUserId(),
 			calendarResource.getCalendarResourceId(),
 			calendarResource.getName(locale), calendarResource.getClassUuid(),

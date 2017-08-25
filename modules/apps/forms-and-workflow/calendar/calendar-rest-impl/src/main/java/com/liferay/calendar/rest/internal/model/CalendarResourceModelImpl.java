@@ -14,6 +14,8 @@
 
 package com.liferay.calendar.rest.internal.model;
 
+import com.liferay.calendar.rest.model.CalendarResourceModel;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -21,9 +23,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Adam Brandizzi
  */
 @XmlRootElement
-public class CalendarResourceModel {
+public class CalendarResourceModelImpl implements CalendarResourceModel {
 
-	public CalendarResourceModel() {
+	public CalendarResourceModelImpl() {
 		_calendarResourceId = 0;
 		_classNameId = 0;
 		_classPK = 0;
@@ -34,7 +36,7 @@ public class CalendarResourceModel {
 		_userId = 0;
 	}
 
-	public CalendarResourceModel(
+	public CalendarResourceModelImpl(
 		long groupId, long userId, long calendarResourceId, String name,
 		String classUuId, long classNameId, long classPK, String code) {
 
@@ -48,41 +50,49 @@ public class CalendarResourceModel {
 		_code = code;
 	}
 
+	@Override
 	@XmlElement
 	public long getCalendarResourceId() {
 		return _calendarResourceId;
 	}
 
+	@Override
 	@XmlElement
 	public long getClassNameId() {
 		return _classNameId;
 	}
 
+	@Override
 	@XmlElement
 	public long getClassPK() {
 		return _classPK;
 	}
 
+	@Override
 	@XmlElement
 	public String getClassUuId() {
 		return _classUuId;
 	}
 
+	@Override
 	@XmlElement
 	public String getCode() {
 		return _code;
 	}
 
+	@Override
 	@XmlElement
 	public long getGroupId() {
 		return _groupId;
 	}
 
+	@Override
 	@XmlElement
 	public String getName() {
 		return _name;
 	}
 
+	@Override
 	@XmlElement
 	public long getUserId() {
 		return _userId;
