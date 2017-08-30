@@ -449,9 +449,55 @@ public class CalendarBookingLocalServiceImpl
 		return calendarBooking;
 	}
 
-	@Override
+	/**
+	 * @deprecated As of 3.0.0, replaced by {@link
+	 * #deleteCalendarBookingInstance(long, CalendarBooking, int, boolean)}
+	 */
+	@Deprecated
 	public void deleteCalendarBookingInstance(
 			CalendarBooking calendarBooking, int instanceIndex,
+			boolean allFollowing)
+		throws PortalException {
+	}
+
+	/**
+	 * @deprecated As of 3.0.0, replaced by {@link
+	 * #deleteCalendarBookingInstance(long, CalendarBooking, int, boolean,
+	 * boolean)}
+	 */
+	@Deprecated
+	public void deleteCalendarBookingInstance(
+			CalendarBooking calendarBooking, int instanceIndex,
+			boolean allFollowing, boolean deleteRecurringCalendarBookings)
+		throws PortalException {
+	}
+
+	/**
+	 * @deprecated As of 3.0.0, replaced by {@link
+	 * #deleteCalendarBookingInstance(long, CalendarBooking, long, boolean)}
+	 */
+	@Deprecated
+	public void deleteCalendarBookingInstance(
+			CalendarBooking calendarBooking, long startTime,
+			boolean allFollowing)
+		throws PortalException {
+	}
+
+	/**
+	 * @deprecated As of 3.0.0, replaced by {@link
+	 * #deleteCalendarBookingInstance(long, CalendarBooking, long, boolean,
+	 * boolean)}
+	 */
+	@Deprecated
+	public void deleteCalendarBookingInstance(
+			CalendarBooking calendarBooking, long startTime,
+			boolean allFollowing, boolean deleteRecurringCalendarBookings)
+		throws PortalException {
+	}
+
+	@Override
+	public void deleteCalendarBookingInstance(
+			long userId, CalendarBooking calendarBooking, int instanceIndex,
 			boolean allFollowing)
 		throws PortalException {
 
@@ -460,13 +506,13 @@ public class CalendarBookingLocalServiceImpl
 				calendarBooking, instanceIndex);
 
 		deleteCalendarBookingInstance(
-			calendarBooking, calendarBookingInstance.getStartTime(),
+			userId, calendarBooking, calendarBookingInstance.getStartTime(),
 			allFollowing);
 	}
 
 	@Override
 	public void deleteCalendarBookingInstance(
-			CalendarBooking calendarBooking, int instanceIndex,
+			long userId, CalendarBooking calendarBooking, int instanceIndex,
 			boolean allFollowing, boolean deleteRecurringCalendarBookings)
 		throws PortalException {
 
@@ -475,23 +521,23 @@ public class CalendarBookingLocalServiceImpl
 				calendarBooking, instanceIndex);
 
 		deleteCalendarBookingInstance(
-			calendarBooking, calendarBookingInstance.getStartTime(),
+			userId, calendarBooking, calendarBookingInstance.getStartTime(),
 			allFollowing, deleteRecurringCalendarBookings);
 	}
 
 	@Override
 	public void deleteCalendarBookingInstance(
-			CalendarBooking calendarBooking, long startTime,
+			long userId, CalendarBooking calendarBooking, long startTime,
 			boolean allFollowing)
 		throws PortalException {
 
 		deleteCalendarBookingInstance(
-			calendarBooking, startTime, allFollowing, false);
+			userId, calendarBooking, startTime, allFollowing, false);
 	}
 
 	@Override
 	public void deleteCalendarBookingInstance(
-			CalendarBooking calendarBooking, long startTime,
+			long userId, CalendarBooking calendarBooking, long startTime,
 			boolean allFollowing, boolean deleteRecurringCalendarBookings)
 		throws PortalException {
 
@@ -505,7 +551,8 @@ public class CalendarBookingLocalServiceImpl
 		if (allFollowing) {
 			if (deleteRecurringCalendarBookings) {
 				List<CalendarBooking> recurringCalendarBookings =
-					splitCalendarBookingInstances(calendarBooking, startTime);
+					splitCalendarBookingInstances(
+						userId, calendarBooking, startTime);
 
 				for (CalendarBooking recurringCalendarBooking :
 						recurringCalendarBookings) {
@@ -548,15 +595,27 @@ public class CalendarBookingLocalServiceImpl
 		updateChildCalendarBookings(calendarBooking, now, recurrence);
 	}
 
-	@Override
+	/**
+	 * @deprecated As of 3.0.0, replaced by {@link
+	 * #deleteCalendarBookingInstance(long, long, long, boolean)}
+	 */
+	@Deprecated
 	public void deleteCalendarBookingInstance(
 			long calendarBookingId, long startTime, boolean allFollowing)
+		throws PortalException {
+	}
+
+	@Override
+	public void deleteCalendarBookingInstance(
+			long userId, long calendarBookingId, long startTime,
+			boolean allFollowing)
 		throws PortalException {
 
 		CalendarBooking calendarBooking =
 			calendarBookingPersistence.findByPrimaryKey(calendarBookingId);
 
-		deleteCalendarBookingInstance(calendarBooking, startTime, allFollowing);
+		deleteCalendarBookingInstance(
+			userId, calendarBooking, startTime, allFollowing);
 	}
 
 	@Override
@@ -833,7 +892,8 @@ public class CalendarBookingLocalServiceImpl
 
 			if (allFollowing) {
 				List<CalendarBooking> recurringCalendarBookings =
-					splitCalendarBookingInstances(calendarBooking, startTime);
+					splitCalendarBookingInstances(
+						userId, calendarBooking, startTime);
 
 				for (CalendarBooking recurringCalendarBooking :
 						recurringCalendarBookings) {
@@ -861,7 +921,7 @@ public class CalendarBookingLocalServiceImpl
 			}
 
 			deleteCalendarBookingInstance(
-				calendarBooking, startTime, allFollowing);
+				userId, calendarBooking, startTime, allFollowing);
 
 			calendarBooking = addCalendarBooking(
 				userId, calendarId, childCalendarIds, 0,
@@ -1349,7 +1409,7 @@ public class CalendarBookingLocalServiceImpl
 		String oldRecurrence = calendarBooking.getRecurrence();
 
 		deleteCalendarBookingInstance(
-			calendarBooking, instanceIndex, allFollowing, false);
+			userId, calendarBooking, instanceIndex, allFollowing, false);
 
 		Map<Locale, String> updatedTitleMap = calendarBooking.getTitleMap();
 
@@ -1364,7 +1424,8 @@ public class CalendarBookingLocalServiceImpl
 			Calendar calendar = calendarLocalService.getCalendar(calendarId);
 
 			List<CalendarBooking> recurringCalendarBookings =
-				splitCalendarBookingInstances(calendarBooking, startTime);
+				splitCalendarBookingInstances(
+					userId, calendarBooking, startTime);
 
 			List<String> unmodifiedAttributesNames =
 				getUnmodifiedAttributesNames(
@@ -2026,7 +2087,7 @@ public class CalendarBookingLocalServiceImpl
 	}
 
 	protected CalendarBooking splitCalendarBookingInstance(
-			CalendarBooking calendarBooking, long startTime,
+			long userId, CalendarBooking calendarBooking, long startTime,
 			Recurrence recurrence)
 		throws PortalException {
 
@@ -2054,13 +2115,14 @@ public class CalendarBookingLocalServiceImpl
 			calendarBooking.getSecondReminderType(),
 			ServiceContextThreadLocal.getServiceContext());
 
-		deleteCalendarBookingInstance(calendarBooking, startTime, true, false);
+		deleteCalendarBookingInstance(
+			userId, calendarBooking, startTime, true, false);
 
 		return calendarBookingInstance;
 	}
 
 	protected List<CalendarBooking> splitCalendarBookingInstances(
-			CalendarBooking calendarBooking, long startTime)
+			long userId, CalendarBooking calendarBooking, long startTime)
 		throws PortalException {
 
 		List<CalendarBooking> recurringCalendarBookings =
@@ -2113,7 +2175,7 @@ public class CalendarBookingLocalServiceImpl
 
 						CalendarBooking newCalendarBooking =
 							splitCalendarBookingInstance(
-								recurringCalendarBooking,
+								userId, recurringCalendarBooking,
 								newStartTimeJCalendar.getTimeInMillis(),
 								recurrenceSplit.getSecondRecurrence());
 
