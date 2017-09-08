@@ -345,8 +345,8 @@ mariadb.executable=${mariadb.executable}]]></echo>
 					<include name="**/com/liferay/**" />
 				</patternset>
 				<fileset dir="@{portal.bundle.dir}">
-					 <include name="**/*.jar" />
-					 <include name="**/*.war" />
+					<include name="**/*.jar" />
+					<include name="**/*.war" />
 				</fileset>
 			</unzip>
 
@@ -653,7 +653,6 @@ app.server.type=@{app.server.type}]]></echo>
 									</ant>
 								</finally>
 							</trycatch>
-
 						</test-action>
 					</database-test-run-test>
 				</test-action>
@@ -2614,6 +2613,55 @@ ${output.content}</echo>
 		</run-batch-test>
 	</target>
 
+	<target name="portal-license-jdk8">
+		<run-batch-test>
+			<test-action>
+				<sequential>
+					<execute>
+						<![CDATA[
+							git diff --name-only ${liferay.portal.branch}...HEAD > ${project.dir}/git.diff
+						]]>
+					</execute>
+
+					<print-file file.name="${project.dir}/git.diff" />
+
+					<copy file="${project.dir}/git.diff" todir="${release.tool.dir}" />
+
+					<print-file file.name="${release.tool.dir}/git.diff" />
+
+					<execute dir="${release.tool.dir}">
+						<![CDATA[
+							ant dist -f build-release-license.xml
+						]]>
+					</execute>
+				</sequential>
+			</test-action>
+
+			<test-tear-down>
+				<if>
+					<available file="${project.dir}/git.diff" />
+					<then>
+						<delete file="${project.dir}/git.diff" />
+					</then>
+				</if>
+
+				<if>
+					<available file="${release.tool.dir}/git.diff" />
+					<then>
+						<delete file="${release.tool.dir}/git.diff" />
+					</then>
+				</if>
+
+				<if>
+					<available file="../bundles" type="dir" />
+					<then>
+						<delete dir="../bundles" />
+					</then>
+				</if>
+			</test-tear-down>
+		</run-batch-test>
+	</target>
+
 	<target name="portal-startup-space-in-path-jdk8">
 		<sequential>
 			<run-batch-test>
@@ -2638,8 +2686,7 @@ ${output.content}</echo>
 								</try>
 							</trycatch>
 
-								<antcall inheritall="false" target="stop-app-server" />
-
+							<antcall inheritall="false" target="stop-app-server" />
 						</test-action>
 					</database-test-run-test>
 				</test-action>
@@ -2649,7 +2696,6 @@ ${output.content}</echo>
 						<isset property="env.DIST_PATH" />
 						<then>
 							<sequential>
-
 								<propertyfile file="app.server.${env.HOSTNAME}.properties">
 									<entry key="app.server.parent.dir" value="${project.dir}/bun dles" />
 								</propertyfile>
@@ -2661,14 +2707,12 @@ ${output.content}</echo>
 								<prepare-test-environment />
 
 								<move file="bundles" tofile="bun dles" />
-
 							</sequential>
 						</then>
 						<else>
 							<prepare-test-build />
 						</else>
 					</if>
-
 				</test-set-up>
 			</run-batch-test>
 		</sequential>
