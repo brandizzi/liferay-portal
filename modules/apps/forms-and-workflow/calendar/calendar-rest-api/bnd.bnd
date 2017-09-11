@@ -1,0 +1,7 @@
+Bundle-Name: Liferay Calendar REST API
+Bundle-SymbolicName: com.liferay.calendar.rest.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.calendar.rest.model,\
+	com.liferay.calendar.rest.resource
+Liferay-Configuration-Path: /configuration
