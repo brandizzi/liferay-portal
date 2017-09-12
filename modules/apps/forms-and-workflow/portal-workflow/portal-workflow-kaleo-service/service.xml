@@ -129,7 +129,6 @@
 		<column name="content" type="String" />
 		<column name="version" type="int" />
 		<column name="active" type="boolean" />
-		<column name="startKaleoNodeId" type="long" />
 
 		<!-- Order -->
 
@@ -189,6 +188,7 @@
 		<column name="description" type="String" />
 		<column name="content" type="String" />
 		<column name="version" type="String" />
+		<column name="startKaleoNodeId" type="long" />
 		<column name="status" type="int" />
 
 		<!-- Finder methods -->
