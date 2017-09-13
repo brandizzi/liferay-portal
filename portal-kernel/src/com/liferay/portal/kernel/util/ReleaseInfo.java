@@ -156,7 +156,7 @@ public class ReleaseInfo {
 		return _VERSION;
 	}
 
-	private static final String _BUILD = "7004";
+	private static final String _BUILD = "7010";
 
 	private static final int _BUILD_NUMBER = GetterUtil.getInteger(_BUILD);
 
@@ -176,9 +176,9 @@ public class ReleaseInfo {
 
 	private static final String _VENDOR = "Liferay, Inc.";
 
-	private static final String _VERSION = "7.0.4";
+	private static final String _VERSION = "7.0.10";
 
-	private static final String _VERSION_DISPLAY_NAME = "7.0.4 GA5";
+	private static final String _VERSION_DISPLAY_NAME = "7.0.10 GA5";
 
 	private static String _releaseInfo;
 	private static String _serverInfo;
