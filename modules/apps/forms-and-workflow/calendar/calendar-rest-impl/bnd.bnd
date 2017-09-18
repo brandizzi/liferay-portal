@@ -1,0 +1,4 @@
+Bundle-Name: Liferay Calendar REST Impl
+Bundle-SymbolicName: com.liferay.calendar.rest.impl
+Bundle-Version: 1.0.0
+Liferay-Configuration-Path: /configuration
