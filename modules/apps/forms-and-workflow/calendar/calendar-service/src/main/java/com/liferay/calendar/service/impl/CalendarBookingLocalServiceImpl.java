@@ -1539,10 +1539,19 @@ public class CalendarBookingLocalServiceImpl
 						CalendarBookingWorkflowConstants.
 							STATUS_MASTER_PENDING) {
 
-					updateStatus(
-						userId, childCalendarBooking,
-						CalendarBookingWorkflowConstants.STATUS_PENDING,
-						serviceContext);
+					if (isStagingCalendarBooking(calendarBooking)) {
+						updateStatus(
+							userId, childCalendarBooking,
+							CalendarBookingWorkflowConstants.
+								STATUS_MASTER_STAGING,
+							serviceContext);
+					}
+					else {
+						updateStatus(
+							userId, childCalendarBooking,
+							CalendarBookingWorkflowConstants.STATUS_PENDING,
+							serviceContext);
+					}
 				}
 			}
 		}
