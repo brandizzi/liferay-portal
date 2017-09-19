@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.workflow.kaleo.model.KaleoDefinitionVersion;
 import com.liferay.portal.workflow.kaleo.service.base.KaleoDefinitionVersionLocalServiceBaseImpl;
 import com.liferay.portal.workflow.kaleo.util.comparator.KaleoDefinitionVersionIdComparator;
@@ -95,11 +96,46 @@ public class KaleoDefinitionVersionLocalServiceImpl
 
 	@Override
 	public KaleoDefinitionVersion deleteKaleoDefinitionVersion(
-			long companyId, String name, String version)
+			KaleoDefinitionVersion kaleoDefinitionVersion)
 		throws PortalException {
 
-		return kaleoDefinitionVersionPersistence.removeByC_N_V(
-			companyId, name, version);
+		// Kaleo definition version
+
+		if (kaleoDefinitionVersion.hasIncompleteKaleoInstances()) {
+			throw new WorkflowException(
+				"Cannot delete incomplete workflow definition version" +
+					kaleoDefinitionVersion.getKaleoDefinitionVersionId());
+		}
+
+		kaleoDefinitionVersionPersistence.remove(kaleoDefinitionVersion);
+
+		// Kaleo condition
+
+		kaleoConditionLocalService.deleteKaleoDefinitionVersionKaleoCondition(
+			kaleoDefinitionVersion.getKaleoDefinitionVersionId());
+
+		// Kaleo instances
+
+		kaleoInstanceLocalService.deleteKaleoDefinitionVersionKaleoInstances(
+			kaleoDefinitionVersion.getKaleoDefinitionVersionId());
+
+		// Kaleo nodes
+
+		kaleoNodeLocalService.deleteKaleoDefinitionVersionKaleoNodes(
+			kaleoDefinitionVersion.getKaleoDefinitionVersionId());
+
+		// Kaleo tasks
+
+		kaleoTaskLocalService.deleteKaleoDefinitionVersionKaleoTasks(
+			kaleoDefinitionVersion.getKaleoDefinitionVersionId());
+
+		// Kaleo transitions
+
+		kaleoTransitionLocalService.
+			deleteKaleoDefinitionVersionKaleoTransitions(
+				kaleoDefinitionVersion.getKaleoDefinitionVersionId());
+
+		return kaleoDefinitionVersion;
 	}
 
 	@Override
@@ -214,20 +250,6 @@ public class KaleoDefinitionVersionLocalServiceImpl
 			companyId, keywords, status);
 
 		return kaleoDefinitionVersionIds.size();
-	}
-
-	@Override
-	public void updateKaleoDefinitionVersionTitle(
-			long companyId, String name, String version, String title)
-		throws PortalException {
-
-		KaleoDefinitionVersion kaleoDefinitionVersion =
-			kaleoDefinitionVersionLocalService.getKaleoDefinitionVersion(
-				companyId, name, version);
-
-		kaleoDefinitionVersion.setTitle(title);
-
-		kaleoDefinitionVersionPersistence.update(kaleoDefinitionVersion);
 	}
 
 	protected void addKeywordsCriterion(
