@@ -231,7 +231,7 @@ public class KaleoWorkflowModelConverterImpl
 		KaleoInstance kaleoInstance = kaleoInstanceToken.getKaleoInstance();
 
 		defaultWorkflowTask.setWorkflowDefinitionId(
-			kaleoInstance.getKaleoDefinitionId());
+			kaleoInstance.getKaleoDefinitionVersionId());
 		defaultWorkflowTask.setWorkflowDefinitionName(
 			kaleoInstance.getKaleoDefinitionName());
 		defaultWorkflowTask.setWorkflowDefinitionVersion(
