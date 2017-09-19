@@ -565,6 +565,52 @@ public class CalendarBookingLocalServiceTest {
 	}
 
 	@Test
+	public void testDeleteCalendarBookingRecurringInstanceNotifiesInvitees()
+		throws Exception {
+
+		ServiceContext serviceContext = createServiceContext();
+
+		_invitingUser = UserTestUtil.addUser();
+
+		Calendar invitingcalendar = CalendarTestUtil.addCalendar(_invitingUser);
+
+		Calendar invitedCalendar = CalendarTestUtil.addCalendar(_user);
+
+		CalendarBooking calendarBooking =
+			CalendarBookingTestUtil.addRecurringCalendarBooking(
+				invitingcalendar, invitedCalendar,
+				RecurrenceTestUtil.getDailyRecurrence(2), serviceContext);
+
+		long calendarBookingId = calendarBooking.getCalendarBookingId();
+
+		CalendarBookingLocalServiceUtil.deleteCalendarBookingInstance(
+			_invitingUser.getUserId(), calendarBooking, 0, false);
+
+		calendarBooking = CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+			calendarBookingId);
+
+		Assert.assertNotNull(calendarBooking);
+
+		String mailMessageSubject =
+			"Calendar: Event Deletion for " + StringPool.QUOTE +
+				calendarBooking.getTitle(LocaleUtil.getDefault()) +
+					StringPool.QUOTE;
+
+		List<MailMessage> mailMessages = MailServiceTestUtil.getMailMessages(
+			"Subject", mailMessageSubject);
+
+		Assert.assertEquals(mailMessages.toString(), 1, mailMessages.size());
+
+		CalendarBookingLocalServiceUtil.deleteCalendarBookingInstance(
+			_user.getUserId(), calendarBooking, 0, false);
+
+		calendarBooking = CalendarBookingLocalServiceUtil.fetchCalendarBooking(
+			calendarBookingId);
+
+		Assert.assertNull(calendarBooking);
+	}
+
+	@Test
 	public void testDeleteCalendarBookingWithAllFollowingInstances()
 		throws Exception {
 
