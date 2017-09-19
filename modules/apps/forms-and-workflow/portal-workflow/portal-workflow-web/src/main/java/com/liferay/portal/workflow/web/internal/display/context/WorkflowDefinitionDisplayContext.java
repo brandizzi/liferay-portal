@@ -81,7 +81,7 @@ public class WorkflowDefinitionDisplayContext {
 		throws PortalException {
 
 		List<WorkflowDefinition> workflowDefinitions =
-			WorkflowDefinitionManagerUtil.getWorkflowDefinitions(
+			WorkflowDefinitionManagerUtil.getLatestWorkflowDefinitions(
 				_workflowDefinitionRequestHelper.getCompanyId(),
 				QueryUtil.ALL_POS, QueryUtil.ALL_POS,
 				getWorkflowDefinitionOrderByComparator());
