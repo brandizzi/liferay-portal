@@ -11,5 +11,7 @@ Liferay.Loader.require(
 		});
 
 		AUI.add('liferay-ddm-form-soy');
+
+		Liferay.fire('DDMFormLoaded');
 	}
 );

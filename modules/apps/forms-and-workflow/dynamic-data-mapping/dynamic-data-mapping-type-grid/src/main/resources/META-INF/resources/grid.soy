@@ -61,20 +61,15 @@
 						<tr name="{$row.value}">
 							<td>{$row.label}</td>
 							{foreach $column in $columns}
-								{let $checked kind="attributes"}
-									{if $column.value == $value[$row.value]}
-										checked
-									{/if}
-								{/let}
-
-								{let $autoFocus kind="attributes"}
-									{if $focusTarget and ($focusTarget.row == $row.value and $focusTarget.index == index($column))}
-										autoFocus
-									{/if}
-								{/let}
-
 								<td>
-									<input {if $autoFocus}autoFocus{/if} {if $checked}checked{/if} class="form-builder-grid-field" data-row-index="{index($column)}" {if $readOnly}disabled{/if} name="{$row.value}" type="radio" value="{$column.value}" />
+									<input {if $focusTarget and ($focusTarget.row == $row.value and $focusTarget.index == index($column))}autoFocus{/if}
+										{if $column.value == $value[$row.value]}checked{/if}
+										class="form-builder-grid-field"
+										data-row-index="{index($column)}"
+										{if $readOnly}disabled{/if}
+										name="{$row.value}"
+										type="radio"
+										value="{$column.value}" />
 								</td>
 							{/foreach}
 						</tr>

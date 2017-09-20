@@ -371,7 +371,7 @@
 	</command>
 
 	<command name="deleteWorkflowDefinition">
-		<execute function="Click" locator1="WorkflowDefinition#DEFINITION_TABLE_DEACTIVATED_DEFINITION_ELLIPSIS" />
+		<execute function="Click" locator1="WorkflowDefinition#DEFINITION_TABLE_ADDED_DEFINITION_ELLIPSIS" />
 
 		<execute macro="Workflow#deleteWorkflowDefinitionCmd" />
 	</command>
@@ -455,18 +455,15 @@
 	</command>
 
 	<command name="reactivateInactiveWorkflowDefinition">
-		<var name="key_workflowDefinitionName" value="${workflowDefinitionName}" />
+		<var name="key_workflowDefinitionTitle" value="${workflowDefinitionTitle}" />
 
-		<execute function="AssertTextEquals" locator1="WorkflowDefinition#DEFINITION_TABLE_ACTIVE" value1="No" />
-
-		<execute function="Click" locator1="WorkflowDefinition#DEFINITION_TABLE_DEACTIVATED_DEFINITION_ELLIPSIS" />
+		<execute function="Click" locator1="WorkflowDefinition#DEFINITION_TABLE_SPECIFIC_DEFINITION_ELLIPSIS" />
 
 		<execute function="AssertClick" locator1="MenuItem#ANY_MENU_ITEM" value1="Activate">
 			<var name="key_menuItem" value="Activate" />
 		</execute>
 
 		<execute macro="Alert#viewSuccessMessage" />
-		<execute function="AssertTextEquals" locator1="WorkflowDefinition#DEFINITION_TABLE_ACTIVE" value1="Yes" />
 	</command>
 
 	<command name="rejectTaskByActions">
@@ -936,9 +933,7 @@
 	</command>
 
 	<command name="viewDefinition">
-		<var name="key_workflowDefinitionName" value="${workflowDefinitionName}" />
-
-		<execute function="AssertTextEquals" locator1="WorkflowDefinition#DEFINITION_TABLE_NAME" value1="${workflowDefinitionName}" />
+		<var name="key_workflowDefinitionTitle" value="${workflowDefinitionTitle}" />
 
 		<if>
 			<isset var="workflowDefinitionTitle" />
@@ -946,11 +941,11 @@
 				<execute function="AssertTextEquals" locator1="WorkflowDefinition#DEFINITION_TABLE_TITLE" value1="${workflowDefinitionTitle}" />
 			</then>
 			<else>
+				<var name="key_workflowDefinitionTitle" value="${workflowDefinitionName}" />
+
 				<execute function="AssertTextEquals" locator1="WorkflowDefinition#DEFINITION_TABLE_TITLE" value1="${workflowDefinitionName}" />
 			</else>
 		</if>
-
-		<execute function="AssertTextEquals" locator1="WorkflowDefinition#DEFINITION_TABLE_ACTIVE" value1="Yes" />
 	</command>
 
 	<command name="viewMySubmissions">
@@ -1082,7 +1077,7 @@
 
 		<execute function="AssertTextEquals#assertText" locator1="MyWorkflowTasksTask#STATE" value1="${workflowTask}" />
 
-		<execute function="AssertTextEquals" locator1="MyWorkflowTasksTask#PREVIEW_TITLE" value1="${workflowAssetTitle}" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="MyWorkflowTasksTask#PREVIEW_TITLE" value1="${workflowAssetTitle}" />
 		<execute function="AssertTextEquals#assertPartialText" locator1="MyWorkflowTasksTask#PREVIEW_CONTENT" value1="${workflowAssetContent}" />
 	</command>
 
@@ -1114,7 +1109,7 @@
 		<execute function="AssertTextEquals" locator1="MyWorkflowTasksTask#ASSIGNED_TO" value1="Nobody" />
 		<execute function="AssertTextEquals" locator1="MyWorkflowTasksTask#STATE" value1="${workflowTask}" />
 
-		<execute function="AssertTextEquals" locator1="MyWorkflowTasksTask#PREVIEW_TITLE" value1="${workflowAssetTitle}" />
+		<execute function="AssertTextEquals#assertPartialText" locator1="MyWorkflowTasksTask#PREVIEW_TITLE" value1="${workflowAssetTitle}" />
 	</command>
 
 	<command name="viewTaskHeaderTitle">
