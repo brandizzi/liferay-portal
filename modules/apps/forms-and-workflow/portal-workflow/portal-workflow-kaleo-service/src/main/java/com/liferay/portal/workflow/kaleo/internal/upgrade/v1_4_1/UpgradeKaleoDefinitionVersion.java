@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.internal.upgrade.v1_3_4;
+package com.liferay.portal.workflow.kaleo.internal.upgrade.v1_4_1;
 
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.util.LoggingTimer;
@@ -53,8 +53,8 @@ public class UpgradeKaleoDefinitionVersion extends UpgradeProcess {
 		sb2.append("(kaleoDefinitionVersionId, groupId, companyId, userId, ");
 		sb2.append("userName, statusByUserId, statusByUserName, statusDate, ");
 		sb2.append("createDate, modifiedDate, name, title, description, ");
-		sb2.append("content, version, status) values (?, ?, ?, ?, ?, ?, ?, ");
-		sb2.append("?, ?, ?, ?, ?, ?, ?, ?, ? )");
+		sb2.append("content, version, startKaleoNodeId, status) values (?, ");
+		sb2.append("?, ?, ?, ?, ?, ?,  ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
 
 		try (LoggingTimer loggingTimer = new LoggingTimer();
 			PreparedStatement ps1 = connection.prepareStatement(sb1.toString());
@@ -75,6 +75,7 @@ public class UpgradeKaleoDefinitionVersion extends UpgradeProcess {
 				String description = rs.getString("description");
 				String content = rs.getString("content");
 				int version = rs.getInt("version");
+				long startKaleoNodeId = rs.getLong("startKaleoNodeId");
 
 				ps2.setLong(1, increment());
 				ps2.setLong(2, groupId);
@@ -91,7 +92,8 @@ public class UpgradeKaleoDefinitionVersion extends UpgradeProcess {
 				ps2.setString(13, description);
 				ps2.setString(14, content);
 				ps2.setString(15, getVersion(version));
-				ps2.setInt(16, WorkflowConstants.STATUS_APPROVED);
+				ps2.setLong(16, startKaleoNodeId);
+				ps2.setInt(17, WorkflowConstants.STATUS_APPROVED);
 
 				ps2.addBatch();
 			}
