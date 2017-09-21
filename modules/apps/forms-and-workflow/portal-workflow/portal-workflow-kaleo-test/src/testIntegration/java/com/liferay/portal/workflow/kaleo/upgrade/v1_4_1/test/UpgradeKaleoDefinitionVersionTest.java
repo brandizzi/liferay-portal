@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.upgrade.v1_3_4.test;
+package com.liferay.portal.workflow.kaleo.upgrade.v1_4_1.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.dao.db.DB;
@@ -111,7 +111,7 @@ public class UpgradeKaleoDefinitionVersionTest {
 			ps.setString(11, StringUtil.randomString());
 			ps.setInt(12, version);
 			ps.setBoolean(13, true);
-			ps.setLong(14, 0);
+			ps.setLong(14, RandomTestUtil.randomLong());
 
 			ps.executeUpdate();
 		}
