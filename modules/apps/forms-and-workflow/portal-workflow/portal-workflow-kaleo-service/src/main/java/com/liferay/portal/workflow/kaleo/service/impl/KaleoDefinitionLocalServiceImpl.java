@@ -340,20 +340,6 @@ public class KaleoDefinitionLocalServiceImpl
 		return kaleoDefinition;
 	}
 
-	@Override
-	public KaleoDefinition updateTitle(
-			String name, String title, ServiceContext serviceContext)
-		throws PortalException {
-
-		KaleoDefinition kaleoDefinition = getKaleoDefinition(
-			name, serviceContext);
-
-		return updatedKaleoDefinition(
-			kaleoDefinition.getKaleoDefinitionId(), title,
-			kaleoDefinition.getDescription(), kaleoDefinition.getContent(),
-			kaleoDefinition.getVersion() + 1, serviceContext);
-	}
-
 	protected String getVersion(int version) {
 		return version + StringPool.PERIOD + 0;
 	}
