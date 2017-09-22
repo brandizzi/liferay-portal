@@ -2089,6 +2089,11 @@ public abstract class BaseIndexer<T> implements Indexer<T> {
 			searchContext.getAttribute(Field.GROUP_ID));
 
 		if (groupId == 0) {
+			groupId = GetterUtil.getLong(
+				searchContext.getAttribute(Field.SCOPE_GROUP_ID));
+		}
+
+		if (groupId == 0) {
 			return null;
 		}
 
