@@ -74,6 +74,7 @@ public class KaleoDefinitionVersionWrapper implements KaleoDefinitionVersion,
 		attributes.put("description", getDescription());
 		attributes.put("content", getContent());
 		attributes.put("version", getVersion());
+		attributes.put("startKaleoNodeId", getStartKaleoNodeId());
 		attributes.put("status", getStatus());
 
 		return attributes;
@@ -172,6 +173,12 @@ public class KaleoDefinitionVersionWrapper implements KaleoDefinitionVersion,
 			setVersion(version);
 		}
 
+		Long startKaleoNodeId = (Long)attributes.get("startKaleoNodeId");
+
+		if (startKaleoNodeId != null) {
+			setStartKaleoNodeId(startKaleoNodeId);
+		}
+
 		Integer status = (Integer)attributes.get("status");
 
 		if (status != null) {
@@ -264,6 +271,12 @@ public class KaleoDefinitionVersionWrapper implements KaleoDefinitionVersion,
 		return _kaleoDefinitionVersion.getKaleoDefinitionVersionId();
 	}
 
+	@Override
+	public KaleoNode getKaleoStartNode()
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _kaleoDefinitionVersion.getKaleoStartNode();
+	}
+
 	/**
 	* Returns the modified date of this kaleo definition version.
 	*
@@ -297,6 +310,16 @@ public class KaleoDefinitionVersionWrapper implements KaleoDefinitionVersion,
 	@Override
 	public Serializable getPrimaryKeyObj() {
 		return _kaleoDefinitionVersion.getPrimaryKeyObj();
+	}
+
+	/**
+	* Returns the start kaleo node ID of this kaleo definition version.
+	*
+	* @return the start kaleo node ID of this kaleo definition version
+	*/
+	@Override
+	public long getStartKaleoNodeId() {
+		return _kaleoDefinitionVersion.getStartKaleoNodeId();
 	}
 
 	/**
@@ -708,6 +731,16 @@ public class KaleoDefinitionVersionWrapper implements KaleoDefinitionVersion,
 	@Override
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
 		_kaleoDefinitionVersion.setPrimaryKeyObj(primaryKeyObj);
+	}
+
+	/**
+	* Sets the start kaleo node ID of this kaleo definition version.
+	*
+	* @param startKaleoNodeId the start kaleo node ID of this kaleo definition version
+	*/
+	@Override
+	public void setStartKaleoNodeId(long startKaleoNodeId) {
+		_kaleoDefinitionVersion.setStartKaleoNodeId(startKaleoNodeId);
 	}
 
 	/**
