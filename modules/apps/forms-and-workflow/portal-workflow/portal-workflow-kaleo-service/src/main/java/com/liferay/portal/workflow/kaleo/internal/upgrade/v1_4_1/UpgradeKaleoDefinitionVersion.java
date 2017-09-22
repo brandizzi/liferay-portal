@@ -45,10 +45,143 @@ public class UpgradeKaleoDefinitionVersion extends UpgradeProcess {
 	@Override
 	protected void doUpgrade() throws Exception {
 		upgradeKaleoDefinitionVersion();
+
+		removeKaleoDefinitionId();
+		removeStartKaleoNodeId();
 	}
 
 	protected String getVersion(int version) {
 		return version + StringPool.PERIOD + 0;
+	}
+
+	protected void removeKaleoDefinitionId() throws Exception {
+		try (LoggingTimer loggingTimer = new LoggingTimer()) {
+			if (hasColumn("KaleoAction", "kaleoDefinitionId")) {
+				runSQL("drop index IX_F95A622 on KaleoAction");
+
+				runSQL("alter table KaleoAction drop column kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoCondition", "kaleoDefinitionId")) {
+				runSQL("drop index IX_DC978A5D on KaleoCondition");
+
+				runSQL(
+					"alter table KaleoCondition drop column kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoInstance", "kaleoDefinitionId")) {
+				runSQL("drop index IX_ACF16238 on KaleoInstance");
+
+				runSQL(
+					"alter table KaleoInstance drop column kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoInstanceToken", "kaleoDefinitionId")) {
+				runSQL("drop index IX_7BDB04B4 on KaleoInstanceToken");
+
+				runSQL(
+					"alter table KaleoInstanceToken drop column " +
+						"kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoLog", "kaleoDefinitionId")) {
+				runSQL("drop index IX_6C64B7D4 on KaleoLog");
+
+				runSQL("alter table KaleoLog drop column kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoNode", "kaleoDefinitionId")) {
+				runSQL("drop index IX_F28C443E on KaleoNode");
+				runSQL("drop index IX_32E94DD6 on KaleoNode");
+
+				runSQL("alter table KaleoNode drop column kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoNotification", "kaleoDefinitionId")) {
+				runSQL("drop index IX_4B968E8D on KaleoNotification");
+
+				runSQL(
+					"alter table KaleoNotification drop column " +
+						"kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoNotificationRecipient", "kaleoDefinitionId")) {
+				runSQL("drop index IX_AA6697EA on KaleoNotificationRecipient");
+
+				runSQL(
+					"alter table KaleoNotificationRecipient drop column " +
+						"kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoTask", "kaleoDefinitionId")) {
+				runSQL("drop index IX_3FFA633 on KaleoTask");
+
+				runSQL("alter table KaleoTask drop column kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoTaskAssignment", "kaleoDefinitionId")) {
+				runSQL("drop index IX_575C03A6 on KaleoTaskAssignment");
+
+				runSQL(
+					"alter table KaleoTaskAssignment drop column " +
+						"kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoTaskAssignmentInstance", "kaleoDefinitionId")) {
+				runSQL("drop index IX_C851011 on KaleoTaskAssignmentInstance");
+
+				runSQL(
+					"alter table KaleoTaskAssignmentInstance drop column " +
+						"kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoTaskForm", "kaleoDefinitionId")) {
+				runSQL("drop index IX_60D1964F on KaleoTaskForm");
+
+				runSQL(
+					"alter table KaleoTaskForm drop column kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoTaskFormInstance", "kaleoDefinitionId")) {
+				runSQL("drop index IX_B975E9BA on KaleoTaskFormInstance");
+
+				runSQL(
+					"alter table KaleoTaskFormInstance drop column " +
+						"kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoTaskInstanceToken", "kaleoDefinitionId")) {
+				runSQL("drop index IX_608E9519 on KaleoTaskInstanceToken");
+
+				runSQL(
+					"alter table KaleoTaskInstanceToken drop column " +
+						"kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoTimer", "kaleoDefinitionId")) {
+				runSQL("alter table KaleoTimer drop column kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoTimerInstanceToken", "kaleoDefinitionId")) {
+				runSQL(
+					"alter table KaleoTimerInstanceToken drop column " +
+						"kaleoDefinitionId");
+			}
+
+			if (hasColumn("KaleoTransition", "kaleoDefinitionId")) {
+				runSQL("drop index IX_479F3063 on KaleoTransition");
+
+				runSQL(
+					"alter table KaleoTransition drop column " +
+						"kaleoDefinitionId");
+			}
+		}
+	}
+
+	protected void removeStartKaleoNodeId() throws Exception {
+		if (hasColumn("KaleoDefinition", "startKaleoNodeId")) {
+			runSQL("alter table KaleoDefinition drop column startKaleoNodeId");
+		}
 	}
 
 	protected void upgradeKaleoDefinitionVersion() throws SQLException {
