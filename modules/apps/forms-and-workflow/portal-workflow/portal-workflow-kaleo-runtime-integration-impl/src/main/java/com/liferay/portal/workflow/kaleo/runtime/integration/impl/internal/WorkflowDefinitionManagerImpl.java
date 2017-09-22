@@ -368,11 +368,14 @@ public class WorkflowDefinitionManagerImpl
 			serviceContext.setUserId(userId);
 
 			KaleoDefinition kaleoDefinition =
-				_kaleoDefinitionLocalService.updateTitle(
-					name, title, serviceContext);
+				_kaleoDefinitionLocalService.getKaleoDefinition(
+					name, serviceContext);
 
-			return _kaleoWorkflowModelConverter.toWorkflowDefinition(
-				kaleoDefinition);
+			String content = kaleoDefinition.getContent();
+
+			return _workflowEngine.deployWorkflowDefinition(
+				title, new UnsyncByteArrayInputStream(content.getBytes()),
+				serviceContext);
 		}
 		catch (Exception e) {
 			throw new WorkflowException(e);
