@@ -16,6 +16,7 @@ create table KaleoDefinitionVersion (
 	description STRING null,
 	content TEXT null,
 	version VARCHAR(75) null,
+	startKaleoNodeId LONG,
 	status INTEGER
 );
 
