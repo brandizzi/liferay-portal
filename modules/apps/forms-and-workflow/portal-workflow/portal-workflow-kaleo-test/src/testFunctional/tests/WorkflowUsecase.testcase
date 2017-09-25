@@ -355,7 +355,6 @@
 		</execute>
 
 		<execute macro="Workflow#viewDefinition">
-			<var name="workflowDefinitionName" value="Legal and Marketing Approval" />
 			<var name="workflowDefinitionTitle" value="Double Approver Definition" />
 			<var name="workflowDefinitionVersionNumber" value="1" />
 		</execute>
@@ -529,7 +528,6 @@
 		</execute>
 
 		<execute macro="Workflow#viewDefinition">
-			<var name="workflowDefinitionName" value="Category Specific Approval" />
 			<var name="workflowDefinitionTitle" value="Category Specific" />
 			<var name="workflowDefinitionVersionNumber" value="1" />
 		</execute>
@@ -896,7 +894,6 @@
 		</execute>
 
 		<execute macro="Workflow#viewDefinition">
-			<var name="workflowDefinitionName" value="Uploaded Definition" />
 			<var name="workflowDefinitionTitle" value="New Uploaded Definition" />
 			<var name="workflowDefinitionVersionNumber" value="1" />
 		</execute>
@@ -908,7 +905,7 @@
 		</execute>
 
 		<execute macro="Workflow#reactivateInactiveWorkflowDefinition">
-			<var name="workflowDefinitionName" value="Uploaded Definition" />
+			<var name="workflowDefinitionTitle" value="New Uploaded Definition" />
 		</execute>
 	</command>
 
@@ -925,7 +922,6 @@
 		</execute>
 
 		<execute macro="Workflow#viewDefinition">
-			<var name="workflowDefinitionName" value="Uploaded Definition" />
 			<var name="workflowDefinitionTitle" value="New Uploaded Definition" />
 			<var name="workflowDefinitionVersionNumber" value="1" />
 		</execute>

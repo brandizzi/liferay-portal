@@ -3,12 +3,17 @@ import Soy from 'metal-soy';
 
 import templates from './grid.soy';
 
-/**
- * Grid Component
- */
-class Grid extends Component {}
+let GridTemplates = [];
 
-// Register component
-Soy.register(Grid, templates, 'render');
+for (let template in templates) {
+	if (template !== 'templates') {
+		class C extends Component {};
+		Soy.register(C, templates, template);
+		GridTemplates.push({
+			key: template,
+			component: C
+		});
+	}
+}
 
-export default Grid;
+export default GridTemplates;

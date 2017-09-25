@@ -40,7 +40,7 @@ public class AMMessagingConfigurator {
 		DestinationConfiguration destinationConfiguration =
 			new DestinationConfiguration(
 				DestinationConfiguration.DESTINATION_TYPE_SERIAL,
-				AMDestinationNames.AM_PROCESSOR);
+				AMDestinationNames.ADAPTIVE_MEDIA_PROCESSOR);
 
 		Destination destination = _destinationFactory.createDestination(
 			destinationConfiguration);

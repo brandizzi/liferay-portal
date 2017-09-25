@@ -6,7 +6,13 @@ Liferay.Loader.require(
 			window.DDMGrid = {};
 		}
 
-		window.DDMGrid.render = Grid.default;
+		if (!window.DDMSelect) {
+			window.DDMSelect = {};
+		}
+
+		Grid.default.forEach(function(item) {
+			window.DDMGrid[item.key] = item.component;
+		});
 
 		AUI.add('liferay-ddm-form-field-grid-template');
 	}
