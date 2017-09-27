@@ -30,15 +30,15 @@
 		<if>
 			<equals arg1="${pageVersioningEnabled}" arg2="true" />
 			<then>
-				<execute function="Check#checkToggleSwitch" locator1="Checkbox#ENABLED_ON_PUBLIC_PAGES" />
-				<execute function="Check#checkToggleSwitch" locator1="Checkbox#ENABLED_ON_PRIVATE_PAGES" />
+				<execute function="Check#checkHiddenToggleSwitch" locator1="Checkbox#ENABLED_ON_PUBLIC_PAGES" />
+				<execute function="Check#checkHiddenToggleSwitch" locator1="Checkbox#ENABLED_ON_PRIVATE_PAGES" />
 			</then>
 		</if>
 
 		<if>
 			<isset var="contentName" />
 			<then>
-				<execute function="Check#checkToggleSwitch" locator1="Checkbox#STAGED_CONTENT">
+				<execute function="Check#checkHiddenToggleSwitch" locator1="Checkbox#STAGED_CONTENT">
 					<var name="key_contentName" value="${contentName}" />
 				</execute>
 			</then>
@@ -54,7 +54,7 @@
 					<for list="Application Display Template,Blogs,Bookmarks,Calendar,Documents and Media,Forms,Knowledge Base,Message Boards,Mobile Device Families,Polls,Web Content,Wiki" param="contentName">
 						<var name="key_contentName" value="${contentName}" />
 
-						<execute function="Check#checkToggleSwitch" locator1="Checkbox#STAGED_CONTENT" />
+						<execute function="Check#checkHiddenToggleSwitch" locator1="Checkbox#STAGED_CONTENT" />
 					</for>
 				</then>
 			</elseif>
@@ -69,7 +69,7 @@
 			<if>
 				<condition function="IsElementPresent" locator1="Checkbox#STAGED_CONTENT" />
 				<then>
-					<execute function="Check#checkToggleSwitch" locator1="Checkbox#STAGED_CONTENT" />
+					<execute function="Check#checkHiddenToggleSwitch" locator1="Checkbox#STAGED_CONTENT" />
 				</then>
 			</if>
 		</for>
@@ -143,7 +143,9 @@
 
 		<var name="key_siteName" value="${siteName}" />
 
-		<execute macro="ProductMenu#gotoSitesPublishing">
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Publishing" />
+			<var name="panel" value="Site Administration" />
 			<var name="portlet" value="Staging" />
 		</execute>
 
@@ -226,13 +228,11 @@
 
 		<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
-		<execute function="Select" locator1="Staging#VARIATIONS_SELECTOR" value1="${pageVariationNameMenulistName}">
-			<var name="key_pageVariationName" value="${pageVariationNameMenulistName}" />
-		</execute>
+		<execute function="Click" locator1="Staging#VARIATIONS_SELECTOR_DROPDOWN" />
 
-		<execute function="SelectFrame" value1="relative=top" />
+		<var name="key_pageVariationName" value="${pageVariationNameMenulistName}" />
 
-		<execute function="Click" locator1="Icon#CLOSE" />
+		<execute function="AssertClick#assertPartialTextClickAt" locator1="Staging#VARIATIONS_SELECTOR" value1="${pageVariationNameMenulistName}" />
 	</command>
 
 	<command name="changePageVariationPG">
@@ -357,7 +357,7 @@
 			<then>
 				<execute function="Click" locator1="StagingPublishToLive#CONTENT_CHOOSE_CONTENT_DELETION_HEADER" />
 
-				<execute function="Check#checkToggleSwitch" locator1="StagingPublishToLive#CONTENT_CHOOSE_CONTENT_DELETION_CHECKBOX" />
+				<execute function="Check#checkHiddenToggleSwitch" locator1="StagingPublishToLive#CONTENT_CHOOSE_CONTENT_DELETION_CHECKBOX" />
 			</then>
 		</if>
 
@@ -597,8 +597,8 @@
 		<if>
 			<equals arg1="${pageVersioningEnabled}" arg2="true" />
 			<then>
-				<execute function="Check#checkToggleSwitch" locator1="Checkbox#ENABLED_ON_PUBLIC_PAGES" />
-				<execute function="Check#checkToggleSwitch" locator1="Checkbox#ENABLED_ON_PRIVATE_PAGES" />
+				<execute function="Check#checkHiddenToggleSwitch" locator1="Checkbox#ENABLED_ON_PUBLIC_PAGES" />
+				<execute function="Check#checkHiddenToggleSwitch" locator1="Checkbox#ENABLED_ON_PRIVATE_PAGES" />
 			</then>
 		</if>
 
@@ -708,7 +708,7 @@
 		<if>
 			<isset var="enableOnPublicPages" />
 			<then>
-				<execute function="Check#checkToggleSwitch" locator1="Checkbox#ENABLED_ON_PUBLIC_PAGES" />
+				<execute function="Check#checkHiddenToggleSwitch" locator1="Checkbox#ENABLED_ON_PUBLIC_PAGES" />
 
 				<execute function="AssertClickNoError" locator1="Button#SAVE" value1="Save" />
 			</then>
@@ -717,7 +717,7 @@
 		<if>
 			<isset var="enableOnPrivatePages" />
 			<then>
-				<execute function="Check#checkToggleSwitch" locator1="Checkbox#ENABLED_ON_PRIVATE_PAGES" />
+				<execute function="Check#checkHiddenToggleSwitch" locator1="Checkbox#ENABLED_ON_PRIVATE_PAGES" />
 
 				<execute function="AssertClickNoError" locator1="Button#SAVE" value1="Save" />
 			</then>
@@ -848,7 +848,9 @@
 
 		<var name="key_siteName" value="${siteName}" />
 
-		<execute macro="ProductMenu#gotoSitesPublishing">
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Publishing" />
+			<var name="panel" value="Site Administration" />
 			<var name="portlet" value="Staging" />
 		</execute>
 
@@ -866,7 +868,9 @@
 	<command name="remoteStagingSetUp">
 		<var name="siteID" value="${siteID}" />
 
-		<execute macro="ProductMenu#gotoControlPanelSites">
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Sites" />
+			<var name="panel" value="Control Panel" />
 			<var name="portlet" value="Sites" />
 		</execute>
 
@@ -878,7 +882,9 @@
 			<var name="site" value="Remote Site" />
 		</execute>
 
-		<execute macro="ProductMenu#gotoSitesConfiguration">
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Configuration" />
+			<var name="panel" value="Site Administration" />
 			<var name="portlet" value="Site Settings" />
 		</execute>
 
@@ -890,7 +896,9 @@
 			<var name="site" value="${siteName}" />
 		</execute>
 
-		<execute macro="ProductMenu#gotoSitesPublishing">
+		<execute macro="ProductMenu#gotoPortlet">
+			<var name="category" value="Publishing" />
+			<var name="panel" value="Site Administration" />
 			<var name="portlet" value="Staging" />
 		</execute>
 
@@ -1075,6 +1083,8 @@
 		<if>
 			<equals arg1="${modifiedVersion}" arg2="true" />
 			<then>
+				<var name="key_historyVersion" value="${historyVersion}" />
+
 				<execute function="AssertTextNotEquals" locator1="Staging#HISTORY_VERSION" value1="${historyVersion}" />
 			</then>
 			<elseif>
@@ -1088,6 +1098,8 @@
 			<elseif>
 				<condition function="IsElementPresent#isVisible" locator1="Staging#HISTORY_VERSION" />
 				<then>
+					<var name="key_historyVersion" value="${historyVersion}" />
+
 					<execute function="AssertTextEquals#assertPartialText" locator1="Staging#HISTORY_VERSION" value1="${historyVersion}" />
 				</then>
 			</elseif>
@@ -1118,6 +1130,14 @@
 		<execute function="SelectFrameTop" />
 
 		<execute function="Click" locator1="Icon#CLOSE" />
+	</command>
+
+	<command name="viewNotAvailableMenuItem">
+		<var name="key_page" value="${pageName}" />
+
+		<execute function="Click#mouseOverClick" locator1="SitePages#SPECIFIC_PAGE_ELLIPSIS" />
+
+		<execute function="AssertNotVisible" locator1="SitePages#DELETE_SPECIFIC_PAGE" />
 	</command>
 
 	<command name="viewPageVariationPG">

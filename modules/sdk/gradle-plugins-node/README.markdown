@@ -12,7 +12,7 @@ To use the plugin, include it in your build script:
 ```gradle
 buildscript {
 	dependencies {
-		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.node", version: "3.1.0"
+		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.node", version: "3.1.1"
 	}
 
 	repositories {
@@ -289,3 +289,7 @@ plugin is applied and the `package.json` file declares a script named `"build"`,
 then the script is executed before the `classes` task but after the
 [`processResources`](https://docs.gradle.org/4.0/userguide/java_plugin.html#sec:java_resources)
 task.
+
+If the [`lifecycle-base`](https://docs.gradle.org/current/javadoc/org/gradle/language/base/plugins/LifecycleBasePlugin.html)
+plugin is applied and the `package.json` file declares a script named `test`,
+then the script is executed when running the `check` task.
