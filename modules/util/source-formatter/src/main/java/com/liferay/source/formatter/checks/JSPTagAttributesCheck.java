@@ -56,7 +56,6 @@ public class JSPTagAttributesCheck extends TagAttributesCheck {
 	@Override
 	public void init() throws Exception {
 		_primitiveTagAttributeDataTypes = _getPrimitiveTagAttributeDataTypes();
-		_tagSetMethodsMap = _getTagSetMethodsMap();
 	}
 
 	@Override
@@ -105,7 +104,10 @@ public class JSPTagAttributesCheck extends TagAttributesCheck {
 			return line;
 		}
 
-		Map<String, String> setMethodsMap = _tagSetMethodsMap.get(tagName);
+		Map<String, Map<String, String>> tagSetMethodsMap =
+			_getTagSetMethodsMap();
+
+		Map<String, String> setMethodsMap = tagSetMethodsMap.get(tagName);
 
 		if (setMethodsMap == null) {
 			return line;
@@ -229,7 +231,8 @@ public class JSPTagAttributesCheck extends TagAttributesCheck {
 	}
 
 	private String _getExtendedFileName(
-		String content, String fileName, String utilTaglibSrcDirName) {
+		String content, String fileName, List<String> imports,
+		String utilTaglibSrcDirName) {
 
 		Matcher matcher = _extendedClassPattern.matcher(content);
 
@@ -237,33 +240,37 @@ public class JSPTagAttributesCheck extends TagAttributesCheck {
 			return null;
 		}
 
-		StringBundler sb = new StringBundler();
-
 		String extendedClassName = matcher.group(1);
 
-		Pattern pattern = Pattern.compile(
-			"\nimport (.*\\." + extendedClassName + ");");
+		if (!extendedClassName.contains(StringPool.PERIOD)) {
+			for (String importName : imports) {
+				if (importName.endsWith(
+						StringPool.PERIOD + extendedClassName)) {
 
-		matcher = pattern.matcher(content);
+					extendedClassName = importName;
 
-		if (matcher.find()) {
-			extendedClassName = matcher.group(1);
-
-			if (!extendedClassName.startsWith("com.liferay.taglib")) {
-				return null;
+					break;
+				}
 			}
+		}
 
+		StringBundler sb = new StringBundler(3);
+
+		if (extendedClassName.startsWith("com.liferay.taglib")) {
 			sb.append(utilTaglibSrcDirName);
 			sb.append(
 				StringUtil.replace(
 					extendedClassName, CharPool.PERIOD, CharPool.SLASH));
 		}
-		else {
+		else if (!extendedClassName.contains(StringPool.PERIOD)) {
 			int pos = fileName.lastIndexOf(CharPool.SLASH);
 
 			sb.append(fileName.substring(0, pos + 1));
 
 			sb.append(extendedClassName);
+		}
+		else {
+			return null;
 		}
 
 		sb.append(".java");
@@ -328,7 +335,8 @@ public class JSPTagAttributesCheck extends TagAttributesCheck {
 		}
 
 		String extendedFileName = _getExtendedFileName(
-			tagFileContent, tagFileName, utilTaglibSrcDirName);
+			tagFileContent, tagFileName, javaClass.getImports(),
+			utilTaglibSrcDirName);
 
 		if (extendedFileName != null) {
 			setMethodsMap.putAll(
@@ -340,15 +348,19 @@ public class JSPTagAttributesCheck extends TagAttributesCheck {
 		return setMethodsMap;
 	}
 
-	private Map<String, Map<String, String>> _getTagSetMethodsMap()
+	private synchronized Map<String, Map<String, String>> _getTagSetMethodsMap()
 		throws Exception {
 
-		Map<String, Map<String, String>> tagSetMethodsMap = new HashMap<>();
+		if (_tagSetMethodsMap != null) {
+			return _tagSetMethodsMap;
+		}
+
+		_tagSetMethodsMap = new HashMap<>();
 
 		List<String> tldFileNames = _getTLDFileNames();
 
 		if (tldFileNames.isEmpty()) {
-			return tagSetMethodsMap;
+			return _tagSetMethodsMap;
 		}
 
 		String utilTaglibSrcDirName = _getUtilTaglibSrcDirName();
@@ -387,7 +399,7 @@ public class JSPTagAttributesCheck extends TagAttributesCheck {
 
 				String tagName = tagNameElement.getStringValue();
 
-				if (tagSetMethodsMap.containsKey(
+				if (_tagSetMethodsMap.containsKey(
 						shortName + StringPool.COLON + tagName)) {
 
 					continue;
@@ -425,12 +437,12 @@ public class JSPTagAttributesCheck extends TagAttributesCheck {
 					continue;
 				}
 
-				tagSetMethodsMap.put(
+				_tagSetMethodsMap.put(
 					shortName + StringPool.COLON + tagName, setMethodsMap);
 			}
 		}
 
-		return tagSetMethodsMap;
+		return _tagSetMethodsMap;
 	}
 
 	private List<String> _getTLDFileNames() throws Exception {
