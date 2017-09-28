@@ -15,6 +15,7 @@
 package com.liferay.portal.workflow.web.internal.request.prepocessor;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -51,7 +52,8 @@ public class WorkflowDefinitionRenderPreprocessor
 				renderRequest, renderResponse);
 
 			WorkflowDefinitionDisplayContext displayContext =
-				new WorkflowDefinitionDisplayContext(renderRequest);
+				new WorkflowDefinitionDisplayContext(
+					renderRequest, _userLocalService);
 
 			renderRequest.setAttribute(
 				WorkflowWebKeys.WORKFLOW_DEFINITION_DISPLAY_CONTEXT,
@@ -99,6 +101,9 @@ public class WorkflowDefinitionRenderPreprocessor
 		renderRequest.setAttribute(
 			WebKeys.WORKFLOW_DEFINITION, workflowDefinition);
 	}
+
+	@Reference
+	private UserLocalService _userLocalService;
 
 	@Reference
 	private WorkflowPreprocessorHelper _workflowPreprocessorHelper;

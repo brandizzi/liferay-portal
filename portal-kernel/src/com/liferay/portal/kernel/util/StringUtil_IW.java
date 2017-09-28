@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.util;
 
+import com.liferay.portal.kernel.security.RandomUtil;
+
 /**
  * @author Brian Wing Shun Chan
  */
@@ -338,7 +340,7 @@ public class StringUtil_IW {
 	}
 
 	public java.lang.String randomize(java.lang.String s) {
-		return StringUtil.randomize(s);
+		return RandomUtil.shuffle(s);
 	}
 
 	public java.lang.String randomString() {
@@ -518,6 +520,10 @@ public class StringUtil_IW {
 		return StringUtil.replaceWithStringBundler(s, begin, end, values);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public java.lang.String reverse(java.lang.String s) {
 		return StringUtil.reverse(s);
 	}
@@ -725,8 +731,12 @@ public class StringUtil_IW {
 		return StringUtil.upperCaseFirstLetter(s);
 	}
 
+	/**
+	 * @deprecated As of 7.0.0, with no direct replacement
+	 */
+	@Deprecated
 	public java.lang.String valueOf(java.lang.Object obj) {
-		return StringUtil.valueOf(obj);
+		return String.valueOf(obj);
 	}
 
 	public boolean wildcardMatches(java.lang.String s,

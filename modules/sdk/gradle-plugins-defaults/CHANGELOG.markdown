@@ -2032,7 +2032,6 @@ ensure it matches the project version.
 dependencies that belong to a different sub-repository.
 
 ### Changed
-
 - [LPS-74469]: Allow publishing modules whose `soyCompile` configuration
 contains project dependencies.
 
@@ -2042,6 +2041,140 @@ contains project dependencies.
 - [LPS-74469]: Look for `.gitrepo` files instead of `settings.gradle` when
 checking if the `soyCompile` configuration contains project dependencies that
 belong to a different sub-repository.
+
+## 5.0.36 - 2017-09-06
+
+### Changed
+- [LPS-74538]: Update the [Liferay Gradle Plugins] dependency to version 3.4.49.
+
+## 5.0.37 - 2017-09-06
+
+### Changed
+- [LPS-74490]: Update the [Liferay Gradle Plugins] dependency to version 3.4.50.
+
+## 5.0.38 - 2017-09-07
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.4.51.
+
+## 5.0.39 - 2017-09-08
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.4.52.
+
+## 5.0.40 - 2017-09-10
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.4.53.
+
+## 5.0.41 - 2017-09-11
+
+### Changed
+- [LPS-74614]: Update the [Liferay Gradle Plugins] dependency to version 3.4.54.
+
+## 5.0.42 - 2017-09-11
+
+### Changed
+- [LPS-74373]: Update the [Liferay Gradle Plugins] dependency to version 3.4.55.
+
+## 5.0.43 - 2017-09-12
+
+### Changed
+- [LPS-74207]: Update the [Liferay Gradle Plugins] dependency to version 3.4.56.
+
+## 5.0.44 - 2017-09-12
+
+### Changed
+- [LPS-74637]: Update the [Liferay Gradle Plugins] dependency to version 3.4.57.
+
+## 5.0.45 - 2017-09-13
+
+### Changed
+- [LPS-74657]: Update the [Liferay Gradle Plugins] dependency to version 3.4.58.
+
+## 5.0.46 - 2017-09-14
+
+### Changed
+- [LPS-74614]: Update the [Liferay Gradle Plugins] dependency to version 3.4.59.
+
+## 5.0.47 - 2017-09-18
+
+### Changed
+- [LPS-74752]: Update the [Liferay Gradle Plugins] dependency to version 3.4.60.
+
+## 5.0.48 - 2017-09-18
+
+### Changed
+- [LPS-74637]: Update the [Liferay Gradle Plugins] dependency to version 3.4.61.
+
+## 5.0.49 - 2017-09-18
+
+### Changed
+- [LPS-74770]: Update the [Liferay Gradle Plugins] dependency to version 3.4.62.
+
+## 5.0.50 - 2017-09-19
+
+### Changed
+- [LPS-74657]: Update the [Liferay Gradle Plugins] dependency to version 3.4.63.
+
+## 5.0.51 - 2017-09-19
+
+### Changed
+- [LPS-74789]: Update the [Liferay Gradle Plugins] dependency to version 3.4.64.
+
+## 5.0.52 - 2017-09-19
+
+### Changed
+- [LPS-74657]: Update the [Liferay Gradle Plugins] dependency to version 3.4.65.
+
+## 5.0.53 - 2017-09-19
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins] dependency to version 3.4.66.
+
+## 5.0.54 - 2017-09-19
+
+### Changed
+- [LPS-74738]: Update the [Liferay Gradle Plugins] dependency to version 3.4.67.
+
+## 5.0.55 - 2017-09-21
+
+### Changed
+- [LPS-74824]: Update the [Liferay Gradle Plugins] dependency to version 3.4.68.
+
+## 5.0.56 - 2017-09-23
+
+### Changed
+- [LPS-71117]: Update the [Liferay Gradle Plugins] dependency to version 3.4.69.
+
+## 5.0.57 - 2017-09-25
+
+### Changed
+- [LPS-74884]: Update the [Liferay Gradle Plugins] dependency to version 3.4.70.
+
+## 5.1.0 - 2017-09-26
+
+### Added
+- [LPS-74749]: Update the [Liferay Gradle Plugins] dependency to version 3.4.71.
+- [LPS-74892]: For OSGi modules, publish an additional `sources-commercial` jar.
+If the module is public, the original copyright in the source files is replaced
+with a commercial copyright.
+
+## 5.1.1 - 2017-09-27
+
+### Changed
+- [LPS-74867]: Update the [Liferay Gradle Plugins] dependency to version 3.4.72.
+
+## 5.1.2 - 2017-09-27
+
+### Added
+- [LPS-74933]: Automatically disable the `PublishNodeModuleTask` instances for
+private projects.
+- [LPS-74933]: Publish *alpha* versions of packages on the NPM registry when
+running the `uploadArchives` task with `-Psnapshot`.
+
+### Changed
+- [LPS-74933]: Update the [Liferay Gradle Plugins] dependency to version 3.4.73.
 
 [Find Security Bugs]: https://github.com/liferay/liferay-portal/tree/master/modules/third-party/com-h3xstream-findsecbugs
 [Gradle License Report]: https://github.com/jk1/Gradle-License-Report
@@ -2171,6 +2304,7 @@ belong to a different sub-repository.
 [LPS-70941]: https://issues.liferay.com/browse/LPS-70941
 [LPS-71005]: https://issues.liferay.com/browse/LPS-71005
 [LPS-71048]: https://issues.liferay.com/browse/LPS-71048
+[LPS-71117]: https://issues.liferay.com/browse/LPS-71117
 [LPS-71118]: https://issues.liferay.com/browse/LPS-71118
 [LPS-71164]: https://issues.liferay.com/browse/LPS-71164
 [LPS-71201]: https://issues.liferay.com/browse/LPS-71201
@@ -2254,6 +2388,7 @@ belong to a different sub-repository.
 [LPS-74104]: https://issues.liferay.com/browse/LPS-74104
 [LPS-74126]: https://issues.liferay.com/browse/LPS-74126
 [LPS-74155]: https://issues.liferay.com/browse/LPS-74155
+[LPS-74207]: https://issues.liferay.com/browse/LPS-74207
 [LPS-74210]: https://issues.liferay.com/browse/LPS-74210
 [LPS-74222]: https://issues.liferay.com/browse/LPS-74222
 [LPS-74250]: https://issues.liferay.com/browse/LPS-74250
@@ -2263,8 +2398,25 @@ belong to a different sub-repository.
 [LPS-74343]: https://issues.liferay.com/browse/LPS-74343
 [LPS-74345]: https://issues.liferay.com/browse/LPS-74345
 [LPS-74368]: https://issues.liferay.com/browse/LPS-74368
+[LPS-74373]: https://issues.liferay.com/browse/LPS-74373
 [LPS-74433]: https://issues.liferay.com/browse/LPS-74433
 [LPS-74469]: https://issues.liferay.com/browse/LPS-74469
+[LPS-74490]: https://issues.liferay.com/browse/LPS-74490
+[LPS-74538]: https://issues.liferay.com/browse/LPS-74538
+[LPS-74544]: https://issues.liferay.com/browse/LPS-74544
+[LPS-74614]: https://issues.liferay.com/browse/LPS-74614
+[LPS-74637]: https://issues.liferay.com/browse/LPS-74637
+[LPS-74657]: https://issues.liferay.com/browse/LPS-74657
+[LPS-74738]: https://issues.liferay.com/browse/LPS-74738
+[LPS-74749]: https://issues.liferay.com/browse/LPS-74749
+[LPS-74752]: https://issues.liferay.com/browse/LPS-74752
+[LPS-74770]: https://issues.liferay.com/browse/LPS-74770
+[LPS-74789]: https://issues.liferay.com/browse/LPS-74789
+[LPS-74824]: https://issues.liferay.com/browse/LPS-74824
+[LPS-74867]: https://issues.liferay.com/browse/LPS-74867
+[LPS-74884]: https://issues.liferay.com/browse/LPS-74884
+[LPS-74892]: https://issues.liferay.com/browse/LPS-74892
+[LPS-74933]: https://issues.liferay.com/browse/LPS-74933
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981
