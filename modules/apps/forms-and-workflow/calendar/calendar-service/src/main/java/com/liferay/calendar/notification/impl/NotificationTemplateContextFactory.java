@@ -32,10 +32,12 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
 
@@ -57,7 +59,8 @@ public class NotificationTemplateContextFactory {
 	public static NotificationTemplateContext getInstance(
 			NotificationType notificationType,
 			NotificationTemplateType notificationTemplateType,
-			CalendarBooking calendarBooking, User user)
+			CalendarBooking calendarBooking, User user,
+			ServiceContext serviceContext)
 		throws Exception {
 
 		CalendarBooking parentCalendarBooking =
@@ -138,6 +141,21 @@ public class NotificationTemplateContextFactory {
 			user, calendarBooking.getCalendarBookingId());
 
 		attributes.put("url", calendarBookingURL);
+
+		if (Validator.isNotNull(serviceContext)) {
+			if (Validator.isNotNull(
+					serviceContext.getAttribute("instanceStartTime"))) {
+
+				long instanceStartTimeL = (long)serviceContext.getAttribute(
+					"instanceStartTime");
+
+				String instanceStartTime =
+					dateFormatDateTime.format(instanceStartTimeL) +
+						StringPool.SPACE + userTimezoneDisplayName;
+
+				attributes.put("instanceStartTime", instanceStartTime);
+			}
+		}
 
 		notificationTemplateContext.setAttributes(attributes);
 

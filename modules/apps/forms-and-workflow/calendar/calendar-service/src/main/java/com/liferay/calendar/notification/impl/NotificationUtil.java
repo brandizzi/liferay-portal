@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Time;
@@ -128,7 +129,8 @@ public class NotificationUtil {
 
 	public static void notifyCalendarBookingRecipients(
 			CalendarBooking calendarBooking, NotificationType notificationType,
-			NotificationTemplateType notificationTemplateType, User senderUser)
+			NotificationTemplateType notificationTemplateType, User senderUser,
+			ServiceContext serviceContext)
 		throws Exception {
 
 		NotificationSender notificationSender =
@@ -151,7 +153,7 @@ public class NotificationUtil {
 			NotificationTemplateContext notificationTemplateContext =
 				NotificationTemplateContextFactory.getInstance(
 					notificationType, notificationTemplateType, calendarBooking,
-					recipientUser);
+					recipientUser, serviceContext);
 
 			notificationSender.sendNotification(
 				senderUser.getEmailAddress(), resourceName,
@@ -173,7 +175,7 @@ public class NotificationUtil {
 				NotificationTemplateContext notificationTemplateContext =
 					NotificationTemplateContextFactory.getInstance(
 						notificationType, notificationTemplateType,
-						calendarBooking, user);
+						calendarBooking, user, serviceContext);
 
 				notificationSender.sendNotification(
 					senderUser.getEmailAddress(), senderUser.getFullName(),
@@ -228,7 +230,7 @@ public class NotificationUtil {
 			NotificationTemplateContext notificationTemplateContext =
 				NotificationTemplateContextFactory.getInstance(
 					notificationType, NotificationTemplateType.REMINDER,
-					calendarBooking, user);
+					calendarBooking, user, null);
 
 			notificationSender.sendNotification(
 				user.getEmailAddress(), user.getFullName(),
