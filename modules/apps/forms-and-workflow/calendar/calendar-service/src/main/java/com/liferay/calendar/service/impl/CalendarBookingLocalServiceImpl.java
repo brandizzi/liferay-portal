@@ -581,6 +581,18 @@ public class CalendarBookingLocalServiceImpl
 				recurrenceObj.setCount(0);
 			}
 
+			int instanceIndex = RecurrenceUtil.getIndexOfInstance(
+				calendarBooking.getRecurrence(), calendarBooking.getStartTime(),
+				startTime);
+
+			CalendarBooking calendarBookingInstance =
+				RecurrenceUtil.getCalendarBookingInstance(
+					calendarBooking, instanceIndex + 1);
+
+			if (calendarBookingInstance != null) {
+				notificationTemplateType = NotificationTemplateType.UPDATE;
+			}
+
 			startTimeJCalendar.add(java.util.Calendar.DATE, -1);
 
 			recurrenceObj.setUntilJCalendar(startTimeJCalendar);
