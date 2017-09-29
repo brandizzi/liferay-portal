@@ -207,15 +207,8 @@ public class KaleoDefinitionLocalServiceImpl
 
 		// Kaleo definition version
 
-		List<KaleoDefinitionVersion> kaleoDefinitionVersions =
-			kaleoDefinition.getKaleoDefinitionVersions();
-
-		for (KaleoDefinitionVersion kaleoDefinitionVersion :
-				kaleoDefinitionVersions) {
-
-			kaleoDefinitionVersionLocalService.deleteKaleoDefinitionVersion(
-				kaleoDefinitionVersion);
-		}
+		kaleoDefinitionVersionLocalService.deleteKaleoDefinitionVersions(
+			kaleoDefinition.getKaleoDefinitionVersions());
 	}
 
 	@Override
