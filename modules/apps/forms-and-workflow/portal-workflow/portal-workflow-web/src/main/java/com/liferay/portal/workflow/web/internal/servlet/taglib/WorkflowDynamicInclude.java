@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
+import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -26,6 +27,13 @@ import javax.portlet.RenderResponse;
  * @author Adam Brandizzi
  */
 public interface WorkflowDynamicInclude extends DynamicInclude {
+
+	public String getSearchJspPath();
+
+	public PortletURL getSearchURL(
+		RenderRequest renderRequest, RenderResponse renderResponse);
+
+	public String getTabName();
 
 	public void prepareDispatch(
 			RenderRequest renderRequest, RenderResponse renderResponse)
