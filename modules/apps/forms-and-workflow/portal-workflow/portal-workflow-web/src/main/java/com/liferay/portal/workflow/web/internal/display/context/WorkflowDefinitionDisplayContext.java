@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.AggregatePredicateFilter;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -28,12 +30,15 @@ import com.liferay.portal.kernel.util.PredicateFilter;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowDefinition;
 import com.liferay.portal.kernel.workflow.WorkflowDefinitionManagerUtil;
+import com.liferay.portal.workflow.web.internal.constants.WorkflowDefinitionConstants;
 import com.liferay.portal.workflow.web.internal.display.context.util.WorkflowDefinitionRequestHelper;
 import com.liferay.portal.workflow.web.internal.search.WorkflowDefinitionSearchTerms;
 import com.liferay.portal.workflow.web.internal.util.WorkflowDefinitionPortletUtil;
-import com.liferay.portal.workflow.web.internal.util.filter.WorkflowDefinitionNamePredicateFilter;
+import com.liferay.portal.workflow.web.internal.util.filter.WorkflowDefinitionActivePredicateFilter;
+import com.liferay.portal.workflow.web.internal.util.filter.WorkflowDefinitionDescriptionPredicateFilter;
 import com.liferay.portal.workflow.web.internal.util.filter.WorkflowDefinitionTitlePredicateFilter;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.portlet.RenderRequest;
@@ -45,7 +50,10 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class WorkflowDefinitionDisplayContext {
 
-	public WorkflowDefinitionDisplayContext(RenderRequest renderRequest) {
+	public WorkflowDefinitionDisplayContext(
+		RenderRequest renderRequest, UserLocalService userLocalService) {
+
+		_userLocalService = userLocalService;
 		_workflowDefinitionRequestHelper = new WorkflowDefinitionRequestHelper(
 			renderRequest);
 	}
@@ -61,16 +69,24 @@ public class WorkflowDefinitionDisplayContext {
 		return LanguageUtil.get(request, "no");
 	}
 
+	public String getDescription(WorkflowDefinition workflowDefinition) {
+		return HtmlUtil.escape(workflowDefinition.getDescription());
+	}
+
+	public Date getModifiedDate(WorkflowDefinition workflowDefinition) {
+		return workflowDefinition.getModifiedDate();
+	}
+
 	public String getName(WorkflowDefinition workflowDefinition) {
 		return HtmlUtil.escape(workflowDefinition.getName());
 	}
 
 	public List<WorkflowDefinition> getSearchContainerResults(
-			SearchContainer<WorkflowDefinition> searchContainer)
+			SearchContainer<WorkflowDefinition> searchContainer, int status)
 		throws PortalException {
 
 		List<WorkflowDefinition> workflowDefinitions =
-			WorkflowDefinitionManagerUtil.getWorkflowDefinitions(
+			WorkflowDefinitionManagerUtil.getLatestWorkflowDefinitions(
 				_workflowDefinitionRequestHelper.getCompanyId(),
 				QueryUtil.ALL_POS, QueryUtil.ALL_POS,
 				getWorkflowDefinitionOrderByComparator());
@@ -80,13 +96,13 @@ public class WorkflowDefinitionDisplayContext {
 
 		if (searchTerms.isAdvancedSearch()) {
 			workflowDefinitions = filter(
-				workflowDefinitions, searchTerms.getName(),
-				searchTerms.getTitle(), searchTerms.isAndOperator());
+				workflowDefinitions, searchTerms.getDescription(),
+				searchTerms.getTitle(), status, searchTerms.isAndOperator());
 		}
 		else {
 			workflowDefinitions = filter(
 				workflowDefinitions, searchTerms.getKeywords(),
-				searchTerms.getKeywords(), false);
+				searchTerms.getKeywords(), status, false);
 		}
 
 		searchContainer.setTotal(workflowDefinitions.size());
@@ -110,8 +126,16 @@ public class WorkflowDefinitionDisplayContext {
 			workflowDefinition.getTitle(themeDisplay.getLanguageId()));
 	}
 
-	public String getVersion(WorkflowDefinition workflowDefinition) {
-		return String.valueOf(workflowDefinition.getVersion());
+	public String getUserName(WorkflowDefinition workflowDefinition) {
+		User user = _userLocalService.fetchUser(workflowDefinition.getUserId());
+
+		if ((user == null) || user.isDefaultUser() ||
+			Validator.isNull(user.getFullName())) {
+
+			return null;
+		}
+
+		return user.getFullName();
 	}
 
 	public List<WorkflowDefinition> getWorkflowDefinitions(String name)
@@ -123,34 +147,39 @@ public class WorkflowDefinitionDisplayContext {
 	}
 
 	protected PredicateFilter<WorkflowDefinition> createPredicateFilter(
-		String name, String title, boolean andOperator) {
+		String description, String title, int status, boolean andOperator) {
 
 		AggregatePredicateFilter<WorkflowDefinition> aggregatePredicateFilter =
 			new AggregatePredicateFilter<>(
-				new WorkflowDefinitionNamePredicateFilter(name));
+				new WorkflowDefinitionTitlePredicateFilter(title));
 
 		if (andOperator) {
 			aggregatePredicateFilter.and(
-				new WorkflowDefinitionTitlePredicateFilter(title));
+				new WorkflowDefinitionDescriptionPredicateFilter(description));
 		}
 		else {
 			aggregatePredicateFilter.or(
-				new WorkflowDefinitionTitlePredicateFilter(title));
+				new WorkflowDefinitionDescriptionPredicateFilter(description));
 		}
+
+		aggregatePredicateFilter.and(
+			new WorkflowDefinitionActivePredicateFilter(status));
 
 		return aggregatePredicateFilter;
 	}
 
 	protected List<WorkflowDefinition> filter(
-		List<WorkflowDefinition> workflowDefinitions, String name, String title,
-		boolean andOperator) {
+		List<WorkflowDefinition> workflowDefinitions, String description,
+		String title, int status, boolean andOperator) {
 
-		if (Validator.isNull(name) && Validator.isNull(title)) {
+		if ((status == WorkflowDefinitionConstants.STATUS_ALL) &&
+			Validator.isNull(title) && Validator.isNull(description)) {
+
 			return workflowDefinitions;
 		}
 
 		PredicateFilter<WorkflowDefinition> predicateFilter =
-			createPredicateFilter(name, title, andOperator);
+			createPredicateFilter(description, title, status, andOperator);
 
 		return ListUtil.filter(workflowDefinitions, predicateFilter);
 	}
@@ -172,6 +201,7 @@ public class WorkflowDefinitionDisplayContext {
 				_workflowDefinitionRequestHelper.getLocale());
 	}
 
+	private final UserLocalService _userLocalService;
 	private final WorkflowDefinitionRequestHelper
 		_workflowDefinitionRequestHelper;
 

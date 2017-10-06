@@ -25,15 +25,14 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.kernel.workflow.WorkflowDefinition;
 import com.liferay.portal.kernel.workflow.WorkflowDefinitionFileException;
 import com.liferay.portal.kernel.workflow.WorkflowDefinitionManager;
+import com.liferay.portal.kernel.workflow.WorkflowDefinitionTitleException;
 import com.liferay.portal.kernel.workflow.WorkflowException;
 import com.liferay.portal.workflow.web.internal.constants.WorkflowPortletKeys;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -89,10 +88,14 @@ public class UpdateWorkflowDefinitionMVCActionCommand
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		String name = ParamUtil.getString(actionRequest, "name");
-		int version = ParamUtil.getInteger(actionRequest, "version");
 		Map<Locale, String> titleMap = LocalizationUtil.getLocalizationMap(
 			actionRequest, "title");
+
+		String title = titleMap.get(LocaleUtil.getDefault());
+
+		if (titleMap.isEmpty() || Validator.isNull(title)) {
+			throw new WorkflowDefinitionTitleException();
+		}
 
 		String content = ParamUtil.getString(actionRequest, "content");
 
@@ -100,20 +103,11 @@ public class UpdateWorkflowDefinitionMVCActionCommand
 			throw new WorkflowDefinitionFileException();
 		}
 
-		WorkflowDefinition workflowDefinition =
-			workflowDefinitionManager.getWorkflowDefinition(
-				themeDisplay.getCompanyId(), name, version);
+		validateWorkflowDefinition(content.getBytes());
 
-		if (Objects.equals(workflowDefinition.getContent(), content)) {
-			workflowDefinitionManager.updateTitle(
-				themeDisplay.getCompanyId(), themeDisplay.getUserId(), name,
-				version, getTitle(titleMap));
-		}
-		else {
-			workflowDefinitionManager.deployWorkflowDefinition(
-				themeDisplay.getCompanyId(), themeDisplay.getUserId(),
-				getTitle(titleMap), content.getBytes());
-		}
+		workflowDefinitionManager.deployWorkflowDefinition(
+			themeDisplay.getCompanyId(), themeDisplay.getUserId(),
+			getTitle(titleMap), content.getBytes());
 
 		sendRedirect(actionRequest, actionResponse);
 	}
@@ -140,6 +134,17 @@ public class UpdateWorkflowDefinitionMVCActionCommand
 		}
 
 		return value;
+	}
+
+	protected void validateWorkflowDefinition(byte[] bytes)
+		throws WorkflowDefinitionFileException {
+
+		try {
+			workflowDefinitionManager.validateWorkflowDefinition(bytes);
+		}
+		catch (WorkflowException we) {
+			throw new WorkflowDefinitionFileException(we);
+		}
 	}
 
 	@Reference(target = "(proxy.bean=false)")

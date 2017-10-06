@@ -154,6 +154,19 @@ cache digest.
 - [LPS-73472]: Remove spurious files before recreating symbolic links in the
 `.bin` directories of `node_modules`.
 
+## 3.1.1 - 2017-09-18
+
+### Added
+- [LPS-74770]: Run the `"test"` script (if declared in the `package.json` file)
+when executing the `check` task.
+
+## 3.2.0 - 2017-09-28
+
+### Added
+- [LPS-74933]: Add the ability to merge the existing `package.json` of the
+project with the values provided by the task properties of
+`PublishNodeModuleTask` when publishing a package to the NPM registry.
+
 [LPS-66906]: https://issues.liferay.com/browse/LPS-66906
 [LPS-67023]: https://issues.liferay.com/browse/LPS-67023
 [LPS-67573]: https://issues.liferay.com/browse/LPS-67573
@@ -171,3 +184,5 @@ cache digest.
 [LPS-72340]: https://issues.liferay.com/browse/LPS-72340
 [LPS-73070]: https://issues.liferay.com/browse/LPS-73070
 [LPS-73472]: https://issues.liferay.com/browse/LPS-73472
+[LPS-74770]: https://issues.liferay.com/browse/LPS-74770
+[LPS-74933]: https://issues.liferay.com/browse/LPS-74933

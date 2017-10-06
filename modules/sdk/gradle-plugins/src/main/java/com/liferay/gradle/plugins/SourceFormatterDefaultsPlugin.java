@@ -58,9 +58,6 @@ public class SourceFormatterDefaultsPlugin
 		return _PORTAL_TOOL_NAME;
 	}
 
-	private SourceFormatterDefaultsPlugin() {
-	}
-
 	private void _configureTasksFormatSource(
 		FormatSourceTask formatSourceTask) {
 
@@ -94,6 +91,14 @@ public class SourceFormatterDefaultsPlugin
 		if (Validator.isNotNull(processorThreadCount)) {
 			formatSourceTask.setProcessorThreadCount(
 				Integer.parseInt(processorThreadCount));
+		}
+
+		String showDebugInformation = GradleUtil.getProperty(
+			project, "source.formatter.show.debug.information", (String)null);
+
+		if (Validator.isNotNull(showDebugInformation)) {
+			formatSourceTask.setShowDebugInformation(
+				Boolean.parseBoolean(showDebugInformation));
 		}
 
 		String showDocumentation = GradleUtil.getProperty(
