@@ -139,6 +139,17 @@ public class KaleoDefinitionVersionLocalServiceImpl
 	}
 
 	@Override
+	public void deleteKaleoDefinitionVersion(
+			long companyId, String name, String version)
+		throws PortalException {
+
+		KaleoDefinitionVersion kaleoDefinitionVersion =
+			getKaleoDefinitionVersion(companyId, name, version);
+
+		deleteKaleoDefinitionVersion(kaleoDefinitionVersion);
+	}
+
+	@Override
 	public void deleteKaleoDefinitionVersions(
 			List<KaleoDefinitionVersion> kaleoDefinitionVersions)
 		throws PortalException {
