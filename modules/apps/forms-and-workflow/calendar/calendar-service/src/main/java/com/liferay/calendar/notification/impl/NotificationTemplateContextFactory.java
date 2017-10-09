@@ -146,14 +146,14 @@ public class NotificationTemplateContextFactory {
 			if (Validator.isNotNull(
 					serviceContext.getAttribute("instanceStartTime"))) {
 
-				long instanceStartTimeL = (long)serviceContext.getAttribute(
+				long instanceStartTime = (long)serviceContext.getAttribute(
 					"instanceStartTime");
 
-				String instanceStartTime =
-					dateFormatDateTime.format(instanceStartTimeL) +
+				String instanceStartTimeFormatted =
+					dateFormatDateTime.format(instanceStartTime) +
 						StringPool.SPACE + userTimezoneDisplayName;
 
-				attributes.put("instanceStartTime", instanceStartTime);
+				attributes.put("instanceStartTime", instanceStartTimeFormatted);
 			}
 		}
 
