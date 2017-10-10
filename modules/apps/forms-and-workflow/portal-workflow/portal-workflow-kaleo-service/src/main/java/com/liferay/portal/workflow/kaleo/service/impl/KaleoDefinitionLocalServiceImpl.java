@@ -285,8 +285,15 @@ public class KaleoDefinitionLocalServiceImpl
 			Definition definition, String title, ServiceContext serviceContext)
 		throws PortalException {
 
-		KaleoDefinition kaleoDefinition = getKaleoDefinition(
+		KaleoDefinition kaleoDefinition = fetchKaleoDefinition(
 			definition.getName(), serviceContext);
+
+		if (kaleoDefinition == null) {
+			return addKaleoDefinition(
+				definition.getName(), title, definition.getDescription(),
+				definition.getContent(), definition.getVersion() + 1,
+				serviceContext);
+		}
 
 		return updatedKaleoDefinition(
 			kaleoDefinition.getKaleoDefinitionId(), title,
