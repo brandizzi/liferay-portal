@@ -109,7 +109,7 @@ public class KaleoDefinitionVersionLocalServiceTest {
 
 		KaleoDefinition kaleoDefinition = addKaleoDefinition();
 
-		updateKaleoDefinition(kaleoDefinition);
+		kaleoDefinition = updateKaleoDefinition(kaleoDefinition);
 
 		deactivateKaleoDefinition(kaleoDefinition);
 
