@@ -16,6 +16,7 @@ package com.liferay.portal.workflow.kaleo.upgrade.v1_4_1.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBInspector;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -37,9 +38,14 @@ import com.liferay.portal.workflow.kaleo.service.KaleoDefinitionVersionLocalServ
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 
+import java.io.IOException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+
+import java.util.function.BiConsumer;
 
 import org.junit.After;
 import org.junit.Before;
@@ -68,6 +74,8 @@ public class UpgradeKaleoDefinitionVersionTest {
 		_db = DBManagerUtil.getDB();
 
 		setUpUpgradeKaleoDefinitionVersion();
+
+		setUpOldColumnsAndIndexes();
 	}
 
 	@After
@@ -82,6 +90,44 @@ public class UpgradeKaleoDefinitionVersionTest {
 		_upgradeKaleoDefinitionVersion.upgrade();
 
 		getKaleoDefinitionVersion(_name, 1);
+	}
+
+	protected void addColumn(String table, String column) throws Exception {
+		addColumn(table, column, null);
+	}
+
+	protected void addColumn(
+			String table, String column, BiConsumer<String, String> postProcess)
+		throws Exception {
+
+		if (!_dbInspector.hasColumn(table, column)) {
+			_db.runSQLTemplateString(
+				"alter table " + table + " add " + column + " LONG;", false,
+				true);
+
+			if (postProcess != null) {
+				postProcess.accept(table, column);
+			}
+		}
+	}
+
+	protected void addColumnAndIndex(String table, String column, String index)
+		throws Exception {
+
+		addColumn(
+			table, column,
+			(table2, column2) -> addIndex(table2, index, column2));
+	}
+
+	protected void addIndex(String table, String index, String... columns) {
+		try {
+			_db.runSQL(
+				"create index " + index + " on " + table + " (" +
+					StringUtil.merge(columns) + ");");
+		}
+		catch (IOException | SQLException e) {
+			throw new AssertionError(e);
+		}
 	}
 
 	protected void addKaleoDefinition(String name, int version)
@@ -139,6 +185,56 @@ public class UpgradeKaleoDefinitionVersionTest {
 		return version + StringPool.PERIOD + 0;
 	}
 
+	protected void setUpOldColumnsAndIndexes() throws Exception {
+		try (Connection con = DataAccess.getUpgradeOptimizedConnection()) {
+			_dbInspector = new DBInspector(con);
+
+			addColumn("KaleoDefinition", "startKaleoNodeId");
+
+			addColumnAndIndex("KaleoAction", "kaleoDefinitionId", "IX_F95A622");
+			addColumnAndIndex(
+				"KaleoCondition", "kaleoDefinitionId", "IX_DC978A5D");
+			addColumnAndIndex(
+				"KaleoInstance", "kaleoDefinitionId", "IX_ACF16238");
+			addColumnAndIndex(
+				"KaleoInstanceToken", "kaleoDefinitionId", "IX_7BDB04B4");
+			addColumnAndIndex("KaleoLog", "kaleoDefinitionId", "IX_6C64B7D4");
+
+			addColumn(
+				"KaleoNode", "kaleoDefinitionId",
+				(table, column) -> {
+					addIndex("KaleoNode", "IX_32E94DD6", "kaleoDefinitionId");
+					addIndex(
+						"KaleoNode", "IX_F28C443E", "companyId",
+						"kaleoDefinitionId");
+				});
+
+			addColumnAndIndex(
+				"KaleoNotification", "kaleoDefinitionId", "IX_4B968E8D");
+			addColumnAndIndex(
+				"KaleoNotificationRecipient", "kaleoDefinitionId",
+				"IX_AA6697EA");
+			addColumnAndIndex("KaleoTask", "kaleoDefinitionId", "IX_3FFA633");
+			addColumnAndIndex(
+				"KaleoTaskAssignment", "kaleoDefinitionId", "IX_575C03A6");
+			addColumnAndIndex(
+				"KaleoTaskAssignmentInstance", "kaleoDefinitionId",
+				"IX_C851011");
+			addColumnAndIndex(
+				"KaleoTaskForm", "kaleoDefinitionId", "IX_60D1964F");
+			addColumnAndIndex(
+				"KaleoTaskFormInstance", "kaleoDefinitionId", "IX_B975E9BA");
+			addColumnAndIndex(
+				"KaleoTaskInstanceToken", "kaleoDefinitionId", "IX_608E9519");
+			addColumn("KaleoTimer", "kaleoDefinitionId");
+			addColumn("KaleoTimerInstanceToken", "kaleoDefinitionId");
+			addColumnAndIndex(
+				"KaleoTransition", "kaleoDefinitionId", "IX_479F3063");
+
+			_dbInspector = null;
+		}
+	}
+
 	protected void setUpUpgradeKaleoDefinitionVersion() {
 		Registry registry = RegistryUtil.getRegistry();
 
@@ -172,6 +268,7 @@ public class UpgradeKaleoDefinitionVersionTest {
 	}
 
 	private DB _db;
+	private DBInspector _dbInspector;
 
 	@DeleteAfterTestRun
 	private Group _group;
