@@ -91,18 +91,13 @@ public class NotificationTemplateContextFactory {
 
 		Map<String, Serializable> attributes = new HashMap<>();
 
-		TimeZone userTimezone = user.getTimeZone();
+		Format userDateTimeFormat = _getUserDateTimeFormat(
+			calendarBooking, user);
 
-		Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(
-			user.getLocale(),
-			CalendarUtil.getCalendarBookingDisplayTimeZone(
-				calendarBooking, userTimezone));
-
-		String userTimezoneDisplayName = userTimezone.getDisplayName(
-			false, TimeZone.SHORT, user.getLocale());
+		String userTimezoneDisplayName = _getUserTimezoneDisplayName(user);
 
 		String endTime =
-			dateFormatDateTime.format(calendarBooking.getEndTime()) +
+			userDateTimeFormat.format(calendarBooking.getEndTime()) +
 				StringPool.SPACE + userTimezoneDisplayName;
 
 		attributes.put("endTime", endTime);
@@ -129,7 +124,7 @@ public class NotificationTemplateContextFactory {
 				"javax.portlet.title.".concat(CalendarPortletKeys.CALENDAR)));
 
 		String startTime =
-			dateFormatDateTime.format(calendarBooking.getStartTime()) +
+			userDateTimeFormat.format(calendarBooking.getStartTime()) +
 				StringPool.SPACE + userTimezoneDisplayName;
 
 		attributes.put("startTime", startTime);
@@ -163,15 +158,20 @@ public class NotificationTemplateContextFactory {
 				long instanceStartTime = (long)serviceContext.getAttribute(
 					"instanceStartTime");
 
+				Format userDateTimeFormat = _getUserDateTimeFormat(
+					calendarBooking, user);
+
+				String userTimezoneDisplayName = _getUserTimezoneDisplayName(
+					user);
+
 				String instanceStartTimeFormatted =
-					dateFormatDateTime.format(instanceStartTime) +
+					userDateTimeFormat.format(instanceStartTime) +
 						StringPool.SPACE + userTimezoneDisplayName;
 
-				attributes.put("instanceStartTime", instanceStartTimeFormatted);
+				notificationTemplateContext.setAttribute(
+					"instanceStartTime", instanceStartTimeFormatted);
 			}
 		}
-
-		notificationTemplateContext.setAttributes(attributes);
 
 		return notificationTemplateContext;
 	}
@@ -224,6 +224,28 @@ public class NotificationTemplateContextFactory {
 		Company company = CompanyLocalServiceUtil.getCompany(companyId);
 
 		return company.getPortalURL(groupId);
+	}
+
+	private static Format _getUserDateTimeFormat(
+		CalendarBooking calendarBooking, User user) {
+
+		TimeZone userTimezone = user.getTimeZone();
+
+		Format dateTimeFormat = FastDateFormatFactoryUtil.getDateTime(
+			user.getLocale(),
+			CalendarUtil.getCalendarBookingDisplayTimeZone(
+				calendarBooking, userTimezone));
+
+		return dateTimeFormat;
+	}
+
+	private static String _getUserTimezoneDisplayName(User user) {
+		TimeZone userTimezone = user.getTimeZone();
+
+		String userTimezoneDisplayName = userTimezone.getDisplayName(
+			false, TimeZone.SHORT, user.getLocale());
+
+		return userTimezoneDisplayName;
 	}
 
 	private static PortletConfig _portletConfig;
