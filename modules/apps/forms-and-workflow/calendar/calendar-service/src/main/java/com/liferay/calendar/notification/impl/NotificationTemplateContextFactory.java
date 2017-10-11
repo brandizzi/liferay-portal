@@ -59,8 +59,7 @@ public class NotificationTemplateContextFactory {
 	public static NotificationTemplateContext getInstance(
 			NotificationType notificationType,
 			NotificationTemplateType notificationTemplateType,
-			CalendarBooking calendarBooking, User user,
-			ServiceContext serviceContext)
+			CalendarBooking calendarBooking, User user)
 		throws Exception {
 
 		CalendarBooking parentCalendarBooking =
@@ -141,6 +140,21 @@ public class NotificationTemplateContextFactory {
 			user, calendarBooking.getCalendarBookingId());
 
 		attributes.put("url", calendarBookingURL);
+
+		notificationTemplateContext.setAttributes(attributes);
+
+		return notificationTemplateContext;
+	}
+
+	public static NotificationTemplateContext getInstance(
+			NotificationType notificationType,
+			NotificationTemplateType notificationTemplateType,
+			CalendarBooking calendarBooking, User user,
+			ServiceContext serviceContext)
+		throws Exception {
+
+		NotificationTemplateContext notificationTemplateContext = getInstance(
+			notificationType, notificationTemplateType, calendarBooking, user);
 
 		if (Validator.isNotNull(serviceContext)) {
 			if (Validator.isNotNull(

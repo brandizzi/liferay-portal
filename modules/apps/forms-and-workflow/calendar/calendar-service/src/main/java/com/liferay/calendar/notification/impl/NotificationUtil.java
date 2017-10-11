@@ -129,6 +129,16 @@ public class NotificationUtil {
 
 	public static void notifyCalendarBookingRecipients(
 			CalendarBooking calendarBooking, NotificationType notificationType,
+			NotificationTemplateType notificationTemplateType, User senderUser)
+		throws Exception {
+
+		notifyCalendarBookingRecipients(
+			calendarBooking, notificationType, notificationTemplateType,
+			senderUser, null);
+	}
+
+	public static void notifyCalendarBookingRecipients(
+			CalendarBooking calendarBooking, NotificationType notificationType,
 			NotificationTemplateType notificationTemplateType, User senderUser,
 			ServiceContext serviceContext)
 		throws Exception {
@@ -230,7 +240,7 @@ public class NotificationUtil {
 			NotificationTemplateContext notificationTemplateContext =
 				NotificationTemplateContextFactory.getInstance(
 					notificationType, NotificationTemplateType.REMINDER,
-					calendarBooking, user, null);
+					calendarBooking, user);
 
 			notificationSender.sendNotification(
 				user.getEmailAddress(), user.getFullName(),
