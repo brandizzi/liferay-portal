@@ -12,10 +12,11 @@
  * details.
  */
 
-package com.liferay.portal.workflow.kaleo.upgrade.v1_3_4.test;
+package com.liferay.portal.workflow.kaleo.upgrade.v1_4_1.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.dao.db.DB;
+import com.liferay.portal.kernel.dao.db.DBInspector;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -65,7 +66,11 @@ public class UpgradeKaleoDefinitionVersionTest {
 		_name = StringUtil.randomString();
 		_timestamp = new Timestamp(System.currentTimeMillis());
 
+		_db = DBManagerUtil.getDB();
+
 		setUpUpgradeKaleoDefinitionVersion();
+
+		setUpOldColumnsAndIndexes();
 	}
 
 	@After
@@ -80,6 +85,33 @@ public class UpgradeKaleoDefinitionVersionTest {
 		_upgradeKaleoDefinitionVersion.upgrade();
 
 		getKaleoDefinitionVersion(_name, 1);
+	}
+
+	protected void addColumn(String table, String column) throws Exception {
+		addColumnAndIndexes(table, column, new String[0]);
+	}
+
+	protected void addColumnAndIndex(String table, String column, String index)
+		throws Exception {
+
+		addColumnAndIndexes(table, column, new String[] {index});
+	}
+
+	protected void addColumnAndIndexes(
+			String table, String column, String[] indexes)
+		throws Exception {
+
+		if (!_dbInspector.hasColumn(table, column)) {
+			_db.runSQLTemplateString(
+				"alter table " + table + " add column " + column + " LONG;",
+				false, true);
+
+			for (String index : indexes) {
+				_db.runSQL(
+					"create index " + index + " on " + table +
+						" (kaleoDefinitionId);");
+			}
+		}
 	}
 
 	protected void addKaleoDefinition(String name, int version)
@@ -111,19 +143,18 @@ public class UpgradeKaleoDefinitionVersionTest {
 			ps.setString(11, StringUtil.randomString());
 			ps.setInt(12, version);
 			ps.setBoolean(13, true);
-			ps.setLong(14, 0);
+			ps.setLong(14, RandomTestUtil.randomLong());
 
 			ps.executeUpdate();
 		}
 	}
 
 	protected void deleteKaleoDefinitionVersion(String name) throws Exception {
-		DB db = DBManagerUtil.getDB();
+		_db.runSQLTemplateString(
+			"delete from KaleoDefinitionVersion where name = '" + name + "'",
+			false, true);
 
-		db.runSQL(
-			"delete from KaleoDefinitionVersion where name = '" + name + "'");
-
-		db.runSQL("delete from KaleoDefinition where name = '" + name + "'");
+		_db.runSQL("delete from KaleoDefinition where name = '" + name + "'");
 	}
 
 	protected KaleoDefinitionVersion getKaleoDefinitionVersion(
@@ -136,6 +167,49 @@ public class UpgradeKaleoDefinitionVersionTest {
 
 	protected String getVersion(int version) {
 		return version + StringPool.PERIOD + 0;
+	}
+
+	protected void setUpOldColumnsAndIndexes() throws Exception {
+		try (Connection con = DataAccess.getUpgradeOptimizedConnection()) {
+			_dbInspector = new DBInspector(con);
+
+			addColumn("KaleoDefinition", "startKaleoNodeId");
+
+			addColumnAndIndex("KaleoAction", "kaleoDefinitionId", "IX_F95A622");
+			addColumnAndIndex(
+				"KaleoCondition", "kaleoDefinitionId", "IX_DC978A5D");
+			addColumnAndIndex(
+				"KaleoInstance", "kaleoDefinitionId", "IX_ACF16238");
+			addColumnAndIndex(
+				"KaleoInstanceToken", "kaleoDefinitionId", "IX_7BDB04B4");
+			addColumnAndIndex("KaleoLog", "kaleoDefinitionId", "IX_6C64B7D4");
+			addColumnAndIndexes(
+				"KaleoNode", "kaleoDefinitionId",
+				new String[] {"IX_32E94DD6", "IX_F28C443E"});
+			addColumnAndIndex(
+				"KaleoNotification", "kaleoDefinitionId", "IX_4B968E8D");
+			addColumnAndIndex(
+				"KaleoNotificationRecipient", "kaleoDefinitionId",
+				"IX_AA6697EA");
+			addColumnAndIndex("KaleoTask", "kaleoDefinitionId", "IX_3FFA633");
+			addColumnAndIndex(
+				"KaleoTaskAssignment", "kaleoDefinitionId", "IX_575C03A6");
+			addColumnAndIndex(
+				"KaleoTaskAssignmentInstance", "kaleoDefinitionId",
+				"IX_C851011");
+			addColumnAndIndex(
+				"KaleoTaskForm", "kaleoDefinitionId", "IX_60D1964F");
+			addColumnAndIndex(
+				"KaleoTaskFormInstance", "kaleoDefinitionId", "IX_B975E9BA");
+			addColumnAndIndex(
+				"KaleoTaskInstanceToken", "kaleoDefinitionId", "IX_608E9519");
+			addColumn("KaleoTimer", "kaleoDefinitionId");
+			addColumn("KaleoTimerInstanceToken", "kaleoDefinitionId");
+			addColumnAndIndex(
+				"KaleoTransition", "kaleoDefinitionId", "IX_479F3063");
+
+			_dbInspector = null;
+		}
 	}
 
 	protected void setUpUpgradeKaleoDefinitionVersion() {
@@ -169,6 +243,9 @@ public class UpgradeKaleoDefinitionVersionTest {
 
 			});
 	}
+
+	private DB _db;
+	private DBInspector _dbInspector;
 
 	@DeleteAfterTestRun
 	private Group _group;
