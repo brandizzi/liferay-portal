@@ -112,7 +112,8 @@ public class LocalGitSyncUtil {
 		GitWorkingDirectory.Branch localBranch,
 		GitWorkingDirectory.Remote remote, long timestamp) {
 
-		gitWorkingDirectory.pushToRemote(true, remote);
+		gitWorkingDirectory.pushToRemote(
+			true, localBranch, localBranch.getName(), remote);
 
 		gitWorkingDirectory.pushToRemote(
 			true, localBranch,
@@ -968,6 +969,6 @@ public class LocalGitSyncUtil {
 
 	private static final String _cacheBranchRegex = ".*cache-.+-.+-.+-[^-]+";
 	private static final Pattern _cacheTimestampBranchPattern = Pattern.compile(
-		"(?<name>cache-.*)-(?<timestamp>\\d+)");
+		"(?<name>cache-[^-]+-[^-]+-[^-]+-[^-]+)-(?<timestamp>\\d+)");
 
 }

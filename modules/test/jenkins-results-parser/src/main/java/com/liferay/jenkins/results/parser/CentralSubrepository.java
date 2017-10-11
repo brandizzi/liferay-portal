@@ -43,8 +43,16 @@ public class CentralSubrepository {
 
 		_subrepositoryName = _getSubrepositoryName();
 
-		_subrepositoryDirectory =
-			"/opt/dev/projects/github/" + _subrepositoryName + "-private";
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("/opt/dev/projects/github/");
+		sb.append(_subrepositoryName);
+
+		if (!_subrepositoryName.endsWith("-private")) {
+			sb.append("-private");
+		}
+
+		_subrepositoryDirectory = sb.toString();
 
 		_subrepositoryUpstreamBranchName =
 			_getSubrepositoryUpstreamBranchName();
@@ -53,9 +61,10 @@ public class CentralSubrepository {
 		String tempBranchName = "temp-" + System.currentTimeMillis();
 
 		GitWorkingDirectory gitWorkingDirectory = new GitWorkingDirectory(
-			"master", _subrepositoryDirectory);
+			_subrepositoryUpstreamBranchName, _subrepositoryDirectory,
+			_subrepositoryName);
 
-		GitWorkingDirectory.Branch localMasterBranch = null;
+		GitWorkingDirectory.Branch localUpstreamBranch = null;
 		GitWorkingDirectory.Branch tempBranch = null;
 
 		try {
@@ -66,17 +75,19 @@ public class CentralSubrepository {
 			GitWorkingDirectory.Remote upstreamRemote =
 				gitWorkingDirectory.getRemote("upstream");
 
-			localMasterBranch = gitWorkingDirectory.getBranch("master", null);
+			localUpstreamBranch = gitWorkingDirectory.getBranch(
+				_subrepositoryUpstreamBranchName, null);
 
 			gitWorkingDirectory.fetch(
-				localMasterBranch,
-				gitWorkingDirectory.getBranch("master", upstreamRemote));
+				localUpstreamBranch,
+				gitWorkingDirectory.getBranch(
+					_subrepositoryUpstreamBranchName, upstreamRemote));
 		}
 		finally {
-			if ((localMasterBranch != null) && (tempBranch != null) &&
+			if ((localUpstreamBranch != null) && (tempBranch != null) &&
 				gitWorkingDirectory.branchExists(tempBranch.getName(), null)) {
 
-				gitWorkingDirectory.checkoutBranch(localMasterBranch);
+				gitWorkingDirectory.checkoutBranch(localUpstreamBranch);
 
 				gitWorkingDirectory.deleteBranch(tempBranch);
 			}
@@ -150,13 +161,22 @@ public class CentralSubrepository {
 			_subrepositoryName, "/commits/", subrepositoryUpstreamCommit,
 			"/statuses");
 
-		JSONArray statusesJSONArray = new JSONArray(
-			JenkinsResultsParserUtil.toString(url, true));
+		for (int i = 0; i < 15; i++) {
+			JSONArray statusesJSONArray = new JSONArray(
+				JenkinsResultsParserUtil.toString(
+					JenkinsResultsParserUtil.combine(
+						url, "?page=", String.valueOf(i + 1)),
+					true));
 
-		if (statusesJSONArray != null) {
-			for (int i = 0; i < statusesJSONArray.length(); i++) {
+			if ((statusesJSONArray == null) ||
+				(statusesJSONArray.length() == 0)) {
+
+				break;
+			}
+
+			for (int j = 0; j < statusesJSONArray.length(); j++) {
 				JSONObject statusesJSONObject = statusesJSONArray.getJSONObject(
-					i);
+					j);
 
 				String context = statusesJSONObject.getString("context");
 
