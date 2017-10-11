@@ -581,15 +581,7 @@ public class CalendarBookingLocalServiceImpl
 				recurrenceObj.setCount(0);
 			}
 
-			int instanceIndex = RecurrenceUtil.getIndexOfInstance(
-				calendarBooking.getRecurrence(), calendarBooking.getStartTime(),
-				startTime);
-
-			CalendarBooking calendarBookingInstance =
-				RecurrenceUtil.getCalendarBookingInstance(
-					calendarBooking, instanceIndex + 1);
-
-			if (calendarBookingInstance != null) {
+			if (hasFollowingInstances(calendarBooking, startTime)) {
 				notificationTemplateType = NotificationTemplateType.UPDATE;
 			}
 
@@ -2023,6 +2015,26 @@ public class CalendarBookingLocalServiceImpl
 		}
 
 		return unmodifiedAttributesNames;
+	}
+
+	protected boolean hasFollowingInstances(
+		CalendarBooking calendarBooking, long startTime) {
+
+		boolean followingInstances = false;
+
+		int instanceIndex = RecurrenceUtil.getIndexOfInstance(
+			calendarBooking.getRecurrence(), calendarBooking.getStartTime(),
+			startTime);
+
+		CalendarBooking calendarBookingInstance =
+			RecurrenceUtil.getCalendarBookingInstance(
+				calendarBooking, instanceIndex + 1);
+
+		if (calendarBookingInstance != null) {
+			followingInstances = true;
+		}
+
+		return followingInstances;
 	}
 
 	protected boolean isCalendarResourceStaged(
