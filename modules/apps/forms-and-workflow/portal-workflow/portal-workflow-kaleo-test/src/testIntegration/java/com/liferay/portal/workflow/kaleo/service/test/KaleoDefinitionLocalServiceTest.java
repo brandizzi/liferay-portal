@@ -110,7 +110,7 @@ public class KaleoDefinitionLocalServiceTest {
 
 		KaleoDefinition kaleoDefinition = addKaleoDefinition();
 
-		updateKaleoDefinition(kaleoDefinition);
+		kaleoDefinition = updateKaleoDefinition(kaleoDefinition);
 
 		deactivateKaleoDefinition(kaleoDefinition);
 
@@ -148,8 +148,7 @@ public class KaleoDefinitionLocalServiceTest {
 		throws PortalException {
 
 		KaleoDefinitionLocalServiceUtil.deleteKaleoDefinition(
-			kaleoDefinition.getName(), kaleoDefinition.getVersion(),
-			_serviceContext);
+			kaleoDefinition.getName(), _serviceContext);
 	}
 
 	protected String read(String name) throws IOException {
