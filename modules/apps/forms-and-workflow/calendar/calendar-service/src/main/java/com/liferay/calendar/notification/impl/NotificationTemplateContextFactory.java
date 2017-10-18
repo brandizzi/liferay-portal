@@ -134,8 +134,7 @@ public class NotificationTemplateContextFactory {
 
 		attributes.put("title", calendarBooking.getTitle(user.getLocale()));
 
-		String calendarBookingURL = _getCalendarBookingURL(
-			user, calendarBooking.getCalendarBookingId());
+		String calendarBookingURL = _getCalendarBookingURL(calendarBooking);
 
 		attributes.put("url", calendarBookingURL);
 
@@ -153,17 +152,20 @@ public class NotificationTemplateContextFactory {
 	}
 
 	private static String _getCalendarBookingURL(
-			User user, long calendarBookingId)
+			CalendarBooking calendarBooking)
 		throws PortalException {
 
-		Group group = GroupLocalServiceUtil.getGroup(
-			user.getCompanyId(), GroupConstants.GUEST);
+		CalendarBooking parentCalendarBooking =
+			calendarBooking.getParentCalendarBooking();
 
-		Layout layout = LayoutLocalServiceUtil.fetchLayout(
-			group.getDefaultPublicPlid());
+		Group group = GroupLocalServiceUtil.getGroup(
+			parentCalendarBooking.getGroupId());
 
 		String portalURL = _getPortalURL(
 			group.getCompanyId(), group.getGroupId());
+
+		Layout layout = LayoutLocalServiceUtil.getLayout(
+			group.getDefaultPublicPlid());
 
 		String layoutActualURL = PortalUtil.getLayoutActualURL(layout);
 
@@ -181,7 +183,8 @@ public class NotificationTemplateContextFactory {
 		url = HttpUtil.addParameter(
 			url, "p_p_state", WindowState.MAXIMIZED.toString());
 		url = HttpUtil.addParameter(
-			url, namespace + "calendarBookingId", calendarBookingId);
+			url, namespace + "calendarBookingId",
+			calendarBooking.getCalendarBookingId());
 
 		return url;
 	}
