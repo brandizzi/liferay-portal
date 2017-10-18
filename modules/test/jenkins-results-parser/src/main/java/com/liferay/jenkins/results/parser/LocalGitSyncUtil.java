@@ -191,10 +191,10 @@ public class LocalGitSyncUtil {
 	}
 
 	protected static void checkoutUpstreamBranch(
-		GitWorkingDirectory gitWorkingDirectory) {
+		GitWorkingDirectory gitWorkingDirectory, String upstreamBranchSHA) {
 
 		GitWorkingDirectory.Branch localUpstreamBranch =
-			updateLocalUpstreamBranch(gitWorkingDirectory);
+			updateLocalUpstreamBranch(gitWorkingDirectory, upstreamBranchSHA);
 
 		gitWorkingDirectory.checkoutBranch(localUpstreamBranch);
 	}
@@ -676,12 +676,13 @@ public class LocalGitSyncUtil {
 					gitWorkingDirectory.deleteBranch(cacheBranchName, null);
 
 					gitWorkingDirectory.createLocalBranch(
-						cacheBranchName, true, remoteCacheBranch.getSha());
+						cacheBranchName, true, remoteCacheBranch.getSHA());
 
 					if (!gitWorkingDirectory.branchExists(
 							upstreamBranchName, null)) {
 
-						updateLocalUpstreamBranch(gitWorkingDirectory);
+						updateLocalUpstreamBranch(
+							gitWorkingDirectory, upstreamBranchSHA);
 					}
 
 					updateCacheBranchTimestamp(
@@ -705,7 +706,8 @@ public class LocalGitSyncUtil {
 					gitWorkingDirectory.getBranch(
 						senderBranchName, senderRemote));
 
-				updateLocalUpstreamBranch(gitWorkingDirectory);
+				updateLocalUpstreamBranch(
+					gitWorkingDirectory, upstreamBranchSHA);
 
 				gitWorkingDirectory.createLocalBranch(
 					cacheBranchName, true, senderBranchSHA);
@@ -761,7 +763,8 @@ public class LocalGitSyncUtil {
 					gitWorkingDirectory.checkoutBranch(originalBranch);
 				}
 				else {
-					checkoutUpstreamBranch(gitWorkingDirectory);
+					checkoutUpstreamBranch(
+						gitWorkingDirectory, upstreamBranchSHA);
 				}
 
 				gitWorkingDirectory.deleteBranch(cacheBranchName, null);
@@ -874,7 +877,7 @@ public class LocalGitSyncUtil {
 						gitWorkingDirectory.checkoutBranch(currentBranch);
 					}
 					else {
-						checkoutUpstreamBranch(gitWorkingDirectory);
+						checkoutUpstreamBranch(gitWorkingDirectory, null);
 					}
 
 					gitWorkingDirectory.deleteBranch(newTimestampBranch);
@@ -890,7 +893,7 @@ public class LocalGitSyncUtil {
 	}
 
 	protected static GitWorkingDirectory.Branch updateLocalUpstreamBranch(
-		GitWorkingDirectory gitWorkingDirectory) {
+		GitWorkingDirectory gitWorkingDirectory, String upstreamBranchSHA) {
 
 		String upstreamBranchName = gitWorkingDirectory.getUpstreamBranchName();
 
@@ -901,11 +904,25 @@ public class LocalGitSyncUtil {
 		GitWorkingDirectory.Branch localUpstreamBranch =
 			gitWorkingDirectory.getBranch(upstreamBranchName, null);
 
-		String localUpstreamBranchSha = localUpstreamBranch.getSha();
+		if (localUpstreamBranch == null) {
+			localUpstreamBranch = gitWorkingDirectory.createLocalBranch(
+				upstreamBranchName);
 
-		String remoteUpstreamBranchSha = remoteUpstreamBranch.getSha();
+			gitWorkingDirectory.fetch(
+				localUpstreamBranch, remoteUpstreamBranch);
+		}
 
-		if (localUpstreamBranchSha.equals(remoteUpstreamBranchSha)) {
+		String localUpstreamBranchSHA = localUpstreamBranch.getSHA();
+
+		String remoteUpstreamBranchSHA = remoteUpstreamBranch.getSHA();
+
+		if ((upstreamBranchSHA != null) &&
+			!remoteUpstreamBranchSHA.equals(upstreamBranchSHA)) {
+
+			remoteUpstreamBranchSHA = upstreamBranchSHA;
+		}
+
+		if (localUpstreamBranchSHA.equals(remoteUpstreamBranchSHA)) {
 			return localUpstreamBranch;
 		}
 
@@ -923,15 +940,14 @@ public class LocalGitSyncUtil {
 
 		try {
 			tempBranch = gitWorkingDirectory.createLocalBranch(
-				tempBranchName, true, remoteUpstreamBranch.getSha());
+				tempBranchName, true, remoteUpstreamBranchSHA);
 
 			gitWorkingDirectory.checkoutBranch(tempBranch, "-f");
 
 			gitWorkingDirectory.deleteBranch(upstreamBranchName, null);
 
 			localUpstreamBranch = gitWorkingDirectory.createLocalBranch(
-				remoteUpstreamBranch.getName(), true,
-				remoteUpstreamBranch.getSha());
+				remoteUpstreamBranch.getName(), true, remoteUpstreamBranchSHA);
 
 			gitWorkingDirectory.checkoutBranch(localUpstreamBranch);
 		}

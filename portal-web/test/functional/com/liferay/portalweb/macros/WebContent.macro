@@ -371,6 +371,8 @@
 
 		<var method="StringUtil#replace('${dmDocumentTitle}', ' ', '+')" name="key_imageFileName" />
 
+		<execute function="Pause" locator1="1000" />
+
 		<execute function="Click" locator1="ItemSelector#SELECT_FILE_IMAGE_PREVIEW" />
 
 		<execute function="SelectFrameTop" value1="relative=top" />
@@ -593,7 +595,7 @@
 		</if>
 
 		<if>
-			<isset var="WebContentSelectWCFile" />
+			<isset var="webContentSelectWCFile" />
 			<then>
 				<execute function="AssertClick" locator1="DDLEditRecord#WEB_CONTENT_CHOOSE_FROM_WEB_CONTENT_LIBRARY_BUTTON" value1="Select">
 					<var name="key_fieldName" value="${fieldName}" />
@@ -601,8 +603,8 @@
 
 				<execute function="SelectFrame" locator1="IFrame#DIALOG" />
 
-				<execute function="AssertClick" locator1="Link#WEB_CONTENT_ARTICLE" value1="${WebContentSelectWCFile}">
-					<var name="key_webContentTitle" value="${WebContentSelectWCFile}" />
+				<execute function="AssertClick" locator1="Link#WEB_CONTENT_ARTICLE" value1="${webContentSelectWCFile}">
+					<var name="key_webContentTitle" value="${webContentSelectWCFile}" />
 				</execute>
 
 				<execute function="SelectFrame" value1="relative=top" />
@@ -1999,7 +2001,15 @@
 			</else>
 		</if>
 
-		<execute function="AssertTextEquals#assertPartialText" locator1="WC#ENTRY_DESCRIPTIVE_TITLE" value1="${webContentTitle}" />
+		<if>
+			<equals arg1="${onLive}" arg2="true" />
+			<then>
+				<execute function="AssertTextEquals#assertPartialText" locator1="WC#ENTRY_DESCRIPTIVE_TITLE_ON_LIVE" value1="${webContentTitle}" />
+			</then>
+			<else>
+				<execute function="AssertTextEquals#assertPartialText" locator1="WC#ENTRY_DESCRIPTIVE_TITLE" value1="${webContentTitle}" />
+			</else>
+		</if>
 	</command>
 
 	<command name="viewTranslation">
