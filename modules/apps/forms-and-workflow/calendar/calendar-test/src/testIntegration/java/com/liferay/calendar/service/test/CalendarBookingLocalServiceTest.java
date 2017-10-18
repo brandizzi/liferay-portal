@@ -1766,6 +1766,64 @@ public class CalendarBookingLocalServiceTest {
 	}
 
 	@Test
+	public void testStagingCalendarBookingDoesNotSendReminderNotification()
+		throws Exception {
+
+		ServiceContext serviceContext = createServiceContext();
+
+		_liveGroup = GroupTestUtil.addGroup();
+
+		Calendar liveCalendar = CalendarTestUtil.getDefaultCalendar(_liveGroup);
+
+		CalendarStagingTestUtil.enableLocalStaging(_liveGroup, true);
+
+		Calendar stagingCalendar = CalendarStagingTestUtil.getStagingCalendar(
+			_liveGroup, liveCalendar);
+
+		Assert.assertNotNull(stagingCalendar);
+
+		CalendarStagingTestUtil.publishLayouts(_liveGroup, true);
+
+		long startTime = System.currentTimeMillis() + (Time.MINUTE * 2);
+
+		long endTime = startTime + Time.HOUR;
+
+		long firstReminder = Time.MINUTE;
+
+		serviceContext.setWorkflowAction(WorkflowConstants.ACTION_PUBLISH);
+
+		CalendarBooking calendarBooking =
+			CalendarBookingTestUtil.addRegularCalendarBooking(stagingCalendar);
+
+		calendarBooking = CalendarBookingLocalServiceUtil.updateCalendarBooking(
+			calendarBooking.getUserId(), calendarBooking.getCalendarBookingId(),
+			stagingCalendar.getCalendarId(), calendarBooking.getTitleMap(),
+			calendarBooking.getDescriptionMap(), calendarBooking.getLocation(),
+			startTime, endTime, calendarBooking.isAllDay(),
+			calendarBooking.getRecurrence(), firstReminder,
+			NotificationType.EMAIL.getValue(), 0,
+			NotificationType.EMAIL.getValue(), serviceContext);
+
+		CalendarBookingLocalServiceUtil.updateStatus(
+			_user.getUserId(), calendarBooking,
+			WorkflowConstants.STATUS_APPROVED, serviceContext);
+
+		CalendarStagingTestUtil.publishLayouts(_liveGroup, true);
+
+		CalendarBookingLocalServiceUtil.checkCalendarBookings();
+
+		String mailMessageSubject =
+			"Calendar: Event Reminder for " + StringPool.QUOTE +
+				calendarBooking.getTitle(LocaleUtil.getDefault()) +
+					StringPool.QUOTE;
+
+		List<MailMessage> mailMessages = MailServiceTestUtil.getMailMessages(
+			"Subject", mailMessageSubject);
+
+		Assert.assertEquals(mailMessages.toString(), 1, mailMessages.size());
+	}
+
+	@Test
 	public void testStagingCalendarResourceShouldNotBeInviteToLiveCalendarBookingAfterPublish()
 		throws Exception {
 
