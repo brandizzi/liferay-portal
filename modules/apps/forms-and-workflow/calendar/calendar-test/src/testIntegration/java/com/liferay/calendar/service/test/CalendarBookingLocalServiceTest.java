@@ -165,7 +165,7 @@ public class CalendarBookingLocalServiceTest {
 		Calendar invitedCalendar = CalendarTestUtil.addCalendar(
 			_user, serviceContext);
 
-		long startTime = System.currentTimeMillis() + Time.MINUTE;
+		long startTime = System.currentTimeMillis() + Time.MINUTE * 2;
 
 		long endTime = startTime + Time.HOUR;
 
