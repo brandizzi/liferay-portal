@@ -1175,9 +1175,11 @@ public class CalendarPortlet extends MVCPortlet {
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
+		Group group = themeDisplay.getScopeGroup();
+
 		List<CalendarBooking> childCalendarBookings =
 			_calendarBookingService.getChildCalendarBookings(
-				parentCalendarBookingId);
+				parentCalendarBookingId, group.isStagingGroup());
 
 		Collection<CalendarResource> calendarResources =
 			CalendarUtil.getCalendarResources(childCalendarBookings);
