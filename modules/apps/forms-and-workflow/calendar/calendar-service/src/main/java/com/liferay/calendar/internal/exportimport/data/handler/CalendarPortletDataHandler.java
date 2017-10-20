@@ -259,7 +259,7 @@ public class CalendarPortletDataHandler extends BasePortletDataHandler {
 					portletDataContext, calendarNotificationTemplateElement);
 			}
 		}
-		
+
 		if (portletDataContext.getBooleanParameter(
 				NAMESPACE, "calendar-bookings")) {
 
