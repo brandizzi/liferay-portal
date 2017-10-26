@@ -44,6 +44,7 @@ AUI.add(
 							success: function(data) {
 								if (success) {
 									success.call(instance, data);
+									instance._showSuccessMessage();
 								}
 							}
 						}
@@ -66,6 +67,7 @@ AUI.add(
 							success: function(data) {
 								if (success) {
 									success.call(instance, data);
+									instance._showSuccessMessage();
 								}
 							}
 						}
@@ -300,6 +302,7 @@ AUI.add(
 
 										if (success) {
 											success.call(instance, data);
+											instance._showSuccessMessage();
 										}
 									}
 								}
@@ -326,6 +329,41 @@ AUI.add(
 							}
 						}
 					);
+				},
+
+				_showSuccessMessage: function() {
+					var instance = this;
+
+					instance.getAttrs();
+
+					var successMessage = Liferay.Language.get('your-request-completed-successfully');
+
+					var alert = instance._alert;
+
+					if (alert) {
+						alert.destroy();
+					}
+
+					alert = new Liferay.Alert(
+						{
+							closeable: true,
+							delay: {
+								hide: 3000,
+								show: 0
+							},
+							icon: 'check',
+							message: successMessage,
+							type: 'success'
+						}
+					);
+
+					if (!alert.get('rendered')) {
+						alert.render(instance.rootNode);
+					}
+
+					alert.show();
+
+					instance._alert = alert;
 				},
 
 				_invokeActionURL: function(params) {
