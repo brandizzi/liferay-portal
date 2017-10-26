@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,10 +35,10 @@ public class AnalyticsEventsMessageBuilderTest {
 
 	@Test
 	public void testCreateContext() {
-		long expectedInstanceId = 123;
-		String expectedLanguageId = "en_US";
-		String expectedURL = "http://www.liferay.com";
-		long expectedUserId = 456;
+		long expectedInstanceId = randomLong();
+		String expectedLanguageId = randomString();
+		String expectedURL = randomString();
+		long expectedUserId = randomLong();
 
 		AnalyticsEventsMessage.Context actualContext = createContext(
 			expectedInstanceId, expectedLanguageId, expectedURL,
@@ -48,21 +51,22 @@ public class AnalyticsEventsMessageBuilderTest {
 
 	@Test
 	public void testCreateEvent() {
-		String expectedAdditionalInfo = "AdditionalInfo";
-		String expectedEvent = "view";
+		String expectedAdditionalInfo = randomString();
+		String expectedEvent = randomString();
 
 		Map<String, String> expectedProperties = new HashMap<>();
 
-		expectedProperties.put("k1", "v1");
-		expectedProperties.put("k2", "v2");
-		expectedProperties.put("k3", "v3");
+		expectedProperties.put(randomString(), randomString());
+		expectedProperties.put(randomString(), randomString());
+		expectedProperties.put(randomString(), randomString());
 
 		List<AnalyticsEventsMessage.Referrer> expectedReferrers =
 			new ArrayList<>();
 
-		List<String> expectedReferrerEntityIds = Arrays.asList("1", "2", "3");
+		List<String> expectedReferrerEntityIds = Arrays.asList(
+			randomString(), randomString(), randomString());
 
-		String expectedReferrerEntityType = "EntityType";
+		String expectedReferrerEntityType = randomString();
 
 		AnalyticsEventsMessage.Referrer expectedReferrer = createReferrer(
 			expectedReferrerEntityIds, expectedReferrerEntityType);
@@ -86,24 +90,26 @@ public class AnalyticsEventsMessageBuilderTest {
 		// Context
 
 		AnalyticsEventsMessage.Context expectedContext = createContext(
-			123, "en_US", "http://www.liferay.com", 456);
+			randomLong(), randomString(), randomString(), randomLong());
 
 		// Events
 
 		List<AnalyticsEventsMessage.Event> expectedEvents = new ArrayList<>();
 
-		String expectedAdditionalInfo = "AdditionalInfo";
-		String expectedEventName = "view";
+		String expectedAdditionalInfo = randomString();
+		String expectedEventName = randomString();
 
 		Map<String, String> expectedProperties = new HashMap<>();
 
-		expectedProperties.put("k1", "v1");
+		expectedProperties.put(randomString(), randomString());
 
 		List<AnalyticsEventsMessage.Referrer> expectedReferrers =
 			new ArrayList<>();
 
 		expectedReferrers.add(
-			createReferrer(Arrays.asList("1", "2", "3"), "EntityType"));
+			createReferrer(
+				Arrays.asList(randomString(), randomString(), randomString()),
+				randomString()));
 
 		Date expectedTimestamp = new Date();
 
@@ -114,13 +120,13 @@ public class AnalyticsEventsMessageBuilderTest {
 
 		// Message
 
-		String expectedAnalyticsKey = "WZYZ";
-		long expectedAnonymousUserId = 123;
-		String expectedApplicationId = "AT";
-		String expectedClientIP = "127.0.0.1";
-		String expectedMessageFormat = "MessageFormat";
-		String expectedProtocolVersion = "1.0.0";
-		String expectedUserAgent = "UserAgent";
+		String expectedAnalyticsKey = randomString();
+		long expectedAnonymousUserId = randomLong();
+		String expectedApplicationId = randomString();
+		String expectedClientIP = randomString();
+		String expectedMessageFormat = randomString();
+		String expectedProtocolVersion = randomString();
+		String expectedUserAgent = randomString();
 
 		AnalyticsEventsMessage actualAnalyticsEventsMessage =
 			createAnalyticsEventsMessage(
@@ -174,9 +180,10 @@ public class AnalyticsEventsMessageBuilderTest {
 
 	@Test
 	public void testCreateReferrer() {
-		List<String> expectedReferrerEntityIds = Arrays.asList("1", "2", "3");
+		List<String> expectedReferrerEntityIds = Arrays.asList(
+			randomString(), randomString(), randomString());
 
-		String expectedReferrerEntityType = "EntityType";
+		String expectedReferrerEntityType = randomString();
 
 		AnalyticsEventsMessage.Referrer referrer = createReferrer(
 			expectedReferrerEntityIds, expectedReferrerEntityType);
@@ -311,6 +318,14 @@ public class AnalyticsEventsMessageBuilderTest {
 		referrerBuilder.referrerEntityType(referrerEntityType);
 
 		return referrerBuilder.build();
+	}
+
+	protected long randomLong() {
+		return RandomUtils.nextLong();
+	}
+
+	protected String randomString() {
+		return RandomStringUtils.random(5);
 	}
 
 }

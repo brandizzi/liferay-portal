@@ -21,11 +21,13 @@ import javax.ws.rs.core.Response;
 import org.apache.http.HttpStatus;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author Eduardo Garcia
  */
+@Ignore
 public class AnalyticsClientTest {
 
 	@Test
