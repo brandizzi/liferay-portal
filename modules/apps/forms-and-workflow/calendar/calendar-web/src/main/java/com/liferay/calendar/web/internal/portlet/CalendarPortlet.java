@@ -70,6 +70,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.LayoutSetPrototype;
+import com.liferay.portal.kernel.model.PortletConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletResponseUtil;
@@ -88,6 +89,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -141,6 +143,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
+import javax.portlet.WindowState;
 import javax.portlet.WindowStateException;
 
 import org.osgi.service.component.annotations.Component;
@@ -497,6 +500,11 @@ public class CalendarPortlet extends MVCPortlet {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
 		long calendarBookingId = ParamUtil.getLong(
 			actionRequest, "calendarBookingId");
 
@@ -541,8 +549,45 @@ public class CalendarPortlet extends MVCPortlet {
 
 		String redirect = getRedirect(actionRequest, actionResponse);
 
+		String referringPortletResource = ParamUtil.getString(
+			actionRequest, "referringPortletResource");
+
+		if (Validator.isNull(referringPortletResource)) {
+			referringPortletResource = portletDisplay.getId();
+		}
+
+		String namespace = _portal.getPortletNamespace(
+			referringPortletResource);
+
+		String rootPortletId = PortletConstants.getRootPortletId(
+			referringPortletResource);
+
+		if ((calendarBooking.getStatus() ==
+				CalendarBookingWorkflowConstants.STATUS_DRAFT) &&
+			!rootPortletId.equals(CalendarPortletKeys.CALENDAR)) {
+
+			String state = _http.getParameter(redirect, "p_p_state", false);
+
+			PortletURL draftURL = _portal.getControlPanelPortletURL(
+				themeDisplay.getRequest(), themeDisplay.getScopeGroup(),
+				getPortletName(), 0, 0, PortletRequest.RENDER_PHASE);
+
+			draftURL.setParameter("mvcPath", "/edit_calendar_booking.jsp");
+			draftURL.setParameter(
+				"calendarBookingId",
+				String.valueOf(calendarBooking.getCalendarBookingId()));
+			draftURL.setParameter("redirect", redirect);
+			draftURL.setWindowState(new WindowState(state));
+
+			redirect = _http.setParameter(
+				redirect, namespace + "closeDialog", Boolean.FALSE);
+			redirect = _http.removeParameter(redirect, namespace + "redirect");
+			redirect = _http.setParameter(
+				redirect, namespace + "redirect", draftURL.toString());
+		}
+
 		redirect = _http.setParameter(
-			redirect, actionResponse.getNamespace() + "calendarBookingId",
+			redirect, namespace + "calendarBookingId",
 			calendarBooking.getCalendarBookingId());
 
 		actionRequest.setAttribute(WebKeys.REDIRECT, redirect);
