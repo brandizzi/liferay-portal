@@ -13,6 +13,29 @@
 		</not>
 	</condition>
 
+	<macrodef name="fetch-portal">
+		<attribute name="fetch.portal.branch.name" />
+		<attribute name="fetch.portal.repository.name" />
+
+		<sequential>
+			<local name="fetch.portal.repository.url" />
+
+			<condition else="git@github.com:liferay/@{fetch.portal.repository.name}.git" property="fetch.portal.repository.url" value="git@github-dev.liferay.com:liferay/@{fetch.portal.repository.name}.git">
+				<isset property="env.JENKINS_HOME" />
+			</condition>
+
+			<echo>git fetch --force --no-tags ${fetch.portal.repository.url} @{fetch.portal.branch.name}</echo>
+
+			<exec executable="git">
+				<arg value="fetch" />
+				<arg value="--force" />
+				<arg value="--no-tags" />
+				<arg value="${fetch.portal.repository.url}" />
+				<arg value="@{fetch.portal.branch.name}" />
+			</exec>
+		</sequential>
+	</macrodef>
+
 	<macrodef name="prepare-working-dir">
 		<attribute name="from.branch.name" />
 		<attribute name="to.branch.name" />
@@ -208,12 +231,32 @@
 			</filterchain>
 		</loadfile>
 
+		<local name="return.code" />
+
 		<exec executable="git" failonerror="false" resultproperty="return.code">
-			<arg value="fetch" />
+			<arg value="log" />
+			<arg value="-n" />
+			<arg value="1" />
+			<arg value="${portal.git.commit}" />
+		</exec>
+
+		<condition property="portal.git.commit.available">
+			<equals arg1="${return.code}" arg2="0" />
+		</condition>
+
+		<fetch-portal
+			fetch.portal.branch.name="${public.branch.name}"
+			fetch.portal.repository.name="liferay-portal"
+			unless:set="portal.git.commit.available"
+		/>
+
+		<local name="return.code" />
+
+		<exec executable="git" failonerror="false" resultproperty="return.code">
+			<arg value="tag" />
 			<arg value="--force" />
-			<arg value="--no-tags" />
-			<arg value="upstream" />
-			<arg value="${portal.git.commit}:refs/tags/git-commit-portal" />
+			<arg value="git-commit-portal" />
+			<arg value="${portal.git.commit}" />
 		</exec>
 
 		<fail message="Please fetch the public branch from upstream before using this command.">
@@ -272,12 +315,32 @@
 			</condition>
 		</fail>
 
+		<local name="return.code" />
+
 		<exec executable="git" failonerror="false" resultproperty="return.code">
-			<arg value="fetch" />
+			<arg value="log" />
+			<arg value="-n" />
+			<arg value="1" />
+			<arg value="${portal.private.git.commit}" />
+		</exec>
+
+		<condition property="portal.private.git.commit.available">
+			<equals arg1="${return.code}" arg2="0" />
+		</condition>
+
+		<fetch-portal
+			fetch.portal.branch.name="${private.branch.name}"
+			fetch.portal.repository.name="liferay-portal-ee"
+			unless:set="portal.private.git.commit.available"
+		/>
+
+		<local name="return.code" />
+
+		<exec executable="git" failonerror="false" resultproperty="return.code">
+			<arg value="tag" />
 			<arg value="--force" />
-			<arg value="--no-tags" />
-			<arg value="upstream" />
-			<arg value="${portal.private.git.commit}:refs/tags/git-commit-portal-private" />
+			<arg value="git-commit-portal-private" />
+			<arg value="${portal.private.git.commit}" />
 		</exec>
 
 		<fail message="Please fetch the private branch from upstream before using this command.">
