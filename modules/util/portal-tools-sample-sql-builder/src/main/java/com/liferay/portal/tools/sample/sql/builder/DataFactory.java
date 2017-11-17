@@ -23,13 +23,13 @@ import com.liferay.asset.kernel.model.AssetTagModel;
 import com.liferay.asset.kernel.model.AssetTagStatsModel;
 import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.model.AssetVocabularyModel;
+import com.liferay.blogs.constants.BlogsPortletKeys;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.model.BlogsEntryModel;
 import com.liferay.blogs.model.BlogsStatsUserModel;
 import com.liferay.blogs.model.impl.BlogsEntryModelImpl;
 import com.liferay.blogs.model.impl.BlogsStatsUserModelImpl;
 import com.liferay.blogs.social.BlogsActivityKeys;
-import com.liferay.blogs.web.constants.BlogsPortletKeys;
 import com.liferay.counter.kernel.model.Counter;
 import com.liferay.counter.kernel.model.CounterModel;
 import com.liferay.counter.model.impl.CounterModelImpl;
@@ -862,7 +862,9 @@ public class DataFactory {
 				assetTagModel.setUserName(_SAMPLE_USER_NAME);
 				assetTagModel.setCreateDate(new Date());
 				assetTagModel.setModifiedDate(new Date());
-				assetTagModel.setName("TestTag_" + i + "_" + j);
+				assetTagModel.setName(
+					StringBundler.concat(
+						"TestTag_", String.valueOf(i), "_", String.valueOf(j)));
 				assetTagModel.setLastPublishDate(new Date());
 
 				assetTagModels.add(assetTagModel);
@@ -1851,9 +1853,8 @@ public class DataFactory {
 		FriendlyURLEntryLocalizationModel friendlyURLEntryLocalizationModel =
 			new FriendlyURLEntryLocalizationModelImpl();
 
-		String languageId = LocaleUtil.toLanguageId(
-			LocaleUtil.getSiteDefault());
-
+		friendlyURLEntryLocalizationModel.setFriendlyURLEntryLocalizationId(
+			_counter.get());
 		friendlyURLEntryLocalizationModel.setFriendlyURLEntryId(
 			friendlyURLEntryModel.getFriendlyURLEntryId());
 		friendlyURLEntryLocalizationModel.setGroupId(
@@ -1864,7 +1865,12 @@ public class DataFactory {
 			friendlyURLEntryModel.getClassNameId());
 		friendlyURLEntryLocalizationModel.setClassPK(
 			friendlyURLEntryModel.getClassPK());
+
+		String languageId = LocaleUtil.toLanguageId(
+			LocaleUtil.getSiteDefault());
+
 		friendlyURLEntryLocalizationModel.setLanguageId(languageId);
+
 		friendlyURLEntryLocalizationModel.setUrlTitle(
 			blogsEntryModel.getUrlTitle());
 
@@ -1877,10 +1883,14 @@ public class DataFactory {
 		FriendlyURLEntryMappingModel friendlyURLEntryMappingModel =
 			new FriendlyURLEntryMappingModelImpl();
 
+		friendlyURLEntryMappingModel.setFriendlyURLEntryMappingId(
+			_counter.get());
 		friendlyURLEntryMappingModel.setClassNameId(
 			friendlyURLEntryModel.getClassNameId());
 		friendlyURLEntryMappingModel.setClassPK(
 			friendlyURLEntryModel.getClassPK());
+		friendlyURLEntryMappingModel.setFriendlyURLEntryId(
+			friendlyURLEntryModel.getFriendlyURLEntryId());
 
 		return friendlyURLEntryMappingModel;
 	}
@@ -1891,6 +1901,7 @@ public class DataFactory {
 		FriendlyURLEntryModel friendlyURLEntryModel =
 			new FriendlyURLEntryModelImpl();
 
+		friendlyURLEntryModel.setDefaultLanguageId("en_US");
 		friendlyURLEntryModel.setUuid(SequentialUUID.generate());
 		friendlyURLEntryModel.setFriendlyURLEntryId(_counter.get());
 		friendlyURLEntryModel.setGroupId(blogsEntryModel.getGroupId());

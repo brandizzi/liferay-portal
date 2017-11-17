@@ -194,6 +194,11 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 	}
 
 	@Override
+	public void setProjectPathPrefix(String projectPathPrefix) {
+		_projectPathPrefix = projectPathPrefix;
+	}
+
+	@Override
 	public void setPropertiesMap(Map<String, Properties> propertiesMap) {
 		_propertiesMap = propertiesMap;
 	}
@@ -293,6 +298,8 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		}
 
 		if (!modifiedContents.add(newContent)) {
+			_sourceFormatterMessagesMap.remove(fileName);
+
 			processMessage(fileName, "Infinite loop in SourceFormatter");
 
 			return originalContent;
@@ -302,6 +309,8 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 			count++;
 
 			if (count > 100) {
+				_sourceFormatterMessagesMap.remove(fileName);
+
 				processMessage(fileName, "Infinite loop in SourceFormatter");
 
 				return originalContent;
@@ -466,6 +475,14 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 	}
 
 	private boolean _containsModuleFile(List<String> fileNames) {
+		if (subrepository) {
+			return true;
+		}
+
+		if (!portalSource) {
+			return false;
+		}
+
 		for (String fileName : fileNames) {
 			if (!_isMatchPath(fileName)) {
 				continue;
@@ -544,6 +561,7 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		sourceCheck.setPluginsInsideModulesDirectoryNames(
 			_pluginsInsideModulesDirectoryNames);
 		sourceCheck.setPortalSource(portalSource);
+		sourceCheck.setProjectPathPrefix(_projectPathPrefix);
 		sourceCheck.setPropertiesMap(_propertiesMap);
 		sourceCheck.setSourceFormatterExcludes(_sourceFormatterExcludes);
 		sourceCheck.setSubrepository(subrepository);
@@ -570,6 +588,10 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 		if (subrepository) {
 			return true;
+		}
+
+		if (!portalSource) {
+			return false;
 		}
 
 		if (includePlugins) {
@@ -648,6 +670,7 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		new CopyOnWriteArrayList<>();
 	private List<String> _pluginsInsideModulesDirectoryNames;
 	private BlockingQueue<ProgressStatusUpdate> _progressStatusQueue;
+	private String _projectPathPrefix;
 	private Map<String, Properties> _propertiesMap;
 	private List<SourceCheck> _sourceChecks = new ArrayList<>();
 	private SourceChecksSuppressions _sourceChecksSuppressions;
