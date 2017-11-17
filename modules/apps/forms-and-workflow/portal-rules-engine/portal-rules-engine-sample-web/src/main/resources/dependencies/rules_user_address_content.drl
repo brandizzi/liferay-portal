@@ -63,11 +63,11 @@ function List getAssetEntries(
 		return Collections.emptyList();
 	}
 	
-    SearchContext searchContext = new SearchContext();
+	SearchContext searchContext = new SearchContext();
 
-    searchContext.setAndSearch(true);
+	searchContext.setAndSearch(true);
 
-    searchContext.setAssetTagNames(new String[]{assetTagName});
+	searchContext.setAssetTagNames(new String[]{assetTagName});
 	searchContext.setAttribute("paginationType", "regular");
 	searchContext.setCompanyId(user.getCompanyId());
 	searchContext.setGroupIds(groupIds);
@@ -75,7 +75,7 @@ function List getAssetEntries(
 	searchContext.setScopeStrict(false);
 	searchContext.setUserId(user.getUserId());
 
-    BooleanQuery booleanQuery = BooleanQueryFactoryUtil.create(searchContext);
+	BooleanQuery booleanQuery = BooleanQueryFactoryUtil.create(searchContext);
 
 	booleanQuery.addExactTerm(Field.ASSET_TAG_NAMES, assetTagName);
 
@@ -84,23 +84,23 @@ function List getAssetEntries(
 
 	searchContext.setBooleanClauses(new BooleanClause[] {booleanClause});
 
-    Indexer<?> indexer = AssetSearcher.getInstance();
+	Indexer<?> indexer = AssetSearcher.getInstance();
 
-    AssetSearcher assetSearcher = (AssetSearcher)indexer;
+	AssetSearcher assetSearcher = (AssetSearcher)indexer;
 
-    AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
+	AssetEntryQuery assetEntryQuery = new AssetEntryQuery();
 
-    assetEntryQuery.setClassNameIds(classNameIds);
+	assetEntryQuery.setClassNameIds(classNameIds);
 
-    QueryConfig queryConfig = searchContext.getQueryConfig();
+	QueryConfig queryConfig = searchContext.getQueryConfig();
 
-    queryConfig.setHighlightEnabled(false);
-    queryConfig.setScoreEnabled(false);
+	queryConfig.setHighlightEnabled(false);
+	queryConfig.setScoreEnabled(false);
 
-    assetSearcher.setAssetEntryQuery(assetEntryQuery);
+	assetSearcher.setAssetEntryQuery(assetEntryQuery);
 
 	Hits hits = assetSearcher.search(searchContext);
-	
+
 	List<AssetEntry> assetEntries = new ArrayList<AssetEntry>();
 	
 	for (int i = 0; i < hits.getDocs().length; i++) {
