@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.search.facet.collector.TermCollector;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.web.internal.facet.display.context.ScopeSearchFacetDisplayContext;
 import com.liferay.portal.search.web.internal.facet.display.context.ScopeSearchFacetTermDisplayContext;
 
@@ -201,7 +202,13 @@ public class ScopeSearchFacetDisplayBuilder {
 		}
 
 		try {
-			return group.getDescriptiveName(_locale);
+			String name = group.getDescriptiveName(_locale);
+
+			if (group.isStagingGroup() || group.isStagedRemotely()) {
+				name = name + StringPool.SPACE + "(Staged)"; //add lang key
+			}
+
+			return name;
 		}
 		catch (PortalException pe) {
 			throw new RuntimeException(pe);
