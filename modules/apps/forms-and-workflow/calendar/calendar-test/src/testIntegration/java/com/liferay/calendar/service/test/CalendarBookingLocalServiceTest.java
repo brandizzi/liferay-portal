@@ -740,7 +740,6 @@ public class CalendarBookingLocalServiceTest {
 		Assert.assertNull(calendarBooking);
 	}
 
-	@Ignore
 	@Test
 	public void testDeleteStagingCalendarBookingDeletesLiveCalendarBooking()
 		throws Exception {
@@ -1416,7 +1415,6 @@ public class CalendarBookingLocalServiceTest {
 		assertCalendarBookingsCount(stagingCalendar, 1);
 	}
 
-	@Ignore
 	@Test
 	public void testMoveStagingCalendarBookingToOtherSiteDeletesLiveCalendarBooking()
 		throws Exception {
