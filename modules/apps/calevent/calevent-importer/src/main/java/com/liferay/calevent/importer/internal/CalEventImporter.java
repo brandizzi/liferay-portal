@@ -842,8 +842,9 @@ public class CalEventImporter {
 
 		_resourcePermissionLocalService.setResourcePermissions(
 			calendarBooking.getCompanyId(), CalendarBooking.class.getName(),
-			ResourceConstants.SCOPE_INDIVIDUAL, String.valueOf(calendarBooking),
-			resourcePermission.getRoleId(), actionIds);
+			ResourceConstants.SCOPE_INDIVIDUAL,
+			String.valueOf(calendarBookingId), resourcePermission.getRoleId(),
+			actionIds);
 	}
 
 	protected void importCalendarBookingResourcePermissions(
