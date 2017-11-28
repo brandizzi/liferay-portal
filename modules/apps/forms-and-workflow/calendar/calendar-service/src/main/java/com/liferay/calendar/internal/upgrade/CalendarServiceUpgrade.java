@@ -22,10 +22,12 @@ import com.liferay.calendar.internal.upgrade.v1_0_5.UpgradeLastPublishDate;
 import com.liferay.calendar.internal.upgrade.v1_0_6.UpgradeResourcePermission;
 import com.liferay.calendar.internal.upgrade.v2_0_0.UpgradeSchema;
 import com.liferay.calendar.internal.upgrade.v3_0_0.UpgradeCalendarBookingResourceBlock;
+import com.liferay.calendar.internal.upgrade.v3_0_0.UpgradeCalendarPortalPreferences;
 import com.liferay.calendar.internal.upgrade.v3_0_0.UpgradeCalendarResourceBlock;
 import com.liferay.calendar.internal.upgrade.v3_0_0.UpgradeCalendarResourceResourceBlock;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.CompanyLocalService;
+import com.liferay.portal.kernel.service.PortalPreferencesLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.service.RoleLocalService;
@@ -90,6 +92,8 @@ public class CalendarServiceUpgrade implements UpgradeStepRegistrator {
 		registry.register(
 			"com.liferay.calendar.service", "2.0.0", "3.0.0",
 			new UpgradeCalendarBookingResourceBlock(),
+			new UpgradeCalendarPortalPreferences(
+				_portalPreferencesLocalService),
 			new UpgradeCalendarResourceBlock(),
 			new UpgradeCalendarResourceResourceBlock());
 	}
@@ -106,6 +110,13 @@ public class CalendarServiceUpgrade implements UpgradeStepRegistrator {
 		CompanyLocalService companyLocalService) {
 
 		_companyLocalService = companyLocalService;
+	}
+
+	@Reference(unbind = "-")
+	protected void setPortalPreferencesLocalService(
+		PortalPreferencesLocalService portalPreferencesLocalService) {
+
+		_portalPreferencesLocalService = portalPreferencesLocalService;
 	}
 
 	@Reference(unbind = "-")
@@ -134,6 +145,7 @@ public class CalendarServiceUpgrade implements UpgradeStepRegistrator {
 
 	private ClassNameLocalService _classNameLocalService;
 	private CompanyLocalService _companyLocalService;
+	private PortalPreferencesLocalService _portalPreferencesLocalService;
 	private ResourceActionLocalService _resourceActionLocalService;
 	private ResourcePermissionLocalService _resourcePermissionLocalService;
 	private RoleLocalService _roleLocalService;
