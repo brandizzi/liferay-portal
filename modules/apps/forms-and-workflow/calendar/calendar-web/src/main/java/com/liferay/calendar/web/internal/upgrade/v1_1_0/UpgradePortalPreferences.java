@@ -145,7 +145,7 @@ public class UpgradePortalPreferences extends RenameUpgradePortalPreferences {
 	private static final Pattern _idPattern = Pattern.compile("[0-9]+");
 	private static final Map<String, String> _newPreferencePatternsMap =
 		new HashMap<>();
-	private static final Pattern[] _oldPreferencePatterns = new Pattern[] {
+	private static final Pattern[] _oldPreferencePatterns = {
 		Pattern.compile(
 			_OLD_SESSION_CLICKS_NAMESPACE +
 				"calendar-portlet-calendar-[0-9]+-color"),
