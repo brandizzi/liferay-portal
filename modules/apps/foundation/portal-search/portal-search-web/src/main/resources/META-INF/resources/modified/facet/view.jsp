@@ -52,31 +52,29 @@ ModifiedFacetCalendarDisplayContext modifiedFacetCalendarDisplayContext = modifi
 			<aui:input cssClass="facet-parameter-name" name="facet-parameter-name" type="hidden" value="<%= modifiedFacetDisplayContext.getParameterName() %>" />
 
 			<aui:field-wrapper cssClass='<%= renderResponse.getNamespace() + "calendar calendar_" %>' label="" name="<%= HtmlUtil.escapeAttribute(modifiedFacetDisplayContext.getParameterName()) %>">
-				<ul class="list-unstyled modified">
+				<ul class="list-unstyled modified nav-stacked">
 
 					<%
 					for (ModifiedFacetTermDisplayContext modifiedFacetTermDisplayContext : modifiedFacetDisplayContext.getTermDisplayContexts()) {
+						if (modifiedFacetTermDisplayContext.getFrequency() == 0) {
+							continue;
+						}
 					%>
 
-						<li class="facet-value" name="<%= renderResponse.getNamespace() + "range_" + modifiedFacetTermDisplayContext.getLabel() %>">
-							<input
-								class="facet-term"
-								data-term-id="<%= modifiedFacetTermDisplayContext.getRange() %>"
-								id="<portlet:namespace /><%= modifiedFacetTermDisplayContext.getLabel() %>"
-								name="<portlet:namespace /><%= modifiedFacetTermDisplayContext.getLabel() %>"
-								onChange="Liferay.Search.FacetUtil.changeSelection(event);"
-								type="checkbox"
-								<%= modifiedFacetTermDisplayContext.getFrequency() != 0 && modifiedFacetTermDisplayContext.isSelected() ? "checked" : StringPool.BLANK %>
-								<%= modifiedFacetTermDisplayContext.getFrequency() == 0 ? "disabled" : StringPool.BLANK %>
-							/>
+						<li class="facet-value nav-item" name="<%= renderResponse.getNamespace() + "range_" + modifiedFacetTermDisplayContext.getLabel() %>">
+							<a
+								class="<%= modifiedFacetTermDisplayContext.isActive() ? "active" : StringPool.BLANK %> nav-link"
+								href="<%= modifiedFacetTermDisplayContext.getRangeURL() %>"
+							>
 
 							<span class="term-name">
 								<liferay-ui:message key="<%= modifiedFacetTermDisplayContext.getLabel() %>" />
 							</span>
 
 							<small class="term-count">
-								<span class="frequency">(<%= modifiedFacetTermDisplayContext.getFrequency() %>)</span>
+								<span class="badge badge-info frequency"><%= modifiedFacetTermDisplayContext.getFrequency() %></span>
 							</small>
+							</a>
 						</li>
 
 					<%
