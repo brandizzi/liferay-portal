@@ -51,45 +51,34 @@ int i = 0;
 
 <liferay-ui:panel-container extended="<%= true %>" id='<%= renderResponse.getNamespace() + "facetModifiedPanelContainer" %>' markupView="lexicon" persistState="<%= true %>">
 	<liferay-ui:panel collapsible="<%= true %>" cssClass="search-facet" id='<%= renderResponse.getNamespace() + "facetModifiedPanel" %>' markupView="lexicon" persistState="<%= true %>" title="last-modified">
-		<aui:form method="post" name="modifiedFacetForm">
+		<aui:form method="get" name="modifiedFacetForm">
 			<aui:input autocomplete="off" name="inputFacetName" type="hidden" value="modified" />
 			<aui:input cssClass="facet-parameter-name" name="facet-parameter-name" type="hidden" value="<%= modifiedFacetDisplayContext.getParameterName() %>" />
 
 			<aui:field-wrapper cssClass='<%= renderResponse.getNamespace() + "calendar calendar_" %>' label="" name="<%= HtmlUtil.escapeAttribute(modifiedFacetDisplayContext.getParameterName()) %>">
-				<ul class="list-unstyled modified">
+				<ul class="list-unstyled modified nav-stacked">
 
 					<%
 					for (ModifiedFacetTermDisplayContext modifiedFacetTermDisplayContext : modifiedFacetDisplayContext.getTermDisplayContexts()) {
-						i++;
+						if (modifiedFacetTermDisplayContext.getFrequency() == 0) {
+							continue;
+						}
 					%>
 
-						<li class="facet-value" name="<%= renderResponse.getNamespace() + "ranger_"+i %>">
-
-							<%
-							String rangeCssClass = " text-default ";
-
-							if (modifiedFacetTermDisplayContext.isSelected()) {
-								rangeCssClass = " text-primary ";
-							}
-							%>
-
-							<input
-								class="facet-term"
-								data-term-id="<%= modifiedFacetTermDisplayContext.getRange() %>"
-								id="<portlet:namespace /><%= modifiedFacetTermDisplayContext.getLabel() %>"
-								name="<portlet:namespace /><%= modifiedFacetTermDisplayContext.getLabel() %>"
-								onChange='Liferay.Search.FacetUtil.changeSelection(event);'
-								type="checkbox"
-								<%= modifiedFacetTermDisplayContext.isSelected() ? "checked" : StringPool.BLANK %>
-							/>
+						<li class="facet-value nav-item" name="<%= renderResponse.getNamespace() + "range_" + modifiedFacetTermDisplayContext.getLabel() %>">
+							<a
+								class="<%= modifiedFacetTermDisplayContext.isActive() ? "active" : StringPool.BLANK %> nav-link"
+								href="<%= modifiedFacetTermDisplayContext.getRangeURL() %>"
+							>
 
 							<span class="term-name">
 								<liferay-ui:message key="<%= modifiedFacetTermDisplayContext.getLabel() %>" />
 							</span>
 
 							<small class="term-count">
-								<span class="frequency">(<%= modifiedFacetTermDisplayContext.getFrequency() %>)</span>
+								<span class="badge badge-info frequency"><%= modifiedFacetTermDisplayContext.getFrequency() %></span>
 							</small>
+							</a>
 						</li>
 
 					<%
@@ -148,16 +137,6 @@ int i = 0;
 								/>
 							</aui:field-wrapper>
 						</div>
-
-							<input
-								class="DELETETHIS-facet-term"
-								data-term-id=""
-								id="<portlet:namespace /><%= "customRange" %>"
-								name="<portlet:namespace /><%= "customRange" %>"
-								onChange="Liferay.Search.FacetUtil.changeSelection(event);"
-								type="hidden"
-								<%= modifiedFacetCalendarDisplayContext.isSelected() ? "checked" : StringPool.BLANK %>
-							/>
 
 						<%
 						String taglibSearchCustomRange = "window['" + renderResponse.getNamespace() + HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) + "searchCustomRange'](event);";
