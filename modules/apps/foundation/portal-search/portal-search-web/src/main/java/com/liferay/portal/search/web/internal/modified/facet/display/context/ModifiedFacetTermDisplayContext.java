@@ -33,6 +33,18 @@ public class ModifiedFacetTermDisplayContext implements Serializable {
 		return _range;
 	}
 
+	public String getRangeURL() {
+		return _rangeURL;
+	}
+
+	public boolean isActive() {
+		if (_frequency == 0) {
+			return false;
+		}
+
+		return _selected;
+	}
+
 	public boolean isSelected() {
 		return _selected;
 	}
@@ -49,6 +61,10 @@ public class ModifiedFacetTermDisplayContext implements Serializable {
 		_range = range;
 	}
 
+	public void setRangeURL(String rangeURL) {
+		_rangeURL = rangeURL;
+	}
+
 	public void setSelected(boolean selected) {
 		_selected = selected;
 	}
@@ -56,6 +72,7 @@ public class ModifiedFacetTermDisplayContext implements Serializable {
 	private int _frequency;
 	private String _label;
 	private String _range;
+	private String _rangeURL;
 	private boolean _selected;
 
 }
