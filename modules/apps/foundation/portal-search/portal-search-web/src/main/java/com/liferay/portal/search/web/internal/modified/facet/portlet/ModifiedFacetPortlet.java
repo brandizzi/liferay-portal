@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ModifiedFacetFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.web.internal.display.context.PortletRequestThemeDisplaySupplier;
 import com.liferay.portal.search.web.internal.display.context.ThemeDisplaySupplier;
@@ -142,6 +143,8 @@ public class ModifiedFacetPortlet
 		modifiedSearchFacetDisplayBuilder.setLocale(themeDisplay.getLocale());
 
 		modifiedSearchFacetDisplayBuilder.setParameterName(parameterName);
+		modifiedSearchFacetDisplayBuilder.setCurrentURL(
+			portal.getCurrentURL(renderRequest));
 
 		Optional<String[]> parameterValuesOptional =
 			portletSharedSearchResponse.getParameterValues(
@@ -195,6 +198,9 @@ public class ModifiedFacetPortlet
 
 	@Reference
 	protected ModifiedFacetFactory modifiedFacetFactory;
+
+	@Reference
+	protected Portal portal;
 
 	@Reference
 	protected PortletSharedSearchRequest portletSharedSearchRequest;

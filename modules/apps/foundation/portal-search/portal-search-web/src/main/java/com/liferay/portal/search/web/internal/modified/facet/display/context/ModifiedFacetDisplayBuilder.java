@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.search.facet.collector.FacetCollector;
 import com.liferay.portal.kernel.search.facet.collector.TermCollector;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.Serializable;
@@ -57,6 +58,10 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 			buildTermDisplayContexts());
 
 		return modifiedFacetDisplayContext;
+	}
+
+	public void setCurrentURL(String currentURL) {
+		_currentURL = currentURL;
 	}
 
 	public void setFacet(Facet facet) {
@@ -126,7 +131,7 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		ModifiedFacetTermDisplayContext customRangeTermDisplayContext =
 			buildTermDisplay(
 				StringPool.BLANK, StringPool.BLANK, selected, data,
-				getFrequency(termCollector));
+				getFrequency(termCollector), null);
 
 		return customRangeTermDisplayContext;
 	}
@@ -145,14 +150,14 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		String label = facetConfiguration.getLabel();
 
 		ModifiedFacetTermDisplayContext defaultTermDisplayContext =
-			buildTermDisplay(label, label, selected, data, frequency);
+			buildTermDisplay(label, label, selected, data, frequency, null);
 
 		return defaultTermDisplayContext;
 	}
 
 	protected ModifiedFacetTermDisplayContext buildTermDisplay(
 		String dataTermId, String label, boolean selected,
-		Map<String, Object> data, int frequency) {
+		Map<String, Object> data, int frequency, String rangeURL) {
 
 		ModifiedFacetTermDisplayContext modifiedSearchFacetTermDisplayContext =
 			new ModifiedFacetTermDisplayContext();
@@ -160,6 +165,7 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		modifiedSearchFacetTermDisplayContext.setFrequency(frequency);
 		modifiedSearchFacetTermDisplayContext.setLabel(label);
 		modifiedSearchFacetTermDisplayContext.setRange(dataTermId);
+		modifiedSearchFacetTermDisplayContext.setRangeURL(rangeURL);
 		modifiedSearchFacetTermDisplayContext.setSelected(selected);
 
 		return modifiedSearchFacetTermDisplayContext;
@@ -194,9 +200,13 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 				termCollector = facetCollector.getTermCollector(range);
 			}
 
+			String rangeURL = HttpUtil.setParameter(
+				_currentURL, "modified", label);
+
 			ModifiedFacetTermDisplayContext
 				modifiedSearchFacetTermDisplayContext = buildTermDisplay(
-					label, label, selected, data, getFrequency(termCollector));
+					label, label, selected, data, getFrequency(termCollector),
+					rangeURL);
 
 			modifiedSearchFacetTermDisplayContexts.add(
 				modifiedSearchFacetTermDisplayContext);
@@ -217,6 +227,7 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		return _selectedRanges.isEmpty();
 	}
 
+	private String _currentURL;
 	private Facet _facet;
 	private Locale _locale;
 	private String _parameterName;

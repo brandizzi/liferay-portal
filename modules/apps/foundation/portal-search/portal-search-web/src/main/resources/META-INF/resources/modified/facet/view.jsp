@@ -43,77 +43,56 @@ ModifiedFacetDisplayContext modifiedFacetDisplayContext = (ModifiedFacetDisplayC
 ModifiedFacetTermDisplayContext customRangeTermDisplayContext = modifiedFacetDisplayContext.getCustomRangeTermDisplayContext();
 
 ModifiedFacetCalendarDisplayContext modifiedFacetCalendarDisplayContext = modifiedFacetDisplayContext.getModifiedFacetCalendarDisplayContext();
-
-// Because of JavaScript?!?!?
-
-int i = 0;
 %>
 
 <liferay-ui:panel-container extended="<%= true %>" id='<%= renderResponse.getNamespace() + "facetModifiedPanelContainer" %>' markupView="lexicon" persistState="<%= true %>">
 	<liferay-ui:panel collapsible="<%= true %>" cssClass="search-facet" id='<%= renderResponse.getNamespace() + "facetModifiedPanel" %>' markupView="lexicon" persistState="<%= true %>" title="last-modified">
-		<aui:form method="post" name="modifiedFacetForm">
+		<aui:form method="get" name="modifiedFacetForm">
 			<aui:input autocomplete="off" name="inputFacetName" type="hidden" value="modified" />
 			<aui:input cssClass="facet-parameter-name" name="facet-parameter-name" type="hidden" value="<%= modifiedFacetDisplayContext.getParameterName() %>" />
 
 			<aui:field-wrapper cssClass='<%= renderResponse.getNamespace() + "calendar calendar_" %>' label="" name="<%= HtmlUtil.escapeAttribute(modifiedFacetDisplayContext.getParameterName()) %>">
-				<ul class="list-unstyled modified">
+				<ul class="list-unstyled modified nav-stacked">
 
 					<%
 					for (ModifiedFacetTermDisplayContext modifiedFacetTermDisplayContext : modifiedFacetDisplayContext.getTermDisplayContexts()) {
-						i++;
+						if (modifiedFacetTermDisplayContext.getFrequency() == 0) {
+							continue;
+						}
 					%>
 
-						<li class="facet-value" name="<%= renderResponse.getNamespace() + "ranger_"+i %>">
-
-							<%
-							String rangeCssClass = " text-default ";
-
-							if (modifiedFacetTermDisplayContext.isSelected()) {
-								rangeCssClass = " text-primary ";
-							}
-							%>
-
-							<input
-								class="facet-term"
-								data-term-id="<%= modifiedFacetTermDisplayContext.getRange() %>"
-								id="<portlet:namespace /><%= modifiedFacetTermDisplayContext.getLabel() %>"
-								name="<portlet:namespace /><%= modifiedFacetTermDisplayContext.getLabel() %>"
-								onChange="Liferay.Search.FacetUtil.changeSelection(event);"
-								type="checkbox"
-								<%= modifiedFacetTermDisplayContext.isSelected() ? "checked" : StringPool.BLANK %>
-							/>
+						<li class="facet-value nav-item" name="<%= renderResponse.getNamespace() + "range_" + modifiedFacetTermDisplayContext.getLabel() %>">
+							<a
+								class="<%= modifiedFacetTermDisplayContext.isActive() ? "active" : StringPool.BLANK %> nav-link"
+								href="<%= modifiedFacetTermDisplayContext.getRangeURL() %>"
+							>
 
 							<span class="term-name">
 								<liferay-ui:message key="<%= modifiedFacetTermDisplayContext.getLabel() %>" />
 							</span>
 
 							<small class="term-count">
-								<span class="frequency">(<%= modifiedFacetTermDisplayContext.getFrequency() %>)</span>
+								<span class="badge badge-info frequency"><%= modifiedFacetTermDisplayContext.getFrequency() %></span>
 							</small>
+							</a>
 						</li>
 
 					<%
 					}
 					%>
 
-					<li class="facet-value">
+					<li class="facet-value nav-item" name="<%= renderResponse.getNamespace() + "range_" + customRangeTermDisplayContext.getLabel() %>">
+						<a
+							class="<%= customRangeTermDisplayContext.isActive() ? "active" : StringPool.BLANK %> nav-link"
+							href="javascript:;"
+							id="<portlet:namespace /><%= customRangeTermDisplayContext.getLabel() + "-toggleLink" %>"
+						>
+							<span class="term-name"><liferay-ui:message key="<%= customRangeTermDisplayContext.getLabel() %>" />&hellip;</span>
 
-						<%
-						String customRangeCssClass = renderResponse.getNamespace() + "custom-range-toggle";
-
-						if (customRangeTermDisplayContext.isSelected()) {
-							customRangeCssClass += " text-primary";
-						}
-						else {
-							customRangeCssClass += " text-default";
-						}
-						%>
-
-						<aui:a cssClass="<%= customRangeCssClass %>" href="javascript:;">
-							<liferay-ui:message key="custom-range" />&hellip;
-
-							<span class="frequency">(<%= customRangeTermDisplayContext.getFrequency() %>)</span>
-						</aui:a>
+							<c:if test="<%= customRangeTermDisplayContext.isSelected() %>">
+								<span class="<%= customRangeTermDisplayContext.getLabel() %>-frequency frequency">(<%= customRangeTermDisplayContext.getFrequency() %>)</span>
+							</c:if>
+						</a>
 					</li>
 
 					<div class="<%= !modifiedFacetCalendarDisplayContext.isSelected() ? "hide" : StringPool.BLANK %> modified-custom-range" id="<portlet:namespace />customRange">
