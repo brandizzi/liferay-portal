@@ -16,11 +16,14 @@ package com.liferay.portal.search.web.internal.facet.display.builder;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.collector.FacetCollector;
 import com.liferay.portal.kernel.search.facet.collector.TermCollector;
 import com.liferay.portal.kernel.service.GroupLocalService;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.search.web.internal.facet.display.context.ScopeSearchFacetDisplayContext;
 import com.liferay.portal.search.web.internal.facet.display.context.ScopeSearchFacetTermDisplayContext;
 
@@ -51,6 +54,7 @@ public class ScopeSearchFacetDisplayBuilder {
 		ScopeSearchFacetDisplayContext scopeSearchFacetDisplayContext =
 			new ScopeSearchFacetDisplayContext();
 
+		scopeSearchFacetDisplayContext.setFilterBySite(isFilterBySite());
 		scopeSearchFacetDisplayContext.setNothingSelected(nothingSelected);
 		scopeSearchFacetDisplayContext.setParameterName(_parameterName);
 		scopeSearchFacetDisplayContext.setParameterValue(
@@ -66,6 +70,18 @@ public class ScopeSearchFacetDisplayBuilder {
 
 	public void setFacet(Facet facet) {
 		_facet = facet;
+	}
+
+	public void setFilterBySite(SearchContext searchContext) {
+		boolean filterBySite = false;
+
+		long[] groupIds = searchContext.getGroupIds();
+
+		if (ArrayUtil.isNotEmpty(groupIds)) {
+			filterBySite = true;
+		}
+
+		_filterBySite = filterBySite;
 	}
 
 	public void setFrequenciesVisible(boolean frequenciesVisible) {
@@ -119,6 +135,7 @@ public class ScopeSearchFacetDisplayBuilder {
 		scopeSearchFacetTermDisplayContext.setCount(count);
 		scopeSearchFacetTermDisplayContext.setDescriptiveName(
 			getDescriptiveName(groupId));
+		scopeSearchFacetTermDisplayContext.setFilterBySite(isFilterBySite());
 		scopeSearchFacetTermDisplayContext.setGroupId(groupId);
 		scopeSearchFacetTermDisplayContext.setSelected(selected);
 		scopeSearchFacetTermDisplayContext.setShowCount(_showCounts);
@@ -185,7 +202,13 @@ public class ScopeSearchFacetDisplayBuilder {
 		}
 
 		try {
-			return group.getDescriptiveName(_locale);
+			String name = group.getDescriptiveName(_locale);
+
+			if (group.isStagingGroup() || group.isStagedRemotely()) {
+				name = name + StringPool.SPACE + "(Staged)"; //add lang key
+			}
+
+			return name;
 		}
 		catch (PortalException pe) {
 			throw new RuntimeException(pe);
@@ -232,6 +255,10 @@ public class ScopeSearchFacetDisplayBuilder {
 		return Collections.<TermCollector>emptyList();
 	}
 
+	protected boolean isFilterBySite() {
+		return _filterBySite;
+	}
+
 	protected boolean isNothingSelected() {
 		if (_selectedGroupIds.isEmpty()) {
 			return true;
@@ -250,6 +277,7 @@ public class ScopeSearchFacetDisplayBuilder {
 
 	private int _countThreshold;
 	private Facet _facet;
+	private boolean _filterBySite;
 	private GroupLocalService _groupLocalService;
 	private Locale _locale;
 	private int _maxTerms;
