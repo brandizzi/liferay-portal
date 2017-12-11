@@ -81,24 +81,18 @@ ModifiedFacetCalendarDisplayContext modifiedFacetCalendarDisplayContext = modifi
 					}
 					%>
 
-					<li class="facet-value" name="<%= renderResponse.getNamespace() + "range_" + customRangeTermDisplayContext.getLabel() %>">
-						<input
-							class="facet-term"
-							data-term-id="<%= customRangeTermDisplayContext.getRange() %>"
-							id="<portlet:namespace /><%= customRangeTermDisplayContext.getLabel() %>"
-							name="<portlet:namespace /><%= customRangeTermDisplayContext.getLabel() %>"
-							onChange="<portlet:namespace />searchCustomRange();"
-							type="checkbox"
-							<%= customRangeTermDisplayContext.isSelected() ? "checked" : StringPool.BLANK %>
-						/>
-
-						<aui:a href="javascript:;" id='<%= customRangeTermDisplayContext.getLabel() + "-toggleLink" %>'>
-							<liferay-ui:message key="<%= customRangeTermDisplayContext.getLabel() %>" />&hellip;
+					<li class="facet-value nav-item" name="<%= renderResponse.getNamespace() + "range_" + customRangeTermDisplayContext.getLabel() %>">
+						<a
+							class="<%= customRangeTermDisplayContext.isActive() ? "active" : StringPool.BLANK %> nav-link"
+							href="javascript:;"
+							id="<portlet:namespace /><%= customRangeTermDisplayContext.getLabel() + "-toggleLink" %>"
+						>
+							<span class="term-name"><liferay-ui:message key="<%= customRangeTermDisplayContext.getLabel() %>" />&hellip;</span>
 
 							<c:if test="<%= customRangeTermDisplayContext.isSelected() %>">
 								<span class="<%= customRangeTermDisplayContext.getLabel() %>-frequency frequency">(<%= customRangeTermDisplayContext.getFrequency() %>)</span>
 							</c:if>
-						</aui:a>
+						</a>
 					</li>
 
 					<div class="<%= !customRangeTermDisplayContext.isSelected() ? "hide" : StringPool.BLANK %> <%= modifiedFacetDisplayContext.getParameterName() %>-<%= customRangeTermDisplayContext.getLabel() %>" id="<portlet:namespace />customRangePickers">
@@ -153,6 +147,13 @@ ModifiedFacetCalendarDisplayContext modifiedFacetCalendarDisplayContext = modifi
 									minuteValue="<%= modifiedFacetCalendarDisplayContext.getToMinuteValue() %>"
 									name="toInputTime"
 								/>
+
+								<aui:button
+									onClick="<portlet:namespace />searchCustomRange();"
+									type="submit"
+								>
+									<liferay-ui:message key="search" />
+								</aui:button>
 							</aui:field-wrapper>
 						</div>
 					</div>
