@@ -973,7 +973,6 @@ public class CalendarBookingServiceImpl extends CalendarBookingServiceBaseImpl {
 				getPermissionChecker(), calendarBooking.getCalendarId(),
 				CalendarActionKeys.VIEW_BOOKING_DETAILS)) {
 
-			calendarBooking.setTitle(StringPool.BLANK);
 			calendarBooking.setDescription(StringPool.BLANK);
 			calendarBooking.setLocation(StringPool.BLANK);
 		}
