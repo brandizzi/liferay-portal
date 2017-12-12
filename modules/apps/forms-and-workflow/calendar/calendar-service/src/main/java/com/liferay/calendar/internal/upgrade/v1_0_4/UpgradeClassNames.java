@@ -32,6 +32,7 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 	@Override
 	public void doUpgrade() throws UpgradeException {
 		changeCalEventClassName();
+
 		deleteCalEventClassName();
 		deleteDuplicateResourcePermissions();
 		deleteDuplicateResources();
@@ -54,6 +55,7 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 			String calBookingClassNameId = null;
 
 			ps1.setString(1, _CAL_EVENT_CLASS_NAME + "%");
+
 			ResultSet rs = ps1.executeQuery();
 
 			if (rs.next()) {
@@ -64,6 +66,7 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 			}
 
 			ps1.setString(1, _CALENDAR_BOOKING_CLASS_NAME + "%");
+
 			rs = ps1.executeQuery();
 
 			if (rs.next()) {
@@ -85,7 +88,6 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 					oldSettings, calEventClassNameId, calBookingClassNameId);
 
 				ps3.setString(1, newSettings);
-
 				ps3.setLong(2, vocabularyId);
 
 				ps3.execute();
