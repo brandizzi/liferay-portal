@@ -51,12 +51,10 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 				"update AssetVocabulary set settings_ = ? where vocabularyId " +
 					"= ?")) {
 
-			String calEventClassNameId = null;
-			String calBookingClassNameId = null;
-
 			ps1.setString(1, _CAL_EVENT_CLASS_NAME + "%");
 
 			ResultSet rs = ps1.executeQuery();
+			String calEventClassNameId = null;
 
 			if (rs.next()) {
 				calEventClassNameId = rs.getString("classNameId");
@@ -68,6 +66,8 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 			ps1.setString(1, _CALENDAR_BOOKING_CLASS_NAME + "%");
 
 			rs = ps1.executeQuery();
+
+			String calBookingClassNameId = null;
 
 			if (rs.next()) {
 				calBookingClassNameId = rs.getString("classNameId");
