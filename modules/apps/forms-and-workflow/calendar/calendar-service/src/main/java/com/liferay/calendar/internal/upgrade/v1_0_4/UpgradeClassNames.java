@@ -151,10 +151,10 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 			ps1.setString(1, _CAL_EVENT_CLASS_NAME + "%");
 
 			ResultSet rs = ps1.executeQuery();
-			String calEventClassNameId = null;
+			long calEventClassNameId = 0;
 
 			if (rs.next()) {
-				calEventClassNameId = rs.getString("classNameId");
+				calEventClassNameId = rs.getLong("classNameId");
 			}
 			else {
 				return;
@@ -164,10 +164,10 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 
 			rs = ps1.executeQuery();
 
-			String calBookingClassNameId = null;
+			long calBookingClassNameId = 0;
 
 			if (rs.next()) {
-				calBookingClassNameId = rs.getString("classNameId");
+				calBookingClassNameId = rs.getLong("classNameId");
 			}
 			else {
 				return;
@@ -182,7 +182,8 @@ public class UpgradeClassNames extends UpgradeKernelPackage {
 				long vocabularyId = rs.getLong("vocabularyId");
 
 				String newSettings = StringUtil.replace(
-					oldSettings, calEventClassNameId, calBookingClassNameId);
+					oldSettings, String.valueOf(calEventClassNameId),
+						String.valueOf(calBookingClassNameId));
 
 				ps3.setString(1, newSettings);
 				ps3.setLong(2, vocabularyId);
