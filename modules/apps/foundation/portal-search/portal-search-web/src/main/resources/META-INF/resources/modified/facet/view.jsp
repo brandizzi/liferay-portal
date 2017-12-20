@@ -85,24 +85,18 @@ int i = 0;
 					}
 					%>
 
-					<li class="facet-value">
+					<li class="facet-value nav-item" name="<%= renderResponse.getNamespace() + "range_" + customRangeTermDisplayContext.getLabel() %>">
+						<a
+							class="<%= customRangeTermDisplayContext.isActive() ? "active" : StringPool.BLANK %> nav-link"
+							href="javascript:;"
+							id="<portlet:namespace /><%= customRangeTermDisplayContext.getLabel() + "-toggleLink" %>"
+						>
+							<span class="term-name"><liferay-ui:message key="<%= customRangeTermDisplayContext.getLabel() %>" />&hellip;</span>
 
-						<%
-						String customRangeCssClass = renderResponse.getNamespace() + "custom-range-toggle";
-
-						if (customRangeTermDisplayContext.isSelected()) {
-							customRangeCssClass += " text-primary";
-						}
-						else {
-							customRangeCssClass += " text-default";
-						}
-						%>
-
-						<aui:a cssClass="<%= customRangeCssClass %>" href="javascript:;">
-							<liferay-ui:message key="custom-range" />&hellip;
-
-							<span class="frequency">(<%= customRangeTermDisplayContext.getFrequency() %>)</span>
-						</aui:a>
+							<c:if test="<%= customRangeTermDisplayContext.isSelected() %>">
+								<span class="<%= customRangeTermDisplayContext.getLabel() %>-frequency frequency">(<%= customRangeTermDisplayContext.getFrequency() %>)</span>
+							</c:if>
+						</a>
 					</li>
 
 					<div class="<%= !modifiedFacetCalendarDisplayContext.isSelected() ? "hide" : StringPool.BLANK %> modified-custom-range" id="<portlet:namespace />customRange">
