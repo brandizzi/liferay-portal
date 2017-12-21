@@ -262,7 +262,6 @@ public class CalendarBookingIndexer extends BaseIndexer<CalendarBooking> {
 				isCommitImmediately());
 		}
 		else if (status == CalendarBookingWorkflowConstants.STATUS_DENIED) {
-
 			doDelete(calendarBooking);
 		}
 	}
