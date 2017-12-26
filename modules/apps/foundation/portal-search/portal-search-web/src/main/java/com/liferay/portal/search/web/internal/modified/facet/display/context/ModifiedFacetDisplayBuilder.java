@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.collector.FacetCollector;
 import com.liferay.portal.kernel.search.facet.collector.TermCollector;
+import com.liferay.portal.kernel.util.CalendarFactoryUtil;
+import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -26,8 +28,11 @@ import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
 
+import java.text.DateFormat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +63,24 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 			buildTermDisplayContexts());
 
 		return modifiedFacetDisplayContext;
+	}
+
+	public String getCustomRangeURL() {
+		DateFormat format = DateFormatFactoryUtil.getSimpleDateFormat(
+			"yyyy-MM-dd");
+
+		Calendar calendar = CalendarFactoryUtil.getCalendar(_timeZone);
+
+		String to = format.format(calendar.getTime());
+
+		calendar.add(Calendar.DATE, -1);
+
+		String from = format.format(calendar.getTime());
+
+		String rangeURL = HttpUtil.setParameter(
+			_currentURL, "modifiedFrom", from);
+
+		return HttpUtil.setParameter(rangeURL, "modifiedTo", to);
 	}
 
 	public void setCurrentURL(String currentURL) {
@@ -144,8 +167,8 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 
 		ModifiedFacetTermDisplayContext customRangeTermDisplayContext =
 			buildTermDisplay(
-				StringPool.BLANK, StringPool.BLANK, selected, data,
-				getFrequency(termCollector), null);
+				"custom-range", "custom-range", selected, data,
+				getFrequency(termCollector), getCustomRangeURL());
 
 		return customRangeTermDisplayContext;
 	}
