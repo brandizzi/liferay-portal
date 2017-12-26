@@ -67,6 +67,10 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		_facet = facet;
 	}
 
+	public void setFromParameterValue(String from) {
+		_from = from;
+	}
+
 	public void setLocale(Locale locale) {
 		_locale = locale;
 	}
@@ -88,6 +92,10 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		_timeZone = timeZone;
 	}
 
+	public void setToParameterValue(String to) {
+		_to = to;
+	}
+
 	protected ModifiedFacetCalendarDisplayContext
 		buildCalendarDisplayContext() {
 
@@ -104,8 +112,10 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 			modifiedFacetCalendarDisplayBuilder::setRangeString
 		);
 
+		modifiedFacetCalendarDisplayBuilder.setFrom(_from);
 		modifiedFacetCalendarDisplayBuilder.setLocale(_locale);
 		modifiedFacetCalendarDisplayBuilder.setTimeZone(_timeZone);
+		modifiedFacetCalendarDisplayBuilder.setTo(_to);
 
 		return modifiedFacetCalendarDisplayBuilder.build();
 	}
@@ -226,10 +236,12 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 
 	private String _currentURL;
 	private Facet _facet;
+	private String _from;
 	private Locale _locale;
 	private String _parameterName;
 	private JSONArray _rangesJSONArray;
 	private List<String> _selectedRanges = Collections.emptyList();
 	private TimeZone _timeZone;
+	private String _to;
 
 }
