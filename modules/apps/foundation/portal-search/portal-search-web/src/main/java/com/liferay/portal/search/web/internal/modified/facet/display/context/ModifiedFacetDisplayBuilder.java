@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.search.facet.collector.TermCollector;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
 
@@ -123,7 +124,11 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 	protected ModifiedFacetTermDisplayContext
 		buildCustomRangeTermDisplayContext() {
 
-		boolean selected = true;
+		boolean selected = false;
+
+		if (Validator.isNotNull(_from) || Validator.isNotNull(_to)) {
+			selected = true;
+		}
 
 		Map<String, Object> data = new HashMap<>();
 

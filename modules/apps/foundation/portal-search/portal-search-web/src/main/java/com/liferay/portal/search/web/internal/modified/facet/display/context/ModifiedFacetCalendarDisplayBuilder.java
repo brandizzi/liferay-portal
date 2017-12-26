@@ -67,7 +67,11 @@ public class ModifiedFacetCalendarDisplayBuilder {
 			toCalendar.setTime(toDate);
 		}
 
-		boolean selected = true;
+		boolean selected = false;
+
+		if (Validator.isNotNull(_from) || Validator.isNotNull(_to)) {
+			selected = true;
+		}
 
 		modifiedFacetCalendarDisplayContext.setSelected(selected);
 
