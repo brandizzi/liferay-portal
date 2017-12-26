@@ -37,6 +37,10 @@ public class ModifiedFacetCalendarDisplayContext implements Serializable {
 		return _fromYearValue;
 	}
 
+	public String getRangeURL() {
+		return _rangeURL;
+	}
+
 	public int getToDayValue() {
 		return _toDayValue;
 	}
@@ -81,6 +85,10 @@ public class ModifiedFacetCalendarDisplayContext implements Serializable {
 		_fromYearValue = fromYearValue;
 	}
 
+	public void setRangeURL(String rangeURL) {
+		_rangeURL = rangeURL;
+	}
+
 	public void setSelected(boolean selected) {
 		_selected = selected;
 	}
@@ -106,6 +114,7 @@ public class ModifiedFacetCalendarDisplayContext implements Serializable {
 	private int _fromFirstDayOfWeek;
 	private int _fromMonthValue;
 	private int _fromYearValue;
+	private String _rangeURL;
 	private boolean _selected;
 	private int _toDayValue;
 	private int _toFirstDayOfWeek;
