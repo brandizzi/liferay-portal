@@ -67,7 +67,11 @@ public class ModifiedFacetCalendarDisplayBuilder {
 			toCalendar.setTime(toDate);
 		}
 
-		boolean selected = true;
+		boolean selected = false;
+
+		if (Validator.isNotNull(_from) || Validator.isNotNull(_to)) {
+			selected = true;
+		}
 
 		modifiedFacetCalendarDisplayContext.setSelected(selected);
 
@@ -100,6 +104,10 @@ public class ModifiedFacetCalendarDisplayBuilder {
 		return modifiedFacetCalendarDisplayContext;
 	}
 
+	public void setFrom(String from) {
+		_from = from;
+	}
+
 	public void setFromDay(int fromDay) {
 		_fromDay = fromDay;
 	}
@@ -124,6 +132,10 @@ public class ModifiedFacetCalendarDisplayBuilder {
 		_timeZone = timeZone;
 	}
 
+	public void setTo(String to) {
+		_to = to;
+	}
+
 	public void setToDay(int toDay) {
 		_toDay = toDay;
 	}
@@ -144,12 +156,14 @@ public class ModifiedFacetCalendarDisplayBuilder {
 		return new int[] {day, month, year};
 	}
 
+	private String _from;
 	private int _fromDay;
 	private int _fromMonth;
 	private int _fromYear;
 	private Locale _locale;
 	private String _rangeString;
 	private TimeZone _timeZone;
+	private String _to;
 	private int _toDay;
 	private int _toMonth;
 	private int _toYear;

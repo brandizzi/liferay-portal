@@ -14,8 +14,7 @@
  */
 --%>
 
-<%@ page import="com.liferay.portal.kernel.language.UnicodeLanguageUtil" %><%@
-page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
+<%@ page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
 page import="com.liferay.portal.search.web.internal.modified.facet.display.context.ModifiedFacetCalendarDisplayContext" %><%@
@@ -84,7 +83,7 @@ ModifiedFacetCalendarDisplayContext modifiedFacetCalendarDisplayContext = modifi
 					<li class="facet-value nav-item" name="<%= renderResponse.getNamespace() + "range_" + customRangeTermDisplayContext.getLabel() %>">
 						<a
 							class="<%= customRangeTermDisplayContext.isActive() ? "active" : StringPool.BLANK %> nav-link"
-							href="javascript:;"
+							href="<%= customRangeTermDisplayContext.getRangeURL() %>"
 							id="<portlet:namespace /><%= customRangeTermDisplayContext.getLabel() + "-toggleLink" %>"
 						>
 							<span class="term-name"><liferay-ui:message key="<%= customRangeTermDisplayContext.getLabel() %>" />&hellip;</span>
@@ -178,80 +177,4 @@ ModifiedFacetCalendarDisplayContext modifiedFacetCalendarDisplayContext = modifi
 
 		FacetUtil.setURLParameters(form, selections);
 	}
-</aui:script>
-
-<aui:script use="aui-form-validator">
-	var Util = Liferay.Util;
-
-	var customRangeFrom = Liferay.component('<%= renderResponse.getNamespace() %>modifiedfromDatePicker');
-	var customRangeTo = Liferay.component('<%= renderResponse.getNamespace() %>modifiedtoDatePicker');
-	var searchButton = A.one('#<portlet:namespace />searchCustomRangeButton');
-
-	var preventKeyboardDateChange = function(event) {
-		if (!event.isKey('TAB')) {
-			event.preventDefault();
-		}
-	};
-
-	A.one('#<portlet:namespace /><%= HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) %>from').on('keydown', preventKeyboardDateChange);
-	A.one('#<portlet:namespace /><%= HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) %>to').on('keydown', preventKeyboardDateChange);
-
-	var DEFAULTS_FORM_VALIDATOR = A.config.FormValidator;
-
-	A.mix(
-		DEFAULTS_FORM_VALIDATOR.STRINGS,
-		{
-			<portlet:namespace />dateRange: '<%= UnicodeLanguageUtil.get(request, "search-custom-range-invalid-date-range") %>'
-		},
-		true
-	);
-
-	A.mix(
-		DEFAULTS_FORM_VALIDATOR.RULES,
-		{
-			<portlet:namespace />dateRange: function(val, fieldNode, ruleValue) {
-				return A.Date.isGreaterOrEqual(customRangeTo.getDate(), customRangeFrom.getDate());
-			}
-		},
-		true
-	);
-
-	var customRangeValidator = new A.FormValidator(
-		{
-			boundingBox: document.<portlet:namespace />fm,
-			fieldContainer: 'div',
-			on: {
-				errorField: function(event) {
-					Util.toggleDisabled(searchButton, true);
-				},
-				validField: function(event) {
-					Util.toggleDisabled(searchButton, false);
-				}
-			},
-			rules: {
-				'<portlet:namespace /><%= HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) %>from': {
-					<portlet:namespace />dateRange: true
-				},
-				'<portlet:namespace /><%= HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) %>to': {
-					<portlet:namespace />dateRange: true
-				}
-			}
-		}
-	);
-
-	var onRangeSelectionChange = function(event) {
-		customRangeValidator.validate();
-	};
-
-	customRangeFrom.on('selectionChange', onRangeSelectionChange);
-	customRangeTo.on('selectionChange', onRangeSelectionChange);
-
-	A.one('.<portlet:namespace />custom-range-toggle').on(
-		'click',
-		function(event) {
-			event.halt();
-
-			A.one('#<%= renderResponse.getNamespace() + "customRange" %>').toggle();
-		}
-	);
 </aui:script>

@@ -20,14 +20,20 @@ import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.collector.FacetCollector;
 import com.liferay.portal.kernel.search.facet.collector.TermCollector;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
+import com.liferay.portal.kernel.util.CalendarFactoryUtil;
+import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
 
+import java.text.DateFormat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -60,12 +66,34 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		return modifiedFacetDisplayContext;
 	}
 
+	public String getCustomRangeURL() {
+		DateFormat format = DateFormatFactoryUtil.getSimpleDateFormat(
+			"yyyy-MM-dd");
+
+		Calendar calendar = CalendarFactoryUtil.getCalendar(_timeZone);
+
+		String to = format.format(calendar.getTime());
+
+		calendar.add(Calendar.DATE, -1);
+
+		String from = format.format(calendar.getTime());
+
+		String rangeURL = HttpUtil.setParameter(
+			_currentURL, "modifiedFrom", from);
+
+		return HttpUtil.setParameter(rangeURL, "modifiedTo", to);
+	}
+
 	public void setCurrentURL(String currentURL) {
 		_currentURL = currentURL;
 	}
 
 	public void setFacet(Facet facet) {
 		_facet = facet;
+	}
+
+	public void setFromParameterValue(String from) {
+		_from = from;
 	}
 
 	public void setLocale(Locale locale) {
@@ -89,6 +117,10 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		_timeZone = timeZone;
 	}
 
+	public void setToParameterValue(String to) {
+		_to = to;
+	}
+
 	protected ModifiedFacetCalendarDisplayContext
 		buildCalendarDisplayContext() {
 
@@ -105,8 +137,10 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 			modifiedFacetCalendarDisplayBuilder::setRangeString
 		);
 
+		modifiedFacetCalendarDisplayBuilder.setFrom(_from);
 		modifiedFacetCalendarDisplayBuilder.setLocale(_locale);
 		modifiedFacetCalendarDisplayBuilder.setTimeZone(_timeZone);
+		modifiedFacetCalendarDisplayBuilder.setTo(_to);
 
 		return modifiedFacetCalendarDisplayBuilder.build();
 	}
@@ -114,7 +148,11 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 	protected ModifiedFacetTermDisplayContext
 		buildCustomRangeTermDisplayContext() {
 
-		boolean selected = true;
+		boolean selected = false;
+
+		if (Validator.isNotNull(_from) || Validator.isNotNull(_to)) {
+			selected = true;
+		}
 
 		Map<String, Object> data = new HashMap<>();
 
@@ -130,8 +168,8 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 
 		ModifiedFacetTermDisplayContext customRangeTermDisplayContext =
 			buildTermDisplay(
-				StringPool.BLANK, StringPool.BLANK, selected, data,
-				getFrequency(termCollector), null);
+				"custom-range", "custom-range", selected, data,
+				getFrequency(termCollector), getCustomRangeURL());
 
 		return customRangeTermDisplayContext;
 	}
@@ -229,10 +267,12 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 
 	private String _currentURL;
 	private Facet _facet;
+	private String _from;
 	private Locale _locale;
 	private String _parameterName;
 	private JSONArray _rangesJSONArray;
 	private List<String> _selectedRanges = Collections.emptyList();
 	private TimeZone _timeZone;
+	private String _to;
 
 }
