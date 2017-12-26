@@ -153,6 +153,20 @@ public class ModifiedFacetPortlet
 		parameterValuesOptional.ifPresent(
 			modifiedSearchFacetDisplayBuilder::setParameterValues);
 
+		Optional<String> fromParameterValueOptional =
+			portletSharedSearchResponse.getParameter(
+				parameterName + "From", renderRequest);
+
+		fromParameterValueOptional.ifPresent(
+			modifiedSearchFacetDisplayBuilder::setFromParameterValue);
+
+		Optional<String> toParameterValueOptional =
+			portletSharedSearchResponse.getParameter(
+				parameterName + "To", renderRequest);
+
+		toParameterValueOptional.ifPresent(
+			modifiedSearchFacetDisplayBuilder::setToParameterValue);
+
 		return modifiedSearchFacetDisplayBuilder.build();
 	}
 
