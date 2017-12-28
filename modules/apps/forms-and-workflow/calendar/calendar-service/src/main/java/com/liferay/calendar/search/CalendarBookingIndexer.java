@@ -128,6 +128,14 @@ public class CalendarBookingIndexer extends BaseIndexer<CalendarBooking> {
 	}
 
 	@Override
+	public void postProcessContextBooleanFilter(
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
+		throws Exception {
+
+		addStatus(contextBooleanFilter, searchContext);
+	}
+
+	@Override
 	protected void doDelete(CalendarBooking calendarBooking) throws Exception {
 		deleteDocument(
 			calendarBooking.getCompanyId(),
