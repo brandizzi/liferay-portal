@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ModifiedFacetFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -39,6 +40,7 @@ import com.liferay.portal.search.web.portlet.shared.search.PortletSharedSearchSe
 
 import java.io.IOException;
 
+import java.util.Date;
 import java.util.Optional;
 
 import javax.portlet.Portlet;
@@ -151,6 +153,13 @@ public class ModifiedFacetPortlet
 		int toYear = ParamUtil.getInteger(
 			renderRequest, escapedParameterName + "yearTo");
 
+		Date modifiedFrom = ParamUtil.getDate(
+			renderRequest, escapedParameterName + "From",
+			DateFormatFactoryUtil.getSimpleDateFormat("yyyy-MM-dd"));
+		Date modifiedTo = ParamUtil.getDate(
+			renderRequest, escapedParameterName + "To",
+			DateFormatFactoryUtil.getSimpleDateFormat("yyyy-MM-dd"));
+
 		ModifiedFacetDisplayBuilder modifiedSearchFacetDisplayBuilder =
 			new ModifiedFacetDisplayBuilder();
 
@@ -170,6 +179,20 @@ public class ModifiedFacetPortlet
 
 		parameterValuesOptional.ifPresent(
 			modifiedSearchFacetDisplayBuilder::setParameterValues);
+
+		Optional<String> fromParameterValueOptional =
+			portletSharedSearchResponse.getParameter(
+				parameterName + "From", renderRequest);
+
+		fromParameterValueOptional.ifPresent(
+			modifiedSearchFacetDisplayBuilder::setFromParameterValue);
+
+		Optional<String> toParameterValueOptional =
+			portletSharedSearchResponse.getParameter(
+				parameterName + "To", renderRequest);
+
+		toParameterValueOptional.ifPresent(
+			modifiedSearchFacetDisplayBuilder::setToParameterValue);
 
 		return modifiedSearchFacetDisplayBuilder.build();
 	}
