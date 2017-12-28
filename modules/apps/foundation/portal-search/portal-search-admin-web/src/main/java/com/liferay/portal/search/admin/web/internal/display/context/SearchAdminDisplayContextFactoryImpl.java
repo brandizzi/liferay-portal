@@ -41,12 +41,21 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 public class SearchAdminDisplayContextFactoryImpl
 	implements SearchAdminDisplayContextFactory {
 
+	private static final String[] _SEARCH_ADMIN_TABS = { "general", "reindex" };
+
 	@Override
 	public SearchAdminDisplayContext create(
 			RenderRequest renderRequest, RenderResponse renderResponse,
 			PortletPreferences portletPreferences)
 		throws PortletException {
 
+		SearchEngineInformation searchEngineInformation = getSearchEngineInformation();
+
+		return new SearchAdminDisplayContext(
+			searchEngineInformation.getStatusString(), _SEARCH_ADMIN_TABS);
+	}
+
+	protected SearchEngineInformation getSearchEngineInformation() {
 		String searchEngineId = _searchEngineHelper.getDefaultSearchEngineId();
 
 		SearchEngine searchEngine = _searchEngineHelper.getSearchEngine(
@@ -58,11 +67,7 @@ public class SearchAdminDisplayContextFactoryImpl
 			vendor = "null";
 		}
 
-		SearchEngineInformation searchEngineInformation =
-			_searchEngineInformationMap.get(vendor);
-
-		return new SearchAdminDisplayContext(
-			searchEngineInformation.getStatusString());
+		return _searchEngineInformationMap.get(vendor);
 	}
 
 	@Reference(

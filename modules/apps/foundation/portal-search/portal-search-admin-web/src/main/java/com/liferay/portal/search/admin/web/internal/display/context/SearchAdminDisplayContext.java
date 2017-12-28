@@ -19,12 +19,23 @@ package com.liferay.portal.search.admin.web.internal.display.context;
  */
 public class SearchAdminDisplayContext {
 
-	public SearchAdminDisplayContext(String statusString) {
+	private String[] _tabs;
+
+	public SearchAdminDisplayContext(
+		String statusString, String[] tabs, String tab) {
+
+		
 		this._statusString = statusString;
+		this._tab = tab;
+		this._tabs = tabs;
 	}
 
 	public String getStatusString() {
 		return _statusString;
+	}
+	
+	public String[] getTabs() {
+		return _tabs;
 	}
 
 	private final String _statusString;
