@@ -1276,12 +1276,7 @@ public class CalendarBookingLocalServiceImpl
 		if (isStagingCalendarBooking(calendarBooking) &&
 			(calendar.getGroupId() != calendarBooking.getGroupId())) {
 
-			systemEventLocalService.addSystemEvent(
-				userId, calendarBooking.getGroupId(),
-				CalendarBooking.class.getName(),
-				calendarBooking.getCalendarBookingId(),
-				calendarBooking.getUuid(), null,
-				SystemEventConstants.TYPE_DELETE, StringPool.BLANK);
+			throw new PortalException("We get into the system event register");
 		}
 
 		for (Map.Entry<Locale, String> entry : descriptionMap.entrySet()) {
