@@ -26,4 +26,10 @@ public class PortalSearchApplicationType {
 
 	}
 
+	public interface SearchBar {
+
+		public static final String CLASS_NAME =
+			"com.liferay.admin.kernel.util.PortalSearchApplicationType$SearchBar";
+
+	}
 }
