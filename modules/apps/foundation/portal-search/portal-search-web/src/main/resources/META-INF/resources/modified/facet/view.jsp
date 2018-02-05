@@ -153,47 +153,12 @@ int i = 0;
 	</liferay-ui:panel>
 </liferay-ui:panel-container>
 
-<aui:script use="liferay-search-facet-util">
-	var Lang = A.Lang;
-	var LString = Lang.String;
+<aui:script use="liferay-search-modified-facet">
+	var fromInputDatePicker = Liferay.component('<portlet:namespace />fromInputDatePicker');
 
-	var FacetUtil = Liferay.Search.FacetUtil;
+	var toInputDatePicker = Liferay.component('<portlet:namespace />toInputDatePicker');
 
-	var ModifiedFacetFilter = function(fromInputDatePicker, toInputDatePicker) {
-		var instance = this;
-
-		instance.fromInputDatePicker = fromInputDatePicker;
-		instance.toInputDatePicker =  toInputDatePicker;
-	};
-
-	ModifiedFacetFilter.prototype.filter = function(event) {
-		var instance = this;
-
-		var fromDate = instance.fromInputDatePicker.getDate();
-		var toDate = instance.toInputDatePicker.getDate();
-
-		var modifiedFromParameter = fromDate.toISOString().slice(0,10);
-		var modifiedToParameter = toDate.toISOString().slice(0,10);
-
-		var parameterArray = document.location.search.substr(1).split('&');
-
-		var newParameters = FacetUtil.removeURLParameters('modified', parameterArray);
-
-		newParameters = FacetUtil.removeURLParameters('modifiedFrom', newParameters);
-
-		newParameters = FacetUtil.removeURLParameters('modifiedTo', newParameters);
-
-		newParameters = FacetUtil.addURLParameter('modifiedFrom', modifiedFromParameter, newParameters);
-
-		newParameters = FacetUtil.addURLParameter('modifiedTo', modifiedToParameter, newParameters);
-
-		document.location.search = newParameters.join('&');
-	};
-
-	var customRangeFilter = new ModifiedFacetFilter(
-		Liferay.component('<portlet:namespace />fromInputDatePicker'),
-		Liferay.component('<portlet:namespace />toInputDatePicker')
-	);
+	var customRangeFilter = new Liferay.Search.ModifiedFacetFilter(fromInputDatePicker, toInputDatePicker);
 
 	window.<portlet:namespace /><%= HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) %>customRangeFilter = customRangeFilter;
 </aui:script>
