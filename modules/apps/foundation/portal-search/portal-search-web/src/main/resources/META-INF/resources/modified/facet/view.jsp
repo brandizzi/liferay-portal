@@ -132,7 +132,7 @@ int i = 0;
 						</div>
 
 						<%
-						String taglibSearchCustomRange = "window['" + renderResponse.getNamespace() + HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) + "searchCustomRange'](event);";
+						String taglibSearchCustomRange = "window['" + renderResponse.getNamespace() + HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) + "customRangeFilter'].filter(event);";
 						%>
 
 						<aui:button disabled="<%= (!modifiedFacetCalendarDisplayContext.isFromBeforeTo()) %>" name="searchCustomRangeButton" onClick="<%= taglibSearchCustomRange %>" value="search" />
@@ -154,18 +154,23 @@ int i = 0;
 </liferay-ui:panel-container>
 
 <aui:script use="liferay-search-facet-util">
+	var Lang = A.Lang;
+	var LString = Lang.String;
+
 	var FacetUtil = Liferay.Search.FacetUtil;
 
-	function searchCustomRange(event) {
-		var A = AUI();
-		var Lang = A.Lang;
-		var LString = Lang.String;
+	var ModifiedFacetFilter = function(fromInputDatePicker, toInputDatePicker) {
+		var instance = this;
 
-		var fromInputDatePicker = Liferay.component('<portlet:namespace />fromInputDatePicker');
-		var toInputDatePicker = Liferay.component('<portlet:namespace />toInputDatePicker');
+		instance.fromInputDatePicker = fromInputDatePicker;
+		instance.toInputDatePicker =  toInputDatePicker;
+	};
 
-		var fromDate = fromInputDatePicker.getDate();
-		var toDate = toInputDatePicker.getDate();
+	ModifiedFacetFilter.prototype.filter = function(event) {
+		var instance = this;
+
+		var fromDate = instance.fromInputDatePicker.getDate();
+		var toDate = instance.toInputDatePicker.getDate();
 
 		var modifiedFromParameter = fromDate.toISOString().slice(0,10);
 		var modifiedToParameter = toDate.toISOString().slice(0,10);
@@ -183,7 +188,12 @@ int i = 0;
 		newParameters = FacetUtil.addURLParameter('modifiedTo', modifiedToParameter, newParameters);
 
 		document.location.search = newParameters.join('&');
-	}
+	};
 
-	window.<portlet:namespace /><%= HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) %>searchCustomRange = searchCustomRange;
+	var customRangeFilter = new ModifiedFacetFilter(
+		Liferay.component('<portlet:namespace />fromInputDatePicker'),
+		Liferay.component('<portlet:namespace />toInputDatePicker')
+	);
+
+	window.<portlet:namespace /><%= HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) %>customRangeFilter = customRangeFilter;
 </aui:script>
