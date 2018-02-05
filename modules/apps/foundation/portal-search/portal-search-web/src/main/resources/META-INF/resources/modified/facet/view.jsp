@@ -128,7 +128,7 @@ ModifiedFacetCalendarDisplayContext modifiedFacetCalendarDisplayContext = modifi
 						</div>
 
 						<%
-						String taglibSearchCustomRange = "window['" + renderResponse.getNamespace() + HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) + "searchCustomRange'](event);";
+						String taglibSearchCustomRange = "window['" + renderResponse.getNamespace() + HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) + "customRangeFilter'].filter(event);";
 						%>
 
 						<aui:button disabled="<%= (!modifiedFacetCalendarDisplayContext.isFromBeforeTo()) %>" name="searchCustomRangeButton" onClick="<%= taglibSearchCustomRange %>" value="search" />
@@ -149,32 +149,12 @@ ModifiedFacetCalendarDisplayContext modifiedFacetCalendarDisplayContext = modifi
 	</liferay-ui:panel>
 </liferay-ui:panel-container>
 
-<aui:script use="liferay-search-facet-util">
-	function <portlet:namespace /><%= HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) %>searchCustomRange(event) {
-		var A = AUI();
-		var Lang = A.Lang;
-		var LString = Lang.String;
+<aui:script use="liferay-search-modified-facet">
+	var fromInputDatePicker = Liferay.component('<portlet:namespace />fromInputDatePicker');
 
-		var form = $(event.currentTarget).closest('form')[0];
+	var toInputDatePicker = Liferay.component('<portlet:namespace />toInputDatePicker');
 
-		var dayFrom = form.fm('fromDay').val();
-		var monthFrom = Lang.toInt(form.fm('fromMonth').val()) + 1;
-		var yearFrom = form.fm('fromYear').val();
+	var customRangeFilter = new Liferay.Search.ModifiedFacetFilter(fromInputDatePicker, toInputDatePicker);
 
-		var dayTo = form.fm('toDay').val();
-		var monthTo = Lang.toInt(form.fm('toMonth').val()) + 1;
-		var yearTo = form.fm('toYear').val();
-
-		var range = '[' + yearFrom + LString.padNumber(monthFrom, 2) + LString.padNumber(dayFrom, 2) + '000000 TO ' + yearTo + LString.padNumber(monthTo, 2) + LString.padNumber(dayTo, 2) + '235959]';
-
-		form.fm('customRange').val(range);
-		form.fm('customRange').attr("checked", true);
-		form.fm('customRange').attr("data-term-id", range);
-		form.fm('<%= HtmlUtil.escapeAttribute(modifiedFacetDisplayContext.getParameterName()) + "selection" %>').val('<%= i + 1 %>');
-		form.fm('<%= HtmlUtil.escapeAttribute(modifiedFacetDisplayContext.getParameterName()) %>').val(range);
-
-		var selections = [range];
-
-		FacetUtil.setURLParameters(form, selections);
-	}
+	window.<portlet:namespace /><%= HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) %>customRangeFilter = customRangeFilter;
 </aui:script>
