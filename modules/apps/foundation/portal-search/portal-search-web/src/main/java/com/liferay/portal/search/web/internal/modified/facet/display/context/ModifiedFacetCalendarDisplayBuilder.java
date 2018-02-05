@@ -18,6 +18,9 @@ import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -29,17 +32,19 @@ import java.util.TimeZone;
 public class ModifiedFacetCalendarDisplayBuilder {
 
 	public ModifiedFacetCalendarDisplayContext build() {
-		if (_rangeString != null) {
-			int[] from = parseDate(_rangeString.substring(1, 9));
+		int[] from = parseDate(_from);
 
+		if (from != null) {
 			_fromDay = from[0];
-			_fromMonth = from[1] - 1;
+			_fromMonth = from[1];
 			_fromYear = from[2];
+		}
 
-			int[] to = parseDate(_rangeString.substring(10, 18));
+		int[] to = parseDate(_to);
 
+		if (to != null) {
 			_toDay = to[0];
-			_toMonth = to[1] - 1;
+			_toMonth = to[1];
 			_toYear = to[2];
 		}
 
@@ -108,18 +113,6 @@ public class ModifiedFacetCalendarDisplayBuilder {
 		_from = from;
 	}
 
-	public void setFromDay(int fromDay) {
-		_fromDay = fromDay;
-	}
-
-	public void setFromMonth(int fromMonth) {
-		_fromMonth = fromMonth;
-	}
-
-	public void setFromYear(int fromYear) {
-		_fromYear = fromYear;
-	}
-
 	public void setLocale(Locale locale) {
 		_locale = locale;
 	}
@@ -136,24 +129,26 @@ public class ModifiedFacetCalendarDisplayBuilder {
 		_to = to;
 	}
 
-	public void setToDay(int toDay) {
-		_toDay = toDay;
-	}
-
-	public void setToMonth(int toMonth) {
-		_toMonth = toMonth;
-	}
-
-	public void setToYear(int toYear) {
-		_toYear = toYear;
-	}
-
 	protected int[] parseDate(String string) {
-		int day = Integer.valueOf(string.substring(6, 8));
-		int month = Integer.valueOf(string.substring(4, 6));
-		int year = Integer.valueOf(string.substring(0, 4));
+		DateFormat format = new SimpleDateFormat("yyyy-mm-dd");
 
-		return new int[] {day, month, year};
+		try {
+			Date date = format.parse(string);
+
+			Calendar calendar = Calendar.getInstance();
+
+			calendar.setTime(date);
+
+			return new int[] {
+				calendar.get(Calendar.DATE),
+				calendar.get(Calendar.MONTH),
+				calendar.get(Calendar.YEAR)
+			};
+		}
+		catch (ParseException e) {
+			return null;
+		}
+
 	}
 
 	private String _from;

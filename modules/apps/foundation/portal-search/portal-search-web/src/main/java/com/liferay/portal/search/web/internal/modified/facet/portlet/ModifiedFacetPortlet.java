@@ -137,29 +137,6 @@ public class ModifiedFacetPortlet
 
 		ThemeDisplay themeDisplay = getThemeDisplay(renderRequest);
 
-		String escapedParameterName = HtmlUtil.escapeJS(parameterName);
-
-		int fromDay = ParamUtil.getInteger(
-			renderRequest, escapedParameterName + "dayFrom");
-		int fromMonth = ParamUtil.getInteger(
-			renderRequest, escapedParameterName + "monthFrom");
-		int fromYear = ParamUtil.getInteger(
-			renderRequest, escapedParameterName + "yearFrom");
-
-		int toDay = ParamUtil.getInteger(
-			renderRequest, escapedParameterName + "dayTo");
-		int toMonth = ParamUtil.getInteger(
-			renderRequest, escapedParameterName + "monthTo");
-		int toYear = ParamUtil.getInteger(
-			renderRequest, escapedParameterName + "yearTo");
-
-		Date modifiedFrom = ParamUtil.getDate(
-			renderRequest, escapedParameterName + "From",
-			DateFormatFactoryUtil.getSimpleDateFormat("yyyy-MM-dd"));
-		Date modifiedTo = ParamUtil.getDate(
-			renderRequest, escapedParameterName + "To",
-			DateFormatFactoryUtil.getSimpleDateFormat("yyyy-MM-dd"));
-
 		ModifiedFacetDisplayBuilder modifiedSearchFacetDisplayBuilder =
 			new ModifiedFacetDisplayBuilder();
 
