@@ -20,9 +20,6 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ModifiedFacetFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
-import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.web.internal.display.context.PortletRequestThemeDisplaySupplier;
@@ -40,7 +37,6 @@ import com.liferay.portal.search.web.portlet.shared.search.PortletSharedSearchSe
 
 import java.io.IOException;
 
-import java.util.Date;
 import java.util.Optional;
 
 import javax.portlet.Portlet;

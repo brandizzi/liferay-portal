@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.web.internal.modified.facet.display.context;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -21,6 +22,7 @@ import com.liferay.portal.kernel.util.Validator;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -52,8 +54,8 @@ public class ModifiedFacetCalendarDisplayBuilder {
 			modifiedFacetCalendarDisplayContext =
 				new ModifiedFacetCalendarDisplayContext();
 
-		Date fromDate = PortalUtil.getDate(_fromMonth, _fromDay, _fromYear);
-		Date toDate = PortalUtil.getDate(_toMonth, _toDay, _toYear);
+		Date fromDate = getDate(_fromYear, _fromMonth, _fromDay);
+		Date toDate = getDate(_toYear, _toMonth, _toDay);
 
 		Calendar fromCalendar = CalendarFactoryUtil.getCalendar(
 			_timeZone, _locale);
@@ -109,6 +111,15 @@ public class ModifiedFacetCalendarDisplayBuilder {
 		return modifiedFacetCalendarDisplayContext;
 	}
 
+	public Date getDate(int year, int month, int day) {
+		try {
+			return PortalUtil.getDate(month, day, year, _timeZone, null);
+		}
+		catch (PortalException pe) {
+			throw new RuntimeException(pe);
+		}
+	}
+
 	public void setFrom(String from) {
 		_from = from;
 	}
@@ -140,15 +151,13 @@ public class ModifiedFacetCalendarDisplayBuilder {
 			calendar.setTime(date);
 
 			return new int[] {
-				calendar.get(Calendar.DATE),
-				calendar.get(Calendar.MONTH),
+				calendar.get(Calendar.DATE), calendar.get(Calendar.MONTH),
 				calendar.get(Calendar.YEAR)
 			};
 		}
-		catch (ParseException e) {
+		catch (ParseException pe) {
 			return null;
 		}
-
 	}
 
 	private String _from;
