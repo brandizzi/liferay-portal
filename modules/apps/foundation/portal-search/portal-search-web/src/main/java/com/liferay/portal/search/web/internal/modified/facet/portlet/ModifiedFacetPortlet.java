@@ -193,6 +193,39 @@ public class ModifiedFacetPortlet
 		return facet.getFieldName();
 	}
 
+	protected Optional<String> getLiteralRange(
+		PortletSharedSearchSettings portletSharedSearchSettings) {
+
+		Optional<String[]> modifiedFromValuesOptional =
+			portletSharedSearchSettings.getParameterValues("modifiedFrom");
+		Optional<String[]> modifiedToValuesOptional =
+			portletSharedSearchSettings.getParameterValues("modifiedTo");
+
+		String[] modifiedFromValues = modifiedFromValuesOptional.orElse(
+			_UNBOUND_RANGE_LIMIT);
+		String[] modifiedToValues = modifiedToValuesOptional.orElse(
+			_UNBOUND_RANGE_LIMIT);
+
+		if (isBoundRange(modifiedFromValues[0], modifiedToValues[0])) {
+			return Optional.of(
+				modifiedFromValues[0] + " TO " + modifiedToValues[0]);
+		}
+		else {
+			return Optional.empty();
+		}
+	}
+
+	protected Optional<String> getNamedRange(
+		ModifiedFacetPortletPreferences modifiedFacetPortletPreferences,
+		PortletSharedSearchSettings portletSharedSearchSettings) {
+
+		Optional<String[]> modifiedValueOptional =
+			portletSharedSearchSettings.getParameterValues(
+				modifiedFacetPortletPreferences.getParameterName());
+
+		return modifiedValueOptional.map(values -> values[0]);
+	}
+
 	protected ModifiedFacetPortletPreferencesImpl getPortletPreferences(
 		RenderRequest renderRequest) {
 
@@ -207,17 +240,45 @@ public class ModifiedFacetPortlet
 		return themeDisplaySupplier.getThemeDisplay();
 	}
 
+	protected boolean isBoundRange(
+		String modifiedFromValue, String modifiedToValue) {
+
+		if (!_UNBOUND_RANGE_LIMIT[0].equals(modifiedFromValue)) {
+			return true;
+		}
+
+		if (!_UNBOUND_RANGE_LIMIT[0].equals(modifiedToValue)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	protected Optional<String> or(
+		Optional<String> range1, Optional<String> range2) {
+
+		return range1.map(
+			Optional::of
+		).orElse(
+			range2
+		);
+	}
+
 	protected void setSelectedRanges(
 		ModifiedFacetPortletPreferences modifiedFacetPortletPreferences,
 		PortletSharedSearchSettings portletSharedSearchSettings,
 		ModifiedFacetBuilder modifiedFacetBuilder) {
 
-		Optional<String[]> parameterValuesOptional =
-			portletSharedSearchSettings.getParameterValues(
-				modifiedFacetPortletPreferences.getParameterName());
+		Optional<String> namedRangeOptional = getNamedRange(
+			modifiedFacetPortletPreferences, portletSharedSearchSettings);
 
-		parameterValuesOptional.ifPresent(
-			modifiedFacetBuilder::setSelectedRanges);
+		Optional<String> literalRangeOptional = getLiteralRange(
+			portletSharedSearchSettings);
+
+		Optional<String> rangeOptional = or(
+			namedRangeOptional, literalRangeOptional);
+
+		rangeOptional.ifPresent(modifiedFacetBuilder::setSelectedRanges);
 	}
 
 	@Reference
@@ -228,5 +289,7 @@ public class ModifiedFacetPortlet
 
 	@Reference
 	protected PortletSharedSearchRequest portletSharedSearchRequest;
+
+	private static final String[] _UNBOUND_RANGE_LIMIT = {"*"};
 
 }
