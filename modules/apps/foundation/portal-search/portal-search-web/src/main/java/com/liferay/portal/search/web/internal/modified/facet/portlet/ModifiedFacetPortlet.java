@@ -180,12 +180,9 @@ public class ModifiedFacetPortlet
 		modifiedFacetBuilder.setSearchContext(
 			portletSharedSearchSettings.getSearchContext());
 
-		Optional<String[]> parameterValuesOptional =
-			portletSharedSearchSettings.getParameterValues(
-				modifiedFacetPortletPreferences.getParameterName());
-
-		parameterValuesOptional.ifPresent(
-			modifiedFacetBuilder::setSelectedRanges);
+		setSelectedRanges(
+			modifiedFacetPortletPreferences, portletSharedSearchSettings,
+			modifiedFacetBuilder);
 
 		return modifiedFacetBuilder.build();
 	}
@@ -208,6 +205,19 @@ public class ModifiedFacetPortlet
 			new PortletRequestThemeDisplaySupplier(renderRequest);
 
 		return themeDisplaySupplier.getThemeDisplay();
+	}
+
+	protected void setSelectedRanges(
+		ModifiedFacetPortletPreferences modifiedFacetPortletPreferences,
+		PortletSharedSearchSettings portletSharedSearchSettings,
+		ModifiedFacetBuilder modifiedFacetBuilder) {
+
+		Optional<String[]> parameterValuesOptional =
+			portletSharedSearchSettings.getParameterValues(
+				modifiedFacetPortletPreferences.getParameterName());
+
+		parameterValuesOptional.ifPresent(
+			modifiedFacetBuilder::setSelectedRanges);
 	}
 
 	@Reference
