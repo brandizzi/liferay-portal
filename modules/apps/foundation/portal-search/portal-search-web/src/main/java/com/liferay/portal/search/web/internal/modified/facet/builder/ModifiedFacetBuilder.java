@@ -21,19 +21,32 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ModifiedFacetFactory;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
+import com.liferay.portal.search.web.internal.modified.facet.portlet.ModifiedFacetPortletPreferences;
+import com.liferay.portal.search.web.portlet.shared.search.PortletSharedSearchSettings;
 
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * @author Lino Alves
  */
 public class ModifiedFacetBuilder {
 
-	public ModifiedFacetBuilder(ModifiedFacetFactory modifiedFacetFactory) {
+	public ModifiedFacetBuilder(
+		ModifiedFacetFactory modifiedFacetFactory,
+		ModifiedFacetPortletPreferences modifiedFacetPortletPreferences,
+		PortletSharedSearchSettings portletSharedSearchSettings) {
+
 		_modifiedFacetFactory = modifiedFacetFactory;
+		_modifiedFacetPortletPreferences = modifiedFacetPortletPreferences;
+		_portletSharedSearchSettings = portletSharedSearchSettings;
 	}
 
 	public Facet build() {
+		_setSelectedRanges(
+			_modifiedFacetPortletPreferences, _portletSharedSearchSettings,
+			this);
+
 		Facet facet = _modifiedFacetFactory.newInstance(_searchContext);
 
 		facet.setFacetConfiguration(buildFacetConfiguration(facet));
@@ -99,8 +112,24 @@ public class ModifiedFacetBuilder {
 		}
 	}
 
+	private void _setSelectedRanges(
+		ModifiedFacetPortletPreferences modifiedFacetPortletPreferences,
+		PortletSharedSearchSettings portletSharedSearchSettings,
+		ModifiedFacetBuilder modifiedFacetBuilder) {
+
+		Optional<String[]> parameterValuesOptional =
+			portletSharedSearchSettings.getParameterValues(
+				modifiedFacetPortletPreferences.getParameterName());
+
+		parameterValuesOptional.ifPresent(
+			modifiedFacetBuilder::setSelectedRanges);
+	}
+
 	private final DateRangeFactory _dateRangeFactory = new DateRangeFactory();
 	private final ModifiedFacetFactory _modifiedFacetFactory;
+	private final ModifiedFacetPortletPreferences
+		_modifiedFacetPortletPreferences;
+	private final PortletSharedSearchSettings _portletSharedSearchSettings;
 	private SearchContext _searchContext;
 	private String[] _selectedRanges;
 
