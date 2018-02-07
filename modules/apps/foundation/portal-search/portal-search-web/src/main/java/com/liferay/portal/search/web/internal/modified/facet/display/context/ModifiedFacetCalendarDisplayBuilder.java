@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.Calendar;
@@ -155,7 +154,7 @@ public class ModifiedFacetCalendarDisplayBuilder {
 				calendar.get(Calendar.YEAR)
 			};
 		}
-		catch (ParseException pe) {
+		catch (Exception pe) {
 			return null;
 		}
 	}

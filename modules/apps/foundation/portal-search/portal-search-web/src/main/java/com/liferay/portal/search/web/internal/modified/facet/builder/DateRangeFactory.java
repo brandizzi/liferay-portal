@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.web.internal.modified.facet.builder;
 
+import com.liferay.portal.kernel.search.facet.util.RangeParserUtil;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -33,8 +34,20 @@ public class DateRangeFactory {
 		return _ranges.keySet();
 	}
 
-	public String getRangeString(String label) {
-		return _normalizeDates(_ranges.get(label));
+	public String getRangeString(String range) {
+		Collection<String> labels = getLabels();
+
+		if (labels.contains(range)) {
+			return _normalizeDates(_ranges.get(range));
+		}
+
+		String[] parsedRange = RangeParserUtil.parserRange(range);
+
+		if ((parsedRange[0] != null) || (parsedRange[1]) != null) {
+		return range;
+		}
+
+		return "";
 	}
 
 	private static String _normalizeDates(String rangeString) {

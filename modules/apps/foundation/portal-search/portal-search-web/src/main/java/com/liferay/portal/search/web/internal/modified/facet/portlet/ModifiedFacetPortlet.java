@@ -206,13 +206,27 @@ public class ModifiedFacetPortlet
 		String[] modifiedToValues = modifiedToValuesOptional.orElse(
 			_UNBOUND_RANGE_LIMIT);
 
-		if (isBoundRange(modifiedFromValues[0], modifiedToValues[0])) {
-			return Optional.of(
-				modifiedFromValues[0] + " TO " + modifiedToValues[0]);
+		String modifiedFromValue = getModifiedFromValue(modifiedFromValues);
+		String modifiedToValue = getModifiedToValue(modifiedToValues);
+
+		if (isBoundRange(modifiedFromValue, modifiedToValue)) {
+			return Optional.of(getRange(modifiedFromValue, modifiedToValue));
 		}
 		else {
 			return Optional.empty();
 		}
+	}
+
+	protected String getModifiedFromValue(String[] modifiedFromValues) {
+		String modifiedFromValue = modifiedFromValues[0].replace("-", "");
+
+		return modifiedFromValue + "000000";
+	}
+
+	protected String getModifiedToValue(String[] modifiedToValues) {
+		String modifiedFromValue = modifiedToValues[0].replace("-", "");
+
+		return modifiedFromValue + "999999";
 	}
 
 	protected Optional<String> getNamedRange(
@@ -231,6 +245,12 @@ public class ModifiedFacetPortlet
 
 		return new ModifiedFacetPortletPreferencesImpl(
 			Optional.ofNullable(renderRequest.getPreferences()));
+	}
+
+	protected String getRange(
+		String modifiedFromValue, String modifiedToValue) {
+
+		return "[" + modifiedFromValue + " TO " + modifiedToValue + "]";
 	}
 
 	protected ThemeDisplay getThemeDisplay(RenderRequest renderRequest) {
