@@ -17,39 +17,43 @@ package com.liferay.portal.search.web.internal.modified.facet.builder;
 import com.liferay.portal.kernel.search.facet.util.RangeParserUtil;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.search.web.internal.modified.facet.date.range.Label;
 
 import java.text.DateFormat;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author André de Oliveira
  */
 public class DateRangeFactory {
 
-	public Collection<String> getLabels() {
-		return _ranges.keySet();
+	public String getRangeString(String range) {
+		return Label.of(range).flatMap(
+			(label) -> Optional.of(_normalizeDates(label)) 
+		)
+		.orElseGet(
+			() -> _getLiteralRange(range)
+		);
 	}
 
-	public String getRangeString(String range) {
-		Collection<String> labels = getLabels();
-
-		if (labels.contains(range)) {
-			return _normalizeDates(_ranges.get(range));
-		}
-
+	private String _getLiteralRange(String range) {
 		String[] parsedRange = RangeParserUtil.parserRange(range);
 
 		if ((parsedRange[0] != null) || (parsedRange[1]) != null) {
 			return range;
 		}
-
+		
 		return "";
 	}
 
+	private static String _normalizeDates(Label label) {
+		return _normalizeDates(_ranges.get(label));
+	}
+	
 	private static String _normalizeDates(String rangeString) {
 		Calendar now = Calendar.getInstance();
 
@@ -100,14 +104,14 @@ public class DateRangeFactory {
 		return rangeString;
 	}
 
-	private static final Map<String, String> _ranges =
-		new LinkedHashMap<String, String>() {
+	private static final Map<Label, String> _ranges =
+		new LinkedHashMap<Label, String>() {
 			{
-				put("past-hour", "[past-hour TO *]");
-				put("past-24-hours", "[past-24-hours TO *]");
-				put("past-week", "[past-week TO *]");
-				put("past-month", "[past-month TO *]");
-				put("past-year", "[past-year TO *]");
+				put(Label.PAST_HOUR, "[past-hour TO *]");
+				put(Label.PAST_24_HOURS, "[past-24-hours TO *]");
+				put(Label.PAST_WEEK, "[past-week TO *]");
+				put(Label.PAST_MONTH, "[past-month TO *]");
+				put(Label.PAST_YEAR, "[past-year TO *]");
 			}
 		};
 

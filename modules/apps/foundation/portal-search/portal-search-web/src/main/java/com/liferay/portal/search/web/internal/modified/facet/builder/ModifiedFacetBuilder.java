@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ModifiedFacetFactory;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
+import com.liferay.portal.search.web.internal.modified.facet.date.range.Label;
 
 import java.util.Collection;
 
@@ -71,7 +72,7 @@ public class ModifiedFacetBuilder {
 	protected JSONArray getRangesJSONArray() {
 		JSONArray rangesJSONArray = JSONFactoryUtil.createJSONArray();
 
-		Collection<String> labels = _dateRangeFactory.getLabels();
+		Collection<String> labels = Label.getTexts();
 
 		for (String label : labels) {
 			JSONObject range = JSONFactoryUtil.createJSONObject();
