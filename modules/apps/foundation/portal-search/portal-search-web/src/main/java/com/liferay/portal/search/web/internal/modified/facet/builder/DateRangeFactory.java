@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.web.internal.modified.facet.builder;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -35,6 +36,18 @@ public class DateRangeFactory {
 
 	public String getRangeString(String label) {
 		return _normalizeDates(_ranges.get(label));
+	}
+
+	public String getRangeString(String from, String to) {
+		StringBundler sb = new StringBundler(5);
+
+		sb.append("[");
+		sb.append(_stripAndPad(from, "000000"));
+		sb.append(" TO ");
+		sb.append(_stripAndPad(to, "235959"));
+		sb.append("]");
+
+		return sb.toString();
 	}
 
 	private static String _normalizeDates(String rangeString) {
@@ -85,6 +98,12 @@ public class DateRangeFactory {
 			});
 
 		return rangeString;
+	}
+
+	private String _stripAndPad(String dateString, String pad) {
+		dateString = dateString.replace("-", "");
+
+		return dateString + pad;
 	}
 
 	private static final Map<String, String> _ranges =
