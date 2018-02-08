@@ -25,7 +25,5 @@ dependencies {
 	compileOnly project(":core:petra:petra-lang")
 	compileOnly project(":core:petra:petra-string")
 
-	testCompile group: "easyconf", name: "easyconf", version: "0.9.5"
-	testCompile group: "org.springframework", name: "spring-web", version: "4.1.9.RELEASE"
 	testCompile project(":apps:foundation:portal-search:portal-search")
 }

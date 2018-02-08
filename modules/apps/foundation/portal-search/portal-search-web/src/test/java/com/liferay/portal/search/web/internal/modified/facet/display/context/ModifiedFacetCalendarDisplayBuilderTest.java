@@ -16,11 +16,9 @@ package com.liferay.portal.search.web.internal.modified.facet.display.context;
 
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
 import com.liferay.portal.util.CalendarFactoryImpl;
-import com.liferay.portal.util.PortalImpl;
 
 import java.util.Calendar;
 import java.util.Optional;
@@ -39,7 +37,6 @@ public class ModifiedFacetCalendarDisplayBuilderTest extends PowerMockito {
 
 	@Before
 	public void setUp() throws Exception {
-		setUpPortalUtil();
 		setUpCalendarFactoryUtil();
 	}
 
@@ -187,12 +184,6 @@ public class ModifiedFacetCalendarDisplayBuilderTest extends PowerMockito {
 		CalendarFactoryUtil calendarFactoryUtil = new CalendarFactoryUtil();
 
 		calendarFactoryUtil.setCalendarFactory(new CalendarFactoryImpl());
-	}
-
-	protected void setUpPortalUtil() {
-		PortalUtil portalUtil = new PortalUtil();
-
-		portalUtil.setPortal(new PortalImpl());
 	}
 
 }
