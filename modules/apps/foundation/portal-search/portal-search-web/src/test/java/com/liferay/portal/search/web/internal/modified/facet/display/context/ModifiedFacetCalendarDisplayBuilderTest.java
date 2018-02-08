@@ -16,10 +16,12 @@ package com.liferay.portal.search.web.internal.modified.facet.display.context;
 
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
 import com.liferay.portal.util.CalendarFactoryImpl;
 
 import java.util.Calendar;
+import java.util.Optional;
 import java.util.TimeZone;
 
 import org.junit.Assert;
@@ -93,6 +95,33 @@ public class ModifiedFacetCalendarDisplayBuilderTest {
 			2018, Calendar.FEBRUARY, 28, modifiedFaceCalendarDisplayContext);
 	}
 
+	@Test
+	public void testGetRangeFromLimitAttributesWithWestwardTimeZone() {
+		Optional<TimeZone> timeZoneOptional = findWestwardTimeZoneOptional(
+			TimeZone.getDefault());
+
+		timeZoneOptional.ifPresent(
+			timeZone -> {
+				ModifiedFacetCalendarDisplayBuilder
+					modifiedFacetCalendarDisplayBuilder = createDisplayBuilder(
+						timeZone);
+
+				modifiedFacetCalendarDisplayBuilder.setFrom("2018-01-31");
+				modifiedFacetCalendarDisplayBuilder.setTo("2018-02-28");
+
+				ModifiedFacetCalendarDisplayContext
+					modifiedFaceCalendarDisplayContext =
+						modifiedFacetCalendarDisplayBuilder.build();
+
+				assertFromDateValues(
+					2018, Calendar.JANUARY, 31,
+					modifiedFaceCalendarDisplayContext);
+				assertToDateValues(
+					2018, Calendar.FEBRUARY, 28,
+					modifiedFaceCalendarDisplayContext);
+			});
+	}
+
 	protected void assertFromDateValues(
 		int year, int month, int dayOfMonth,
 		ModifiedFacetCalendarDisplayContext
@@ -134,6 +163,19 @@ public class ModifiedFacetCalendarDisplayBuilderTest {
 		modifiedFacetCalendarDisplayBuilder.setTimeZone(timeZone);
 
 		return modifiedFacetCalendarDisplayBuilder;
+	}
+
+	protected Optional<TimeZone> findWestwardTimeZoneOptional(
+		TimeZone timeZone) {
+
+		String[] availableIDs = TimeZone.getAvailableIDs(
+			(int)(timeZone.getRawOffset() - Time.HOUR));
+
+		if (availableIDs.length == 0) {
+			return Optional.empty();
+		}
+
+		return Optional.of(TimeZoneUtil.getTimeZone(availableIDs[0]));
 	}
 
 	protected void setUpCalendarFactoryUtil() {
