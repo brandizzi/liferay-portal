@@ -81,6 +81,23 @@ public class ModifiedFacetCalendarDisplayBuilderTest extends PowerMockito {
 			modifiedFaceCalendarDisplayContext);
 	}
 
+	@Test
+	public void testGetRangeFromLimitAttributes() {
+		ModifiedFacetCalendarDisplayBuilder
+			modifiedFacetCalendarDisplayBuilder = createDisplayBuilder();
+
+		modifiedFacetCalendarDisplayBuilder.setFrom("2018-01-31");
+		modifiedFacetCalendarDisplayBuilder.setTo("2018-02-28");
+
+		ModifiedFacetCalendarDisplayContext modifiedFaceCalendarDisplayContext =
+			modifiedFacetCalendarDisplayBuilder.build();
+
+		assertFromDateValues(
+			2018, Calendar.JANUARY, 31, modifiedFaceCalendarDisplayContext);
+		assertToDateValues(
+			2018, Calendar.FEBRUARY, 28, modifiedFaceCalendarDisplayContext);
+	}
+
 	protected void assertFromDateValues(
 		int year, int month, int dayOfMonth,
 		ModifiedFacetCalendarDisplayContext
