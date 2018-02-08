@@ -24,7 +24,5 @@ dependencies {
 	provided project(":apps:foundation:portal:portal-instance-lifecycle-api")
 	provided project(":apps:web-experience:asset:asset-taglib")
 
-	testCompile group: "easyconf", name: "easyconf", version: "0.9.5"
-	testCompile group: "org.springframework", name: "spring-web", version: "4.1.9.RELEASE"
 	testCompile project(":apps:foundation:portal-search:portal-search")
 }
