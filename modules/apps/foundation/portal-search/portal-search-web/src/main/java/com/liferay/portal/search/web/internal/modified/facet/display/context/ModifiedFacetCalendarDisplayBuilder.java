@@ -42,6 +42,19 @@ public class ModifiedFacetCalendarDisplayBuilder {
 			_toMonth = to[1] - 1;
 			_toYear = to[2];
 		}
+		else if (Validator.isNotNull(_from) && Validator.isNotNull(_to)) {
+			int[] from = parseDate(_from.replace("-", ""));
+
+			_fromDay = from[0];
+			_fromMonth = from[1] - 1;
+			_fromYear = from[2];
+
+			int[] to = parseDate(_to.replace("-", ""));
+
+			_toDay = to[0];
+			_toMonth = to[1] - 1;
+			_toYear = to[2];
+		}
 
 		ModifiedFacetCalendarDisplayContext
 			modifiedFacetCalendarDisplayContext =
