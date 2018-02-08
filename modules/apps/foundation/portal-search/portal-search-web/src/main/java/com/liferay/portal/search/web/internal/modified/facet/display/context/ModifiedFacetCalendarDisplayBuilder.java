@@ -15,11 +15,9 @@
 package com.liferay.portal.search.web.internal.modified.facet.display.context;
 
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -42,25 +40,8 @@ public class ModifiedFacetCalendarDisplayBuilder {
 			modifiedFacetCalendarDisplayContext =
 				new ModifiedFacetCalendarDisplayContext();
 
-		Date fromDate = PortalUtil.getDate(_fromMonth, _fromDay, _fromYear);
-		Date toDate = PortalUtil.getDate(_toMonth, _toDay, _toYear);
-
-		Calendar fromCalendar = CalendarFactoryUtil.getCalendar(
-			_timeZone, _locale);
-
-		if (Validator.isNotNull(fromDate)) {
-			fromCalendar.setTime(fromDate);
-		}
-		else {
-			fromCalendar.add(Calendar.DATE, -1);
-		}
-
-		Calendar toCalendar = CalendarFactoryUtil.getCalendar(
-			_timeZone, _locale);
-
-		if (Validator.isNotNull(toDate)) {
-			toCalendar.setTime(toDate);
-		}
+		Calendar fromCalendar = _getFromCalendar();
+		Calendar toCalendar = _getToCalendar();
 
 		boolean selected = false;
 
@@ -149,6 +130,34 @@ public class ModifiedFacetCalendarDisplayBuilder {
 		int year = Integer.valueOf(string.substring(0, 4));
 
 		return new int[] {day, month, year};
+	}
+
+	private Calendar _getFromCalendar() {
+		if (Validator.isGregorianDate(_fromMonth, _fromDay, _fromYear)) {
+			return CalendarFactoryUtil.getCalendar(
+				_fromYear, _fromMonth, _fromDay, 0, 0, 0, 0, _timeZone);
+		}
+		else {
+			Calendar calendar = CalendarFactoryUtil.getCalendar(
+				_timeZone, _locale);
+
+			calendar.add(Calendar.DATE, -1);
+
+			return calendar;
+		}
+	}
+
+	private Calendar _getToCalendar() {
+		if (Validator.isGregorianDate(_toMonth, _toDay, _toYear)) {
+			return CalendarFactoryUtil.getCalendar(
+				_toYear, _toMonth, _toDay, 0, 0, 0, 0, _timeZone);
+		}
+		else {
+			Calendar toCalendar = CalendarFactoryUtil.getCalendar(
+				_timeZone, _locale);
+
+			return toCalendar;
+		}
 	}
 
 	private void _setFromValues(String dateString) {
