@@ -30,17 +30,12 @@ public class ModifiedFacetCalendarDisplayBuilder {
 
 	public ModifiedFacetCalendarDisplayContext build() {
 		if (_rangeString != null) {
-			int[] from = parseDate(_rangeString.substring(1, 9));
-
-			_fromDay = from[0];
-			_fromMonth = from[1] - 1;
-			_fromYear = from[2];
-
-			int[] to = parseDate(_rangeString.substring(10, 18));
-
-			_toDay = to[0];
-			_toMonth = to[1] - 1;
-			_toYear = to[2];
+			_setFromValues(_rangeString.substring(1, 9));
+			_setToValues(_rangeString.substring(10, 18));
+		}
+		else if (Validator.isNotNull(_from) && Validator.isNotNull(_to)) {
+			_setFromValues(_from.replace("-", ""));
+			_setToValues(_to.replace("-", ""));
 		}
 
 		ModifiedFacetCalendarDisplayContext
@@ -154,6 +149,22 @@ public class ModifiedFacetCalendarDisplayBuilder {
 		int year = Integer.valueOf(string.substring(0, 4));
 
 		return new int[] {day, month, year};
+	}
+
+	private void _setFromValues(String dateString) {
+		int[] from = parseDate(dateString);
+
+		_fromDay = from[0];
+		_fromMonth = from[1] - 1;
+		_fromYear = from[2];
+	}
+
+	private void _setToValues(String dateString) {
+		int[] to = parseDate(dateString);
+
+		_toDay = to[0];
+		_toMonth = to[1] - 1;
+		_toYear = to[2];
 	}
 
 	private String _from;
