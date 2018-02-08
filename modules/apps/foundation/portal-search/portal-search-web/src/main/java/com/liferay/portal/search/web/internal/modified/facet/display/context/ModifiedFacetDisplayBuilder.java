@@ -262,7 +262,15 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 	}
 
 	protected boolean isNothingSelected() {
-		return _selectedRanges.isEmpty();
+		if (!_selectedRanges.isEmpty()) {
+			return false;
+		}
+
+		if (Validator.isNotNull(_from) && Validator.isNotNull(_to)) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private String _currentURL;
