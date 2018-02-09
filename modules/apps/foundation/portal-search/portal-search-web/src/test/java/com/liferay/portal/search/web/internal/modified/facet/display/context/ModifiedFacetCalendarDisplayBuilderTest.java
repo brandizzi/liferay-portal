@@ -20,7 +20,9 @@ import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
 import com.liferay.portal.util.CalendarFactoryImpl;
 
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.TimeZone;
 
@@ -28,12 +30,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.powermock.api.mockito.PowerMockito;
-
 /**
  * @author Adam Brandizzi
  */
-public class ModifiedFacetCalendarDisplayBuilderTest extends PowerMockito {
+public class ModifiedFacetCalendarDisplayBuilderTest {
 
 	@Before
 	public void setUp() throws Exception {
@@ -62,21 +62,18 @@ public class ModifiedFacetCalendarDisplayBuilderTest extends PowerMockito {
 		ModifiedFacetCalendarDisplayContext modifiedFaceCalendarDisplayContext =
 			modifiedFacetCalendarDisplayBuilder.build();
 
-		Calendar todayCalendar = CalendarFactoryUtil.getCalendar(timeZone);
+		LocalDate today = LocalDate.now();
 
-		Calendar yesterdayCalendar = (Calendar)todayCalendar.clone();
-
-		yesterdayCalendar.add(Calendar.DAY_OF_MONTH, -1);
+		LocalDate yesterday = today.minus(1, ChronoUnit.DAYS);
 
 		assertFromDateValues(
-			yesterdayCalendar.get(Calendar.YEAR),
-			yesterdayCalendar.get(Calendar.MONTH),
-			yesterdayCalendar.get(Calendar.DAY_OF_MONTH),
+			yesterday.getYear(), yesterday.getMonth(),
+			yesterday.getDayOfMonth(),
 			modifiedFaceCalendarDisplayContext);
 
 		assertToDateValues(
-			todayCalendar.get(Calendar.YEAR), todayCalendar.get(Calendar.MONTH),
-			todayCalendar.get(Calendar.DAY_OF_MONTH),
+			today.getYear(), today.getMonth(),
+			today.getDayOfMonth(),
 			modifiedFaceCalendarDisplayContext);
 	}
 
@@ -92,9 +89,9 @@ public class ModifiedFacetCalendarDisplayBuilderTest extends PowerMockito {
 			modifiedFacetCalendarDisplayBuilder.build();
 
 		assertFromDateValues(
-			2018, Calendar.JANUARY, 31, modifiedFaceCalendarDisplayContext);
+			2018, Month.JANUARY, 31, modifiedFaceCalendarDisplayContext);
 		assertToDateValues(
-			2018, Calendar.FEBRUARY, 28, modifiedFaceCalendarDisplayContext);
+			2018, Month.FEBRUARY, 28, modifiedFaceCalendarDisplayContext);
 	}
 
 	@Test
@@ -116,36 +113,38 @@ public class ModifiedFacetCalendarDisplayBuilderTest extends PowerMockito {
 						modifiedFacetCalendarDisplayBuilder.build();
 
 				assertFromDateValues(
-					2018, Calendar.JANUARY, 31,
+					2018, Month.JANUARY, 31,
 					modifiedFaceCalendarDisplayContext);
 				assertToDateValues(
-					2018, Calendar.FEBRUARY, 28,
+					2018, Month.FEBRUARY, 28,
 					modifiedFaceCalendarDisplayContext);
 			});
 	}
 
 	protected void assertFromDateValues(
-		int year, int month, int dayOfMonth,
+		int year, Month month, int dayOfMonth,
 		ModifiedFacetCalendarDisplayContext
 			modifiedFaceCalendarDisplayContext) {
 
 		Assert.assertEquals(
 			year, modifiedFaceCalendarDisplayContext.getFromYearValue());
 		Assert.assertEquals(
-			month, modifiedFaceCalendarDisplayContext.getFromMonthValue());
+			month.getValue() - 1,
+			modifiedFaceCalendarDisplayContext.getFromMonthValue());
 		Assert.assertEquals(
 			dayOfMonth, modifiedFaceCalendarDisplayContext.getFromDayValue());
 	}
 
 	protected void assertToDateValues(
-		int year, int month, int dayOfMonth,
+		int year, Month month, int dayOfMonth,
 		ModifiedFacetCalendarDisplayContext
 			modifiedFaceCalendarDisplayContext) {
 
 		Assert.assertEquals(
 			year, modifiedFaceCalendarDisplayContext.getToYearValue());
 		Assert.assertEquals(
-			month, modifiedFaceCalendarDisplayContext.getToMonthValue());
+			month.getValue() - 1,
+			modifiedFaceCalendarDisplayContext.getToMonthValue());
 		Assert.assertEquals(
 			dayOfMonth, modifiedFaceCalendarDisplayContext.getToDayValue());
 	}

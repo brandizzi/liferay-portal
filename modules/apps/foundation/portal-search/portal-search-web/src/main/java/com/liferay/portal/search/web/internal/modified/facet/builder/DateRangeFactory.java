@@ -15,12 +15,11 @@
 package com.liferay.portal.search.web.internal.modified.facet.builder;
 
 import com.liferay.petra.string.StringBundler;
-import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
-import java.text.DateFormat;
-
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,48 +37,30 @@ public class DateRangeFactory {
 		return _normalizeDates(_ranges.get(label));
 	}
 
-	public String getRangeString(String from, String to) {
+	public String getRangeString(String start, String end) {
 		StringBundler sb = new StringBundler(5);
 
 		sb.append("[");
-		sb.append(_stripAndPad(from, "000000"));
+		sb.append(_stripAndPad(start, "000000"));
 		sb.append(" TO ");
-		sb.append(_stripAndPad(to, "235959"));
+		sb.append(_stripAndPad(end, "235959"));
 		sb.append("]");
 
 		return sb.toString();
 	}
 
 	private static String _normalizeDates(String rangeString) {
-		Calendar now = Calendar.getInstance();
+		LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS);
 
-		now.set(Calendar.SECOND, 0);
-		now.set(Calendar.MINUTE, 0);
+		LocalDateTime pastHour = now.minus(1, ChronoUnit.HOURS);
+		LocalDateTime past24Hours = now.minus(24, ChronoUnit.HOURS);
+		LocalDateTime pastWeek = now.minus(1, ChronoUnit.WEEKS);
+		LocalDateTime pastMonth = now.minus(1, ChronoUnit.MONTHS);
+		LocalDateTime pastYear = now.minus(1, ChronoUnit.YEARS);
 
-		Calendar pastHour = (Calendar)now.clone();
+		now = now.plus(1, ChronoUnit.HOURS);
 
-		pastHour.set(Calendar.HOUR_OF_DAY, now.get(Calendar.HOUR_OF_DAY) - 1);
-
-		Calendar past24Hours = (Calendar)now.clone();
-
-		past24Hours.set(
-			Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) - 1);
-
-		Calendar pastWeek = (Calendar)now.clone();
-
-		pastWeek.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) - 7);
-
-		Calendar pastMonth = (Calendar)now.clone();
-
-		pastMonth.set(Calendar.MONTH, now.get(Calendar.MONTH) - 1);
-
-		Calendar pastYear = (Calendar)now.clone();
-
-		pastYear.set(Calendar.YEAR, now.get(Calendar.YEAR) - 1);
-
-		now.set(Calendar.HOUR_OF_DAY, now.get(Calendar.HOUR_OF_DAY) + 1);
-
-		DateFormat dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(
 			"yyyyMMddHHmmss");
 
 		rangeString = StringUtil.replace(
@@ -89,12 +70,12 @@ public class DateRangeFactory {
 				"past-year", "*"
 			},
 			new String[] {
-				dateFormat.format(pastHour.getTime()),
-				dateFormat.format(past24Hours.getTime()),
-				dateFormat.format(pastWeek.getTime()),
-				dateFormat.format(pastMonth.getTime()),
-				dateFormat.format(pastYear.getTime()),
-				dateFormat.format(now.getTime())
+				dateTimeFormatter.format(pastHour),
+				dateTimeFormatter.format(past24Hours),
+				dateTimeFormatter.format(pastWeek),
+				dateTimeFormatter.format(pastMonth),
+				dateTimeFormatter.format(pastYear),
+				dateTimeFormatter.format(now)
 			});
 
 		return rangeString;

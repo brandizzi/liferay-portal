@@ -21,19 +21,17 @@ import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ModifiedFacetFactory;
 import com.liferay.portal.kernel.search.facet.util.RangeParserUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
-import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.util.CalendarFactoryImpl;
-import com.liferay.portal.util.DateFormatFactoryImpl;
 
-import java.text.DateFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalQueries;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -44,12 +42,9 @@ import org.junit.Test;
  */
 public class ModifiedFacetBuilderTest {
 
-	private DateFormat _dateFormat;
-
 	@Before
 	public void setUp() {
 		setUpCalendarFactoryUtil();
-		setUpDateFormat();
 		setUpJSONFactoryUtil();
 	}
 
@@ -63,14 +58,10 @@ public class ModifiedFacetBuilderTest {
 
 		Facet modifiedFacet = modifiedFacetBuilder.build();
 
-		List<Calendar> calendars = getRangeCalendars(modifiedFacet);
+		List<LocalDate> rangeLimits = getRangeLimits(modifiedFacet);
 
-		Calendar startCalendar = parseCalendar("20180131");
-
-		Calendar endCalendar = parseCalendar("20180228");
-
-		assertSameDay(calendars.get(0), startCalendar);
-		assertSameDay(calendars.get(1), endCalendar);
+		assertSameDay(rangeLimits.get(0), parseLocalDateTime("20180131"));
+		assertSameDay(rangeLimits.get(1), parseLocalDateTime("20180228"));
 	}
 
 	@Test
@@ -82,19 +73,16 @@ public class ModifiedFacetBuilderTest {
 
 		Facet modifiedFacet = modifiedFacetBuilder.build();
 
-		List<Calendar> calendars = getRangeCalendars(modifiedFacet);
+		List<LocalDate> rangeLimits = getRangeLimits(modifiedFacet);
 
-		Calendar today = CalendarFactoryUtil.getCalendar();
+		LocalDate today = LocalDate.now();
 
-		assertSameDay(calendars.get(0), getYesterday(today));
-		assertSameDay(calendars.get(1), today);
+		assertSameDay(rangeLimits.get(0), today.minus(1, ChronoUnit.DAYS));
+		assertSameDay(rangeLimits.get(1), today);
 	}
 
-	protected void assertSameDay(Calendar expected, Calendar actual) {
-		String expectedDateString = _dateFormat.format(expected.getTime());
-		String actualDateString = _dateFormat.format(actual.getTime());
-
-		Assert.assertEquals(expectedDateString, actualDateString);
+	protected void assertSameDay(LocalDate expected, LocalDate actual) {
+		Assert.assertEquals(expected, actual);
 	}
 
 	protected ModifiedFacetBuilder createModifiedFacetBuilder() {
@@ -108,15 +96,7 @@ public class ModifiedFacetBuilderTest {
 		return modifiedFacetBuilder;
 	}
 
-	protected Calendar getYesterday(Calendar today) {
-		Calendar yesterday = (Calendar) today.clone();
-
-		yesterday.add(Calendar.DAY_OF_YEAR, -1);
-
-		return yesterday;
-	}
-
-	protected List<Calendar> getRangeCalendars(Facet modifiedFacet)
+	protected List<LocalDate> getRangeLimits(Facet modifiedFacet)
 		throws ParseException {
 
 		SearchContext searchContext = modifiedFacet.getSearchContext();
@@ -126,24 +106,19 @@ public class ModifiedFacetBuilderTest {
 
 		String[] dateStrings = RangeParserUtil.parserRange(range);
 
-		List<Date> dates = Arrays.asList(
-			_dateFormat.parse(dateStrings[0].substring(0, 8)),
-			_dateFormat.parse(dateStrings[1].substring(0, 8)));
+		LocalDate startDate = LocalDate.parse(
+			dateStrings[0].substring(0, 8), dateTimeFormatter);
 
-		Stream<Date> stream = dates.stream();
+		LocalDate endDate = LocalDate.parse(
+			dateStrings[1].substring(0, 8), dateTimeFormatter);
 
-		return stream.map(
-			date -> CalendarFactoryUtil.getCalendar(date.getTime())
-		).collect(Collectors.toList());
+		return Arrays.asList(startDate, endDate);
 	}
 
-	protected Calendar parseCalendar(String calendarString)
-			throws ParseException {
-		Calendar calendar = Calendar.getInstance();
+	protected LocalDate parseLocalDateTime(String dateString)
+		throws ParseException {
 
-		calendar.setTime(_dateFormat.parse(calendarString));
-
-		return calendar;
+		return LocalDate.parse(dateString, dateTimeFormatter);
 	}
 
 	protected void setUpCalendarFactoryUtil() {
@@ -152,19 +127,12 @@ public class ModifiedFacetBuilderTest {
 		calendarFactoryUtil.setCalendarFactory(new CalendarFactoryImpl());
 	}
 
-	protected void setUpDateFormat() {
-		DateFormatFactoryUtil dateFormatFactoryUtil =
-			new DateFormatFactoryUtil();
-
-		dateFormatFactoryUtil.setDateFormatFactory(new DateFormatFactoryImpl());
-
-		_dateFormat = DateFormatFactoryUtil.getSimpleDateFormat("yyyyMMdd");
-	}
-
 	protected void setUpJSONFactoryUtil() {
 		JSONFactoryUtil jsonFactoryUtil = new JSONFactoryUtil();
 
 		jsonFactoryUtil.setJSONFactory(new JSONFactoryImpl());
 	}
 
+	protected DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(
+		"yyyyMMdd");
 }

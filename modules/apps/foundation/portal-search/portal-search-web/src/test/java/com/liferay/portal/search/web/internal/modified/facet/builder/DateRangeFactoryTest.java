@@ -23,7 +23,7 @@ import org.junit.Test;
 public class DateRangeFactoryTest {
 
 	@Test
-	public void testGetRangeStringFromTo() {
+	public void testGetRangeStringFromStartEnd() {
 		DateRangeFactory dateRangeFactory = new DateRangeFactory();
 
 		String rangeString = dateRangeFactory.getRangeString(

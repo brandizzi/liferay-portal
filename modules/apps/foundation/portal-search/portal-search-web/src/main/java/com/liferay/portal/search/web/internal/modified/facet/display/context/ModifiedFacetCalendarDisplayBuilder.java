@@ -14,12 +14,14 @@
 
 package com.liferay.portal.search.web.internal.modified.facet.display.context;
 
-import com.liferay.portal.kernel.util.CalendarFactoryUtil;
-import com.liferay.portal.kernel.util.Validator;
-
-import java.util.Calendar;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.WeekFields;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import com.liferay.portal.kernel.util.Validator;
 
 /**
  * @author André de Oliveira
@@ -40,8 +42,8 @@ public class ModifiedFacetCalendarDisplayBuilder {
 			modifiedFacetCalendarDisplayContext =
 				new ModifiedFacetCalendarDisplayContext();
 
-		Calendar fromCalendar = _getFromCalendar();
-		Calendar toCalendar = _getToCalendar();
+		LocalDate from = _getFromLocalDate();
+		LocalDate to = _getToLocalDate();
 
 		boolean selected = false;
 
@@ -52,26 +54,29 @@ public class ModifiedFacetCalendarDisplayBuilder {
 		modifiedFacetCalendarDisplayContext.setSelected(selected);
 
 		modifiedFacetCalendarDisplayContext.setFromDayValue(
-			fromCalendar.get(Calendar.DATE));
+			from.getDayOfMonth());
+
+		DayOfWeek firstDayOfWeek = WeekFields.of(_locale).getFirstDayOfWeek();
+
 		modifiedFacetCalendarDisplayContext.setFromFirstDayOfWeek(
-			fromCalendar.getFirstDayOfWeek() - 1);
+			firstDayOfWeek.ordinal());
 		modifiedFacetCalendarDisplayContext.setFromMonthValue(
-			fromCalendar.get(Calendar.MONTH));
+			from.getMonth().getValue() - 1);
 		modifiedFacetCalendarDisplayContext.setFromYearValue(
-			fromCalendar.get(Calendar.YEAR));
+			from.getYear());
 
 		modifiedFacetCalendarDisplayContext.setToDayValue(
-			toCalendar.get(Calendar.DATE));
+			to.getDayOfMonth());
 		modifiedFacetCalendarDisplayContext.setToFirstDayOfWeek(
-			toCalendar.getFirstDayOfWeek() - 1);
+			firstDayOfWeek.ordinal());
 		modifiedFacetCalendarDisplayContext.setToMonthValue(
-			toCalendar.get(Calendar.MONTH));
+			to.getMonth().getValue() - 1);
 		modifiedFacetCalendarDisplayContext.setToYearValue(
-			toCalendar.get(Calendar.YEAR));
+			to.getYear());
 
 		boolean fromBeforeTo = false;
 
-		if (fromCalendar.getTimeInMillis() < toCalendar.getTimeInMillis()) {
+		if (from.isBefore(to)) {
 			fromBeforeTo = true;
 		}
 
@@ -132,31 +137,22 @@ public class ModifiedFacetCalendarDisplayBuilder {
 		return new int[] {day, month, year};
 	}
 
-	private Calendar _getFromCalendar() {
+	private LocalDate _getFromLocalDate() {
 		if (Validator.isGregorianDate(_fromMonth, _fromDay, _fromYear)) {
-			return CalendarFactoryUtil.getCalendar(
-				_fromYear, _fromMonth, _fromDay, 0, 0, 0, 0, _timeZone);
+			return LocalDate.of(
+				_fromYear, _fromMonth, _fromDay);
 		}
 		else {
-			Calendar calendar = CalendarFactoryUtil.getCalendar(
-				_timeZone, _locale);
-
-			calendar.add(Calendar.DATE, -1);
-
-			return calendar;
+			return LocalDate.now().minus(1, ChronoUnit.HOURS);
 		}
 	}
 
-	private Calendar _getToCalendar() {
+	private LocalDate _getToLocalDate() {
 		if (Validator.isGregorianDate(_toMonth, _toDay, _toYear)) {
-			return CalendarFactoryUtil.getCalendar(
-				_toYear, _toMonth, _toDay, 0, 0, 0, 0, _timeZone);
+			return LocalDate.of(_toYear, _toMonth, _toDay);
 		}
 		else {
-			Calendar toCalendar = CalendarFactoryUtil.getCalendar(
-				_timeZone, _locale);
-
-			return toCalendar;
+			return LocalDate.now();
 		}
 	}
 
