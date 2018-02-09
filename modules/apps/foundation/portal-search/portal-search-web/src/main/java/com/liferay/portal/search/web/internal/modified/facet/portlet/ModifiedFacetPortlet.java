@@ -180,12 +180,25 @@ public class ModifiedFacetPortlet
 		modifiedFacetBuilder.setSearchContext(
 			portletSharedSearchSettings.getSearchContext());
 
+		String parameterName =
+			modifiedFacetPortletPreferences.getParameterName();
+
 		Optional<String[]> parameterValuesOptional =
-			portletSharedSearchSettings.getParameterValues(
-				modifiedFacetPortletPreferences.getParameterName());
+			portletSharedSearchSettings.getParameterValues(parameterName);
 
 		parameterValuesOptional.ifPresent(
 			modifiedFacetBuilder::setSelectedRanges);
+
+		Optional<String> fromParameterValueOptional =
+			portletSharedSearchSettings.getParameter(parameterName + "From");
+
+		fromParameterValueOptional.ifPresent(
+			modifiedFacetBuilder::setStartRange);
+
+		Optional<String> toParameterValueOptional =
+			portletSharedSearchSettings.getParameter(parameterName + "To");
+
+		toParameterValueOptional.ifPresent(modifiedFacetBuilder::setEndRange);
 
 		return modifiedFacetBuilder.build();
 	}
