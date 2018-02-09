@@ -238,8 +238,7 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 				termCollector = facetCollector.getTermCollector(range);
 			}
 
-			String rangeURL = HttpUtil.setParameter(
-				_currentURL, "modified", label);
+			String rangeURL = getLabeledRangeURL(label);
 
 			ModifiedFacetTermDisplayContext
 				modifiedSearchFacetTermDisplayContext = buildTermDisplay(
@@ -259,6 +258,14 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		}
 
 		return 0;
+	}
+
+	protected String getLabeledRangeURL(String label) {
+		String rangeURL = HttpUtil.removeParameter(_currentURL, "modifiedFrom");
+
+		rangeURL = HttpUtil.removeParameter(rangeURL, "modifiedTo");
+
+		return HttpUtil.setParameter(rangeURL, "modified", label);
 	}
 
 	protected boolean isNothingSelected() {

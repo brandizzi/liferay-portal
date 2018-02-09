@@ -55,7 +55,7 @@ AUI.add(
 						var itemSplit = item.split('=');
 
 						if (itemSplit) {
-							if (itemSplit[0] != key) {
+							if ((itemSplit[0] != key) && (itemSplit[0] != key + 'From') && (itemSplit[0] != key + 'To')) {
 								newParameters.push(item);
 							}
 						}
