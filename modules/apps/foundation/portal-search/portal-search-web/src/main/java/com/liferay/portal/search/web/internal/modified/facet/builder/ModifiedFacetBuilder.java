@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ModifiedFacetFactory;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Collection;
 
@@ -43,12 +44,20 @@ public class ModifiedFacetBuilder {
 		return facet;
 	}
 
+	public void setEndRange(String endRange) {
+		_endRange = endRange;
+	}
+
 	public void setSearchContext(SearchContext searchContext) {
 		_searchContext = searchContext;
 	}
 
 	public void setSelectedRanges(String... selectedRanges) {
 		_selectedRanges = selectedRanges;
+	}
+
+	public void setStartRange(String startRange) {
+		_startRange = startRange;
 	}
 
 	protected FacetConfiguration buildFacetConfiguration(Facet facet) {
@@ -86,13 +95,19 @@ public class ModifiedFacetBuilder {
 	}
 
 	private void _applySelectedRanges(Facet facet) {
-		if (_selectedRanges == null) {
-			return;
+		String rangeString = null;
+
+		if (Validator.isNotNull(_startRange) &&
+			Validator.isNotNull(_endRange)) {
+
+			rangeString = _dateRangeFactory.getRangeString(
+				_startRange, _endRange);
 		}
+		else if (Validator.isNotNull(_selectedRanges)) {
+			String label = _selectedRanges[_selectedRanges.length - 1];
 
-		String label = _selectedRanges[_selectedRanges.length - 1];
-
-		String rangeString = _dateRangeFactory.getRangeString(label);
+			rangeString = _dateRangeFactory.getRangeString(label);
+		}
 
 		if (rangeString != null) {
 			_searchContext.setAttribute(facet.getFieldName(), rangeString);
@@ -100,8 +115,10 @@ public class ModifiedFacetBuilder {
 	}
 
 	private final DateRangeFactory _dateRangeFactory = new DateRangeFactory();
+	private String _endRange;
 	private final ModifiedFacetFactory _modifiedFacetFactory;
 	private SearchContext _searchContext;
 	private String[] _selectedRanges;
+	private String _startRange;
 
 }
