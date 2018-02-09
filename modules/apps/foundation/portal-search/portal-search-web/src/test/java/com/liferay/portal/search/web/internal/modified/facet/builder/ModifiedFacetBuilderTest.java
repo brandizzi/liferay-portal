@@ -28,6 +28,7 @@ import com.liferay.portal.util.DateFormatFactoryImpl;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,13 +45,31 @@ import org.junit.Test;
  */
 public class ModifiedFacetBuilderTest {
 
-	private DateFormat _dateFormat;
-
 	@Before
 	public void setUp() {
 		setUpCalendarFactoryUtil();
 		setUpDateFormat();
 		setUpJSONFactoryUtil();
+	}
+
+	@Test
+	public void testFacetGetModifiedValueFromRangeStartEnd() throws Exception {
+		ModifiedFacetBuilder modifiedFacetBuilder =
+			createModifiedFacetBuilder();
+
+		modifiedFacetBuilder.setStartRange("20180131");
+		modifiedFacetBuilder.setEndRange("20180228");
+
+		Facet modifiedFacet = modifiedFacetBuilder.build();
+
+		List<Calendar> calendars = getRangeCalendars(modifiedFacet);
+
+		Calendar startCalendar = parseCalendar("20180131");
+
+		Calendar endCalendar = parseCalendar("20180228");
+
+		assertSameDay(calendars.get(0), startCalendar);
+		assertSameDay(calendars.get(1), endCalendar);
 	}
 
 	@Test
@@ -88,14 +107,6 @@ public class ModifiedFacetBuilderTest {
 		return modifiedFacetBuilder;
 	}
 
-	protected Calendar getYesterday(Calendar today) {
-		Calendar yesterday = (Calendar) today.clone();
-
-		yesterday.add(Calendar.DAY_OF_YEAR, -1);
-
-		return yesterday;
-	}
-
 	protected List<Calendar> getRangeCalendars(Facet modifiedFacet)
 		throws ParseException {
 
@@ -114,7 +125,27 @@ public class ModifiedFacetBuilderTest {
 
 		return stream.map(
 			date -> CalendarFactoryUtil.getCalendar(date.getTime())
-		).collect(Collectors.toList());
+		).collect(
+			Collectors.toList()
+		);
+	}
+
+	protected Calendar getYesterday(Calendar today) {
+		Calendar yesterday = (Calendar)today.clone();
+
+		yesterday.add(Calendar.DAY_OF_YEAR, -1);
+
+		return yesterday;
+	}
+
+	protected Calendar parseCalendar(String calendarString)
+		throws ParseException {
+
+		Calendar calendar = Calendar.getInstance();
+
+		calendar.setTime(_dateFormat.parse(calendarString));
+
+		return calendar;
 	}
 
 	protected void setUpCalendarFactoryUtil() {
@@ -137,5 +168,7 @@ public class ModifiedFacetBuilderTest {
 
 		jsonFactoryUtil.setJSONFactory(new JSONFactoryImpl());
 	}
+
+	private DateFormat _dateFormat;
 
 }
