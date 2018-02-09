@@ -54,6 +54,26 @@ public class ModifiedFacetBuilderTest {
 	}
 
 	@Test
+	public void testFacetGetModifiedValueFromRangeStartEnd() throws Exception {
+		ModifiedFacetBuilder modifiedFacetBuilder =
+			createModifiedFacetBuilder();
+
+		modifiedFacetBuilder.setStartRange("20180131");
+		modifiedFacetBuilder.setEndRange("20180228");
+
+		Facet modifiedFacet = modifiedFacetBuilder.build();
+
+		List<Calendar> calendars = getRangeCalendars(modifiedFacet);
+
+		Calendar startCalendar = parseCalendar("20180131");
+
+		Calendar endCalendar = parseCalendar("20180228");
+
+		assertSameDay(calendars.get(0), startCalendar);
+		assertSameDay(calendars.get(1), endCalendar);
+	}
+
+	@Test
 	public void testFacetGetModifiedValueFromSelectedRanges() throws Exception {
 		ModifiedFacetBuilder modifiedFacetBuilder =
 			createModifiedFacetBuilder();
@@ -115,6 +135,15 @@ public class ModifiedFacetBuilderTest {
 		return stream.map(
 			date -> CalendarFactoryUtil.getCalendar(date.getTime())
 		).collect(Collectors.toList());
+	}
+
+	protected Calendar parseCalendar(String calendarString)
+			throws ParseException {
+		Calendar calendar = Calendar.getInstance();
+
+		calendar.setTime(_dateFormat.parse(calendarString));
+
+		return calendar;
 	}
 
 	protected void setUpCalendarFactoryUtil() {
