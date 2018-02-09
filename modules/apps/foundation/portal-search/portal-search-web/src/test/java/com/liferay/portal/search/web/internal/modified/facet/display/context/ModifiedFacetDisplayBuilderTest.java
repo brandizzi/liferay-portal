@@ -76,6 +76,20 @@ public class ModifiedFacetDisplayBuilderTest {
 	}
 
 	@Test
+	public void testIsNothingSelectedWithFromAndToAttributes() {
+		ModifiedFacetDisplayBuilder modifiedFacetDisplayBuilder =
+			createDisplayBuilder();
+
+		modifiedFacetDisplayBuilder.setFromParameterValue("2018-01-01");
+		modifiedFacetDisplayBuilder.setToParameterValue("2018-01-31");
+
+		ModifiedFacetDisplayContext modifiedFaceDisplayContext =
+			modifiedFacetDisplayBuilder.build();
+
+		Assert.assertFalse(modifiedFaceDisplayContext.isNothingSelected());
+	}
+
+	@Test
 	public void testIsNothingSelectedWithSelectedRange() {
 		ModifiedFacetDisplayBuilder modifiedFacetDisplayBuilder =
 			createDisplayBuilder();
