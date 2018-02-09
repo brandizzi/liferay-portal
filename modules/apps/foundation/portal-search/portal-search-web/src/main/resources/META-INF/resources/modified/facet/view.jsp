@@ -42,10 +42,6 @@ ModifiedFacetDisplayContext modifiedFacetDisplayContext = (ModifiedFacetDisplayC
 ModifiedFacetTermDisplayContext customRangeTermDisplayContext = modifiedFacetDisplayContext.getCustomRangeTermDisplayContext();
 
 ModifiedFacetCalendarDisplayContext modifiedFacetCalendarDisplayContext = modifiedFacetDisplayContext.getModifiedFacetCalendarDisplayContext();
-
-// Because of JavaScript?!?!?
-
-int i = 0;
 %>
 
 <liferay-ui:panel-container extended="<%= true %>" id='<%= renderResponse.getNamespace() + "facetModifiedPanelContainer" %>' markupView="lexicon" persistState="<%= true %>">
