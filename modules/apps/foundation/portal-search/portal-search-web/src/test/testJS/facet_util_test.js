@@ -33,6 +33,25 @@ describe(
 						done();
 					}
 				);
+
+				it(
+					'should remove the parameters whose name is the key suffixes with "From" or "To".',
+					function(done) {
+						var parameterArray = [
+							'modifiedFrom=2018-01-01',
+							'modifiedTo=2018-01-31',
+							'q=test'
+						];
+
+						var newParameters = Liferay.Search.FacetUtil.removeURLParameters('modified', parameterArray);
+
+						assert.equal(newParameters.length, 1);
+						assert.equal(newParameters[0], 'q=test');
+
+						done();
+					}
+				);
+
 			}
 		);
 	}

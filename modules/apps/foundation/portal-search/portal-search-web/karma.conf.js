@@ -8,6 +8,8 @@ module.exports = function(config) {
 
 	liferayKarmaAlloyConfig(config);
 
+	config.singleRun = true;
+
 	config.files.push(
 		{
 			included: true,
