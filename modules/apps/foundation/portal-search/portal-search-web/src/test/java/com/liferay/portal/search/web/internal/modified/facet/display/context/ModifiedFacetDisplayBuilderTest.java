@@ -21,7 +21,9 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.collector.FacetCollector;
+import com.liferay.portal.kernel.search.facet.collector.TermCollector;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -73,6 +75,29 @@ public class ModifiedFacetDisplayBuilderTest {
 		).when(
 			_facet
 		).getFacetConfiguration();
+	}
+
+	@Test
+	public void testGetCustomRangeTermDisplayContextHasTermCollectorFrequency() {
+		int frequency = RandomTestUtil.randomInt();
+		TermCollector termCollector = mockTermCollector();
+
+		mockTermCollectorFrequency(termCollector, frequency);
+
+		ModifiedFacetDisplayBuilder modifiedFacetDisplayBuilder =
+			createDisplayBuilder();
+
+		modifiedFacetDisplayBuilder.setFromParameterValue("2018-01-01");
+		modifiedFacetDisplayBuilder.setToParameterValue("2018-01-31");
+
+		ModifiedFacetDisplayContext modifiedFacetDisplayContext =
+			modifiedFacetDisplayBuilder.build();
+
+		ModifiedFacetTermDisplayContext customRangeTermDisplayContext =
+			modifiedFacetDisplayContext.getCustomRangeTermDisplayContext();
+
+		Assert.assertEquals(
+			frequency, customRangeTermDisplayContext.getFrequency());
 	}
 
 	@Test
@@ -206,6 +231,30 @@ public class ModifiedFacetDisplayBuilderTest {
 		facetConfiguration.setDataJSONObject(jsonObject);
 
 		return facetConfiguration;
+	}
+
+	protected TermCollector mockTermCollector() {
+		TermCollector termCollector = Mockito.mock(TermCollector.class);
+
+		Mockito.doReturn(
+			termCollector
+		).when(
+			_facetCollector
+		).getTermCollector(
+			Mockito.anyString()
+		);
+
+		return termCollector;
+	}
+
+	protected void mockTermCollectorFrequency(
+		TermCollector termCollector, int frequency) {
+
+		Mockito.doReturn(
+			frequency
+		).when(
+			termCollector
+		).getFrequency();
 	}
 
 	protected void setUpCalendarFactoryUtil() {
