@@ -350,7 +350,7 @@ public class ModifiedFacetDisplayBuilderTest {
 	@Mock
 	protected Portal portal;
 
-	private DateRangeFactory _dateRangeFactory = new DateRangeFactory();
+	private final DateRangeFactory _dateRangeFactory = new DateRangeFactory();
 
 	@Mock
 	private Facet _facet;
