@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.web.internal.modified.facet.builder.DateRangeFactory;
 
 import java.io.Serializable;
 
@@ -161,7 +162,7 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		TermCollector termCollector = null;
 
 		if (selected) {
-			String term = "";
+			String term = _dateRangeFactory.getRangeString(_from, _to);
 
 			termCollector = facetCollector.getTermCollector(term);
 		}
@@ -281,6 +282,7 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 	}
 
 	private String _currentURL;
+	private final DateRangeFactory _dateRangeFactory = new DateRangeFactory();
 	private Facet _facet;
 	private String _from;
 	private Locale _locale;
