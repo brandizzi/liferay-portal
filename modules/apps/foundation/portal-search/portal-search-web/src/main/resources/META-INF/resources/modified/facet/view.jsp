@@ -89,7 +89,9 @@ ModifiedFacetCalendarDisplayContext modifiedFacetCalendarDisplayContext = modifi
 							<span class="term-name"><liferay-ui:message key="<%= customRangeTermDisplayContext.getLabel() %>" />&hellip;</span>
 
 							<c:if test="<%= customRangeTermDisplayContext.isSelected() %>">
-								<span class="<%= customRangeTermDisplayContext.getLabel() %>-frequency frequency">(<%= customRangeTermDisplayContext.getFrequency() %>)</span>
+								<small class="term-count">
+									<span class="badge badge-info frequency"><%= customRangeTermDisplayContext.getFrequency() %></span>
+								</small>
 							</c:if>
 						</a>
 					</li>
