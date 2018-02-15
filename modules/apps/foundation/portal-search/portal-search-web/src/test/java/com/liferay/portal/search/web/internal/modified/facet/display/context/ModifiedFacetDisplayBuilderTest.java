@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.web.internal.modified.facet.builder.DateRangeFactory;
 import com.liferay.portal.util.CalendarFactoryImpl;
 import com.liferay.portal.util.DateFormatFactoryImpl;
 import com.liferay.portal.util.HtmlImpl;
@@ -75,6 +76,34 @@ public class ModifiedFacetDisplayBuilderTest {
 		).when(
 			_facet
 		).getFacetConfiguration();
+	}
+
+	@Test
+	public void testGetCustomRangeTermDisplayContextHasFrequency() {
+		String from = "2018-01-01";
+		String to = "2018-01-31";
+
+		TermCollector termCollector = mockTermCollector(
+			_dateRangeFactory.getRangeString(from, to));
+
+		int frequency = RandomTestUtil.randomInt();
+
+		mockTermCollectorFrequency(termCollector, frequency);
+
+		ModifiedFacetDisplayBuilder modifiedFacetDisplayBuilder =
+			createDisplayBuilder();
+
+		modifiedFacetDisplayBuilder.setFromParameterValue(from);
+		modifiedFacetDisplayBuilder.setToParameterValue(to);
+
+		ModifiedFacetDisplayContext modifiedFacetDisplayContext =
+			modifiedFacetDisplayBuilder.build();
+
+		ModifiedFacetTermDisplayContext customRangeTermDisplayContext =
+			modifiedFacetDisplayContext.getCustomRangeTermDisplayContext();
+
+		Assert.assertEquals(
+			frequency, customRangeTermDisplayContext.getFrequency());
 	}
 
 	@Test
@@ -247,6 +276,20 @@ public class ModifiedFacetDisplayBuilderTest {
 		return termCollector;
 	}
 
+	protected TermCollector mockTermCollector(String term) {
+		TermCollector termCollector = Mockito.mock(TermCollector.class);
+
+		Mockito.doReturn(
+			termCollector
+		).when(
+			_facetCollector
+		).getTermCollector(
+			term
+		);
+
+		return termCollector;
+	}
+
 	protected void mockTermCollectorFrequency(
 		TermCollector termCollector, int frequency) {
 
@@ -306,6 +349,8 @@ public class ModifiedFacetDisplayBuilderTest {
 
 	@Mock
 	protected Portal portal;
+
+	private DateRangeFactory _dateRangeFactory = new DateRangeFactory();
 
 	@Mock
 	private Facet _facet;
