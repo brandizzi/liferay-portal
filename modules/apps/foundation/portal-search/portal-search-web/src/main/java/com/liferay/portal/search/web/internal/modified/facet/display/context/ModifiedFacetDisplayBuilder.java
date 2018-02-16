@@ -122,6 +122,10 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		_to = to;
 	}
 
+	public void setTotalHits(int totalHits) {
+		_totalHits = totalHits;
+	}
+
 	protected ModifiedFacetCalendarDisplayContext
 		buildCalendarDisplayContext() {
 
@@ -291,5 +295,6 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 	private List<String> _selectedRanges = Collections.emptyList();
 	private TimeZone _timeZone;
 	private String _to;
+	private int _totalHits;
 
 }
