@@ -167,6 +167,9 @@ public class ModifiedFacetPortlet
 		toParameterValueOptional.ifPresent(
 			modifiedSearchFacetDisplayBuilder::setToParameterValue);
 
+		modifiedSearchFacetDisplayBuilder.setTotalHits(
+			portletSharedSearchResponse.getTotalHits());
+
 		return modifiedSearchFacetDisplayBuilder.build();
 	}
 
