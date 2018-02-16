@@ -149,16 +149,6 @@ int i = 0;
 							</aui:field-wrapper>
 						</div>
 
-							<input
-								class="DELETETHIS-facet-term"
-								data-term-id=""
-								id="<portlet:namespace /><%= "customRange" %>"
-								name="<portlet:namespace /><%= "customRange" %>"
-								onChange="Liferay.Search.FacetUtil.changeSelection(event);"
-								type="hidden"
-								<%= modifiedFacetCalendarDisplayContext.isSelected() ? "checked" : StringPool.BLANK %>
-							/>
-
 						<%
 						String taglibSearchCustomRange = "window['" + renderResponse.getNamespace() + HtmlUtil.escapeJS(modifiedFacetDisplayContext.getParameterName()) + "searchCustomRange'](event);";
 						%>

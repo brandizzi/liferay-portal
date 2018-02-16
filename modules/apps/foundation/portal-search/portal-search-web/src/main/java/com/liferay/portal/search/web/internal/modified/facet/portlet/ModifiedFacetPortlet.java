@@ -20,8 +20,6 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.ModifiedFacetFactory;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.web.internal.display.context.PortletRequestThemeDisplaySupplier;
 import com.liferay.portal.search.web.internal.display.context.ThemeDisplaySupplier;
@@ -133,22 +131,6 @@ public class ModifiedFacetPortlet
 			modifiedFacetPortletPreferences.getParameterName();
 
 		ThemeDisplay themeDisplay = getThemeDisplay(renderRequest);
-
-		String escapedParameterName = HtmlUtil.escapeJS(parameterName);
-
-		int fromDay = ParamUtil.getInteger(
-			renderRequest, escapedParameterName + "dayFrom");
-		int fromMonth = ParamUtil.getInteger(
-			renderRequest, escapedParameterName + "monthFrom");
-		int fromYear = ParamUtil.getInteger(
-			renderRequest, escapedParameterName + "yearFrom");
-
-		int toDay = ParamUtil.getInteger(
-			renderRequest, escapedParameterName + "dayTo");
-		int toMonth = ParamUtil.getInteger(
-			renderRequest, escapedParameterName + "monthTo");
-		int toYear = ParamUtil.getInteger(
-			renderRequest, escapedParameterName + "yearTo");
 
 		ModifiedFacetDisplayBuilder modifiedSearchFacetDisplayBuilder =
 			new ModifiedFacetDisplayBuilder();
