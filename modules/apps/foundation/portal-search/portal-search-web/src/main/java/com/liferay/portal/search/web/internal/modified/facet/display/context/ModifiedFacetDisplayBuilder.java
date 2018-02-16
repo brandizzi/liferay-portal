@@ -59,6 +59,7 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 			buildCustomRangeTermDisplayContext());
 		modifiedFacetDisplayContext.setDefaultTermDisplayContext(
 			buildDefaultTermDisplay());
+		modifiedFacetDisplayContext.setRenderNothing(isRenderNothing());
 		modifiedFacetDisplayContext.setNothingSelected(isNothingSelected());
 		modifiedFacetDisplayContext.setParameterName(_parameterName);
 		modifiedFacetDisplayContext.setTermDisplayContexts(
@@ -283,6 +284,14 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		}
 
 		return true;
+	}
+
+	protected boolean isRenderNothing() {
+		if (_totalHits > 0) {
+			return false;
+		}
+
+		return isNothingSelected();
 	}
 
 	private String _currentURL;

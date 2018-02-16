@@ -49,6 +49,10 @@ public class ModifiedFacetDisplayContext implements Serializable {
 		return _nothingSelected;
 	}
 
+	public boolean isRenderNothing() {
+		return _renderNothing;
+	}
+
 	public void setCalendarDisplayContext(
 		ModifiedFacetCalendarDisplayContext
 			modifiedFacetCalendarDisplayContext) {
@@ -77,6 +81,10 @@ public class ModifiedFacetDisplayContext implements Serializable {
 		_parameterName = paramName;
 	}
 
+	public void setRenderNothing(boolean renderNothing) {
+		_renderNothing = renderNothing;
+	}
+
 	public void setTermDisplayContexts(
 		List<ModifiedFacetTermDisplayContext>
 			modifiedSearchFacetTermDisplayContext) {
@@ -93,5 +101,6 @@ public class ModifiedFacetDisplayContext implements Serializable {
 		_modifiedSearchFacetTermDisplayContext;
 	private boolean _nothingSelected;
 	private String _parameterName;
+	private boolean _renderNothing;
 
 }
