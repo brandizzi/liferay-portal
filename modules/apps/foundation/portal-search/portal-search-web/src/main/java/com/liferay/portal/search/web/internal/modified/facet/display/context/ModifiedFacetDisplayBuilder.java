@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.search.facet.collector.FacetCollector;
 import com.liferay.portal.kernel.search.facet.collector.TermCollector;
+import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
 import com.liferay.portal.kernel.util.HtmlUtil;
 
 import java.io.Serializable;
@@ -139,7 +140,9 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		boolean selected = true;
 		int frequency = 0;
 
-		String label = _facet.getFacetConfiguration().getLabel();
+		FacetConfiguration facetConfiguration = _facet.getFacetConfiguration();
+
+		String label = facetConfiguration.getLabel();
 
 		ModifiedFacetTermDisplayContext defaultTermDisplayContext =
 			buildTermDisplay(label, label, selected, data, frequency);
