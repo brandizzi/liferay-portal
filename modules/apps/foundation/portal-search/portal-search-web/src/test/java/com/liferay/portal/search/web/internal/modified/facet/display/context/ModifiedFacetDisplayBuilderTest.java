@@ -182,6 +182,61 @@ public class ModifiedFacetDisplayBuilderTest {
 		Assert.assertFalse(modifiedFaceDisplayContext.isNothingSelected());
 	}
 
+	@Test
+	public void testIsRenderNothingFalseWithFromAndTo() {
+		ModifiedFacetDisplayBuilder modifiedFacetDisplayBuilder =
+			createDisplayBuilder();
+
+		modifiedFacetDisplayBuilder.setFromParameterValue("2018-01-01");
+		modifiedFacetDisplayBuilder.setToParameterValue("2018-01-31");
+		modifiedFacetDisplayBuilder.setTotalHits(0);
+
+		ModifiedFacetDisplayContext modifiedFaceDisplayContext =
+			modifiedFacetDisplayBuilder.build();
+
+		Assert.assertFalse(modifiedFaceDisplayContext.isRenderNothing());
+	}
+
+	@Test
+	public void testIsRenderNothingFalseWithHits() {
+		ModifiedFacetDisplayBuilder modifiedFacetDisplayBuilder =
+			createDisplayBuilder();
+
+		modifiedFacetDisplayBuilder.setTotalHits(1);
+
+		ModifiedFacetDisplayContext modifiedFaceDisplayContext =
+			modifiedFacetDisplayBuilder.build();
+
+		Assert.assertFalse(modifiedFaceDisplayContext.isRenderNothing());
+	}
+
+	@Test
+	public void testIsRenderNothingFalseWithSelectedRange() {
+		ModifiedFacetDisplayBuilder modifiedFacetDisplayBuilder =
+			createDisplayBuilder();
+
+		modifiedFacetDisplayBuilder.setParameterValues("past-24-hours");
+		modifiedFacetDisplayBuilder.setTotalHits(0);
+
+		ModifiedFacetDisplayContext modifiedFaceDisplayContext =
+			modifiedFacetDisplayBuilder.build();
+
+		Assert.assertFalse(modifiedFaceDisplayContext.isRenderNothing());
+	}
+
+	@Test
+	public void testIsRenderNothingTrueWithNoHits() {
+		ModifiedFacetDisplayBuilder modifiedFacetDisplayBuilder =
+			createDisplayBuilder();
+
+		modifiedFacetDisplayBuilder.setTotalHits(0);
+
+		ModifiedFacetDisplayContext modifiedFaceDisplayContext =
+			modifiedFacetDisplayBuilder.build();
+
+		Assert.assertTrue(modifiedFaceDisplayContext.isRenderNothing());
+	}
+
 	protected void addRangeJSONObject(
 		JSONArray jsonArray, String label, String range) {
 
