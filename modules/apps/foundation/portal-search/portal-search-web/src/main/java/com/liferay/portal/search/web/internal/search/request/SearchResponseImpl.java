@@ -20,7 +20,9 @@ import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.search.web.search.request.SearchResponse;
+import com.liferay.portal.search.web.search.request.SearchSettings;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,12 +75,27 @@ public class SearchResponseImpl implements SearchResponse {
 		return _queryString;
 	}
 
+	@Override
+	public List<String> getRelatedSuggestions() {
+		return Arrays.asList(_hits.getQuerySuggestions());
+	}
+
 	public SearchContainer<Document> getSearchContainer() {
 		return _searchContainer;
 	}
 
 	public SearchContext getSearchContext() {
 		return _searchContext;
+	}
+
+	@Override
+	public SearchSettings getSearchSettings() {
+		return _searchSettings;
+	}
+
+	@Override
+	public String getSpellCheckSuggestion() {
+		return _hits.getCollatedSpellCheckResult();
 	}
 
 	@Override
@@ -118,6 +135,10 @@ public class SearchResponseImpl implements SearchResponse {
 		_searchContext = searchContext;
 	}
 
+	public void setSearchSettings(SearchSettings searchSettings) {
+		_searchSettings = searchSettings;
+	}
+
 	public void setTotalHits(int totalHits) {
 		_totalHits = totalHits;
 	}
@@ -130,6 +151,7 @@ public class SearchResponseImpl implements SearchResponse {
 	private String _queryString;
 	private SearchContainer<Document> _searchContainer;
 	private SearchContext _searchContext;
+	private SearchSettings _searchSettings;
 	private int _totalHits;
 
 }

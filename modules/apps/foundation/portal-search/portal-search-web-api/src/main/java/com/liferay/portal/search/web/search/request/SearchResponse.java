@@ -47,6 +47,12 @@ public interface SearchResponse {
 
 	public String getQueryString();
 
+	public List<String> getRelatedSuggestions();
+
+	public SearchSettings getSearchSettings();
+
+	public String getSpellCheckSuggestion();
+
 	public int getTotalHits();
 
 }

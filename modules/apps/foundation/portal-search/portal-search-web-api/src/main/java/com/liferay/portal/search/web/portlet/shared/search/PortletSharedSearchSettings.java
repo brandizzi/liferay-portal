@@ -30,6 +30,8 @@ import javax.portlet.RenderRequest;
 @ProviderType
 public interface PortletSharedSearchSettings extends SearchSettings {
 
+	public Optional<String> getKeywordsParameterName();
+
 	public Optional<String> getParameter(String name);
 
 	public Optional<String[]> getParameterValues(String name);
@@ -39,5 +41,7 @@ public interface PortletSharedSearchSettings extends SearchSettings {
 	public RenderRequest getRenderRequest();
 
 	public ThemeDisplay getThemeDisplay();
+
+	public void setKeywordsParameterName(String keywordsParameterName);
 
 }
