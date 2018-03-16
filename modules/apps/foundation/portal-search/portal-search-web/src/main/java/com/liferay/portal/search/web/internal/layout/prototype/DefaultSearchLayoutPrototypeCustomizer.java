@@ -22,6 +22,7 @@ import com.liferay.portal.search.web.internal.modified.facet.constants.ModifiedF
 import com.liferay.portal.search.web.internal.search.bar.constants.SearchBarPortletKeys;
 import com.liferay.portal.search.web.internal.search.results.constants.SearchResultsPortletKeys;
 import com.liferay.portal.search.web.internal.site.facet.constants.SiteFacetPortletKeys;
+import com.liferay.portal.search.web.internal.suggestions.constants.SearchSuggestionsPortletKeys;
 import com.liferay.portal.search.web.internal.tag.facet.constants.TagFacetPortletKeys;
 import com.liferay.portal.search.web.internal.type.facet.constants.TypeFacetPortletKeys;
 import com.liferay.portal.search.web.internal.user.facet.constants.UserFacetPortletKeys;
@@ -41,6 +42,10 @@ public class DefaultSearchLayoutPrototypeCustomizer
 	public void customize(Layout layout) throws Exception {
 		addBorderlessPortlet(
 			layout, SearchBarPortletKeys.SEARCH_BAR, "column-1");
+
+		addBorderlessPortlet(
+			layout, SearchSuggestionsPortletKeys.SEARCH_SUGGESTIONS,
+			"column-3");
 
 		addBorderlessPortlet(
 			layout, SearchResultsPortletKeys.SEARCH_RESULTS, "column-3");
