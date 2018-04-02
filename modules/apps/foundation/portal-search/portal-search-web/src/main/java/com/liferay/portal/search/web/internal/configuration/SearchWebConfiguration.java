@@ -32,14 +32,14 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 public interface SearchWebConfiguration {
 
 	@Meta.AD(
-		deflt = "true",
+		deflt = "false",
 		description = "classic-search-portlet-in-front-page-help",
 		name = "classic-search-portlet-in-front-page", required = false
 	)
 	public boolean classicSearchPortletInFrontPage();
 
 	@Meta.AD(
-		deflt = "true",
+		deflt = "false",
 		description = "skip-automatic-creation-of-search-page-in-guest-site-help",
 		name = "skip-automatic-creation-of-search-page-in-guest-site",
 		required = false
