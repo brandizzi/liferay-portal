@@ -63,10 +63,6 @@ public class SearchBarPortletDisplayContext {
 		return _selectedEverythingSearchScope;
 	}
 
-	public boolean isShowSelectDestinationLink() {
-		return true;
-	}
-
 	public void setAvailableEverythingSearchScope(
 		boolean availableEverythingSearchScope) {
 
