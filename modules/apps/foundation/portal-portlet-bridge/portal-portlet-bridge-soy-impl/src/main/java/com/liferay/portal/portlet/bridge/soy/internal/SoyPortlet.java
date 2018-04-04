@@ -110,11 +110,18 @@ public class SoyPortlet extends MVCPortlet {
 	public void init(PortletConfig portletConfig) throws PortletException {
 		super.init(portletConfig);
 
+		_portletConfig = portletConfig;
+
 		propagateRequestParameters = GetterUtil.getBoolean(
 			getInitParameter("propagate-request-parameters"), true);
 
-		_bundle = FrameworkUtil.getBundle(getClass());
-		_portletConfig = portletConfig;
+		Class<?> clazz = getClass();
+
+		if (_soyPortletRegister != null) {
+			clazz = _soyPortletRegister.getClass();
+		}
+
+		_bundle = FrameworkUtil.getBundle(clazz);
 
 		try {
 			MVCCommandCache mvcRenderCommandCache = getRenderMVCCommandCache();

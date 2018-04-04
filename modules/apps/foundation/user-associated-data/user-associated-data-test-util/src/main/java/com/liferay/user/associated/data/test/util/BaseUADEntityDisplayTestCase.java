@@ -48,40 +48,37 @@ public abstract class BaseUADEntityDisplayTestCase<T> {
 	}
 
 	@Test
-	public void testGetUADEntityTypeDescription() {
+	public void testGetTypeDescription() {
 		Assert.assertEquals(
-			getUADEntityTypeDescription(),
-			_uadEntityDisplay.getUADEntityTypeDescription());
+			getTypeDescription(), _uadEntityDisplay.getTypeDescription());
 	}
 
 	@Test
-	public void testGetUADEntityTypeName() throws Exception {
+	public void testGetTypeName() throws Exception {
 		BaseModel baseModel = addBaseModel(_user.getUserId());
 
 		String simpleClassName = StringUtil.extractLast(
 			baseModel.getModelClassName(), StringPool.PERIOD);
 
-		Assert.assertEquals(
-			simpleClassName, _uadEntityDisplay.getUADEntityTypeName());
+		Assert.assertEquals(simpleClassName, _uadEntityDisplay.getTypeName());
 	}
 
 	protected abstract BaseModel<?> addBaseModel(long userId) throws Exception;
 
 	protected abstract String getApplicationName();
 
+	protected abstract String getTypeDescription();
+
 	protected abstract UADEntityAggregator<T> getUADEntityAggregator();
 
 	protected abstract UADEntityDisplay<T> getUADEntityDisplay();
 
-	protected abstract String getUADEntityTypeDescription();
-
-	private T _createUADEntity() throws Exception {
+	private T _createBaseModel() throws Exception {
 		addBaseModel(_user.getUserId());
 
-		List<T> uadEntities = _uadEntityAggregator.getEntities(
-			_user.getUserId());
+		List<T> baseModels = _uadEntityAggregator.getAll(_user.getUserId());
 
-		return uadEntities.get(0);
+		return baseModels.get(0);
 	}
 
 	private UADEntityAggregator<T> _uadEntityAggregator;

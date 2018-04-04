@@ -3929,11 +3929,48 @@ to version 2.3.115.
 - [LPS-79282]: Update the [Liferay Source Formatter] dependency to version
 1.0.587.
 
-## 3.10.1 - 2018-03-30
+## 3.10.1 - 2018-03-31
+
+### Changed
+- [LPS-79248]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.116.
+- [LPS-79248]: Update the [Liferay Source Formatter] dependency to version
+1.0.588.
 
 ### Fixed
 - [LPS-69247]: Pass lower case project properties to Bnd when executing the
 `buildWSDDJar` task.
+
+## 3.10.2 - 2018-04-02
+
+### Changed
+- [LPS-79192]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.117.
+- [LPS-79192]: Update the [Liferay Source Formatter] dependency to version
+1.0.589.
+
+## 3.10.3 - 2018-04-02
+
+### Changed
+- [LPS-74544]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.118.
+- [LPS-74544]: Update the [Liferay Source Formatter] dependency to version
+1.0.590.
+
+## 3.10.4 - 2018-04-02
+
+### Changed
+- [LPS-75010]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.119.
+- [LPS-75010]: Update the [Liferay Source Formatter] dependency to version
+1.0.591.
+- [LPS-78571]: Update the [Liferay Ant BND] dependency to version 2.0.49.
+
+## 3.10.5 - 2018-04-03
+
+### Changed
+- [LPS-74110]: Suppress Bnd warning about deprecated annotations.
+- [LPS-74110]: Update the [Liferay Ant BND] dependency to version 2.0.50.
 
 [Gradle Bundle Plugin]: https://github.com/TomDmitriev/gradle-bundle-plugin
 [Liferay Alloy Taglib]: https://github.com/liferay/alloy-taglibs
@@ -4271,6 +4308,7 @@ to version 2.3.115.
 [LPS-79191]: https://issues.liferay.com/browse/LPS-79191
 [LPS-79192]: https://issues.liferay.com/browse/LPS-79192
 [LPS-79226]: https://issues.liferay.com/browse/LPS-79226
+[LPS-79248]: https://issues.liferay.com/browse/LPS-79248
 [LPS-79282]: https://issues.liferay.com/browse/LPS-79282
 [LPS-79286]: https://issues.liferay.com/browse/LPS-79286
 [LRDOCS-3023]: https://issues.liferay.com/browse/LRDOCS-3023

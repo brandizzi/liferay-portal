@@ -939,7 +939,7 @@ public class JenkinsResultsParserUtil {
 
 	public static String getRegexLiteral(String string) {
 		if (string == null) {
-			throw new NullPointerException("String may not be null");
+			throw new NullPointerException("String is NULL");
 		}
 
 		String specialCharactersString = "\\^$.|?*+()[]{}";
@@ -998,6 +998,30 @@ public class JenkinsResultsParserUtil {
 		throws Exception {
 
 		return getSlaves(getBuildProperties(), jenkinsMasterPatternString);
+	}
+
+	public static boolean isFileInDirectory(File directory, File file) {
+		if (directory == null) {
+			throw new IllegalArgumentException("Directory is NULL");
+		}
+
+		if (file == null) {
+			throw new IllegalArgumentException("File is NULL");
+		}
+
+		if (!directory.isDirectory()) {
+			throw new IllegalArgumentException(
+				directory.getName() + " is not a directory");
+		}
+
+		String directoryAbsolutePath = directory.getAbsolutePath();
+		String fileAbsolutePath = file.getAbsolutePath();
+
+		if (fileAbsolutePath.startsWith(directoryAbsolutePath)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public static String merge(String... strings) {

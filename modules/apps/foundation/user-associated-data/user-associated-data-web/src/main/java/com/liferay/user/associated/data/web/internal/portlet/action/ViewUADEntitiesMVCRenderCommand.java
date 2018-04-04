@@ -141,8 +141,7 @@ public class ViewUADEntitiesMVCRenderCommand implements MVCRenderCommand {
 					navigationItem.setHref(
 						tabPortletURL, "uadRegistryKey",
 						uadEntityDisplay.getKey());
-					navigationItem.setLabel(
-						uadEntityDisplay.getUADEntityTypeName());
+					navigationItem.setLabel(uadEntityDisplay.getTypeName());
 				});
 		}
 
@@ -159,7 +158,7 @@ public class ViewUADEntitiesMVCRenderCommand implements MVCRenderCommand {
 		UADEntityAggregator uadEntityAggregator =
 			_uadRegistry.getUADEntityAggregator(uadRegistryKey);
 
-		List<Object> entities = uadEntityAggregator.getEntities(
+		List<Object> entities = uadEntityAggregator.getRange(
 			selectedUserId, searchContainer.getStart(),
 			searchContainer.getEnd());
 
@@ -168,8 +167,7 @@ public class ViewUADEntitiesMVCRenderCommand implements MVCRenderCommand {
 		for (Object entity : entities) {
 			uadEntities.add(
 				new UADEntity(
-					entity, uadEntityAggregator.getPrimaryKeyObj(entity),
-					uadRegistryKey));
+					entity, uadEntityAggregator.getPrimaryKey(entity)));
 		}
 
 		searchContainer.setResults(uadEntities);

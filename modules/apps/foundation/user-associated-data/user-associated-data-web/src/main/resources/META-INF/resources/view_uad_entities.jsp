@@ -32,7 +32,7 @@ backURL.setParameter("p_u_i_d", String.valueOf(selectedUser.getUserId()));
 
 portletDisplay.setURLBack(backURL.toString());
 
-renderResponse.setTitle(StringBundler.concat(selectedUser.getFullName(), " - ", LanguageUtil.get(request, "personal-data-erasure"), " - ", uadEntityDisplay.getUADEntityTypeName()));
+renderResponse.setTitle(StringBundler.concat(selectedUser.getFullName(), " - ", LanguageUtil.get(request, "personal-data-erasure"), " - ", uadEntityDisplay.getTypeName()));
 %>
 
 <clay:navigation-bar
@@ -80,7 +80,7 @@ renderResponse.setTitle(StringBundler.concat(selectedUser.getFullName(), " - ", 
 					<liferay-ui:search-container-column-text
 						cssClass="table-cell-expand"
 						name="entity-id"
-						property="entityId"
+						property="primaryKey"
 					/>
 
 					<%
