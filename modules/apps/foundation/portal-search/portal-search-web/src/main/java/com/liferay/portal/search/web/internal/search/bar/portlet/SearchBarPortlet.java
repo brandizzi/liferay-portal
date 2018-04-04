@@ -119,12 +119,6 @@ public class SearchBarPortlet
 		super.render(renderRequest, renderResponse);
 	}
 
-	protected static <T> void copy(Supplier<Optional<T>> from, Consumer<T> to) {
-		Optional<T> optional = from.get();
-
-		optional.ifPresent(to);
-	}
-
 	protected SearchBarPortletDisplayContext buildDisplayContext(
 		SearchBarPortletPreferences searchBarPortletPreferences,
 		PortletSharedSearchResponse portletSharedSearchResponse,
@@ -154,9 +148,11 @@ public class SearchBarPortlet
 				scopeParameterName, renderRequest),
 			searchBarPortletDisplayBuilder::setScopeParameterValue);
 
+		boolean searchLayoutAvailable = isSearchLayoutAvailable(
+			renderRequest, searchBarPortletPreferences);
+
 		searchBarPortletDisplayBuilder.setSearchLayoutAvailable(
-			isSearchLayoutAvailable(
-				renderRequest, searchBarPortletPreferences));
+			searchLayoutAvailable);
 
 		searchBarPortletDisplayBuilder.setSearchScopePreference(
 			searchBarPortletPreferences.getSearchScopePreference());
@@ -164,6 +160,12 @@ public class SearchBarPortlet
 			portletSharedSearchResponse.getThemeDisplay(renderRequest));
 
 		return searchBarPortletDisplayBuilder.build();
+	}
+
+	protected <T> void copy(Supplier<Optional<T>> from, Consumer<T> to) {
+		Optional<T> optional = from.get();
+
+		optional.ifPresent(to);
 	}
 
 	protected void filterByThisSite(

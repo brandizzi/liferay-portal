@@ -47,8 +47,14 @@ public class SearchBarPortletDisplayBuilder {
 				true);
 		}
 
+		boolean destinationConfigured = false;
+
+		if (Validator.isNotNull(_destination) && !_searchLayoutAvailable) {
+			destinationConfigured = true;
+		}
+
 		searchBarPortletDisplayContext.setDestinationConfigured(
-			Validator.isNotNull(_destination) && !_searchLayoutAvailable);
+			destinationConfigured);
 
 		searchBarPortletDisplayContext.setScopeParameterName(
 			_scopeParameterName);
