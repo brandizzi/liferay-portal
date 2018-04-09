@@ -22,10 +22,10 @@ import com.liferay.portal.kernel.search.SearchPermissionChecker;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.TermsFilter;
 import com.liferay.portal.kernel.util.ArrayUtil;
-
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.search.query.ModelQueryPreFilterContributorHelper;
+
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -34,8 +34,8 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true, service = ModelQueryPreFilterContributorHelper.class
 )
-public class ModelQueryPreFilterContributorHelperImpl implements
-	ModelQueryPreFilterContributorHelper {
+public class ModelQueryPreFilterContributorHelperImpl
+	implements ModelQueryPreFilterContributorHelper {
 
 	@Override
 	public void addClassTypeIdsFilter(
@@ -67,8 +67,8 @@ public class ModelQueryPreFilterContributorHelperImpl implements
 
 		searchPermissionChecker.getPermissionBooleanFilter(
 			searchContext.getCompanyId(), searchContext.getGroupIds(),
-			searchContext.getUserId(), entryClassName,
-			booleanFilter, searchContext);
+			searchContext.getUserId(), entryClassName, booleanFilter,
+			searchContext);
 	}
 
 	public void addStagingFilter(
@@ -114,6 +114,5 @@ public class ModelQueryPreFilterContributorHelperImpl implements
 				BooleanClauseOccur.MUST_NOT);
 		}
 	}
-
 
 }

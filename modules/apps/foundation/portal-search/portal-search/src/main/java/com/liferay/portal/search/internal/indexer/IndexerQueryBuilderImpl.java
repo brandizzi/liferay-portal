@@ -104,6 +104,51 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 		}
 	}
 
+	protected void contribute(
+		Iterable<KeywordQueryContributor> keywordQueryContributors,
+		SearchContext searchContext, BooleanQuery booleanQuery,
+		String keywords) {
+
+		for (KeywordQueryContributor keywordQueryContributor :
+				keywordQueryContributors) {
+
+			keywordQueryContributor.contribute(
+				keywords, booleanQuery,
+				new KeywordQueryContributorHelper() {
+
+					@Override
+					public String getClassName() {
+						return _modelSearchSettings.getClassName();
+					}
+
+					@Override
+					public Stream<String> getSearchClassNamesStream() {
+						return Stream.of(
+							_modelSearchSettings.getSearchClassNames());
+					}
+
+					@Override
+					public SearchContext getSearchContext() {
+						return searchContext;
+					}
+
+				});
+		}
+	}
+
+	protected void contribute(
+			Iterable<QueryPreFilterContributor> queryPreFilterContributors,
+			BooleanFilter fullQueryBooleanFilter, SearchContext searchContext)
+		throws Exception {
+
+		for (QueryPreFilterContributor queryPreFilterContributor :
+				queryPreFilterContributors) {
+
+			queryPreFilterContributor.contribute(
+				fullQueryBooleanFilter, searchContext);
+		}
+	}
+
 	protected void contributePreFilter(
 			BooleanFilter fullQueryBooleanFilter, SearchContext searchContext)
 		throws Exception {
@@ -136,51 +181,6 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 				entryClassNameBooleanFilter, BooleanClauseOccur.SHOULD);
 
 			entryClassNameModelQueryPreFilterContributors.close();
-		}
-	}
-
-	protected void contribute(
-			Iterable<QueryPreFilterContributor> queryPreFilterContributors,
-			BooleanFilter fullQueryBooleanFilter, SearchContext searchContext)
-		throws Exception {
-
-		for (QueryPreFilterContributor queryPreFilterContributor :
-				queryPreFilterContributors) {
-
-			queryPreFilterContributor.contribute(
-				fullQueryBooleanFilter, searchContext);
-		}
-	}
-
-	protected void contribute(
-		Iterable<KeywordQueryContributor> keywordQueryContributors,
-		SearchContext searchContext, BooleanQuery booleanQuery,
-		String keywords) {
-
-		for (KeywordQueryContributor keywordQueryContributor :
-				keywordQueryContributors) {
-
-			keywordQueryContributor.contribute(
-				keywords, booleanQuery,
-				new KeywordQueryContributorHelper() {
-
-					@Override
-					public String getClassName() {
-						return _modelSearchSettings.getClassName();
-					}
-
-					@Override
-					public Stream<String> getSearchClassNamesStream() {
-						return Stream.of(
-							_modelSearchSettings.getSearchClassNames());
-					}
-
-					@Override
-					public SearchContext getSearchContext() {
-						return searchContext;
-					}
-
-				});
 		}
 	}
 
