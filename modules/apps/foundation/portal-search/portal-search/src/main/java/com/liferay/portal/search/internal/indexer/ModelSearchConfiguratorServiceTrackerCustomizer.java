@@ -44,8 +44,10 @@ import com.liferay.portal.search.indexer.IndexerQueryBuilder;
 import com.liferay.portal.search.indexer.IndexerSearcher;
 import com.liferay.portal.search.indexer.IndexerSummaryBuilder;
 import com.liferay.portal.search.indexer.IndexerWriter;
+import com.liferay.portal.search.internal.index.dispatcher.ImmediateIndexerDispatcher;
 import com.liferay.portal.search.permission.SearchPermissionIndexWriter;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
+import com.liferay.portal.search.spi.model.index.dispatcher.IndexerDispatcher;
 import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
 import com.liferay.portal.search.spi.model.query.contributor.QueryConfigContributor;
 import com.liferay.portal.search.spi.model.query.contributor.QueryPreFilterContributor;
@@ -272,13 +274,16 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		serviceRegistrationHolder.setIndexerSearcherServiceRegistration(
 			indexerSearcherServiceRegistration);
 
-		IndexerWriter<?> indexerWriter = new IndexerWriterImpl<>(
+		IndexerDispatcher indexerDispatcher = new ImmediateIndexerDispatcher(
+			indexerDocumentBuilder, indexWriterHelper,
 			modelSearchConfigurator.getModelSearchSettings(),
+			searchPermissionIndexWriter, updateDocumentIndexWriter);
+
+		IndexerWriter<?> indexerWriter = new IndexerWriterImpl<>(
+			indexerDispatcher, modelSearchConfigurator.getModelSearchSettings(),
 			baseModelRetriever,
 			modelSearchConfigurator.getModelIndexerWriterContributor(),
-			indexerDocumentBuilder, searchPermissionIndexWriter,
-			updateDocumentIndexWriter, indexStatusManager, indexWriterHelper,
-			props);
+			indexerDocumentBuilder, indexStatusManager, props);
 
 		ServiceRegistration<IndexerWriter> indexerWriterServiceRegistration =
 			_bundleContext.registerService(

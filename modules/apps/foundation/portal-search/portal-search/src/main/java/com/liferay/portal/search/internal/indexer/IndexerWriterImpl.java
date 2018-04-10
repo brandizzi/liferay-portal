@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.TrashedModel;
 import com.liferay.portal.kernel.model.WorkflowedModel;
 import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.IndexWriterHelper;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -31,14 +30,13 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.search.batch.BatchIndexingActionable;
 import com.liferay.portal.search.index.IndexStatusManager;
-import com.liferay.portal.search.index.UpdateDocumentIndexWriter;
 import com.liferay.portal.search.indexer.BaseModelRetriever;
 import com.liferay.portal.search.indexer.IndexerDocumentBuilder;
 import com.liferay.portal.search.indexer.IndexerWriter;
-import com.liferay.portal.search.permission.SearchPermissionIndexWriter;
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
 import com.liferay.portal.search.spi.model.index.contributor.helper.IndexerWriterMode;
 import com.liferay.portal.search.spi.model.index.contributor.helper.ModelIndexerWriterDocumentHelper;
+import com.liferay.portal.search.spi.model.index.dispatcher.IndexerDispatcher;
 import com.liferay.portal.search.spi.model.registrar.ModelSearchSettings;
 
 import java.util.Collection;
@@ -51,23 +49,19 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 	implements IndexerWriter<T> {
 
 	public IndexerWriterImpl(
+		IndexerDispatcher indexerDispatcher,
 		ModelSearchSettings modelSearchSettings,
 		BaseModelRetriever baseModelRetriever,
 		ModelIndexerWriterContributor<T> modelIndexerWriterContributor,
 		IndexerDocumentBuilder indexerDocumentBuilder,
-		SearchPermissionIndexWriter searchPermissionIndexWriter,
-		UpdateDocumentIndexWriter updateDocumentIndexWriter,
-		IndexStatusManager indexStatusManager,
-		IndexWriterHelper indexWriterHelper, Props props) {
+		IndexStatusManager indexStatusManager, Props props) {
 
+		_indexerDispatcher = indexerDispatcher;
 		_modelSearchSettings = modelSearchSettings;
 		_baseModelRetriever = baseModelRetriever;
 		_modelIndexerWriterContributor = modelIndexerWriterContributor;
 		_indexerDocumentBuilder = indexerDocumentBuilder;
-		_searchPermissionIndexWriter = searchPermissionIndexWriter;
-		_updateDocumentIndexWriter = updateDocumentIndexWriter;
 		_indexStatusManager = indexStatusManager;
-		_indexWriterHelper = indexWriterHelper;
 		_props = props;
 	}
 
@@ -78,9 +72,7 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 		}
 
 		try {
-			_indexWriterHelper.deleteDocument(
-				_modelSearchSettings.getSearchEngineId(), companyId, uid,
-				_modelSearchSettings.isCommitImmediately());
+			_indexerDispatcher.deleteDocument(companyId, uid);
 		}
 		catch (SearchException se) {
 			throw new RuntimeException(se);
@@ -95,9 +87,16 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 
 		long companyId = _modelIndexerWriterContributor.getCompanyId(baseModel);
 
-		String uid = _indexerDocumentBuilder.getDocumentUID(baseModel);
+		if (!isEnabled()) {
+			return;
+		}
 
-		delete(companyId, uid);
+		try {
+			_indexerDispatcher.deleteDocument(companyId, baseModel);
+		}
+		catch (SearchException se) {
+			throw new RuntimeException(se);
+		}
 	}
 
 	@Override
@@ -238,12 +237,9 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 		if ((indexerWriterMode == IndexerWriterMode.UPDATE) ||
 			(indexerWriterMode == IndexerWriterMode.PARTIAL_UPDATE)) {
 
-			Document document = _indexerDocumentBuilder.getDocument(baseModel);
-
-			_updateDocumentIndexWriter.updateDocument(
-				_modelSearchSettings.getSearchEngineId(),
+			_indexerDispatcher.updateDocument(
 				_modelIndexerWriterContributor.getCompanyId(baseModel),
-				document, _modelSearchSettings.isCommitImmediately());
+				baseModel);
 		}
 		else if (indexerWriterMode == IndexerWriterMode.DELETE) {
 			delete(baseModel);
@@ -264,10 +260,8 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 
 	@Override
 	public void updatePermissionFields(T baseModel) {
-		_searchPermissionIndexWriter.updatePermissionFields(
-			baseModel, _modelIndexerWriterContributor.getCompanyId(baseModel),
-			_modelSearchSettings.getSearchEngineId(),
-			_modelSearchSettings.isCommitImmediately());
+		_indexerDispatcher.updatePermissionFields(
+			_modelIndexerWriterContributor.getCompanyId(baseModel), baseModel);
 	}
 
 	private IndexerWriterMode _getIndexerWriterMode(T baseModel) {
@@ -296,15 +290,13 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 		IndexerWriterImpl.class);
 
 	private final BaseModelRetriever _baseModelRetriever;
+	private final IndexerDispatcher _indexerDispatcher;
 	private final IndexerDocumentBuilder _indexerDocumentBuilder;
 	private Boolean _indexerEnabled;
 	private final IndexStatusManager _indexStatusManager;
-	private final IndexWriterHelper _indexWriterHelper;
 	private final ModelIndexerWriterContributor<T>
 		_modelIndexerWriterContributor;
 	private final ModelSearchSettings _modelSearchSettings;
 	private final Props _props;
-	private final SearchPermissionIndexWriter _searchPermissionIndexWriter;
-	private final UpdateDocumentIndexWriter _updateDocumentIndexWriter;
 
 }
