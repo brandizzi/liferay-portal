@@ -14,11 +14,14 @@
 
 package com.liferay.portal.search.internal.indexer;
 
+import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
+import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexerPostProcessor;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.RelatedEntryIndexer;
@@ -36,6 +39,10 @@ import com.liferay.portal.search.spi.model.registrar.ModelSearchSettings;
 
 import java.util.stream.Stream;
 
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.FrameworkUtil;
+
 /**
  * @author Michael C. Han
  */
@@ -45,7 +52,6 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 	public IndexerQueryBuilderImpl(
 		ModelSearchSettings modelSearchSettings,
 		Iterable<KeywordQueryContributor> modelKeywordQueryContributors,
-		Iterable<QueryPreFilterContributor> modelQueryPreFilterContributor,
 		Iterable<SearchContextContributor> modelSearchContextContributor,
 		Iterable<KeywordQueryContributor> keywordQueryContributors,
 		Iterable<QueryPreFilterContributor> queryPreFilterContributors,
@@ -55,7 +61,6 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 
 		_modelSearchSettings = modelSearchSettings;
 		_modelKeywordQueryContributors = modelKeywordQueryContributors;
-		_modelQueryPreFilterContributors = modelQueryPreFilterContributor;
 		_modelSearchContextContributors = modelSearchContextContributor;
 		_keywordQueryContributors = keywordQueryContributors;
 		_queryPreFilterContributors = queryPreFilterContributors;
@@ -82,13 +87,7 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 
 			final BooleanFilter fullQueryBooleanFilter = new BooleanFilter();
 
-			contribute(
-				_queryPreFilterContributors, searchContext,
-				fullQueryBooleanFilter);
-
-			contribute(
-				_modelQueryPreFilterContributors, searchContext,
-				fullQueryBooleanFilter);
+			contributePreFilter(fullQueryBooleanFilter, searchContext);
 
 			BooleanQuery fullQuery = createFullQuery(
 				fullQueryBooleanFilter, searchContext);
@@ -102,6 +101,54 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 		}
 		catch (Exception e) {
 			throw new SystemException(e);
+		}
+	}
+
+	protected void contributePreFilter(
+			BooleanFilter fullQueryBooleanFilter, SearchContext searchContext)
+		throws Exception {
+
+		contribute(_queryPreFilterContributors, fullQueryBooleanFilter,
+			searchContext);
+
+		Bundle bundle = FrameworkUtil.getBundle(getClass());
+
+		BundleContext bundleContext = bundle.getBundleContext();
+
+		for (String entryClassName : searchContext.getEntryClassNames()) {
+			BooleanFilter entryClassNameBooleanFilter = new BooleanFilter();
+
+			entryClassNameBooleanFilter.addRequiredTerm(
+				Field.ENTRY_CLASS_NAME, entryClassName);
+
+			ServiceTrackerList
+				<QueryPreFilterContributor, QueryPreFilterContributor>
+					entryClassNameModelQueryPreFilterContributors =
+						ServiceTrackerListFactory.open(
+							bundleContext, QueryPreFilterContributor.class,
+							"(indexer.class.name=" + entryClassName + ")");
+
+			contribute(
+				entryClassNameModelQueryPreFilterContributors,
+				entryClassNameBooleanFilter, searchContext);
+
+			fullQueryBooleanFilter.add(
+				entryClassNameBooleanFilter, BooleanClauseOccur.SHOULD);
+
+			entryClassNameModelQueryPreFilterContributors.close();
+		}
+	}
+
+	protected void contribute(
+			Iterable<QueryPreFilterContributor> queryPreFilterContributors,
+			BooleanFilter fullQueryBooleanFilter, SearchContext searchContext)
+		throws Exception {
+
+		for (QueryPreFilterContributor queryPreFilterContributor :
+				queryPreFilterContributors) {
+
+			queryPreFilterContributor.contribute(
+				fullQueryBooleanFilter, searchContext);
 		}
 	}
 
@@ -134,18 +181,6 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 					}
 
 				});
-		}
-	}
-
-	protected void contribute(
-		Iterable<QueryPreFilterContributor> queryPreFilterContributors,
-		SearchContext searchContext, BooleanFilter fullQueryBooleanFilter) {
-
-		for (QueryPreFilterContributor queryPreFilterContributor :
-				queryPreFilterContributors) {
-
-			queryPreFilterContributor.contribute(
-				fullQueryBooleanFilter, searchContext);
 		}
 	}
 
@@ -264,8 +299,6 @@ public class IndexerQueryBuilderImpl<T extends BaseModel<?>>
 	private final Iterable<KeywordQueryContributor> _keywordQueryContributors;
 	private final Iterable<KeywordQueryContributor>
 		_modelKeywordQueryContributors;
-	private final Iterable<QueryPreFilterContributor>
-		_modelQueryPreFilterContributors;
 	private final Iterable<SearchContextContributor>
 		_modelSearchContextContributors;
 	private final ModelSearchSettings _modelSearchSettings;
