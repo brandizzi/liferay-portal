@@ -226,7 +226,6 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		IndexerQueryBuilder indexerQueryBuilder = new IndexerQueryBuilderImpl<>(
 			modelSearchConfigurator.getModelSearchSettings(),
 			modelSearchConfigurator.getKeywordQueryContributors(),
-			modelSearchConfigurator.getQueryPreFilterContributors(),
 			modelSearchConfigurator.getSearchContextContributors(),
 			_keywordQueryContributors, _queryPreFilterContributors,
 			_searchContextContributors, indexerPostProcessorsHolder,
