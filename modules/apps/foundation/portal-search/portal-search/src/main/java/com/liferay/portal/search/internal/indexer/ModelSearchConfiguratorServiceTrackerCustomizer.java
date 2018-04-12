@@ -275,11 +275,11 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		serviceRegistrationHolder.setIndexerSearcherServiceRegistration(
 			indexerSearcherServiceRegistration);
 
-//		IndexerDispatcher indexerDispatcher = new ImmediateIndexerDispatcher(
-//			indexerDocumentBuilder, indexWriterHelper,
-//			modelSearchConfigurator.getModelSearchSettings(),
-//			searchPermissionIndexWriter, updateDocumentIndexWriter);
-		IndexerDispatcher indexerDispatcher = new NoopIndexerDispatcher();
+		IndexerDispatcher indexerDispatcher = new ImmediateIndexerDispatcher(
+			indexerDocumentBuilder, indexWriterHelper,
+			modelSearchConfigurator.getModelSearchSettings(),
+			searchPermissionIndexWriter, updateDocumentIndexWriter);
+//		IndexerDispatcher indexerDispatcher = new NoopIndexerDispatcher();
 
 		IndexerWriter<?> indexerWriter = new IndexerWriterImpl<>(
 			indexerDispatcher, modelSearchConfigurator.getModelSearchSettings(),
