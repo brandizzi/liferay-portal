@@ -45,6 +45,7 @@ import com.liferay.portal.search.indexer.IndexerSearcher;
 import com.liferay.portal.search.indexer.IndexerSummaryBuilder;
 import com.liferay.portal.search.indexer.IndexerWriter;
 import com.liferay.portal.search.internal.index.dispatcher.ImmediateIndexerDispatcher;
+import com.liferay.portal.search.internal.indexer.dispatcher.NoopIndexerDispatcher;
 import com.liferay.portal.search.permission.SearchPermissionIndexWriter;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 import com.liferay.portal.search.spi.model.index.dispatcher.IndexerDispatcher;
@@ -274,10 +275,11 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		serviceRegistrationHolder.setIndexerSearcherServiceRegistration(
 			indexerSearcherServiceRegistration);
 
-		IndexerDispatcher indexerDispatcher = new ImmediateIndexerDispatcher(
-			indexerDocumentBuilder, indexWriterHelper,
-			modelSearchConfigurator.getModelSearchSettings(),
-			searchPermissionIndexWriter, updateDocumentIndexWriter);
+//		IndexerDispatcher indexerDispatcher = new ImmediateIndexerDispatcher(
+//			indexerDocumentBuilder, indexWriterHelper,
+//			modelSearchConfigurator.getModelSearchSettings(),
+//			searchPermissionIndexWriter, updateDocumentIndexWriter);
+		IndexerDispatcher indexerDispatcher = new NoopIndexerDispatcher();
 
 		IndexerWriter<?> indexerWriter = new IndexerWriterImpl<>(
 			indexerDispatcher, modelSearchConfigurator.getModelSearchSettings(),
