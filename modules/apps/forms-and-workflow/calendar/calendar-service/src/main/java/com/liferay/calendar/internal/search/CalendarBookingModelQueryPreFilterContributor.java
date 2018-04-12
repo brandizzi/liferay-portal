@@ -14,6 +14,7 @@
 
 package com.liferay.calendar.internal.search;
 
+import com.liferay.calendar.model.Calendar;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.search.query.ModelQueryPreFilterContributorHelper;
@@ -37,6 +38,8 @@ public class CalendarBookingModelQueryPreFilterContributor
 	public void contribute(
 		BooleanFilter fullQueryBooleanFilter, SearchContext searchContext) {
 
+		modelQueryPreFilterContributorHelper.addPermissionFilter(
+			fullQueryBooleanFilter, Calendar.class.getName(), searchContext);
 		modelQueryPreFilterContributorHelper.addWorkflowStatusesFilter(
 			fullQueryBooleanFilter, searchContext);
 	}
