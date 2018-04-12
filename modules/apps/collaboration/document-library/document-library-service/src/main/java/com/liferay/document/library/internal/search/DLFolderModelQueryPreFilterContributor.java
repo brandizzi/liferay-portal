@@ -15,7 +15,6 @@
 package com.liferay.document.library.internal.search;
 
 import com.liferay.document.library.kernel.model.DLFolder;
-import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.search.query.ModelQueryPreFilterContributorHelper;
@@ -39,7 +38,6 @@ public class DLFolderModelQueryPreFilterContributor
 	public void contribute(
 		BooleanFilter fullQueryBooleanFilter, SearchContext searchContext) {
 
-		addHiddenFilter(fullQueryBooleanFilter);
 		addHelperFilters(fullQueryBooleanFilter, searchContext);
 	}
 
@@ -52,10 +50,6 @@ public class DLFolderModelQueryPreFilterContributor
 			fullQueryBooleanFilter, searchContext);
 		modelQueryPreFilterContributorHelper.addWorkflowStatusesFilter(
 			fullQueryBooleanFilter, searchContext);
-	}
-
-	protected void addHiddenFilter(BooleanFilter booleanFilter) {
-		booleanFilter.addRequiredTerm(Field.HIDDEN, false);
 	}
 
 	@Reference
