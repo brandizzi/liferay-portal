@@ -44,6 +44,8 @@ import com.liferay.portal.search.indexer.IndexerQueryBuilder;
 import com.liferay.portal.search.indexer.IndexerSearcher;
 import com.liferay.portal.search.indexer.IndexerSummaryBuilder;
 import com.liferay.portal.search.indexer.IndexerWriter;
+import com.liferay.portal.search.internal.indexer.token.IndexerTokenConsumer;
+import com.liferay.portal.search.internal.indexer.token.IndexerTokenFactoryImpl;
 import com.liferay.portal.search.permission.SearchPermissionFilterContributor;
 import com.liferay.portal.search.permission.SearchPermissionIndexWriter;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
@@ -276,13 +278,12 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		serviceRegistrationHolder.setIndexerSearcherServiceRegistration(
 			indexerSearcherServiceRegistration);
 
-		IndexerWriter<?> indexerWriter = new IndexerWriterImpl<>(
+		IndexerWriter<?> indexerWriter = new TokenMediatedIndexerWriter<>(
+			baseModelRetriever, new IndexerTokenFactoryImpl(),
+			indexerTokenConsumer,
 			modelSearchConfigurator.getModelSearchSettings(),
-			baseModelRetriever,
 			modelSearchConfigurator.getModelIndexerWriterContributor(),
-			indexerDocumentBuilder, searchPermissionIndexWriter,
-			updateDocumentIndexWriter, indexStatusManager, indexWriterHelper,
-			props);
+			indexerDocumentBuilder, true);
 
 		ServiceRegistration<IndexerWriter> indexerWriterServiceRegistration =
 			_bundleContext.registerService(
@@ -337,6 +338,9 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 
 	@Reference
 	protected HitsProcessorRegistry hitsProcessorRegistry;
+
+	@Reference
+	protected IndexerTokenConsumer indexerTokenConsumer;
 
 	@Reference
 	protected IndexSearcherHelper indexSearcherHelper;
