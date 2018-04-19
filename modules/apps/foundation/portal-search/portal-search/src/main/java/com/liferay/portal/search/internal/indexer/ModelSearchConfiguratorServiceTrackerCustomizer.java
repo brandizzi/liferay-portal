@@ -44,6 +44,7 @@ import com.liferay.portal.search.indexer.IndexerQueryBuilder;
 import com.liferay.portal.search.indexer.IndexerSearcher;
 import com.liferay.portal.search.indexer.IndexerSummaryBuilder;
 import com.liferay.portal.search.indexer.IndexerWriter;
+import com.liferay.portal.search.internal.indexer.queue.IndexerTokenConsumer;
 import com.liferay.portal.search.permission.SearchPermissionFilterContributor;
 import com.liferay.portal.search.permission.SearchPermissionIndexWriter;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
@@ -363,6 +364,9 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 	@Reference
 	protected UpdateDocumentIndexWriter updateDocumentIndexWriter;
 
+	@Reference
+	protected IndexerTokenConsumer indexerTokenConsumer;
+	
 	private static final Log _log = LogFactoryUtil.getLog(
 		ModelSearchConfiguratorServiceTrackerCustomizer.class);
 
