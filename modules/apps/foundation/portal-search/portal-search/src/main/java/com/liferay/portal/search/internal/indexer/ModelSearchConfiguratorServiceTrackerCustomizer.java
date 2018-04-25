@@ -44,9 +44,12 @@ import com.liferay.portal.search.indexer.IndexerQueryBuilder;
 import com.liferay.portal.search.indexer.IndexerSearcher;
 import com.liferay.portal.search.indexer.IndexerSummaryBuilder;
 import com.liferay.portal.search.indexer.IndexerWriter;
+import com.liferay.portal.search.internal.indexer.token.IndexerTokenConsumer;
+import com.liferay.portal.search.internal.indexer.token.IndexerTokenFactoryImpl;
 import com.liferay.portal.search.permission.SearchPermissionFilterContributor;
 import com.liferay.portal.search.permission.SearchPermissionIndexWriter;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
+import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
 import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
 import com.liferay.portal.search.spi.model.query.contributor.QueryConfigContributor;
 import com.liferay.portal.search.spi.model.query.contributor.QueryPreFilterContributor;
@@ -276,13 +279,19 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		serviceRegistrationHolder.setIndexerSearcherServiceRegistration(
 			indexerSearcherServiceRegistration);
 
-		IndexerWriter<?> indexerWriter = new IndexerWriterImpl<>(
+		ModelIndexerWriterContributor<T> modelIndexerWriterContributor =
+			modelSearchConfigurator.getModelIndexerWriterContributor();
+
+		IndexerTokenConsumer indexerTokenConsumer = new IndexerTokenConsumer(
+			baseModelRetriever, indexerDocumentBuilder, indexWriterHelper,
+			modelIndexerWriterContributor, searchPermissionIndexWriter,
+			updateDocumentIndexWriter);
+
+		IndexerWriter<?> indexerWriter = new TokenMediatedIndexerWriter<>(
+			baseModelRetriever, new IndexerTokenFactoryImpl(),
+			indexerTokenConsumer,
 			modelSearchConfigurator.getModelSearchSettings(),
-			baseModelRetriever,
-			modelSearchConfigurator.getModelIndexerWriterContributor(),
-			indexerDocumentBuilder, searchPermissionIndexWriter,
-			updateDocumentIndexWriter, indexStatusManager, indexWriterHelper,
-			props);
+			modelIndexerWriterContributor, indexerDocumentBuilder, true);
 
 		ServiceRegistration<IndexerWriter> indexerWriterServiceRegistration =
 			_bundleContext.registerService(
