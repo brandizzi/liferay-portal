@@ -45,8 +45,12 @@ import com.liferay.portal.search.indexer.IndexerQueryBuilder;
 import com.liferay.portal.search.indexer.IndexerSearcher;
 import com.liferay.portal.search.indexer.IndexerSummaryBuilder;
 import com.liferay.portal.search.indexer.IndexerWriter;
+import com.liferay.portal.search.internal.indexer.token.IndexerTokenConsumer;
+import com.liferay.portal.search.internal.indexer.token.IndexerTokenFactoryImpl;
+import com.liferay.portal.search.permission.SearchPermissionFilterContributor;
 import com.liferay.portal.search.permission.SearchPermissionIndexWriter;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
+import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
 import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
 import com.liferay.portal.search.spi.model.query.contributor.QueryConfigContributor;
 import com.liferay.portal.search.spi.model.query.contributor.SearchContextContributor;
@@ -270,13 +274,28 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		serviceRegistrationHolder.setIndexerSearcherServiceRegistration(
 			indexerSearcherServiceRegistration);
 
-		IndexerWriter<?> indexerWriter = new IndexerWriterImpl<>(
+		ModelIndexerWriterContributor<T> modelIndexerWriterContributor =
+			modelSearchConfigurator.getModelIndexerWriterContributor();
+
+		IndexerTokenConsumer<T> indexerTokenConsumer =
+			new IndexerTokenConsumer<>(
+				baseModelRetriever, indexerDocumentBuilder, indexWriterHelper,
+				modelIndexerWriterContributor, searchPermissionIndexWriter,
+				updateDocumentIndexWriter);
+
+		ServiceRegistration<IndexerTokenConsumer>
+			indexerTokenConsumerRegistration = _bundleContext.registerService(
+				IndexerTokenConsumer.class, indexerTokenConsumer,
+				serviceProperties);
+
+		serviceRegistrationHolder.setTokenConsumerServiceRegistration(
+			indexerTokenConsumerRegistration);
+
+		IndexerWriter<?> indexerWriter = new TokenMediatedIndexerWriter<>(
+			baseModelRetriever, new IndexerTokenFactoryImpl(),
+			indexerTokenConsumer,
 			modelSearchConfigurator.getModelSearchSettings(),
-			baseModelRetriever,
-			modelSearchConfigurator.getModelIndexerWriterContributor(),
-			indexerDocumentBuilder, searchPermissionIndexWriter,
-			updateDocumentIndexWriter, indexStatusManager, indexWriterHelper,
-			props);
+			modelIndexerWriterContributor, indexerDocumentBuilder, true);
 
 		ServiceRegistration<IndexerWriter> indexerWriterServiceRegistration =
 			_bundleContext.registerService(
@@ -477,6 +496,14 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 				indexerWriterServiceRegistration;
 		}
 
+		public void setTokenConsumerServiceRegistration(
+			ServiceRegistration<IndexerTokenConsumer>
+				indexerTokenConsumerRegistration) {
+
+			_indexerTokenConsumerRegistration =
+				indexerTokenConsumerRegistration;
+		}
+
 		private ServiceRegistration<IndexerDocumentBuilder>
 			_indexerDocumentBuilderServiceRegistration;
 		private ServiceRegistration<IndexerPermissionPostFilter>
@@ -488,6 +515,8 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		private ServiceRegistration<Indexer> _indexerServiceRegistration;
 		private ServiceRegistration<IndexerSummaryBuilder>
 			_indexerSummaryBuilderServiceRegistration;
+		private ServiceRegistration<IndexerTokenConsumer>
+			_indexerTokenConsumerRegistration;
 		private ServiceRegistration<IndexerWriter>
 			_indexerWriterServiceRegistration;
 		private final ModelSearchConfigurator<?> _modelSearchConfigurator;
