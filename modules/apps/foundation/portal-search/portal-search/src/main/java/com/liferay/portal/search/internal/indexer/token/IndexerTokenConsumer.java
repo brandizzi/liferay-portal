@@ -36,13 +36,13 @@ import java.util.Optional;
 /**
  * @author Adam Brandizzi
  */
-public class IndexerTokenConsumer {
+public class IndexerTokenConsumer<T extends BaseModel<?>> {
 
 	public IndexerTokenConsumer(
 		BaseModelRetriever baseModelRetriever,
 		IndexerDocumentBuilder indexerDocumentBuilder,
 		IndexWriterHelper indexWriterHelper,
-		ModelIndexerWriterContributor<?> modelIndexerWriterContributor,
+		ModelIndexerWriterContributor<T> modelIndexerWriterContributor,
 		SearchPermissionIndexWriter searchPermissionIndexWriter,
 		UpdateDocumentIndexWriter updateDocumentIndexWriter) {
 
@@ -197,7 +197,7 @@ public class IndexerTokenConsumer {
 	private final BaseModelRetriever _baseModelRetriever;
 	private final IndexerDocumentBuilder _indexerDocumentBuilder;
 	private final IndexWriterHelper _indexWriterHelper;
-	private final ModelIndexerWriterContributor<?>
+	private final ModelIndexerWriterContributor<T>
 		_modelIndexerWriterContributor;
 	private final SearchPermissionIndexWriter _searchPermissionIndexWriter;
 	private final UpdateDocumentIndexWriter _updateDocumentIndexWriter;

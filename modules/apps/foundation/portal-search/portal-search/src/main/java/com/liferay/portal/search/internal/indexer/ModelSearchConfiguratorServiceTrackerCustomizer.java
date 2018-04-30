@@ -282,10 +282,19 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		ModelIndexerWriterContributor<T> modelIndexerWriterContributor =
 			modelSearchConfigurator.getModelIndexerWriterContributor();
 
-		IndexerTokenConsumer indexerTokenConsumer = new IndexerTokenConsumer(
-			baseModelRetriever, indexerDocumentBuilder, indexWriterHelper,
-			modelIndexerWriterContributor, searchPermissionIndexWriter,
-			updateDocumentIndexWriter);
+		IndexerTokenConsumer<T> indexerTokenConsumer =
+			new IndexerTokenConsumer<>(
+				baseModelRetriever, indexerDocumentBuilder, indexWriterHelper,
+				modelIndexerWriterContributor, searchPermissionIndexWriter,
+				updateDocumentIndexWriter);
+
+		ServiceRegistration<IndexerTokenConsumer>
+			indexerTokenConsumerRegistration = _bundleContext.registerService(
+				IndexerTokenConsumer.class, indexerTokenConsumer,
+				serviceProperties);
+
+		serviceRegistrationHolder.setTokenConsumerServiceRegistration(
+			indexerTokenConsumerRegistration);
 
 		IndexerWriter<?> indexerWriter = new TokenMediatedIndexerWriter<>(
 			baseModelRetriever, new IndexerTokenFactoryImpl(),
@@ -494,6 +503,14 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 				indexerWriterServiceRegistration;
 		}
 
+		public void setTokenConsumerServiceRegistration(
+			ServiceRegistration<IndexerTokenConsumer>
+				indexerTokenConsumerRegistration) {
+
+			_indexerTokenConsumerRegistration =
+				indexerTokenConsumerRegistration;
+		}
+
 		private ServiceRegistration<IndexerDocumentBuilder>
 			_indexerDocumentBuilderServiceRegistration;
 		private ServiceRegistration<IndexerPermissionPostFilter>
@@ -505,6 +522,8 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		private ServiceRegistration<Indexer> _indexerServiceRegistration;
 		private ServiceRegistration<IndexerSummaryBuilder>
 			_indexerSummaryBuilderServiceRegistration;
+		private ServiceRegistration<IndexerTokenConsumer>
+			_indexerTokenConsumerRegistration;
 		private ServiceRegistration<IndexerWriter>
 			_indexerWriterServiceRegistration;
 		private final ModelSearchConfigurator<?> _modelSearchConfigurator;
