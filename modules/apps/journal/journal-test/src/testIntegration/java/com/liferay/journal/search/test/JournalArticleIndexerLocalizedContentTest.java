@@ -85,6 +85,20 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 	@Test
 	public void testIndexedFields() throws Exception {
+		String originalContent = RandomTestUtil.randomString();
+		String translatedContent = RandomTestUtil.randomString();
+
+		setContent(
+			new JournalArticleContent() {
+				{
+					defaultLocale = LocaleUtil.US;
+					name = "content";
+
+					put(LocaleUtil.US, originalContent);
+					put(LocaleUtil.HUNGARY, translatedContent);
+				}
+			});
+
 		String originalTitle = "entity title";
 		String translatedTitle = "entitas neve";
 
@@ -96,38 +110,16 @@ public class JournalArticleIndexerLocalizedContentTest {
 				}
 			});
 
-		String originalContent = RandomTestUtil.randomString();
-		String translatedContent = RandomTestUtil.randomString();
-
-		setContent(
-			new JournalArticleContent() {
-				{
-					name = "content";
-					defaultLocale = LocaleUtil.US;
-
-					put(LocaleUtil.US, originalContent);
-					put(LocaleUtil.HUNGARY, translatedContent);
-				}
-			});
-
 		addArticle();
 
-		Map<String, String> titleStrings = new HashMap<String, String>() {
+		Map<String, String> contentMap = new HashMap<String, String>() {
 			{
-				put("title_en_US", originalTitle);
-				put("title_hu_HU", translatedTitle);
-			}
-		};
-
-		Map<String, String> contentStrings = new HashMap<String, String>() {
-			{
-				put("content", originalContent);
 				put("content_en_US", originalContent);
 				put("content_hu_HU", translatedContent);
 			}
 		};
 
-		Map<String, String> localizedTitleStrings = _withSortableValues(
+		Map<String, String> localizedTitleMap = _withSortableValues(
 			new HashMap<String, String>() {
 				{
 					put("localized_title_en_US", originalTitle);
@@ -146,24 +138,80 @@ public class JournalArticleIndexerLocalizedContentTest {
 				}
 			});
 
-		localizedTitleStrings.put("localized_title", originalTitle);
+		localizedTitleMap.put("localized_title", originalTitle);
+
+		Map<String, String> titleMap = new HashMap<String, String>() {
+			{
+				put("title_en_US", originalTitle);
+				put("title_hu_HU", translatedTitle);
+			}
+		};
 
 		String searchTerm = "nev";
 
 		Document document = _search(searchTerm, LocaleUtil.HUNGARY);
 
 		FieldValuesAssert.assertFieldValues(
-			titleStrings, "title", document, searchTerm);
+			contentMap, "content", document, searchTerm);
 
 		FieldValuesAssert.assertFieldValues(
-			contentStrings, "content", document, searchTerm);
+			localizedTitleMap, "localized_title", document, searchTerm);
 
 		FieldValuesAssert.assertFieldValues(
-			localizedTitleStrings, "localized_title", document, searchTerm);
+			titleMap, "title", document, searchTerm);
+	}
+
+	@Test
+	public void testIndexedFieldsInAnyLanguage() throws Exception {
+		String title = "entity title";
+
+		setTitle(
+			new JournalArticleTitle() {
+				{
+					put(LocaleUtil.US, title);
+				}
+			});
+
+		String content = "entity content";
+
+		setContent(
+			new JournalArticleContent() {
+				{
+					defaultLocale = LocaleUtil.US;
+					name = "content";
+
+					put(LocaleUtil.US, content);
+				}
+			});
+
+		addArticle();
+
+		Document document = _search("content", LocaleUtil.HUNGARY);
+
+		Map<String, String> contentMap = new HashMap<String, String>() {
+			{
+				put("content_en_US", content);
+			}
+		};
+
+		FieldValuesAssert.assertFieldValues(
+			contentMap, "content", document, title);
+
+		document = _search("title", LocaleUtil.HUNGARY);
+
+		Map<String, String> titleMap = new HashMap<String, String>() {
+			{
+				put("title_en_US", title);
+			}
+		};
+
+		FieldValuesAssert.assertFieldValues(titleMap, "title", document, title);
 	}
 
 	@Test
 	public void testIndexedFieldsMissingWhenContentIsEmpty() throws Exception {
+		setContent(new JournalArticleContent());
+
 		String originalTitle = "entity title";
 		String translatedTitle = "título da entidade";
 
@@ -175,17 +223,15 @@ public class JournalArticleIndexerLocalizedContentTest {
 				}
 			});
 
-		setContent(new JournalArticleContent());
-
 		JournalArticle journalArticle = addArticle();
 
 		String articleId = journalArticle.getArticleId();
 
-		Map<String, String> titleStrings = Collections.emptyMap();
+		Map<String, String> contentMap = Collections.emptyMap();
 
-		Map<String, String> contentStrings = Collections.emptyMap();
+		Map<String, String> ddmContentMap = Collections.emptyMap();
 
-		Map<String, String> localizedTitleStrings = _withSortableValues(
+		Map<String, String> localizedTitleMap = _withSortableValues(
 			new HashMap<String, String>() {
 				{
 					put("localized_title_en_US", originalTitle);
@@ -204,29 +250,41 @@ public class JournalArticleIndexerLocalizedContentTest {
 				}
 			});
 
-		localizedTitleStrings.put("localized_title", originalTitle);
+		localizedTitleMap.put("localized_title", originalTitle);
 
-		Map<String, String> ddmContentStrings = Collections.emptyMap();
+		Map<String, String> titleMap = Collections.emptyMap();
 
 		String searchTerm = articleId;
 
 		Document document = _search(searchTerm, LocaleUtil.BRAZIL);
 
 		FieldValuesAssert.assertFieldValues(
-			titleStrings, "title", document, searchTerm);
+			ddmContentMap, "ddm__text", document, searchTerm);
 
 		FieldValuesAssert.assertFieldValues(
-			contentStrings, "content", document, searchTerm);
+			contentMap, "content", document, searchTerm);
 
 		FieldValuesAssert.assertFieldValues(
-			localizedTitleStrings, "localized_title", document, searchTerm);
+			localizedTitleMap, "localized_title", document, searchTerm);
 
 		FieldValuesAssert.assertFieldValues(
-			ddmContentStrings, "ddm__text", document, searchTerm);
+			titleMap, "title", document, searchTerm);
 	}
 
 	@Test
 	public void testJapaneseTitle() throws Exception {
+		String content = RandomTestUtil.randomString();
+
+		setContent(
+			new JournalArticleContent() {
+				{
+					defaultLocale = LocaleUtil.JAPAN;
+					name = "content";
+
+					put(LocaleUtil.JAPAN, content);
+				}
+			});
+
 		String title = "新規作成";
 
 		setTitle(
@@ -236,34 +294,15 @@ public class JournalArticleIndexerLocalizedContentTest {
 				}
 			});
 
-		String content = RandomTestUtil.randomString();
-
-		setContent(
-			new JournalArticleContent() {
-				{
-					name = "content";
-					defaultLocale = LocaleUtil.JAPAN;
-
-					put(LocaleUtil.JAPAN, content);
-				}
-			});
-
 		addArticle();
 
-		Map<String, String> titleStrings = new HashMap<String, String>() {
+		Map<String, String> contentMap = new HashMap<String, String>() {
 			{
-				put("title_ja_JP", title);
-			}
-		};
-
-		Map<String, String> contentStrings = new HashMap<String, String>() {
-			{
-				put("content", content);
 				put("content_ja_JP", content);
 			}
 		};
 
-		Map<String, String> localizedTitleStrings = _withSortableValues(
+		Map<String, String> localizedTitleMap = _withSortableValues(
 			new HashMap<String, String>() {
 				{
 					put("localized_title_ja_JP", title);
@@ -282,7 +321,13 @@ public class JournalArticleIndexerLocalizedContentTest {
 				}
 			});
 
-		localizedTitleStrings.put("localized_title", title);
+		localizedTitleMap.put("localized_title", title);
+
+		Map<String, String> titleMap = new HashMap<String, String>() {
+			{
+				put("title_ja_JP", title);
+			}
+		};
 
 		String word1 = "新規";
 		String word2 = "作成";
@@ -296,14 +341,13 @@ public class JournalArticleIndexerLocalizedContentTest {
 				Document document = _search(searchTerm, LocaleUtil.JAPAN);
 
 				FieldValuesAssert.assertFieldValues(
-					titleStrings, "title", document, searchTerm);
+					contentMap, "content", document, searchTerm);
 
 				FieldValuesAssert.assertFieldValues(
-					contentStrings, "content", document, searchTerm);
+					localizedTitleMap, "localized_title", document, searchTerm);
 
 				FieldValuesAssert.assertFieldValues(
-					localizedTitleStrings, "localized_title", document,
-					searchTerm);
+					titleMap, "title", document, searchTerm);
 			}
 		);
 	}
@@ -318,18 +362,11 @@ public class JournalArticleIndexerLocalizedContentTest {
 			full, partial1, partial2
 		).forEach(
 			title -> {
-				setTitle(
-					new JournalArticleTitle() {
-						{
-							put(LocaleUtil.JAPAN, title);
-						}
-					});
-
 				setContent(
 					new JournalArticleContent() {
 						{
-							name = "content";
 							defaultLocale = LocaleUtil.JAPAN;
+							name = "content";
 
 							put(
 								LocaleUtil.JAPAN,
@@ -337,11 +374,18 @@ public class JournalArticleIndexerLocalizedContentTest {
 						}
 					});
 
+				setTitle(
+					new JournalArticleTitle() {
+						{
+							put(LocaleUtil.JAPAN, title);
+						}
+					});
+
 				addArticle();
 			}
 		);
 
-		Map<String, String> titleStrings = new HashMap<String, String>() {
+		Map<String, String> titleMap = new HashMap<String, String>() {
 			{
 				put("title_ja_JP", full);
 			}
@@ -357,7 +401,7 @@ public class JournalArticleIndexerLocalizedContentTest {
 				Document document = _search(searchTerm, LocaleUtil.JAPAN);
 
 				FieldValuesAssert.assertFieldValues(
-					titleStrings, "title", document, searchTerm);
+					titleMap, "title", document, searchTerm);
 			}
 		);
 	}
