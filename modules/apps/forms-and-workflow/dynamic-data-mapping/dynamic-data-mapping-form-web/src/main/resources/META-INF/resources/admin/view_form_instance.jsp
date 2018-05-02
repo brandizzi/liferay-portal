@@ -19,7 +19,6 @@
 <%
 String displayStyle = ddmFormAdminDisplayContext.getDisplayStyle();
 PortletURL portletURL = ddmFormAdminDisplayContext.getPortletURL();
-portletURL.setParameter("displayStyle", displayStyle);
 %>
 
 <div class="container-fluid-1280" id="<portlet:namespace />formContainer">
@@ -73,13 +72,13 @@ portletURL.setParameter("displayStyle", displayStyle);
 							cssClass="table-cell-content"
 							href="<%= rowURL %>"
 							name="name"
-							value="<%= HtmlUtil.escape(formInstance.getName(locale)) %>"
+							value="<%= HtmlUtil.extractText(formInstance.getName(locale)) %>"
 						/>
 
 						<liferay-ui:search-container-column-text
 							cssClass="table-cell-content"
 							name="description"
-							value="<%= HtmlUtil.escape(formInstance.getDescription(locale)) %>"
+							value="<%= HtmlUtil.extractText(formInstance.getDescription(locale)) %>"
 						/>
 
 						<liferay-ui:search-container-column-date

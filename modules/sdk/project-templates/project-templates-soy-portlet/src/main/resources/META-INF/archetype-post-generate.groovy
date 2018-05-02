@@ -15,6 +15,7 @@
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+
 import java.util.List
 
 Path projectPath = Paths.get(request.outputDirectory, request.artifactId)
@@ -33,7 +34,7 @@ List<String> pathList = ["src", "main", "java"]
 pathList.addAll packageList
 pathList.add "portlet"
 
-if (liferayVersion == "7.1") {
+if (liferayVersion.startsWith("7.1")) {
 	pathList.add "${className}Portlet.java"
 }
 else {

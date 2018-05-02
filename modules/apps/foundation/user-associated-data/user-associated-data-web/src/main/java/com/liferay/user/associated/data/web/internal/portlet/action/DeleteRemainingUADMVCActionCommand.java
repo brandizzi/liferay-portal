@@ -14,11 +14,13 @@
 
 package com.liferay.user.associated.data.web.internal.portlet.action;
 
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.user.associated.data.anonymizer.UADAnonymizer;
 import com.liferay.user.associated.data.constants.UserAssociatedDataPortletKeys;
 import com.liferay.user.associated.data.web.internal.registry.UADRegistry;
+import com.liferay.user.associated.data.web.internal.util.UADAnonymizerHelper;
 
 import java.util.Collection;
 
@@ -47,19 +49,26 @@ public class DeleteRemainingUADMVCActionCommand
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long selectedUserId = getSelectedUserId(actionRequest);
-
 		Collection<UADAnonymizer> uadAnonymizers =
 			_uadRegistry.getUADAnonymizers();
 
 		for (UADAnonymizer uadAnonymizer : uadAnonymizers) {
-			uadAnonymizer.autoAnonymizeAll(selectedUserId);
+			User selectedUser = getSelectedUser(actionRequest);
+
+			User anonymousUser = _uadAnonymizerHelper.getAnonymousUser(
+				selectedUser.getCompanyId());
+
+			uadAnonymizer.autoAnonymizeAll(
+				selectedUser.getUserId(), anonymousUser);
 		}
 
 		String redirect = ParamUtil.getString(actionRequest, "redirect");
 
 		sendRedirect(actionRequest, actionResponse, redirect);
 	}
+
+	@Reference
+	private UADAnonymizerHelper _uadAnonymizerHelper;
 
 	@Reference
 	private UADRegistry _uadRegistry;

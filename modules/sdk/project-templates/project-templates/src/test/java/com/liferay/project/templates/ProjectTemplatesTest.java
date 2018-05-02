@@ -75,6 +75,7 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -84,6 +85,7 @@ import org.junit.rules.TemporaryFolder;
  * @author Gregory Amerson
  * @author Andrea Di Giorgi
  */
+@Ignore
 public class ProjectTemplatesTest {
 
 	@ClassRule
@@ -2331,6 +2333,7 @@ public class ProjectTemplatesTest {
 		List<File> archetypesDirs = Arrays.asList(archetypesDir);
 
 		projectTemplatesArgs.setArchetypesDirs(archetypesDirs);
+
 		projectTemplatesArgs.setAuthor(author);
 		projectTemplatesArgs.setClassName(className);
 		projectTemplatesArgs.setContributorType(contributorType);

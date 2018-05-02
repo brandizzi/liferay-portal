@@ -51,6 +51,7 @@ AUI.add(
 						var instance = this;
 
 						instance._eventHandlers = [
+							instance.on('close', instance._hideSidebarContent),
 							instance.after('open', instance._afterSidebarOpen),
 							instance.before('open', instance._beforeSidebarOpen),
 							instance.after('open:start', instance._afterOpenStart),
@@ -92,6 +93,8 @@ AUI.add(
 						instance.settingsForm.destroy();
 
 						instance._changeFieldTypeMenu(fieldType);
+
+						instance._hideCurrentFieldTypeFromList(field.get('type'));
 
 						settingsRetriever.getSettingsContext(field).then(
 							function(settingsContext) {
@@ -206,6 +209,8 @@ AUI.add(
 						var fieldType = FieldTypes.get(field.get('type'));
 						var toolbar = instance.get('toolbar');
 
+						instance._hideCurrentFieldTypeFromList(field.get('type'));
+
 						instance.set('description', fieldType.get('label'));
 						instance.set('title', field.get('context.label'));
 
@@ -268,6 +273,8 @@ AUI.add(
 
 						instance._removeLoading();
 
+						instance._showSidebarContent();
+
 						instance._enableSidebarHeader();
 
 						settingsForm.render();
@@ -316,6 +323,30 @@ AUI.add(
 						var instance = this;
 
 						return '<div>' + Liferay.Util.getLexiconIconTpl(fieldType.get('icon')) + '</div><span>' + fieldType.get('label') + '</span>' + Liferay.Util.getLexiconIconTpl('caret-bottom');
+					},
+
+					_hideCurrentFieldTypeFromList: function(fieldTypeName) {
+						var instance = this;
+
+						var contentBox = instance.get('contentBox');
+
+						var toolbarFieldTypeList = contentBox.one('.lfr-ddm-toolbar-field-type');
+
+						toolbarFieldTypeList.all('.dropdown-item').show();
+
+						toolbarFieldTypeList.one('[data-name="' + fieldTypeName + '"]').hide();
+					},
+
+					_hideSidebarContent: function() {
+						var instance = this;
+
+						var contentBox = instance.get('contentBox');
+
+						var content = contentBox.one('.tabbable-content');
+
+						if (content) {
+							content.hide();
+						}
 					},
 
 					_isFieldNode: function(node) {
@@ -380,6 +411,8 @@ AUI.add(
 
 						var FormBuilderUtil = Liferay.DDM.FormBuilderUtil;
 
+						var ignoredFieldNames = ['dataType', 'type', 'validation'];
+
 						FormBuilderUtil.visitLayout(
 							newSettingsContext.pages,
 							function(settingsFormFieldContext) {
@@ -392,7 +425,7 @@ AUI.add(
 										var previousFieldLocalizable = previousSettingsFormFieldContext.localizable;
 										var previousFieldName = previousSettingsFormFieldContext.fieldName;
 
-										if (!(fieldName === 'type') && !(fieldName === 'dataType') && (fieldName === previousFieldName)) {
+										if ((ignoredFieldNames.indexOf(fieldName) === -1) && (fieldName === previousFieldName)) {
 											if (fieldLocalizable && previousFieldLocalizable) {
 												settingsFormFieldContext.localizedValue = previousSettingsFormFieldContext.localizedValue;
 											}
@@ -474,6 +507,18 @@ AUI.add(
 
 						if (!contentBox.one('.loading-animation')) {
 							contentBox.append(TPL_LOADING);
+						}
+					},
+
+					_showSidebarContent: function() {
+						var instance = this;
+
+						var contentBox = instance.get('contentBox');
+
+						var content = contentBox.one('.tabbable-content');
+
+						if (content) {
+							content.show();
 						}
 					},
 

@@ -14,10 +14,12 @@
 
 package com.liferay.user.associated.data.web.internal.portlet.action;
 
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.user.associated.data.anonymizer.UADAnonymizer;
 import com.liferay.user.associated.data.constants.UserAssociatedDataPortletKeys;
+import com.liferay.user.associated.data.web.internal.util.UADAnonymizerHelper;
 import com.liferay.user.associated.data.web.internal.util.UADApplicationSummaryHelper;
 
 import java.util.List;
@@ -47,8 +49,6 @@ public class AnonymizeApplicationUADEntitiesMVCActionCommand
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long selectedUserId = getSelectedUserId(actionRequest);
-
 		String applicationName = ParamUtil.getString(
 			actionRequest, "applicationName");
 
@@ -57,9 +57,18 @@ public class AnonymizeApplicationUADEntitiesMVCActionCommand
 				applicationName);
 
 		for (UADAnonymizer uadAnonymizer : uadAnonymizers) {
-			uadAnonymizer.autoAnonymizeAll(selectedUserId);
+			User selectedUser = getSelectedUser(actionRequest);
+
+			User anonymousUser = _uadAnonymizerHelper.getAnonymousUser(
+				selectedUser.getCompanyId());
+
+			uadAnonymizer.autoAnonymizeAll(
+				selectedUser.getUserId(), anonymousUser);
 		}
 	}
+
+	@Reference
+	private UADAnonymizerHelper _uadAnonymizerHelper;
 
 	@Reference
 	private UADApplicationSummaryHelper _uadApplicationSummaryHelper;

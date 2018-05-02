@@ -1297,7 +1297,7 @@ war.path=${app.server.weblogic.portal.dir}/</echo>
 
 	<macrodef name="prepare-blacklist-configuration">
 		<sequential>
-			<echo file="${liferay.home}/osgi/configs/com.liferay.portal.bundle.blacklist.internal.BundleBlacklistConfiguration.config">blacklistBundleSymbolicNames=[&quot;com.liferay.portal.mobile.device.detection.fiftyonedegrees.api&quot;,&quot;com.liferay.portal.mobile.device.detection.fiftyonedegrees.enterprise&quot;,&quot;com.liferay.portal.mobile.device.detection.fiftyonedegrees.enterprise.test.data&quot;,&quot;com.liferay.portal.mobile.device.detection.fiftyonedegrees&quot;]</echo>
+			<echo file="${liferay.home}/osgi/configs/com.liferay.portal.bundle.blacklist.internal.BundleBlacklistConfiguration.config">blacklistBundleSymbolicNames=&quot;com.liferay.portal.mobile.device.detection.fiftyonedegrees.api,com.liferay.portal.mobile.device.detection.fiftyonedegrees.enterprise,com.liferay.portal.mobile.device.detection.fiftyonedegrees.enterprise.test.data,com.liferay.portal.mobile.device.detection.fiftyonedegrees&quot;</echo>
 		</sequential>
 	</macrodef>
 
@@ -1853,6 +1853,23 @@ tell application "Safari" to quit
 				<else>
 					<fail message="Operating system is not supported." />
 				</else>
+			</if>
+		</sequential>
+	</macrodef>
+
+	<macrodef name="prepare-search-engine">
+		<attribute name="search.engine" />
+
+		<sequential>
+			<echo>Preparing search engine: @{search.engine}</echo>
+
+			<if>
+				<equals arg1="@{search.engine}" arg2="solr" />
+				<then>
+					<ant antfile="build-test-solr.xml" inheritAll="false" target="deploy-solr" />
+
+					<ant antfile="build-test-solr.xml" inheritAll="false" target="start-solr" />
+				</then>
 			</if>
 		</sequential>
 	</macrodef>
@@ -3868,6 +3885,17 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 		</sequential>
 	</macrodef>
 
+	<macrodef name="stop-search-engine">
+		<sequential>
+			<if>
+				<equals arg1="${search.engine}" arg2="solr" />
+				<then>
+					<ant antfile="build-test-solr.xml" target="stop-solr-core" />
+				</then>
+			</if>
+		</sequential>
+	</macrodef>
+
 	<macrodef name="uninstall-patches">
 		<attribute name="patching.tool.dir" />
 
@@ -5025,15 +5053,6 @@ go]]></replacevalue>
 	<target name="deploy-osgi-apps">
 		<get-testcase-property property.name="osgi.app.includes" />
 
-		<get-testcase-property property.name="solr.enabled" />
-
-		<if>
-			<equals arg1="${solr.enabled}" arg2="true" />
-			<then>
-				<var name="osgi.app.includes" value="${osgi.app.includes},portal-search-solr" />
-			</then>
-		</if>
-
 		<if>
 			<isset property="osgi.app.includes" />
 			<then>
@@ -5106,6 +5125,8 @@ go]]></replacevalue>
 														<include name="${module.war.name}*" />
 													</fileset>
 												</delete>
+
+												<echo file="@{module.dir.path}/.lfrbuild-portal" />
 											</sequential>
 										</for>
 
@@ -5117,6 +5138,19 @@ go]]></replacevalue>
 											<property name="app.name" value="${osgi.app.name}" />
 											<property name="osgi.dir" value="${liferay.home}/osgi" />
 										</ant>
+
+										<for param="module.dir.path">
+											<path>
+												<dirset
+													dir="@{app.dir}"
+												>
+													<include name="*" />
+												</dirset>
+											</path>
+											<sequential>
+												<delete file="@{module.dir.path}/.lfrbuild-portal" />
+											</sequential>
+										</for>
 
 										<gradle-execute dir="@{app.dir}" task="clean" />
 									</else>
@@ -5134,7 +5168,7 @@ go]]></replacevalue>
 
 		<get-testcase-property property.name="osgi.module.configurations" />
 
-		<for list="${osgi.module.configurations}" param="configuration">
+		<for delimiter=":" list="${osgi.module.configurations}" param="configuration">
 			<sequential>
 				<echo file="${liferay.home}/osgi/configs/${osgi.module.configurations.index}">@{configuration}</echo>
 
@@ -5152,7 +5186,7 @@ go]]></replacevalue>
 
 		<get-testcase-property property.name="osgi.module.configuration.file.names" />
 
-		<for list="${osgi.module.configuration.file.names}" param="file.names">
+		<for delimiter=":" list="${osgi.module.configuration.file.names}" param="file.names">
 			<sequential>
 				<if>
 					<available file="${liferay.home}/osgi/configs/${osgi.module.configuration.file.names.index}" />
@@ -5998,7 +6032,7 @@ osb.lcs.portlet.oauth.consumer.secret=${osb.lcs.portlet.oauth.consumer.secret}</
 	</root>
 </log4j:configuration>]]></echo>
 
-		<echo file="${liferay.home}/osgi/log4j/com.liferay.portal.osgi.web.wab.generator-log4j-ext.xml"><![CDATA[<?xml version="1.0"?>
+		<echo file="${liferay.home}/osgi/log4j/com.liferay.portal.osgi.web.wab.generator.impl-log4j-ext.xml"><![CDATA[<?xml version="1.0"?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
@@ -6039,7 +6073,14 @@ osb.lcs.portlet.oauth.consumer.secret=${osb.lcs.portlet.oauth.consumer.secret}</
 	<target name="prepare-osgi-module-configurations">
 		<get-testcase-property property.name="osgi.module.configurations" />
 
-		<prepare-blacklist-configuration />
+		<if>
+			<not>
+				<available file="${liferay.home}/osgi/configs/com.liferay.portal.bundle.blacklist.internal.BundleBlacklistConfiguration.config" />
+			</not>
+			<then>
+				<prepare-blacklist-configuration />
+			</then>
+		</if>
 
 		<if>
 			<not>

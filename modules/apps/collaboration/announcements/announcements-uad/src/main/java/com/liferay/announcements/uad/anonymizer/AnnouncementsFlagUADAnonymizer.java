@@ -14,20 +14,10 @@
 
 package com.liferay.announcements.uad.anonymizer;
 
-import com.liferay.announcements.kernel.model.AnnouncementsFlag;
-import com.liferay.announcements.kernel.service.AnnouncementsFlagLocalService;
 import com.liferay.announcements.uad.constants.AnnouncementsUADConstants;
-import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.user.associated.data.anonymizer.DynamicQueryUADAnonymizer;
 import com.liferay.user.associated.data.anonymizer.UADAnonymizer;
-import com.liferay.user.associated.data.util.UADAnonymizerHelper;
-
-import java.util.Collections;
-import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Noah Sherrill
@@ -38,42 +28,5 @@ import org.osgi.service.component.annotations.Reference;
 	service = UADAnonymizer.class
 )
 public class AnnouncementsFlagUADAnonymizer
-	extends DynamicQueryUADAnonymizer<AnnouncementsFlag> {
-
-	@Override
-	public void autoAnonymize(AnnouncementsFlag announcementsFlag, long userId)
-		throws PortalException {
-
-		announcementsFlag.setUserId(_uadAnonymizerHelper.getAnonymousUserId());
-
-		_announcementsFlagLocalService.updateAnnouncementsFlag(
-			announcementsFlag);
-	}
-
-	@Override
-	public void delete(AnnouncementsFlag announcementsFlag) {
-		_announcementsFlagLocalService.deleteFlag(announcementsFlag);
-	}
-
-	@Override
-	public List<String> getNonanonymizableFieldNames() {
-		return Collections.emptyList();
-	}
-
-	@Override
-	protected ActionableDynamicQuery doGetActionableDynamicQuery() {
-		return _announcementsFlagLocalService.getActionableDynamicQuery();
-	}
-
-	@Override
-	protected String[] doGetUserIdFieldNames() {
-		return AnnouncementsUADConstants.USER_ID_FIELD_NAMES_ANNOUNCEMENTS_FLAG;
-	}
-
-	@Reference
-	private AnnouncementsFlagLocalService _announcementsFlagLocalService;
-
-	@Reference
-	private UADAnonymizerHelper _uadAnonymizerHelper;
-
+	extends BaseAnnouncementsFlagUADAnonymizer {
 }

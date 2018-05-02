@@ -21,6 +21,10 @@ import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.model.Value;
 import com.liferay.dynamic.data.mapping.render.DDMFormFieldRenderingContext;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.util.HtmlUtil;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -57,15 +61,22 @@ public class NumericDDMFormFieldTemplateContextContributor
 
 		Locale locale = ddmFormFieldRenderingContext.getLocale();
 
-		parameters.put("placeholder", getValueString(placeholder, locale));
+		parameters.put(
+			"placeholder",
+			getValueString(placeholder, locale, ddmFormFieldRenderingContext));
 		parameters.put(
 			"predefinedValue",
-			getValueString(ddmFormField.getPredefinedValue(), locale));
+			getValueString(
+				ddmFormField.getPredefinedValue(), locale,
+				ddmFormFieldRenderingContext));
+		parameters.put("symbols", getSymbolsMap(locale));
 
 		LocalizedValue tooltip = (LocalizedValue)ddmFormField.getProperty(
 			"tooltip");
 
-		parameters.put("tooltip", getValueString(tooltip, locale));
+		parameters.put(
+			"tooltip",
+			getValueString(tooltip, locale, ddmFormFieldRenderingContext));
 
 		return parameters;
 	}
@@ -90,12 +101,44 @@ public class NumericDDMFormFieldTemplateContextContributor
 		return ddmFormField.getDataType();
 	}
 
-	protected String getValueString(Value value, Locale locale) {
-		if (value != null) {
-			return value.getString(locale);
+	protected DecimalFormatSymbols getDecimalFormatSymbols(Locale locale) {
+		DecimalFormat formatter = (DecimalFormat)DecimalFormat.getInstance(
+			locale);
+
+		return formatter.getDecimalFormatSymbols();
+	}
+
+	protected Map<String, String> getSymbolsMap(Locale locale) {
+		DecimalFormatSymbols decimalFormatSymbols = getDecimalFormatSymbols(
+			locale);
+
+		Map<String, String> symbolsMap = new HashMap<>();
+
+		symbolsMap.put(
+			"decimalSymbol",
+			String.valueOf(decimalFormatSymbols.getDecimalSeparator()));
+		symbolsMap.put(
+			"thousandsSeparator",
+			String.valueOf(decimalFormatSymbols.getGroupingSeparator()));
+
+		return symbolsMap;
+	}
+
+	protected String getValueString(
+		Value value, Locale locale,
+		DDMFormFieldRenderingContext ddmFormFieldRenderingContext) {
+
+		if (value == null) {
+			return StringPool.BLANK;
 		}
 
-		return StringPool.BLANK;
+		String valueString = value.getString(locale);
+
+		if (ddmFormFieldRenderingContext.isViewMode()) {
+			valueString = HtmlUtil.extractText(value.getString(locale));
+		}
+
+		return valueString;
 	}
 
 }
