@@ -101,9 +101,9 @@ public class FacetedSearcherImpl
 			SearchContext searchContext)
 		throws Exception {
 
-		if (Validator.isNull(keywords)) {
-			return;
-		}
+//		if (Validator.isNull(keywords)) {
+//			return;
+//		}
 
 		if (luceneSyntax) {
 			searchQuery.add(new StringQuery(keywords), BooleanClauseOccur.MUST);

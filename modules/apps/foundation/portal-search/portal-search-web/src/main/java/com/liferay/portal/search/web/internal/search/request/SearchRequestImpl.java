@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.web.internal.search.request;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Hits;
@@ -160,15 +161,16 @@ public class SearchRequestImpl implements SearchRequest {
 		Optional<String> keywordsOptional = SearchStringUtil.maybe(
 			searchContext.getKeywords());
 
-		Optional<Hits> hitsOptional = keywordsOptional.map(
-			keywords -> {
-				FacetedSearcher facetedSearcher =
-					_facetedSearcherManager.createFacetedSearcher();
+		String keywords = keywordsOptional.orElse(StringPool.STAR);
+		
+		searchContext.setKeywords(keywords);
+		
+		FacetedSearcher facetedSearcher =
+			_facetedSearcherManager.createFacetedSearcher();
 
-				return search(facetedSearcher, searchContext);
-			});
+		return search(facetedSearcher, searchContext);
 
-		return hitsOptional.orElseGet(HitsImpl::new);
+//		return hitsOptional.orElseGet(HitsImpl::new);
 	}
 
 	private final FacetedSearcherManager _facetedSearcherManager;

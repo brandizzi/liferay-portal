@@ -23,9 +23,9 @@ AUI.add(
 
 					keywords = keywords.replace(/^\s+|\s+$/, '');
 
-					if (keywords !== '') {
+					//if (keywords !== '') {
 						submitForm(instance.form);
-					}
+					//}
 				}
 			}
 		);

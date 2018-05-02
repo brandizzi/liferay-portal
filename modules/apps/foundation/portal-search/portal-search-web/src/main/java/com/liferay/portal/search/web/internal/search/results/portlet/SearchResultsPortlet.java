@@ -168,9 +168,9 @@ public class SearchResultsPortlet
 
 		boolean renderNothing = false;
 
-		if (!keywordsOptional.isPresent()) {
-			renderNothing = true;
-		}
+//		if (!keywordsOptional.isPresent()) {
+//			renderNothing = true;
+//		}
 
 		searchResultsPortletDisplayContext.setRenderNothing(renderNothing);
 
