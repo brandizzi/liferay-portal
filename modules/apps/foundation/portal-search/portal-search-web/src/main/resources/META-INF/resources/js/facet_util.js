@@ -86,7 +86,11 @@ AUI.add(
 			},
 
 			updateQueryString: function(key, selections, queryString) {
-				var parameterArray = queryString.substr(1).split('&');
+				var parameterArray = queryString.substr(1).split('&').filter(
+					function(item) {
+						return item.trim() !== '';
+					}
+				);
 
 				var newParameters = FacetUtil.setURLParameters(key, selections, parameterArray);
 
