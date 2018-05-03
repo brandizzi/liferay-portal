@@ -46,20 +46,19 @@ AUI.add(
 			},
 
 			removeURLParameters: function(key, parameterArray) {
-				key = encodeURI(key);
+				var key = encodeURI(key);
 
-				var newParameters = [];
+				var newParameters =  parameterArray.filter(
+					function(item) {
+						var result = true;
 
-				AUI.$.each(
-					parameterArray,
-					function(index, item) {
 						var itemSplit = item.split('=');
 
-						if (itemSplit) {
-							if (itemSplit[0] != key) {
-								newParameters.push(item);
-							}
+						if (itemSplit && (itemSplit[0] === key)) {
+							result = false;
 						}
+
+						return result;
 					}
 				);
 
@@ -73,19 +72,21 @@ AUI.add(
 
 				var parameterArray = document.location.search.substr(1).split('&');
 
-				var newParameters = FacetUtil.removeURLParameters(key, parameterArray);
-
-				for (var i = 0; i < selections.length; i++) {
-					newParameters = FacetUtil.addURLParameter(key, selections[i], newParameters);
-				}
-
-				newParameters = newParameters.join('&');
-
-				if (newParameters.startsWith('&')) {
-					newParameters = newParameters.substr(1);
-				}
+				var newParameters = FacetUtil.setURLParameters(key, selections, parameterArray);
 
 				document.location.search = newParameters.join('&');
+			},
+
+			setURLParameters: function(key, values, parameterArray) {
+				var newParameters = FacetUtil.removeURLParameters(key, parameterArray);
+
+				values.forEach(
+					function (item) {
+						newParameters = FacetUtil.addURLParameter(key, item, newParameters);
+					}
+				);
+
+				return newParameters;
 			}
 		};
 
