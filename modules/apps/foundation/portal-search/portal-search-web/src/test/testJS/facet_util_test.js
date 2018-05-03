@@ -91,6 +91,7 @@ describe(
 
 					}
 				);
+
 				describe(
 					'.updateQueryString()',
 					function() {
@@ -111,6 +112,27 @@ describe(
 								var queryString = Liferay.Search.FacetUtil.updateQueryString('key1', ['sel1'], '?key2=sel2');
 
 								assert.equal(queryString, 'key2=sel2&key1=sel1');
+
+								done();
+							}
+						);
+					}
+				);
+			}
+		);
+
+		describe(
+			'regression',
+			function() {
+				describe(
+					'.updateQueryString()',
+					function() {
+						it(
+							'should not prefix with amperstand.',
+							function(done) {
+								var queryString = Liferay.Search.FacetUtil.updateQueryString('key', ['sel1', 'sel2'], '?');
+
+								assert.equal(queryString, 'key=sel1&key=sel2');
 
 								done();
 							}
