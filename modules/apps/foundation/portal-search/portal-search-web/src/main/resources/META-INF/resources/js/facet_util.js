@@ -70,11 +70,7 @@ AUI.add(
 
 				var key = formParameterName[0].value;
 
-				var parameterArray = document.location.search.substr(1).split('&');
-
-				var newParameters = FacetUtil.setURLParameters(key, selections, parameterArray);
-
-				document.location.search = newParameters.join('&');
+				document.location.search = FacetUtil.updateQueryString(key, selections, document.location.search);
 			},
 
 			setURLParameters: function(key, values, parameterArray) {
@@ -87,6 +83,14 @@ AUI.add(
 				);
 
 				return newParameters;
+			},
+
+			updateQueryString: function(key, selections, queryString) {
+				var parameterArray = queryString.substr(1).split('&');
+
+				var newParameters = FacetUtil.setURLParameters(key, selections, parameterArray);
+
+				return newParameters.join('&');
 			}
 		};
 
