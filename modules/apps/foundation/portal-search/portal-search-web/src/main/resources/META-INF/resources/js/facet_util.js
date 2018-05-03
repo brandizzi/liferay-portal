@@ -30,7 +30,7 @@ AUI.add(
 					}
 				);
 
-				FacetUtil.setURLParameters(form, selections);
+				FacetUtil.selectTerms(form, selections);
 			},
 
 			clearSelections: function(event) {
@@ -42,7 +42,7 @@ AUI.add(
 
 				var selections = [];
 
-				FacetUtil.setURLParameters(form, selections);
+				FacetUtil.selectTerms(form, selections);
 			},
 
 			removeURLParameters: function(key, parameterArray) {
@@ -66,7 +66,7 @@ AUI.add(
 				return newParameters;
 			},
 
-			setURLParameters: function(form, selections) {
+			selectTerms: function(form, selections) {
 				var formParameterName = $('#' + form.id + ' input.facet-parameter-name');
 
 				var key = formParameterName[0].value;
