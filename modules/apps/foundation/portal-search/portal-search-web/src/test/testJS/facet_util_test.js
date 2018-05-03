@@ -91,7 +91,32 @@ describe(
 
 					}
 				);
+				describe(
+					'.updateQueryString()',
+					function() {
+						it(
+							'should remove old selections.',
+							function(done) {
+								var queryString = Liferay.Search.FacetUtil.updateQueryString('key', ['sel2', 'sel3'], '?key=sel1');
 
+								assert.equal(queryString, 'key=sel2&key=sel3');
+
+								done();
+							}
+						);
+
+						it(
+							'should add new selections.',
+							function(done) {
+								var queryString = Liferay.Search.FacetUtil.updateQueryString('key1', ['sel1'], '?key2=sel2');
+
+								assert.equal(queryString, 'key2=sel2&key1=sel1');
+
+								done();
+							}
+						);
+					}
+				);
 			}
 		);
 	}
