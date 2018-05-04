@@ -6,9 +6,11 @@ AUI.add(
 
 			instance.form = form;
 
+			instance.form.on('submit', A.bind(instance._onSubmit, instance));
+
 			var searchButton = instance.form.one('.search-bar-search-button');
 
-			searchButton.on('click', A.bind(instance.search, instance));
+			searchButton.on('click', A.bind(instance._onClick, instance));
 		};
 
 		A.mix(
@@ -26,6 +28,20 @@ AUI.add(
 					if (keywords !== '') {
 						submitForm(instance.form);
 					}
+				},
+
+				_onClick: function(event) {
+					var instance = this;
+
+					instance.search();
+				},
+
+				_onSubmit: function(event) {
+					var instance = this;
+
+					event.stopPropagation();
+
+					instance.search();
 				}
 			}
 		);
