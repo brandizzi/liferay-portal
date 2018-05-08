@@ -1,6 +1,8 @@
 AUI.add(
 	'liferay-search-bar',
 	function(A) {
+		var FacetUtil = Liferay.Search.FacetUtil;
+
 		var SearchBar = function(form) {
 			var instance = this;
 
@@ -26,7 +28,25 @@ AUI.add(
 					keywords = keywords.replace(/^\s+|\s+$/, '');
 
 					if (keywords !== '') {
-						submitForm(instance.form);
+						var keywordsParameterName = keywordsInput.get('name');
+
+						var searchURL = instance.form.get('action');
+
+						var queryString = document.location.search;
+
+						queryString = FacetUtil.updateQueryString(keywordsParameterName, [keywords], queryString);
+
+						var scopeSelect = instance.form.one('.search-bar-scope-select');
+
+						if (scopeSelect) {
+							var scope = scopeSelect.val();
+
+							var scopeParameterName = scopeSelect.get('name');
+
+							queryString = FacetUtil.updateQueryString(scopeParameterName, [scope], queryString);
+						}
+
+						document.location.href = searchURL + '?' + queryString;
 					}
 				},
 
@@ -50,6 +70,6 @@ AUI.add(
 	},
 	'',
 	{
-		requires: []
+		requires: ['liferay-search-facet-util']
 	}
 );
