@@ -17,6 +17,7 @@ package com.liferay.portal.search.web.internal.search.bar.portlet;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.web.internal.display.context.SearchScope;
 import com.liferay.portal.search.web.internal.display.context.SearchScopePreference;
@@ -63,6 +64,8 @@ public class SearchBarPortletDisplayBuilder {
 
 		setSelectedSearchScope(searchBarPortletDisplayContext);
 
+		searchBarPortletDisplayContext.setSearchURL(getSearchURL());
+
 		return searchBarPortletDisplayContext;
 	}
 
@@ -88,6 +91,10 @@ public class SearchBarPortletDisplayBuilder {
 
 	public void setSearchLayoutAvailable(boolean searchLayoutAvailable) {
 		_searchLayoutAvailable = searchLayoutAvailable;
+	}
+
+	public void setSearchLayoutURL(String searchLayoutURL) {
+		_searchLayoutURL = searchLayoutURL;
 	}
 
 	public void setSearchScopePreference(
@@ -130,6 +137,14 @@ public class SearchBarPortletDisplayBuilder {
 		return SearchScope.THIS_SITE;
 	}
 
+	protected String getSearchURL() {
+		if (_searchLayoutAvailable) {
+			return _searchLayoutURL;
+		}
+
+		return HttpUtil.getPath(_themeDisplay.getURLCurrent());
+	}
+
 	protected boolean isAvailableEverythingSearchScope() {
 		Group group = _themeDisplay.getScopeGroup();
 
@@ -162,6 +177,7 @@ public class SearchBarPortletDisplayBuilder {
 	private String _scopeParameterName;
 	private String _scopeParameterValue;
 	private boolean _searchLayoutAvailable;
+	private String _searchLayoutURL;
 	private SearchScopePreference _searchScopePreference;
 	private ThemeDisplay _themeDisplay;
 
