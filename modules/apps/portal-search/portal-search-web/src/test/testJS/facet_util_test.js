@@ -21,6 +21,55 @@ describe(
 			'unit',
 			function() {
 				describe(
+					'.setURLParameter()',
+					function() {
+						it(
+							'should add a missing parameter.',
+							function(done) {
+								var url  = Liferay.Search.FacetUtil.setURLParameter('http://example.com/', 'q', 'test');
+
+								assert.equal('http://example.com/?q=test', url);
+
+								done();
+							}
+						);
+
+						it(
+							'should update an existing parameter.',
+							function(done) {
+								var url  = Liferay.Search.FacetUtil.setURLParameter('http://example.com/?q=example', 'q', 'test');
+
+								assert.equal('http://example.com/?q=test', url);
+
+								done();
+							}
+						);
+
+						it(
+							'should add a missing parameter with path.',
+							function(done) {
+								var url  = Liferay.Search.FacetUtil.setURLParameter('http://example.com/path', 'q', 'test');
+
+								assert.equal('http://example.com/path?q=test', url);
+
+								done();
+							}
+						);
+
+						it(
+							'should update an existing parameter.',
+							function(done) {
+								var url  = Liferay.Search.FacetUtil.setURLParameter('http://example.com/path?q=example', 'q', 'test');
+
+								assert.equal('http://example.com/path?q=test', url);
+
+								done();
+							}
+						);
+					}
+				);
+
+				describe(
 					'.setURLParameters()',
 					function() {
 						it(
@@ -104,6 +153,17 @@ describe(
 							'should add new selections.',
 							function(done) {
 								var queryString = Liferay.Search.FacetUtil.updateQueryString('key1', ['sel1'], '?key2=sel2');
+
+								assert.equal(queryString, 'key2=sel2&key1=sel1');
+
+								done();
+							}
+						);
+
+						it(
+							'should accept query string without question mark.',
+							function(done) {
+								var queryString = Liferay.Search.FacetUtil.updateQueryString('key1', ['sel1'], 'key2=sel2');
 
 								assert.equal(queryString, 'key2=sel2&key1=sel1');
 
