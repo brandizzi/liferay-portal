@@ -73,6 +73,22 @@ AUI.add(
 				document.location.search = FacetUtil.updateQueryString(key, selections, document.location.search);
 			},
 
+			setURLParameter: function(url, name, value) {
+				var parts = url.split('?');
+
+				var address = parts[0];
+
+				var queryString = parts[1];
+
+				if (!queryString) {
+					queryString = '';
+				}
+
+				queryString = Liferay.Search.FacetUtil.updateQueryString(name, [value], queryString);
+
+				return address + '?' + queryString;
+			},
+
 			setURLParameters: function(key, values, parameterArray) {
 				var newParameters = FacetUtil.removeURLParameters(key, parameterArray);
 
@@ -86,7 +102,13 @@ AUI.add(
 			},
 
 			updateQueryString: function(key, selections, queryString) {
-				var parameterArray = queryString.substr(1).split('&').filter(
+				var search = queryString;
+
+				if (queryString[0] === '?') {
+					search = search.substr(1);
+				}
+
+				var parameterArray = search.split('&').filter(
 					function(item) {
 						return item.trim() !== '';
 					}
