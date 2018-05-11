@@ -127,7 +127,7 @@ public class SearchBarPortletDisplayBuilder {
 			return searchScope;
 		}
 
-		return SearchScope.EVERYTHING;
+		return SearchScope.THIS_SITE;
 	}
 
 	protected boolean isAvailableEverythingSearchScope() {
