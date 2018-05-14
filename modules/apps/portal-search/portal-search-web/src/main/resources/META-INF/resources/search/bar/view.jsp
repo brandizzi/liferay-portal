@@ -44,13 +44,13 @@ SearchBarPortletDisplayContext searchBarPortletDisplayContext = (SearchBarPortle
 			<aui:fieldset id="searchContainer">
 				<div class="input-group search-bar">
 					<aui:field-wrapper inlineField="<%= true %>">
-						<aui:input autoFocus="<%= true %>" cssClass="search-bar-keywords-input search-input" label="" name="<%= searchBarPortletDisplayContext.getKeywordsParameterName() %>" placeholder="search-..." title="search" type="text" useNamespace="<%= false %>" value="<%= searchBarPortletDisplayContext.getKeywords() %>" />
+						<aui:input autoFocus="<%= true %>" cssClass="search-bar-keywords-input search-input" label="" name="<%= searchBarPortletDisplayContext.getKeywordsParameterName() %>" placeholder="search-..." title="search" type="text" value="<%= searchBarPortletDisplayContext.getKeywords() %>" />
 					</aui:field-wrapper>
 
 					<c:choose>
 						<c:when test="<%= searchBarPortletDisplayContext.isLetTheUserChooseTheSearchScope() %>">
 							<aui:field-wrapper inlineField="<%= true %>">
-								<aui:select cssClass="search-bar-scope-select search-select" label="" name="<%= searchBarPortletDisplayContext.getScopeParameterName() %>" title="scope" useNamespace="<%= false %>">
+								<aui:select cssClass="search-bar-scope-select search-select" label="" name="<%= searchBarPortletDisplayContext.getScopeParameterName() %>" title="scope">
 									<c:if test="<%= searchBarPortletDisplayContext.isAvailableEverythingSearchScope() %>">
 										<aui:option label="all-sites" selected="<%= searchBarPortletDisplayContext.isSelectedEverythingSearchScope() %>" value="<%= searchBarPortletDisplayContext.getEverythingSearchScopeParameterString() %>" />
 									</c:if>

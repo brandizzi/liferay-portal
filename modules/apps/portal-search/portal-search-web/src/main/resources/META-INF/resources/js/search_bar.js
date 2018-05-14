@@ -21,6 +21,8 @@ AUI.add(
 				search: function() {
 					var instance = this;
 
+					var namespace = instance.form.get('id').replace('fm', '');
+
 					var keywordsInput = instance.form.one('.search-bar-keywords-input');
 
 					var keywords = keywordsInput.val();
@@ -28,7 +30,7 @@ AUI.add(
 					keywords = keywords.replace(/^\s+|\s+$/, '');
 
 					if (keywords !== '') {
-						var keywordsParameterName = keywordsInput.get('name');
+						var keywordsParameterName = keywordsInput.get('name').replace(namespace, '');
 
 						var searchURL = instance.form.get('action');
 
@@ -41,7 +43,7 @@ AUI.add(
 						if (scopeSelect) {
 							var scope = scopeSelect.val();
 
-							var scopeParameterName = scopeSelect.get('name');
+							var scopeParameterName = scopeSelect.get('name').replace(namespace, '');
 
 							queryString = FacetUtil.updateQueryString(scopeParameterName, [scope], queryString);
 						}
