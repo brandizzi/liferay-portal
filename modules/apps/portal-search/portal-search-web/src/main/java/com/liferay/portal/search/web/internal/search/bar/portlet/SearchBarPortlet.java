@@ -14,10 +14,14 @@
 
 package com.liferay.portal.search.web.internal.search.bar.portlet;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.web.internal.search.bar.constants.SearchBarPortletKeys;
@@ -126,11 +130,10 @@ public class SearchBarPortlet extends MVCPortlet {
 				scopeParameterName, renderRequest),
 			searchBarPortletDisplayBuilder::setScopeParameterValue);
 
-		boolean searchLayoutAvailable = isSearchLayoutAvailable(
-			renderRequest, searchBarPortletPreferences);
-
-		searchBarPortletDisplayBuilder.setSearchLayoutAvailable(
-			searchLayoutAvailable);
+		copy(
+			() -> getSearchLayout(renderRequest, searchBarPortletPreferences),
+			layout -> setSerchLayout(
+				searchBarPortletDisplayBuilder, layout, renderRequest));
 
 		searchBarPortletDisplayBuilder.setSearchScopePreference(
 			searchBarPortletPreferences.getSearchScopePreference());
@@ -153,30 +156,71 @@ public class SearchBarPortlet extends MVCPortlet {
 		return themeDisplay.getScopeGroupId();
 	}
 
-	protected boolean isSearchLayoutAvailable(
+	protected Optional<Layout> getSearchLayout(
 		RenderRequest renderRequest,
 		SearchBarPortletPreferences searchBarPortletPreferences) {
 
 		String destination = searchBarPortletPreferences.getDestinationString();
 
 		if (Validator.isNull(destination)) {
-			return false;
+			return Optional.empty();
 		}
 
 		Layout layout = layoutLocalService.fetchLayoutByFriendlyURL(
 			getScopeGroupId(renderRequest), false, destination);
 
-		if (layout != null) {
-			return true;
-		}
+		return Optional.ofNullable(layout);
+	}
 
-		return false;
+	protected Optional<String> getSearchLayoutURL(
+		RenderRequest renderRequest, Layout layout) {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		try {
+			String layoutFriendlyURL = portal.getLayoutFriendlyURL(
+				layout, themeDisplay);
+
+			return Optional.ofNullable(layoutFriendlyURL);
+		}
+		catch (PortalException pe) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Failed to retrieve friendly URL from layout" +
+						layout.getLinkedToLayout(),
+					pe);
+			}
+
+			return Optional.empty();
+		}
+	}
+
+	protected void setSerchLayout(
+		SearchBarPortletDisplayBuilder searchBarPortletDisplayBuilder,
+		Layout layout, RenderRequest renderRequest) {
+
+		searchBarPortletDisplayBuilder.setSearchLayoutAvailable(true);
+
+		Optional<String> layoutFriendlyURLOptional = getSearchLayoutURL(
+			renderRequest, layout);
+
+		layoutFriendlyURLOptional.ifPresent(
+			layoutFriendlyURL ->
+				searchBarPortletDisplayBuilder.setSearchLayoutURL(
+					layoutFriendlyURL));
 	}
 
 	@Reference
 	protected LayoutLocalService layoutLocalService;
 
 	@Reference
+	protected Portal portal;
+
+	@Reference
 	protected PortletSharedSearchRequest portletSharedSearchRequest;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		SearchBarPortlet.class);
 
 }
