@@ -43,6 +43,10 @@ public class SearchBarPortletDisplayContext {
 		return _scopeParameterValue;
 	}
 
+	public String getSearchURL() {
+		return _searchURL;
+	}
+
 	public boolean isAvailableEverythingSearchScope() {
 		return _availableEverythingSearchScope;
 	}
@@ -109,6 +113,10 @@ public class SearchBarPortletDisplayContext {
 		_scopeParameterValue = scopeParameterValue;
 	}
 
+	public void setSearchURL(String searchURL) {
+		_searchURL = searchURL;
+	}
+
 	public void setSelectedCurrentSiteSearchScope(
 		boolean selectedCurrentSiteSearchScope) {
 
@@ -130,6 +138,7 @@ public class SearchBarPortletDisplayContext {
 	private boolean _letTheUserChooseTheSearchScope;
 	private String _scopeParameterName;
 	private String _scopeParameterValue;
+	private String _searchURL;
 	private boolean _selectedCurrentSiteSearchScope;
 	private boolean _selectedEverythingSearchScope;
 

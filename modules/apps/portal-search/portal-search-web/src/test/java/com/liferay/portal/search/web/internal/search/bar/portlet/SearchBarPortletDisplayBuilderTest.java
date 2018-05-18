@@ -17,6 +17,7 @@ package com.liferay.portal.search.web.internal.search.bar.portlet;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.search.web.internal.display.context.SearchScopePreference;
 
 import org.junit.Assert;
@@ -36,11 +37,38 @@ public class SearchBarPortletDisplayBuilderTest {
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 
-		Mockito.when(
-			_themeDisplay.getScopeGroup()
-		).thenReturn(
-			_group
-		);
+		setUpHttp();
+		setUpThemeDisplay();
+	}
+
+	@Test
+	public void testGetSearchURLWithoutSearchLayoutAvailable() {
+		SearchBarPortletDisplayBuilder searchBarPortletDisplayBuilder =
+			createSearchBarPortletDisplayBuilder();
+
+		searchBarPortletDisplayBuilder.setSearchLayoutAvailable(false);
+		searchBarPortletDisplayBuilder.setSearchLayoutURL("/web/guest/search");
+
+		SearchBarPortletDisplayContext searchBarPortletDisplayContext =
+			searchBarPortletDisplayBuilder.build();
+
+		Assert.assertEquals(
+			"/web/guest/home", searchBarPortletDisplayContext.getSearchURL());
+	}
+
+	@Test
+	public void testGetSearchURLWithSearchLayoutAvailable() {
+		SearchBarPortletDisplayBuilder searchBarPortletDisplayBuilder =
+			createSearchBarPortletDisplayBuilder();
+
+		searchBarPortletDisplayBuilder.setSearchLayoutAvailable(true);
+		searchBarPortletDisplayBuilder.setSearchLayoutURL("/web/guest/search");
+
+		SearchBarPortletDisplayContext searchBarPortletDisplayContext =
+			searchBarPortletDisplayBuilder.build();
+
+		Assert.assertEquals(
+			"/web/guest/search", searchBarPortletDisplayContext.getSearchURL());
 	}
 
 	@Test
@@ -105,7 +133,7 @@ public class SearchBarPortletDisplayBuilderTest {
 		createSearchBarPortletDisplayBuilder() {
 
 		SearchBarPortletDisplayBuilder displayBuilder =
-			new SearchBarPortletDisplayBuilder();
+			new SearchBarPortletDisplayBuilder(_http);
 
 		displayBuilder.setSearchScopePreference(
 			SearchScopePreference.EVERYTHING);
@@ -114,8 +142,48 @@ public class SearchBarPortletDisplayBuilderTest {
 		return displayBuilder;
 	}
 
+	protected void setUpHttp() {
+		Mockito.doAnswer(
+			invocation -> {
+				String url = invocation.getArgumentAt(0, String.class);
+
+				url = url.replaceAll("https?://", "");
+
+				int slashIndex = url.indexOf(StringPool.SLASH);
+				int questionIndex = url.indexOf(StringPool.QUESTION);
+
+				if (questionIndex > 0) {
+					return url.substring(slashIndex, questionIndex);
+				}
+
+				return url.substring(slashIndex);
+			}
+		).when(
+			_http
+		).getPath(
+			Mockito.anyString()
+		);
+	}
+
+	protected void setUpThemeDisplay() {
+		Mockito.when(
+			_themeDisplay.getURLCurrent()
+		).thenReturn(
+			"http://example.com/web/guest/home?param=arg"
+		);
+
+		Mockito.when(
+			_themeDisplay.getScopeGroup()
+		).thenReturn(
+			_group
+		);
+	}
+
 	@Mock
 	private Group _group;
+
+	@Mock
+	private Http _http;
 
 	@Mock
 	private ThemeDisplay _themeDisplay;
