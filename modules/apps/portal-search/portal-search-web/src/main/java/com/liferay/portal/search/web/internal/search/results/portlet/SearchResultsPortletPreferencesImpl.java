@@ -65,6 +65,13 @@ public class SearchResultsPortletPreferencesImpl
 	}
 
 	@Override
+	public boolean isEmptySearchEnabled() {
+		return _portletPreferencesHelper.getBoolean(
+			SearchResultsPortletPreferences.PREFERENCE_KEY_EMPTY_SEARCH_ENABLED,
+			false);
+	}
+
+	@Override
 	public boolean isHighlightEnabled() {
 		return _portletPreferencesHelper.getBoolean(
 			SearchResultsPortletPreferences.PREFERENCE_KEY_HIGHLIGHT_ENABLED,
