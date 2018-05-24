@@ -48,6 +48,10 @@ public interface SearchSettings {
 
 	public SearchContext getSearchContext();
 
+	public boolean isEmptySearchEnabled();
+
+	public void setEmptySearchEnabled(boolean emptySearchEnabled);
+
 	public void setKeywords(String keywords);
 
 	public void setKeywordsParameterName(String keywordsParameterName);
