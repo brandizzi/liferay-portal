@@ -94,6 +94,16 @@ public class SearchSettingsImpl implements SearchSettings {
 	}
 
 	@Override
+	public boolean isEmptySearchEnabled() {
+		return _emptySearchEnabled;
+	}
+
+	@Override
+	public void setEmptySearchEnabled(boolean emptySearchEnabled) {
+		_emptySearchEnabled = emptySearchEnabled;
+	}
+
+	@Override
 	public void setKeywords(String keywords) {
 		_searchContext.setKeywords(keywords);
 	}
@@ -135,6 +145,7 @@ public class SearchSettingsImpl implements SearchSettings {
 		return data.getString("aggregationName", facet.getFieldName());
 	}
 
+	private boolean _emptySearchEnabled;
 	private String _keywordsParameterName;
 	private Integer _paginationDelta;
 	private String _paginationDeltaParameterName;

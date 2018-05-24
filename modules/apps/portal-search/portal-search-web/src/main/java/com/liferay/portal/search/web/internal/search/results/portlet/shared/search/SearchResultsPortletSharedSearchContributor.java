@@ -15,6 +15,7 @@
 package com.liferay.portal.search.web.internal.search.results.portlet.shared.search;
 
 import com.liferay.portal.kernel.search.QueryConfig;
+import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.search.web.internal.search.results.constants.SearchResultsPortletKeys;
 import com.liferay.portal.search.web.internal.search.results.portlet.SearchResultsPortletPreferences;
 import com.liferay.portal.search.web.internal.search.results.portlet.SearchResultsPortletPreferencesImpl;
@@ -46,6 +47,24 @@ public class SearchResultsPortletSharedSearchContributor
 		paginate(searchResultsPortletPreferences, portletSharedSearchSettings);
 
 		highlight(searchResultsPortletPreferences, portletSharedSearchSettings);
+
+		enableEmptySerch(
+			searchResultsPortletPreferences, portletSharedSearchSettings);
+	}
+
+	protected void enableEmptySerch(
+		SearchResultsPortletPreferences searchResultsPortletPreferences,
+		PortletSharedSearchSettings portletSharedSearchSettings) {
+
+		boolean emptySearchEnabled =
+			searchResultsPortletPreferences.isEmptySearchEnabled();
+
+		portletSharedSearchSettings.setEmptySearchEnabled(emptySearchEnabled);
+
+		SearchContext searchContext =
+			portletSharedSearchSettings.getSearchContext();
+
+		searchContext.setAttribute("emptySerchEnabled", emptySearchEnabled);
 	}
 
 	protected void highlight(

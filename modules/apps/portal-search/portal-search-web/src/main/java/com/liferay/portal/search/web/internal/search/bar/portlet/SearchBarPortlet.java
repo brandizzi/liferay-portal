@@ -23,6 +23,7 @@ import com.liferay.portal.search.web.internal.search.bar.constants.SearchBarPort
 import com.liferay.portal.search.web.internal.util.SearchOptionalUtil;
 import com.liferay.portal.search.web.portlet.shared.search.PortletSharedSearchRequest;
 import com.liferay.portal.search.web.portlet.shared.search.PortletSharedSearchResponse;
+import com.liferay.portal.search.web.search.request.SearchSettings;
 
 import java.io.IOException;
 
@@ -130,6 +131,12 @@ public class SearchBarPortlet extends MVCPortlet {
 			searchBarPortletPreferences.getSearchScopePreference());
 		searchBarPortletDisplayBuilder.setThemeDisplay(
 			portletSharedSearchResponse.getThemeDisplay(renderRequest));
+
+		SearchSettings searchSettings =
+			portletSharedSearchResponse.getSearchSettings();
+
+		searchBarPortletDisplayBuilder.setEmptySearchEnabled(
+			searchSettings.isEmptySearchEnabled());
 
 		return searchBarPortletDisplayBuilder.build();
 	}
