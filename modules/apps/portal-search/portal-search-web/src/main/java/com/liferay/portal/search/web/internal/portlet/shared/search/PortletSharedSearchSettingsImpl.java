@@ -130,6 +130,16 @@ public class PortletSharedSearchSettingsImpl
 	}
 
 	@Override
+	public boolean isEmptySearchEnabled() {
+		return _searchSettings.isEmptySearchEnabled();
+	}
+
+	@Override
+	public void setEmptySearchEnabled(boolean emptySearchEnabled) {
+		_searchSettings.setEmptySearchEnabled(emptySearchEnabled);
+	}
+
+	@Override
 	public void setKeywords(String keywords) {
 		_searchSettings.setKeywords(keywords);
 	}

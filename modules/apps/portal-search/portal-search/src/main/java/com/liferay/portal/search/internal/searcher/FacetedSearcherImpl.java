@@ -101,7 +101,10 @@ public class FacetedSearcherImpl
 			SearchContext searchContext)
 		throws Exception {
 
-		if (Validator.isNull(keywords)) {
+		if (Validator.isBlank(keywords) &&
+			!GetterUtil.getBoolean(
+				searchContext.getAttribute("emptySerchEnabled"))) {
+
 			return;
 		}
 
@@ -112,13 +115,15 @@ public class FacetedSearcherImpl
 			addSearchLocalizedTerm(
 				searchQuery, searchContext, Field.ASSET_CATEGORY_TITLES, false);
 
-			searchQuery.addTerm(Field.ASSET_TAG_NAMES, keywords);
+			if (!Validator.isBlank(keywords)) {
+				searchQuery.addTerm(Field.ASSET_TAG_NAMES, keywords);
 
-			searchQuery.addTerms(Field.KEYWORDS, keywords);
+				searchQuery.addTerms(Field.KEYWORDS, keywords);
 
-			addSearchExpando(
-				searchQuery, searchContext, keywords,
-				entryClassNameIndexerMap.keySet());
+				addSearchExpando(
+					searchQuery, searchContext, keywords,
+					entryClassNameIndexerMap.keySet());
+			}
 		}
 	}
 

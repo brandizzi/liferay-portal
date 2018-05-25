@@ -22,6 +22,9 @@ public interface SearchResultsPortletPreferences {
 	public static final String PREFERENCE_KEY_DISPLAY_IN_DOCUMENT_FORM =
 		"displayInDocumentForm";
 
+	public static final String PREFERENCE_KEY_EMPTY_SEARCH_ENABLED =
+		"emptySearchEnabled";
+
 	public static final String PREFERENCE_KEY_HIGHLIGHT_ENABLED =
 		"highlightEnabled";
 
@@ -43,6 +46,8 @@ public interface SearchResultsPortletPreferences {
 	public String getPaginationStartParameterName();
 
 	public boolean isDisplayInDocumentForm();
+
+	public boolean isEmptySearchEnabled();
 
 	public boolean isHighlightEnabled();
 
