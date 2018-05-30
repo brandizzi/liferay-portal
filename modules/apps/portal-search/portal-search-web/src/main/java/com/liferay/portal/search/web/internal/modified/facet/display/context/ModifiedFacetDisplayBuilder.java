@@ -78,6 +78,10 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		return modifiedFacetDisplayContext;
 	}
 
+	public void setCurrentTimeCalendar(Calendar currentTimeCalendar) {
+		_currentTimeCalendar = currentTimeCalendar;
+	}
+
 	public void setCurrentURL(String currentURL) {
 		_currentURL = currentURL;
 	}
@@ -187,7 +191,7 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		modifiedFacetTermDisplayContext.setFrequency(
 			getFrequency(getTermCollector(range)));
 		modifiedFacetTermDisplayContext.setLabel(label);
-		modifiedFacetTermDisplayContext.setRange(label);
+		modifiedFacetTermDisplayContext.setRange(range);
 		modifiedFacetTermDisplayContext.setRangeURL(getLabeledRangeURL(label));
 		modifiedFacetTermDisplayContext.setSelected(
 			_selectedRanges.contains(label));
@@ -202,10 +206,12 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 		for (int i = 0; i < _rangesJSONArray.length(); i++) {
 			JSONObject jsonObject = _rangesJSONArray.getJSONObject(i);
 
+			String label = jsonObject.getString("label");
+			String range = _dateRangeFactory.normalizeDate(
+				jsonObject.getString("range"), _currentTimeCalendar);
+
 			modifiedFacetTermDisplayContexts.add(
-				buildTermDisplayContext(
-					jsonObject.getString("label"),
-					jsonObject.getString("range")));
+				buildTermDisplayContext(label, range));
 		}
 
 		return modifiedFacetTermDisplayContexts;
@@ -294,6 +300,7 @@ public class ModifiedFacetDisplayBuilder implements Serializable {
 	}
 
 	private final CalendarFactory _calendarFactory;
+	private Calendar _currentTimeCalendar;
 	private String _currentURL;
 	private final DateFormatFactory _dateFormatFactory;
 	private final DateRangeFactory _dateRangeFactory;

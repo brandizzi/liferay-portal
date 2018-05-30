@@ -15,7 +15,6 @@
 package com.liferay.portal.search.web.internal.modified.facet.portlet;
 
 import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.Facet;
@@ -42,6 +41,7 @@ import com.liferay.portal.search.web.portlet.shared.search.PortletSharedSearchRe
 import java.io.IOException;
 
 import java.util.Optional;
+import java.util.TimeZone;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletException;
@@ -109,9 +109,18 @@ public class ModifiedFacetPortlet extends MVCPortlet {
 				portletSharedSearchResponse.getPortletPreferences(
 					renderRequest));
 
+		CalendarFactory calendarFactory = getCalendarFactory();
+
 		ModifiedFacetDisplayBuilder modifiedFacetDisplayBuilder =
 			new ModifiedFacetDisplayBuilder(
-				getCalendarFactory(), getDateFormatFactory(), http);
+				calendarFactory, getDateFormatFactory(), http);
+
+		ThemeDisplay themeDisplay = getThemeDisplay(renderRequest);
+
+		TimeZone timeZone = themeDisplay.getTimeZone();
+
+		modifiedFacetDisplayBuilder.setCurrentTimeCalendar(
+			calendarFactory.getCalendar(timeZone));
 
 		modifiedFacetDisplayBuilder.setCurrentURL(
 			portal.getCurrentURL(renderRequest));
@@ -127,10 +136,8 @@ public class ModifiedFacetPortlet extends MVCPortlet {
 			getRangesJSONArray(
 				modifiedFacetConfiguration, modifiedFacetPortletPreferences));
 
-		ThemeDisplay themeDisplay = getThemeDisplay(renderRequest);
-
 		modifiedFacetDisplayBuilder.setLocale(themeDisplay.getLocale());
-		modifiedFacetDisplayBuilder.setTimeZone(themeDisplay.getTimeZone());
+		modifiedFacetDisplayBuilder.setTimeZone(timeZone);
 
 		String parameterName =
 			modifiedFacetPortletPreferences.getParameterName();

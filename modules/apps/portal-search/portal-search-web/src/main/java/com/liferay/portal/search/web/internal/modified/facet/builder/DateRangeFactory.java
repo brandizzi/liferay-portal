@@ -60,6 +60,10 @@ public class DateRangeFactory {
 		return map;
 	}
 
+	public String normalizeDate(String rangeString, Calendar calendar) {
+		return _normalizeDates(rangeString, calendar);
+	}
+
 	private String _normalizeDates(String rangeString, Calendar calendar) {
 		Calendar now = (Calendar)calendar.clone();
 
