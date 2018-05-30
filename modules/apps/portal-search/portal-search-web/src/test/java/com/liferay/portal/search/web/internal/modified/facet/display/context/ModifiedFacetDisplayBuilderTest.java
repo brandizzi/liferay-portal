@@ -37,6 +37,8 @@ import com.liferay.portal.util.DateFormatFactoryImpl;
 import com.liferay.portal.util.HtmlImpl;
 import com.liferay.portal.util.HttpImpl;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Assert;
@@ -241,6 +243,89 @@ public class ModifiedFacetDisplayBuilderTest {
 			modifiedFacetDisplayContext.getModifiedFacetTermDisplayContexts());
 	}
 
+	@Test
+	public void testModifiedFacetTermDisplayContexts() {
+		ModifiedFacetDisplayBuilder modifiedFacetDisplayBuilder =
+			createDisplayBuilder();
+
+		JSONArray rangesJSONArray = createRangesJSONArray(
+			"past-hour", "[20180515225959 TO 20180515235959]", "some-time-ago",
+			"[20180508235959 TO 20180514235959]");
+
+		modifiedFacetDisplayBuilder.setRangesJSONArray(rangesJSONArray);
+
+		ModifiedFacetDisplayContext modifiedFacetDisplayContext =
+			modifiedFacetDisplayBuilder.build();
+
+		List<ModifiedFacetTermDisplayContext> modifiedFacetTermDisplayContexts =
+			modifiedFacetDisplayContext.getModifiedFacetTermDisplayContexts();
+
+		Assert.assertEquals(
+			modifiedFacetTermDisplayContexts.toString(), 2,
+			modifiedFacetTermDisplayContexts.size());
+
+		ModifiedFacetTermDisplayContext modifiedFacetTermDisplayContext =
+			modifiedFacetTermDisplayContexts.get(0);
+
+		Assert.assertEquals(
+			"past-hour", modifiedFacetTermDisplayContext.getLabel());
+		Assert.assertEquals(
+			"[20180515225959 TO 20180515235959]",
+			modifiedFacetTermDisplayContext.getRange());
+
+		modifiedFacetTermDisplayContext = modifiedFacetTermDisplayContexts.get(
+			1);
+
+		Assert.assertEquals(
+			"some-time-ago", modifiedFacetTermDisplayContext.getLabel());
+		Assert.assertEquals(
+			"[20180508235959 TO 20180514235959]",
+			modifiedFacetTermDisplayContext.getRange());
+	}
+
+	@Test
+	public void testModifiedFacetTermDisplayContextsNormalizedDates() {
+		ModifiedFacetDisplayBuilder modifiedFacetDisplayBuilder =
+			createDisplayBuilder();
+
+		modifiedFacetDisplayBuilder.setCurrentTimeCalendar(
+			new GregorianCalendar(2018, Calendar.MAY, 15, 23, 59, 59));
+
+		JSONArray rangesJSONArray = createRangesJSONArray(
+			"past-hour", "[past-hour TO *]", "some-time-ago",
+			"[past-24-hours TO past-hour]");
+
+		modifiedFacetDisplayBuilder.setRangesJSONArray(rangesJSONArray);
+
+		ModifiedFacetDisplayContext modifiedFacetDisplayContext =
+			modifiedFacetDisplayBuilder.build();
+
+		List<ModifiedFacetTermDisplayContext> modifiedFacetTermDisplayContexts =
+			modifiedFacetDisplayContext.getModifiedFacetTermDisplayContexts();
+
+		Assert.assertEquals(
+			modifiedFacetTermDisplayContexts.toString(), 2,
+			modifiedFacetTermDisplayContexts.size());
+
+		ModifiedFacetTermDisplayContext modifiedFacetTermDisplayContext =
+			modifiedFacetTermDisplayContexts.get(0);
+
+		Assert.assertEquals(
+			"past-hour", modifiedFacetTermDisplayContext.getLabel());
+		Assert.assertEquals(
+			"[20180515225959 TO 20180515235959]",
+			modifiedFacetTermDisplayContext.getRange());
+
+		modifiedFacetTermDisplayContext = modifiedFacetTermDisplayContexts.get(
+			1);
+
+		Assert.assertEquals(
+			"some-time-ago", modifiedFacetTermDisplayContext.getLabel());
+		Assert.assertEquals(
+			"[20180514235959 TO 20180515225959]",
+			modifiedFacetTermDisplayContext.getRange());
+	}
+
 	protected void addRangeJSONObject(
 		JSONArray jsonArray, String label, String range) {
 
@@ -287,6 +372,8 @@ public class ModifiedFacetDisplayBuilderTest {
 			new ModifiedFacetDisplayBuilder(
 				_calendarFactory, _dateFormatFactory, _http);
 
+		modifiedFacetDisplayBuilder.setCurrentTimeCalendar(
+			new GregorianCalendar());
 		modifiedFacetDisplayBuilder.setFacet(_facet);
 		modifiedFacetDisplayBuilder.setRangesJSONArray(createRangesJSONArray());
 		modifiedFacetDisplayBuilder.setLocale(LocaleUtil.getDefault());
@@ -296,18 +383,21 @@ public class ModifiedFacetDisplayBuilderTest {
 	}
 
 	protected JSONArray createRangesJSONArray() {
+		return createRangesJSONArray(
+			"past-hour", "[20180215120000 TO 20180215140000]", "past-24-hours",
+			"[20180214130000 TO 20180215140000]", "past-week",
+			"[20180208130000 TO 20180215140000]", "past-month",
+			"[20180115130000 TO 20180215140000]", "past-year",
+			"[20170215130000 TO 20180215140000]");
+	}
+
+	protected JSONArray createRangesJSONArray(String... labelsAndRanges) {
 		JSONArray jsonArray = _jsonFactory.createJSONArray();
 
-		addRangeJSONObject(
-			jsonArray, "past-hour", "[20180215120000 TO 20180215140000]");
-		addRangeJSONObject(
-			jsonArray, "past-24-hours", "[20180214130000 TO 20180215140000]");
-		addRangeJSONObject(
-			jsonArray, "past-week", "[20180208130000 TO 20180215140000]");
-		addRangeJSONObject(
-			jsonArray, "past-month", "[20180115130000 TO 20180215140000]");
-		addRangeJSONObject(
-			jsonArray, "past-year", "[20170215130000 TO 20180215140000]");
+		for (int i = 0; i < labelsAndRanges.length; i += 2) {
+			addRangeJSONObject(
+				jsonArray, labelsAndRanges[i], labelsAndRanges[i+1]);
+		}
 
 		return jsonArray;
 	}

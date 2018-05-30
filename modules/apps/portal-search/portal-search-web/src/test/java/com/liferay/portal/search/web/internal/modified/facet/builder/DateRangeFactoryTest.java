@@ -47,6 +47,60 @@ public class DateRangeFactoryTest {
 			_dateRangeFactory.getRangeString("past-24-hours", calendar));
 	}
 
+	@Test
+	public void testNormalizeDatePast24Hours() {
+		Calendar calendar = new GregorianCalendar(
+			2018, Calendar.MAY, 15, 23, 59, 59);
+
+		Assert.assertEquals(
+			"[20180514235959 TO 20180515225959]",
+			_dateRangeFactory.normalizeDate(
+				"[past-24-hours TO past-hour]", calendar));
+	}
+
+	@Test
+	public void testNormalizeDatePastHour() {
+		Calendar calendar = new GregorianCalendar(
+			2018, Calendar.MAY, 15, 23, 59, 59);
+
+		Assert.assertEquals(
+			"[20180515225959 TO 20180515235959]",
+			_dateRangeFactory.normalizeDate("[past-hour TO *]", calendar));
+	}
+
+	@Test
+	public void testNormalizeDatePastMonth() {
+		Calendar calendar = new GregorianCalendar(
+			2018, Calendar.MAY, 15, 23, 59, 59);
+
+		Assert.assertEquals(
+			"[20180415235959 TO 20180508235959]",
+			_dateRangeFactory.normalizeDate(
+				"[past-month TO past-week]", calendar));
+	}
+
+	@Test
+	public void testNormalizeDatePastWeek() {
+		Calendar calendar = new GregorianCalendar(
+			2018, Calendar.MAY, 15, 23, 59, 59);
+
+		Assert.assertEquals(
+			"[20180508235959 TO 20180514235959]",
+			_dateRangeFactory.normalizeDate(
+				"[past-week TO past-24-hours]", calendar));
+	}
+
+	@Test
+	public void testNormalizeDatePastYear() {
+		Calendar calendar = new GregorianCalendar(
+			2018, Calendar.MAY, 15, 23, 59, 59);
+
+		Assert.assertEquals(
+			"[20170515235959 TO 20180415235959]",
+			_dateRangeFactory.normalizeDate(
+				"[past-year TO past-month]", calendar));
+	}
+
 	private final DateRangeFactory _dateRangeFactory = new DateRangeFactory(
 		new DateFormatFactoryImpl());
 
