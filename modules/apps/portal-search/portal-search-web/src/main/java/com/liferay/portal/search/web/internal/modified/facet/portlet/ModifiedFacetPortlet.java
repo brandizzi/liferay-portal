@@ -15,7 +15,6 @@
 package com.liferay.portal.search.web.internal.modified.facet.portlet;
 
 import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.search.facet.Facet;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -196,23 +195,7 @@ public class ModifiedFacetPortlet extends MVCPortlet {
 		ModifiedFacetConfiguration modifiedFacetConfiguration,
 		ModifiedFacetPortletPreferences modifiedFacetPortletPreferences) {
 
-		JSONArray rangesJSONArray =
-			modifiedFacetConfiguration.getRangesJSONArray();
-
-		JSONArray rangesFromPreferencesJSONArray =
-			modifiedFacetPortletPreferences.getRangesJSONArray();
-
-		for (int i = 0; i < rangesJSONArray.length(); i++) {
-			JSONObject rangeJSONObject = rangesJSONArray.getJSONObject(i);
-			JSONObject rangeFromPreferenceJSONObject =
-				rangesFromPreferencesJSONArray.getJSONObject(i);
-
-			rangeJSONObject.remove("label");
-			rangeJSONObject.put(
-				"label", rangeFromPreferenceJSONObject.get("label"));
-		}
-
-		return rangesJSONArray;
+		return modifiedFacetPortletPreferences.getRangesJSONArray();
 	}
 
 	protected ThemeDisplay getThemeDisplay(RenderRequest renderRequest) {
