@@ -396,7 +396,7 @@ public class ModifiedFacetDisplayBuilderTest {
 
 		for (int i = 0; i < labelsAndRanges.length; i += 2) {
 			addRangeJSONObject(
-				jsonArray, labelsAndRanges[i], labelsAndRanges[i+1]);
+				jsonArray, labelsAndRanges[i], labelsAndRanges[i + 1]);
 		}
 
 		return jsonArray;
