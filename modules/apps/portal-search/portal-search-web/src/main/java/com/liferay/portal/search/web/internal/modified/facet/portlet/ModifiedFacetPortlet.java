@@ -197,23 +197,7 @@ public class ModifiedFacetPortlet extends MVCPortlet {
 		ModifiedFacetConfiguration modifiedFacetConfiguration,
 		ModifiedFacetPortletPreferences modifiedFacetPortletPreferences) {
 
-		JSONArray rangesJSONArray =
-			modifiedFacetConfiguration.getRangesJSONArray();
-
-		JSONArray rangesFromPreferencesJSONArray =
-			modifiedFacetPortletPreferences.getRangesJSONArray();
-
-		for (int i = 0; i < rangesJSONArray.length(); i++) {
-			JSONObject rangeJSONObject = rangesJSONArray.getJSONObject(i);
-			JSONObject rangeFromPreferenceJSONObject =
-				rangesFromPreferencesJSONArray.getJSONObject(i);
-
-			rangeJSONObject.remove("label");
-			rangeJSONObject.put(
-				"label", rangeFromPreferenceJSONObject.get("label"));
-		}
-
-		return rangesJSONArray;
+		return modifiedFacetPortletPreferences.getRangesJSONArray();
 	}
 
 	protected ThemeDisplay getThemeDisplay(RenderRequest renderRequest) {
