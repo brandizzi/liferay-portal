@@ -63,6 +63,8 @@ JSONArray rangesJSONArray = modifiedFacetPortletPreferences.getRangesJSONArray()
 					<div class="lfr-form-row lfr-form-row-inline">
 						<div class="row-fields">
 							<aui:input label="label" name='<%= "label_" + i %>' value='<%= jsonObject.getString("label") %>' />
+
+							<aui:input label="range" name='<%= "range_" + i %>' value='<%= jsonObject.getString("range") %>' />
 						</div>
 					</div>
 
@@ -107,8 +109,11 @@ JSONArray rangesJSONArray = modifiedFacetPortletPreferences.getRangesJSONArray()
 			for (var i = 0 ; i < <%= rangesJSONArray.length() %> ; i ++) {
 				var label = $('[name="<portlet:namespace />label_' + i +'"]').val();
 
+				var range = $('[name="<portlet:namespace />range_' + i +'"]').val();
+
 				ranges.push({
-					label : label
+					label : label,
+					range : range
 				});
 			}
 			form.fm('<%= PortletPreferencesJspUtil.getInputName(ModifiedFacetPortletPreferences.PREFERENCE_KEY_RANGES) %>').val(JSON.stringify(ranges));
