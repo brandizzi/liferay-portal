@@ -27,10 +27,11 @@ import com.liferay.portal.kernel.search.facet.util.RangeParserUtil;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.search.filter.RangeTermFilter;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
+import com.liferay.portal.kernel.util.DateFormatFactory;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.facet.Facet;
+import com.liferay.portal.util.DateFormatFactoryImpl;
 
 import java.text.DateFormat;
 
@@ -45,6 +46,8 @@ public class ModifiedFacetImpl extends RangeFacet implements Facet {
 		super(searchContext);
 
 		setFieldName(fieldName);
+
+		_dateFormatFactory = new DateFormatFactoryImpl();
 	}
 
 	@Override
@@ -119,10 +122,7 @@ public class ModifiedFacetImpl extends RangeFacet implements Facet {
 	}
 
 	protected void normalizeDates(FacetConfiguration facetConfiguration) {
-		Calendar now = Calendar.getInstance();
-
-		now.set(Calendar.SECOND, 0);
-		now.set(Calendar.MINUTE, 0);
+		Calendar now = (Calendar)Calendar.getInstance();
 
 		Calendar pastHour = (Calendar)now.clone();
 
@@ -145,9 +145,7 @@ public class ModifiedFacetImpl extends RangeFacet implements Facet {
 
 		pastYear.set(Calendar.YEAR, now.get(Calendar.YEAR) - 1);
 
-		now.set(Calendar.HOUR_OF_DAY, now.get(Calendar.HOUR_OF_DAY) + 1);
-
-		DateFormat dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
+		DateFormat dateFormat = _dateFormatFactory.getSimpleDateFormat(
 			"yyyyMMddHHmmss");
 
 		JSONObject dataJSONObject = facetConfiguration.getData();
@@ -182,6 +180,7 @@ public class ModifiedFacetImpl extends RangeFacet implements Facet {
 		}
 	}
 
+	private final DateFormatFactory _dateFormatFactory;
 	private String[] _selections = {};
 
 }
