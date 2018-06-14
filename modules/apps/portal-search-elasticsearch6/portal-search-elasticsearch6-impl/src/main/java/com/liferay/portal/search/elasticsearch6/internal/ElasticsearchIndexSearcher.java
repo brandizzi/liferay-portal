@@ -179,7 +179,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 				_log.warn(e, e);
 			}
 
-			if (!_logExceptionsOnly) {
+			if (!handle(e) && !_logExceptionsOnly) {
 				throw new SearchException(e.getMessage(), e);
 			}
 
@@ -655,6 +655,28 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		}
 
 		return Field.getSortFieldName(sort, scoreFieldName);
+	}
+
+	protected boolean handle(Exception e) {
+		Throwable cause = e.getCause();
+
+		String message = cause.getMessage();
+
+		if (message == null) {
+			return false;
+		}
+
+		if (message.contains(
+				"Fielddata is disabled on text fields by default.")) {
+
+			_log.error(
+				"Search failed due to text field in facet selection. Only use" +
+					"the custom facet portlet with keyword fields.");
+
+			return true;
+		}
+
+		return false;
 	}
 
 	protected AggregationBuilder postProcessAggregationBuilder(
