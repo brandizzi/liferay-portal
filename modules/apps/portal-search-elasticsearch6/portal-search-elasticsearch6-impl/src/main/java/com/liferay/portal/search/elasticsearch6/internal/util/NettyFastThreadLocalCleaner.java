@@ -21,6 +21,7 @@ public class NettyFastThreadLocalCleaner {
 		
 		System.err.println("Cleaning up Netty. KILL IT!");
 		
+		FastThreadLocal.removeAll();
 		FastThreadLocal.destroy();
 
 		System.err.println("Netty KILLT!!!");
