@@ -45,9 +45,9 @@ import com.liferay.portal.search.indexer.IndexerQueryBuilder;
 import com.liferay.portal.search.indexer.IndexerSearcher;
 import com.liferay.portal.search.indexer.IndexerSummaryBuilder;
 import com.liferay.portal.search.indexer.IndexerWriter;
+import com.liferay.portal.search.internal.indexer.queue.IndexerQueue;
 import com.liferay.portal.search.internal.indexer.token.IndexerTokenConsumer;
 import com.liferay.portal.search.internal.indexer.token.IndexerTokenFactoryImpl;
-import com.liferay.portal.search.permission.SearchPermissionFilterContributor;
 import com.liferay.portal.search.permission.SearchPermissionIndexWriter;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
@@ -291,9 +291,8 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 		serviceRegistrationHolder.setTokenConsumerServiceRegistration(
 			indexerTokenConsumerRegistration);
 
-		IndexerWriter<?> indexerWriter = new TokenMediatedIndexerWriter<>(
-			baseModelRetriever, new IndexerTokenFactoryImpl(),
-			indexerTokenConsumer,
+		IndexerWriter<?> indexerWriter = new QueueIndexerWriter<>(
+			baseModelRetriever, new IndexerTokenFactoryImpl(), indexerQueue,
 			modelSearchConfigurator.getModelSearchSettings(),
 			modelIndexerWriterContributor, indexerDocumentBuilder, true);
 
@@ -348,6 +347,9 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 
 	@Reference
 	protected HitsProcessorRegistry hitsProcessorRegistry;
+
+	@Reference
+	protected IndexerQueue indexerQueue;
 
 	@Reference
 	protected IndexerRegistry indexerRegistry;

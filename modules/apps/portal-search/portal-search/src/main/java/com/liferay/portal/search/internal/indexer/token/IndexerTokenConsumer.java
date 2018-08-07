@@ -67,7 +67,7 @@ public class IndexerTokenConsumer<T extends BaseModel<?>> {
 			executeReindexModel(indexerToken);
 		}
 		else if (indexerOperation ==
-					IndexerOperation.UPDATE_PERMISSION_FIELDS) {
+					 IndexerOperation.UPDATE_PERMISSION_FIELDS) {
 
 			executeUpdatePermissionFields(indexerToken);
 		}
