@@ -30,12 +30,15 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
-import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
+import com.liferay.portal.search.test.internal.util.UserSearchFixture;
 import com.liferay.portal.search.test.journal.util.JournalArticleBlueprint;
 import com.liferay.portal.search.test.journal.util.JournalArticleContent;
 import com.liferay.portal.search.test.journal.util.JournalArticleDescription;
+import com.liferay.portal.search.test.journal.util.JournalArticleSearchFixture;
 import com.liferay.portal.search.test.journal.util.JournalArticleTitle;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.test.rule.Inject;
@@ -48,6 +51,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -60,7 +64,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Arquillian.class)
 @Sync
-public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
+public class MultiLanguageSearchTest {
 
 	@ClassRule
 	@Rule
@@ -68,12 +72,39 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 		new LiferayIntegrationTestRule();
 
 	@Before
-	@Override
 	public void setUp() throws Exception {
-		super.setUp();
+		WorkflowThreadLocal.setEnabled(false);
 
-		init();
+		userSearchFixture.setUp();
+
+		_users = userSearchFixture.getUsers();
+
+		_group = userSearchFixture.addGroup();
+
+		_user = userSearchFixture.addUser(
+			RandomTestUtil.randomString(), _group, new String[0]);
+
+		_title = "english";
+		_title_nl = "engels";
+		_description = "description";
+		_description_nl = "beschrijving";
+		_content = "content";
+		_content_nl = "inhoud";
+
+		_indexer = _indexerRegistry.getIndexer(JournalArticle.class);
+
+		journalArticleSearchFixture.setUp();
+
+		_journalArticles = journalArticleSearchFixture.getJournalArticles();
+
 		addJournalArticlesExpectedResults();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		journalArticleSearchFixture.tearDown();
+
+		userSearchFixture.tearDown();
 	}
 
 	@Test
@@ -271,10 +302,9 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 			articleIdContentExpectedMap, journalArticle);
 	}
 
-	protected User addUser() throws Exception {
-		User user = UserTestUtil.addUser();
-
-		_users.add(user);
+	protected User addUser(Group group) throws Exception {
+		User user = userSearchFixture.addUser(
+			RandomTestUtil.randomString(), group, new String[0]);
 
 		return user;
 	}
@@ -296,18 +326,26 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 			});
 	}
 
-	protected void init() throws Exception {
-		_title = "english";
-		_title_nl = "engels";
-		_description = "description";
-		_description_nl = "beschrijving";
-		_content = "content";
-		_content_nl = "inhoud";
-
-		_group = addGroup();
-		_user = addUser();
-		_indexer = _indexerRegistry.getIndexer(JournalArticle.class);
+	protected SearchContext getSearchContext(String keywords) throws Exception {
+		return userSearchFixture.getSearchContext(keywords);
 	}
+
+	protected void setUpJournalArticleSearchFixture() throws Exception {
+		journalArticleSearchFixture.setUp();
+
+		_journalArticles = journalArticleSearchFixture.getJournalArticles();
+	}
+
+	protected void setUpUserSearchFixture() throws Exception {
+		userSearchFixture.setUp();
+
+		_user = userSearchFixture.addUser(
+			RandomTestUtil.randomString(), _group, new String[0]);
+		_users = userSearchFixture.getUsers();
+	}
+
+	protected final JournalArticleSearchFixture journalArticleSearchFixture =
+		new JournalArticleSearchFixture();
 
 	protected class LocaleKeywordWrapper {
 
@@ -360,33 +398,28 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 				}
 			};
 
-		articleIdTitleExpectedMap.put(journalArticle.getArticleId(), titlesMap);
-
-		Map<String, String> descStrings_US = new HashMap<String, String>() {
-			{
-				put("description_en_US", _description);
-			}
-		};
-
-		Map<String, String> descStrings_NL = new HashMap<>();
-
-		Map<String, Map<String, String>> descMap =
-			new HashMap<String, Map<String, String>>() {
+			Map<String, String> descStrings_US = new HashMap<String, String>() {
+				{
+					put("description_en_US", _description);
+				}
+			};
+			
+			Map<String, String> descStrings_NL = new HashMap<>();
+			
+			Map<String, Map<String, String>> descMap =
+					new HashMap<String, Map<String, String>>() {
 				{
 					put("description_en_US", descStrings_US);
 					put("description_nl_NL", descStrings_NL);
 				}
 			};
-
-		articleIdDescriptionExpectedMap.put(
-			journalArticle.getArticleId(), descMap);
-
-		Map<String, String> contentStrings_US = new HashMap<String, String>() {
-			{
-				put("content_en_US", _content);
-			}
-		};
-
+			
+			Map<String, String> contentStrings_US = new HashMap<String, String>() {
+				{
+					put("content_en_US", _content);
+				}
+			};
+			
 		Map<String, String> contentStrings_NL = new HashMap<>();
 
 		Map<String, Map<String, String>> contentsMap =
@@ -396,6 +429,11 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 					put("content_nl_NL", contentStrings_NL);
 				}
 			};
+
+		articleIdTitleExpectedMap.put(journalArticle.getArticleId(), titlesMap);
+
+		articleIdDescriptionExpectedMap.put(
+			journalArticle.getArticleId(), descMap);
 
 		articleIdContentExpectedMap.put(
 			journalArticle.getArticleId(), contentsMap);
@@ -433,8 +471,6 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 				}
 			};
 
-		articleIdTitleExpectedMap.put(journalArticle.getArticleId(), titlesMap);
-
 		Map<String, String> descStrings_US = new HashMap<String, String>() {
 			{
 				put("description_en_US", _description);
@@ -455,9 +491,6 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 				}
 			};
 
-		articleIdDescriptionExpectedMap.put(
-			journalArticle.getArticleId(), descMap);
-
 		Map<String, String> contentStrings_US = new HashMap<String, String>() {
 			{
 				put("content_en_US", _content);
@@ -477,6 +510,11 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 					put("content_nl_NL", contentStrings_NL);
 				}
 			};
+
+		articleIdTitleExpectedMap.put(journalArticle.getArticleId(), titlesMap);
+
+		articleIdDescriptionExpectedMap.put(
+			journalArticle.getArticleId(), descMap);
 
 		articleIdContentExpectedMap.put(
 			journalArticle.getArticleId(), contentsMap);
@@ -514,8 +552,6 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 				}
 			};
 
-		articleIdTitleExpectedMap.put(journalArticle.getArticleId(), titlesMap);
-
 		Map<String, String> descStrings_NL = new HashMap<String, String>() {
 			{
 				put("description_nl_NL", _description);
@@ -531,9 +567,6 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 					put("description_nl_NL", descStrings_NL);
 				}
 			};
-
-		articleIdDescriptionExpectedMap.put(
-			journalArticle.getArticleId(), descMap);
 
 		HashMap<String, String> contentStrings_NL =
 			new HashMap<String, String>() {
@@ -553,6 +586,11 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 					put("content_nl_NL", contentStrings_NL);
 				}
 			};
+
+		articleIdTitleExpectedMap.put(journalArticle.getArticleId(), titlesMap);
+
+		articleIdDescriptionExpectedMap.put(
+			journalArticle.getArticleId(), descMap);
 
 		articleIdContentExpectedMap.put(
 			journalArticle.getArticleId(), contentsMap);
@@ -606,11 +644,18 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 	private Indexer<JournalArticle> _indexer;
 	private final Map<String, Map<String, Map<String, Map<String, String>>>>
 		_indexTypeExpectedMap = new HashMap<>(3);
+
+	@DeleteAfterTestRun
+	private List<JournalArticle> _journalArticles;
+
 	private String _title;
 	private String _title_nl;
 	private User _user;
 
 	@DeleteAfterTestRun
-	private final List<User> _users = new ArrayList<>();
+	private List<User> _users = new ArrayList<>();
+
+		protected final UserSearchFixture userSearchFixture =
+			new UserSearchFixture();
 
 }

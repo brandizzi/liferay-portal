@@ -116,7 +116,7 @@ public class JournalArticleIndexerMultiLanguageSearchGroupIdsTest {
 		List<Document> documents = _searchDocuments(
 			searchTerm, _usGroup, _japanGroup);
 
-		Assert.assertEquals(documents.toString(), 2, documents.size());
+		Assert.assertEquals(2, documents.size());
 
 		assertContentAndTitleValues(
 			LocaleUtil.JAPAN, documents, japanContentMap, japanTitleMap,
