@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.settings.LocalizedValuesMap;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.Sync;
@@ -93,14 +94,14 @@ public class MultiLanguageSearchTest {
 		List<Document> documents = _search(searchTerm, LocaleUtil.US);
 
 		Assert.assertEquals(documents.toString(), 3, documents.size());
-		assertSearch("content", "content_en_US", documents, searchTerm);
-		assertSearch("content", "content_nl_NL", documents, searchTerm);
+
+		assertSearchContent(documents, searchTerm);
 
 		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
 
 		Assert.assertEquals(documents.toString(), 3, documents.size());
-		assertSearch("content", "content_en_US", documents, searchTerm);
-		assertSearch("content", "content_nl_NL", documents, searchTerm);
+
+		assertSearchContent(documents, searchTerm);
 	}
 
 	@Test
@@ -110,14 +111,14 @@ public class MultiLanguageSearchTest {
 		List<Document> documents = _search(searchTerm, LocaleUtil.US);
 
 		Assert.assertEquals(documents.toString(), 3, documents.size());
-		assertSearch("description", "description_en_US", documents, searchTerm);
-		assertSearch("description", "description_nl_NL", documents, searchTerm);
+
+		assertSearchDescription(documents, searchTerm);
 
 		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
 
 		Assert.assertEquals(documents.toString(), 3, documents.size());
-		assertSearch("description", "description_en_US", documents, searchTerm);
-		assertSearch("description", "description_nl_NL", documents, searchTerm);
+
+		assertSearchDescription(documents, searchTerm);
 	}
 
 	@Test
@@ -127,14 +128,14 @@ public class MultiLanguageSearchTest {
 		List<Document> documents = _search(searchTerm, LocaleUtil.US);
 
 		Assert.assertEquals(documents.toString(), 3, documents.size());
-		assertSearch("title", "title", documents, searchTerm);
-		assertSearch("title", "localized_title_nl_NL", documents, searchTerm);
+
+		assertSearchTitle(documents, searchTerm);
 
 		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
 
 		Assert.assertEquals(documents.toString(), 3, documents.size());
-		assertSearch("title", "title", documents, searchTerm);
-		assertSearch("title", "localized_title_nl_NL", documents, searchTerm);
+
+		assertSearchTitle(documents, searchTerm);
 	}
 
 	@Test
@@ -171,7 +172,7 @@ public class MultiLanguageSearchTest {
 			JournalArticleTitle journalArticleTitleParam)
 		throws Exception {
 
-		return journalArticleSearchFixture.addArticle(
+		JournalArticle journalArticle = journalArticleSearchFixture.addArticle(
 			new JournalArticleBlueprint() {
 				{
 					groupId = group.getGroupId();
@@ -181,22 +182,11 @@ public class MultiLanguageSearchTest {
 					userId = user.getUserId();
 				}
 			});
+
+		return journalArticle;
 	}
 
 	protected void addJournalArticlesExpectedResults() throws Exception {
-		Map<String, Map<String, Map<String, String>>>
-			articleIdTitleExpectedMap = new HashMap<>();
-		Map<String, Map<String, Map<String, String>>>
-			articleIdDescriptionExpectedMap = new HashMap<>();
-		Map<String, Map<String, Map<String, String>>>
-			articleIdContentExpectedMap = new HashMap<>();
-
-		_indexTypeExpectedMap.put("content", articleIdContentExpectedMap);
-
-		_indexTypeExpectedMap.put(
-			"description", articleIdDescriptionExpectedMap);
-		_indexTypeExpectedMap.put("title", articleIdTitleExpectedMap);
-
 		JournalArticleContent usJournalArticleContent =
 			new JournalArticleContent() {
 				{
@@ -221,9 +211,9 @@ public class MultiLanguageSearchTest {
 			_group, _user, usJournalArticleContent, usJournalArticleDescription,
 			usJournalArticleTitle);
 
-		_addExpectedValueMap_1(
-			articleIdTitleExpectedMap, articleIdDescriptionExpectedMap,
-			articleIdContentExpectedMap, usJournalArticle);
+		_addExpectedValuesMaps(
+			usJournalArticle, usJournalArticleContent,
+			usJournalArticleDescription, usJournalArticleTitle);
 
 		JournalArticleContent netherlandsUSJournalArticleContent =
 			new JournalArticleContent() {
@@ -254,9 +244,10 @@ public class MultiLanguageSearchTest {
 			netherlandsUSJournalArticleDescription,
 			netherlandsUSJournalArticleTitle);
 
-		_addExpectedValueMap_2(
-			articleIdTitleExpectedMap, articleIdDescriptionExpectedMap,
-			articleIdContentExpectedMap, netherlandsUSJournalArticle);
+		_addExpectedValuesMaps(
+			netherlandsUSJournalArticle, netherlandsUSJournalArticleContent,
+			netherlandsUSJournalArticleDescription,
+			netherlandsUSJournalArticleTitle);
 
 		JournalArticleContent netherlandsJournalArticleContent =
 			new JournalArticleContent() {
@@ -284,9 +275,10 @@ public class MultiLanguageSearchTest {
 			netherlandsJournalArticleDescription,
 			netherlandsJournalArticleTitle);
 
-		_addExpectedValueMap_3(
-			articleIdTitleExpectedMap, articleIdDescriptionExpectedMap,
-			articleIdContentExpectedMap, netherlandsJournalArticle);
+		_addExpectedValuesMaps(
+			netherlandsJournalArticle, netherlandsJournalArticleContent,
+			netherlandsJournalArticleDescription,
+			netherlandsJournalArticleTitle);
 	}
 
 	protected User addUser() throws Exception {
@@ -298,20 +290,38 @@ public class MultiLanguageSearchTest {
 	}
 
 	protected void assertSearch(
-		String indexType, String prefix, List<Document> documents,
-		String searchTerm) {
-
-		Map<String, Map<String, Map<String, String>>> articleIdExpectedMap =
-			_indexTypeExpectedMap.get(indexType);
+		List<Document> documents,
+		Map<String, ? extends LocalizedValuesMap> localizedValuesMaps,
+		String prefix, String message) {
 
 		documents.forEach(
 			document -> {
-				Map<String, Map<String, String>> expected =
-					articleIdExpectedMap.get(document.get(Field.ARTICLE_ID));
+				String articleId = document.get(Field.ARTICLE_ID);
+
+				LocalizedValuesMap localizedValuesMap = localizedValuesMaps.get(
+					articleId);
 
 				FieldValuesAssert.assertFieldValues(
-					expected.get(prefix), prefix, document, searchTerm);
+					_getStringKeyMap(localizedValuesMap, prefix), prefix,
+					document, message);
 			});
+	}
+
+	protected void assertSearchContent(
+		List<Document> documents, String message) {
+
+		assertSearch(documents, journalArticleContentsMap, "content", message);
+	}
+
+	protected void assertSearchDescription(
+		List<Document> documents, String message) {
+
+		assertSearch(
+			documents, journalArticleDescriptionsMap, "description", message);
+	}
+
+	protected void assertSearchTitle(List<Document> documents, String message) {
+		assertSearch(documents, journalArticleTitlesMap, "title", message);
 	}
 
 	protected SearchContext getSearchContext(String keywords) throws Exception {
@@ -344,238 +354,28 @@ public class MultiLanguageSearchTest {
 		_users = userSearchFixture.getUsers();
 	}
 
+	protected Map<String, JournalArticleContent> journalArticleContentsMap =
+		new HashMap<>();
+	protected Map<String, JournalArticleDescription>
+		journalArticleDescriptionsMap = new HashMap<>();
 	protected final JournalArticleSearchFixture journalArticleSearchFixture =
 		new JournalArticleSearchFixture();
+	protected Map<String, JournalArticleTitle> journalArticleTitlesMap =
+		new HashMap<>();
 	protected final UserSearchFixture userSearchFixture =
 		new UserSearchFixture();
 
-	@SuppressWarnings("serial")
-	private void _addExpectedValueMap_1(
-		Map<String, Map<String, Map<String, String>>> articleIdTitleExpectedMap,
-		Map<String, Map<String, Map<String, String>>>
-			articleIdDescriptionExpectedMap,
-		Map<String, Map<String, Map<String, String>>>
-			articleIdContentExpectedMap,
-		JournalArticle journalArticle) {
+	private void _addExpectedValuesMaps(
+		JournalArticle journalArticle,
+		JournalArticleContent journalArticleContent,
+		JournalArticleDescription journalArticleDescription,
+		JournalArticleTitle journalArticleTitle) {
 
-		Map<String, String> titleStrings = new HashMap<String, String>() {
-			{
-				put("title_en_US", _usTitle);
-			}
-		};
+		String articleId = journalArticle.getArticleId();
 
-		Map<String, String> localizedTitleStrings =
-			new HashMap<String, String>() {
-				{
-					put("localized_title_nl_NL", _usTitle);
-					put("localized_title_nl_NL_sortable", _usTitle);
-				}
-			};
-
-		Map<String, Map<String, String>> titlesMap =
-			new HashMap<String, Map<String, String>>() {
-				{
-					put("title", titleStrings);
-					put("localized_title_nl_NL", localizedTitleStrings);
-				}
-			};
-
-		articleIdTitleExpectedMap.put(journalArticle.getArticleId(), titlesMap);
-
-		Map<String, String> descStrings_US = new HashMap<String, String>() {
-			{
-				put("description_en_US", _usDescription);
-			}
-		};
-
-		Map<String, String> descStrings_NL = new HashMap<>();
-
-		Map<String, Map<String, String>> descMap =
-			new HashMap<String, Map<String, String>>() {
-				{
-					put("description_en_US", descStrings_US);
-					put("description_nl_NL", descStrings_NL);
-				}
-			};
-
-		articleIdDescriptionExpectedMap.put(
-			journalArticle.getArticleId(), descMap);
-
-		Map<String, String> contentStrings_US = new HashMap<String, String>() {
-			{
-				put("content_en_US", _usContent);
-			}
-		};
-
-		Map<String, String> contentStrings_NL = new HashMap<>();
-
-		Map<String, Map<String, String>> contentsMap =
-			new HashMap<String, Map<String, String>>() {
-				{
-					put("content_en_US", contentStrings_US);
-					put("content_nl_NL", contentStrings_NL);
-				}
-			};
-
-		articleIdContentExpectedMap.put(
-			journalArticle.getArticleId(), contentsMap);
-	}
-
-	@SuppressWarnings("serial")
-	private void _addExpectedValueMap_2(
-		Map<String, Map<String, Map<String, String>>> articleIdTitleExpectedMap,
-		Map<String, Map<String, Map<String, String>>>
-			articleIdDescriptionExpectedMap,
-		Map<String, Map<String, Map<String, String>>>
-			articleIdContentExpectedMap,
-		JournalArticle journalArticle) {
-
-		HashMap<String, String> titleStrings = new HashMap<String, String>() {
-			{
-				put("title_en_US", _usTitle);
-				put("title_nl_NL", _netherlandsTitle);
-			}
-		};
-
-		HashMap<String, String> localizedTitleStrings =
-			new HashMap<String, String>() {
-				{
-					put("localized_title_nl_NL", _netherlandsTitle);
-					put("localized_title_nl_NL_sortable", _netherlandsTitle);
-				}
-			};
-
-		Map<String, Map<String, String>> titlesMap =
-			new HashMap<String, Map<String, String>>() {
-				{
-					put("title", titleStrings);
-					put("localized_title_nl_NL", localizedTitleStrings);
-				}
-			};
-
-		articleIdTitleExpectedMap.put(journalArticle.getArticleId(), titlesMap);
-
-		Map<String, String> descStrings_US = new HashMap<String, String>() {
-			{
-				put("description_en_US", _usDescription);
-			}
-		};
-
-		Map<String, String> descStrings_NL = new HashMap<String, String>() {
-			{
-				put("description_nl_NL", _netherlandsDescription);
-			}
-		};
-
-		Map<String, Map<String, String>> descMap =
-			new HashMap<String, Map<String, String>>() {
-				{
-					put("description_en_US", descStrings_US);
-					put("description_nl_NL", descStrings_NL);
-				}
-			};
-
-		articleIdDescriptionExpectedMap.put(
-			journalArticle.getArticleId(), descMap);
-
-		Map<String, String> contentStrings_US = new HashMap<String, String>() {
-			{
-				put("content_en_US", _usContent);
-			}
-		};
-
-		Map<String, String> contentStrings_NL = new HashMap<String, String>() {
-			{
-				put("content_nl_NL", _netherandsContent);
-			}
-		};
-
-		Map<String, Map<String, String>> contentsMap =
-			new HashMap<String, Map<String, String>>() {
-				{
-					put("content_en_US", contentStrings_US);
-					put("content_nl_NL", contentStrings_NL);
-				}
-			};
-
-		articleIdContentExpectedMap.put(
-			journalArticle.getArticleId(), contentsMap);
-	}
-
-	@SuppressWarnings("serial")
-	private void _addExpectedValueMap_3(
-		Map<String, Map<String, Map<String, String>>> articleIdTitleExpectedMap,
-		Map<String, Map<String, Map<String, String>>>
-			articleIdDescriptionExpectedMap,
-		Map<String, Map<String, Map<String, String>>>
-			articleIdContentExpectedMap,
-		JournalArticle journalArticle) {
-
-		HashMap<String, String> titleStrings = new HashMap<String, String>() {
-			{
-				put("title_nl_NL", _usTitle);
-			}
-		};
-
-		HashMap<String, String> localizedTitleStrings =
-			new HashMap<String, String>() {
-				{
-					put("localized_title_nl_NL", _usTitle);
-					put("localized_title_nl_NL_sortable", _usTitle);
-				}
-
-			};
-
-		Map<String, Map<String, String>> titlesMap =
-			new HashMap<String, Map<String, String>>() {
-				{
-					put("title", titleStrings);
-					put("localized_title_nl_NL", localizedTitleStrings);
-				}
-			};
-
-		articleIdTitleExpectedMap.put(journalArticle.getArticleId(), titlesMap);
-
-		Map<String, String> descStrings_NL = new HashMap<String, String>() {
-			{
-				put("description_nl_NL", _usDescription);
-			}
-		};
-
-		Map<String, String> descStrings_US = new HashMap<>();
-
-		Map<String, Map<String, String>> descMap =
-			new HashMap<String, Map<String, String>>() {
-				{
-					put("description_en_US", descStrings_US);
-					put("description_nl_NL", descStrings_NL);
-				}
-			};
-
-		articleIdDescriptionExpectedMap.put(
-			journalArticle.getArticleId(), descMap);
-
-		HashMap<String, String> contentStrings_NL =
-			new HashMap<String, String>() {
-
-				{
-					put("content_nl_NL", _usContent);
-				}
-
-			};
-
-		HashMap<String, String> contentStrings_US = new HashMap<>();
-
-		Map<String, Map<String, String>> contentsMap =
-			new HashMap<String, Map<String, String>>() {
-				{
-					put("content_en_US", contentStrings_US);
-					put("content_nl_NL", contentStrings_NL);
-				}
-			};
-
-		articleIdContentExpectedMap.put(
-			journalArticle.getArticleId(), contentsMap);
+		journalArticleContentsMap.put(articleId, journalArticleContent);
+		journalArticleDescriptionsMap.put(articleId, journalArticleDescription);
+		journalArticleTitlesMap.put(articleId, journalArticleTitle);
 	}
 
 	private SearchContext _getSearchContext(String searchTerm, Locale locale)
@@ -593,6 +393,23 @@ public class MultiLanguageSearchTest {
 		queryConfig.setSelectedFieldNames(StringPool.STAR);
 
 		return searchContext;
+	}
+
+	private String _getStringKey(String prefix, Locale locale) {
+		return prefix + StringPool.UNDERLINE + LocaleUtil.toLanguageId(locale);
+	}
+
+	private Map<String, String> _getStringKeyMap(
+		LocalizedValuesMap localizedValuesMap, String prefix) {
+
+		Map<Locale, String> localesMap = localizedValuesMap.getValues();
+		Map<String, String> stringsMap = new HashMap<>();
+
+		localesMap.forEach(
+			(locale, value) -> stringsMap.put(
+				_getStringKey(prefix, locale), value));
+
+		return stringsMap;
 	}
 
 	private List<Document> _search(String searchTerm, Locale locale) {
@@ -620,8 +437,6 @@ public class MultiLanguageSearchTest {
 	private List<Group> _groups;
 
 	private Indexer<JournalArticle> _indexer;
-	private final Map<String, Map<String, Map<String, Map<String, String>>>>
-		_indexTypeExpectedMap = new HashMap<>(3);
 
 	@DeleteAfterTestRun
 	private List<JournalArticle> _journalArticles;
