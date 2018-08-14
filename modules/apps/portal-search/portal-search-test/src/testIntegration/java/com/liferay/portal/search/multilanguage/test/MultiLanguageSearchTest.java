@@ -93,13 +93,13 @@ public class MultiLanguageSearchTest {
 
 		List<Document> documents = _search(searchTerm, LocaleUtil.US);
 
-		Assert.assertEquals(3, documents.size(), 0);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
 		assertSearch("content", "content_en_US", documents, searchTerm);
 		assertSearch("content", "content_nl_NL", documents, searchTerm);
 
 		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
 
-		Assert.assertEquals(3, documents.size(), 0);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
 		assertSearch("content", "content_en_US", documents, searchTerm);
 		assertSearch("content", "content_nl_NL", documents, searchTerm);
 	}
@@ -110,13 +110,13 @@ public class MultiLanguageSearchTest {
 
 		List<Document> documents = _search(searchTerm, LocaleUtil.US);
 
-		Assert.assertEquals(3, documents.size(), 0);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
 		assertSearch("description", "description_en_US", documents, searchTerm);
 		assertSearch("description", "description_nl_NL", documents, searchTerm);
 
 		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
 
-		Assert.assertEquals(3, documents.size(), 0);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
 		assertSearch("description", "description_en_US", documents, searchTerm);
 		assertSearch("description", "description_nl_NL", documents, searchTerm);
 	}
@@ -127,13 +127,13 @@ public class MultiLanguageSearchTest {
 
 		List<Document> documents = _search(searchTerm, LocaleUtil.US);
 
-		Assert.assertEquals(3, documents.size(), 0);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
 		assertSearch("title", "title", documents, searchTerm);
 		assertSearch("title", "localized_title_nl_NL", documents, searchTerm);
 
 		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
 
-		Assert.assertEquals(3, documents.size(), 0);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
 		assertSearch("title", "title", documents, searchTerm);
 		assertSearch("title", "localized_title_nl_NL", documents, searchTerm);
 	}
@@ -144,17 +144,17 @@ public class MultiLanguageSearchTest {
 
 		List<Document> documents = _search(searchTerm, LocaleUtil.US);
 
-		Assert.assertEquals(3, documents.size(), 0);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
 
 		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
 
-		Assert.assertEquals(3, documents.size(), 0);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
 
 		searchTerm = "no field value";
 
 		documents = _search(searchTerm, LocaleUtil.US);
 
-		Assert.assertEquals(0, documents.size(), 0);
+		Assert.assertEquals(documents.toString(), 0, documents.size());
 	}
 
 	protected Group addGroup() throws Exception {
