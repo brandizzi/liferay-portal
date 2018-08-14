@@ -33,21 +33,24 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
+import com.liferay.portal.search.test.internal.util.UserSearchFixture;
 import com.liferay.portal.search.test.journal.util.JournalArticleBlueprint;
 import com.liferay.portal.search.test.journal.util.JournalArticleContent;
 import com.liferay.portal.search.test.journal.util.JournalArticleDescription;
+import com.liferay.portal.search.test.journal.util.JournalArticleSearchFixture;
 import com.liferay.portal.search.test.journal.util.JournalArticleTitle;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -60,7 +63,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Arquillian.class)
 @Sync
-public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
+public class MultiLanguageSearchTest {
 
 	@ClassRule
 	@Rule
@@ -68,12 +71,20 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 		new LiferayIntegrationTestRule();
 
 	@Before
-	@Override
 	public void setUp() throws Exception {
-		super.setUp();
+		WorkflowThreadLocal.setEnabled(false);
+
+		setUpJournalArticleSearchFixture();
+		setUpUserSearchFixture();
 
 		init();
 		addJournalArticlesExpectedResults();
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		journalArticleSearchFixture.tearDown();
+		userSearchFixture.tearDown();
 	}
 
 	@Test
@@ -296,6 +307,10 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 			});
 	}
 
+	protected SearchContext getSearchContext(String keywords) throws Exception {
+		return userSearchFixture.getSearchContext(keywords);
+	}
+
 	protected void init() throws Exception {
 		_title = "english";
 		_title_nl = "engels";
@@ -308,6 +323,24 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 		_user = addUser();
 		_indexer = _indexerRegistry.getIndexer(JournalArticle.class);
 	}
+
+	protected void setUpJournalArticleSearchFixture() throws Exception {
+		journalArticleSearchFixture.setUp();
+
+		_journalArticles = journalArticleSearchFixture.getJournalArticles();
+	}
+
+	protected void setUpUserSearchFixture() throws Exception {
+		userSearchFixture.setUp();
+
+		_groups = userSearchFixture.getGroups();
+		_users = userSearchFixture.getUsers();
+	}
+
+	protected final JournalArticleSearchFixture journalArticleSearchFixture =
+		new JournalArticleSearchFixture();
+	protected final UserSearchFixture userSearchFixture =
+		new UserSearchFixture();
 
 	protected class LocaleKeywordWrapper {
 
@@ -601,16 +634,20 @@ public class MultiLanguageSearchTest extends BaseMultiLanguageSearchTestCase {
 	private Group _group;
 
 	@DeleteAfterTestRun
-	private final List<Group> _groups = new ArrayList<>();
+	private List<Group> _groups;
 
 	private Indexer<JournalArticle> _indexer;
 	private final Map<String, Map<String, Map<String, Map<String, String>>>>
 		_indexTypeExpectedMap = new HashMap<>(3);
+
+	@DeleteAfterTestRun
+	private List<JournalArticle> _journalArticles;
+
 	private String _title;
 	private String _title_nl;
 	private User _user;
 
 	@DeleteAfterTestRun
-	private final List<User> _users = new ArrayList<>();
+	private List<User> _users;
 
 }
