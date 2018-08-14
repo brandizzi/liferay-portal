@@ -230,12 +230,12 @@ public class MultiLanguageSearchTest {
 		_indexTypeExpectedMap.put("title", articleIdTitleExpectedMap);
 
 		List<LocaleKeywordWrapper> localeKeywordWrapperContentList =
-			Arrays.asList(new LocaleKeywordWrapper(LocaleUtil.US, _content));
+			Arrays.asList(new LocaleKeywordWrapper(LocaleUtil.US, _usContent));
 		List<LocaleKeywordWrapper> localeKeywordWrapperDescriptionList =
 			Arrays.asList(
-				new LocaleKeywordWrapper(LocaleUtil.US, _description));
+				new LocaleKeywordWrapper(LocaleUtil.US, _usDescription));
 		List<LocaleKeywordWrapper> localeKeywordWrapperTitleList =
-			Arrays.asList(new LocaleKeywordWrapper(LocaleUtil.US, _title));
+			Arrays.asList(new LocaleKeywordWrapper(LocaleUtil.US, _usTitle));
 
 		JournalArticle journalArticle = addJournalArticle(
 			_group, _user, LocaleUtil.US, localeKeywordWrapperTitleList,
@@ -247,14 +247,17 @@ public class MultiLanguageSearchTest {
 			articleIdContentExpectedMap, journalArticle);
 
 		localeKeywordWrapperContentList = Arrays.asList(
-			new LocaleKeywordWrapper(LocaleUtil.US, _content),
-			new LocaleKeywordWrapper(LocaleUtil.NETHERLANDS, _content_nl));
+			new LocaleKeywordWrapper(LocaleUtil.US, _usContent),
+			new LocaleKeywordWrapper(
+				LocaleUtil.NETHERLANDS, _netherandsContent));
 		localeKeywordWrapperDescriptionList = Arrays.asList(
-			new LocaleKeywordWrapper(LocaleUtil.US, _description),
-			new LocaleKeywordWrapper(LocaleUtil.NETHERLANDS, _description_nl));
+			new LocaleKeywordWrapper(LocaleUtil.US, _usDescription),
+			new LocaleKeywordWrapper(
+				LocaleUtil.NETHERLANDS, _netherlandsDescription));
 		localeKeywordWrapperTitleList = Arrays.asList(
-			new LocaleKeywordWrapper(LocaleUtil.US, _title),
-			new LocaleKeywordWrapper(LocaleUtil.NETHERLANDS, _title_nl));
+			new LocaleKeywordWrapper(LocaleUtil.US, _usTitle),
+			new LocaleKeywordWrapper(
+				LocaleUtil.NETHERLANDS, _netherlandsTitle));
 
 		journalArticle = addJournalArticle(
 			_group, _user, LocaleUtil.US, localeKeywordWrapperTitleList,
@@ -266,11 +269,11 @@ public class MultiLanguageSearchTest {
 			articleIdContentExpectedMap, journalArticle);
 
 		localeKeywordWrapperContentList = Arrays.asList(
-			new LocaleKeywordWrapper(LocaleUtil.NETHERLANDS, _content));
+			new LocaleKeywordWrapper(LocaleUtil.NETHERLANDS, _usContent));
 		localeKeywordWrapperDescriptionList = Arrays.asList(
-			new LocaleKeywordWrapper(LocaleUtil.NETHERLANDS, _description));
+			new LocaleKeywordWrapper(LocaleUtil.NETHERLANDS, _usDescription));
 		localeKeywordWrapperTitleList = Arrays.asList(
-			new LocaleKeywordWrapper(LocaleUtil.NETHERLANDS, _title));
+			new LocaleKeywordWrapper(LocaleUtil.NETHERLANDS, _usTitle));
 
 		journalArticle = addJournalArticle(
 			_group, _user, LocaleUtil.NETHERLANDS,
@@ -312,12 +315,12 @@ public class MultiLanguageSearchTest {
 	}
 
 	protected void init() throws Exception {
-		_title = "english";
-		_title_nl = "engels";
-		_description = "description";
-		_description_nl = "beschrijving";
-		_content = "content";
-		_content_nl = "inhoud";
+		_usTitle = "english";
+		_netherlandsTitle = "engels";
+		_usDescription = "description";
+		_netherlandsDescription = "beschrijving";
+		_usContent = "content";
+		_netherandsContent = "inhoud";
 
 		_group = addGroup();
 		_user = addUser();
@@ -373,15 +376,15 @@ public class MultiLanguageSearchTest {
 
 		Map<String, String> titleStrings = new HashMap<String, String>() {
 			{
-				put("title_en_US", _title);
+				put("title_en_US", _usTitle);
 			}
 		};
 
 		Map<String, String> localizedTitleStrings =
 			new HashMap<String, String>() {
 				{
-					put("localized_title_nl_NL", _title);
-					put("localized_title_nl_NL_sortable", _title);
+					put("localized_title_nl_NL", _usTitle);
+					put("localized_title_nl_NL_sortable", _usTitle);
 				}
 			};
 
@@ -397,7 +400,7 @@ public class MultiLanguageSearchTest {
 
 		Map<String, String> descStrings_US = new HashMap<String, String>() {
 			{
-				put("description_en_US", _description);
+				put("description_en_US", _usDescription);
 			}
 		};
 
@@ -416,7 +419,7 @@ public class MultiLanguageSearchTest {
 
 		Map<String, String> contentStrings_US = new HashMap<String, String>() {
 			{
-				put("content_en_US", _content);
+				put("content_en_US", _usContent);
 			}
 		};
 
@@ -445,16 +448,16 @@ public class MultiLanguageSearchTest {
 
 		HashMap<String, String> titleStrings = new HashMap<String, String>() {
 			{
-				put("title_en_US", _title);
-				put("title_nl_NL", _title_nl);
+				put("title_en_US", _usTitle);
+				put("title_nl_NL", _netherlandsTitle);
 			}
 		};
 
 		HashMap<String, String> localizedTitleStrings =
 			new HashMap<String, String>() {
 				{
-					put("localized_title_nl_NL", _title_nl);
-					put("localized_title_nl_NL_sortable", _title_nl);
+					put("localized_title_nl_NL", _netherlandsTitle);
+					put("localized_title_nl_NL_sortable", _netherlandsTitle);
 				}
 			};
 
@@ -470,13 +473,13 @@ public class MultiLanguageSearchTest {
 
 		Map<String, String> descStrings_US = new HashMap<String, String>() {
 			{
-				put("description_en_US", _description);
+				put("description_en_US", _usDescription);
 			}
 		};
 
 		Map<String, String> descStrings_NL = new HashMap<String, String>() {
 			{
-				put("description_nl_NL", _description_nl);
+				put("description_nl_NL", _netherlandsDescription);
 			}
 		};
 
@@ -493,13 +496,13 @@ public class MultiLanguageSearchTest {
 
 		Map<String, String> contentStrings_US = new HashMap<String, String>() {
 			{
-				put("content_en_US", _content);
+				put("content_en_US", _usContent);
 			}
 		};
 
 		Map<String, String> contentStrings_NL = new HashMap<String, String>() {
 			{
-				put("content_nl_NL", _content_nl);
+				put("content_nl_NL", _netherandsContent);
 			}
 		};
 
@@ -526,15 +529,15 @@ public class MultiLanguageSearchTest {
 
 		HashMap<String, String> titleStrings = new HashMap<String, String>() {
 			{
-				put("title_nl_NL", _title);
+				put("title_nl_NL", _usTitle);
 			}
 		};
 
 		HashMap<String, String> localizedTitleStrings =
 			new HashMap<String, String>() {
 				{
-					put("localized_title_nl_NL", _title);
-					put("localized_title_nl_NL_sortable", _title);
+					put("localized_title_nl_NL", _usTitle);
+					put("localized_title_nl_NL_sortable", _usTitle);
 				}
 
 			};
@@ -551,7 +554,7 @@ public class MultiLanguageSearchTest {
 
 		Map<String, String> descStrings_NL = new HashMap<String, String>() {
 			{
-				put("description_nl_NL", _description);
+				put("description_nl_NL", _usDescription);
 			}
 		};
 
@@ -572,7 +575,7 @@ public class MultiLanguageSearchTest {
 			new HashMap<String, String>() {
 
 				{
-					put("content_nl_NL", _content);
+					put("content_nl_NL", _usContent);
 				}
 
 			};
@@ -627,10 +630,6 @@ public class MultiLanguageSearchTest {
 	@Inject
 	private static IndexerRegistry _indexerRegistry;
 
-	private String _content;
-	private String _content_nl;
-	private String _description;
-	private String _description_nl;
 	private Group _group;
 
 	@DeleteAfterTestRun
@@ -643,11 +642,16 @@ public class MultiLanguageSearchTest {
 	@DeleteAfterTestRun
 	private List<JournalArticle> _journalArticles;
 
-	private String _title;
-	private String _title_nl;
+	private String _netherandsContent;
+	private String _netherlandsDescription;
+	private String _netherlandsTitle;
+	private String _usContent;
+	private String _usDescription;
 	private User _user;
 
 	@DeleteAfterTestRun
 	private List<User> _users;
+
+	private String _usTitle;
 
 }
