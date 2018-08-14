@@ -167,9 +167,9 @@ public class MultiLanguageSearchTest {
 
 	protected JournalArticle addJournalArticle(
 			Group group, User user, Locale defaultLocal,
-			List<LocaleKeywordWrapper> localeKeywordWrapperTitle,
-			List<LocaleKeywordWrapper> localeKeywordWrapperDescription,
-			List<LocaleKeywordWrapper> localeKeywordWrapperContent)
+			List<LocaleKeywordWrapper> titleLocaleKeywordWrappers,
+			List<LocaleKeywordWrapper> descriptionLocaleKeywordWrappers,
+			List<LocaleKeywordWrapper> contentLocaleKeywordWrappers)
 		throws Exception {
 
 		return journalArticleSearchFixture.addArticle(
@@ -180,7 +180,7 @@ public class MultiLanguageSearchTest {
 						{
 							defaultLocale = defaultLocal;
 							name = "content";
-							localeKeywordWrapperContent.forEach(
+							contentLocaleKeywordWrappers.forEach(
 								wrapper -> {
 									put(
 										wrapper.getLocale(),
@@ -191,7 +191,7 @@ public class MultiLanguageSearchTest {
 					journalArticleDescription =
 						new JournalArticleDescription() {
 							{
-								localeKeywordWrapperDescription.forEach(
+								descriptionLocaleKeywordWrappers.forEach(
 									wrapper -> {
 										put(
 											wrapper.getLocale(),
@@ -202,7 +202,7 @@ public class MultiLanguageSearchTest {
 						};
 					journalArticleTitle = new JournalArticleTitle() {
 						{
-							localeKeywordWrapperTitle.forEach(
+							titleLocaleKeywordWrappers.forEach(
 								wrapper -> {
 									put(
 										wrapper.getLocale(),
