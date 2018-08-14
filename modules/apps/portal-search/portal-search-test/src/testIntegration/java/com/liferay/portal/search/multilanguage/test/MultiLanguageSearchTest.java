@@ -113,15 +113,15 @@ public class MultiLanguageSearchTest {
 
 		List<Document> documents = _search(searchTerm, LocaleUtil.US);
 
-		Assert.assertEquals(3, documents.size(), 0);
-		assertSearch("content", "content_en_US", documents, searchTerm);
-		assertSearch("content", "content_nl_NL", documents, searchTerm);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
+		assertContentSearch("content_en_US", documents, searchTerm);
+		assertContentSearch("content_nl_NL", documents, searchTerm);
 
 		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
 
-		Assert.assertEquals(3, documents.size(), 0);
-		assertSearch("content", "content_en_US", documents, searchTerm);
-		assertSearch("content", "content_nl_NL", documents, searchTerm);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
+		assertContentSearch("content_en_US", documents, searchTerm);
+		assertContentSearch("content_nl_NL", documents, searchTerm);
 	}
 
 	@Test
@@ -130,15 +130,15 @@ public class MultiLanguageSearchTest {
 
 		List<Document> documents = _search(searchTerm, LocaleUtil.US);
 
-		Assert.assertEquals(3, documents.size(), 0);
-		assertSearch("description", "description_en_US", documents, searchTerm);
-		assertSearch("description", "description_nl_NL", documents, searchTerm);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
+		assertDescriptionSearch("description_en_US", documents, searchTerm);
+		assertDescriptionSearch("description_nl_NL", documents, searchTerm);
 
 		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
 
-		Assert.assertEquals(3, documents.size(), 0);
-		assertSearch("description", "description_en_US", documents, searchTerm);
-		assertSearch("description", "description_nl_NL", documents, searchTerm);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
+		assertDescriptionSearch("description_en_US", documents, searchTerm);
+		assertDescriptionSearch("description_nl_NL", documents, searchTerm);
 	}
 
 	@Test
@@ -147,15 +147,15 @@ public class MultiLanguageSearchTest {
 
 		List<Document> documents = _search(searchTerm, LocaleUtil.US);
 
-		Assert.assertEquals(3, documents.size(), 0);
-		assertSearch("title", "title", documents, searchTerm);
-		assertSearch("title", "localized_title_nl_NL", documents, searchTerm);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
+		assertTitleSearch("title", documents, searchTerm);
+		assertTitleSearch("localized_title_nl_NL", documents, searchTerm);
 
 		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
 
-		Assert.assertEquals(3, documents.size(), 0);
-		assertSearch("title", "title", documents, searchTerm);
-		assertSearch("title", "localized_title_nl_NL", documents, searchTerm);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
+		assertTitleSearch("title", documents, searchTerm);
+		assertTitleSearch("localized_title_nl_NL", documents, searchTerm);
 	}
 
 	@Test
@@ -164,17 +164,17 @@ public class MultiLanguageSearchTest {
 
 		List<Document> documents = _search(searchTerm, LocaleUtil.US);
 
-		Assert.assertEquals(3, documents.size(), 0);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
 
 		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
 
-		Assert.assertEquals(3, documents.size(), 0);
+		Assert.assertEquals(documents.toString(), 3, documents.size());
 
 		searchTerm = "no field value";
 
 		documents = _search(searchTerm, LocaleUtil.US);
 
-		Assert.assertEquals(0, documents.size(), 0);
+		Assert.assertEquals(documents.toString(), 0, documents.size());
 	}
 
 	protected Group addGroup() throws Exception {
@@ -309,6 +309,18 @@ public class MultiLanguageSearchTest {
 		return user;
 	}
 
+	protected void assertContentSearch(
+		String suffixedField, List<Document> documents, String searchTerm) {
+
+		assertSearch("content", suffixedField, documents, searchTerm);
+	}
+
+	protected void assertDescriptionSearch(
+		String suffixedField, List<Document> documents, String searchTerm) {
+
+		assertSearch("description", suffixedField, documents, searchTerm);
+	}
+
 	protected void assertSearch(
 		String indexType, String prefix, List<Document> documents,
 		String searchTerm) {
@@ -324,6 +336,12 @@ public class MultiLanguageSearchTest {
 				FieldValuesAssert.assertFieldValues(
 					expected.get(prefix), prefix, doc, searchTerm);
 			});
+	}
+
+	protected void assertTitleSearch(
+		String suffixedField, List<Document> documents, String searchTerm) {
+
+		assertSearch("title", suffixedField, documents, searchTerm);
 	}
 
 	protected SearchContext getSearchContext(String keywords) throws Exception {
@@ -346,6 +364,8 @@ public class MultiLanguageSearchTest {
 
 	protected final JournalArticleSearchFixture journalArticleSearchFixture =
 		new JournalArticleSearchFixture();
+	protected final UserSearchFixture userSearchFixture =
+		new UserSearchFixture();
 
 	protected class LocaleKeywordWrapper {
 
@@ -398,28 +418,29 @@ public class MultiLanguageSearchTest {
 				}
 			};
 
-			Map<String, String> descStrings_US = new HashMap<String, String>() {
-				{
-					put("description_en_US", _description);
-				}
-			};
-			
-			Map<String, String> descStrings_NL = new HashMap<>();
-			
-			Map<String, Map<String, String>> descMap =
-					new HashMap<String, Map<String, String>>() {
+		Map<String, String> descStrings_US = new HashMap<String, String>() {
+			{
+				put("description_en_US", _description);
+			}
+		};
+
+		Map<String, String> descStrings_NL = new HashMap<>();
+
+		Map<String, Map<String, String>> descMap =
+			new HashMap<String, Map<String, String>>() {
 				{
 					put("description_en_US", descStrings_US);
 					put("description_nl_NL", descStrings_NL);
 				}
 			};
-			
-			Map<String, String> contentStrings_US = new HashMap<String, String>() {
-				{
-					put("content_en_US", _content);
-				}
-			};
-			
+
+		Map<String, String> contentStrings_US = new HashMap<String, String>() {
+			{
+				put("content_en_US", _content);
+			}
+
+		};
+
 		Map<String, String> contentStrings_NL = new HashMap<>();
 
 		Map<String, Map<String, String>> contentsMap =
@@ -654,8 +675,5 @@ public class MultiLanguageSearchTest {
 
 	@DeleteAfterTestRun
 	private List<User> _users = new ArrayList<>();
-
-		protected final UserSearchFixture userSearchFixture =
-			new UserSearchFixture();
 
 }
