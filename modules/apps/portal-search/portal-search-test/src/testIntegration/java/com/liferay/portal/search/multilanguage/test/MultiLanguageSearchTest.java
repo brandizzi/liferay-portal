@@ -44,7 +44,6 @@ import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -166,50 +165,19 @@ public class MultiLanguageSearchTest {
 	}
 
 	protected JournalArticle addJournalArticle(
-			Group group, User user, Locale locale,
-			List<LocaleKeywordWrapper> titleLocaleKeywordWrappers,
-			List<LocaleKeywordWrapper> descriptionLocaleKeywordWrappers,
-			List<LocaleKeywordWrapper> contentLocaleKeywordWrappers)
+			Group group, User user,
+			JournalArticleContent journalArticleContentParam,
+			JournalArticleDescription journalArticleDescriptionParam,
+			JournalArticleTitle journalArticleTitleParam)
 		throws Exception {
 
 		return journalArticleSearchFixture.addArticle(
 			new JournalArticleBlueprint() {
 				{
 					groupId = group.getGroupId();
-					journalArticleContent = new JournalArticleContent() {
-						{
-							defaultLocale = locale;
-							name = "content";
-							contentLocaleKeywordWrappers.forEach(
-								localeKeywordWrapper -> {
-									put(
-										localeKeywordWrapper.getLocale(),
-										localeKeywordWrapper.getKeyword());
-								});
-						}
-					};
-					journalArticleDescription =
-						new JournalArticleDescription() {
-							{
-								descriptionLocaleKeywordWrappers.forEach(
-									localeKeywordWrapper -> {
-										put(
-											localeKeywordWrapper.getLocale(),
-											localeKeywordWrapper.getKeyword());
-									});
-							}
-
-						};
-					journalArticleTitle = new JournalArticleTitle() {
-						{
-							titleLocaleKeywordWrappers.forEach(
-								localeKeywordWrapper -> {
-									put(
-										localeKeywordWrapper.getLocale(),
-										localeKeywordWrapper.getKeyword());
-								});
-						}
-					};
+					journalArticleContent = journalArticleContentParam;
+					journalArticleDescription = journalArticleDescriptionParam;
+					journalArticleTitle = journalArticleTitleParam;
 					userId = user.getUserId();
 				}
 			});
@@ -229,60 +197,96 @@ public class MultiLanguageSearchTest {
 			"description", articleIdDescriptionExpectedMap);
 		_indexTypeExpectedMap.put("title", articleIdTitleExpectedMap);
 
-		List<LocaleKeywordWrapper> localeKeywordWrapperContentList =
-			Arrays.asList(new LocaleKeywordWrapper(LocaleUtil.US, _usContent));
-		List<LocaleKeywordWrapper> localeKeywordWrapperDescriptionList =
-			Arrays.asList(
-				new LocaleKeywordWrapper(LocaleUtil.US, _usDescription));
-		List<LocaleKeywordWrapper> localeKeywordWrapperTitleList =
-			Arrays.asList(new LocaleKeywordWrapper(LocaleUtil.US, _usTitle));
+		JournalArticleContent usJournalArticleContent =
+			new JournalArticleContent() {
+				{
+					defaultLocale = LocaleUtil.US;
+					name = "content";
+					put(LocaleUtil.US, _usContent);
+				}
+			};
+		JournalArticleDescription usJournalArticleDescription =
+			new JournalArticleDescription() {
+				{
+					put(LocaleUtil.US, _usDescription);
+				}
+			};
+		JournalArticleTitle usJournalArticleTitle = new JournalArticleTitle() {
+			{
+				put(LocaleUtil.US, _usTitle);
+			}
+		};
 
-		JournalArticle journalArticle = addJournalArticle(
-			_group, _user, LocaleUtil.US, localeKeywordWrapperTitleList,
-			localeKeywordWrapperDescriptionList,
-			localeKeywordWrapperContentList);
+		JournalArticle usJournalArticle = addJournalArticle(
+			_group, _user, usJournalArticleContent, usJournalArticleDescription,
+			usJournalArticleTitle);
 
 		_addExpectedValueMap_1(
 			articleIdTitleExpectedMap, articleIdDescriptionExpectedMap,
-			articleIdContentExpectedMap, journalArticle);
+			articleIdContentExpectedMap, usJournalArticle);
 
-		localeKeywordWrapperContentList = Arrays.asList(
-			new LocaleKeywordWrapper(LocaleUtil.US, _usContent),
-			new LocaleKeywordWrapper(
-				LocaleUtil.NETHERLANDS, _netherandsContent));
-		localeKeywordWrapperDescriptionList = Arrays.asList(
-			new LocaleKeywordWrapper(LocaleUtil.US, _usDescription),
-			new LocaleKeywordWrapper(
-				LocaleUtil.NETHERLANDS, _netherlandsDescription));
-		localeKeywordWrapperTitleList = Arrays.asList(
-			new LocaleKeywordWrapper(LocaleUtil.US, _usTitle),
-			new LocaleKeywordWrapper(
-				LocaleUtil.NETHERLANDS, _netherlandsTitle));
+		JournalArticleContent netherlandsUSJournalArticleContent =
+			new JournalArticleContent() {
+				{
+					defaultLocale = LocaleUtil.US;
+					name = "content";
+					put(LocaleUtil.NETHERLANDS, _netherandsContent);
+					put(LocaleUtil.US, _usContent);
+				}
+			};
+		JournalArticleDescription netherlandsUSJournalArticleDescription =
+			new JournalArticleDescription() {
+				{
+					put(LocaleUtil.NETHERLANDS, _netherlandsDescription);
+					put(LocaleUtil.US, _usDescription);
+				}
+			};
+		JournalArticleTitle netherlandsUSJournalArticleTitle =
+			new JournalArticleTitle() {
+				{
+					put(LocaleUtil.NETHERLANDS, _netherlandsTitle);
+					put(LocaleUtil.US, _usTitle);
+				}
+			};
 
-		journalArticle = addJournalArticle(
-			_group, _user, LocaleUtil.US, localeKeywordWrapperTitleList,
-			localeKeywordWrapperDescriptionList,
-			localeKeywordWrapperContentList);
+		JournalArticle netherlandsUSJournalArticle = addJournalArticle(
+			_group, _user, netherlandsUSJournalArticleContent,
+			netherlandsUSJournalArticleDescription,
+			netherlandsUSJournalArticleTitle);
 
 		_addExpectedValueMap_2(
 			articleIdTitleExpectedMap, articleIdDescriptionExpectedMap,
-			articleIdContentExpectedMap, journalArticle);
+			articleIdContentExpectedMap, netherlandsUSJournalArticle);
 
-		localeKeywordWrapperContentList = Arrays.asList(
-			new LocaleKeywordWrapper(LocaleUtil.NETHERLANDS, _usContent));
-		localeKeywordWrapperDescriptionList = Arrays.asList(
-			new LocaleKeywordWrapper(LocaleUtil.NETHERLANDS, _usDescription));
-		localeKeywordWrapperTitleList = Arrays.asList(
-			new LocaleKeywordWrapper(LocaleUtil.NETHERLANDS, _usTitle));
+		JournalArticleContent netherlandsJournalArticleContent =
+			new JournalArticleContent() {
+				{
+					defaultLocale = LocaleUtil.NETHERLANDS;
+					name = "content";
+					put(LocaleUtil.NETHERLANDS, _usContent);
+				}
+			};
+		JournalArticleDescription netherlandsJournalArticleDescription =
+			new JournalArticleDescription() {
+				{
+					put(LocaleUtil.NETHERLANDS, _usDescription);
+				}
+			};
+		JournalArticleTitle netherlandsJournalArticleTitle =
+			new JournalArticleTitle() {
+				{
+					put(LocaleUtil.NETHERLANDS, _usTitle);
+				}
+			};
 
-		journalArticle = addJournalArticle(
-			_group, _user, LocaleUtil.NETHERLANDS,
-			localeKeywordWrapperTitleList, localeKeywordWrapperDescriptionList,
-			localeKeywordWrapperContentList);
+		JournalArticle netherlandsJournalArticle = addJournalArticle(
+			_group, _user, netherlandsJournalArticleContent,
+			netherlandsJournalArticleDescription,
+			netherlandsJournalArticleTitle);
 
 		_addExpectedValueMap_3(
 			articleIdTitleExpectedMap, articleIdDescriptionExpectedMap,
-			articleIdContentExpectedMap, journalArticle);
+			articleIdContentExpectedMap, netherlandsJournalArticle);
 	}
 
 	protected User addUser() throws Exception {
@@ -344,26 +348,6 @@ public class MultiLanguageSearchTest {
 		new JournalArticleSearchFixture();
 	protected final UserSearchFixture userSearchFixture =
 		new UserSearchFixture();
-
-	protected class LocaleKeywordWrapper {
-
-		public LocaleKeywordWrapper(Locale locale, String keyword) {
-			_locale = locale;
-			_keyword = keyword;
-		}
-
-		public String getKeyword() {
-			return _keyword;
-		}
-
-		public Locale getLocale() {
-			return _locale;
-		}
-
-		private final String _keyword;
-		private final Locale _locale;
-
-	}
 
 	@SuppressWarnings("serial")
 	private void _addExpectedValueMap_1(
