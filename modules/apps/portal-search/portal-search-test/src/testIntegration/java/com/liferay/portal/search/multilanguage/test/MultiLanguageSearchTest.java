@@ -166,7 +166,7 @@ public class MultiLanguageSearchTest {
 	}
 
 	protected JournalArticle addJournalArticle(
-			Group group, User user, Locale defaultLocal,
+			Group group, User user, Locale locale,
 			List<LocaleKeywordWrapper> titleLocaleKeywordWrappers,
 			List<LocaleKeywordWrapper> descriptionLocaleKeywordWrappers,
 			List<LocaleKeywordWrapper> contentLocaleKeywordWrappers)
@@ -178,13 +178,13 @@ public class MultiLanguageSearchTest {
 					groupId = group.getGroupId();
 					journalArticleContent = new JournalArticleContent() {
 						{
-							defaultLocale = defaultLocal;
+							defaultLocale = locale;
 							name = "content";
 							contentLocaleKeywordWrappers.forEach(
-								wrapper -> {
+								localeKeywordWrapper -> {
 									put(
-										wrapper.getLocale(),
-										wrapper.getKeyword());
+										localeKeywordWrapper.getLocale(),
+										localeKeywordWrapper.getKeyword());
 								});
 						}
 					};
@@ -192,10 +192,10 @@ public class MultiLanguageSearchTest {
 						new JournalArticleDescription() {
 							{
 								descriptionLocaleKeywordWrappers.forEach(
-									wrapper -> {
+									localeKeywordWrapper -> {
 										put(
-											wrapper.getLocale(),
-											wrapper.getKeyword());
+											localeKeywordWrapper.getLocale(),
+											localeKeywordWrapper.getKeyword());
 									});
 							}
 
@@ -203,10 +203,10 @@ public class MultiLanguageSearchTest {
 					journalArticleTitle = new JournalArticleTitle() {
 						{
 							titleLocaleKeywordWrappers.forEach(
-								wrapper -> {
+								localeKeywordWrapper -> {
 									put(
-										wrapper.getLocale(),
-										wrapper.getKeyword());
+										localeKeywordWrapper.getLocale(),
+										localeKeywordWrapper.getKeyword());
 								});
 						}
 					};
@@ -298,12 +298,12 @@ public class MultiLanguageSearchTest {
 			_indexTypeExpectedMap.get(indexType);
 
 		documents.forEach(
-			doc -> {
+			document -> {
 				Map<String, Map<String, String>> expected =
-					articleIdExpectedMap.get(doc.get(Field.ARTICLE_ID));
+					articleIdExpectedMap.get(document.get(Field.ARTICLE_ID));
 
 				FieldValuesAssert.assertFieldValues(
-					expected.get(prefix), prefix, doc, searchTerm);
+					expected.get(prefix), prefix, document, searchTerm);
 			});
 	}
 
