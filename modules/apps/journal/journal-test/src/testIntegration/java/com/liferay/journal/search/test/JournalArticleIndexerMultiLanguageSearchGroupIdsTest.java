@@ -74,41 +74,33 @@ public class JournalArticleIndexerMultiLanguageSearchGroupIdsTest {
 		ServiceTestUtil.setUser(TestPropsValues.getUser());
 
 		CompanyThreadLocal.setCompanyId(TestPropsValues.getCompanyId());
+		
+		Group japanGroup = addGroup(LocaleUtil.JAPAN);
+		Group usGroup = addGroup(LocaleUtil.US);
 
 		_indexer = _indexerRegistry.getIndexer(JournalArticle.class);
-
-		_japanGroup = addGroup(LocaleUtil.JAPAN);
-
-		_usGroup = addGroup(LocaleUtil.US);
-
-		_japanJournalArticleBuilder = createJournalArticleBuilder(_japanGroup);
-
-		_usJournalArticleBuilder = createJournalArticleBuilder(_usGroup);
+		_japanGroup = japanGroup;
+		_japanJournalArticleBuilder = createJournalArticleBuilder(japanGroup);
+		_usGroup = usGroup;
+		_usJournalArticleBuilder = createJournalArticleBuilder(usGroup);
 	}
 
 	@Test
 	public void testSearchWithJapanAndUSGroupIds() throws Exception {
 		String japanContent = RandomTestUtil.randomString();
-
 		String japanTitle = "新規作成";
-
-		addJapanArticle(japanTitle, japanContent);
-
 		String usContent = RandomTestUtil.randomString();
-
 		String usTitle = "entity title";
 
+		addJapanArticle(japanTitle, japanContent);
 		addUSArticle(usTitle, usContent);
 
 		Map<String, String> japanContentMap = getContentMap(
 			japanContent, LocaleUtil.JAPAN);
-
 		Map<String, String> japanTitleMap = getTitleMap(
 			japanTitle, LocaleUtil.JAPAN);
-
 		Map<String, String> usContentMap = getContentMap(
 			usContent, LocaleUtil.US);
-
 		Map<String, String> usTitleMap = getTitleMap(usTitle, LocaleUtil.US);
 
 		String searchTerm = "entity 作成";
@@ -121,7 +113,6 @@ public class JournalArticleIndexerMultiLanguageSearchGroupIdsTest {
 		assertContentAndTitleValues(
 			LocaleUtil.JAPAN, documents, japanContentMap, japanTitleMap,
 			searchTerm);
-
 		assertContentAndTitleValues(
 			LocaleUtil.US, documents, usContentMap, usTitleMap, searchTerm);
 	}
@@ -129,20 +120,15 @@ public class JournalArticleIndexerMultiLanguageSearchGroupIdsTest {
 	@Test
 	public void testSearchWithJapanGroupId() throws Exception {
 		String japanContent = RandomTestUtil.randomString();
-
 		String japanTitle = "新規作成";
-
-		addJapanArticle(japanTitle, japanContent);
-
 		String usContent = RandomTestUtil.randomString();
-
 		String usTitle = "entity title";
 
+		addJapanArticle(japanTitle, japanContent);
 		addUSArticle(usTitle, usContent);
 
 		Map<String, String> contentMap = getContentMap(
 			japanContent, LocaleUtil.JAPAN);
-
 		Map<String, String> titleMap = getTitleMap(
 			japanTitle, LocaleUtil.JAPAN);
 
@@ -152,7 +138,6 @@ public class JournalArticleIndexerMultiLanguageSearchGroupIdsTest {
 
 		FieldValuesAssert.assertFieldValues(
 			contentMap, "content", document, searchTerm);
-
 		FieldValuesAssert.assertFieldValues(
 			titleMap, "title", document, searchTerm);
 	}
@@ -160,26 +145,19 @@ public class JournalArticleIndexerMultiLanguageSearchGroupIdsTest {
 	@Test
 	public void testSearchWithNoGroupIds() throws Exception {
 		String japanContent = RandomTestUtil.randomString();
-
 		String japanTitle = "新規作成";
-
-		addJapanArticle(japanTitle, japanContent);
-
 		String usContent = RandomTestUtil.randomString();
-
 		String usTitle = "entity title";
 
+		addJapanArticle(japanTitle, japanContent);
 		addUSArticle(usTitle, usContent);
 
 		Map<String, String> japanContentMap = getContentMap(
 			japanContent, LocaleUtil.JAPAN);
-
 		Map<String, String> japanTitleMap = getTitleMap(
 			japanTitle, LocaleUtil.JAPAN);
-
 		Map<String, String> usContentMap = getContentMap(
 			usContent, LocaleUtil.US);
-
 		Map<String, String> usTitleMap = getTitleMap(usTitle, LocaleUtil.US);
 
 		String searchTerm = "entity 作成";
@@ -191,7 +169,6 @@ public class JournalArticleIndexerMultiLanguageSearchGroupIdsTest {
 		assertContentAndTitleValues(
 			LocaleUtil.JAPAN, documents, japanContentMap, japanTitleMap,
 			searchTerm);
-
 		assertContentAndTitleValues(
 			LocaleUtil.US, documents, usContentMap, usTitleMap, searchTerm);
 	}

@@ -235,6 +235,42 @@ public class MultiLanguageSearchTest {
 			});
 	}
 
+	protected JournalArticle addJournalArticle(Group group, User user,
+			Locale locale, Map<Locale, String> contentMap,
+			Map<Locale, String> descriptionMap,
+			Map<Locale, String> titleMap) throws Exception {
+
+		return journalArticleSearchFixture.addArticle(
+				new JournalArticleBlueprint() {
+					{
+						groupId = group.getGroupId();
+						journalArticleContent = new JournalArticleContent() {
+							{
+								defaultLocale = locale;
+								name = "content";
+								contentMap.forEach(
+									(locale, content) -> put(locale, content));
+							}
+						};
+						journalArticleDescription =
+							new JournalArticleDescription() {
+								{
+									descriptionMap.forEach(
+										(locale, content) -> put(locale, content));
+								}
+
+							};
+						journalArticleTitle = new JournalArticleTitle() {
+							{
+								titleMap.forEach(
+									(locale, content) -> put(locale, content));
+							}
+						};
+						userId = user.getUserId();
+					}
+				});
+	}
+
 	protected void addJournalArticlesExpectedResults() throws Exception {
 		Map<String, Map<String, Map<String, String>>>
 			articleIdTitleExpectedMap = new HashMap<>();
@@ -257,10 +293,26 @@ public class MultiLanguageSearchTest {
 		List<LocaleKeywordWrapper> localeKeywordWrapperTitleList =
 			Arrays.asList(new LocaleKeywordWrapper(LocaleUtil.US, _title));
 
+		Map<Locale, String> contentMap = new HashMap<Locale, String>() {
+			{
+				put(LocaleUtil.US, _content);
+			}
+		};
+
+		Map<Locale, String> descriptionMap = new HashMap<Locale, String>() {
+			{
+				put(LocaleUtil.US, _description);
+			}
+		};
+
+		Map<Locale, String> titleMap = new HashMap<Locale, String>() {
+			{
+				put(LocaleUtil.US, _description);
+			}
+		};
+
 		JournalArticle journalArticle = addJournalArticle(
-			_group, _user, LocaleUtil.US, localeKeywordWrapperTitleList,
-			localeKeywordWrapperDescriptionList,
-			localeKeywordWrapperContentList);
+			_group, _user, LocaleUtil.US, contentMap, descriptionMap, titleMap);
 
 		_addExpectedValueMap_1(
 			articleIdTitleExpectedMap, articleIdDescriptionExpectedMap,
@@ -312,7 +364,18 @@ public class MultiLanguageSearchTest {
 	protected void assertContentSearch(
 		String suffixedField, List<Document> documents, String searchTerm) {
 
-		assertSearch("content", suffixedField, documents, searchTerm);
+		Map<String, Map<String, Map<String, String>>> articleIdExpectedMap =
+			_indexTypeExpectedMap.get("content");
+
+		documents.forEach(
+			doc -> {
+				Map<String, Map<String, String>> expected =
+					articleIdExpectedMap.get(doc.get(Field.ARTICLE_ID));
+
+				FieldValuesAssert.assertFieldValues(
+					expected.get(suffixedField), suffixedField, doc,
+					searchTerm);
+			});
 	}
 
 	protected void assertDescriptionSearch(
