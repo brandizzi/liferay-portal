@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -157,14 +158,6 @@ public class MultiLanguageSearchTest {
 		Assert.assertEquals(documents.toString(), 0, documents.size());
 	}
 
-	protected Group addGroup() throws Exception {
-		Group group = GroupTestUtil.addGroup();
-
-		_groups.add(group);
-
-		return group;
-	}
-
 	protected JournalArticle addJournalArticle(
 			Group group, User user,
 			JournalArticleContent journalArticleContentParam,
@@ -281,14 +274,6 @@ public class MultiLanguageSearchTest {
 			netherlandsJournalArticleTitle);
 	}
 
-	protected User addUser() throws Exception {
-		User user = UserTestUtil.addUser();
-
-		_users.add(user);
-
-		return user;
-	}
-
 	protected void assertSearch(
 		List<Document> documents,
 		Map<String, ? extends LocalizedValuesMap> localizedValuesMaps,
@@ -329,6 +314,11 @@ public class MultiLanguageSearchTest {
 	}
 
 	protected void init() throws Exception {
+		Group group = userSearchFixture.addGroup();
+
+		User user = userSearchFixture.addUser(
+			RandomTestUtil.randomString(), group);
+
 		_usTitle = "english";
 		_netherlandsTitle = "engels";
 		_usDescription = "description";
@@ -336,8 +326,8 @@ public class MultiLanguageSearchTest {
 		_usContent = "content";
 		_netherandsContent = "inhoud";
 
-		_group = addGroup();
-		_user = addUser();
+		_group = group;
+		_user = user;
 		_indexer = _indexerRegistry.getIndexer(JournalArticle.class);
 	}
 
