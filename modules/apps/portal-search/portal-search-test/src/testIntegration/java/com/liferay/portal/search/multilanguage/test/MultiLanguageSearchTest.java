@@ -30,10 +30,8 @@ import com.liferay.portal.kernel.settings.LocalizedValuesMap;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.Sync;
-import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
-import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.search.test.internal.util.UserSearchFixture;
@@ -159,7 +157,6 @@ public class MultiLanguageSearchTest {
 	}
 
 	protected JournalArticle addJournalArticle(
-			Group group, User user,
 			JournalArticleContent journalArticleContentParam,
 			JournalArticleDescription journalArticleDescriptionParam,
 			JournalArticleTitle journalArticleTitleParam)
@@ -168,110 +165,119 @@ public class MultiLanguageSearchTest {
 		JournalArticle journalArticle = journalArticleSearchFixture.addArticle(
 			new JournalArticleBlueprint() {
 				{
-					groupId = group.getGroupId();
+					groupId = _group.getGroupId();
 					journalArticleContent = journalArticleContentParam;
 					journalArticleDescription = journalArticleDescriptionParam;
 					journalArticleTitle = journalArticleTitleParam;
-					userId = user.getUserId();
+					userId = _user.getUserId();
 				}
 			});
+
+		_addExpectedValuesMaps(
+			journalArticle, journalArticleContentParam,
+			journalArticleDescriptionParam, journalArticleTitleParam);
 
 		return journalArticle;
 	}
 
 	protected void addJournalArticlesExpectedResults() throws Exception {
-		JournalArticleContent usJournalArticleContent =
-			new JournalArticleContent() {
-				{
-					defaultLocale = LocaleUtil.US;
-					name = "content";
-					put(LocaleUtil.US, _usContent);
-				}
-			};
-		JournalArticleDescription usJournalArticleDescription =
-			new JournalArticleDescription() {
-				{
-					put(LocaleUtil.US, _usDescription);
-				}
-			};
-		JournalArticleTitle usJournalArticleTitle = new JournalArticleTitle() {
-			{
-				put(LocaleUtil.US, _usTitle);
-			}
-		};
+		addUSJournalArticle(_usContent, _usDescription, _usTitle);
+		addNetherlandsJournalArticle(_usContent, _usDescription, _usTitle);
+		addNetherlandsUSJournalArticle(
+			_netherandsContent, _usContent, _netherlandsDescription,
+			_usDescription, _netherlandsTitle, _usTitle);
+	}
 
-		JournalArticle usJournalArticle = addJournalArticle(
-			_group, _user, usJournalArticleContent, usJournalArticleDescription,
-			usJournalArticleTitle);
+	protected JournalArticle addNetherlandsJournalArticle(
+			String content, String description, String title)
+		throws Exception {
 
-		_addExpectedValuesMaps(
-			usJournalArticle, usJournalArticleContent,
-			usJournalArticleDescription, usJournalArticleTitle);
-
-		JournalArticleContent netherlandsUSJournalArticleContent =
-			new JournalArticleContent() {
-				{
-					defaultLocale = LocaleUtil.US;
-					name = "content";
-					put(LocaleUtil.NETHERLANDS, _netherandsContent);
-					put(LocaleUtil.US, _usContent);
-				}
-			};
-		JournalArticleDescription netherlandsUSJournalArticleDescription =
-			new JournalArticleDescription() {
-				{
-					put(LocaleUtil.NETHERLANDS, _netherlandsDescription);
-					put(LocaleUtil.US, _usDescription);
-				}
-			};
-		JournalArticleTitle netherlandsUSJournalArticleTitle =
-			new JournalArticleTitle() {
-				{
-					put(LocaleUtil.NETHERLANDS, _netherlandsTitle);
-					put(LocaleUtil.US, _usTitle);
-				}
-			};
-
-		JournalArticle netherlandsUSJournalArticle = addJournalArticle(
-			_group, _user, netherlandsUSJournalArticleContent,
-			netherlandsUSJournalArticleDescription,
-			netherlandsUSJournalArticleTitle);
-
-		_addExpectedValuesMaps(
-			netherlandsUSJournalArticle, netherlandsUSJournalArticleContent,
-			netherlandsUSJournalArticleDescription,
-			netherlandsUSJournalArticleTitle);
-
-		JournalArticleContent netherlandsJournalArticleContent =
+		JournalArticleContent journalArticleContent =
 			new JournalArticleContent() {
 				{
 					defaultLocale = LocaleUtil.NETHERLANDS;
 					name = "content";
-					put(LocaleUtil.NETHERLANDS, _usContent);
+					put(LocaleUtil.NETHERLANDS, content);
 				}
 			};
-		JournalArticleDescription netherlandsJournalArticleDescription =
+		JournalArticleDescription journalArticleDescription =
 			new JournalArticleDescription() {
 				{
-					put(LocaleUtil.NETHERLANDS, _usDescription);
+					put(LocaleUtil.NETHERLANDS, description);
 				}
 			};
-		JournalArticleTitle netherlandsJournalArticleTitle =
-			new JournalArticleTitle() {
+		JournalArticleTitle journalArticleTitle = new JournalArticleTitle() {
+			{
+				put(LocaleUtil.NETHERLANDS, title);
+			}
+		};
+
+		return addJournalArticle(
+			journalArticleContent, journalArticleDescription,
+			journalArticleTitle);
+	}
+
+	protected JournalArticle addNetherlandsUSJournalArticle(
+			String netherandsContent, String usContent,
+			String netherlandsDescription, String usDescription,
+			String netherlandsTitle, String usTitle)
+		throws Exception {
+
+		JournalArticleContent journalArticleContent =
+			new JournalArticleContent() {
 				{
-					put(LocaleUtil.NETHERLANDS, _usTitle);
+					defaultLocale = LocaleUtil.US;
+					name = "content";
+					put(LocaleUtil.NETHERLANDS, netherandsContent);
+					put(LocaleUtil.US, usContent);
 				}
 			};
+		JournalArticleDescription journalArticleDescription =
+			new JournalArticleDescription() {
+				{
+					put(LocaleUtil.NETHERLANDS, netherlandsDescription);
+					put(LocaleUtil.US, usDescription);
+				}
+			};
+		JournalArticleTitle journalArticleTitle = new JournalArticleTitle() {
+			{
+				put(LocaleUtil.NETHERLANDS, netherlandsTitle);
+				put(LocaleUtil.US, usTitle);
+			}
+		};
 
-		JournalArticle netherlandsJournalArticle = addJournalArticle(
-			_group, _user, netherlandsJournalArticleContent,
-			netherlandsJournalArticleDescription,
-			netherlandsJournalArticleTitle);
+		return addJournalArticle(
+			journalArticleContent, journalArticleDescription,
+			journalArticleTitle);
+	}
 
-		_addExpectedValuesMaps(
-			netherlandsJournalArticle, netherlandsJournalArticleContent,
-			netherlandsJournalArticleDescription,
-			netherlandsJournalArticleTitle);
+	protected JournalArticle addUSJournalArticle(
+			String content, String description, String title)
+		throws Exception {
+
+		JournalArticleContent journalArticleContent =
+			new JournalArticleContent() {
+				{
+					defaultLocale = LocaleUtil.US;
+					name = "content";
+					put(LocaleUtil.US, content);
+				}
+			};
+		JournalArticleDescription journalArticleDescription =
+			new JournalArticleDescription() {
+				{
+					put(LocaleUtil.US, description);
+				}
+			};
+		JournalArticleTitle journalArticleTitle = new JournalArticleTitle() {
+			{
+				put(LocaleUtil.US, title);
+			}
+		};
+
+		return addJournalArticle(
+			journalArticleContent, journalArticleDescription,
+			journalArticleTitle);
 	}
 
 	protected void assertSearch(
