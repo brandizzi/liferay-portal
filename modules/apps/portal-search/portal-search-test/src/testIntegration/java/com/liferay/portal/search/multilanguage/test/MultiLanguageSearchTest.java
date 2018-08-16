@@ -73,11 +73,10 @@ public class MultiLanguageSearchTest {
 	public void setUp() throws Exception {
 		WorkflowThreadLocal.setEnabled(false);
 
-		setUpJournalArticleSearchFixture();
-		setUpUserSearchFixture();
+		setUpUserAndGroup();
 
-		init();
-		addJournalArticlesExpectedResults();
+		setUpIndexer();
+		setUpJournalArticles();
 	}
 
 	@After
@@ -178,14 +177,6 @@ public class MultiLanguageSearchTest {
 			journalArticleDescriptionParam, journalArticleTitleParam);
 
 		return journalArticle;
-	}
-
-	protected void addJournalArticlesExpectedResults() throws Exception {
-		addUSJournalArticle(_usContent, _usDescription, _usTitle);
-		addNetherlandsJournalArticle(_usContent, _usDescription, _usTitle);
-		addNetherlandsUSJournalArticle(
-			_netherandsContent, _usContent, _netherlandsDescription,
-			_usDescription, _netherlandsTitle, _usTitle);
 	}
 
 	protected JournalArticle addNetherlandsJournalArticle(
@@ -319,35 +310,42 @@ public class MultiLanguageSearchTest {
 		return userSearchFixture.getSearchContext(keywords);
 	}
 
-	protected void init() throws Exception {
+	protected void setUpIndexer() {
+		_indexer = _indexerRegistry.getIndexer(JournalArticle.class);
+	}
+
+	protected void setUpJournalArticles() throws Exception {
+		journalArticleSearchFixture.setUp();
+
+		String netherlandsDescription = "beschrijving";
+		String netherandsContent = "inhoud";
+		String netherlandsTitle = "engels";
+		String usDescription = "description";
+		String usContent = "content";
+		String usTitle = "english";
+
+		addUSJournalArticle(usContent, usDescription, usTitle);
+		addNetherlandsJournalArticle(usContent, usDescription, usTitle);
+		addNetherlandsUSJournalArticle(
+			netherandsContent, usContent, netherlandsDescription, usDescription,
+			netherlandsTitle, usTitle);
+
+		_journalArticles = journalArticleSearchFixture.getJournalArticles();
+	}
+
+	protected void setUpUserAndGroup() throws Exception {
+		userSearchFixture.setUp();
+
 		Group group = userSearchFixture.addGroup();
 
 		User user = userSearchFixture.addUser(
 			RandomTestUtil.randomString(), group);
 
-		_usTitle = "english";
-		_netherlandsTitle = "engels";
-		_usDescription = "description";
-		_netherlandsDescription = "beschrijving";
-		_usContent = "content";
-		_netherandsContent = "inhoud";
+		_groups = userSearchFixture.getGroups();
+		_users = userSearchFixture.getUsers();
 
 		_group = group;
 		_user = user;
-		_indexer = _indexerRegistry.getIndexer(JournalArticle.class);
-	}
-
-	protected void setUpJournalArticleSearchFixture() throws Exception {
-		journalArticleSearchFixture.setUp();
-
-		_journalArticles = journalArticleSearchFixture.getJournalArticles();
-	}
-
-	protected void setUpUserSearchFixture() throws Exception {
-		userSearchFixture.setUp();
-
-		_groups = userSearchFixture.getGroups();
-		_users = userSearchFixture.getUsers();
 	}
 
 	protected Map<String, JournalArticleContent> journalArticleContentsMap =
@@ -437,16 +435,9 @@ public class MultiLanguageSearchTest {
 	@DeleteAfterTestRun
 	private List<JournalArticle> _journalArticles;
 
-	private String _netherandsContent;
-	private String _netherlandsDescription;
-	private String _netherlandsTitle;
-	private String _usContent;
-	private String _usDescription;
 	private User _user;
 
 	@DeleteAfterTestRun
 	private List<User> _users;
-
-	private String _usTitle;
 
 }
