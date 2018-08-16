@@ -15,6 +15,9 @@
 package com.liferay.portal.search.multilanguage.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.document.library.kernel.model.DLFolder;
+import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
+import com.liferay.document.library.kernel.service.DLFolderLocalService;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
@@ -26,14 +29,17 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.settings.LocalizedValuesMap;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
+import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
+import com.liferay.portal.search.test.documentlibrary.util.DLFolderSearchFixture;
 import com.liferay.portal.search.test.internal.util.UserSearchFixture;
 import com.liferay.portal.search.test.journal.util.JournalArticleBlueprint;
 import com.liferay.portal.search.test.journal.util.JournalArticleContent;
@@ -75,6 +81,7 @@ public class MultiLanguageSearchTest {
 
 		setUpUserAndGroup();
 
+		setUpDLFolders();
 		setUpIndexer();
 		setUpJournalArticles();
 	}
@@ -153,6 +160,36 @@ public class MultiLanguageSearchTest {
 		documents = _search(searchTerm, LocaleUtil.US);
 
 		Assert.assertEquals(documents.toString(), 0, documents.size());
+	}
+
+	@Test
+	public void testMultiLanguageJournalArticleDLFile() throws Exception {
+		addDLFolder("english title", "english content");
+
+		String searchTerm = "content";
+
+		List<Document> documents = _search(searchTerm, LocaleUtil.US);
+
+		Assert.assertEquals(documents.toString(), 3, documents.size());
+
+		assertSearchContent(documents, searchTerm);
+
+		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
+
+		Assert.assertEquals(documents.toString(), 3, documents.size());
+
+		assertSearchContent(documents, searchTerm);
+	}
+
+	protected DLFolder addDLFolder(String keywords, String content)
+		throws Exception {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), _user.getUserId());
+
+		return folderSearchFixture.addDLFolderAndDLFileEntry(
+			_group, _user, keywords, content, serviceContext);
 	}
 
 	protected JournalArticle addJournalArticle(
@@ -310,6 +347,15 @@ public class MultiLanguageSearchTest {
 		return userSearchFixture.getSearchContext(keywords);
 	}
 
+	protected void setUpDLFolders() throws Exception {
+		folderSearchFixture = new DLFolderSearchFixture(
+			folderLocalService, fileEntryLocalService);
+
+		folderSearchFixture.setUp();
+
+		_folders = folderSearchFixture.getDLFolders();
+	}
+
 	protected void setUpIndexer() {
 		_indexer = _indexerRegistry.getIndexer(JournalArticle.class);
 	}
@@ -348,6 +394,13 @@ public class MultiLanguageSearchTest {
 		_user = user;
 	}
 
+	@Inject
+	protected DLFileEntryLocalService fileEntryLocalService;
+
+	@Inject
+	protected DLFolderLocalService folderLocalService;
+
+	protected DLFolderSearchFixture folderSearchFixture;
 	protected Map<String, JournalArticleContent> journalArticleContentsMap =
 		new HashMap<>();
 	protected Map<String, JournalArticleDescription>
@@ -424,6 +477,9 @@ public class MultiLanguageSearchTest {
 
 	@Inject
 	private static IndexerRegistry _indexerRegistry;
+
+	@DeleteAfterTestRun
+	private List<DLFolder> _folders;
 
 	private Group _group;
 
