@@ -22,10 +22,10 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcher;
+import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcherManager;
 import com.liferay.portal.kernel.settings.LocalizedValuesMap;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
@@ -76,7 +76,6 @@ public class MultiLanguageSearchTest {
 
 		setUpUserAndGroup();
 
-		setUpIndexer();
 		setUpJournalArticles();
 	}
 
@@ -311,10 +310,6 @@ public class MultiLanguageSearchTest {
 		return userSearchFixture.getSearchContext(keywords);
 	}
 
-	protected void setUpIndexer() {
-		_indexer = _indexerRegistry.getIndexer(JournalArticle.class);
-	}
-
 	protected void setUpJournalArticles() throws Exception {
 		journalArticleSearchFixture.setUp();
 
@@ -380,7 +375,6 @@ public class MultiLanguageSearchTest {
 			_group.getGroupId());
 
 		searchContext.setKeywords(searchTerm);
-
 		searchContext.setLocale(locale);
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
@@ -411,7 +405,10 @@ public class MultiLanguageSearchTest {
 		try {
 			SearchContext searchContext = _getSearchContext(searchTerm, locale);
 
-			Hits hits = _indexer.search(searchContext);
+			FacetedSearcher facetedSearcher =
+				_facetedSearcherManager.createFacetedSearcher();
+
+			Hits hits = facetedSearcher.search(searchContext);
 
 			return hits.toList();
 		}
@@ -424,14 +421,12 @@ public class MultiLanguageSearchTest {
 	}
 
 	@Inject
-	private static IndexerRegistry _indexerRegistry;
+	private static FacetedSearcherManager _facetedSearcherManager;
 
 	private Group _group;
 
 	@DeleteAfterTestRun
 	private List<Group> _groups;
-
-	private Indexer<JournalArticle> _indexer;
 
 	@DeleteAfterTestRun
 	private List<JournalArticle> _journalArticles;
