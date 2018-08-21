@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
+import com.liferay.portal.search.constants.SearchContextAttributes;
 import com.liferay.portal.search.test.internal.util.UserSearchFixture;
 import com.liferay.portal.search.test.journal.util.JournalArticleBlueprint;
 import com.liferay.portal.search.test.journal.util.JournalArticleContent;
@@ -140,17 +141,17 @@ public class MultiLanguageSearchTest {
 	public void testMultiLanguageEmtpySearch() throws Exception {
 		String searchTerm = null;
 
-		List<Document> documents = _search(searchTerm, LocaleUtil.US);
+		List<Document> documents = _search(searchTerm, LocaleUtil.US, true);
 
 		Assert.assertEquals(documents.toString(), 3, documents.size());
 
-		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
+		documents = _search(searchTerm, LocaleUtil.NETHERLANDS, true);
 
 		Assert.assertEquals(documents.toString(), 3, documents.size());
 
 		searchTerm = "no field value";
 
-		documents = _search(searchTerm, LocaleUtil.US);
+		documents = _search(searchTerm, LocaleUtil.US, true);
 
 		Assert.assertEquals(documents.toString(), 0, documents.size());
 	}
@@ -368,12 +369,18 @@ public class MultiLanguageSearchTest {
 		journalArticleTitlesMap.put(articleId, journalArticleTitle);
 	}
 
-	private SearchContext _getSearchContext(String searchTerm, Locale locale)
+	private SearchContext _getSearchContext(
+			String searchTerm, Locale locale, boolean enableEmptySearch)
 		throws Exception {
 
 		SearchContext searchContext = SearchContextTestUtil.getSearchContext(
 			_group.getGroupId());
 
+		searchContext.setAttribute(
+			SearchContextAttributes.ATTRIBUTE_KEY_EMPTY_SEARCH,
+			enableEmptySearch);
+		searchContext.setEntryClassNames(
+			new String[] {JournalArticle.class.getName()});
 		searchContext.setKeywords(searchTerm);
 		searchContext.setLocale(locale);
 
@@ -402,8 +409,15 @@ public class MultiLanguageSearchTest {
 	}
 
 	private List<Document> _search(String searchTerm, Locale locale) {
+		return _search(searchTerm, locale, false);
+	}
+
+	private List<Document> _search(
+		String searchTerm, Locale locale, boolean enableEmptySearch) {
+
 		try {
-			SearchContext searchContext = _getSearchContext(searchTerm, locale);
+			SearchContext searchContext = _getSearchContext(
+				searchTerm, locale, enableEmptySearch);
 
 			FacetedSearcher facetedSearcher =
 				_facetedSearcherManager.createFacetedSearcher();
