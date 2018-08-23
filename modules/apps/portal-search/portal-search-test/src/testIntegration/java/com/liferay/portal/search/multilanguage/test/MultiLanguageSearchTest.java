@@ -15,6 +15,9 @@
 package com.liferay.portal.search.multilanguage.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.document.library.kernel.model.DLFolder;
+import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
+import com.liferay.document.library.kernel.service.DLFolderLocalService;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
@@ -26,15 +29,18 @@ import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcher;
 import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcherManager;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.settings.LocalizedValuesMap;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.SearchContextTestUtil;
+import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.search.constants.SearchContextAttributes;
+import com.liferay.portal.search.test.documentlibrary.util.DLFolderSearchFixture;
 import com.liferay.portal.search.test.internal.util.UserSearchFixture;
 import com.liferay.portal.search.test.journal.util.JournalArticleBlueprint;
 import com.liferay.portal.search.test.journal.util.JournalArticleContent;
@@ -49,6 +55,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -77,6 +85,7 @@ public class MultiLanguageSearchTest {
 
 		setUpUserAndGroup();
 
+		setUpDLFolders();
 		setUpJournalArticles();
 	}
 
@@ -154,6 +163,49 @@ public class MultiLanguageSearchTest {
 		documents = _search(searchTerm, LocaleUtil.US, true);
 
 		Assert.assertEquals(documents.toString(), 0, documents.size());
+	}
+
+	@Test
+	public void testMultiLanguageJournalArticleDLFile() throws Exception {
+		addDLFolder("english title", "english content");
+
+		String searchTerm = "english";
+
+		List<Document> documents = _search(searchTerm, LocaleUtil.US);
+
+		Assert.assertEquals(documents.toString(), 4, documents.size());
+		assertJournalArticleCount(documents, 3);
+		assertDLFolderCount(documents, 1);
+
+		documents = _search(searchTerm, LocaleUtil.NETHERLANDS);
+
+		Assert.assertEquals(documents.toString(), 4, documents.size());
+		assertJournalArticleCount(documents, 3);
+		assertDLFolderCount(documents, 1);
+	}
+
+	protected long _countByEntryClassName(
+		List<Document> documents, String entryClassName) {
+
+		Stream<Document> stream = documents.stream();
+
+		return stream.filter(
+			document -> Objects.equals(
+				document.get(Field.ENTRY_CLASS_NAME), entryClassName)
+		).count();
+	}
+
+	protected DLFolder addDLFolder(String keywords, String content)
+		throws Exception {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), _user.getUserId());
+
+		DLFolder folder = folderSearchFixture.addDLFolderAndDLFileEntry(
+			_group, _user, keywords, content, serviceContext);
+
+		return folder;
 	}
 
 	protected JournalArticle addJournalArticle(
@@ -272,6 +324,18 @@ public class MultiLanguageSearchTest {
 			journalArticleTitle);
 	}
 
+	protected void assertDLFolderCount(List<Document> documents, int count) {
+		Assert.assertEquals(
+			count, _countByEntryClassName(documents, _dlFolderClassName));
+	}
+
+	protected void assertJournalArticleCount(
+		List<Document> documents, int count) {
+
+		Assert.assertEquals(
+			count, _countByEntryClassName(documents, _journalArticleClassName));
+	}
+
 	protected void assertSearch(
 		List<Document> documents,
 		Map<String, ? extends LocalizedValuesMap> localizedValuesMaps,
@@ -279,6 +343,13 @@ public class MultiLanguageSearchTest {
 
 		documents.forEach(
 			document -> {
+				if (!Objects.equals(
+						document.get(Field.ENTRY_CLASS_NAME),
+						_journalArticleClassName)) {
+
+					return;
+				}
+
 				String articleId = document.get(Field.ARTICLE_ID);
 
 				LocalizedValuesMap localizedValuesMap = localizedValuesMaps.get(
@@ -309,6 +380,15 @@ public class MultiLanguageSearchTest {
 
 	protected SearchContext getSearchContext(String keywords) throws Exception {
 		return userSearchFixture.getSearchContext(keywords);
+	}
+
+	protected void setUpDLFolders() throws Exception {
+		folderSearchFixture = new DLFolderSearchFixture(
+			folderLocalService, fileEntryLocalService);
+
+		folderSearchFixture.setUp();
+
+		_folders = folderSearchFixture.getDLFolders();
 	}
 
 	protected void setUpJournalArticles() throws Exception {
@@ -345,6 +425,13 @@ public class MultiLanguageSearchTest {
 		_user = user;
 	}
 
+	@Inject
+	protected DLFileEntryLocalService fileEntryLocalService;
+
+	@Inject
+	protected DLFolderLocalService folderLocalService;
+
+	protected DLFolderSearchFixture folderSearchFixture;
 	protected Map<String, JournalArticleContent> journalArticleContentsMap =
 		new HashMap<>();
 	protected Map<String, JournalArticleDescription>
@@ -380,7 +467,7 @@ public class MultiLanguageSearchTest {
 			SearchContextAttributes.ATTRIBUTE_KEY_EMPTY_SEARCH,
 			enableEmptySearch);
 		searchContext.setEntryClassNames(
-			new String[] {JournalArticle.class.getName()});
+			new String[] {_journalArticleClassName, _dlFolderClassName});
 		searchContext.setKeywords(searchTerm);
 		searchContext.setLocale(locale);
 
@@ -434,8 +521,16 @@ public class MultiLanguageSearchTest {
 		}
 	}
 
+	private static final String _dlFolderClassName = DLFolder.class.getName();
+
 	@Inject
 	private static FacetedSearcherManager _facetedSearcherManager;
+
+	private static final String _journalArticleClassName =
+		JournalArticle.class.getName();
+
+	@DeleteAfterTestRun
+	private List<DLFolder> _folders;
 
 	private Group _group;
 
