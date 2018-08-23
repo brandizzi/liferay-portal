@@ -91,8 +91,8 @@ public class MultiLanguageSearchTest {
 
 	@After
 	public void tearDown() throws Exception {
-		journalArticleSearchFixture.tearDown();
-		userSearchFixture.tearDown();
+		_journalArticleSearchFixture.tearDown();
+		_userSearchFixture.tearDown();
 	}
 
 	@Test
@@ -202,7 +202,7 @@ public class MultiLanguageSearchTest {
 			ServiceContextTestUtil.getServiceContext(
 				_group.getGroupId(), _user.getUserId());
 
-		DLFolder folder = folderSearchFixture.addDLFolderAndDLFileEntry(
+		DLFolder folder = _folderSearchFixture.addDLFolderAndDLFileEntry(
 			_group, _user, keywords, content, serviceContext);
 
 		return folder;
@@ -214,7 +214,7 @@ public class MultiLanguageSearchTest {
 			JournalArticleTitle journalArticleTitleParam)
 		throws Exception {
 
-		JournalArticle journalArticle = journalArticleSearchFixture.addArticle(
+		JournalArticle journalArticle = _journalArticleSearchFixture.addArticle(
 			new JournalArticleBlueprint() {
 				{
 					groupId = _group.getGroupId();
@@ -364,35 +364,35 @@ public class MultiLanguageSearchTest {
 	protected void assertSearchContent(
 		List<Document> documents, String message) {
 
-		assertSearch(documents, journalArticleContentsMap, "content", message);
+		assertSearch(documents, _journalArticleContentsMap, "content", message);
 	}
 
 	protected void assertSearchDescription(
 		List<Document> documents, String message) {
 
 		assertSearch(
-			documents, journalArticleDescriptionsMap, "description", message);
+			documents, _journalArticleDescriptionsMap, "description", message);
 	}
 
 	protected void assertSearchTitle(List<Document> documents, String message) {
-		assertSearch(documents, journalArticleTitlesMap, "title", message);
+		assertSearch(documents, _journalArticleTitlesMap, "title", message);
 	}
 
 	protected SearchContext getSearchContext(String keywords) throws Exception {
-		return userSearchFixture.getSearchContext(keywords);
+		return _userSearchFixture.getSearchContext(keywords);
 	}
 
 	protected void setUpDLFolders() throws Exception {
-		folderSearchFixture = new DLFolderSearchFixture(
-			folderLocalService, fileEntryLocalService);
+		_folderSearchFixture = new DLFolderSearchFixture(
+			_folderLocalService, _fileEntryLocalService);
 
-		folderSearchFixture.setUp();
+		_folderSearchFixture.setUp();
 
-		_folders = folderSearchFixture.getDLFolders();
+		_folders = _folderSearchFixture.getDLFolders();
 	}
 
 	protected void setUpJournalArticles() throws Exception {
-		journalArticleSearchFixture.setUp();
+		_journalArticleSearchFixture.setUp();
 
 		String netherlandsDescription = "beschrijving";
 		String netherandsContent = "inhoud";
@@ -407,41 +407,23 @@ public class MultiLanguageSearchTest {
 			netherandsContent, usContent, netherlandsDescription, usDescription,
 			netherlandsTitle, usTitle);
 
-		_journalArticles = journalArticleSearchFixture.getJournalArticles();
+		_journalArticles = _journalArticleSearchFixture.getJournalArticles();
 	}
 
 	protected void setUpUserAndGroup() throws Exception {
-		userSearchFixture.setUp();
+		_userSearchFixture.setUp();
 
-		Group group = userSearchFixture.addGroup();
+		Group group = _userSearchFixture.addGroup();
 
-		User user = userSearchFixture.addUser(
+		User user = _userSearchFixture.addUser(
 			RandomTestUtil.randomString(), group);
 
-		_groups = userSearchFixture.getGroups();
-		_users = userSearchFixture.getUsers();
+		_groups = _userSearchFixture.getGroups();
+		_users = _userSearchFixture.getUsers();
 
 		_group = group;
 		_user = user;
 	}
-
-	@Inject
-	protected DLFileEntryLocalService fileEntryLocalService;
-
-	@Inject
-	protected DLFolderLocalService folderLocalService;
-
-	protected DLFolderSearchFixture folderSearchFixture;
-	protected Map<String, JournalArticleContent> journalArticleContentsMap =
-		new HashMap<>();
-	protected Map<String, JournalArticleDescription>
-		journalArticleDescriptionsMap = new HashMap<>();
-	protected final JournalArticleSearchFixture journalArticleSearchFixture =
-		new JournalArticleSearchFixture();
-	protected Map<String, JournalArticleTitle> journalArticleTitlesMap =
-		new HashMap<>();
-	protected final UserSearchFixture userSearchFixture =
-		new UserSearchFixture();
 
 	private void _addExpectedValuesMaps(
 		JournalArticle journalArticle,
@@ -451,9 +433,10 @@ public class MultiLanguageSearchTest {
 
 		String articleId = journalArticle.getArticleId();
 
-		journalArticleContentsMap.put(articleId, journalArticleContent);
-		journalArticleDescriptionsMap.put(articleId, journalArticleDescription);
-		journalArticleTitlesMap.put(articleId, journalArticleTitle);
+		_journalArticleContentsMap.put(articleId, journalArticleContent);
+		_journalArticleDescriptionsMap.put(
+			articleId, journalArticleDescription);
+		_journalArticleTitlesMap.put(articleId, journalArticleTitle);
 	}
 
 	private SearchContext _getSearchContext(
@@ -529,20 +512,39 @@ public class MultiLanguageSearchTest {
 	private static final String _journalArticleClassName =
 		JournalArticle.class.getName();
 
+	@Inject
+	private DLFileEntryLocalService _fileEntryLocalService;
+
+	@Inject
+	private DLFolderLocalService _folderLocalService;
+
 	@DeleteAfterTestRun
 	private List<DLFolder> _folders;
 
+	private DLFolderSearchFixture _folderSearchFixture;
 	private Group _group;
 
 	@DeleteAfterTestRun
 	private List<Group> _groups;
 
+	private final Map<String, JournalArticleContent> _journalArticleContentsMap =
+		new HashMap<>();
+	private final Map<String, JournalArticleDescription> _journalArticleDescriptionsMap =
+		new HashMap<>();
+
 	@DeleteAfterTestRun
 	private List<JournalArticle> _journalArticles;
 
+	private final JournalArticleSearchFixture _journalArticleSearchFixture =
+		new JournalArticleSearchFixture();
+	private final Map<String, JournalArticleTitle> _journalArticleTitlesMap =
+		new HashMap<>();
 	private User _user;
 
 	@DeleteAfterTestRun
 	private List<User> _users;
+
+	private final UserSearchFixture _userSearchFixture =
+		new UserSearchFixture();
 
 }
