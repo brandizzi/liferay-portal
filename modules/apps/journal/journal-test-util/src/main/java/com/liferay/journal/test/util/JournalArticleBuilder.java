@@ -19,11 +19,8 @@ import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
-import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -50,14 +47,6 @@ public class JournalArticleBuilder {
 			ddmStructureKey, ddmTemplateKey, serviceContext);
 	}
 
-	protected Map<Locale, String> getDescriptionValues() {
-		if (_journalArticleDescription == null) {
-			return Collections.emptyMap();
-		}
-
-		return _journalArticleDescription.getValues();
-	}
-
 	public void setContent(JournalArticleContent content) {
 		_journalArticleContent = content;
 	}
@@ -72,6 +61,14 @@ public class JournalArticleBuilder {
 
 	public void setTitle(JournalArticleTitle title) {
 		_journalArticleTitle = title;
+	}
+
+	protected Map<Locale, String> getDescriptionValues() {
+		if (_journalArticleDescription == null) {
+			return Collections.emptyMap();
+		}
+
+		return _journalArticleDescription.getValues();
 	}
 
 	private Long _groupId;
