@@ -19,7 +19,11 @@ import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
+import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.Validator;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -36,7 +40,7 @@ public class JournalArticleBuilder {
 
 		long folderId = JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID;
 		Map<Locale, String> titleMap = _journalArticleTitle.getValues();
-		Map<Locale, String> descriptionMap = null;
+		Map<Locale, String> descriptionMap = getDescriptionValues();
 		String contentString = _journalArticleContent.getContentString();
 		String ddmStructureKey = "BASIC-WEB-CONTENT";
 		String ddmTemplateKey = "BASIC-WEB-CONTENT";
@@ -46,8 +50,20 @@ public class JournalArticleBuilder {
 			ddmStructureKey, ddmTemplateKey, serviceContext);
 	}
 
+	protected Map<Locale, String> getDescriptionValues() {
+		if (_journalArticleDescription == null) {
+			return Collections.emptyMap();
+		}
+
+		return _journalArticleDescription.getValues();
+	}
+
 	public void setContent(JournalArticleContent content) {
 		_journalArticleContent = content;
+	}
+
+	public void setDescription(JournalArticleDescription description) {
+		_journalArticleDescription = description;
 	}
 
 	public void setGroupId(long groupId) {
@@ -60,6 +76,7 @@ public class JournalArticleBuilder {
 
 	private Long _groupId;
 	private JournalArticleContent _journalArticleContent;
+	private JournalArticleDescription _journalArticleDescription;
 	private JournalArticleTitle _journalArticleTitle;
 
 }
