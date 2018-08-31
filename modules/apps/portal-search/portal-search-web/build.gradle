@@ -29,6 +29,7 @@ dependencies {
 	compileOnly project(":core:osgi-service-tracker-collections")
 	compileOnly project(":core:petra:petra-lang")
 	compileOnly project(":core:petra:petra-string")
+	compileOnly project(":core:registry-api")
 
 	testCompile group: "commons-httpclient", name: "commons-httpclient", version: "3.1"
 	testCompile group: "easyconf", name: "easyconf", version: "0.9.5"
