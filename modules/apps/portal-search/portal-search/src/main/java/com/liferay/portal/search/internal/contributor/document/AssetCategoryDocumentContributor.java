@@ -64,8 +64,6 @@ public class AssetCategoryDocumentContributor implements DocumentContributor {
 
 		Map<Locale, List<String>> assetCategoryTitles = new HashMap<>();
 
-		Locale defaultLocale = LocaleUtil.getDefault();
-
 		for (AssetCategory assetCategory : assetCategories) {
 			Map<Locale, String> titleMap = assetCategory.getTitleMap();
 
@@ -91,10 +89,6 @@ public class AssetCategoryDocumentContributor implements DocumentContributor {
 			List<String> titles = entry.getValue();
 
 			String[] titlesArray = titles.toArray(new String[titles.size()]);
-
-			if (locale.equals(defaultLocale)) {
-				document.addText(field, titlesArray);
-			}
 
 			document.addText(
 				field.concat(StringPool.UNDERLINE).concat(locale.toString()),
