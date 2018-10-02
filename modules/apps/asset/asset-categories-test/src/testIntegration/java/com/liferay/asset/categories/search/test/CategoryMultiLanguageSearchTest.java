@@ -16,6 +16,7 @@ package com.liferay.asset.categories.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.kernel.model.AssetCategoryConstants;
 import com.liferay.asset.kernel.model.AssetVocabulary;
 import com.liferay.asset.kernel.service.AssetCategoryLocalService;
 import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
@@ -25,6 +26,7 @@ import com.liferay.journal.test.util.JournalArticleContent;
 import com.liferay.journal.test.util.JournalArticleSearchFixture;
 import com.liferay.journal.test.util.JournalArticleTitle;
 import com.liferay.journal.test.util.JournalTestUtil;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Field;
@@ -39,7 +41,7 @@ import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
-import com.liferay.portal.kernel.test.util.UserTestUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
 import com.liferay.portal.search.facet.category.CategoryFacetFactory;
@@ -50,13 +52,14 @@ import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -88,9 +91,9 @@ public class CategoryMultiLanguageSearchTest {
 		_assetVocabularyList = new ArrayList<>();
 		_updateJournalArticleList = new ArrayList<>();
 
-		_group = userSearchFixture.addGroup();
+		Group group = userSearchFixture.addGroup();
 
-		_user = UserTestUtil.addUser(_group.getGroupId());
+		user = userSearchFixture.addUser(RandomTestUtil.randomString(), group);
 	}
 
 	@After
@@ -104,39 +107,37 @@ public class CategoryMultiLanguageSearchTest {
 		String categoryTitle = "你好";
 		String webContentTitle = "whatever";
 
-		AssetVocabulary assetVocabulary = addVocabulary(_group);
+		Group group = addGroup(LocaleUtil.CHINA);
+
+		AssetVocabulary assetVocabulary = addVocabulary(group);
 
 		AssetCategory category = addCategory(
-			assetVocabulary, categoryTitle, LocaleUtil.CHINA);
+			group, assetVocabulary, categoryTitle, LocaleUtil.CHINA);
 
 		addJournalArticle(
-			_group, webContentTitle, webContentTitle, category,
+			group, webContentTitle, webContentTitle, category,
 			LocaleUtil.CHINA);
 
-		SearchContext searchContext = getSearchContext(
-			_group, categoryTitle, LocaleUtil.CHINA);
-
-		Hits hits = search(searchContext);
-
-		Assert.assertTrue(
-			searchContext.getKeywords() + "->" + hits.getDocs().toString(),
-			hits.getDocs().length == 0);
+		assertCategoryInSearchResults(
+			group, categoryTitle, category, LocaleUtil.CHINA);
 	}
 
 	@Test
 	public void testEnglishCategories() throws Exception {
 		String categoryTitle = "testEngine";
 		String webContentTitle = "testContent";
+		Group group = addGroup(LocaleUtil.US);
 
-		AssetVocabulary assetVocabulary = addVocabulary(_group);
+		AssetVocabulary assetVocabulary = addVocabulary(group);
 
 		AssetCategory category = addCategory(
-			assetVocabulary, categoryTitle, LocaleUtil.US);
+			group, assetVocabulary, categoryTitle, LocaleUtil.US);
 
 		addJournalArticle(
-			_group, webContentTitle, webContentTitle, category, LocaleUtil.US);
+			group, webContentTitle, webContentTitle, category, LocaleUtil.US);
 
-		assertCategoryInSearchResults(categoryTitle, category, LocaleUtil.US);
+		assertCategoryInSearchResults(
+			group, categoryTitle, category, LocaleUtil.US);
 	}
 
 	@Test
@@ -146,53 +147,78 @@ public class CategoryMultiLanguageSearchTest {
 		String categoryTitle2 = "京都";
 		String webContentTitle1 = "豊島区";
 		String webContentTitle2 = "下京区";
+		Group group = addGroup(LocaleUtil.JAPAN);
 
-		AssetVocabulary assetVocabulary = addVocabulary(
-			_group, vocabularyTitle);
+		AssetVocabulary assetVocabulary = addVocabulary(group, vocabularyTitle);
 
 		AssetCategory category1 = addCategory(
-			assetVocabulary, categoryTitle1, LocaleUtil.JAPAN);
+			group, assetVocabulary, categoryTitle1, LocaleUtil.JAPAN);
 
 		AssetCategory category2 = addCategory(
-			assetVocabulary, categoryTitle2, LocaleUtil.JAPAN);
+			group, assetVocabulary, categoryTitle2, LocaleUtil.JAPAN);
 
 		addJournalArticle(
-			_group, webContentTitle1, webContentTitle1, category1,
+			group, webContentTitle1, webContentTitle1, category1,
 			LocaleUtil.JAPAN);
 		addJournalArticle(
-			_group, webContentTitle2, webContentTitle2, category2,
+			group, webContentTitle2, webContentTitle2, category2,
 			LocaleUtil.JAPAN);
 
 		assertCategoryInSearchResults(
-			categoryTitle1, category1, LocaleUtil.JAPAN);
+			group, categoryTitle1, category1, LocaleUtil.JAPAN);
 		assertCategoryInSearchResults(
-			categoryTitle2, category2, LocaleUtil.JAPAN);
+			group, categoryTitle2, category2, LocaleUtil.JAPAN);
 	}
 
 	protected AssetCategory addCategory(
-			AssetVocabulary assetVocabulary, String title, Locale locale)
-		throws Exception {
-
-		return addCategory(assetVocabulary, title, locale.getLanguage());
-	}
-
-	protected AssetCategory addCategory(
-			AssetVocabulary assetVocabulary, String title, String languageId)
+			Group group, AssetVocabulary assetVocabulary, String title,
+			Locale locale)
 		throws Exception {
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
-				_group.getGroupId(), _user.getUserId());
+				group.getGroupId(), user.getUserId());
 
-		serviceContext.setLanguageId(languageId);
+		Map<Locale, String> titleMap = new HashMap<Locale, String>() {
+			{
+				put(locale, title);
+			}
+		};
+
+		Locale previousLocale = LocaleThreadLocal.getSiteDefaultLocale();
+
+		LocaleThreadLocal.setSiteDefaultLocale(locale);
 
 		AssetCategory assetCategory = assetCategoryLocalService.addCategory(
-			_user.getUserId(), _group.getGroupId(), title,
-			assetVocabulary.getVocabularyId(), serviceContext);
+			user.getUserId(), group.getGroupId(),
+			AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID, titleMap,
+			new HashMap<>(), assetVocabulary.getVocabularyId(), new String[0],
+			serviceContext);
 
 		_assetCategoryList.add(assetCategory);
 
+		LocaleThreadLocal.setSiteDefaultLocale(previousLocale);
+
 		return assetCategory;
+	}
+
+	protected Group addGroup(Locale locale) throws Exception {
+		Group group = userSearchFixture.addGroup();
+
+		StringBundler sb = new StringBundler(6);
+
+		sb.append("locales=");
+		sb.append(locale.toString());
+		sb.append("\n");
+		sb.append("languageId=");
+		sb.append(locale.toString());
+		sb.append("\n");
+
+		group.setTypeSettings(sb.toString());
+
+		group.persist();
+
+		return group;
 	}
 
 	protected JournalArticle addJournalArticle(
@@ -205,7 +231,7 @@ public class CategoryMultiLanguageSearchTest {
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
-				group.getGroupId(), _user.getUserId());
+				group.getGroupId(), user.getUserId());
 
 		serviceContext.setAssetCategoryIds(
 			new long[] {category.getCategoryId()});
@@ -263,11 +289,10 @@ public class CategoryMultiLanguageSearchTest {
 	}
 
 	protected void assertCategoryInSearchResults(
-			String keywords, AssetCategory category, Locale locale)
+			Group group, String keywords, AssetCategory category, Locale locale)
 		throws Exception {
 
-		SearchContext searchContext = getSearchContext(
-			_group, keywords, locale);
+		SearchContext searchContext = getSearchContext(group, keywords, locale);
 
 		Hits hits = search(searchContext);
 
@@ -280,7 +305,7 @@ public class CategoryMultiLanguageSearchTest {
 		Stream<AssetCategory> stream = Arrays.asList(categories).stream();
 
 		return stream.map(
-			(category) -> String.valueOf(category.getCategoryId())
+			category -> String.valueOf(category.getCategoryId())
 		).collect(
 			Collectors.toList()
 		);
@@ -345,6 +370,7 @@ public class CategoryMultiLanguageSearchTest {
 
 	protected final JournalArticleSearchFixture journalArticleSearchFixture =
 		new JournalArticleSearchFixture();
+	protected User user;
 	protected final UserSearchFixture userSearchFixture =
 		new UserSearchFixture();
 
@@ -354,8 +380,6 @@ public class CategoryMultiLanguageSearchTest {
 	@DeleteAfterTestRun
 	private List<AssetVocabulary> _assetVocabularyList;
 
-	private Group _group;
-
 	@DeleteAfterTestRun
 	private List<Group> _groups;
 
@@ -364,9 +388,6 @@ public class CategoryMultiLanguageSearchTest {
 
 	@DeleteAfterTestRun
 	private List<JournalArticle> _updateJournalArticleList;
-
-	@DeleteAfterTestRun
-	private User _user;
 
 	@DeleteAfterTestRun
 	private List<User> _users;
