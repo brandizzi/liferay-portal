@@ -21,6 +21,8 @@ import com.liferay.portal.search.query.QueryHelper;
 import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
 import com.liferay.portal.search.spi.model.query.contributor.helper.KeywordQueryContributorHelper;
 
+import java.util.Locale;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -39,9 +41,12 @@ public class AssetCategoryTitlesKeywordQueryContributor
 		SearchContext searchContext =
 			keywordQueryContributorHelper.getSearchContext();
 
-		queryHelper.addSearchLocalizedTerm(
-			booleanQuery, searchContext, Field.ASSET_CATEGORY_TITLES,
-			searchContext.isLike());
+		Locale locale = searchContext.getLocale();
+
+		String fieldName = Field.ASSET_CATEGORY_TITLES + locale.getLanguage();
+
+		queryHelper.addSearchTerm(
+			booleanQuery, searchContext, fieldName, searchContext.isLike());
 	}
 
 	@Reference
