@@ -146,7 +146,7 @@ public class CategoryMultiLanguageSearchTest {
 		String categoryTitle1 = "東京";
 		String categoryTitle2 = "京都";
 		String webContentTitle1 = "豊島区";
-		String webContentTitle2 = "下京区";
+		String webContentTitle2 = "伏見区";
 		Group group = addGroup(LocaleUtil.JAPAN);
 
 		AssetVocabulary assetVocabulary = addVocabulary(group, vocabularyTitle);
