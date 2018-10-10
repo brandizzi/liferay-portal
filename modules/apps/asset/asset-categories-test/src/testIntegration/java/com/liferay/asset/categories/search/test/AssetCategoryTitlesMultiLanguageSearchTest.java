@@ -26,6 +26,7 @@ import com.liferay.journal.test.util.search.JournalArticleBlueprint;
 import com.liferay.journal.test.util.search.JournalArticleContent;
 import com.liferay.journal.test.util.search.JournalArticleSearchFixture;
 import com.liferay.journal.test.util.search.JournalArticleTitle;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Field;
@@ -202,6 +203,57 @@ public class AssetCategoryTitlesMultiLanguageSearchTest {
 	}
 
 	@Test
+	public void testEnglishJapaneseCategories() throws Exception {
+		String usCategoryTitleString = "cars";
+		String japanCategoryTitleString = "自動車";
+		Group group = _userSearchFixture.addGroup(
+			new GroupBlueprint() {
+				{
+					defaultLocale = LocaleUtil.US;
+					availableLocales = Arrays.asList(
+						LocaleUtil.JAPAN, LocaleUtil.US);
+				}
+			});
+
+		HashMap<Locale, String> categoryTitles = new HashMap<Locale, String>() {
+			{
+				put(LocaleUtil.JAPAN, japanCategoryTitleString);
+				put(LocaleUtil.US, usCategoryTitleString);
+			}
+		};
+
+		AssetCategory assetCategory = addCategory(
+			group, addVocabulary(group), categoryTitles, LocaleUtil.US);
+
+		_journalArticleSearchFixture.addArticle(
+			new JournalArticleBlueprint() {
+				{
+					assetCategoryIds =
+						new long[] {assetCategory.getCategoryId()};
+					groupId = group.getGroupId();
+					journalArticleContent = new JournalArticleContent() {
+						{
+							defaultLocale = LocaleUtil.US;
+							name = "content";
+							put(LocaleUtil.US, RandomTestUtil.randomString());
+						}
+					};
+					journalArticleTitle = new JournalArticleTitle() {
+						{
+							put(LocaleUtil.US, RandomTestUtil.randomString());
+						}
+					};
+					userId = _user.getUserId();
+				}
+			});
+
+		assertSearch(
+			usCategoryTitleString, assetCategory, LocaleUtil.JAPAN, group);
+		assertSearch(
+			japanCategoryTitleString, assetCategory, LocaleUtil.US, group);
+	}
+
+	@Test
 	public void testJapaneseCategories() throws Exception {
 		String categoryTitleString1 = "東京";
 		String categoryTitleString2 = "京都";
@@ -277,23 +329,17 @@ public class AssetCategoryTitlesMultiLanguageSearchTest {
 	}
 
 	protected AssetCategory addCategory(
-			Group group, AssetVocabulary assetVocabulary, String title,
-			Locale locale)
-		throws Exception {
+			Group group, AssetVocabulary assetVocabulary,
+			Map<Locale, String> titleMap, Locale defaultLocale)
+		throws PortalException {
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
 				group.getGroupId(), _user.getUserId());
 
-		Map<Locale, String> titleMap = new HashMap<Locale, String>() {
-			{
-				put(locale, title);
-			}
-		};
-
 		Locale previousLocale = LocaleThreadLocal.getSiteDefaultLocale();
 
-		LocaleThreadLocal.setSiteDefaultLocale(locale);
+		LocaleThreadLocal.setSiteDefaultLocale(defaultLocale);
 
 		try {
 			AssetCategory assetCategory = assetCategoryLocalService.addCategory(
@@ -309,6 +355,20 @@ public class AssetCategoryTitlesMultiLanguageSearchTest {
 		finally {
 			LocaleThreadLocal.setSiteDefaultLocale(previousLocale);
 		}
+	}
+
+	protected AssetCategory addCategory(
+			Group group, AssetVocabulary assetVocabulary, String title,
+			Locale locale)
+		throws Exception {
+
+		Map<Locale, String> titleMap = new HashMap<Locale, String>() {
+			{
+				put(locale, title);
+			}
+		};
+
+		return addCategory(group, assetVocabulary, titleMap, locale);
 	}
 
 	protected AssetVocabulary addVocabulary(Group group) throws Exception {
