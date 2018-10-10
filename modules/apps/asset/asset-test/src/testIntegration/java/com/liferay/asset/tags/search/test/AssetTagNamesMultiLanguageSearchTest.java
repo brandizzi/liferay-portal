@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.Sync;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.workflow.WorkflowThreadLocal;
@@ -117,6 +118,47 @@ public class AssetTagNamesMultiLanguageSearchTest {
 			});
 
 		assertSearch(tag, locale);
+	}
+
+	@Test
+	public void testEnglishJapaneseTags() throws Exception {
+		String usTag = "automobiles";
+
+		String japanTag = "自動車";
+
+		Group group = _userSearchFixture.addGroup(
+			new GroupBlueprint() {
+				{
+					defaultLocale = LocaleUtil.US;
+					availableLocales = Arrays.asList(
+						LocaleUtil.JAPAN, LocaleUtil.US);
+				}
+			});
+
+		_fileEntrySearchFixture.addFileEntry(
+			new FileEntryBlueprint() {
+				{
+					assetTagNames = new String[] {japanTag};
+					fileName = RandomTestUtil.randomString();
+					groupId = group.getGroupId();
+					title = RandomTestUtil.randomString();
+					userId = getAdminUserId(group);
+				}
+			});
+
+		_fileEntrySearchFixture.addFileEntry(
+			new FileEntryBlueprint() {
+				{
+					assetTagNames = new String[] {usTag};
+					fileName = RandomTestUtil.randomString();
+					groupId = group.getGroupId();
+					title = RandomTestUtil.randomString();
+					userId = getAdminUserId(group);
+				}
+			});
+
+		assertSearch(usTag, Locale.JAPAN);
+		assertSearch(japanTag, Locale.US);
 	}
 
 	@Test
