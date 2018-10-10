@@ -26,6 +26,10 @@ import com.liferay.portal.kernel.search.SearchContext;
 @ProviderType
 public interface QueryHelper {
 
+	public void addSearchGroupLocalizedTerms(
+		BooleanQuery booleanQuery, SearchContext searchContext,
+		String fieldPrefix, boolean like);
+
 	public void addSearchLocalizedTerm(
 		BooleanQuery searchQuery, SearchContext searchContext, String field,
 		boolean like);
