@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -58,10 +59,15 @@ public class UserSearchFixture {
 		Group group = addGroup();
 
 		Locale locale = groupBlueprint.getDefaultLocale();
+		List<Locale> availableLocales = groupBlueprint.getAvailableLocales();
 
 		if (locale != null) {
+			if (ListUtil.isEmpty(availableLocales)) {
+				availableLocales = Arrays.asList(locale);
+			}
+
 			GroupTestUtil.updateDisplaySettings(
-				group.getGroupId(), null, locale);
+				group.getGroupId(), availableLocales, locale);
 		}
 
 		return group;

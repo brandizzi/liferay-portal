@@ -14,6 +14,7 @@
 
 package com.liferay.users.admin.test.util.search;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -21,10 +22,15 @@ import java.util.Locale;
  */
 public class GroupBlueprint {
 
+	public List<Locale> getAvailableLocales() {
+		return availableLocales;
+	}
+
 	public Locale getDefaultLocale() {
 		return defaultLocale;
 	}
 
+	protected List<Locale> availableLocales;
 	protected Locale defaultLocale;
 
 }
