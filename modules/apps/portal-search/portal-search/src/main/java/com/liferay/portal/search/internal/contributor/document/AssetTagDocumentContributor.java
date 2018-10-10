@@ -17,6 +17,7 @@ package com.liferay.portal.search.internal.contributor.document;
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.AssetTagLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.GroupedModel;
 import com.liferay.portal.kernel.model.User;
@@ -30,8 +31,10 @@ import com.liferay.portal.kernel.util.Localization;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.Portal;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Component;
@@ -80,11 +83,14 @@ public class AssetTagDocumentContributor implements DocumentContributor {
 
 		Localization localization = getLocalization();
 
-		document.addText(
-			localization.getLocalizedName(
-				Field.ASSET_TAG_NAMES,
-				LocaleUtil.toLanguageId(getSiteDefaultLocale(groupId))),
-			getNames(assetTags));
+		Collection<Locale> locales = getSearchLocales(assetTags);
+
+		for (Locale locale : locales) {
+			document.addText(
+				localization.getLocalizedName(
+					Field.ASSET_TAG_NAMES, LocaleUtil.toLanguageId(locale)),
+				getNames(assetTags));
+		}
 	}
 
 	protected void contributeAssetTagNamesRaw(
@@ -126,6 +132,22 @@ public class AssetTagDocumentContributor implements DocumentContributor {
 		);
 	}
 
+	protected Collection<Locale> getSearchLocales(
+		List<? extends GroupedModel> groupedModels) {
+
+		Stream<? extends GroupedModel> stream = groupedModels.stream();
+
+		return stream.map(
+			GroupedModel::getGroupId
+		).map(
+			language::getAvailableLocales
+		).flatMap(
+			Collection::stream
+		).collect(
+			Collectors.toList()
+		);
+	}
+
 	protected Locale getSiteDefaultLocale(long groupId) {
 		try {
 			return portal.getSiteDefaultLocale(groupId);
@@ -147,6 +169,9 @@ public class AssetTagDocumentContributor implements DocumentContributor {
 
 	@Reference
 	protected AssetTagLocalService assetTagLocalService;
+
+	@Reference
+	protected Language language;
 
 	protected Localization localization;
 

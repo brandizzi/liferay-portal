@@ -16,6 +16,7 @@ package com.liferay.portal.search.internal.query;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.Query;
@@ -30,15 +31,33 @@ import com.liferay.portal.search.query.QueryHelper;
 
 import java.io.Serializable;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
  */
 @Component(immediate = true, service = QueryHelper.class)
 public class QueryHelperImpl implements QueryHelper {
+
+	@Override
+	public void addSearchGroupLocalizedTerms(
+		BooleanQuery booleanQuery, SearchContext searchContext, String field,
+		boolean like) {
+
+		Collection<Locale> locales = getSearchLocales(searchContext);
+
+		for (Locale locale : locales) {
+			addSearchTerm(
+				booleanQuery, searchContext, getLocalizedName(field, locale),
+				false);
+		}
+	}
 
 	@Override
 	public void addSearchLocalizedTerm(
@@ -122,6 +141,27 @@ public class QueryHelperImpl implements QueryHelper {
 		return localization.getLocalizedName(
 			name, LocaleUtil.toLanguageId(locale));
 	}
+
+	protected Collection<Locale> getSearchLocales(SearchContext searchContext) {
+		Set<Locale> locales = new HashSet<>();
+
+		long[] groupIds = searchContext.getGroupIds();
+
+		if (groupIds == null) {
+			locales = language.getCompanyAvailableLocales(
+				searchContext.getCompanyId());
+		}
+		else {
+			for (long groupId : groupIds) {
+				locales.addAll(language.getAvailableLocales(groupId));
+			}
+		}
+
+		return locales;
+	}
+
+	@Reference
+	protected Language language;
 
 	protected Localization localization;
 
