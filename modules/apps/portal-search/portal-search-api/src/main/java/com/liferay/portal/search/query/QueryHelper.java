@@ -20,11 +20,17 @@ import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 
+import java.util.Set;
+
 /**
  * @author André de Oliveira
  */
 @ProviderType
 public interface QueryHelper {
+
+	public void addBoosterTerm(
+		BooleanQuery booleanQuery, String _field, Set<String> boosterValues,
+		float _boostIncrement);
 
 	public void addSearchLocalizedTerm(
 		BooleanQuery searchQuery, SearchContext searchContext, String field,
