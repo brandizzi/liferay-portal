@@ -16,10 +16,14 @@ package com.liferay.portal.search.internal.query;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.TermQuery;
+import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
+import com.liferay.portal.kernel.search.generic.TermQueryImpl;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Localization;
@@ -31,6 +35,7 @@ import com.liferay.portal.search.query.QueryHelper;
 import java.io.Serializable;
 
 import java.util.Locale;
+import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -39,6 +44,28 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(immediate = true, service = QueryHelper.class)
 public class QueryHelperImpl implements QueryHelper {
+
+	public void addBoosterTerm(
+		BooleanQuery booleanQuery, String field, Set<String> boosterValues,
+		float boostIncrement) {
+
+		BooleanQuery boosterQuery = new BooleanQueryImpl();
+
+		try {
+			for (String boosterValue : boosterValues) {
+				TermQuery termQuery = new TermQueryImpl(field, boosterValue);
+
+				boosterQuery.add(termQuery, BooleanClauseOccur.SHOULD);
+			}
+
+			boosterQuery.setBoost(boostIncrement);
+
+			booleanQuery.add(boosterQuery, BooleanClauseOccur.SHOULD);
+		}
+		catch (ParseException pe) {
+			throw new SystemException(pe);
+		}
+	}
 
 	@Override
 	public void addSearchLocalizedTerm(
