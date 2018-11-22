@@ -31,13 +31,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 @ProviderType
 public interface CustomRelevanceConfiguration {
 
-	@Meta.AD(name = "field", required = false)
-	public String field();
-
-	@Meta.AD(name = "booster-values", required = false)
-	public String[] boosterValues();
-
-	@Meta.AD(name = "boost-increment", required = false)
-	public float boostIncrement();
+	@Meta.AD(name = "boostings", required = false)
+	public String[] boostings();
 
 }
