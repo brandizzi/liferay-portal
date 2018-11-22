@@ -16,17 +16,15 @@ package com.liferay.portal.search.internal.contributor.query;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.util.SetUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.configuration.CustomRelevanceConfiguration;
+import com.liferay.portal.search.internal.configuration.CustomRelevance;
+import com.liferay.portal.search.internal.configuration.CustomRelevanceFactory;
 import com.liferay.portal.search.query.QueryHelper;
 import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
 import com.liferay.portal.search.spi.model.query.contributor.helper.KeywordQueryContributorHelper;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -48,11 +46,11 @@ public class CustomRelevanceKeywordQueryContributor
 		String keywords, BooleanQuery booleanQuery,
 		KeywordQueryContributorHelper keywordQueryContributorHelper) {
 
-		Set<String> boosterValues = _getBoosterValues();
-
-		if (!Validator.isBlank(_field) && !boosterValues.isEmpty()) {
+		for (CustomRelevance customRelevance : customRelevances) {
 			queryHelper.addBoosterTerm(
-				booleanQuery, _field, boosterValues, _boostIncrement);
+				booleanQuery, customRelevance.getField(),
+				customRelevance.getBoosterValues(),
+				customRelevance.getBoostIncrement());
 		}
 	}
 
@@ -63,29 +61,15 @@ public class CustomRelevanceKeywordQueryContributor
 			ConfigurableUtil.createConfigurable(
 				CustomRelevanceConfiguration.class, properties);
 
-		_field = customRelevanceConfiguration.field();
-
-		_boosterValues = SetUtil.fromArray(
-			customRelevanceConfiguration.boosterValues());
-
-		_boostIncrement = customRelevanceConfiguration.boostIncrement();
+		customRelevances = customRelevanceFactory.getCustomRelevances(
+			customRelevanceConfiguration.boostings());
 	}
+
+	protected CustomRelevanceFactory customRelevanceFactory =
+		new CustomRelevanceFactory();
+	protected List<CustomRelevance> customRelevances;
 
 	@Reference
 	protected QueryHelper queryHelper;
-
-	private Set<String> _getBoosterValues() {
-		Stream<String> stream = _boosterValues.stream();
-
-		return stream.filter(
-			boosterValue -> !Validator.isBlank(boosterValue)
-		).collect(
-			Collectors.toSet()
-		);
-	}
-
-	private Set<String> _boosterValues;
-	private float _boostIncrement;
-	private String _field;
 
 }

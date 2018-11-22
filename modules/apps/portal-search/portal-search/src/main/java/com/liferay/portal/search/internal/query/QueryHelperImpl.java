@@ -34,8 +34,8 @@ import com.liferay.portal.search.query.QueryHelper;
 
 import java.io.Serializable;
 
+import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -46,7 +46,7 @@ import org.osgi.service.component.annotations.Component;
 public class QueryHelperImpl implements QueryHelper {
 
 	public void addBoosterTerm(
-		BooleanQuery booleanQuery, String field, Set<String> boosterValues,
+		BooleanQuery booleanQuery, String field, List<String> boosterValues,
 		float boostIncrement) {
 
 		BooleanQuery boosterQuery = new BooleanQueryImpl();
