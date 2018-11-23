@@ -21,11 +21,14 @@ import com.liferay.portal.kernel.search.query.QueryTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.facet.FacetTranslator;
 import com.liferay.portal.search.engine.adapter.search.BaseSearchRequest;
 
+import java.util.Optional;
+
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.rescore.QueryRescorerBuilder;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -74,6 +77,11 @@ public class CommonSearchRequestBuilderAssemblerImpl
 		searchRequestBuilder.setTrackTotalHits(
 			baseSearchRequest.isTrackTotalHits());
 
+		Optional<QueryRescorerBuilder> rescorerBuilderOptional =
+			getRescorerBuilderOptional(baseSearchRequest);
+
+		rescorerBuilderOptional.ifPresent(searchRequestBuilder::setRescorer);
+
 		facetTranslator.translate(
 			searchRequestBuilder, baseSearchRequest.getQuery(),
 			baseSearchRequest.getFacets(),
@@ -106,6 +114,20 @@ public class CommonSearchRequestBuilderAssemblerImpl
 		boolQueryBuilder.must(queryBuilder);
 
 		return boolQueryBuilder;
+	}
+
+	protected Optional<QueryRescorerBuilder> getRescorerBuilderOptional(
+		BaseSearchRequest searchSearchRequest) {
+
+		Query query = searchSearchRequest.getRescorerQuery();
+
+		if (query == null) {
+			return Optional.empty();
+		}
+
+		QueryBuilder queryBuilder = queryTranslator.translate(query, null);
+
+		return Optional.of(new QueryRescorerBuilder(queryBuilder));
 	}
 
 	@Reference
