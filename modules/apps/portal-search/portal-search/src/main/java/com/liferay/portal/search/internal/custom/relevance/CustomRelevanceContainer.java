@@ -12,16 +12,12 @@
  * details.
  */
 
-package com.liferay.portal.search.internal.contributor.query;
+package com.liferay.portal.search.internal.custom.relevance;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.search.configuration.CustomRelevanceConfiguration;
-import com.liferay.portal.search.internal.configuration.CustomRelevance;
-import com.liferay.portal.search.internal.configuration.CustomRelevanceFactory;
 import com.liferay.portal.search.query.QueryHelper;
-import com.liferay.portal.search.spi.model.query.contributor.KeywordQueryContributor;
-import com.liferay.portal.search.spi.model.query.contributor.helper.KeywordQueryContributorHelper;
 
 import java.util.List;
 import java.util.Map;
@@ -36,22 +32,21 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	configurationPid = "com.liferay.portal.search.configuration.CustomRelevanceConfiguration",
-	immediate = true, service = KeywordQueryContributor.class
+	immediate = true, service = CustomRelevanceContainer.class
 )
-public class CustomRelevanceKeywordQueryContributor
-	implements KeywordQueryContributor {
+public class CustomRelevanceContainer {
 
-	@Override
-	public void contribute(
-		String keywords, BooleanQuery booleanQuery,
-		KeywordQueryContributorHelper keywordQueryContributorHelper) {
-
+	public void addBoosterTerms(BooleanQuery booleanQuery) {
 		for (CustomRelevance customRelevance : customRelevances) {
 			queryHelper.addBoosterTerm(
 				booleanQuery, customRelevance.getField(),
 				customRelevance.getBoosterValues(),
 				customRelevance.getBoostIncrement());
 		}
+	}
+
+	public List<CustomRelevance> getCustomRelevances() {
+		return customRelevances;
 	}
 
 	@Activate

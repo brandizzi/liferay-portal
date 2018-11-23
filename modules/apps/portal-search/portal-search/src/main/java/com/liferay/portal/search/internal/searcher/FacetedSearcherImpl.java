@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.constants.SearchContextAttributes;
+import com.liferay.portal.search.internal.custom.relevance.CustomRelevanceContainer;
 import com.liferay.portal.search.internal.indexer.PreFilterContributorHelper;
 
 import java.util.LinkedHashMap;
@@ -53,12 +54,14 @@ public class FacetedSearcherImpl
 	extends BaseSearcher implements FacetedSearcher {
 
 	public FacetedSearcherImpl(
+		CustomRelevanceContainer customRelevanceContainer,
 		ExpandoQueryContributor expandoQueryContributor,
 		IndexerRegistry indexerRegistry,
 		IndexSearcherHelper indexSearcherHelper,
 		PreFilterContributorHelper preFilterContributorHelper,
 		SearchEngineHelper searchEngineHelper) {
 
+		_customRelevanceContainer = customRelevanceContainer;
 		_expandoQueryContributor = expandoQueryContributor;
 		_indexerRegistry = indexerRegistry;
 		_indexSearcherHelper = indexSearcherHelper;
@@ -91,6 +94,8 @@ public class FacetedSearcherImpl
 
 		_addPreFilters(
 			fullQueryBooleanFilter, entryClassNameIndexerMap, searchContext);
+
+		_addRescorerQuery(searchContext);
 
 		BooleanQuery fullQuery = new BooleanQueryImpl();
 
@@ -208,6 +213,14 @@ public class FacetedSearcherImpl
 			booleanFilter, entryClassNameIndexerMap, searchContext);
 	}
 
+	private void _addRescorerQuery(SearchContext searchContext) {
+		BooleanQuery query = new BooleanQueryImpl();
+
+		_customRelevanceContainer.addBoosterTerms(query);
+
+		searchContext.setAttribute("custom.relevance.query", query);
+	}
+
 	private void _addSearchKeywords(
 			BooleanQuery booleanQuery, boolean luceneSyntax,
 			Map<String, Indexer<?>> entryClassNameIndexerMap,
@@ -305,6 +318,7 @@ public class FacetedSearcherImpl
 		};
 	}
 
+	private final CustomRelevanceContainer _customRelevanceContainer;
 	private final ExpandoQueryContributor _expandoQueryContributor;
 	private final IndexerRegistry _indexerRegistry;
 	private final IndexSearcherHelper _indexSearcherHelper;

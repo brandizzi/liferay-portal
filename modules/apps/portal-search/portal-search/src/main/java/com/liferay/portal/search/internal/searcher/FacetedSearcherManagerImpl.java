@@ -22,7 +22,9 @@ import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcher;
 import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcherManager;
 import com.liferay.portal.kernel.util.Localization;
 import com.liferay.portal.kernel.util.LocalizationUtil;
+import com.liferay.portal.search.internal.custom.relevance.CustomRelevanceContainer;
 import com.liferay.portal.search.internal.indexer.PreFilterContributorHelper;
+import com.liferay.portal.search.query.QueryHelper;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -36,8 +38,9 @@ public class FacetedSearcherManagerImpl implements FacetedSearcherManager {
 	@Override
 	public FacetedSearcher createFacetedSearcher() {
 		return new FacetedSearcherImpl(
-			expandoQueryContributor, indexerRegistry, indexSearcherHelper,
-			preFilterContributorHelper, searchEngineHelper);
+			customRelevanceContainer, expandoQueryContributor, indexerRegistry,
+			indexSearcherHelper, preFilterContributorHelper,
+			searchEngineHelper);
 	}
 
 	protected Localization getLocalization() {
@@ -52,6 +55,9 @@ public class FacetedSearcherManagerImpl implements FacetedSearcherManager {
 	}
 
 	@Reference
+	protected CustomRelevanceContainer customRelevanceContainer;
+
+	@Reference
 	protected ExpandoQueryContributor expandoQueryContributor;
 
 	@Reference
@@ -64,6 +70,9 @@ public class FacetedSearcherManagerImpl implements FacetedSearcherManager {
 
 	@Reference
 	protected PreFilterContributorHelper preFilterContributorHelper;
+
+	@Reference
+	protected QueryHelper queryHelper;
 
 	@Reference
 	protected SearchEngineHelper searchEngineHelper;

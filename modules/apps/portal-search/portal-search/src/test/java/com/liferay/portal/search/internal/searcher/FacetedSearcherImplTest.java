@@ -25,8 +25,10 @@ import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcher;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.search.constants.SearchContextAttributes;
+import com.liferay.portal.search.internal.custom.relevance.CustomRelevanceContainer;
 import com.liferay.portal.search.internal.indexer.PreFilterContributorHelper;
 import com.liferay.portal.search.internal.test.util.DocumentFixture;
+import com.liferay.portal.search.query.QueryHelper;
 import com.liferay.registry.BasicRegistryImpl;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
@@ -132,9 +134,13 @@ public class FacetedSearcherImplTest {
 
 	protected FacetedSearcherImpl createFacetedSearcher() {
 		return new FacetedSearcherImpl(
-			expandoQueryContributor, indexerRegistry, indexSearcherHelper,
-			preFilterContributorHelper, searchEngineHelper);
+			customRelevanceContainer, expandoQueryContributor, indexerRegistry,
+			indexSearcherHelper, preFilterContributorHelper,
+			searchEngineHelper);
 	}
+
+	@Mock
+	protected CustomRelevanceContainer customRelevanceContainer;
 
 	@Mock
 	protected ExpandoQueryContributor expandoQueryContributor;
@@ -149,6 +155,9 @@ public class FacetedSearcherImplTest {
 
 	@Mock
 	protected PreFilterContributorHelper preFilterContributorHelper;
+
+	@Mock
+	protected QueryHelper queryHelper;
 
 	@Mock
 	protected SearchEngineHelper searchEngineHelper;
