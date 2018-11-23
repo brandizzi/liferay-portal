@@ -49,6 +49,10 @@ public abstract class BaseSearchRequest {
 		return _query;
 	}
 
+	public Query getRescorerQuery() {
+		return _rescorerQuery;
+	}
+
 	public long getTimeoutInMilliseconds() {
 		return _timeoutInMilliseconds;
 	}
@@ -97,6 +101,10 @@ public abstract class BaseSearchRequest {
 		_requestCache = requestCache;
 	}
 
+	public void setRescorerQuery(Query rescorerQuery) {
+		_rescorerQuery = rescorerQuery;
+	}
+
 	public void setTimeoutInMilliseconds(long timeoutInMilliseconds) {
 		_timeoutInMilliseconds = timeoutInMilliseconds;
 	}
@@ -112,6 +120,7 @@ public abstract class BaseSearchRequest {
 	private Filter _postFilter;
 	private Query _query;
 	private boolean _requestCache;
+	private Query _rescorerQuery;
 	private long _timeoutInMilliseconds;
 	private boolean _trackTotalHits = true;
 
