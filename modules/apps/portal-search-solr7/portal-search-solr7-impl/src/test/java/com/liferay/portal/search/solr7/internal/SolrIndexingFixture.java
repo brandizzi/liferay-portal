@@ -23,6 +23,10 @@ import com.liferay.portal.kernel.util.Digester;
 import com.liferay.portal.kernel.util.Localization;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.search.document.DocumentBuilderFactory;
+import com.liferay.portal.search.field.FieldRegistry;
+import com.liferay.portal.search.internal.document.DocumentBuilderFactoryImpl;
+import com.liferay.portal.search.internal.field.FieldRegistryImpl;
 import com.liferay.portal.search.internal.legacy.searcher.SearchRequestBuilderFactoryImpl;
 import com.liferay.portal.search.internal.legacy.searcher.SearchResponseBuilderFactoryImpl;
 import com.liferay.portal.search.internal.legacy.stats.StatsRequestBuilderFactoryImpl;
@@ -89,6 +93,21 @@ public class SolrIndexingFixture implements IndexingFixture {
 	}
 
 	@Override
+	public void addIndexingFixtureListener(
+		IndexingFixtureListener indexingFixtureListener) {
+	}
+
+	@Override
+	public DocumentBuilderFactory getDocumentBuilderFactory() {
+		return _documentBuilderFactory;
+	}
+
+	@Override
+	public FieldRegistry getFieldRegistry() {
+		return _fieldRegistry;
+	}
+
+	@Override
 	public IndexSearcher getIndexSearcher() {
 		return _indexSearcher;
 	}
@@ -115,6 +134,15 @@ public class SolrIndexingFixture implements IndexingFixture {
 
 		SolrClientManager solrClientManager = new TestSolrClientManager(
 			_properties);
+
+		FieldRegistry fieldRegistry = createFieldRegistry();
+
+		DocumentBuilderFactory documentBuilderFactory =
+			createDocumentBuilderFactory(fieldRegistry);
+
+		_documentBuilderFactory = documentBuilderFactory;
+
+		_fieldRegistry = fieldRegistry;
 
 		_indexSearcher = createIndexSearcher(solrClientManager);
 		_indexWriter = createIndexWriter(solrClientManager);
@@ -173,7 +201,7 @@ public class SolrIndexingFixture implements IndexingFixture {
 		};
 	}
 
-	protected Digester createDigester() {
+	protected static Digester createDigester() {
 		Digester digester = Mockito.mock(Digester.class);
 
 		Mockito.doAnswer(
@@ -193,12 +221,26 @@ public class SolrIndexingFixture implements IndexingFixture {
 		return digester;
 	}
 
+	protected static DocumentBuilderFactory createDocumentBuilderFactory(
+		FieldRegistry fieldRegistry1) {
+
+		return new DocumentBuilderFactoryImpl() {
+			{
+				fieldRegistry = fieldRegistry1;
+			}
+		};
+	}
+
 	protected FacetProcessor createFacetProcessor() {
 		return new DefaultFacetProcessor() {
 			{
 				setJSONFactory(_jsonFactory);
 			}
 		};
+	}
+
+	protected static FieldRegistry createFieldRegistry() {
+		return new FieldRegistryImpl();
 	}
 
 	protected IndexSearcher createIndexSearcher(
@@ -233,10 +275,10 @@ public class SolrIndexingFixture implements IndexingFixture {
 		};
 	}
 
-	protected IndexWriter createIndexWriter(
-		final SolrClientManager solrClientManager) {
+	protected static IndexWriter createIndexWriter(
+		SolrClientManager solrClientManager) {
 
-		final SolrUpdateDocumentCommand solrUpdateDocumentCommand =
+		SolrUpdateDocumentCommand solrUpdateDocumentCommand =
 			createSolrUpdateDocumentCommand(solrClientManager);
 
 		return new SolrIndexWriter() {
@@ -306,9 +348,9 @@ public class SolrIndexingFixture implements IndexingFixture {
 		};
 	}
 
-	protected SolrSpellCheckIndexWriter createSolrSpellCheckIndexWriter(
-		final SolrClientManager solrClientManager,
-		final SolrUpdateDocumentCommand solrUpdateDocumentCommand) {
+	protected static SolrSpellCheckIndexWriter createSolrSpellCheckIndexWriter(
+		SolrClientManager solrClientManager,
+		SolrUpdateDocumentCommand solrUpdateDocumentCommand) {
 
 		return new SolrSpellCheckIndexWriter() {
 			{
@@ -321,8 +363,8 @@ public class SolrIndexingFixture implements IndexingFixture {
 		};
 	}
 
-	protected SolrUpdateDocumentCommandImpl createSolrUpdateDocumentCommand(
-		final SolrClientManager solrClientManager) {
+	protected static SolrUpdateDocumentCommandImpl createSolrUpdateDocumentCommand(
+		SolrClientManager solrClientManager) {
 
 		return new SolrUpdateDocumentCommandImpl() {
 			{
@@ -332,7 +374,9 @@ public class SolrIndexingFixture implements IndexingFixture {
 		};
 	}
 
+	private DocumentBuilderFactory _documentBuilderFactory;
 	private FacetProcessor<SolrQuery> _facetProcessor;
+	private FieldRegistry _fieldRegistry;
 	private IndexSearcher _indexSearcher;
 	private IndexWriter _indexWriter;
 	private final JSONFactory _jsonFactory = new JSONFactoryImpl();
