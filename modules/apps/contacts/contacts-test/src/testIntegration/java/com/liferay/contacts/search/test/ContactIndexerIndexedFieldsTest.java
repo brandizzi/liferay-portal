@@ -89,9 +89,8 @@ public class ContactIndexerIndexedFieldsTest {
 
 		indexedFieldsFixture.postProcessDocument(document);
 
-		Map<String, String> expected = expectedFieldValues(contact);
-
-		FieldValuesAssert.assertFieldValues(expected, document, searchTerm);
+		FieldValuesAssert.assertFieldValues(
+			expectedFieldValues(contact), document, searchTerm);
 	}
 
 	protected Map<String, String> expectedFieldValues(Contact contact)
