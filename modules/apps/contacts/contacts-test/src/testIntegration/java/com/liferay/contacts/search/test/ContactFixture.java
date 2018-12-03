@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.ContactLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
@@ -52,12 +53,12 @@ public class ContactFixture {
 		String jobTitle = StringPool.BLANK;
 
 		return addContact(
-			emailAddress, firstName, middleName, lastName, fullName, jobTitle);
+			emailAddress, firstName, middleName, lastName, jobTitle);
 	}
 
 	public Contact addContact(
 			String emailAddress, String firstName, String middleName,
-			String lastName, String fullName, String jobTitle)
+			String lastName, String jobTitle)
 		throws Exception {
 
 		long userId = getUserId();
@@ -130,6 +131,19 @@ public class ContactFixture {
 			_group.getGroupId(), null, locale);
 
 		_group.setModelAttributes(group.getModelAttributes());
+	}
+
+	protected Contact addContact() throws Exception {
+		String emailAddress = RandomTestUtil.randomString() + "@liferay.com";
+
+		String firstName = RandomTestUtil.randomString();
+		String middleName = RandomTestUtil.randomString();
+		String lastName = RandomTestUtil.randomString();
+
+		String jobTitle = RandomTestUtil.randomString();
+
+		return addContact(
+			emailAddress, firstName, middleName, lastName, jobTitle);
 	}
 
 	protected long getGroupId() throws Exception {

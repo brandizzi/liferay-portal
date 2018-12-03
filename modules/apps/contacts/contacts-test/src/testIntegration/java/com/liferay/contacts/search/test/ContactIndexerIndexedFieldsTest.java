@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
-import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
@@ -65,21 +64,9 @@ public class ContactIndexerIndexedFieldsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		contactFixture = createContactFixture();
+		setUpContactFixture();
 
-		contactFixture.setUp();
-
-		indexedFieldsFixture = createIndexedFieldsFixture();
-
-		contactFixture.setGroup(contactFixture.addGroup());
-
-		User user = contactFixture.addUser();
-
-		contactFixture.setUser(user);
-
-		contactIndexerFixture = createContactIndexerFixture();
-
-		contactIndexerFixture.setUser(user);
+		setUpContactSearchFixture();
 	}
 
 	@Test
@@ -88,21 +75,14 @@ public class ContactIndexerIndexedFieldsTest {
 
 		contactFixture.updateDisplaySettings(locale);
 
-		String emailAddress = RandomTestUtil.randomString() + "@liferay.com";
+		Contact contact = contactFixture.addContact();
 
-		String firstName = RandomTestUtil.randomString();
-		String middleName = RandomTestUtil.randomString();
-		String lastName = RandomTestUtil.randomString();
+		assertSearchContact(locale, contact, contact.getFullName());
+	}
 
-		String fullName = String.format(
-			"%s %s %s", firstName, middleName, lastName);
-
-		String jobTitle = RandomTestUtil.randomString();
-
-		Contact contact = contactFixture.addContact(
-			emailAddress, firstName, middleName, lastName, fullName, jobTitle);
-
-		String searchTerm = fullName;
+	protected void assertSearchContact(
+			Locale locale, Contact contact, String searchTerm)
+		throws Exception {
 
 		Document document = contactIndexerFixture.searchOnlyOne(
 			searchTerm, locale);
@@ -112,22 +92,6 @@ public class ContactIndexerIndexedFieldsTest {
 		Map<String, String> expected = expectedFieldValues(contact);
 
 		FieldValuesAssert.assertFieldValues(expected, document, searchTerm);
-	}
-
-	protected ContactFixture createContactFixture() {
-		return new ContactFixture(
-			contactLocalService, _users, _groups, _contacts);
-	}
-
-	protected ContactIndexerFixture createContactIndexerFixture() {
-		Indexer<?> indexer = indexerRegistry.getIndexer(Contact.class);
-
-		return new ContactIndexerFixture(indexer);
-	}
-
-	protected IndexedFieldsFixture createIndexedFieldsFixture() {
-		return new IndexedFieldsFixture(
-			resourcePermissionLocalService, searchEngineHelper);
 	}
 
 	protected Map<String, String> expectedFieldValues(Contact contact)
@@ -173,6 +137,30 @@ public class ContactIndexerIndexedFieldsTest {
 		return map;
 	}
 
+	protected void setUpContactFixture() throws Exception {
+		contactFixture = new ContactFixture(
+			contactLocalService, _users, _groups, _contacts);
+
+		contactFixture.setUp();
+
+		contactFixture.setGroup(contactFixture.addGroup());
+
+		user = contactFixture.addUser();
+
+		contactFixture.setUser(user);
+	}
+
+	protected void setUpContactSearchFixture() {
+		indexedFieldsFixture = new IndexedFieldsFixture(
+			resourcePermissionLocalService, searchEngineHelper);
+
+		Indexer<?> indexer = indexerRegistry.getIndexer(Contact.class);
+
+		contactIndexerFixture = new ContactIndexerFixture(indexer);
+
+		contactIndexerFixture.setUser(user);
+	}
+
 	protected ContactFixture contactFixture;
 	protected ContactIndexerFixture contactIndexerFixture;
 
@@ -189,6 +177,8 @@ public class ContactIndexerIndexedFieldsTest {
 
 	@Inject
 	protected SearchEngineHelper searchEngineHelper;
+
+	protected User user;
 
 	@DeleteAfterTestRun
 	private final List<Contact> _contacts = new ArrayList<>(1);
