@@ -240,7 +240,10 @@ public class SolrIndexingFixture implements IndexingFixture {
 	}
 
 	protected static FieldRegistry createFieldRegistry() {
-		return new FieldRegistryImpl();
+		return new FieldRegistryImpl() {						// TODO Listeners Holder
+			{
+			}
+		};
 	}
 
 	protected IndexSearcher createIndexSearcher(
