@@ -16,11 +16,13 @@ package com.liferay.contacts.search.test;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
 import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
@@ -35,8 +37,9 @@ import java.util.Objects;
  */
 public class ContactIndexerFixture {
 
-	public ContactIndexerFixture(Indexer<?> indexer) {
-		_indexer = indexer;
+	public ContactIndexerFixture(IndexerRegistry indexerRegistry, User user) {
+		_indexer = indexerRegistry.getIndexer(Contact.class);
+		_user = user;
 	}
 
 	public void deleteDocument(Document document)
@@ -55,7 +58,7 @@ public class ContactIndexerFixture {
 		searchContext.setCompanyId(TestPropsValues.getCompanyId());
 		searchContext.setKeywords(keywords);
 		searchContext.setLocale(Objects.requireNonNull(locale));
-		searchContext.setUserId(getUserId());
+		searchContext.setUserId(_user.getUserId());
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
 
@@ -75,14 +78,6 @@ public class ContactIndexerFixture {
 			search(getSearchContext(keywords, locale)));
 	}
 
-	public void setUser(User user) {
-		_user = user;
-	}
-
-	protected long getUserId() throws Exception {
-		return _user.getUserId();
-	}
-
 	protected void reindex(long companyId) throws Exception {
 		_indexer.reindex(new String[] {String.valueOf(companyId)});
 	}
@@ -92,6 +87,6 @@ public class ContactIndexerFixture {
 	}
 
 	private final Indexer<?> _indexer;
-	private User _user;
+	private final User _user;
 
 }

@@ -25,7 +25,6 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.test.util.UserTestUtil;
 
 import java.util.List;
 import java.util.Locale;
@@ -36,13 +35,13 @@ import java.util.Locale;
 public class ContactFixture {
 
 	public ContactFixture(
-		ContactLocalService contactLocalService, List<User> users,
-		List<Group> groups, List<Contact> contacts) {
+		ContactLocalService contactLocalService, List<Contact> contacts,
+		Group group, User user) {
 
 		_contactLocalService = contactLocalService;
-		_users = users;
-		_groups = groups;
 		_contacts = contacts;
+		_group = group;
+		_user = user;
 	}
 
 	public Contact addContact(String firstName) throws Exception {
@@ -58,7 +57,7 @@ public class ContactFixture {
 		throws Exception {
 
 		Contact contact = _contactLocalService.addContact(
-			getUserId(), StringPool.STAR, 1, emailAddress, firstName,
+			_user.getUserId(), StringPool.STAR, 1, emailAddress, firstName,
 			middleName, lastName, 0, 0, RandomTestUtil.randomBoolean(),
 			RandomTestUtil.randomInt(0, 11), RandomTestUtil.randomInt(1, 28),
 			RandomTestUtil.randomInt(1970, 2018), RandomTestUtil.randomString(),
@@ -71,37 +70,13 @@ public class ContactFixture {
 		return contact;
 	}
 
-	public Group addGroup() throws Exception {
-		Group group = GroupTestUtil.addGroup();
-
-		_groups.add(group);
-
-		return group;
-	}
-
-	public User addUser() throws Exception {
-		User user = UserTestUtil.addUser(getGroupId());
-
-		_users.add(user);
-
-		return user;
-	}
-
 	public ServiceContext getServiceContext() throws Exception {
 		return ServiceContextTestUtil.getServiceContext(
-			getGroupId(), getUserId());
-	}
-
-	public void setGroup(Group group) {
-		_group = group;
+			_group.getGroupId(), _user.getUserId());
 	}
 
 	public void setUp() throws Exception {
 		CompanyThreadLocal.setCompanyId(TestPropsValues.getCompanyId());
-	}
-
-	public void setUser(User user) {
-		_user = user;
 	}
 
 	public void updateDisplaySettings(Locale locale) throws Exception {
@@ -118,19 +93,9 @@ public class ContactFixture {
 			RandomTestUtil.randomString());
 	}
 
-	protected long getGroupId() throws Exception {
-		return _group.getGroupId();
-	}
-
-	protected long getUserId() throws Exception {
-		return _user.getUserId();
-	}
-
 	private final ContactLocalService _contactLocalService;
 	private final List<Contact> _contacts;
-	private Group _group;
-	private final List<Group> _groups;
-	private User _user;
-	private final List<User> _users;
+	private final Group _group;
+	private final User _user;
 
 }
