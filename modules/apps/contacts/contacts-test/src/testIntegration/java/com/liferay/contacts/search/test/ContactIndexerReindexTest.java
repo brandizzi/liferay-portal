@@ -16,14 +16,26 @@ package com.liferay.contacts.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.model.Contact;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistry;
+import com.liferay.portal.kernel.search.SearchEngineHelper;
+import com.liferay.portal.kernel.service.ContactLocalService;
+import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.search.test.util.IndexedFieldsFixture;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import org.junit.Before;
@@ -36,7 +48,7 @@ import org.junit.runner.RunWith;
  * @author Lucas Marques de Paula
  */
 @RunWith(Arquillian.class)
-public class ContactIndexerReindexTest extends BaseContactIndexerTestCase {
+public class ContactIndexerReindexTest {
 
 	@ClassRule
 	@Rule
@@ -48,10 +60,9 @@ public class ContactIndexerReindexTest extends BaseContactIndexerTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		super.setUp();
+		setUpContactFixture();
 
-		super.setGroup(contactFixture.addGroup());
-		super.setUser(contactFixture.addUser());
+		setUpContactSearchFixture();
 	}
 
 	@Test
@@ -77,5 +88,57 @@ public class ContactIndexerReindexTest extends BaseContactIndexerTestCase {
 
 		contactIndexerFixture.searchOnlyOne(searchTerm, locale);
 	}
+
+	protected void setUpContactFixture() throws Exception {
+		contactFixture = new ContactFixture(
+			contactLocalService, _users, _groups, _contacts);
+
+		contactFixture.setUp();
+
+		contactFixture.setGroup(contactFixture.addGroup());
+
+		user = contactFixture.addUser();
+
+		contactFixture.setUser(user);
+	}
+
+	protected void setUpContactSearchFixture() {
+		indexedFieldsFixture = new IndexedFieldsFixture(
+			resourcePermissionLocalService, searchEngineHelper);
+
+		Indexer<?> indexer = indexerRegistry.getIndexer(Contact.class);
+
+		contactIndexerFixture = new ContactIndexerFixture(indexer);
+
+		contactIndexerFixture.setUser(user);
+	}
+
+	protected ContactFixture contactFixture;
+	protected ContactIndexerFixture contactIndexerFixture;
+
+	@Inject
+	protected ContactLocalService contactLocalService;
+
+	protected IndexedFieldsFixture indexedFieldsFixture;
+
+	@Inject
+	protected IndexerRegistry indexerRegistry;
+
+	@Inject
+	protected ResourcePermissionLocalService resourcePermissionLocalService;
+
+	@Inject
+	protected SearchEngineHelper searchEngineHelper;
+
+	protected User user;
+
+	@DeleteAfterTestRun
+	private final List<Contact> _contacts = new ArrayList<>(1);
+
+	@DeleteAfterTestRun
+	private final List<Group> _groups = new ArrayList<>(1);
+
+	@DeleteAfterTestRun
+	private final List<User> _users = new ArrayList<>(1);
 
 }
