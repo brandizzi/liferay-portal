@@ -47,7 +47,6 @@ import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.BooleanQuery;
-import com.liferay.portal.kernel.search.DDMStructureIndexer;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriterHelper;
@@ -117,8 +116,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Tibor Lipusz
  */
 @Component(immediate = true, service = Indexer.class)
-public class JournalArticleIndexer
-	extends BaseIndexer<JournalArticle> implements DDMStructureIndexer {
+public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 
 	public static final String CLASS_NAME = JournalArticle.class.getName();
 
@@ -291,7 +289,10 @@ public class JournalArticleIndexer
 		}
 	}
 
-	@Override
+	/**
+	 * @deprecated As of Judson (7.1.x), replaced by {@link #JournalArticleDDMStructureIndexer}
+	 */
+	@Deprecated
 	public void reindexDDMStructures(List<Long> ddmStructureIds)
 		throws SearchException {
 
