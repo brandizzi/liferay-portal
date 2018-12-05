@@ -24,8 +24,6 @@ import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
 import com.liferay.portal.kernel.backgroundtask.display.BackgroundTaskDisplay;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.DDMStructureIndexer;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistry;
 
 import java.io.Serializable;
 
@@ -69,6 +67,11 @@ public class DDMStructureIndexerBackgroundTaskExecutor
 
 		DDMStructureIndexer structureIndexer = getDDMStructureIndexer(
 			structureId);
+
+		if (structureIndexer == null) {
+			return new BackgroundTaskResult(
+				BackgroundTaskConstants.STATUS_FAILED);
+		}
 
 		List<Long> ddmStructureIds = getChildrenStructureIds(structureId);
 
@@ -126,10 +129,15 @@ public class DDMStructureIndexerBackgroundTaskExecutor
 		DDMStructure structure = _ddmStructureLocalService.getStructure(
 			structureId);
 
-		Indexer<?> indexer = _indexerRegistry.nullSafeGetIndexer(
+		return _ddmStructureIndexerTracker.getDDMStructureIndexer(
 			structure.getClassName());
+	}
 
-		return (DDMStructureIndexer)indexer;
+	@Reference(unbind = "-")
+	protected void setDDMStructureIndexerTracker(
+		DDMStructureIndexerTracker ddmStructureIndexerTracker) {
+
+		_ddmStructureIndexerTracker = ddmStructureIndexerTracker;
 	}
 
 	@Reference(unbind = "-")
@@ -139,15 +147,10 @@ public class DDMStructureIndexerBackgroundTaskExecutor
 		_ddmStructureLocalService = ddmStructureLocalService;
 	}
 
-	@Reference(unbind = "-")
-	protected void setIndexerRegistry(IndexerRegistry indexerRegistry) {
-		_indexerRegistry = indexerRegistry;
-	}
-
 	private static final String _BACKGROUND_TASK_NAME_PREFIX =
 		"DDMStructureIndexerBackgroundTaskExecutor-";
 
+	private DDMStructureIndexerTracker _ddmStructureIndexerTracker;
 	private DDMStructureLocalService _ddmStructureLocalService;
-	private IndexerRegistry _indexerRegistry;
 
 }
