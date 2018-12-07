@@ -152,7 +152,7 @@ public class OrganizationIndexerIndexedFieldsTest
 
 		Map<String, String> map = new HashMap<>();
 
-		String countryName = getCountryNameForAllAvailableLocales(organization);
+		String countryName = organizationFixture.getCountryNames(organization);
 
 		Region region = regionService.getRegion(organization.getRegionId());
 

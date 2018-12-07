@@ -14,8 +14,6 @@
 
 package com.liferay.organizations.search.test;
 
-import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.model.Country;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.search.SearchEngineHelper;
@@ -24,16 +22,12 @@ import com.liferay.portal.kernel.service.OrganizationService;
 import com.liferay.portal.kernel.service.RegionService;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.test.util.IndexedFieldsFixture;
 import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.Inject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 /**
  * @author Igor Fabiano Nazar
@@ -63,40 +57,6 @@ public abstract class BaseOrganizationIndexerTestCase {
 
 	protected IndexerFixture<Organization> createOrganizationIndexerFixture() {
 		return new IndexerFixture<>(Organization.class);
-	}
-
-	protected String getCountryNameForAllAvailableLocales(
-		Organization organization) {
-
-		Country country = countryService.fetchCountry(
-			organization.getCountryId());
-
-		Set<String> countryNames = new HashSet<>();
-
-		for (Locale locale : LanguageUtil.getAvailableLocales()) {
-			String countryName = country.getName(locale);
-
-			countryName = StringUtil.toLowerCase(countryName);
-
-			countryNames.add(countryName);
-		}
-
-		return joinCountryNames(countryNames);
-	}
-
-	protected String joinCountryNames(Set<String> countryNames) {
-		String separator = ", ";
-		StringBuffer sb = new StringBuffer();
-
-		for (String string : countryNames) {
-			if (sb.length() != 0) {
-				sb.append(separator);
-			}
-
-			sb.append(string);
-		}
-
-		return "[" + sb.toString() + "]";
 	}
 
 	protected void setGroup(Group group) {

@@ -15,6 +15,7 @@
 package com.liferay.organizations.search.test;
 
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Country;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ListTypeConstants;
@@ -36,10 +37,12 @@ import com.liferay.portal.service.test.ServiceTestUtil;
 import java.io.File;
 import java.io.Serializable;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 /**
@@ -115,6 +118,23 @@ public class OrganizationFixture {
 		}
 	}
 
+	public String getCountryNames(Organization organization) {
+		Country country = _countryService.fetchCountry(
+			organization.getCountryId());
+
+		Set<String> countryNames = new HashSet<>();
+
+		for (Locale locale : LanguageUtil.getAvailableLocales()) {
+			String countryName = country.getName(locale);
+
+			countryName = StringUtil.toLowerCase(countryName);
+
+			countryNames.add(countryName);
+		}
+
+		return _joinCountryNames(countryNames);
+	}
+
 	public ServiceContext getServiceContext() throws Exception {
 		return ServiceContextTestUtil.getServiceContext(
 			_group.getGroupId(), getUserId());
@@ -159,6 +179,21 @@ public class OrganizationFixture {
 		Region region = regionOptional.get();
 
 		return region;
+	}
+
+	private String _joinCountryNames(Set<String> countryNames) {
+		String separator = ", ";
+		StringBuffer sb = new StringBuffer();
+
+		for (String string : countryNames) {
+			if (sb.length() != 0) {
+				sb.append(separator);
+			}
+
+			sb.append(string);
+		}
+
+		return "[" + sb.toString() + "]";
 	}
 
 	private final CountryService _countryService;
