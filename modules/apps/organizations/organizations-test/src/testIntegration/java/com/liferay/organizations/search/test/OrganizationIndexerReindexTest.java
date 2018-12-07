@@ -15,11 +15,17 @@
 package com.liferay.organizations.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
+import com.liferay.users.admin.test.util.search.UserSearchFixture;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -47,7 +53,16 @@ public class OrganizationIndexerReindexTest
 	public void setUp() throws Exception {
 		super.setUp();
 
-		super.setGroup(organizationFixture.addGroup());
+		userSearchFixture = new UserSearchFixture();
+
+		userSearchFixture.setUp();
+
+		_groups = userSearchFixture.getGroups();
+		_users = userSearchFixture.getUsers();
+
+		group = userSearchFixture.addGroup();
+
+		super.setGroup(group);
 	}
 
 	@Test
@@ -63,5 +78,14 @@ public class OrganizationIndexerReindexTest
 		organizationIndexerFixture.reindex(organization.getCompanyId());
 		organizationIndexerFixture.searchOnlyOne(organizationName);
 	}
+
+	@DeleteAfterTestRun
+	private List<Group> _groups;
+
+	@DeleteAfterTestRun
+	private List<User> _users;
+
+	private Group group;
+	private UserSearchFixture userSearchFixture;
 
 }

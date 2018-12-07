@@ -53,22 +53,12 @@ public class OrganizationFixture {
 
 	public OrganizationFixture(
 		OrganizationService organizationService, CountryService countryService,
-		RegionService regionService, List<Group> groups,
-		List<Organization> organizatons) {
+		RegionService regionService, List<Organization> organizatons) {
 
 		_organizationService = organizationService;
 		_countryService = countryService;
 		_regionService = regionService;
-		_groups = groups;
 		_organizatons = organizatons;
-	}
-
-	public Group addGroup() throws Exception {
-		Group group = GroupTestUtil.addGroup();
-
-		_groups.add(group);
-
-		return group;
 	}
 
 	public Organization createAnOrganization(
@@ -198,7 +188,6 @@ public class OrganizationFixture {
 
 	private final CountryService _countryService;
 	private Group _group;
-	private final List<Group> _groups;
 	private final OrganizationService _organizationService;
 	private final List<Organization> _organizatons;
 	private final RegionService _regionService;

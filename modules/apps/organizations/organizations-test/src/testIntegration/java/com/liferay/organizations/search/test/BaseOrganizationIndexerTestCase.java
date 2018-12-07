@@ -51,8 +51,7 @@ public abstract class BaseOrganizationIndexerTestCase {
 
 	protected OrganizationFixture createOrganizationFixture() {
 		return new OrganizationFixture(
-			organizationService, countryService, regionService, _groups,
-			_organizations);
+			organizationService, countryService, regionService, _organizations);
 	}
 
 	protected IndexerFixture<Organization> createOrganizationIndexerFixture() {
@@ -81,9 +80,6 @@ public abstract class BaseOrganizationIndexerTestCase {
 
 	@Inject
 	protected SearchEngineHelper searchEngineHelper;
-
-	@DeleteAfterTestRun
-	private final List<Group> _groups = new ArrayList<>(1);
 
 	@DeleteAfterTestRun
 	private final List<Organization> _organizations = new ArrayList<>(1);

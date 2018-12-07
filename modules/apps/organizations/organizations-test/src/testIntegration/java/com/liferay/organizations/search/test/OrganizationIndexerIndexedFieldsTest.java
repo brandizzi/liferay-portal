@@ -20,8 +20,10 @@ import com.liferay.expando.kernel.model.ExpandoColumnConstants;
 import com.liferay.expando.kernel.model.ExpandoTable;
 import com.liferay.expando.kernel.service.ExpandoColumnLocalService;
 import com.liferay.expando.kernel.service.ExpandoTableLocalService;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Region;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
@@ -34,6 +36,7 @@ import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
+import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
 import java.io.Serializable;
 
@@ -68,6 +71,15 @@ public class OrganizationIndexerIndexedFieldsTest
 	public void setUp() throws Exception {
 		super.setUp();
 
+		userSearchFixture = new UserSearchFixture();
+
+		userSearchFixture.setUp();
+
+		_groups = userSearchFixture.getGroups();
+		_users = userSearchFixture.getUsers();
+
+		group = userSearchFixture.addGroup();
+
 		expandoTableSearchFixture = new ExpandoTableSearchFixture(
 			classNameLocalService, expandoColumnLocalService,
 			expandoTableLocalService);
@@ -75,7 +87,7 @@ public class OrganizationIndexerIndexedFieldsTest
 		_expandoColumns = expandoTableSearchFixture.getExpandoColumns();
 		_expandoTables = expandoTableSearchFixture.getExpandoTables();
 
-		setGroup(organizationFixture.addGroup());
+		setGroup(group);
 	}
 
 	@Test
@@ -146,6 +158,7 @@ public class OrganizationIndexerIndexedFieldsTest
 	protected ExpandoTableLocalService expandoTableLocalService;
 
 	protected ExpandoTableSearchFixture expandoTableSearchFixture;
+	protected UserSearchFixture userSearchFixture;
 
 	private Map<String, String> _expectedFieldValues(Organization organization)
 		throws Exception {
@@ -238,5 +251,13 @@ public class OrganizationIndexerIndexedFieldsTest
 
 	@DeleteAfterTestRun
 	private List<ExpandoTable> _expandoTables;
+
+	@DeleteAfterTestRun
+	private List<Group> _groups;
+
+	@DeleteAfterTestRun
+	private List<User> _users;
+
+	private Group group;
 
 }
