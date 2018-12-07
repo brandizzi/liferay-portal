@@ -37,6 +37,7 @@ import com.liferay.portal.service.test.ServiceTestUtil;
 import java.io.File;
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -53,12 +54,11 @@ public class OrganizationFixture {
 
 	public OrganizationFixture(
 		OrganizationService organizationService, CountryService countryService,
-		RegionService regionService, List<Organization> organizatons) {
+		RegionService regionService) {
 
 		_organizationService = organizationService;
 		_countryService = countryService;
 		_regionService = regionService;
-		_organizatons = organizatons;
 	}
 
 	public Organization createAnOrganization(
@@ -125,6 +125,10 @@ public class OrganizationFixture {
 		return _joinCountryNames(countryNames);
 	}
 
+	public List<Organization> getOrganizations() {
+		return _organizatons;
+	}
+
 	public ServiceContext getServiceContext() throws Exception {
 		return ServiceContextTestUtil.getServiceContext(
 			_group.getGroupId(), getUserId());
@@ -189,7 +193,7 @@ public class OrganizationFixture {
 	private final CountryService _countryService;
 	private Group _group;
 	private final OrganizationService _organizationService;
-	private final List<Organization> _organizatons;
+	private final List<Organization> _organizatons = new ArrayList<>();
 	private final RegionService _regionService;
 
 }

@@ -26,7 +26,6 @@ import com.liferay.portal.search.test.util.IndexedFieldsFixture;
 import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.Inject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +39,8 @@ public abstract class BaseOrganizationIndexerTestCase {
 
 		organizationFixture.setUp();
 
+		_organizations = organizationFixture.getOrganizations();
+
 		organizationIndexerFixture = createOrganizationIndexerFixture();
 		indexedFieldsFixture = createIndexedFieldsFixture();
 	}
@@ -51,7 +52,7 @@ public abstract class BaseOrganizationIndexerTestCase {
 
 	protected OrganizationFixture createOrganizationFixture() {
 		return new OrganizationFixture(
-			organizationService, countryService, regionService, _organizations);
+			organizationService, countryService, regionService);
 	}
 
 	protected IndexerFixture<Organization> createOrganizationIndexerFixture() {
@@ -82,6 +83,6 @@ public abstract class BaseOrganizationIndexerTestCase {
 	protected SearchEngineHelper searchEngineHelper;
 
 	@DeleteAfterTestRun
-	private final List<Organization> _organizations = new ArrayList<>(1);
+	private List<Organization> _organizations;
 
 }
