@@ -59,6 +59,14 @@ public class IndexerFixture<T> {
 		HitsAssert.assertNoHits(hits);
 	}
 
+	public void searchNoOne(String keywords) throws Exception {
+		searchNoOne(TestPropsValues.getUserId(), keywords, null);
+	}
+
+	public void searchNoOne(String keywords, Locale locale) throws Exception {
+		searchNoOne(TestPropsValues.getUserId(), keywords, locale);
+	}
+
 	public Document searchOnlyOne(long userId, String keywords, Locale locale)
 		throws Exception {
 
@@ -68,6 +76,16 @@ public class IndexerFixture<T> {
 		Hits hits = _indexer.search(searchContext);
 
 		return HitsAssert.assertOnlyOne(hits);
+	}
+
+	public Document searchOnlyOne(String keywords) throws Exception {
+		return searchOnlyOne(TestPropsValues.getUserId(), keywords, null);
+	}
+
+	public Document searchOnlyOne(String keywords, Locale locale)
+		throws Exception {
+
+		return searchOnlyOne(TestPropsValues.getUserId(), keywords, locale);
 	}
 
 	private final Indexer<T> _indexer;
