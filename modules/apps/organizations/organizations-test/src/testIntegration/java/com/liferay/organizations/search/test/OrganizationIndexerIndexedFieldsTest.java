@@ -15,15 +15,23 @@
 package com.liferay.organizations.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.expando.kernel.model.ExpandoColumn;
 import com.liferay.expando.kernel.model.ExpandoColumnConstants;
+import com.liferay.expando.kernel.model.ExpandoTable;
+import com.liferay.expando.kernel.service.ExpandoColumnLocalService;
+import com.liferay.expando.kernel.service.ExpandoTableLocalService;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.Region;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.search.test.util.ExpandoTableSearchFixture;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
 
@@ -59,6 +67,13 @@ public class OrganizationIndexerIndexedFieldsTest
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
+
+		expandoTableSearchFixture = new ExpandoTableSearchFixture(
+			classNameLocalService, expandoColumnLocalService,
+			expandoTableLocalService);
+
+		_expandoColumns = expandoTableSearchFixture.getExpandoColumns();
+		_expandoTables = expandoTableSearchFixture.getExpandoTables();
 
 		setGroup(organizationFixture.addGroup());
 	}
@@ -96,14 +111,9 @@ public class OrganizationIndexerIndexedFieldsTest
 		String expandoColumnName = "expandoColumnName";
 		String expandoColumnNameValue = "Software Developer";
 
-		List<String> lstExpandoColumns = new ArrayList<>();
-
-		lstExpandoColumns.add(expandoColumnObs);
-		lstExpandoColumns.add(expandoColumnName);
-
-		addExpandoColumn(
-			Organization.class, lstExpandoColumns,
-			ExpandoColumnConstants.INDEX_TYPE_KEYWORD);
+		expandoTableSearchFixture.addExpandoColumn(
+			Organization.class, ExpandoColumnConstants.INDEX_TYPE_KEYWORD,
+			expandoColumnObs, expandoColumnName);
 
 		Map<String, Serializable> expandoValues = new HashMap<>();
 
@@ -125,6 +135,17 @@ public class OrganizationIndexerIndexedFieldsTest
 
 		FieldValuesAssert.assertFieldValues(expected, document, searchTerm);
 	}
+
+	@Inject
+	protected ClassNameLocalService classNameLocalService;
+
+	@Inject
+	protected ExpandoColumnLocalService expandoColumnLocalService;
+
+	@Inject
+	protected ExpandoTableLocalService expandoTableLocalService;
+
+	protected ExpandoTableSearchFixture expandoTableSearchFixture;
 
 	private Map<String, String> _expectedFieldValues(Organization organization)
 		throws Exception {
@@ -211,5 +232,11 @@ public class OrganizationIndexerIndexedFieldsTest
 			organization.getOrganizationId(), organization.getGroupId(), null,
 			map);
 	}
+
+	@DeleteAfterTestRun
+	private List<ExpandoColumn> _expandoColumns;
+
+	@DeleteAfterTestRun
+	private List<ExpandoTable> _expandoTables;
 
 }
