@@ -62,7 +62,7 @@ public class ContactFixture {
 			middleName, lastName, 0, 0, RandomTestUtil.randomBoolean(),
 			RandomTestUtil.randomInt(Calendar.JANUARY, Calendar.DECEMBER),
 			RandomTestUtil.randomInt(1, 28),
-			RandomTestUtil.randomInt(1970, 2018), StringPool.BLANK,
+			RandomTestUtil.randomInt(1970, 2017), StringPool.BLANK,
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			jobTitle);

@@ -19,14 +19,13 @@ import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.service.ContactLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
@@ -76,15 +75,16 @@ public class ContactIndexerReindexTest {
 		String searchTerm = firstName;
 
 		Document document = contactIndexerFixture.searchOnlyOne(
-			searchTerm, locale);
+			user.getUserId(), searchTerm, locale);
 
 		contactIndexerFixture.deleteDocument(document);
 
-		contactIndexerFixture.searchNoOne(searchTerm, locale);
+		contactIndexerFixture.searchNoOne(user.getUserId(), searchTerm, locale);
 
 		contactIndexerFixture.reindex(contact.getCompanyId());
 
-		contactIndexerFixture.searchOnlyOne(searchTerm, locale);
+		contactIndexerFixture.searchOnlyOne(
+			user.getUserId(), searchTerm, locale);
 	}
 
 	protected void setUpContactFixture() throws Exception {
@@ -99,11 +99,7 @@ public class ContactIndexerReindexTest {
 	}
 
 	protected void setUpContactIndexerFixture() {
-		Indexer<Contact> indexer = indexerRegistry.getIndexer(Contact.class);
-
-		contactIndexerFixture = new ContactIndexerFixture(indexer);
-
-		contactIndexerFixture.setUser(user);
+		contactIndexerFixture = new IndexerFixture<>(Contact.class);
 	}
 
 	protected void setUpUserSearchFixture() throws Exception {
@@ -120,16 +116,12 @@ public class ContactIndexerReindexTest {
 	}
 
 	protected ContactFixture contactFixture;
-	protected ContactIndexerFixture contactIndexerFixture;
+	protected IndexerFixture<Contact> contactIndexerFixture;
 
 	@Inject
 	protected ContactLocalService contactLocalService;
 
 	protected Group group;
-
-	@Inject
-	protected IndexerRegistry indexerRegistry;
-
 	protected User user;
 	protected UserSearchFixture userSearchFixture;
 
