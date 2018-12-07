@@ -23,8 +23,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Country;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.CountryService;
@@ -36,6 +34,7 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.search.test.util.IndexedFieldsFixture;
+import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portlet.expando.util.test.ExpandoTestUtil;
 
@@ -105,11 +104,8 @@ public abstract class BaseOrganizationIndexerTestCase {
 			_organizations);
 	}
 
-	protected OrganizationIndexerFixture createOrganizationIndexerFixture() {
-		Indexer<Organization> indexer = indexerRegistry.getIndexer(
-			Organization.class);
-
-		return new OrganizationIndexerFixture(indexer);
+	protected IndexerFixture<Organization> createOrganizationIndexerFixture() {
+		return new IndexerFixture<>(Organization.class);
 	}
 
 	protected String getCountryNameForAllAvailableLocales(
@@ -169,12 +165,8 @@ public abstract class BaseOrganizationIndexerTestCase {
 	protected final List<ExpandoTable> expandoTables = new ArrayList<>();
 
 	protected IndexedFieldsFixture indexedFieldsFixture;
-
-	@Inject
-	protected IndexerRegistry indexerRegistry;
-
 	protected OrganizationFixture organizationFixture;
-	protected OrganizationIndexerFixture organizationIndexerFixture;
+	protected IndexerFixture<Organization> organizationIndexerFixture;
 
 	@Inject
 	protected OrganizationService organizationService;
