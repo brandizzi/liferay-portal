@@ -61,15 +61,29 @@ public class OrganizationFixture {
 		_regionService = regionService;
 	}
 
-	public Organization createAnOrganization(
+	public Organization createOrganization(String organizationName)
+		throws Exception {
+
+		return createOrganization(organizationName, "united-states", "Alabama");
+	}
+
+	public Organization createOrganization(
+			String organizationName, Map<String, Serializable> expandoValues)
+		throws Exception {
+
+		return createOrganization(
+			organizationName, "united-states", "Alabama", expandoValues);
+	}
+
+	public Organization createOrganization(
 			String organizationName, String countryName, String regionName)
 		throws Exception, PortalException {
 
-		return createAnOrganization(
+		return createOrganization(
 			organizationName, countryName, regionName, null);
 	}
 
-	public Organization createAnOrganization(
+	public Organization createOrganization(
 			String organizationName, String countryName, String regionName,
 			Map<String, Serializable> expando)
 		throws Exception, PortalException {

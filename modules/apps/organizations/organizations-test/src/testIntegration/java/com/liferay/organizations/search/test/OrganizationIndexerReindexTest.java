@@ -27,7 +27,6 @@ import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
-import com.liferay.portal.search.test.util.IndexedFieldsFixture;
 import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -59,7 +58,6 @@ public class OrganizationIndexerReindexTest {
 
 	@Before
 	public void setUp() throws Exception {
-		setUpIndexedFieldsFixture();
 		setUpOrganizationIndexerFixture();
 
 		setUpUserSearchFixture();
@@ -70,11 +68,9 @@ public class OrganizationIndexerReindexTest {
 	@Test
 	public void testIndexedFields() throws Exception {
 		String organizationName = "abcd efgh";
-		String countryName = "united-states";
-		String regionName = "Alabama";
 
-		Organization organization = organizationFixture.createAnOrganization(
-			organizationName, countryName, regionName);
+		Organization organization = organizationFixture.createOrganization(
+			organizationName);
 
 		Document document = organizationIndexerFixture.searchOnlyOne(
 			organizationName);
@@ -86,11 +82,6 @@ public class OrganizationIndexerReindexTest {
 		organizationIndexerFixture.reindex(organization.getCompanyId());
 
 		organizationIndexerFixture.searchOnlyOne(organizationName);
-	}
-
-	protected void setUpIndexedFieldsFixture() {
-		indexedFieldsFixture = new IndexedFieldsFixture(
-			resourcePermissionLocalService, searchEngineHelper);
 	}
 
 	protected void setUpOrganizationFixture() throws Exception {
@@ -123,7 +114,6 @@ public class OrganizationIndexerReindexTest {
 	protected CountryService countryService;
 
 	protected Group group;
-	protected IndexedFieldsFixture indexedFieldsFixture;
 	protected OrganizationFixture organizationFixture;
 	protected IndexerFixture<Organization> organizationIndexerFixture;
 

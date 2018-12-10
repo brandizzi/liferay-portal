@@ -47,7 +47,6 @@ import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
 import java.io.Serializable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,12 +85,8 @@ public class OrganizationIndexerIndexedFieldsTest {
 
 	@Test
 	public void testIndexedFields() throws Exception {
-		String organizationName = "abcd efgh";
-		String countryName = "united-states";
-		String regionName = "Alabama";
-
-		Organization organization = organizationFixture.createAnOrganization(
-			organizationName, countryName, regionName);
+		Organization organization = organizationFixture.createOrganization(
+			"abcd efgh");
 
 		String searchTerm = "abcd";
 
@@ -107,15 +102,8 @@ public class OrganizationIndexerIndexedFieldsTest {
 
 	@Test
 	public void testIndexedFieldsWithExpando() throws Exception {
-		String organizationName = "My Organization";
-		String countryName = "united-states";
-		String regionName = "Alabama";
-
-		String expandoColumnObs = "expandoColumnObs";
-		String expandoColumnObsValue = "Software Engineer";
-
 		String expandoColumnName = "expandoColumnName";
-		String expandoColumnNameValue = "Software Developer";
+		String expandoColumnObs = "expandoColumnObs";
 
 		expandoTableSearchFixture.addExpandoColumn(
 			Organization.class, ExpandoColumnConstants.INDEX_TYPE_KEYWORD,
@@ -123,11 +111,11 @@ public class OrganizationIndexerIndexedFieldsTest {
 
 		Map<String, Serializable> expandoValues = new HashMap<>();
 
-		expandoValues.put(expandoColumnObs, expandoColumnObsValue);
-		expandoValues.put(expandoColumnName, expandoColumnNameValue);
+		expandoValues.put(expandoColumnName, "Software Developer");
+		expandoValues.put(expandoColumnObs, "Software Engineer");
 
-		Organization organization = organizationFixture.createAnOrganization(
-			organizationName, countryName, regionName, expandoValues);
+		Organization organization = organizationFixture.createOrganization(
+			"My Organization", expandoValues);
 
 		String searchTerm = "Developer";
 
