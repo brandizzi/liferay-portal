@@ -27,14 +27,12 @@ import com.liferay.portal.kernel.service.CountryService;
 import com.liferay.portal.kernel.service.OrganizationService;
 import com.liferay.portal.kernel.service.RegionService;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.test.util.GroupTestUtil;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
-import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.service.test.ServiceTestUtil;
 
-import java.io.File;
 import java.io.Serializable;
 
 import java.util.ArrayList;
@@ -42,9 +40,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  * @author Igor Fabiano Nazar
@@ -86,40 +82,31 @@ public class OrganizationFixture {
 	public Organization createOrganization(
 			String organizationName, String countryName, String regionName,
 			Map<String, Serializable> expando)
-		throws Exception, PortalException {
+		throws Exception {
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), getUserId());
 
 		Country country = _countryService.getCountryByName(countryName);
 
 		Region region = _getRegion(regionName, country);
 
-		long parentOrganizationId =
-			OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID;
-		String organizatioType = OrganizationConstants.TYPE_ORGANIZATION;
-		long regionId = region.getRegionId();
-		long countryId = country.getCountryId();
-		long statusId = ListTypeConstants.ORGANIZATION_STATUS_DEFAULT;
-		String comments = "";
-		boolean site = false;
-
-		ServiceContext serviceContext = getServiceContext();
-
 		if (expando != null) {
 			serviceContext.setExpandoBridgeAttributes(expando);
 		}
 
-		try {
-			Organization organization = _organizationService.addOrganization(
-				parentOrganizationId, organizationName, organizatioType,
-				regionId, countryId, statusId, comments, site, serviceContext);
+		Organization organization = _organizationService.addOrganization(
+			(long)OrganizationConstants.DEFAULT_PARENT_ORGANIZATION_ID,
+			organizationName, OrganizationConstants.TYPE_ORGANIZATION,
+			region.getRegionId(), country.getCountryId(),
+			ListTypeConstants.ORGANIZATION_STATUS_DEFAULT,
+			RandomTestUtil.randomString(), RandomTestUtil.randomBoolean(),
+			serviceContext);
 
-			_organizatons.add(organization);
+		_organizatons.add(organization);
 
-			return organization;
-		}
-		catch (PortalException e)
-		{
-			throw new RuntimeException(e);
-		}
+		return organization;
 	}
 
 	public String getCountryNames(Organization organization) {
@@ -143,11 +130,6 @@ public class OrganizationFixture {
 		return _organizatons;
 	}
 
-	public ServiceContext getServiceContext() throws Exception {
-		return ServiceContextTestUtil.getServiceContext(
-			_group.getGroupId(), getUserId());
-	}
-
 	public void setGroup(Group group) {
 		_group = group;
 	}
@@ -158,17 +140,6 @@ public class OrganizationFixture {
 		CompanyThreadLocal.setCompanyId(TestPropsValues.getCompanyId());
 	}
 
-	public void updateDisplaySettings(Locale locale) throws Exception {
-		Group group = GroupTestUtil.updateDisplaySettings(
-			_group.getGroupId(), null, locale);
-
-		_group.setModelAttributes(group.getModelAttributes());
-	}
-
-	protected String getContentType(String fileName) {
-		return MimeTypesUtil.getContentType((File)null, fileName);
-	}
-
 	protected long getUserId() throws Exception {
 		return TestPropsValues.getUserId();
 	}
@@ -177,16 +148,7 @@ public class OrganizationFixture {
 		List<Region> regions = _regionService.getRegions(
 			country.getCountryId());
 
-		Stream<Region> regionStream = regions.stream();
-
-		Optional<Region> regionOptional = regionStream.filter(
-			line -> {
-				return StringUtil.equalsIgnoreCase(regionName, line.getName());
-			}).findFirst();
-
-		Region region = regionOptional.get();
-
-		return region;
+		return regions.get(0);
 	}
 
 	private String _joinCountryNames(Set<String> countryNames) {
