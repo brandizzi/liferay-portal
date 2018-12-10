@@ -20,9 +20,6 @@ import com.liferay.portal.kernel.search.BaseSearcher;
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author Raymond Augé
- * @author Zsigmond Rab
- * @author Hugo Huijser
  * @author Lucas Marques de Paula
  */
 @Component(
