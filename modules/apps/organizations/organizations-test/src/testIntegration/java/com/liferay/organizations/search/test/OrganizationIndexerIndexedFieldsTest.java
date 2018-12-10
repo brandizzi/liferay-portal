@@ -26,13 +26,20 @@ import com.liferay.portal.kernel.model.Region;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
+import com.liferay.portal.kernel.service.CountryService;
+import com.liferay.portal.kernel.service.OrganizationService;
+import com.liferay.portal.kernel.service.RegionService;
+import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.test.util.ExpandoTableSearchFixture;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
+import com.liferay.portal.search.test.util.IndexedFieldsFixture;
+import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
@@ -56,8 +63,7 @@ import org.junit.runner.RunWith;
  * @author Luan Maoski
  */
 @RunWith(Arquillian.class)
-public class OrganizationIndexerIndexedFieldsTest
-	extends BaseOrganizationIndexerTestCase {
+public class OrganizationIndexerIndexedFieldsTest {
 
 	@ClassRule
 	@Rule
@@ -69,25 +75,13 @@ public class OrganizationIndexerIndexedFieldsTest
 
 	@Before
 	public void setUp() throws Exception {
-		super.setUp();
+		setUpExpandoTableSearchFixture();
+		setUpIndexedFieldsFixture();
+		setUpOrganizationIndexerFixture();
 
-		userSearchFixture = new UserSearchFixture();
+		setUpUserSearchFixture();
 
-		userSearchFixture.setUp();
-
-		_groups = userSearchFixture.getGroups();
-		_users = userSearchFixture.getUsers();
-
-		group = userSearchFixture.addGroup();
-
-		expandoTableSearchFixture = new ExpandoTableSearchFixture(
-			classNameLocalService, expandoColumnLocalService,
-			expandoTableLocalService);
-
-		_expandoColumns = expandoTableSearchFixture.getExpandoColumns();
-		_expandoTables = expandoTableSearchFixture.getExpandoTables();
-
-		setGroup(group);
+		setUpOrganizationFixture();
 	}
 
 	@Test
@@ -148,8 +142,51 @@ public class OrganizationIndexerIndexedFieldsTest
 		FieldValuesAssert.assertFieldValues(expected, document, searchTerm);
 	}
 
+	protected void setUpExpandoTableSearchFixture() {
+		expandoTableSearchFixture = new ExpandoTableSearchFixture(
+			classNameLocalService, expandoColumnLocalService,
+			expandoTableLocalService);
+
+		_expandoColumns = expandoTableSearchFixture.getExpandoColumns();
+		_expandoTables = expandoTableSearchFixture.getExpandoTables();
+	}
+
+	protected void setUpIndexedFieldsFixture() {
+		indexedFieldsFixture = new IndexedFieldsFixture(
+			resourcePermissionLocalService, searchEngineHelper);
+	}
+
+	protected void setUpOrganizationFixture() throws Exception {
+		organizationFixture = new OrganizationFixture(
+			organizationService, countryService, regionService);
+
+		organizationFixture.setUp();
+
+		organizationFixture.setGroup(group);
+
+		_organizations = organizationFixture.getOrganizations();
+	}
+
+	protected void setUpOrganizationIndexerFixture() {
+		organizationIndexerFixture = new IndexerFixture<>(Organization.class);
+	}
+
+	protected void setUpUserSearchFixture() throws Exception {
+		userSearchFixture = new UserSearchFixture();
+
+		userSearchFixture.setUp();
+
+		_groups = userSearchFixture.getGroups();
+		_users = userSearchFixture.getUsers();
+
+		group = userSearchFixture.addGroup();
+	}
+
 	@Inject
 	protected ClassNameLocalService classNameLocalService;
+
+	@Inject
+	protected CountryService countryService;
 
 	@Inject
 	protected ExpandoColumnLocalService expandoColumnLocalService;
@@ -158,6 +195,23 @@ public class OrganizationIndexerIndexedFieldsTest
 	protected ExpandoTableLocalService expandoTableLocalService;
 
 	protected ExpandoTableSearchFixture expandoTableSearchFixture;
+	protected Group group;
+	protected IndexedFieldsFixture indexedFieldsFixture;
+	protected OrganizationFixture organizationFixture;
+	protected IndexerFixture<Organization> organizationIndexerFixture;
+
+	@Inject
+	protected OrganizationService organizationService;
+
+	@Inject
+	protected RegionService regionService;
+
+	@Inject
+	protected ResourcePermissionLocalService resourcePermissionLocalService;
+
+	@Inject
+	protected SearchEngineHelper searchEngineHelper;
+
 	protected UserSearchFixture userSearchFixture;
 
 	private Map<String, String> _expectedFieldValues(Organization organization)
@@ -256,8 +310,9 @@ public class OrganizationIndexerIndexedFieldsTest
 	private List<Group> _groups;
 
 	@DeleteAfterTestRun
-	private List<User> _users;
+	private List<Organization> _organizations;
 
-	private Group group;
+	@DeleteAfterTestRun
+	private List<User> _users;
 
 }

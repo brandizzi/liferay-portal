@@ -18,9 +18,17 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.search.SearchEngineHelper;
+import com.liferay.portal.kernel.service.CountryService;
+import com.liferay.portal.kernel.service.OrganizationService;
+import com.liferay.portal.kernel.service.RegionService;
+import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
+import com.liferay.portal.search.test.util.IndexedFieldsFixture;
+import com.liferay.portal.search.test.util.IndexerFixture;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
 import com.liferay.users.admin.test.util.search.UserSearchFixture;
@@ -38,8 +46,7 @@ import org.junit.runner.RunWith;
  * @author Luan Maoski
  */
 @RunWith(Arquillian.class)
-public class OrganizationIndexerReindexTest
-	extends BaseOrganizationIndexerTestCase {
+public class OrganizationIndexerReindexTest {
 
 	@ClassRule
 	@Rule
@@ -51,18 +58,12 @@ public class OrganizationIndexerReindexTest
 
 	@Before
 	public void setUp() throws Exception {
-		super.setUp();
+		setUpIndexedFieldsFixture();
+		setUpOrganizationIndexerFixture();
 
-		userSearchFixture = new UserSearchFixture();
+		setUpUserSearchFixture();
 
-		userSearchFixture.setUp();
-
-		_groups = userSearchFixture.getGroups();
-		_users = userSearchFixture.getUsers();
-
-		group = userSearchFixture.addGroup();
-
-		super.setGroup(group);
+		setUpOrganizationFixture();
 	}
 
 	@Test
@@ -79,13 +80,66 @@ public class OrganizationIndexerReindexTest
 		organizationIndexerFixture.searchOnlyOne(organizationName);
 	}
 
+	protected void setUpIndexedFieldsFixture() {
+		indexedFieldsFixture = new IndexedFieldsFixture(
+			resourcePermissionLocalService, searchEngineHelper);
+	}
+
+	protected void setUpOrganizationFixture() throws Exception {
+		organizationFixture = new OrganizationFixture(
+			organizationService, countryService, regionService);
+
+		organizationFixture.setUp();
+
+		organizationFixture.setGroup(group);
+
+		_organizations = organizationFixture.getOrganizations();
+	}
+
+	protected void setUpOrganizationIndexerFixture() {
+		organizationIndexerFixture = new IndexerFixture<>(Organization.class);
+	}
+
+	protected void setUpUserSearchFixture() throws Exception {
+		userSearchFixture = new UserSearchFixture();
+
+		userSearchFixture.setUp();
+
+		_groups = userSearchFixture.getGroups();
+		_users = userSearchFixture.getUsers();
+
+		group = userSearchFixture.addGroup();
+	}
+
+	@Inject
+	protected CountryService countryService;
+
+	protected Group group;
+	protected IndexedFieldsFixture indexedFieldsFixture;
+	protected OrganizationFixture organizationFixture;
+	protected IndexerFixture<Organization> organizationIndexerFixture;
+
+	@Inject
+	protected OrganizationService organizationService;
+
+	@Inject
+	protected RegionService regionService;
+
+	@Inject
+	protected ResourcePermissionLocalService resourcePermissionLocalService;
+
+	@Inject
+	protected SearchEngineHelper searchEngineHelper;
+
+	protected UserSearchFixture userSearchFixture;
+
 	@DeleteAfterTestRun
 	private List<Group> _groups;
 
 	@DeleteAfterTestRun
-	private List<User> _users;
+	private List<Organization> _organizations;
 
-	private Group group;
-	private UserSearchFixture userSearchFixture;
+	@DeleteAfterTestRun
+	private List<User> _users;
 
 }
