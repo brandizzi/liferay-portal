@@ -18,6 +18,7 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.service.CountryService;
 import com.liferay.portal.kernel.service.OrganizationService;
@@ -75,8 +76,15 @@ public class OrganizationIndexerReindexTest {
 		Organization organization = organizationFixture.createAnOrganization(
 			organizationName, countryName, regionName);
 
-		organizationIndexerFixture.searchOnlyOne(organizationName);
+		Document document = organizationIndexerFixture.searchOnlyOne(
+			organizationName);
+
+		organizationIndexerFixture.deleteDocument(document);
+
+		organizationIndexerFixture.searchNoOne(organizationName);
+
 		organizationIndexerFixture.reindex(organization.getCompanyId());
+
 		organizationIndexerFixture.searchOnlyOne(organizationName);
 	}
 
