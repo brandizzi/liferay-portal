@@ -26,10 +26,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Raymond Augé
- * @author Zsigmond Rab
- * @author Hugo Huijser
- * @author Marco Leo
+ * @author Igor Fabiano Nazar
  */
 @Component(
 	immediate = true,

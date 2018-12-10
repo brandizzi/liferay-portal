@@ -20,10 +20,7 @@ import com.liferay.portal.search.contributor.sort.SortFieldNameTranslator;
 import org.osgi.service.component.annotations.Component;
 
 /**
- * @author Raymond Augé
- * @author Zsigmond Rab
- * @author Hugo Huijser
- * @author Marco Leo
+ * @author Igor Fabiano Nazar
  */
 @Component(
 	immediate = true,
