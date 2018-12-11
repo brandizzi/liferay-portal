@@ -466,7 +466,6 @@
 		</property>
 	</bean>
 	<bean class="com.liferay.portal.model.adapter.builder.ServiceTrackerMapModelAdapterBuilderLocator" id="com.liferay.portal.model.adapter.builder.ServiceTrackerMapModelAdapterBuilderLocator" />
-	<bean class="com.liferay.portal.plugin.PluginPackageIndexer" id="com.liferay.portal.plugin.PluginPackageIndexer" />
 	<bean class="com.liferay.portal.resiliency.mpi.portlet.PortalResiliencyPortletContainerWrapper" factory-method="createPortalResiliencyPortletContainerWrapper" id="com.liferay.portal.resiliency.mpi.portlet.PortalResiliencyPortletContainerWrapper">
 		<constructor-arg name="portletContainer" ref="com.liferay.portlet.internal.PortletContainerImpl" />
 	</bean>

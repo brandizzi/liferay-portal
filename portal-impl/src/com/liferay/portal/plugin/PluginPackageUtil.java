@@ -18,7 +18,6 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.Plugin;
 import com.liferay.portal.kernel.plugin.License;
 import com.liferay.portal.kernel.plugin.PluginPackage;
@@ -26,10 +25,7 @@ import com.liferay.portal.kernel.plugin.RemotePluginPackageRepository;
 import com.liferay.portal.kernel.plugin.Screenshot;
 import com.liferay.portal.kernel.plugin.Version;
 import com.liferay.portal.kernel.search.Hits;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.search.QueryConfig;
-import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.HitsImpl;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -53,7 +49,6 @@ import com.liferay.portal.util.PropsValues;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 
 import java.net.MalformedURLException;
 
@@ -227,13 +222,16 @@ public class PluginPackageUtil {
 		return _instance._reloadRepositories();
 	}
 
+	/**
+	* @deprecated As of Judson (7.1.x), since 7.1.0
+	*/
+	@Deprecated
 	public static Hits search(
 			String keywords, String type, String tag, String license,
 			String repositoryURL, String status, int start, int end)
 		throws PortalException {
 
-		return _instance._search(
-			keywords, type, tag, license, repositoryURL, status, start, end);
+		return new HitsImpl();
 	}
 
 	public static void unregisterInstalledPluginPackage(
@@ -254,23 +252,6 @@ public class PluginPackageUtil {
 		_installedPluginPackages = new LocalPluginPackageRepository();
 		_repositoryCache = new HashMap<>();
 		_availableTagsCache = new TreeSet<>();
-	}
-
-	private void _checkRepositories(String repositoryURL)
-		throws PortalException {
-
-		String[] repositoryURLs = null;
-
-		if (Validator.isNotNull(repositoryURL)) {
-			repositoryURLs = new String[] {repositoryURL};
-		}
-		else {
-			repositoryURLs = _getRepositoryURLs();
-		}
-
-		for (String curRepositoryURL : repositoryURLs) {
-			_getRepository(curRepositoryURL);
-		}
 	}
 
 	private void _endPluginPackageInstallation(String preliminaryContext) {
@@ -472,15 +453,6 @@ public class PluginPackageUtil {
 
 	private String[] _getSupportedTypes() {
 		return PropsValues.PLUGIN_TYPES;
-	}
-
-	private void _indexPluginPackage(PluginPackage pluginPackage)
-		throws PortalException {
-
-		Indexer<PluginPackage> indexer = IndexerRegistryUtil.getIndexer(
-			PluginPackage.class);
-
-		indexer.reindex(pluginPackage);
 	}
 
 	private boolean _isCurrentVersionSupported(List<String> versions) {
@@ -749,8 +721,6 @@ public class PluginPackageUtil {
 			pluginPackage.setRepository(pluginPackageRepository);
 
 			pluginPackageRepository.addPluginPackage(pluginPackage);
-
-			_indexPluginPackage(pluginPackage);
 		}
 
 		return pluginPackageRepository;
@@ -1247,8 +1217,6 @@ public class PluginPackageUtil {
 		_installedPluginPackages.addPluginPackage(pluginPackage);
 
 		_updateAvailable = null;
-
-		_indexPluginPackage(pluginPackage);
 	}
 
 	private void _registerPluginPackageInstallation(String preliminaryContext) {
@@ -1281,71 +1249,13 @@ public class PluginPackageUtil {
 			}
 		}
 
-		Indexer<PluginPackage> indexer = IndexerRegistryUtil.getIndexer(
-			PluginPackage.class);
-
-		indexer.reindex(new String[0]);
-
 		return repositoryReport;
-	}
-
-	private Hits _search(
-			String keywords, String type, String tag, String license,
-			String repositoryURL, String status, int start, int end)
-		throws PortalException {
-
-		_checkRepositories(repositoryURL);
-
-		SearchContext searchContext = new SearchContext();
-
-		Map<String, Serializable> attributes = new HashMap<>();
-
-		attributes.put("license", license);
-		attributes.put("repositoryURL", repositoryURL);
-		attributes.put("status", status);
-		attributes.put("tag", tag);
-		attributes.put("type", type);
-
-		searchContext.setAttributes(attributes);
-
-		searchContext.setCompanyId(CompanyConstants.SYSTEM);
-		searchContext.setEnd(end);
-		searchContext.setKeywords(keywords);
-
-		QueryConfig queryConfig = searchContext.getQueryConfig();
-
-		queryConfig.setHighlightEnabled(false);
-		queryConfig.setScoreEnabled(false);
-
-		searchContext.setStart(start);
-
-		Indexer<PluginPackage> indexer = IndexerRegistryUtil.getIndexer(
-			PluginPackage.class);
-
-		return indexer.search(searchContext);
 	}
 
 	private void _unregisterInstalledPluginPackage(PluginPackage pluginPackage)
 		throws PortalException {
 
 		_installedPluginPackages.removePluginPackage(pluginPackage);
-
-		try {
-			List<PluginPackage> pluginPackages = _getAvailablePluginPackages(
-				pluginPackage.getGroupId(), pluginPackage.getArtifactId());
-
-			for (PluginPackage availablePackage : pluginPackages) {
-				_indexPluginPackage(availablePackage);
-			}
-		}
-		catch (PluginPackageException ppe) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(
-					StringBundler.concat(
-						"Unable to reindex unistalled package ",
-						pluginPackage.getContext(), ": ", ppe.getMessage()));
-			}
-		}
 	}
 
 	private void _updateInstallingPluginPackage(

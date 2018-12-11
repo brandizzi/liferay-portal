@@ -29,7 +29,6 @@ import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.background.task.ReindexStatusMessageSenderUtil;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
-import com.liferay.portal.kernel.spring.osgi.OSGiBeanProperties;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -49,8 +48,9 @@ import javax.portlet.PortletResponse;
  * @author Brian Wing Shun Chan
  * @author Bruno Farache
  * @author Raymond Augé
+ * @deprecated As of Judson (7.1.x), since 7.1.0
  */
-@OSGiBeanProperties
+@Deprecated
 public class PluginPackageIndexer extends BaseIndexer<PluginPackage> {
 
 	public static final String CLASS_NAME = PluginPackage.class.getName();
