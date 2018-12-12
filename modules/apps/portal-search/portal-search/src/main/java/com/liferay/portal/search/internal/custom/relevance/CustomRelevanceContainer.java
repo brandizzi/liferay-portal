@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.search.configuration.CustomRelevanceConfiguration;
 import com.liferay.portal.search.query.QueryHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,22 @@ public class CustomRelevanceContainer {
 				booleanQuery, customRelevance.getField(),
 				customRelevance.getBoosterValues(),
 				customRelevance.getBoostIncrement());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void addCustomBoosterTerms(
+		ArrayList<Object[]> customBoostList, BooleanQuery booleanQuery) {
+
+		if (customBoostList != null) {
+			for (Object[] customBoost : customBoostList) {
+				String field = (String)customBoost[0];
+				List<String> values = (List<String>)customBoost[1];
+				Float increment = (Float)customBoost[2];
+
+				queryHelper.addBoosterTerm(
+					booleanQuery, field, values, increment);
+			}
 		}
 	}
 
