@@ -1,6 +1,7 @@
 AUI.add(
 	'liferay-search-facet-util',
 	function(A) {
+
 		var FacetUtil = {
 			addURLParameter: function(key, value, parameterArray) {
 				key = encodeURIComponent(key);
@@ -9,6 +10,51 @@ AUI.add(
 				parameterArray[parameterArray.length] = [key, value].join('=');
 
 				return parameterArray;
+			},
+
+			getInputValues: function(val) {
+				if (!val ) {
+					return [];
+				}
+
+				var values = val.split(',');
+
+				values = values.map(function(value) {
+					return value.trim();
+				});
+
+				values = values.filter(function (value) {
+				  return value;
+				});
+
+				return values;
+			},
+
+			changeInput: function(event) {
+
+				var form = event.currentTarget._node
+
+				if (!form) {
+					return;
+				}
+
+				var formInput = $('#' + form.id + ' input.filter-keyword');
+
+				var values =  FacetUtil.getInputValues(formInput.val());
+
+				if (values.length === 0) {
+					return;
+				}
+
+				FacetUtil.inputValues(form, values);
+			},
+
+			inputValues: function(form, values) {
+				var formParameterName = $('#' + form.id + ' input.filter-parameter-name');
+
+				var key = formParameterName[0].value;
+
+				document.location.search = FacetUtil.updateQueryString(key, values, document.location.search);
 			},
 
 			changeSelection: function(event) {
