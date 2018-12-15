@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch7.internal.cluster.ClusterSettingsContext;
 import com.liferay.portal.search.elasticsearch7.internal.index.IndexFactory;
+import com.liferay.portal.search.elasticsearch7.internal.util.ResourceUtil;
 import com.liferay.portal.search.elasticsearch7.settings.SettingsContributor;
 
 import io.netty.buffer.ByteBufUtil;
@@ -42,9 +43,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.time.StopWatch;
+import org.apache.http.HttpHost;
 import org.apache.logging.log4j.LogManager;
 
 import org.elasticsearch.client.Client;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.inject.Injector;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.Node;
@@ -185,6 +189,10 @@ public class EmbeddedElasticsearchConnection
 
 	protected void configureHttp() {
 		settingsBuilder.put(
+			"http.port",
+			String.valueOf(elasticsearchConfiguration.embeddedHttpPort()));
+
+		settingsBuilder.put(
 			"http.cors.enabled", elasticsearchConfiguration.httpCORSEnabled());
 
 		if (!elasticsearchConfiguration.httpCORSEnabled()) {
@@ -228,15 +236,18 @@ public class EmbeddedElasticsearchConnection
 			elasticsearchConfiguration.networkPublishHost();
 
 		if (Validator.isNotNull(networkPublishHost)) {
+			//network.publish_host?
 			settingsBuilder.put("network.publish.host", networkPublishHost);
 		}
 
+		//deprecate?
 		String transportTcpPort = elasticsearchConfiguration.transportTcpPort();
 
 		if (Validator.isNotNull(transportTcpPort)) {
 			settingsBuilder.put("transport.tcp.port", transportTcpPort);
 		}
 
+		//needed? http.type?
 		settingsBuilder.put("transport.type", "netty4");
 	}
 
@@ -352,6 +363,15 @@ public class EmbeddedElasticsearchConnection
 		}
 	}
 
+	@Override
+	protected RestHighLevelClient createRestHighLevelClient() {
+		return new RestHighLevelClient(
+			RestClient.builder(
+				new HttpHost(
+					"localhost", elasticsearchConfiguration.embeddedHttpPort(),
+					"http")));
+	}
+
 	@Deactivate
 	protected void deactivate(Map<String, Object> properties) {
 		close();
@@ -387,9 +407,28 @@ public class EmbeddedElasticsearchConnection
 		LogManager.shutdown();
 	}
 
+	protected void loadAdditionalConfigurations() {
+		settingsBuilder.loadFromSource(
+			elasticsearchConfiguration.additionalConfigurations());
+	}
+
 	@Override
+	protected void loadConfigurations() {
+		loadOptionalDefaultConfigurations();
+
+		loadAdditionalConfigurations();
+
+		loadRequiredDefaultConfigurations();
+	}
+
+	protected void loadOptionalDefaultConfigurations() {
+		String defaultConfigurations = ResourceUtil.getResourceAsString(
+			getClass(), "/META-INF/elasticsearch-optional-defaults.yml");
+
+		settingsBuilder.loadFromSource(defaultConfigurations);
+	}
+
 	protected void loadRequiredDefaultConfigurations() {
-		settingsBuilder.put("action.auto_create_index", false);
 		settingsBuilder.put(
 			"bootstrap.memory_lock",
 			elasticsearchConfiguration.bootstrapMlockAll());
