@@ -40,6 +40,17 @@ public class JournalArticleSearchFixture {
 	public JournalArticle addArticle(
 		JournalArticleBlueprint journalArticleBlueprint) {
 
+		String ddmStructureKey = "BASIC-WEB-CONTENT";
+		String ddmTemplateKey = "BASIC-WEB-CONTENT";
+
+		return addArticle(
+			journalArticleBlueprint, ddmStructureKey, ddmTemplateKey);
+	}
+
+	public JournalArticle addArticle(
+		JournalArticleBlueprint journalArticleBlueprint, String ddmStructureKey,
+		String ddmTemplateKey) {
+
 		long userId = journalArticleBlueprint.getUserId();
 		long groupId = journalArticleBlueprint.getGroupId();
 		long folderId = JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID;
@@ -47,8 +58,6 @@ public class JournalArticleSearchFixture {
 		Map<Locale, String> descriptionMap =
 			journalArticleBlueprint.getDescriptionMap();
 		String contentString = journalArticleBlueprint.getContentString();
-		String ddmStructureKey = "BASIC-WEB-CONTENT";
-		String ddmTemplateKey = "BASIC-WEB-CONTENT";
 
 		ServiceContext serviceContext = getServiceContext(groupId, userId);
 
