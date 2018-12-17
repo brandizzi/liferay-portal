@@ -14,10 +14,6 @@
 
 package com.liferay.journal.test.util;
 
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Map;
-
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalFolderConstants;
 import com.liferay.journal.service.JournalArticleLocalServiceUtil;
@@ -25,6 +21,10 @@ import com.liferay.journal.test.util.search.JournalArticleContent;
 import com.liferay.journal.test.util.search.JournalArticleTitle;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
+
+import java.util.Collections;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author André de Oliveira

@@ -14,6 +14,7 @@
 
 package com.liferay.journal.test.util.search;
 
+import com.liferay.journal.test.util.JournalArticleDescription;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
