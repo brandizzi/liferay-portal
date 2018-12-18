@@ -15,14 +15,26 @@
 package com.liferay.document.library.test.util.search;
 
 import java.io.InputStream;
+import java.io.Serializable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Wade Cao
  */
 public class FileEntryBlueprint {
 
+	public void addAttributes(Map<String, Serializable> attributes) {
+		_attributes.putAll(attributes);
+	}
+
 	public String[] getAssetTagNames() {
 		return _assetTagNames;
+	}
+
+	public Map<String, Serializable> getAttributes() {
+		return _attributes;
 	}
 
 	public String getFileName() {
@@ -70,6 +82,7 @@ public class FileEntryBlueprint {
 	}
 
 	private String[] _assetTagNames;
+	private final Map<String, Serializable> _attributes = new HashMap<>();
 	private String _fileName;
 	private long _groupId;
 	private InputStream _inputStream;
