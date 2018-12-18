@@ -46,6 +46,8 @@ public class FileEntrySearchFixture {
 
 		serviceContext.setAssetTagNames(fileEntryBlueprint.getAssetTagNames());
 
+		serviceContext.setAttributes(fileEntryBlueprint.getAttributes());
+
 		FileEntry fileEntry;
 
 		if (fileEntryBlueprint.getInputStream() != null) {
