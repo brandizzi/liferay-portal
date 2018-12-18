@@ -15,6 +15,9 @@
 package com.liferay.document.library.test.util.search;
 
 import java.io.InputStream;
+import java.io.Serializable;
+
+import java.util.Map;
 
 /**
  * @author Wade Cao
@@ -23,6 +26,10 @@ public class FileEntryBlueprint {
 
 	public String[] getAssetTagNames() {
 		return assetTagNames;
+	}
+
+	public Map<String, Serializable> getAttributes() {
+		return attributes;
 	}
 
 	public String getFileName() {
@@ -46,6 +53,7 @@ public class FileEntryBlueprint {
 	}
 
 	protected String[] assetTagNames;
+	protected Map<String, Serializable> attributes;
 	protected String fileName;
 	protected long groupId;
 	protected InputStream inputStream;

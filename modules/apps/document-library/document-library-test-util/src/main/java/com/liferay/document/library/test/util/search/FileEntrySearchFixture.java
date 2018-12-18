@@ -28,9 +28,11 @@ import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author André de Oliveira
@@ -45,6 +47,13 @@ public class FileEntrySearchFixture {
 		ServiceContext serviceContext = getServiceContext(fileEntryBlueprint);
 
 		serviceContext.setAssetTagNames(fileEntryBlueprint.getAssetTagNames());
+
+		Map<String, Serializable> attributes =
+			fileEntryBlueprint.getAttributes();
+
+		if (attributes != null) {
+			serviceContext.setAttributes(attributes);
+		}
 
 		FileEntry fileEntry;
 
