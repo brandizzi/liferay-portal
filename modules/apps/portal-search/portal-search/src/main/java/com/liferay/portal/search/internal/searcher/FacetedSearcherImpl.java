@@ -41,9 +41,11 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.constants.SearchContextAttributes;
+import com.liferay.portal.search.custom.relevance.CustomRelevance;
 import com.liferay.portal.search.internal.custom.relevance.CustomRelevanceContainer;
 import com.liferay.portal.search.internal.indexer.PreFilterContributorHelper;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -213,8 +215,15 @@ public class FacetedSearcherImpl
 			booleanFilter, entryClassNameIndexerMap, searchContext);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void _addRescorerQuery(SearchContext searchContext) {
 		BooleanQuery query = new BooleanQueryImpl();
+
+		ArrayList<CustomRelevance> customBoostList =
+			(ArrayList<CustomRelevance>)searchContext.getAttribute(
+				"customBoostWidget");
+
+		_customRelevanceContainer.addCustomBoosterTerms(customBoostList, query);
 
 		_customRelevanceContainer.addBoosterTerms(query);
 

@@ -17,8 +17,10 @@ package com.liferay.portal.search.internal.custom.relevance;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.search.configuration.CustomRelevanceConfiguration;
+import com.liferay.portal.search.custom.relevance.CustomRelevance;
 import com.liferay.portal.search.query.QueryHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +44,20 @@ public class CustomRelevanceContainer {
 				booleanQuery, customRelevance.getField(),
 				customRelevance.getBoosterValues(),
 				customRelevance.getBoostIncrement());
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void addCustomBoosterTerms(
+		ArrayList<CustomRelevance> customBoostList, BooleanQuery booleanQuery) {
+
+		if (customBoostList != null) {
+			for (CustomRelevance customRelevance : customBoostList) {
+				queryHelper.addBoosterTerm(
+					booleanQuery, customRelevance.getField(),
+					customRelevance.getBoosterValues(),
+					customRelevance.getBoostIncrement());
+			}
 		}
 	}
 
