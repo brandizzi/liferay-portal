@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.search.internal.custom.relevance;
+package com.liferay.portal.search.custom.relevance;
 
 import java.util.List;
 
