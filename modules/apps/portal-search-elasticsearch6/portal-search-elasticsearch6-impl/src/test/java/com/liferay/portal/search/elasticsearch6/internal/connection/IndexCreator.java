@@ -14,7 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.connection;
 
-import com.liferay.portal.kernel.json.JSONFactory;
+import com.liferay.portal.search.elasticsearch6.internal.field.FieldRegistrySynchronizer;
 import com.liferay.portal.search.elasticsearch6.internal.index.create.CreateIndexContributor;
 import com.liferay.portal.search.elasticsearch6.internal.index.create.CreateIndexOptions;
 import com.liferay.portal.search.elasticsearch6.internal.index.create.CreateIndexOptionsBuilder;
@@ -42,17 +42,18 @@ public class IndexCreator {
 	public void addCreateIndexContributor(
 		CreateIndexContributor createIndexContributor) {
 
-		createIndexContributors.add(createIndexContributor);
+		_createIndexContributors.add(createIndexContributor);
 	}
 
 	public Index createIndex(IndexName indexName) {
 		if (_liferayMappingsAddedToIndex) {
 			addCreateIndexContributor(
-				new LiferayCreateIndexContributor(elasticsearchClientResolver));
+				new LiferayCreateIndexContributor(
+					_elasticsearchClientResolver));
 		}
 
 		CreateIndexRequestFactory createIndexRequestFactory =
-			new CreateIndexRequestFactoryImpl();
+			createCreateIndexRequestFactory(_fieldRegistrySynchronizer);
 
 		CreateIndexOptionsBuilder createIndexOptionsBuilder =
 			createIndexRequestFactory.createOptionsBuilder();
@@ -62,7 +63,7 @@ public class IndexCreator {
 				createIndexOptionsBuilder.addContributor(
 					new DeleteBeforeCreateIndexContributor()
 				).addContributors(
-					createIndexContributors
+					_createIndexContributors
 				).adminClient(
 					getAdminClient()
 				).indexName(
@@ -75,27 +76,42 @@ public class IndexCreator {
 	}
 
 	public Collection<CreateIndexContributor> getCreateIndexContributors() {
-		return Collections.unmodifiableCollection(createIndexContributors);
+		return Collections.unmodifiableCollection(_createIndexContributors);
 	}
 
-	public void setLiferayMappingsAddedToIndex(
-		boolean liferayMappingsAddedToIndex) {
+	protected static CreateIndexRequestFactory createCreateIndexRequestFactory(
+		FieldRegistrySynchronizer fieldRegistrySynchronizer1) {
 
-		_liferayMappingsAddedToIndex = liferayMappingsAddedToIndex;
+		return new CreateIndexRequestFactoryImpl() {
+			{
+				fieldRegistrySynchronizer = fieldRegistrySynchronizer1;
+			}
+		};
 	}
 
 	protected AdminClient getAdminClient() {
-		Client client = elasticsearchClientResolver.getClient();
+		Client client = _elasticsearchClientResolver.getClient();
 
 		return client.admin();
 	}
 
-	protected final List<CreateIndexContributor> createIndexContributors =
-		new ArrayList<>();
-	protected ElasticsearchClientResolver elasticsearchClientResolver;
-	protected JSONFactory jsonFactory;
+	protected void setElasticsearchClientResolver(
+		ElasticsearchClientResolver elasticsearchClientResolver) {
 
-	private boolean _liferayMappingsAddedToIndex;
+		_elasticsearchClientResolver = elasticsearchClientResolver;
+	}
+
+	protected void setFieldRegistrySynchronizer(
+		FieldRegistrySynchronizer fieldRegistrySynchronizer) {
+
+		_fieldRegistrySynchronizer = fieldRegistrySynchronizer;
+	}
+
+	protected void setLiferayMappingsAddedToIndex(
+		boolean liferayMappingsAddedToIndex) {
+
+		_liferayMappingsAddedToIndex = liferayMappingsAddedToIndex;
+	}
 
 	private class DeleteBeforeCreateIndexContributor
 		extends DummyCreateIndexContributor {
@@ -118,26 +134,11 @@ public class IndexCreator {
 
 	}
 
-	protected void setElasticsearchClientResolver(
-		ElasticsearchClientResolver elasticsearchClientResolver) {
-
-		_elasticsearchClientResolver = elasticsearchClientResolver;
-	}
-
-	protected void setIndexCreationHelper(
-		IndexCreationHelper indexCreationHelper) {
-
-		_indexCreationHelper = indexCreationHelper;
-	}
-
-	protected void setLiferayMappingsAddedToIndex(
-		boolean liferayMappingsAddedToIndex) {
-
-		_liferayMappingsAddedToIndex = liferayMappingsAddedToIndex;
-	}
+	private final List<CreateIndexContributor> _createIndexContributors =
+		new ArrayList<>();
 
 	private ElasticsearchClientResolver _elasticsearchClientResolver;
-	private IndexCreationHelper _indexCreationHelper;
+	private FieldRegistrySynchronizer _fieldRegistrySynchronizer;
 	private boolean _liferayMappingsAddedToIndex;
 
 }
