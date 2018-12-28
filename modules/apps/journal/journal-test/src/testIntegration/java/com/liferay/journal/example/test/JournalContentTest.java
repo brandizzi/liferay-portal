@@ -17,6 +17,7 @@ package com.liferay.journal.example.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestUtil;
 import com.liferay.journal.model.JournalArticle;
+import com.liferay.journal.model.JournalArticleDisplay;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.journal.util.JournalContent;
@@ -56,6 +57,7 @@ import javax.portlet.RenderRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -93,14 +95,22 @@ public class JournalContentTest {
 	}
 
 	@Test
-	public void test() throws Exception {
+	public void testGetDisplay() throws Exception {
 		_journalArticle = JournalTestUtil.addArticleWithXMLContent(
 			getXML(), "BASIC-WEB-CONTENT", "BASIC-WEB-CONTENT");
 
-		_journalContent.getDisplay(
+		JournalArticleDisplay display = _journalContent.getDisplay(
 			_journalArticle.getGroupId(), _journalArticle.getArticleId(),
 			Constants.VIEW, _journalArticle.getDefaultLanguageId(),
 			_portletRequestModel);
+
+		Assert.assertEquals(
+			_journalArticle.getDescription(
+				_journalArticle.getDefaultLanguageId()),
+			display.getDescription());
+		Assert.assertEquals(
+			_journalArticle.getTitle(_journalArticle.getDefaultLanguageId()),
+			display.getTitle());
 	}
 
 	protected static String getXML() {
