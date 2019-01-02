@@ -12,18 +12,12 @@
  * details.
  */
 
-package com.liferay.portal.search.elasticsearch6.internal.highlight;
+package com.liferay.journal.test.util.search;
 
-import org.elasticsearch.action.search.SearchRequestBuilder;
+import com.liferay.portal.kernel.settings.LocalizedValuesMap;
 
 /**
- * @author Michael C. Han
+ * @author Adam Brandizzi
  */
-public interface HighlighterTranslator {
-
-	public void translate(
-		SearchRequestBuilder searchRequestBuilder, String[] highlightFieldNames,
-		boolean highlightRequireFieldMatch, int highlightFragmentSize,
-		int highlightSnippetSize, boolean luceneSyntax);
-
+public class JournalArticleDescription extends LocalizedValuesMap {
 }

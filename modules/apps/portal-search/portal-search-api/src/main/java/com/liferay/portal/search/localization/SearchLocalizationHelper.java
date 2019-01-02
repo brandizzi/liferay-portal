@@ -12,18 +12,20 @@
  * details.
  */
 
-package com.liferay.portal.search.elasticsearch6.internal.highlight;
+package com.liferay.portal.search.localization;
 
-import org.elasticsearch.action.search.SearchRequestBuilder;
+import com.liferay.portal.kernel.search.SearchContext;
+
+import java.util.Locale;
 
 /**
- * @author Michael C. Han
+ * @author Adam Brandizzi
  */
-public interface HighlighterTranslator {
+public interface SearchLocalizationHelper {
 
-	public void translate(
-		SearchRequestBuilder searchRequestBuilder, String[] highlightFieldNames,
-		boolean highlightRequireFieldMatch, int highlightFragmentSize,
-		int highlightSnippetSize, boolean luceneSyntax);
+	public Locale[] getLocales(SearchContext searchContext);
+
+	public String[] getLocalizedFieldNames(
+		String[] prefixes, SearchContext searchContext);
 
 }
