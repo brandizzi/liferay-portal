@@ -132,7 +132,6 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 		Map<String, String> contentStrings = new HashMap<String, String>() {
 			{
-				put("content", originalContent);
 				put("content_en_US", originalContent);
 				put("content_hu_HU", translatedContent);
 			}
@@ -171,6 +170,53 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 		FieldValuesAssert.assertFieldValues(
 			localizedTitleStrings, "localized_title", document, searchTerm);
+	}
+
+	@Test
+	public void testIndexedFieldsInAnyLanguage() throws Exception {
+		String title = "entity title";
+		String content = "entity content";
+
+		_journalArticleSearchFixture.addArticle(
+			new JournalArticleBlueprint() {
+				{
+					groupId = _group.getGroupId();
+					journalArticleContent = new JournalArticleContent() {
+						{
+							name = "content";
+							defaultLocale = LocaleUtil.US;
+
+							put(LocaleUtil.US, content);
+						}
+					};
+					journalArticleTitle = new JournalArticleTitle() {
+						{
+							put(LocaleUtil.US, title);
+						}
+					};
+				}
+			});
+
+		Document document = _search("content", LocaleUtil.HUNGARY);
+
+		Map<String, String> contentMap = new HashMap<String, String>() {
+			{
+				put("content_en_US", content);
+			}
+		};
+
+		FieldValuesAssert.assertFieldValues(
+			contentMap, "content", document, title);
+
+		document = _search("title", LocaleUtil.HUNGARY);
+
+		Map<String, String> titleMap = new HashMap<String, String>() {
+			{
+				put("title_en_US", title);
+			}
+		};
+
+		FieldValuesAssert.assertFieldValues(titleMap, "title", document, title);
 	}
 
 	@Test
@@ -272,7 +318,6 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 		Map<String, String> contentStrings = new HashMap<String, String>() {
 			{
-				put("content", content);
 				put("content_ja_JP", content);
 			}
 		};
