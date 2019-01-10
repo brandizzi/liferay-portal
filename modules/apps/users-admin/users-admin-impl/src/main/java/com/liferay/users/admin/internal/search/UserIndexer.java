@@ -56,13 +56,15 @@ import java.util.stream.Stream;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Raymond Augé
  * @author Zsigmond Rab
  * @author Hugo Huijser
- * @deprecated As of Judson (7.1.x), since 7.1.0
  */
-@Deprecated
+@Component(immediate = true, service = Indexer.class)
 public class UserIndexer extends BaseIndexer<User> {
 
 	public static final String CLASS_NAME = User.class.getName();
@@ -417,9 +419,16 @@ public class UserIndexer extends BaseIndexer<User> {
 		indexableActionableDynamicQuery.performActions();
 	}
 
+	@Reference
 	protected GroupLocalService groupLocalService;
+
+	@Reference
 	protected IndexWriterHelper indexWriterHelper;
+
+	@Reference
 	protected OrganizationLocalService organizationLocalService;
+
+	@Reference
 	protected UserLocalService userLocalService;
 
 	private static final Log _log = LogFactoryUtil.getLog(UserIndexer.class);
