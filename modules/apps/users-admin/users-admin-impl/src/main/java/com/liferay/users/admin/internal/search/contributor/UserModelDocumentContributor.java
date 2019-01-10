@@ -206,7 +206,6 @@ public class UserModelDocumentContributor
 			streets.add(StringUtil.toLowerCase(address.getStreet1()));
 			streets.add(StringUtil.toLowerCase(address.getStreet2()));
 			streets.add(StringUtil.toLowerCase(address.getStreet3()));
-
 			zips.add(StringUtil.toLowerCase(address.getZip()));
 		}
 
