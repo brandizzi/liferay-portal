@@ -21,16 +21,8 @@ import com.liferay.journal.test.util.search.JournalArticleBlueprint;
 import com.liferay.journal.test.util.search.JournalArticleContent;
 import com.liferay.journal.test.util.search.JournalArticleSearchFixture;
 import com.liferay.journal.test.util.search.JournalArticleTitle;
-import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.search.Document;
-import com.liferay.portal.kernel.search.Hits;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistry;
-import com.liferay.portal.kernel.search.QueryConfig;
-import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
@@ -40,6 +32,7 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
+import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.service.test.ServiceTestUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -75,7 +68,7 @@ public class JournalArticleIndexerLocalizedContentTest {
 	public void setUp() throws Exception {
 		_group = GroupTestUtil.addGroup();
 
-		_indexer = _indexerRegistry.getIndexer(JournalArticle.class);
+		_indexerFixture = new IndexerFixture<>(JournalArticle.class);
 
 		_journalArticleSearchFixture = new JournalArticleSearchFixture(
 			_journalArticleLocalService);
@@ -161,7 +154,8 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 		String searchTerm = "nev";
 
-		Document document = _search(searchTerm, LocaleUtil.HUNGARY);
+		Document document = _indexerFixture.searchOnlyOne(
+			searchTerm, LocaleUtil.HUNGARY);
 
 		FieldValuesAssert.assertFieldValues(
 			titleStrings, "title", document, searchTerm);
@@ -252,7 +246,8 @@ public class JournalArticleIndexerLocalizedContentTest {
 
 		String searchTerm = articleId;
 
-		Document document = _search(searchTerm, LocaleUtil.BRAZIL);
+		Document document = _indexerFixture.searchOnlyOne(
+			searchTerm, LocaleUtil.BRAZIL);
 
 		FieldValuesAssert.assertFieldValues(
 			titleStrings, "title", document, searchTerm);
@@ -329,7 +324,8 @@ public class JournalArticleIndexerLocalizedContentTest {
 			word1, word2, prefix1, prefix2
 		).forEach(
 			searchTerm -> {
-				Document document = _search(searchTerm, LocaleUtil.JAPAN);
+				Document document = _indexerFixture.searchOnlyOne(
+					searchTerm, LocaleUtil.JAPAN);
 
 				FieldValuesAssert.assertFieldValues(
 					titleStrings, "title", document, searchTerm);
@@ -389,7 +385,8 @@ public class JournalArticleIndexerLocalizedContentTest {
 			word1, word2
 		).forEach(
 			searchTerm -> {
-				Document document = _search(searchTerm, LocaleUtil.JAPAN);
+				Document document = _indexerFixture.searchOnlyOne(
+					searchTerm, LocaleUtil.JAPAN);
 
 				FieldValuesAssert.assertFieldValues(
 					titleStrings, "title", document, searchTerm);
@@ -401,13 +398,11 @@ public class JournalArticleIndexerLocalizedContentTest {
 		String fieldValue, Locale locale, String fieldPrefix,
 		String fieldName) {
 
-		SearchContext searchContext = _getSearchContext(fieldValue, locale);
-
-		Document document = _search(searchContext);
+		Document document = _indexerFixture.searchOnlyOne(fieldValue, locale);
 
 		FieldValuesAssert.assertFieldValues(
 			Collections.singletonMap(fieldName, fieldValue), fieldPrefix,
-			document, (String)searchContext.getAttribute("queryString"));
+			document, document.toString());
 	}
 
 	private static Map<String, String> _withSortableValues(
@@ -427,67 +422,13 @@ public class JournalArticleIndexerLocalizedContentTest {
 		return map2;
 	}
 
-	private SearchContext _getSearchContext(String searchTerm, Locale locale) {
-		try {
-			SearchContext searchContext = new SearchContext();
-
-			searchContext.setCompanyId(TestPropsValues.getCompanyId());
-			searchContext.setGroupIds(new long[] {_group.getGroupId()});
-			searchContext.setKeywords(searchTerm);
-			searchContext.setLocale(locale);
-			searchContext.setUserId(TestPropsValues.getUserId());
-
-			QueryConfig queryConfig = searchContext.getQueryConfig();
-
-			queryConfig.setSelectedFieldNames(StringPool.STAR);
-
-			return searchContext;
-		}
-		catch (PortalException pe) {
-			throw new RuntimeException(pe);
-		}
-	}
-
-	private Document _getSingleDocument(
-		Hits hits, SearchContext searchContext) {
-
-		List<Document> documents = hits.toList();
-
-		if (documents.size() == 1) {
-			return documents.get(0);
-		}
-
-		throw new AssertionError(
-			searchContext.getAttribute("queryString") + "->" + documents);
-	}
-
-	private Document _search(SearchContext searchContext) {
-		try {
-			Hits hits = _indexer.search(searchContext);
-
-			return _getSingleDocument(hits, searchContext);
-		}
-		catch (SearchException se) {
-			throw new RuntimeException(se);
-		}
-	}
-
-	private Document _search(String searchTerm, Locale locale) {
-		SearchContext searchContext = _getSearchContext(searchTerm, locale);
-
-		return _search(searchContext);
-	}
-
-	@Inject
-	private static IndexerRegistry _indexerRegistry;
-
 	@Inject
 	private static JournalArticleLocalService _journalArticleLocalService;
 
 	@DeleteAfterTestRun
 	private Group _group;
 
-	private Indexer<JournalArticle> _indexer;
+	private IndexerFixture<JournalArticle> _indexerFixture;
 
 	@DeleteAfterTestRun
 	private List<JournalArticle> _journalArticles;
