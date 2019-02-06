@@ -68,6 +68,10 @@ public class IndexOnStartupIndexerServiceCustomizer
 		}
 
 		synchronized (_serviceRegistrations) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Registering service for " + className);
+			}
+
 			if (_serviceRegistrations.containsKey(className)) {
 				if (_log.isInfoEnabled()) {
 					_log.info(
@@ -138,6 +142,10 @@ public class IndexOnStartupIndexerServiceCustomizer
 				serviceRegistration.unregister();
 
 				removedIndexerClassNames.add(entry.getKey());
+
+				if (_log.isDebugEnabled()) {
+					_log.debug("Unregistering service for " + entry.getKey());
+				}
 			}
 
 			for (String removedIndexerClassName : removedIndexerClassNames) {

@@ -113,6 +113,14 @@ public class ModelSearchConfiguratorServiceTrackerCustomizer
 			return modelSearchConfigurator;
 		}
 
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				StringBundler.concat(
+					"Registering ",
+					ClassUtil.getClassName(serviceRegistrationHolder), "for",
+					modelSearchConfigurator.getClassName()));
+		}
+
 		serviceRegistrationHolder = new ServiceRegistrationHolder(
 			modelSearchConfigurator, serviceRanking);
 

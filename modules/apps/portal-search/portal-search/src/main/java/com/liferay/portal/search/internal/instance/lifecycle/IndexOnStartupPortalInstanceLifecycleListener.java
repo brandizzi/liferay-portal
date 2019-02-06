@@ -42,7 +42,15 @@ public class IndexOnStartupPortalInstanceLifecycleListener
 	@Override
 	public void portalInstanceRegistered(Company company) throws Exception {
 		if (!GetterUtil.getBoolean(_props.get(PropsKeys.INDEX_ON_STARTUP))) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Indexing on startup disabled");
+			}
+
 			return;
+		}
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("Reindexing " + _className + "on startup");
 		}
 
 		try {
