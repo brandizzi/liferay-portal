@@ -29,7 +29,7 @@ definition {
 		property apacheds.blank.user.password.enabled = "true";
 		property apacheds.enabled = "true";
 		property environment.acceptance = "false";
-		property portal.acceptance = "true";
+		property portal.acceptance = "josh";
 		property test.name.skip.portal.instance = "LDAP#ImportLDAPUserWithBlankPassword";
 
 		ProductMenu.gotoPortlet(
@@ -85,6 +85,7 @@ definition {
 	test ResetFieldsValueForImportedLDAPUser {
 		property apacheds.enabled = "true";
 		property custom.properties = "field.enable.com.liferay.portal.kernel.model.Contact.male=true";
+		property portal.acceptance = "josh";
 		property test.name.skip.portal.instance = "LDAP#ResetFieldsValueForImportedLDAPUser";
 
 		ProductMenu.gotoPortlet(
