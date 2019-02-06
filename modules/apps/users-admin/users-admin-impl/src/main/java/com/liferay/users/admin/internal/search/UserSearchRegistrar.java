@@ -14,6 +14,8 @@
 
 package com.liferay.users.admin.internal.search;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
@@ -35,6 +37,10 @@ public class UserSearchRegistrar {
 
 	@Activate
 	protected void activate(BundleContext bundleContext) {
+		if (_log.isDebugEnabled()) {
+			_log.debug("Activting user indexer");
+		}
+
 		_serviceRegistration = modelSearchRegistrarHelper.register(
 			User.class, bundleContext,
 			modelSearchDefinition -> {
@@ -67,6 +73,9 @@ public class UserSearchRegistrar {
 		target = "(indexer.class.name=com.liferay.portal.kernel.model.User)"
 	)
 	protected ModelSummaryContributor modelSummaryContributor;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		UserSearchRegistrar.class);
 
 	private ServiceRegistration<?> _serviceRegistration;
 

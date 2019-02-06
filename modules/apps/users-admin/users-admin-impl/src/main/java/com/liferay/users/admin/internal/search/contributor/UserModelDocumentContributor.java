@@ -14,6 +14,7 @@
 
 package com.liferay.users.admin.internal.search.contributor;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.NoSuchCountryException;
 import com.liferay.portal.kernel.exception.NoSuchRegionException;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -60,6 +61,13 @@ public class UserModelDocumentContributor
 
 	@Override
 	public void contribute(Document document, User user) {
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				StringBundler.concat(
+					"Adding fields to document for user ", user.getScreenName(),
+					" (", user.getUserId(), ")"));
+		}
+
 		try {
 			long[] organizationIds = user.getOrganizationIds();
 

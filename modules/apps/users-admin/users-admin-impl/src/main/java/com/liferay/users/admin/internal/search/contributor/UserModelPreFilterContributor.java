@@ -14,6 +14,8 @@
 
 package com.liferay.users.admin.internal.search.contributor;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
@@ -46,6 +48,10 @@ public class UserModelPreFilterContributor
 	public void contribute(
 		BooleanFilter contextBooleanFilter,
 		ModelSearchSettings modelSearchSettings, SearchContext searchContext) {
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("Adding pre filters to user search");
+		}
 
 		int status = GetterUtil.getInteger(
 			searchContext.getAttribute(Field.STATUS),
@@ -157,5 +163,8 @@ public class UserModelPreFilterContributor
 				"userGroupIds", String.valueOf(value));
 		}
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		UserModelPreFilterContributor.class);
 
 }

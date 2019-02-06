@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<category name="com.liferay.users.admin.internal.search.UserSearchRegistrar">
+		<priority value="DEBUG" />
+	</category>
+
+	<category name="com.liferay.users.admin.internal.search.contributor.UserKeywordQueryContributor">
+		<priority value="DEBUG" />
+	</category>
+
+	<category name="com.liferay.users.admin.internal.search.contributor.UserModelDocumentContributor">
+		<priority value="DEBUG" />
+	</category>
+
+	<category name="com.liferay.users.admin.internal.search.contributor.UserModelIndexWriterContributor">
+		<priority value="DEBUG" />
+	</category>
+
+	<category name="com.liferay.users.admin.internal.search.contributor.UserModelPreFilterContributor">
+		<priority value="DEBUG" />
+	</category>
+
+	<category name="com.liferay.users.admin.internal.search.contributor.UserModelSummaryContributor">
+		<priority value="DEBUG" />
+	</category>
+</log4j:configuration>

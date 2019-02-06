@@ -14,6 +14,9 @@
 
 package com.liferay.users.admin.internal.search.contributor;
 
+import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.search.batch.BatchIndexingActionable;
@@ -41,11 +44,31 @@ public class UserModelIndexWriterContributor
 		BatchIndexingActionable batchIndexingActionable,
 		ModelIndexerWriterDocumentHelper modelIndexerWriterDocumentHelper) {
 
+		if (_log.isDebugEnabled()) {
+			_log.debug("Starting user indexing");
+		}
+
 		batchIndexingActionable.setPerformActionMethod(
 			(User user) -> {
 				if (!user.isDefaultUser()) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(
+							StringBundler.concat(
+								"Indexing user ", user.getScreenName(), " (",
+								user.getUserId(), ")"));
+					}
+
 					batchIndexingActionable.addDocuments(
 						modelIndexerWriterDocumentHelper.getDocument(user));
+				}
+				else {
+					if (_log.isDebugEnabled()) {
+						_log.debug(
+							StringBundler.concat(
+								"Not indexing default user ",
+								user.getScreenName(), " (", user.getUserId(),
+								")"));
+					}
 				}
 			});
 	}
@@ -76,5 +99,8 @@ public class UserModelIndexWriterContributor
 
 	@Reference
 	protected UserLocalService userLocalService;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		UserModelIndexWriterContributor.class);
 
 }

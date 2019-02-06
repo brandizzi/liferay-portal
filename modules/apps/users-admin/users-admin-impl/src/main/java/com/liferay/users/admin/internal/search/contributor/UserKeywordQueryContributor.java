@@ -14,6 +14,8 @@
 
 package com.liferay.users.admin.internal.search.contributor;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.QueryConfig;
 import com.liferay.portal.kernel.search.SearchContext;
@@ -38,6 +40,10 @@ public class UserKeywordQueryContributor implements KeywordQueryContributor {
 	public void contribute(
 		String keywords, BooleanQuery booleanQuery,
 		KeywordQueryContributorHelper keywordQueryContributorHelper) {
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("Adding queries to user search");
+		}
 
 		SearchContext searchContext =
 			keywordQueryContributorHelper.getSearchContext();
@@ -78,5 +84,8 @@ public class UserKeywordQueryContributor implements KeywordQueryContributor {
 
 	@Reference
 	protected QueryHelper queryHelper;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		UserKeywordQueryContributor.class);
 
 }

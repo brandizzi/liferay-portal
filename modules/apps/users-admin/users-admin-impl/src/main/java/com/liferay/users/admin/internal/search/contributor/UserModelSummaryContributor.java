@@ -14,7 +14,10 @@
 
 package com.liferay.users.admin.internal.search.contributor;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Summary;
@@ -38,6 +41,13 @@ public class UserModelSummaryContributor implements ModelSummaryContributor {
 	public Summary getSummary(
 		Document document, Locale locale, String snippet) {
 
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				StringBundler.concat(
+					"Getting summary for user ", document.get(Field.USER_NAME),
+					" (", document.get(Field.CLASS_PK), ")"));
+		}
+
 		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
 
 		String fullName = "fullName";
@@ -48,5 +58,8 @@ public class UserModelSummaryContributor implements ModelSummaryContributor {
 
 		return new Summary(title, content);
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		UserModelSummaryContributor.class);
 
 }
