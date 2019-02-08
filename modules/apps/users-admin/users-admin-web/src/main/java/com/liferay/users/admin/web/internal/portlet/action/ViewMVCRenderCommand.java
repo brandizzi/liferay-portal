@@ -14,6 +14,8 @@
 
 package com.liferay.users.admin.web.internal.portlet.action;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.users.admin.constants.UsersAdminPortletKeys;
 import com.liferay.users.admin.user.action.contributor.UserActionContributor;
@@ -49,6 +51,10 @@ public class ViewMVCRenderCommand implements MVCRenderCommand {
 	public String render(
 		RenderRequest renderRequest, RenderResponse renderResponse) {
 
+		if (_log.isDebugEnabled()) {
+			_log.debug("Listing users");
+		}
+
 		renderRequest.setAttribute(
 			UsersAdminWebKeys.USER_ACTION_CONTRIBUTORS,
 			_userActionContributors.toArray(new UserActionContributor[0]));
@@ -72,6 +78,9 @@ public class ViewMVCRenderCommand implements MVCRenderCommand {
 
 		_userActionContributors.remove(userActionContributor);
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		ViewMVCRenderCommand.class);
 
 	private final List<UserActionContributor> _userActionContributors =
 		new CopyOnWriteArrayList<>();
