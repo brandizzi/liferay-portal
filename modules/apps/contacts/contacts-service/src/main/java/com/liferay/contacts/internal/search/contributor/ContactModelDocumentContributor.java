@@ -14,6 +14,9 @@
 
 package com.liferay.contacts.internal.search.contributor;
 
+import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
@@ -39,14 +42,49 @@ public class ContactModelDocumentContributor
 	@Override
 	public void contribute(Document document, Contact contact) {
 		if (contact.isUser()) {
+			if (_log.isDebugEnabled()) {
+				_log.debug("Contact " + contact.getContactId() + " is user.");
+			}
+
 			User user = userLocalService.fetchUserByContactId(
 				contact.getContactId());
 
-			if ((user == null) || user.isDefaultUser() ||
-				(user.getStatus() != WorkflowConstants.STATUS_APPROVED)) {
+			if (user == null) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(
+						"Contact " + contact.getContactId() + " user is null");
+				}
 
 				return;
 			}
+
+			if (user.isDefaultUser()) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(
+						"Contact " + contact.getContactId() +
+							" user is default");
+				}
+
+				return;
+			}
+
+			if (user.getStatus() != WorkflowConstants.STATUS_APPROVED) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(
+						StringBundler.concat(
+							"Contact ", contact.getContactId(),
+							" user is not approved: ", user.getStatus()));
+				}
+
+				return;
+			}
+		}
+
+		if (_log.isDebugEnabled()) {
+			_log.debug(
+				StringBundler.concat(
+					"Indexing contact ", contact.getEmailAddress(), " (",
+					contact.getContactId() + ")"));
 		}
 
 		document.addKeyword(Field.COMPANY_ID, contact.getCompanyId());
@@ -64,5 +102,8 @@ public class ContactModelDocumentContributor
 
 	@Reference
 	protected UserLocalService userLocalService;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		ContactModelDocumentContributor.class);
 
 }
