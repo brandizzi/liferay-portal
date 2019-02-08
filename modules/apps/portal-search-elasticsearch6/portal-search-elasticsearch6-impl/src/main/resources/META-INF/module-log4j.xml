@@ -6,6 +6,10 @@
 		<priority value="ERROR" />
 	</category>
 
+	<category name="com.liferay.portal.search.elasticsearch6.internal.ElasticsearchIndexSearcher">
+		<priority value="DEBUG" />
+	</category>
+
 	<category name="com.liferay.portal.search.elasticsearch6.internal.connection.EmbeddedElasticsearchConnection">
 		<priority value="WARN" />
 	</category>

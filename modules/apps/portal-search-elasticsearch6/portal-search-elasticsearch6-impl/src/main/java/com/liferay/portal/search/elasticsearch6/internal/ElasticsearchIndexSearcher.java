@@ -122,7 +122,12 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 							"The search engine processed ",
 							searchSearchResponse.getSearchRequestString(),
 							" in ",
-							searchSearchResponse.getExecutionTime() + " ms"));
+							searchSearchResponse.getExecutionTime() + " ms.",
+							searchSearchResponse.getCount(),
+							" documents found."));
+					_log.info(
+						"Search results: " +
+							searchSearchResponse.getSearchResponseString());
 				}
 
 				populateResponse(searchSearchResponse, searchResponseBuilder);
