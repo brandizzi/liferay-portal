@@ -71,20 +71,14 @@ import java.util.Locale;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Brian Wing Shun Chan
  * @author Harry Mark
  * @author Bruno Farache
  * @author Raymond Augé
+ * @deprecated As of Judson (7.1.x), since 7.1.0
  */
-@Component(
-	immediate = true,
-	property = "related.entry.indexer.class.name=com.liferay.message.boards.model.MBMessage",
-	service = {Indexer.class, RelatedEntryIndexer.class}
-)
+@Deprecated
 public class MBMessageIndexer
 	extends BaseIndexer<MBMessage> implements RelatedEntryIndexer {
 
@@ -580,22 +574,11 @@ public class MBMessageIndexer
 		intervalActionProcessor.performIntervalActions();
 	}
 
-	@Reference
 	protected CommentManager commentManager;
-
-	@Reference
 	protected GroupLocalService groupLocalService;
-
-	@Reference
 	protected MBCategoryLocalService mbCategoryLocalService;
-
-	@Reference
 	protected MBCategoryService mbCategoryService;
-
-	@Reference
 	protected MBDiscussionLocalService mbDiscussionLocalService;
-
-	@Reference
 	protected MBMessageLocalService mbMessageLocalService;
 
 	private DynamicQuery _getDistinctGroupIdDynamicQuery(
@@ -629,11 +612,7 @@ public class MBMessageIndexer
 	private static final Log _log = LogFactoryUtil.getLog(
 		MBMessageIndexer.class);
 
-	@Reference(
-		target = "(model.class.name=com.liferay.message.boards.model.MBMessage)"
-	)
 	private ModelResourcePermission<MBMessage> _messageModelResourcePermission;
-
 	private final RelatedEntryIndexer _relatedEntryIndexer =
 		new BaseRelatedEntryIndexer();
 

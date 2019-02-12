@@ -36,7 +36,6 @@ import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
-import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
@@ -52,13 +51,11 @@ import java.util.Locale;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Eudaldo Alonso
+ * @deprecated As of Judson (7.1.x), since 7.1.0
  */
-@Component(immediate = true, service = Indexer.class)
+@Deprecated
 public class MBThreadIndexer extends BaseIndexer<MBThread> {
 
 	public static final String CLASS_NAME = MBThread.class.getName();
@@ -309,16 +306,9 @@ public class MBThreadIndexer extends BaseIndexer<MBThread> {
 		indexableActionableDynamicQuery.performActions();
 	}
 
-	@Reference
 	protected GroupLocalService groupLocalService;
-
-	@Reference
 	protected MBCategoryLocalService mbCategoryLocalService;
-
-	@Reference
 	protected MBDiscussionLocalService mbDiscussionLocalService;
-
-	@Reference
 	protected MBThreadLocalService mbThreadLocalService;
 
 	private DynamicQuery _getDistinctGroupIdDynamicQuery(
