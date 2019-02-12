@@ -23,9 +23,13 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 
+import java.io.Serializable;
+
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -98,7 +102,25 @@ public class IndexerFixture<T> {
 		try {
 			SearchContext searchContext =
 				SearchContextTestUtil.getSearchContext(
-					userId, keywords, locale);
+					userId, null, keywords, locale, null);
+
+			Hits hits = _indexer.search(searchContext);
+
+			HitsAssert.assertNoHits(hits);
+		}
+		catch (PortalException pe) {
+			throw new RuntimeException(pe);
+		}
+	}
+
+	public void searchNoOne(
+		long userId, String keywords, Locale locale,
+		Map<String, Serializable> attributes) {
+
+		try {
+			SearchContext searchContext =
+				SearchContextTestUtil.getSearchContext(
+					userId, null, keywords, locale, attributes);
 
 			Hits hits = _indexer.search(searchContext);
 
@@ -111,7 +133,7 @@ public class IndexerFixture<T> {
 
 	public void searchNoOne(String keywords) {
 		try {
-			searchNoOne(TestPropsValues.getUserId(), keywords, null);
+			searchNoOne(TestPropsValues.getUserId(), keywords, null, null);
 		}
 		catch (PortalException pe) {
 			throw new RuntimeException(pe);
@@ -120,7 +142,19 @@ public class IndexerFixture<T> {
 
 	public void searchNoOne(String keywords, Locale locale) {
 		try {
-			searchNoOne(TestPropsValues.getUserId(), keywords, locale);
+			searchNoOne(TestPropsValues.getUserId(), keywords, locale, null);
+		}
+		catch (PortalException pe) {
+			throw new RuntimeException(pe);
+		}
+	}
+
+	public void searchNoOne(
+		String keywords, Locale locale, Map<String, Serializable> attributes) {
+
+		try {
+			searchNoOne(
+				TestPropsValues.getUserId(), keywords, locale, attributes);
 		}
 		catch (PortalException pe) {
 			throw new RuntimeException(pe);
@@ -131,7 +165,25 @@ public class IndexerFixture<T> {
 		try {
 			SearchContext searchContext =
 				SearchContextTestUtil.getSearchContext(
-					userId, keywords, locale);
+					userId, null, keywords, locale, null);
+
+			Hits hits = _indexer.search(searchContext);
+
+			return HitsAssert.assertOnlyOne(hits);
+		}
+		catch (PortalException pe) {
+			throw new RuntimeException(pe);
+		}
+	}
+
+	public Document searchOnlyOne(
+		long userId, String keywords, Locale locale,
+		Map<String, Serializable> attributes) {
+
+		try {
+			SearchContext searchContext =
+				SearchContextTestUtil.getSearchContext(
+					userId, null, keywords, locale, attributes);
 
 			Hits hits = _indexer.search(searchContext);
 
@@ -144,7 +196,8 @@ public class IndexerFixture<T> {
 
 	public Document searchOnlyOne(String keywords) {
 		try {
-			return searchOnlyOne(TestPropsValues.getUserId(), keywords, null);
+			return searchOnlyOne(
+				TestPropsValues.getUserId(), keywords, null, null);
 		}
 		catch (PortalException pe) {
 			throw new RuntimeException(pe);
@@ -153,7 +206,62 @@ public class IndexerFixture<T> {
 
 	public Document searchOnlyOne(String keywords, Locale locale) {
 		try {
-			return searchOnlyOne(TestPropsValues.getUserId(), keywords, locale);
+			return searchOnlyOne(
+				TestPropsValues.getUserId(), keywords, locale, null);
+		}
+		catch (PortalException pe) {
+			throw new RuntimeException(pe);
+		}
+	}
+
+	public Document searchOnlyOne(
+		String keywords, Locale locale, Map<String, Serializable> attributes) {
+
+		try {
+			return searchOnlyOne(
+				TestPropsValues.getUserId(), keywords, locale, attributes);
+		}
+		catch (PortalException pe) {
+			throw new RuntimeException(pe);
+		}
+	}
+
+	public Document searchOnlyOne(
+		String keywords, Locale locale, String attributeName) {
+
+		HashMap<String, Serializable> map = new HashMap<>();
+
+		map.put(attributeName, keywords);
+
+		try {
+			return searchOnlyOne(
+				TestPropsValues.getUserId(), keywords, locale, map);
+		}
+		catch (PortalException pe) {
+			throw new RuntimeException(pe);
+		}
+	}
+
+	public Document searchOnlyOne(
+		String keywords, Map<String, Serializable> attributes) {
+
+		try {
+			return searchOnlyOne(
+				TestPropsValues.getUserId(), keywords, null, attributes);
+		}
+		catch (PortalException pe) {
+			throw new RuntimeException(pe);
+		}
+	}
+
+	public Document searchOnlyOne(String keywords, String attributeName) {
+		HashMap<String, Serializable> map = new HashMap<>();
+
+		map.put(attributeName, keywords);
+
+		try {
+			return searchOnlyOne(
+				TestPropsValues.getUserId(), keywords, null, map);
 		}
 		catch (PortalException pe) {
 			throw new RuntimeException(pe);
