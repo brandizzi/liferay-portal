@@ -82,9 +82,7 @@ public class MBMessageIndexerTest {
 	public void testNotReindexGroupNotContainingMBMessages() throws Exception {
 		try (CaptureAppender captureAppender =
 				Log4JLoggerTestUtil.configureLog4JLogger(
-					"com.liferay.message.boards.internal.search." +
-						"MBMessageIndexer",
-					Level.DEBUG)) {
+					_LOG4JLOGGER, Level.DEBUG)) {
 
 			GroupTestUtil.addGroup(
 				_company1.getCompanyId(), _user1.getUserId(),
@@ -105,9 +103,7 @@ public class MBMessageIndexerTest {
 	public void testReindexGroupContainingMBDiscussion() throws Exception {
 		try (CaptureAppender captureAppender =
 				Log4JLoggerTestUtil.configureLog4JLogger(
-					"com.liferay.message.boards.internal.search." +
-						"MBMessageIndexer",
-					Level.DEBUG)) {
+					_LOG4JLOGGER, Level.DEBUG)) {
 
 			Group group = GroupTestUtil.addGroup(
 				_company1.getCompanyId(), _user1.getUserId(),
@@ -129,7 +125,7 @@ public class MBMessageIndexerTest {
 				captureAppender.getLoggingEvents();
 
 			Assert.assertEquals(
-				loggingEvents.toString(), 1, loggingEvents.size());
+				loggingEvents.toString(), 2, loggingEvents.size());
 
 			LoggingEvent loggingEvent = loggingEvents.get(0);
 
@@ -146,9 +142,7 @@ public class MBMessageIndexerTest {
 	public void testReindexGroupContainingMBMessage() throws Exception {
 		try (CaptureAppender captureAppender =
 				Log4JLoggerTestUtil.configureLog4JLogger(
-					"com.liferay.message.boards.internal.search." +
-						"MBMessageIndexer",
-					Level.DEBUG)) {
+					_LOG4JLOGGER, Level.DEBUG)) {
 
 			Group group = GroupTestUtil.addGroup(
 				_company1.getCompanyId(), _user1.getUserId(),
@@ -190,6 +184,10 @@ public class MBMessageIndexerTest {
 				loggingEvent.getMessage());
 		}
 	}
+
+	private static final String _LOG4JLOGGER =
+		"com.liferay.message.boards.internal.search.spi.model.index." +
+			"contributor.MBMessageModelIndexerWriterContributor";
 
 	@DeleteAfterTestRun
 	private Company _company1;
