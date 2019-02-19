@@ -82,7 +82,7 @@ public class MBMessageIndexerTest {
 	public void testNotReindexGroupNotContainingMBMessages() throws Exception {
 		try (CaptureAppender captureAppender =
 				Log4JLoggerTestUtil.configureLog4JLogger(
-					_LOG4JLOGGER, Level.DEBUG)) {
+					_LOG_NAME, Level.DEBUG)) {
 
 			GroupTestUtil.addGroup(
 				_company1.getCompanyId(), _user1.getUserId(),
@@ -103,7 +103,7 @@ public class MBMessageIndexerTest {
 	public void testReindexGroupContainingMBDiscussion() throws Exception {
 		try (CaptureAppender captureAppender =
 				Log4JLoggerTestUtil.configureLog4JLogger(
-					_LOG4JLOGGER, Level.DEBUG)) {
+					_LOG_NAME, Level.DEBUG)) {
 
 			Group group = GroupTestUtil.addGroup(
 				_company1.getCompanyId(), _user1.getUserId(),
@@ -142,7 +142,7 @@ public class MBMessageIndexerTest {
 	public void testReindexGroupContainingMBMessage() throws Exception {
 		try (CaptureAppender captureAppender =
 				Log4JLoggerTestUtil.configureLog4JLogger(
-					_LOG4JLOGGER, Level.DEBUG)) {
+					_LOG_NAME, Level.DEBUG)) {
 
 			Group group = GroupTestUtil.addGroup(
 				_company1.getCompanyId(), _user1.getUserId(),
@@ -185,7 +185,7 @@ public class MBMessageIndexerTest {
 		}
 	}
 
-	private static final String _LOG4JLOGGER =
+	private static final String _LOG_NAME =
 		"com.liferay.message.boards.internal.search.spi.model.index." +
 			"contributor.MBMessageModelIndexerWriterContributor";
 
