@@ -26,7 +26,6 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.RelatedEntryIndexer;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.filter.BooleanFilter;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -39,16 +38,7 @@ import org.osgi.service.component.annotations.Reference;
 	property = "related.entry.indexer.class.name=com.liferay.message.boards.model.MBMessage",
 	service = RelatedEntryIndexer.class
 )
-public class MBMessageRelatedEntryIndexer implements RelatedEntryIndexer {
-
-	@Override
-	public void addRelatedClassNames(
-			BooleanFilter contextBooleanFilter, SearchContext searchContext)
-		throws Exception {
-
-		_relatedEntryIndexer.addRelatedClassNames(
-			contextBooleanFilter, searchContext);
-	}
+public class MBMessageRelatedEntryIndexer extends BaseRelatedEntryIndexer {
 
 	@Override
 	public void addRelatedEntryFields(Document document, Object obj)
@@ -108,8 +98,5 @@ public class MBMessageRelatedEntryIndexer implements RelatedEntryIndexer {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		MBMessageRelatedEntryIndexer.class);
-
-	private final RelatedEntryIndexer _relatedEntryIndexer =
-		new BaseRelatedEntryIndexer();
 
 }

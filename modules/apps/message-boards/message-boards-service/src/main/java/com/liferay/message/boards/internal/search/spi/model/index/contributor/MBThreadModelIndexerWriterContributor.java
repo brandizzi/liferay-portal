@@ -53,7 +53,6 @@ public class MBThreadModelIndexerWriterContributor
 
 				dynamicQuery.add(
 					statusProperty.eq(WorkflowConstants.STATUS_APPROVED));
-
 			});
 
 		batchIndexingActionable.setPerformActionMethod(
@@ -70,7 +69,6 @@ public class MBThreadModelIndexerWriterContributor
 					modelIndexerWriterDocumentHelper.getDocument(mbThread);
 
 				batchIndexingActionable.addDocuments(document);
-
 			});
 	}
 

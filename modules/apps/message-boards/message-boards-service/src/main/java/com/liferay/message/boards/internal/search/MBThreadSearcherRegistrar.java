@@ -40,7 +40,6 @@ public class MBThreadSearcherRegistrar {
 				modelSearchDefinition.setDefaultSelectedFieldNames(
 					Field.CLASS_NAME_ID, Field.CLASS_PK, Field.COMPANY_ID,
 					Field.ENTRY_CLASS_NAME, Field.ENTRY_CLASS_PK, Field.UID);
-
 				modelSearchDefinition.setModelIndexWriteContributor(
 					modelIndexWriterContributor);
 
