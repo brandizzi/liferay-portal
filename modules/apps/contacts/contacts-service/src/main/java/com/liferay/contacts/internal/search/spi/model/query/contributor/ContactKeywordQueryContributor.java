@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.contact.internal.search.spi.model.query.contributor;
+package com.liferay.contacts.internal.search.spi.model.query.contributor;
 
 import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.SearchContext;
