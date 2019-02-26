@@ -15,3 +15,13 @@
 --%>
 
 <%@ include file="/init.jsp" %>
+
+<%
+	Map<String, Object> context = new HashMap<>();
+%>
+
+<soy:component-renderer
+	context="<%= context %>"
+	module="js/FieldMappings.es"
+	templateNamespace="com.liferay.portal.search.admin.web.FieldMappings.render"
+/>
