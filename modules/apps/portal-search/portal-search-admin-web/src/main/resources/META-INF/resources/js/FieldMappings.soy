@@ -1,0 +1,53 @@
+{namespace com.liferay.portal.search.admin.web.FieldMappings}
+
+/**
+ * Renders Field Mappings.
+ */
+{template .render}
+
+	<div class="container-fluid container-fluid-max-xl container-form-lg">
+		<div class="row">
+			<div class="col-md-3">
+				<h3>{msg desc=""}index{/msg}</h3>
+				<nav class="menubar menubar-transparent menubar-vertical-expand-lg">
+					<ul class="nav nav-nested">
+						<li class="nav-item">
+							<a class="active nav-link" href="">
+								{msg desc=""}index-id-goes-here{/msg}
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="">
+								{msg desc=""}index-identity{/msg}
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="">
+								{msg desc=""}the-index-name{/msg}
+							</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+
+			<div class="col-md-9">
+				<div class="sheet">
+					<div class="sheet-header">
+						<h2 class="sheet-title">
+							{msg desc=""}index-names-goes-here{/msg}
+						</h2>
+						<h5 class="subtitle">
+							{msg desc=""}a-list-of-all-field-mappings-in-this-index{/msg}
+						</h5>
+					</div>
+					<div class="sheet-section">
+						<div class="lfr-editor-container" id="editorContainer">
+							<div class="lfr-rich-editor" id="richEditor"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{/template}
