@@ -4,8 +4,10 @@
  * Renders Field Mappings.
  */
 {template .render}
+	{@param spritemap: string}
+	{@param? _selectText: any}
 
-	<div class="container-fluid container-fluid-max-xl container-form-lg">
+	<div class="container-fluid container-fluid-max-xl container-form-lg portal-search-admin-field-mappings">
 		<div class="row">
 			<div class="col-md-3">
 				<h3>{msg desc=""}index{/msg}</h3>
@@ -41,9 +43,37 @@
 						</h5>
 					</div>
 					<div class="sheet-section">
-						<div class="lfr-editor-container" id="editorContainer">
-							<div class="lfr-rich-editor" id="richEditor"></div>
-						</div>
+						{call ClayButton.render }
+							{param icon: 'moon' /}
+							{param monospaced: true /}
+							{param spritemap: $spritemap /}
+							{param style: 'secondary' /}
+						{/call}
+						{call ClayButton.render }
+							{param icon: 'plus' /}
+							{param monospaced: true /}
+							{param spritemap: $spritemap /}
+							{param style: 'secondary' /}
+						{/call}
+						{call ClayButton.render }
+							{param icon: 'hr' /}
+							{param monospaced: true /}
+							{param spritemap: $spritemap /}
+							{param style: 'secondary' /}
+						{/call}
+						{call ClayButton.render}
+							{param events: [
+								'click': $_selectText
+							] /}
+							{param icon: 'paste' /}
+							{param monospaced: true /}
+							{param spritemap: $spritemap /}
+							{param elementClasses: 'btn-copy' /}
+							{param style: 'secondary' /}
+						{/call}
+					</div>
+					<div class="sheet-section">
+						<div class="lfr-rich-editor" ref="wrapper" id="richEditor"></div>
 					</div>
 				</div>
 			</div>
