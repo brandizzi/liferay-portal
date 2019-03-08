@@ -25,7 +25,7 @@ class FieldMappings extends PortletBase {
 	}
 
 	_selectText() {
-		let copyTextArea = document.querySelector(".ace_text-input")
+		let copyTextArea = document.querySelector(".ace_text-input");
 		copyTextArea.focus();
 		copyTextArea.select();
 
@@ -36,6 +36,10 @@ class FieldMappings extends PortletBase {
 			},
 			0
 		);
+	}
+
+	_switchTheme() {
+		document.querySelector("#richEditor").classList.toggle("ace_dark");
 	}
 }
 
