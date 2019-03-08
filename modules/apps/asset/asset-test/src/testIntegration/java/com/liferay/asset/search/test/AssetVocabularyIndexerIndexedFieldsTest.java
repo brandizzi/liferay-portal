@@ -68,15 +68,12 @@ public class AssetVocabularyIndexerIndexedFieldsTest {
 
 	@Before
 	public void setUp() throws Exception {
+		setUpAssetVocabularyIndexerFixture();
+		setUpIndexedFieldsFixture();
+		setUpLocale();
 		setUpUserSearchFixture();
 
 		setUpAssetVocabularyFixture();
-
-		setUpAssetVocabularyIndexerFixture();
-
-		setUpIndexedFieldsFixture();
-
-		_defaultLocale = LocaleThreadLocal.getDefaultLocale();
 	}
 
 	@After
@@ -126,6 +123,10 @@ public class AssetVocabularyIndexerIndexedFieldsTest {
 			resourcePermissionLocalService, searchEngineHelper);
 	}
 
+	protected void setUpLocale() {
+		tearDownLocale();
+	}
+
 	protected void setUpUserSearchFixture() throws Exception {
 		userSearchFixture = new UserSearchFixture();
 
@@ -136,6 +137,10 @@ public class AssetVocabularyIndexerIndexedFieldsTest {
 		_groups = userSearchFixture.getGroups();
 
 		_users = userSearchFixture.getUsers();
+	}
+
+	protected void tearDownLocale() {
+		_defaultLocale = LocaleThreadLocal.getDefaultLocale();
 	}
 
 	protected AssetVocabularyFixture assetVocabularyFixture;

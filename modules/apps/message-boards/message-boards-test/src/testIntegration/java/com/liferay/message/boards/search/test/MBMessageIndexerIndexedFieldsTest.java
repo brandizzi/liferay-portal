@@ -70,9 +70,10 @@ public class MBMessageIndexerIndexedFieldsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		setUpUserSearchFixture();
 		setUpIndexedFieldsFixture();
 		setUpMBMessageIndexerFixture();
+		setUpUserSearchFixture();
+
 		setUpMBMessageFixture();
 	}
 
