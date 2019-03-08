@@ -6,6 +6,7 @@
 {template .render}
 	{@param spritemap: string}
 	{@param? _selectText: any}
+	{@param? _switchTheme: any}
 
 	<div class="container-fluid container-fluid-max-xl container-form-lg portal-search-admin-field-mappings">
 		<div class="row">
@@ -45,6 +46,9 @@
 					<div class="sheet-section">
 						{call ClayButton.render }
 							{param icon: 'moon' /}
+							{param events: [
+								'click': $_switchTheme
+							] /}
 							{param monospaced: true /}
 							{param spritemap: $spritemap /}
 							{param style: 'secondary' /}
@@ -72,8 +76,8 @@
 							{param style: 'secondary' /}
 						{/call}
 					</div>
-					<div class="sheet-section">
-						<div class="lfr-rich-editor" ref="wrapper" id="richEditor"></div>
+					<div class="sheet-section lfr-source-editor lfr-source-editor-content" id="richEditor">
+						<div class="lfr-source-editor-code" ref="wrapper"></div>
 					</div>
 				</div>
 			</div>
