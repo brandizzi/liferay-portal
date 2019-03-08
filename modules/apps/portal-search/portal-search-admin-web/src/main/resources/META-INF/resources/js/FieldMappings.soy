@@ -7,6 +7,8 @@
 	{@param spritemap: string}
 	{@param? _selectText: any}
 	{@param? _switchTheme: any}
+	{@param? _increaseFontSize: any}
+	{@param? _decreaseFontSize: any}
 
 	<div class="container-fluid container-fluid-max-xl container-form-lg portal-search-admin-field-mappings">
 		<div class="row">
@@ -55,12 +57,18 @@
 						{/call}
 						{call ClayButton.render }
 							{param icon: 'plus' /}
+							{param events: [
+								'click': $_increaseFontSize
+							] /}
 							{param monospaced: true /}
 							{param spritemap: $spritemap /}
 							{param style: 'secondary' /}
 						{/call}
 						{call ClayButton.render }
 							{param icon: 'hr' /}
+							{param events: [
+								'click': $_decreaseFontSize
+							] /}
 							{param monospaced: true /}
 							{param spritemap: $spritemap /}
 							{param style: 'secondary' /}

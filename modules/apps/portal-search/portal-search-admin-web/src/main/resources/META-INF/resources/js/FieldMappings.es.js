@@ -41,6 +41,22 @@ class FieldMappings extends PortletBase {
 	_switchTheme() {
 		document.querySelector("#richEditor").classList.toggle("ace_dark");
 	}
+
+	_increaseFontSize() {
+			this._getAceEditorElement().style.fontSize = this._getAceEditorFontSize() + 2 + "px";
+	}
+
+	_decreaseFontSize() {
+		this._getAceEditorElement().style.fontSize = this._getAceEditorFontSize() - 2+ "px";
+	}
+
+	_getAceEditorFontSize() {
+		return parseInt(window.getComputedStyle(this._getAceEditorElement(), null).getPropertyValue('font-size'));
+	}
+
+	_getAceEditorElement() {
+		return document.querySelector(".ace_editor");
+	}
 }
 
 FieldMappings.STATE = {
