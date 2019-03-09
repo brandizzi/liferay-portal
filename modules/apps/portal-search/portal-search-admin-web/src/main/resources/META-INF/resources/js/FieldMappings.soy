@@ -14,6 +14,7 @@
 		<div class="row">
 			<div class="col-md-3">
 				<h3>{msg desc=""}index{/msg}</h3>
+
 				<nav class="menubar menubar-transparent menubar-vertical-expand-lg">
 					<ul class="nav nav-nested">
 						<li class="nav-item">
@@ -41,10 +42,12 @@
 						<h2 class="sheet-title">
 							{msg desc=""}index-names-goes-here{/msg}
 						</h2>
+
 						<h5 class="subtitle">
 							{msg desc=""}a-list-of-all-field-mappings-in-this-index{/msg}
 						</h5>
 					</div>
+
 					<div class="sheet-section">
 						{call ClayButton.render }
 							{param icon: 'moon' /}
@@ -62,6 +65,7 @@
 							] /}
 							{param monospaced: true /}
 							{param spritemap: $spritemap /}
+							{param elementClasses: 'btn-plus' /}
 							{param style: 'secondary' /}
 						{/call}
 						{call ClayButton.render }
@@ -71,6 +75,7 @@
 							] /}
 							{param monospaced: true /}
 							{param spritemap: $spritemap /}
+							{param elementClasses: 'btn-hr' /}
 							{param style: 'secondary' /}
 						{/call}
 						{call ClayButton.render}
@@ -84,6 +89,7 @@
 							{param style: 'secondary' /}
 						{/call}
 					</div>
+
 					<div class="sheet-section lfr-source-editor lfr-source-editor-content" id="richEditor">
 						<div class="lfr-source-editor-code" ref="wrapper"></div>
 					</div>

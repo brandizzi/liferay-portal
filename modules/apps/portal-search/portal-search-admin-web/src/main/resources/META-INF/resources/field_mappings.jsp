@@ -17,8 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
-	Map<String, Object> context = new HashMap<>();
-	context.put("spritemap", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
+Map<String, Object> context = new HashMap<>();
+context.put("spritemap", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
 %>
 
 <soy:component-renderer

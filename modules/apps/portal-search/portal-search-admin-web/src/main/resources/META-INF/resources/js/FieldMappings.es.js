@@ -25,37 +25,41 @@ class FieldMappings extends PortletBase {
 	}
 
 	_selectText() {
-		let copyTextArea = document.querySelector(".ace_text-input");
+		let copyTextArea = document.querySelector('.ace_text-input');
 		copyTextArea.focus();
 		copyTextArea.select();
 
 		setTimeout(
 			function() {
-				document.execCommand("copy");
-				Liferay.Portal.ToolTip.show(document.querySelector(".btn-copy"), 'Copied');
+				document.execCommand('copy');
+				Liferay.Portal.ToolTip.show(
+					document.querySelector('.btn-copy'), 'Copied');
 			},
 			0
 		);
 	}
 
 	_switchTheme() {
-		document.querySelector("#richEditor").classList.toggle("ace_dark");
+		document.querySelector('#richEditor').classList.toggle('ace_dark');
 	}
 
 	_increaseFontSize() {
-			this._getAceEditorElement().style.fontSize = this._getAceEditorFontSize() + 2 + "px";
+		this._getAceEditorElement().style.fontSize =
+			this._getAceEditorFontSize() + 2 + 'px';
 	}
 
 	_decreaseFontSize() {
-		this._getAceEditorElement().style.fontSize = this._getAceEditorFontSize() - 2+ "px";
+		this._getAceEditorElement().style.fontSize =
+			this._getAceEditorFontSize() - 2 + 'px';
 	}
 
 	_getAceEditorFontSize() {
-		return parseInt(window.getComputedStyle(this._getAceEditorElement(), null).getPropertyValue('font-size'));
+		return parseInt(window.getComputedStyle(
+			this._getAceEditorElement(), null).getPropertyValue('font-size'));
 	}
 
 	_getAceEditorElement() {
-		return document.querySelector(".ace_editor");
+		return document.querySelector('.ace_editor');
 	}
 }
 
