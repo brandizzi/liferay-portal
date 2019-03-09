@@ -17,7 +17,7 @@
 <%@ include file="/init.jsp" %>
 
 <%
-	String tabs1 = ParamUtil.getString(request, "tabs1", "index-actions");
+String tabs1 = ParamUtil.getString(request, "tabs1", "index-actions");
 %>
 
 <clay:navigation-bar

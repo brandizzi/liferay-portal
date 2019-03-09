@@ -11,5 +11,5 @@ Require-Capability:\
 		filter:="(&(osgi.extender=jsp.taglib)(uri=http://liferay.com/tld/soy))"
 	soy;\
 		filter:="(type=metal)"
-Include-Resource: package.json
 Web-ContextPath: /portal-search-admin-web
+-includeresource: package.json
