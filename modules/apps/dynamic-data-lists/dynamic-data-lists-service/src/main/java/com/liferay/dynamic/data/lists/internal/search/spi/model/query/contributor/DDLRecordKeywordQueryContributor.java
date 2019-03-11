@@ -42,7 +42,6 @@ public class DDLRecordKeywordQueryContributor
 		queryHelper.addSearchTerm(
 			booleanQuery, keywordQueryContributorHelper.getSearchContext(),
 			Field.USER_NAME, false);
-
 		queryHelper.addSearchLocalizedTerm(
 			booleanQuery, keywordQueryContributorHelper.getSearchContext(),
 			"ddmContent", false);
