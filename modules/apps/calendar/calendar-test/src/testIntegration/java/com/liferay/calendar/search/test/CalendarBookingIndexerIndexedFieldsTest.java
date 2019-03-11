@@ -228,7 +228,6 @@ public class CalendarBookingIndexerIndexedFieldsTest
 
 	protected void populateTitle(String title, Map<String, String> map) {
 		map.put(Field.TITLE + "_en_US", title);
-
 		map.put("localized_title", title);
 
 		Set<Locale> locales = LanguageUtil.getAvailableLocales();
@@ -239,9 +238,9 @@ public class CalendarBookingIndexerIndexedFieldsTest
 					"localized_title_" + locale.getLanguage() + "_" +
 						locale.getCountry();
 
-				String mapKeySortable = mapKey + "_sortable";
-
 				map.put(mapKey, title);
+
+				String mapKeySortable = mapKey + "_sortable";
 
 				map.put(mapKeySortable, title);
 			});
@@ -251,7 +250,6 @@ public class CalendarBookingIndexerIndexedFieldsTest
 		String title, Map<String, String> map) {
 
 		map.put(Field.TITLE + "_hu_HU", title);
-
 		map.put("localized_title_hu_HU", title);
 		map.put("localized_title_hu_HU_sortable", title);
 	}
