@@ -40,9 +40,7 @@ public class DDMFormInstanceRecordTestHelper {
 			Group group, DDMFormInstance ddmFormInstance)
 		throws PortalException {
 
-		_group = group;
-		_user = TestPropsValues.getUser();
-		_ddmFormInstance = ddmFormInstance;
+		this(group, TestPropsValues.getUser(), ddmFormInstance);
 	}
 
 	public DDMFormInstanceRecordTestHelper(
