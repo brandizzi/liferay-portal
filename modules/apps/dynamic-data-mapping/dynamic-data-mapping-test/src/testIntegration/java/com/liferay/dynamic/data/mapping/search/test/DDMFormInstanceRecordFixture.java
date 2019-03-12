@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Luan Maoski
@@ -91,9 +92,11 @@ public class DDMFormInstanceRecordFixture {
 
 		descriptionMap.put(LocaleUtil.US, description);
 
+		Set<Locale> localesSet = nameMap.keySet();
+
 		Locale[] locales = new Locale[nameMap.size()];
 
-		nameMap.keySet().toArray(locales);
+		localesSet.toArray(locales);
 
 		DDMFormValues ddmFormValues = createDDMFormValues(locales);
 
