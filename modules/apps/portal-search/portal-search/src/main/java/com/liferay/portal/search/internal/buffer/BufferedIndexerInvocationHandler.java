@@ -113,11 +113,11 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 
 			Long classPK = (Long)classedModel.getPrimaryKeyObj();
 
-			if (args[0] instanceof ResourcedModel) {
-				ResourcedModel resourcedModel = (ResourcedModel)args[0];
-
-				classPK = resourcedModel.getResourcePrimKey();
-			}
+//			if (args[0] instanceof ResourcedModel) {
+//				ResourcedModel resourcedModel = (ResourcedModel)args[0];
+//
+//				classPK = resourcedModel.getResourcePrimKey();
+//			}
 
 			bufferRequest(
 				methodKey, classedModel.getModelClassName(), classPK,
@@ -144,11 +144,11 @@ public class BufferedIndexerInvocationHandler implements InvocationHandler {
 				Object obj = persistedModelLocalService.getPersistedModel(
 					classPK);
 
-				if (obj instanceof ResourcedModel) {
-					ResourcedModel resourcedModel = (ResourcedModel)obj;
-
-					classPK = resourcedModel.getResourcePrimKey();
-				}
+//				if (obj instanceof ResourcedModel) {
+//					ResourcedModel resourcedModel = (ResourcedModel)obj;
+//
+//					classPK = resourcedModel.getResourcePrimKey();
+//				}
 			}
 			catch (Exception e) {
 				if (_log.isDebugEnabled()) {
