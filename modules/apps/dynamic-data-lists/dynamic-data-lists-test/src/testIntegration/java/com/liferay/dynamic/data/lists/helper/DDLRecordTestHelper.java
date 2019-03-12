@@ -42,9 +42,7 @@ public class DDLRecordTestHelper {
 	public DDLRecordTestHelper(Group group, DDLRecordSet recordSet)
 		throws Exception {
 
-		_group = group;
-		_user = TestPropsValues.getUser();
-		_recordSet = recordSet;
+		this(group, TestPropsValues.getUser(), recordSet);
 	}
 
 	public DDLRecordTestHelper(Group group, User user, DDLRecordSet recordSet)

@@ -43,8 +43,7 @@ import java.util.Map;
 public class DDLRecordSetTestHelper {
 
 	public DDLRecordSetTestHelper(Group group) throws PortalException {
-		_group = group;
-		_user = TestPropsValues.getUser();
+		this(group, TestPropsValues.getUser());
 	}
 
 	public DDLRecordSetTestHelper(Group group, User user) {
