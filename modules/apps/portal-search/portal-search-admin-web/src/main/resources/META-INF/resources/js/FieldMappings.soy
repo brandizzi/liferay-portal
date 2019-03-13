@@ -5,6 +5,8 @@
  */
 {template .render}
 	{@param spritemap: string}
+	{@param indexNames: list<?>}
+	{@param selectedIndexName: string}
 	{@param? _selectText: any}
 	{@param? _switchTheme: any}
 	{@param? _increaseFontSize: any}
@@ -17,21 +19,13 @@
 
 				<nav class="menubar menubar-transparent menubar-vertical-expand-lg">
 					<ul class="nav nav-nested">
-						<li class="nav-item">
-							<a class="active nav-link" href="">
-								{msg desc=""}index-id-goes-here{/msg}
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="">
-								{msg desc=""}index-identity{/msg}
-							</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="">
-								{msg desc=""}the-index-name{/msg}
-							</a>
-						</li>
+						{foreach $indexName in $indexNames}
+							<li class="nav-item">
+								<a class="active nav-link" href="">
+									{$indexName}
+								</a>
+							</li>
+						{/foreach}
 					</ul>
 				</nav>
 			</div>
@@ -40,7 +34,7 @@
 				<div class="sheet">
 					<div class="sheet-header">
 						<h2 class="sheet-title">
-							{msg desc=""}index-names-goes-here{/msg}
+							{$selectedIndexName}
 						</h2>
 
 						<h5 class="subtitle">

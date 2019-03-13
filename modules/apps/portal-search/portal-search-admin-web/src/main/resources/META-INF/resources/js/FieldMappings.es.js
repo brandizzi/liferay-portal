@@ -17,7 +17,8 @@ class FieldMappings extends PortletBase {
 					boundingBox: this.refs.wrapper,
 					highlightActiveLine: false,
 					mode: 'json',
-					value: '{}',
+					readOnly: 'true',
+					value: this.fieldMappingsJson,
 					tabSize: 4
 				}).render();
 			}
@@ -64,7 +65,7 @@ class FieldMappings extends PortletBase {
 }
 
 FieldMappings.STATE = {
-
+	fieldMappingsJson: Config.string().required(),
 };
 
 Soy.register(FieldMappings, templates);
