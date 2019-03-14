@@ -14,15 +14,23 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.index;
 
+import com.liferay.portal.kernel.json.JSONFactory;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchConnection;
 import com.liferay.portal.search.index.IndexInformation;
+
+import java.util.Map;
 
 import org.elasticsearch.action.ActionFuture;
 import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
 import org.elasticsearch.action.admin.indices.get.GetIndexResponse;
+import org.elasticsearch.action.admin.indices.mapping.get.GetFieldMappingsRequest;
+import org.elasticsearch.action.admin.indices.mapping.get.GetFieldMappingsResponse;
+import org.elasticsearch.action.admin.indices.mapping.get.GetFieldMappingsResponse.FieldMappingMetaData;
 import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.IndicesAdminClient;
+import org.elasticsearch.common.Strings;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -35,10 +43,10 @@ public class ElasticsearchIndexInformation implements IndexInformation {
 
 	@Override
 	public String getFieldMappings(String indexName) {
+		GetFieldMappingsResponse getFieldMappingsResponse =
+			getGetFieldMappingsResponse(indexName);
 
-		// TODO Auto-generated method stub
-
-		return null;
+		return Strings.toString(getFieldMappingsResponse);
 	}
 
 	@Override
@@ -46,6 +54,54 @@ public class ElasticsearchIndexInformation implements IndexInformation {
 		GetIndexResponse getIndexResponse = getGetIndexResponse();
 
 		return getIndexResponse.getIndices();
+	}
+
+	protected JSONObject getFieldMappingMetaDataJSONObject(
+		FieldMappingMetaData fieldMappingMetaData) {
+
+		JSONObject fieldMappingMetaDataJSONObject =
+			jsonFactory.createJSONObject();
+
+		Map<String, Object> source = fieldMappingMetaData.sourceAsMap();
+
+		for (Map.Entry<String, Object> metaData : source.entrySet()) {
+			fieldMappingMetaDataJSONObject.put(
+				metaData.getKey(), metaData.getValue());
+		}
+
+		return fieldMappingMetaDataJSONObject;
+	}
+
+	protected JSONObject getFieldsJSONObject(
+		Map<String, FieldMappingMetaData> fields) {
+
+		JSONObject fieldsJSONObject = jsonFactory.createJSONObject();
+
+		for (Map.Entry<String, FieldMappingMetaData> fieldEntry :
+				fields.entrySet()) {
+
+			JSONObject fieldMappingMetaDataJSONObject =
+				getFieldMappingMetaDataJSONObject(fieldEntry.getValue());
+
+			fieldsJSONObject.put(
+				fieldEntry.getKey(), fieldMappingMetaDataJSONObject);
+		}
+
+		return fieldsJSONObject;
+	}
+
+	protected GetFieldMappingsResponse getGetFieldMappingsResponse(
+		String index) {
+
+		IndicesAdminClient indices = getIndicesAdminClient();
+
+		GetFieldMappingsRequest request = new GetFieldMappingsRequest().indices(
+			index);
+
+		ActionFuture<GetFieldMappingsResponse> getIndexResponseFuture =
+			indices.getFieldMappings(request);
+
+		return getIndexResponseFuture.actionGet();
 	}
 
 	protected GetIndexResponse getGetIndexResponse() {
@@ -69,5 +125,8 @@ public class ElasticsearchIndexInformation implements IndexInformation {
 
 	@Reference
 	protected ElasticsearchConnection elasticsearchConnection;
+
+	@Reference
+	protected JSONFactory jsonFactory;
 
 }

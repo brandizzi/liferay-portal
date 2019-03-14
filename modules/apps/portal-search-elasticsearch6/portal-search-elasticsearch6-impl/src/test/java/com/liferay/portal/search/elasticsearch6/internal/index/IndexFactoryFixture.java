@@ -34,9 +34,15 @@ public class IndexFactoryFixture {
 	}
 
 	public void createIndices() throws Exception {
+		createIndices(null);
+	}
+
+	public void createIndices(String typeMappings) throws Exception {
 		AdminClient adminClient = _elasticsearchFixture.getAdminClient();
 
 		CompanyIndexFactory companyIndexFactory = getCompanyIndexFactory();
+
+		companyIndexFactory.setAdditionalTypeMappings(typeMappings);
 
 		companyIndexFactory.createIndices(
 			adminClient, RandomTestUtil.randomLong());

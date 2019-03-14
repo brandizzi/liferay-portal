@@ -54,6 +54,17 @@ public class ElasticsearchIndexInformationTest {
 	}
 
 	@Test
+	public void testGetFieldMappings() throws Exception {
+		_companyIndexFactoryFixture.createIndices();
+
+		String fieldMappings = _elasticsearchIndexInformation.getFieldMappings(
+			_companyIndexFactoryFixture.getIndexName());
+
+		Assert.assertEquals(
+			"{\"testgetfieldmappings\":{\"mappings\":{}}}", fieldMappings);
+	}
+
+	@Test
 	public void testGetIndexNames() throws Exception {
 		_companyIndexFactoryFixture.createIndices();
 
