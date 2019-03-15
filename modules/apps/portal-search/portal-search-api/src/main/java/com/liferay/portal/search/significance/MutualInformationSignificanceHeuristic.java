@@ -18,15 +18,14 @@ import aQute.bnd.annotation.ProviderType;
 
 /**
  * @author Michael C. Han
+ * @author André de Oliveira
  */
 @ProviderType
-public class MutualInformationSignifanceHeuristic
-	extends NxySignificanceHeuristic {
+public interface MutualInformationSignificanceHeuristic
+	extends SignificanceHeuristic {
 
-	public MutualInformationSignifanceHeuristic(
-		boolean backgroundIsSuperset, boolean includeNegatives) {
+	public boolean isBackgroundIsSuperset();
 
-		super(backgroundIsSuperset, includeNegatives);
-	}
+	public boolean isIncludeNegatives();
 
 }

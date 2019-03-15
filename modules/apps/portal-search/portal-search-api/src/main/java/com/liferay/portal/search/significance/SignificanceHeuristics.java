@@ -16,16 +16,26 @@ package com.liferay.portal.search.significance;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.portal.search.script.Script;
+
 /**
- * @author Michael C. Han
+ * @author Wade Cao
  */
 @ProviderType
-public class ChiSquareSignifanceHeuristic extends NxySignificanceHeuristic {
+public interface SignificanceHeuristics {
 
-	public ChiSquareSignifanceHeuristic(
-		boolean backgroundIsSuperset, boolean includeNegatives) {
+	public ChiSquareSignificanceHeuristic chiSquare(
+		boolean backgroundIsSuperset, boolean includeNegatives);
 
-		super(backgroundIsSuperset, includeNegatives);
-	}
+	public GNDSignificanceHeuristic gnd(boolean backgroundIsSuperset);
+
+	public JLHScoreSignificanceHeuristic jlhScore();
+
+	public MutualInformationSignificanceHeuristic mutualInformation(
+		boolean backgroundIsSuperset, boolean includeNegatives);
+
+	public PercentageScoreSignificanceHeuristic percentageScore();
+
+	public ScriptSignificanceHeuristic script(Script script);
 
 }

@@ -18,27 +18,9 @@ import aQute.bnd.annotation.ProviderType;
 
 /**
  * @author Michael C. Han
+ * @author André de Oliveira
  */
 @ProviderType
-public abstract class NxySignificanceHeuristic
-	implements SignificanceHeuristic {
-
-	public NxySignificanceHeuristic(
-		boolean backgroundIsSuperset, boolean includeNegatives) {
-
-		_backgroundIsSuperset = backgroundIsSuperset;
-		_includeNegatives = includeNegatives;
-	}
-
-	public boolean isBackgroundIsSuperset() {
-		return _backgroundIsSuperset;
-	}
-
-	public boolean isIncludeNegatives() {
-		return _includeNegatives;
-	}
-
-	private final boolean _backgroundIsSuperset;
-	private final boolean _includeNegatives;
-
+public interface PercentageScoreSignificanceHeuristic
+	extends SignificanceHeuristic {
 }
