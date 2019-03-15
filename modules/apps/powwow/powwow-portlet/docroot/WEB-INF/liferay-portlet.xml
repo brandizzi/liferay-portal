@@ -6,7 +6,6 @@
 		<portlet-name>1</portlet-name>
 		<icon>/admin/icon.png</icon>
 		<configuration-action-class>com.liferay.portal.kernel.portlet.DefaultConfigurationAction</configuration-action-class>
-		<indexer-class>com.liferay.powwow.util.PowwowMeetingIndexer</indexer-class>
 		<friendly-url-mapper-class>com.liferay.portal.kernel.portlet.DefaultFriendlyURLMapper</friendly-url-mapper-class>
 		<friendly-url-mapping>meetings</friendly-url-mapping>
 		<friendly-url-routes>com/liferay/powwow/meetings/portlet/meetings-friendly-url-routes.xml</friendly-url-routes>
