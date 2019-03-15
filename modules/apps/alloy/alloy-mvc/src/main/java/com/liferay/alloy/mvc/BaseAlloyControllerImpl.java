@@ -820,21 +820,6 @@ public abstract class BaseAlloyControllerImpl implements AlloyController {
 		Indexer existingIndexer = IndexerRegistryUtil.getIndexer(
 			indexerClassName);
 
-		if ((existingIndexer != null) && (existingIndexer == indexer)) {
-			BaseAlloyIndexer baseAlloyIndexer = (BaseAlloyIndexer)indexer;
-
-			alloyServiceInvoker = baseAlloyIndexer.getAlloyServiceInvoker();
-
-			return;
-		}
-
-		alloyServiceInvoker = new AlloyServiceInvoker(indexerClassName);
-
-		BaseAlloyIndexer baseAlloyIndexer = (BaseAlloyIndexer)indexer;
-
-		baseAlloyIndexer.setAlloyServiceInvoker(alloyServiceInvoker);
-		baseAlloyIndexer.setClassName(portlet.getModelClassName());
-
 		PortletBag portletBag = PortletBagPool.get(portlet.getPortletId());
 
 		List<Indexer<?>> indexerInstances = portletBag.getIndexerInstances();
