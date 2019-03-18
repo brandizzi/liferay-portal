@@ -58,14 +58,12 @@ import java.util.Locale;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Peter Shin
  * @author Brian Wing Shun Chan
+ * @deprecated As of Judson (7.1.x), since 7.1.0
  */
-@Component(immediate = true, service = Indexer.class)
+@Deprecated
 public class KBArticleIndexer extends BaseIndexer<KBArticle> {
 
 	public static final String CLASS_NAME = KBArticle.class.getName();
@@ -275,21 +273,13 @@ public class KBArticleIndexer extends BaseIndexer<KBArticle> {
 		indexableActionableDynamicQuery.performActions();
 	}
 
-	@Reference
 	protected IndexWriterHelper indexWriterHelper;
-
-	@Reference
 	protected KBArticleLocalService kbArticleLocalService;
-
-	@Reference
 	protected KBFolderLocalService kbFolderLocalService;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		KBArticleIndexer.class);
 
-	@Reference(
-		target = "(model.class.name=com.liferay.knowledge.base.model.KBArticle)"
-	)
 	private ModelResourcePermission<KBArticle>
 		_kbArticleModelResourcePermission;
 
