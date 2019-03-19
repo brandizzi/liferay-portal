@@ -68,6 +68,8 @@
 		<field name="modifiedDate" type="Date" />
 		<field name="layoutPageTemplateStructureId" type="long" />
 		<field name="segmentsExperienceId" type="long" />
-		<field name="data" type="String" />
+		<field name="data" type="String">
+			<hint name="max-length">4000</hint>
+		</field>
 	</model>
 </model-hints>
