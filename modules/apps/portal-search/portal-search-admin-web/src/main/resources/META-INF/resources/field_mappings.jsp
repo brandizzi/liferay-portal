@@ -16,14 +16,20 @@
 
 <%@ include file="/init.jsp" %>
 
+<%@ page import="com.liferay.portal.kernel.json.JSONDeserializer" %>
+<%@ page import="com.liferay.portal.kernel.json.JSONFactoryUtil" %>
 <%
-List<String> indexNames = new ArrayList<>();
-indexNames.add("My Index");
-indexNames.add("Other index");
+JSONDeserializer<Map<String, Object>> jsonDeserializer =
+	JSONFactoryUtil.createJSONDeserializer();
+
+List<Object> indexList = (List<Object>)jsonDeserializer.deserialize("[" +
+	"{\"name\": \"My Index\",\"url\": \"localhost:8080\", \"cssClass\": \"active\"}," +
+	"{\"name\": \"Other index\",\"url\": \"localhost:8080\", \"cssClass\": \"\"}" +
+"]");
 
 Map<String, Object> context = new HashMap<>();
 context.put("spritemap", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
-context.put("indexNames", indexNames);
+context.put("indexList", indexList);
 context.put("selectedIndexName", "My Index");
 context.put("fieldMappingsJson",
 	"{ \"LiferayDocumentType\": {\"date_detection\": false} }");
