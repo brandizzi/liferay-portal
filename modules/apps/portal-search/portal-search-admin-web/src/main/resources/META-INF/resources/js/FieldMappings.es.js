@@ -65,7 +65,7 @@ class FieldMappings extends PortletBase {
 
 				Liferay.Portal.ToolTip.show(
 					document.querySelector('.btn-copy'),
-					'Copied'
+					Liferay.Language.get('copied')
 				);
 			},
 			0
