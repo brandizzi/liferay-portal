@@ -13,28 +13,56 @@ class FieldMappings extends PortletBase {
 		AUI().use(
 			'aui-ace-editor',
 			A => {
-				const editor = new A.AceEditor({
-					boundingBox: this.refs.wrapper,
-					highlightActiveLine: false,
-					mode: 'json',
-					readOnly: 'true',
-					value: this.fieldMappingsJson,
-					tabSize: 4
-				}).render();
+				new A.AceEditor(
+					{
+						boundingBox: this.refs.wrapper,
+						highlightActiveLine: false,
+						mode: 'json',
+						readOnly: 'true',
+						tabSize: 4,
+						value: this.fieldMappingsJson
+					}
+				).render();
 			}
+		);
+	}
+
+	_decreaseFontSize() {
+		this._getAceEditorElement().style.fontSize = this._getAceEditorFontSize() - 2 + 'px';
+	}
+
+	_increaseFontSize() {
+		this._getAceEditorElement().style.fontSize = this._getAceEditorFontSize() + 2 + 'px';
+	}
+
+	_getAceEditorElement() {
+		return document.querySelector('.ace_editor');
+	}
+
+	_getAceEditorFontSize() {
+		return parseInt(
+			window.getComputedStyle(
+				this._getAceEditorElement(),
+				null
+			).getPropertyValue('font-size'),
+			10
 		);
 	}
 
 	_selectText() {
 		let copyTextArea = document.querySelector('.ace_text-input');
+
 		copyTextArea.focus();
 		copyTextArea.select();
 
 		setTimeout(
 			function() {
 				document.execCommand('copy');
+
 				Liferay.Portal.ToolTip.show(
-					document.querySelector('.btn-copy'), 'Copied');
+					document.querySelector('.btn-copy'),
+					'Copied'
+				);
 			},
 			0
 		);
@@ -42,25 +70,6 @@ class FieldMappings extends PortletBase {
 
 	_switchTheme() {
 		document.querySelector('#richEditor').classList.toggle('ace_dark');
-	}
-
-	_increaseFontSize() {
-		this._getAceEditorElement().style.fontSize =
-			this._getAceEditorFontSize() + 2 + 'px';
-	}
-
-	_decreaseFontSize() {
-		this._getAceEditorElement().style.fontSize =
-			this._getAceEditorFontSize() - 2 + 'px';
-	}
-
-	_getAceEditorFontSize() {
-		return parseInt(window.getComputedStyle(
-			this._getAceEditorElement(), null).getPropertyValue('font-size'));
-	}
-
-	_getAceEditorElement() {
-		return document.querySelector('.ace_editor');
 	}
 }
 
