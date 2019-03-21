@@ -16,8 +16,9 @@
 
 <%@ include file="/init.jsp" %>
 
-<%@ page import="com.liferay.portal.kernel.json.JSONDeserializer" %>
-<%@ page import="com.liferay.portal.kernel.json.JSONFactoryUtil" %>
+<%@ page import="com.liferay.portal.kernel.json.JSONDeserializer" %><%@
+page import="com.liferay.portal.kernel.json.JSONFactoryUtil" %>
+
 <%
 JSONDeserializer<Map<String, Object>> jsonDeserializer =
 	JSONFactoryUtil.createJSONDeserializer();
