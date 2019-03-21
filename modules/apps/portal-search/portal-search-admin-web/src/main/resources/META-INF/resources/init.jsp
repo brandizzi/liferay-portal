@@ -40,6 +40,7 @@ page import="com.liferay.portal.kernel.search.IndexerClassNameComparator" %><%@
 page import="com.liferay.portal.kernel.search.IndexerRegistryUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
+page import="com.liferay.portal.search.admin.web.internal.display.context.FieldMappingsDisplayContext" %><%@
 page import="com.liferay.portal.search.admin.web.internal.display.context.SearchAdminDisplayContext" %>
 
 <%@ page import="java.io.Serializable" %>

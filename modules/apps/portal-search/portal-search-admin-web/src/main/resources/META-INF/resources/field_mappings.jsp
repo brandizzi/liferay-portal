@@ -17,16 +17,15 @@
 <%@ include file="/init.jsp" %>
 
 <%
-List<String> indexNames = new ArrayList<>();
-indexNames.add("My Index");
-indexNames.add("Other index");
+FieldMappingsDisplayContext fieldMappingsDisplayContext = (FieldMappingsDisplayContext)request.getAttribute(WebKeys.PORTLET_DISPLAY_CONTEXT);
 
 Map<String, Object> context = new HashMap<>();
+
 context.put("spritemap", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
-context.put("indexNames", indexNames);
-context.put("selectedIndexName", "My Index");
-context.put("fieldMappingsJson",
-	"{ \"LiferayDocumentType\": {\"date_detection\": false} }");
+context.put("indexNames", fieldMappingsDisplayContext.getIndexNames());
+context.put("selectedIndexName", fieldMappingsDisplayContext.getSelectedIndexName());
+context.put("fieldMappingsJson", fieldMappingsDisplayContext.getFieldMappings());
+context.put("displayContext", fieldMappingsDisplayContext);
 %>
 
 <soy:component-renderer
