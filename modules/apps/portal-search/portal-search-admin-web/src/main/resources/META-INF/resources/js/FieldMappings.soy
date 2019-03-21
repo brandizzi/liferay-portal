@@ -1,7 +1,7 @@
 {namespace com.liferay.portal.search.admin.web.FieldMappings}
 
 /**
- * Renders Field Mappings.
+ * This renders the field mappings page.
  */
 {template .render}
 	{@param spritemap: string}
@@ -43,7 +43,7 @@
 					</div>
 
 					<div class="sheet-section">
-						{call ClayButton.render }
+						{call ClayButton.render}
 							{param icon: 'moon' /}
 							{param events: [
 								'click': $_switchTheme
@@ -52,7 +52,7 @@
 							{param spritemap: $spritemap /}
 							{param style: 'secondary' /}
 						{/call}
-						{call ClayButton.render }
+						{call ClayButton.render}
 							{param icon: 'plus' /}
 							{param events: [
 								'click': $_increaseFontSize
@@ -62,7 +62,7 @@
 							{param elementClasses: 'btn-plus' /}
 							{param style: 'secondary' /}
 						{/call}
-						{call ClayButton.render }
+						{call ClayButton.render}
 							{param icon: 'hr' /}
 							{param events: [
 								'click': $_decreaseFontSize

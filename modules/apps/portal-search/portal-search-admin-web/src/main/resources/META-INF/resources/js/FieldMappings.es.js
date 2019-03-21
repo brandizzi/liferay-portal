@@ -28,11 +28,15 @@ class FieldMappings extends PortletBase {
 	}
 
 	_decreaseFontSize() {
-		this._getAceEditorElement().style.fontSize = this._getAceEditorFontSize() - 2 + 'px';
+		const aceEditorElement = this._getAceEditorElement();
+
+		aceEditorElement.style.fontSize = this._getAceEditorFontSize() - 2 + 'px';
 	}
 
 	_increaseFontSize() {
-		this._getAceEditorElement().style.fontSize = this._getAceEditorFontSize() + 2 + 'px';
+		const aceEditorElement = this._getAceEditorElement();
+
+		aceEditorElement.style.fontSize = this._getAceEditorFontSize() + 2 + 'px';
 	}
 
 	_getAceEditorElement() {
@@ -50,7 +54,7 @@ class FieldMappings extends PortletBase {
 	}
 
 	_selectText() {
-		let copyTextArea = document.querySelector('.ace_text-input');
+		const copyTextArea = document.querySelector('.ace_text-input');
 
 		copyTextArea.focus();
 		copyTextArea.select();

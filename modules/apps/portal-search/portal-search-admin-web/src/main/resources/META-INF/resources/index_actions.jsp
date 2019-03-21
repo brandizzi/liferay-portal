@@ -113,6 +113,7 @@ portletURL.setParameter("mvcRenderCommandName", "/search_admin/view");
 						</c:choose>
 					</div>
 				</li>
+
 				<li class="clearfix list-group-item">
 					<div class="pull-left">
 						<h5><liferay-ui:message key="reindex-all-spell-check-indexes" /></h5>
@@ -160,13 +161,13 @@ portletURL.setParameter("mvcRenderCommandName", "/search_admin/view");
 
 <aui:script use="liferay-admin">
 	new Liferay.Portlet.Admin(
-	{
-	form: document.<portlet:namespace />fm,
-	indexActionsPanel: '#adminSearchAdminIndexActionsPanel',
-	namespace: '<portlet:namespace />',
-	redirectUrl: '<%= redirectURL %>',
-	submitButton: '.save-server-button',
-	url: '<portlet:actionURL name="/search_admin/edit" />'
-	}
+		{
+			form: document.<portlet:namespace />fm,
+			indexActionsPanel: '#adminSearchAdminIndexActionsPanel',
+			namespace: '<portlet:namespace />',
+			redirectUrl: '<%= redirectURL %>',
+			submitButton: '.save-server-button',
+			url: '<portlet:actionURL name="/search_admin/edit" />'
+		}
 	);
 </aui:script>
