@@ -203,6 +203,15 @@ public class SegmentsExperienceLocalServiceImpl
 
 	@Override
 	public List<SegmentsExperience> getSegmentsExperiences(
+			long groupId, long classNameId, long classPK, boolean active)
+		throws PortalException {
+
+		return segmentsExperiencePersistence.findByG_C_C_A(
+			groupId, classNameId, _getPublishedLayoutClassPK(classPK), active);
+	}
+
+	@Override
+	public List<SegmentsExperience> getSegmentsExperiences(
 		long groupId, long classNameId, long classPK, boolean active, int start,
 		int end, OrderByComparator<SegmentsExperience> orderByComparator) {
 
