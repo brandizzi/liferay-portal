@@ -35,15 +35,15 @@
 }
 
 .portlet-search-admin {
-	h5.subtitle {
-		color: #989DA9;
-	}
+	.portal-search-admin-field-mappings {
+		.btn-group-font-size {
+			margin: 0 16px;
+		}
 
-	.btn-hr {
-		margin-right: 15px;
-	}
-
-	.btn-plus {
-		margin-left: 15px;
+		.nav-header {
+			font-size: 16px;
+			font-weight: 600;
+			padding: 0.625rem 1rem;
+		}
 	}
 }

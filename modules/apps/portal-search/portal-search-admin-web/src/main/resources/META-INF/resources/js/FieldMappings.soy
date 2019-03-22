@@ -15,10 +15,12 @@
 	<div class="container-fluid container-fluid-max-xl container-form-lg portal-search-admin-field-mappings">
 		<div class="row">
 			<div class="col-md-3">
-				<h3>{msg desc=""}index{/msg}</h3>
-
 				<nav class="menubar menubar-transparent menubar-vertical-expand-lg">
 					<ul class="nav nav-nested">
+						<li class="nav-header">
+							{msg desc=""}index{/msg}
+						</li>
+
 						{foreach $indexName in $indexList}
 							<li class="nav-item">
 								<a class="{$indexName.cssClass} nav-link" href="{$indexName.url}">
@@ -37,9 +39,9 @@
 							{$selectedIndexName}
 						</h2>
 
-						<h5 class="subtitle">
+						<div class="sheet-text">
 							{msg desc=""}a-list-of-all-field-mappings-in-this-index{/msg}
-						</h5>
+						</div>
 					</div>
 
 					<div class="sheet-section">
@@ -52,26 +54,31 @@
 							{param spritemap: $spritemap /}
 							{param style: 'secondary' /}
 						{/call}
-						{call ClayButton.render}
-							{param icon: 'plus' /}
-							{param events: [
-								'click': $_increaseFontSize
-							] /}
-							{param monospaced: true /}
-							{param spritemap: $spritemap /}
-							{param elementClasses: 'btn-plus' /}
-							{param style: 'secondary' /}
-						{/call}
-						{call ClayButton.render}
-							{param icon: 'hr' /}
-							{param events: [
-								'click': $_decreaseFontSize
-							] /}
-							{param monospaced: true /}
-							{param spritemap: $spritemap /}
-							{param elementClasses: 'btn-hr' /}
-							{param style: 'secondary' /}
-						{/call}
+
+						<div class="btn-group btn-group-font-size" role="group">
+							{call ClayButton.render}
+								{param icon: 'plus' /}
+								{param events: [
+									'click': $_increaseFontSize
+								] /}
+								{param monospaced: true /}
+								{param spritemap: $spritemap /}
+								{param elementClasses: 'btn-plus' /}
+								{param style: 'secondary' /}
+							{/call}
+
+							{call ClayButton.render}
+								{param icon: 'hr' /}
+								{param events: [
+									'click': $_decreaseFontSize
+								] /}
+								{param monospaced: true /}
+								{param spritemap: $spritemap /}
+								{param elementClasses: 'btn-hr' /}
+								{param style: 'secondary' /}
+							{/call}
+						</div>
+
 						{call ClayButton.render}
 							{param events: [
 								'click': $_selectText
