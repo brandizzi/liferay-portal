@@ -67,7 +67,7 @@ ResultsRankingPortletDisplayContext resultsRankingPortletDisplayContext = (Resul
 			modelVar="resultsRankingEntryDisplayContext"
 		>
 			<portlet:renderURL var="rowURL">
-				<portlet:param name="mvcRenderCommandName" value="editResultsRankingsEntry" />
+				<portlet:param name="mvcRenderCommandName" value="addResultsRankingsEntry" />
 				<portlet:param name="redirect" value="<%= currentURL %>" />
 				<portlet:param name="uid" value="<%= resultsRankingEntryDisplayContext.getUid() %>" />
 				<portlet:param name="keywords" value="<%= resultsRankingEntryDisplayContext.getKeywords() %>" />
