@@ -38,8 +38,38 @@ public class SearchContextTestUtil {
 		throws Exception {
 
 		return getSearchContext(
-			TestPropsValues.getUserId(), new long[] {groupId}, StringPool.BLANK,
-			null, null);
+			TestPropsValues.getUserId(), TestPropsValues.getCompanyId(),
+			new long[] {groupId}, StringPool.BLANK, null, null);
+	}
+
+	public static SearchContext getSearchContext(
+		long userId, long companyId, long[] groupIds, String keywords,
+		Locale locale, boolean highlightEnabled,
+		Map<String, Serializable> attributes) {
+
+		SearchContext searchContext = new SearchContext();
+
+		searchContext.setAttributes(attributes);
+		searchContext.setCompanyId(companyId);
+		searchContext.setKeywords(keywords);
+		searchContext.setGroupIds(groupIds);
+		searchContext.setLocale(locale);
+		searchContext.setUserId(userId);
+
+		QueryConfig queryConfig = searchContext.getQueryConfig();
+
+		queryConfig.setHighlightEnabled(highlightEnabled);
+		queryConfig.setSelectedFieldNames(StringPool.STAR);
+
+		return searchContext;
+	}
+
+	public static SearchContext getSearchContext(
+		long userId, long companyId, long[] groupIds, String keywords,
+		Locale locale, Map<String, Serializable> attributes) {
+
+		return getSearchContext(
+			userId, companyId, groupIds, keywords, locale, false, attributes);
 	}
 
 	public static SearchContext getSearchContext(
@@ -55,45 +85,17 @@ public class SearchContextTestUtil {
 		throws PortalException {
 
 		return getSearchContext(
-			userId, groupIds, keywords, locale, highlightEnabled, null);
-	}
-
-	public static SearchContext getSearchContext(
-			long userId, long[] groupIds, String keywords, Locale locale,
-			boolean highlightEnabled, Map<String, Serializable> attributes)
-		throws PortalException {
-
-		SearchContext searchContext = new SearchContext();
-
-		searchContext.setAttributes(attributes);
-		searchContext.setCompanyId(TestPropsValues.getCompanyId());
-		searchContext.setKeywords(keywords);
-		searchContext.setGroupIds(groupIds);
-		searchContext.setLocale(locale);
-		searchContext.setUserId(userId);
-
-		QueryConfig queryConfig = searchContext.getQueryConfig();
-
-		queryConfig.setHighlightEnabled(highlightEnabled);
-		queryConfig.setSelectedFieldNames(StringPool.STAR);
-
-		return searchContext;
-	}
-
-	public static SearchContext getSearchContext(
-			long userId, long[] groupIds, String keywords, Locale locale,
-			Map<String, Serializable> attributes)
-		throws PortalException {
-
-		return getSearchContext(
-			userId, groupIds, keywords, locale, false, attributes);
+			userId, TestPropsValues.getCompanyId(), groupIds, keywords, locale,
+			highlightEnabled, null);
 	}
 
 	public static SearchContext getSearchContext(
 			long userId, String keywords, Locale locale)
 		throws PortalException {
 
-		return getSearchContext(userId, null, keywords, locale, null);
+		return getSearchContext(
+			userId, TestPropsValues.getCompanyId(), null, keywords, locale,
+			null);
 	}
 
 }
