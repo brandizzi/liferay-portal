@@ -1,13 +1,14 @@
-import React, {Component} from 'react';
-import {findDOMNode} from 'react-dom';
-import {PropTypes} from 'prop-types';
-import {DragSource as dragSource, DropTarget as dropTarget} from 'react-dnd';
-import {getEmptyImage} from 'react-dnd-html5-backend';
+import ClayButton from 'components/shared/ClayButton.es';
+import ClayIcon from 'components/shared/ClayIcon.es';
 import DRAG_TYPES from 'utils/drag-types.es';
-import {getLang, sub} from 'utils/language.es';
-import ClayIcon from '../ClayIcon.es';
 import Dropdown from './Dropdown.es';
 import getCN from 'classnames';
+import React, {Component} from 'react';
+import {DragSource as dragSource, DropTarget as dropTarget} from 'react-dnd';
+import {findDOMNode} from 'react-dom';
+import {getEmptyImage} from 'react-dnd-html5-backend';
+import {PropTypes} from 'prop-types';
+import {sub} from 'utils/language.es';
 
 /**
  * Passes the required values to the drop target and drag preview.
@@ -15,22 +16,24 @@ import getCN from 'classnames';
  * @param {Object} props Component's current props
  * @returns {Object} The props to be passed to the drop target and drag preview.
  */
-function beginDrag({
-	author,
-	clicks,
-	date,
-	description,
-	extension,
-	hidden,
-	hoverIndex,
-	id,
-	index,
-	lastIndex,
-	pinned,
-	selected,
-	title,
-	type
-}) {
+function beginDrag(
+	{
+		author,
+		clicks,
+		date,
+		description,
+		extension,
+		hidden,
+		hoverIndex,
+		id,
+		index,
+		lastIndex,
+		pinned,
+		selected,
+		title,
+		type
+	}
+) {
 	return {
 		author,
 		clicks,
@@ -94,7 +97,8 @@ function hover(props, monitor, component) {
 
 	if (isHoverAbove(monitor, component)) {
 		onDragHover(index);
-	} else {
+	}
+	else {
 		onDragHover(index + 1);
 	}
 }
@@ -106,16 +110,18 @@ function hover(props, monitor, component) {
  * @param {DragDropContainer} component The component being hovered over.
  */
 function isHoverAbove(monitor, component) {
-	// Determine rectangle on screen
 	const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
 
 	// Get vertical middle
+
 	const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
 
 	// Determine mouse position
+
 	const clientOffset = monitor.getClientOffset();
 
 	// Get pixels to the top
+
 	const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
 	return hoverClientY < hoverMiddleY;
@@ -140,10 +146,10 @@ class Item extends Component {
 		extension: PropTypes.string,
 		hidden: PropTypes.bool,
 		hoverIndex: PropTypes.number,
-		lastIndex: PropTypes.number,
 		id: PropTypes.number,
 		index: PropTypes.number,
 		initialPinned: PropTypes.number,
+		lastIndex: PropTypes.number,
 		onClickHide: PropTypes.func,
 		onClickPin: PropTypes.func,
 		onDragHover: PropTypes.func,
@@ -153,7 +159,8 @@ class Item extends Component {
 		searchTerm: PropTypes.string,
 		selected: PropTypes.bool,
 		title: PropTypes.string,
-		type: PropTypes.string
+		type: PropTypes.string,
+		url: PropTypes.string
 	};
 
 	static defaultProps = {
@@ -174,11 +181,20 @@ class Item extends Component {
 		const {connectDragPreview} = this.props;
 
 		if (connectDragPreview) {
-			connectDragPreview(getEmptyImage(), {
-				captureDraggingState: true
-			});
+			connectDragPreview(
+				getEmptyImage(),
+				{
+					captureDraggingState: true
+				}
+			);
 		}
 	}
+
+	_handleAddedResultMouseOver = event => {
+		const message = Liferay.Language.get('search-your-engine-to-display-results');
+
+		Liferay.Portal.ToolTip.show(event.currentTarget, message);
+	};
 
 	_handleSelect = () => {
 		this.props.onSelect(this.props.id);
@@ -198,10 +214,9 @@ class Item extends Component {
 		let descriptionBlock = '';
 
 		if (description) {
-			const descriptionText =
-				description.length > 75
-					? `${description.slice(0, 75)}...`
-					: description;
+			const descriptionText = description.length > 75 ?
+				`${description.slice(0, 75)}...` :
+				description;
 
 			descriptionBlock = (
 				<p className="list-group-text list-item-description">
@@ -215,13 +230,14 @@ class Item extends Component {
 
 	render() {
 		const {
+			addedResult,
 			author,
 			canDrop,
 			clicks,
 			connectDragSource,
 			connectDropTarget,
-			dragging,
 			date,
+			dragging,
 			extension,
 			hidden,
 			hoverIndex,
@@ -234,7 +250,8 @@ class Item extends Component {
 			selected,
 			style,
 			title,
-			type
+			type,
+			url
 		} = this.props;
 
 		const colorScheme = {
@@ -243,9 +260,9 @@ class Item extends Component {
 			png: 'purple'
 		};
 
-		const colorSticker = colorScheme[extension]
-			? colorScheme[extension]
-			: 'grey';
+		const colorSticker = colorScheme[extension] ?
+			colorScheme[extension] :
+			'grey';
 
 		const classSticker = getCN(
 			`icon-${colorSticker}`,
@@ -254,14 +271,15 @@ class Item extends Component {
 		);
 
 		const listClasses = getCN(
+			'list-item-root',
 			'list-group-item',
 			'list-group-item-flex',
-			'results-ranking-item',
 			{
 				'list-item-drag-hover': canDrop && index === hoverIndex,
 				'list-item-drag-hover-below':
 					index + 1 === hoverIndex && hoverIndex === lastIndex,
 				'list-item-dragging': dragging,
+				'results-ranking-item-added-result': addedResult,
 				'results-ranking-item-hidden': hidden,
 				'results-ranking-item-pinned': pinned
 			}
@@ -308,7 +326,7 @@ class Item extends Component {
 					<section className="autofit-section">
 						<h4 className="list-group-title">
 							<span className="text-truncate-inline">
-								<a href="#1">{title}</a>
+								{url ? <a href={url}>{title}</a> : title}
 							</span>
 						</h4>
 
@@ -316,7 +334,7 @@ class Item extends Component {
 							{`${author} - ${date}`}
 						</p>
 
-						<p className="list-group-subtext">[{type}]</p>
+						<p className="list-group-subtext">{`[${type}]`}</p>
 
 						{this._renderDescription()}
 					</section>
@@ -325,14 +343,24 @@ class Item extends Component {
 				{onClickHide && (
 					<div className="autofit-col">
 						<div className="result-hide">
-							<a
-								className="component-action"
-								href="#1"
-								onClick={this._handleHide}
-								role="button"
-							>
-								<ClayIcon iconName="hidden" />
-							</a>
+							{addedResult ? (
+								<ClayButton
+									borderless
+									className="component-action"
+									disabled
+									iconName="hidden"
+									monospaced
+									onMouseOver={this._handleAddedResultMouseOver}
+								/>
+							) : (
+								<ClayButton
+									borderless
+									className="component-action"
+									iconName="hidden"
+									monospaced
+									onClick={this._handleHide}
+								/>
+							)}
 						</div>
 					</div>
 				)}
@@ -340,14 +368,13 @@ class Item extends Component {
 				{onClickPin && !hidden && (
 					<div className="autofit-col">
 						<div className="result-pin">
-							<a
+							<ClayButton
+								borderless
 								className="component-action"
-								href="#1"
+								iconName="lock"
+								monospaced
 								onClick={this._handlePin}
-								role="button"
-							>
-								<ClayIcon iconName="lock" />
-							</a>
+							/>
 						</div>
 					</div>
 				)}
@@ -356,7 +383,7 @@ class Item extends Component {
 					<div className="autofit-col">
 						<Dropdown
 							hidden={hidden}
-							onClickHide={this._handleHide}
+							onClickHide={addedResult ? null : this._handleHide}
 							onClickPin={this._handlePin}
 							pinned={pinned}
 						/>
@@ -365,7 +392,7 @@ class Item extends Component {
 
 				<div className="click-count list-group-text sticker-bottom-right">
 					{sub(
-						getLang('clicks-x'),
+						Liferay.Language.get('clicks-x'),
 						[<b key="CLICK_COUNT">{clicks}</b>],
 						false
 					)}

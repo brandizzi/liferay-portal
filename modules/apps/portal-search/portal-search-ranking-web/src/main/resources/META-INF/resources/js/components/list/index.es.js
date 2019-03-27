@@ -1,31 +1,34 @@
-import React, {Component} from 'react';
-import {PropTypes} from 'prop-types';
+import ClayButton from '../shared/ClayButton.es';
+import DragLayer from './DragLayer.es';
 import HTML5Backend from 'react-dnd-html5-backend';
-import {DragDropContext as dragDropContext} from 'react-dnd';
 import Item from './Item.es';
+import React, {Component} from 'react';
 import SearchBar from './SearchBar.es';
-import {getLang} from '../../utils/language.es';
+import {DragDropContext as dragDropContext} from 'react-dnd';
+import {PropTypes} from 'prop-types';
 import {toggleListItem} from '../../utils/util.es';
-import ClayButton from '../ClayButton.es';
 
 class List extends Component {
 	static propTypes = {
-		dataMap: PropTypes.object,
 		dataLoading: PropTypes.bool,
-		resultIds: PropTypes.arrayOf(Number),
+		dataMap: PropTypes.object,
 		onAddResultSubmit: PropTypes.func,
 		onClickHide: PropTypes.func,
 		onClickPin: PropTypes.func,
 		onLoadResults: PropTypes.func,
 		onMove: PropTypes.func,
+		onSearchBarEnter: PropTypes.func,
+		onUpdateSearchBarTerm: PropTypes.func,
+		resultIds: PropTypes.arrayOf(Number),
+		searchBarTerm: PropTypes.string,
 		totalResultsCount: PropTypes.number
 	};
 
 	static defaultProps = {
 		dataLoading: false,
+		resultIds: [],
 		resultIdsHidden: [],
-		resultIdsPinned: [],
-		resultIds: []
+		resultIdsPinned: []
 	};
 
 	state = {
@@ -38,9 +41,11 @@ class List extends Component {
 	 * removes itself from the selected ids list.
 	 */
 	_handleClickHide = (ids, hide) => {
-		this.setState(state => ({
-			selectedIds: state.selectedIds.filter(id => !ids.includes(id))
-		}));
+		this.setState(
+			state => (
+				{selectedIds: state.selectedIds.filter(id => !ids.includes(id))}
+			)
+		);
 
 		this.props.onClickHide(ids, hide);
 	};
@@ -54,9 +59,11 @@ class List extends Component {
 	};
 
 	_handleSelect = id => {
-		this.setState(state => ({
-			selectedIds: toggleListItem(state.selectedIds, id)
-		}));
+		this.setState(
+			state => (
+				{selectedIds: toggleListItem(state.selectedIds, id)}
+			)
+		);
 	};
 
 	/**
@@ -68,12 +75,7 @@ class List extends Component {
 	};
 
 	_handleSelectAll = () => {
-		const {resultIds} = this.props;
-
-		this.setState(state => ({
-			selectedIds:
-				state.selectedIds.length === resultIds.length ? [] : resultIds
-		}));
+		this.setState({selectedIds: this.props.resultIds});
 	};
 
 	_handleTabSelect = (index, lastIndex) => {
@@ -97,6 +99,7 @@ class List extends Component {
 
 		return (
 			<Item
+				addedResult={item.addedResult}
 				author={item.author}
 				clicks={item.clicks}
 				date={item.date}
@@ -123,31 +126,40 @@ class List extends Component {
 
 	render() {
 		const {
-			dataMap,
 			dataLoading,
+			dataMap,
 			onAddResultSubmit,
 			onClickPin,
-			resultIds
+			onSearchBarEnter,
+			onUpdateSearchBarTerm,
+			resultIds,
+			searchBarTerm
 		} = this.props;
 
 		const {selectedIds} = this.state;
 
 		return (
 			<div className="results-ranking-list-root">
+				<DragLayer />
+
 				<SearchBar
 					dataMap={dataMap}
 					onAddResultSubmit={onAddResultSubmit}
 					onClickHide={this._handleClickHide}
 					onClickPin={onClickPin}
+					onSearchBarEnter={onSearchBarEnter}
 					onSelectAll={this._handleSelectAll}
 					onSelectClear={this._handleSelectClear}
+					onUpdateSearchBarTerm={onUpdateSearchBarTerm}
 					resultIds={resultIds}
+					searchBarTerm={searchBarTerm}
 					selectedIds={selectedIds}
 				/>
 
 				<ul className="list-group">
-					{resultIds.map((id, index, arr) =>
-						this._renderItem(id, index, arr)
+					{resultIds.map(
+						(id, index, arr) =>
+							this._renderItem(id, index, arr)
 					)}
 				</ul>
 
@@ -161,7 +173,7 @@ class List extends Component {
 					<div className="load-more-container">
 						<ClayButton
 							className="load-more-button"
-							label={getLang('load-more-results')}
+							label={Liferay.Language.get('load-more-results')}
 							onClick={this._handleLoadMoreResults}
 						/>
 					</div>

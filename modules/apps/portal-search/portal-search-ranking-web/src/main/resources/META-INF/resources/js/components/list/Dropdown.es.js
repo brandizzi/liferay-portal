@@ -1,21 +1,21 @@
-import React, {Component} from 'react';
-import {PropTypes} from 'prop-types';
+import ClayButton from 'components/shared/ClayButton.es';
+import ClayIcon from 'components/shared/ClayIcon.es';
 import getCN from 'classnames';
-import ClayButton from '../ClayButton.es';
-import ClayIcon from '../ClayIcon.es';
-import {getLang} from 'utils/language.es';
+import React, {Component} from 'react';
+import {getPluralMessage} from 'utils/language.es';
+import {PropTypes} from 'prop-types';
 
 class Dropdown extends Component {
-	static defaultProps = {
-		singular: true
-	};
-
 	static propTypes = {
 		hidden: PropTypes.bool,
+		itemCount: PropTypes.number,
 		onClickHide: PropTypes.func,
 		onClickPin: PropTypes.func,
-		pinned: PropTypes.bool,
-		singular: PropTypes.bool
+		pinned: PropTypes.bool
+	};
+
+	static defaultProps = {
+		itemCount: 1
 	};
 
 	constructor(props) {
@@ -42,30 +42,39 @@ class Dropdown extends Component {
 
 	_handleClickOutside = event => {
 		if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-			this.setState({
-				show: false
-			});
+			this.setState({show: false});
 		}
 	};
 
 	_handleDropdownToggle = event => {
 		event.preventDefault();
 
-		this.setState(state => ({
-			show: !state.show
-		}));
+		this.setState(
+			state => ({show: !state.show})
+		);
+	};
+
+	_handleDropdownAction = actionFn => event => {
+		event.preventDefault();
+
+		actionFn(event);
+
+		this.setState({show: false});
 	};
 
 	render() {
 		const show = this.state.show;
 
-		const {hidden, onClickHide, onClickPin, pinned, singular} = this.props;
+		const {hidden, itemCount, onClickHide, onClickPin, pinned} = this.props;
 
-		const classHidden = getCN('dropdown-menu', 'dropdown-menu-right', {
-			show: show
-		});
-
-		const addPlural = singular ? 'result' : 'results';
+		const classHidden = getCN(
+			'dropdown-menu',
+			'dropdown-menu-indicator-start',
+			'dropdown-menu-right',
+			{
+				show
+			}
+		);
 
 		return (
 			<div
@@ -77,9 +86,9 @@ class Dropdown extends Component {
 					aria-haspopup="true"
 					className="component-action dropdown-toggle"
 					data-toggle="dropdown"
+					iconName="ellipsis-v"
 					id="optionDropdown"
 					onClick={this._handleDropdownToggle}
-					iconName="ellipsis-v"
 				/>
 
 				<ul aria-labelledby="optionDropdown" className={classHidden}>
@@ -87,35 +96,55 @@ class Dropdown extends Component {
 						<li>
 							<a
 								className="dropdown-item"
-								href="#1"
-								onClick={onClickPin}
+								href="#"
+								onClick={this._handleDropdownAction(onClickPin)}
 							>
-								<ClayIcon iconName="lock" />
+								<div className="dropdown-item-indicator">
+									<ClayIcon iconName="lock" />
+								</div>
 
-								<span className="dropdown-option-text">
-									{pinned
-										? getLang(`unpin-${addPlural}`)
-										: getLang(`pin-${addPlural}`)}
-								</span>
+								{pinned ?
+									getPluralMessage(
+										Liferay.Language.get('unpin-result'),
+										Liferay.Language.get('unpin-results'),
+										itemCount
+									) :
+									getPluralMessage(
+										Liferay.Language.get('pin-result'),
+										Liferay.Language.get('pin-results'),
+										itemCount
+									)
+								}
 							</a>
 						</li>
 					)}
 
-					<li>
-						<a
-							className="dropdown-item"
-							href="#1"
-							onClick={onClickHide}
-						>
-							<ClayIcon iconName="hidden" />
+					{onClickHide && (
+						<li>
+							<a
+								className="dropdown-item"
+								href="#"
+								onClick={this._handleDropdownAction(onClickHide)}
+							>
+								<div className="dropdown-item-indicator">
+									<ClayIcon iconName="hidden" />
+								</div>
 
-							<span className="dropdown-option-text">
-								{hidden
-									? getLang(`show-${addPlural}`)
-									: getLang(`hide-${addPlural}`)}
-							</span>
-						</a>
-					</li>
+								{hidden ?
+									getPluralMessage(
+										Liferay.Language.get('show-result'),
+										Liferay.Language.get('show-results'),
+										itemCount
+									) :
+									getPluralMessage(
+										Liferay.Language.get('hide-result'),
+										Liferay.Language.get('hide-results'),
+										itemCount
+									)
+								}
+							</a>
+						</li>
+					)}
 				</ul>
 			</div>
 		);

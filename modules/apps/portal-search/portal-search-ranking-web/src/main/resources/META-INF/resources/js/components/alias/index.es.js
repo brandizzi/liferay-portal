@@ -1,17 +1,15 @@
-import React, {Component} from 'react';
-import ClayButton from './ClayButton.es';
-import {getLang} from 'utils/language.es';
+import ClayButton from 'components/shared/ClayButton.es';
+import ClayMultiselect from 'components/shared/ClayMultiselect.es';
 import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import ReactModal from 'react-modal';
-import ReactSelectTags from './ReactSelectTags.es';
 import Tag from './Tag.es';
 
 class Alias extends Component {
 	static propTypes = {
 		keywords: PropTypes.arrayOf(String),
-		onClickDelete: PropTypes.func,
-		onClickSubmit: PropTypes.func,
-		searchTerm: PropTypes.string
+		onClickDelete: PropTypes.func.isRequired,
+		onClickSubmit: PropTypes.func.isRequired
 	};
 
 	state = {
@@ -24,10 +22,12 @@ class Alias extends Component {
 	};
 
 	_handleOpenModal = () => {
-		this.setState({
-			modalKeywords: [],
-			showModal: true
-		});
+		this.setState(
+			{
+				modalKeywords: [],
+				showModal: true
+			}
+		);
 	};
 
 	_handleSubmit = () => {
@@ -39,61 +39,58 @@ class Alias extends Component {
 	};
 
 	_handleUpdate = value => {
-		this.setState({
-			modalKeywords: value
-		});
+		this.setState({modalKeywords: value});
 	};
 
 	render() {
-		const {keywords, onClickDelete, searchTerm} = this.props;
+		const {keywords, onClickDelete} = this.props;
 
 		const {modalKeywords} = this.state;
 
 		return (
-			<div className="results-ranking-alias">
-				<div className="sheet sheet-lg">
-					<h2 className="sheet-title">{`"${searchTerm}"`}</h2>
+			<div className="results-ranking-alias-root">
+				<div className="sheet-text">
+					<div className="alias-title">
+						<strong>{Liferay.Language.get('aliases')}</strong>
+					</div>
 
-					<div className="sheet-text">
-						<div className="alias-title">
-							<strong>{getLang('aliases')}</strong>
-						</div>
-
-						<div className="input-group">
-							<div className="input-group-item input-group-item-shrink">
-								{keywords.map(word => (
+					<div className="input-group">
+						<div className="input-group-item input-group-item-shrink">
+							{keywords.map(
+								word => (
 									<Tag
 										key={word}
 										label={word}
 										onClickDelete={onClickDelete}
 									/>
-								))}
-							</div>
+								)
+							)}
+						</div>
 
-							<div className="input-group-item input-group-item-shrink">
-								<a
-									className="link-outline link-outline-borderless link-outline-primary"
-									href="#1"
-									onClick={this._handleOpenModal}
-								>
-									{getLang('add-an-alias')}
-								</a>
-							</div>
+						<div className="input-group-item input-group-item-shrink">
+							<ClayButton
+								borderless
+								displayStyle="primary"
+								label={Liferay.Language.get('add-an-alias')}
+								onClick={this._handleOpenModal}
+								size="sm"
+							/>
 						</div>
 					</div>
 				</div>
 
 				<ReactModal
-					isOpen={this.state.showModal}
+					className="modal-dialog modal-lg alias-modal-root"
 					contentLabel="aliasModal"
+					isOpen={this.state.showModal}
 					onRequestClose={this._handleCloseModal}
-					className="modal-dialog modal-lg results-ranking-alias-modal"
 					overlayClassName="modal-backdrop react-modal-backdrop"
+					portalClassName="results-ranking-modal-root"
 				>
 					<div className="modal-content">
 						<div className="modal-header">
 							<div className="modal-title">
-								{getLang('add-an-alias')}
+								{Liferay.Language.get('add-an-alias')}
 							</div>
 
 							<ClayButton
@@ -105,19 +102,20 @@ class Alias extends Component {
 
 						<div className="modal-body">
 							<div className="alias-modal-description">
-								{getLang('add-an-alias-description')}
+								{Liferay.Language.get('add-an-alias-description')}
 							</div>
-							<div className="form-group">
-								<label>{getLang('alias')}</label>
 
-								<ReactSelectTags
-									value={modalKeywords}
+							<div className="form-group">
+								<label>{Liferay.Language.get('alias')}</label>
+
+								<ClayMultiselect
 									onAction={this._handleUpdate}
+									value={modalKeywords}
 								/>
 
 								<div className="form-feedback-group">
 									<div className="form-text">
-										{getLang('add-an-alias-instruction')}
+										{Liferay.Language.get('add-an-alias-instruction')}
 									</div>
 								</div>
 							</div>
@@ -129,7 +127,7 @@ class Alias extends Component {
 									<div className="btn-group-item">
 										<ClayButton
 											borderless
-											label={getLang('cancel')}
+											label={Liferay.Language.get('cancel')}
 											onClick={this._handleCloseModal}
 										/>
 									</div>
@@ -140,7 +138,7 @@ class Alias extends Component {
 												modalKeywords.length === 0
 											}
 											displayStyle="primary"
-											label={getLang('add')}
+											label={Liferay.Language.get('add')}
 											onClick={this._handleSubmit}
 										/>
 									</div>

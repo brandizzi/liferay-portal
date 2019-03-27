@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String redirect = ParamUtil.getString(request, "redirect");
+
 String resultsRankingsRootElementId = renderResponse.getNamespace() + "-results-rankings-root";
 %>
 
@@ -26,7 +28,8 @@ String resultsRankingsRootElementId = renderResponse.getNamespace() + "-results-
 	ResultsRankings.default(
 		'<%= resultsRankingsRootElementId %>',
 		{
-			searchTerm: ''
+			cancelUrl: '<%= HtmlUtil.escape(redirect) %>',
+			searchTerm: 'example'
 		},
 		{
 			spritemap: '<%= themeDisplay.getPathThemeImages() + "/lexicon/icons.svg" %>'
