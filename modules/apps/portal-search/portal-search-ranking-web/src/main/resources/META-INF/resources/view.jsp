@@ -55,6 +55,6 @@ String tabs = ParamUtil.getString(request, "tabs", "synonym-sets");
 
 <c:choose>
 	<c:when test='<%= tabs.equals("synonym-sets") %>'>
-		<liferay-util:include page="/synonym-sets.jsp" servletContext="<%= application %>" />
+		<liferay-util:include page="/add_synonym_sets.jsp" servletContext="<%= application %>" />
 	</c:when>
 </c:choose>
