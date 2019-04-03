@@ -21,7 +21,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.admin.web.internal.constants.SearchAdminPortletKeys;
 import com.liferay.portal.search.admin.web.internal.display.context.FieldMappingsDisplayBuilder;
-import com.liferay.portal.search.admin.web.internal.display.context.SearchAdminDisplayBuilder;
+import com.liferay.portal.search.admin.web.internal.display.context.IndexActionsDisplayBuilder;
 import com.liferay.portal.search.engine.SearchEngineInformation;
 import com.liferay.portal.search.index.IndexInformation;
 
@@ -76,15 +76,15 @@ public class SearchAdminPortlet extends MVCPortlet {
 			renderRequest, "tabs1", "index-actions");
 
 		if (tabs1.equals("index-actions")) {
-			SearchAdminDisplayBuilder searchAdminDisplayBuilder =
-				new SearchAdminDisplayBuilder();
+			IndexActionsDisplayBuilder indexActionsDisplayBuilder =
+				new IndexActionsDisplayBuilder();
 
-			searchAdminDisplayBuilder.setSearchEngineInformation(
+			indexActionsDisplayBuilder.setSearchEngineInformation(
 				searchEngineInformation);
 
 			renderRequest.setAttribute(
 				WebKeys.PORTLET_DISPLAY_CONTEXT,
-				searchAdminDisplayBuilder.build());
+				indexActionsDisplayBuilder.build());
 		}
 		else {
 			FieldMappingsDisplayBuilder fieldMappingsDisplayBuilder =
