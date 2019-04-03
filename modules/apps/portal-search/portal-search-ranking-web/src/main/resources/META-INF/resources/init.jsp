@@ -31,6 +31,7 @@ page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.search.ranking.web.internal.display.context.ResultsRankingsDisplayContext" %><%@
+page import="com.liferay.portal.search.ranking.web.internal.display.context.SynonymSetsDisplayContext" %><%@
 page import="com.liferay.portal.search.ranking.web.internal.constants.SearchRankingPortletKeys" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %>
 

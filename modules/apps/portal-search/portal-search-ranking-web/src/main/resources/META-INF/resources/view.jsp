@@ -56,6 +56,6 @@ String tabs = ParamUtil.getString(request, "tabs", "results-rankings");
 		<liferay-util:include page="/field_mappings.jsp" servletContext="<%= application %>" />
 	</c:when>
 	<c:when test='<%= tabs.equals("synonym-sets") %>'>
-		<liferay-util:include page="/add_synonym_sets.jsp" servletContext="<%= application %>" />
+		<liferay-util:include page="/view_synonym_sets.jsp" servletContext="<%= application %>" />
 	</c:when>
 </c:choose>

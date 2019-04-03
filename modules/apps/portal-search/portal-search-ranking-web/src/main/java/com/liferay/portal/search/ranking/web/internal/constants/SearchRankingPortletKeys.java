@@ -25,4 +25,7 @@ public class SearchRankingPortletKeys {
 	public static final String SEARCH_RANKING =
 		"com_liferay_portal_search_ranking_web_portlet_SearchRankingPortlet";
 
+	public static final String SYNONYM_SETS_DISPLAY_CONTEXT =
+		"SYNONYM_SETS_DISPLAY_CONTEXT";
+
 }
