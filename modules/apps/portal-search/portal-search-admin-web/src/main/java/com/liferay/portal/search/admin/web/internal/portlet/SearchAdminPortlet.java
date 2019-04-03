@@ -22,6 +22,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.admin.web.internal.constants.SearchAdminPortletKeys;
 import com.liferay.portal.search.admin.web.internal.display.context.FieldMappingsDisplayBuilder;
 import com.liferay.portal.search.admin.web.internal.display.context.IndexActionsDisplayBuilder;
+import com.liferay.portal.search.admin.web.internal.display.context.SearchAdminDisplayBuilder;
+import com.liferay.portal.search.admin.web.internal.display.context.SearchAdminDisplayContext;
 import com.liferay.portal.search.engine.SearchEngineInformation;
 import com.liferay.portal.search.index.IndexInformation;
 
@@ -72,10 +74,16 @@ public class SearchAdminPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
-		String tabs1 = ParamUtil.getString(
-			renderRequest, "tabs1", "index-actions");
+		SearchAdminDisplayBuilder searchAdminDisplayBuilder =
+			new SearchAdminDisplayBuilder(
+				_portal, renderRequest, renderResponse);
 
-		if (tabs1.equals("index-actions")) {
+		SearchAdminDisplayContext searchAdminDisplayContext =
+			searchAdminDisplayBuilder.build();
+
+		String tab = searchAdminDisplayContext.getTab();
+
+		if (tab.equals("index-actions")) {
 			IndexActionsDisplayBuilder indexActionsDisplayBuilder =
 				new IndexActionsDisplayBuilder();
 
