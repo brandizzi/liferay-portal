@@ -28,4 +28,7 @@ public class ResultsRankingPortletKeys {
 	public static final String SYNONYM_SETS_DISPLAY_CONTEXT =
 		"SYNONYM_SETS_DISPLAY_CONTEXT";
 
+	public static final String SYNONYM_SETS_DISPLAY_CONTEXT =
+		"SYNONYM_SETS_DISPLAY_CONTEXT";
+
 }
