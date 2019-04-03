@@ -21,9 +21,66 @@ SynonymSetsDisplayContext synonymSetsDisplayContext = (SynonymSetsDisplayContext
 %>
 
 <clay:management-toolbar
+	actionDropdownItems="<%= synonymSetsDisplayContext.getActionDropdownItems() %>"
+	clearResultsURL="<%= synonymSetsDisplayContext.getClearResultsURL() %>"
 	componentId="synonymSetsEntriesManagementToolbar"
 	creationMenu="<%= synonymSetsDisplayContext.getCreationMenu() %>"
+	disabled="<%= synonymSetsDisplayContext.isDisabledManagementBar() %>"
+	filterDropdownItems="<%= synonymSetsDisplayContext.getFilterItemsDropdownItems() %>"
+	itemsTotal="<%= synonymSetsDisplayContext.getTotalItems() %>"
+	searchActionURL="<%= synonymSetsDisplayContext.getSearchActionURL() %>"
 	searchContainerId="synonymSetsEntries"
 	searchFormName="searchFm"
 	selectable="<%= true %>"
+	showCreationMenu="<%= synonymSetsDisplayContext.isShowCreationMenu() %>"
+	sortingOrder="<%= synonymSetsDisplayContext.getOrderByType() %>"
+	sortingURL="<%= synonymSetsDisplayContext.getSortingURL() %>"
 />
+
+<portlet:actionURL name="deleteResultsRankingsEntry" var="deleteResultsRankingsEntryURL">
+	<portlet:param name="redirect" value="<%= currentURL %>" />
+</portlet:actionURL>
+
+<aui:form action="<%= deleteResultsRankingsEntryURL %>" cssClass="container-fluid-1280" method="post" name="resultsRankingEntriesFm">
+	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+
+	<liferay-ui:search-container
+		id="resultsRankingEntries"
+		searchContainer="<%= synonymSetsDisplayContext.getSearchContainer() %>"
+	>
+		<liferay-ui:search-container-row
+			className="com.liferay.portal.kernel.search.Document"
+			keyProperty="resultsRankingsEntryId"
+			modelVar="resultsRankingsEntry"
+		>
+			<portlet:renderURL var="rowURL">
+				<portlet:param name="mvcRenderCommandName" value="addResultsRankingsEntry" />
+				<portlet:param name="redirect" value="<%= currentURL %>" />
+				<portlet:param name="ResultsRankingsEntryId" value="0" />
+			</portlet:renderURL>
+
+			<liferay-ui:search-container-column-text
+				cssClass="table-cell-expand table-title"
+				href="<%= rowURL %>"
+				name="name"
+				value="Test Title"
+			/>
+
+			<liferay-ui:search-container-column-text
+				cssClass="table-cell-expand-smallest table-cell-minw-150"
+				name="pinned"
+				value="0"
+			/>
+
+			<liferay-ui:search-container-column-date
+				cssClass="table-cell-expand-smallest table-cell-minw-150 table-cell-ws-nowrap"
+				name="modified-date"
+				value="Test Date"
+			/>
+		</liferay-ui:search-container-row>
+
+		<liferay-ui:search-iterator
+			markupView="lexicon"
+		/>
+	</liferay-ui:search-container>
+</aui:form>
