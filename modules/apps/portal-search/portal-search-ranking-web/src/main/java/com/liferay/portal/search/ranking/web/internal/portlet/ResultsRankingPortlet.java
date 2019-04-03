@@ -22,6 +22,7 @@ import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.ranking.web.internal.constants.ResultsRankingPortletKeys;
 import com.liferay.portal.search.ranking.web.internal.display.context.ResultsRankingPortletDisplayContext;
 import com.liferay.portal.search.searcher.Searcher;
+import com.liferay.portal.search.ranking.web.internal.display.context.SynonymSetsDisplayContext;
 
 import java.io.IOException;
 
@@ -78,9 +79,17 @@ public class ResultsRankingPortlet extends MVCPortlet {
 					httpServletRequest, _language, _queries, renderRequest,
 					renderResponse, _searcher, _searchRequestBuilderFactory);
 
+		SynonymSetsDisplayContext synonymSetsDisplayContext =
+			new SynonymSetsDisplayContext(
+				httpServletRequest, renderRequest, renderResponse);
+
 		renderRequest.setAttribute(
 			ResultsRankingPortletKeys.RESULTS_RANKING_DISPLAY_CONTEXT,
 			resultsRankingPortletDisplayContext);
+
+		renderRequest.setAttribute(
+			SearchRankingPortletKeys.SYNONYM_SETS_DISPLAY_CONTEXT,
+			synonymSetsDisplayContext);
 
 		super.render(renderRequest, renderResponse);
 	}

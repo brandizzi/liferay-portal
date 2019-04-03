@@ -16,8 +16,13 @@
 
 <%@ include file="/init.jsp" %>
 
+<%
+SynonymSetsDisplayContext synonymSetsDisplayContext = (SynonymSetsDisplayContext)request.getAttribute(SearchRankingPortletKeys.SYNONYM_SETS_DISPLAY_CONTEXT);
+%>
+
 <clay:management-toolbar
 	componentId="synonymSetsEntriesManagementToolbar"
+	creationMenu="<%= synonymSetsDisplayContext.getCreationMenu() %>"
 	searchContainerId="synonymSetsEntries"
 	searchFormName="searchFm"
 	selectable="<%= true %>"

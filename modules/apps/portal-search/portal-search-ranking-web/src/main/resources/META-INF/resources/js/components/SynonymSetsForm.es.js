@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
 import ClayButton from './ClayButton.es';
-import {getLang} from 'utils/language.es';
 import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import ReactSelectTags from './ReactSelectTags.es';
+import {getLang} from 'utils/language.es';
 
 class SynonymSetsForm extends Component {
 	static propTypes = {
-		onClickSubmit: PropTypes.func,
+		onClickSubmit: PropTypes.func
 	};
 
 	state = {
@@ -18,10 +18,12 @@ class SynonymSetsForm extends Component {
 	};
 
 	_handleSaveAsDraft = () => {
+
 		/* TODO: Call backend to save as draft synonym sets */
 	};
 
 	_handleSubmit = () => {
+
 		/* TODO: Call backend to save synonym sets */
 	};
 
@@ -48,8 +50,8 @@ class SynonymSetsForm extends Component {
 
 						<label>{getLang('synonyms')}</label>
 						<ReactSelectTags
-							value={synonyms}
 							onAction={this._handleUpdate}
+							value={synonyms}
 						/>
 
 						<div className="form-feedback-group">

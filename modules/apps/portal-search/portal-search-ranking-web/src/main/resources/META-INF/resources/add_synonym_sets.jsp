@@ -18,6 +18,8 @@
 
 <%
 String synonymSetsRootElementId = renderResponse.getNamespace() + "-synonym-sets-root";
+
+portletDisplay.setShowBackIcon(true);
 %>
 
 <div id="<%= synonymSetsRootElementId %>"></div>
