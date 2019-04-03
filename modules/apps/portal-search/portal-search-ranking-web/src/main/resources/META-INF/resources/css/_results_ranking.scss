@@ -32,11 +32,9 @@
 	width: 100%;
 
 	.react-select__control {
-		background-color: #F1F2F5;
 
 		&:hover{
-			border-color: unset;
-			box-shadow: none;
+			cursor: text;
 		}
 
 		.react-select__multi-value, .react-select__multi-value__label, .react-select__multi-value__remove {

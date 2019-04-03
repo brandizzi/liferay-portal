@@ -11,6 +11,15 @@ const createOption = label => ({
 	value: label
 });
 
+const customStyles = {
+	control: (style, state) => ({
+		...style,
+		backgroundColor: state.isFocused ? '#F0F5FF' : '#F1F2F5',
+		borderColor: state.isFocused ? '#80ACFF': '#E7E7ED',
+		boxShadow: 'none'
+	})
+};
+
 class ReactSelectTags extends Component {
 	static propTypes = {
 		value: PropTypes.arrayOf(String),
@@ -66,6 +75,7 @@ class ReactSelectTags extends Component {
 				onInputChange={this.handleInputChange}
 				onKeyDown={this.handleKeyDown}
 				placeholder=""
+				styles={customStyles}
 				value={value}
 			/>
 		);
