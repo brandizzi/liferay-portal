@@ -5,11 +5,11 @@ import ThemeContext from './ThemeContext.es';
 
 export default function(id, props, context) {
 	ReactDOM.render(
-	<ThemeContext.Provider value={context}>
-		<div className="synonym-sets-root">
-			<SynonymSetsForm />
-		</div>
-	</ThemeContext.Provider>,
-	document.getElementById(id)
-);
+		<ThemeContext.Provider value={context}>
+			<div className="synonym-sets-root">
+				<SynonymSetsForm />
+			</div>
+		</ThemeContext.Provider>,
+		document.getElementById(id)
+	);
 }
