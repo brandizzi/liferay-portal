@@ -15,6 +15,7 @@
 package com.liferay.fragment.util;
 
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
+import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
@@ -161,7 +162,7 @@ public class FragmentEntryRenderUtil {
 				defaultFragmentRendererContext, request, response);
 		}
 		catch (IOException ioe) {
-			throw new PortalException(ioe);
+			throw new FragmentEntryContentException(ioe);
 		}
 	}
 

@@ -14,14 +14,17 @@
 
 package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 
+import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.DefaultFragmentRendererContext;
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
@@ -30,8 +33,12 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 
+import java.io.IOException;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+
+import org.jsoup.nodes.Element;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -64,22 +71,49 @@ public class RenderFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		if (fragmentEntryLink != null) {
+			String content = StringPool.BLANK;
+
 			ThemeDisplay themeDisplay =
 				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
-			DefaultFragmentRendererContext defaultFragmentRendererContext =
-				new DefaultFragmentRendererContext(fragmentEntryLink);
+            DefaultFragmentRendererContext defaultFragmentRendererContext =
+                new DefaultFragmentRendererContext(fragmentEntryLink);
 
-			defaultFragmentRendererContext.setLocale(themeDisplay.getLocale());
-			defaultFragmentRendererContext.setMode(
-				FragmentEntryLinkConstants.EDIT);
+            defaultFragmentRendererContext.setLocale(themeDisplay.getLocale());
+            defaultFragmentRendererContext.setMode(
+                FragmentEntryLinkConstants.EDIT);
 
-			jsonObject.put(
-				"content",
-				_fragmentRendererController.render(
-					defaultFragmentRendererContext,
-					_portal.getHttpServletRequest(actionRequest),
-					_portal.getHttpServletResponse(actionResponse)));
+			try {
+				content = _fragmentRendererController.render(
+                    defaultFragmentRendererContext,
+                    _portal.getHttpServletRequest(actionRequest),
+                    _portal.getHttpServletResponse(actionResponse));
+			}
+			catch (IOException ioe) {
+				Element element = new Element("div");
+
+				element.attr("class", "alert alert-danger m-2");
+
+				Throwable cause = ioe.getCause();
+
+				String errorMessage = "an-unexpected-error-occurred";
+
+				if (cause instanceof FragmentEntryContentException) {
+					FragmentEntryContentException fece =
+						(FragmentEntryContentException)cause;
+
+					errorMessage = fece.getLocalizedMessage();
+				}
+
+				element.text(
+					LanguageUtil.get(themeDisplay.getLocale(), errorMessage));
+
+				content = element.outerHtml();
+
+				jsonObject.put("error", true);
+			}
+
+			jsonObject.put("content", content);
 		}
 
 		JSONPortletResponseUtil.writeJSON(
