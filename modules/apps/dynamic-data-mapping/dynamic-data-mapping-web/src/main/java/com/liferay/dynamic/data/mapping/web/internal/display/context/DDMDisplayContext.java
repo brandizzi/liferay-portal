@@ -739,9 +739,16 @@ public class DDMDisplayContext {
 			String resourceName)
 		throws PortalException {
 
+		if (getClassNameId() > 0) {
+			return PortletPermissionUtil.contains(
+				_ddmWebRequestHelper.getPermissionChecker(),
+				_ddmWebRequestHelper.getLayout(), resourceName,
+				ActionKeys.ADD_PORTLET_DISPLAY_TEMPLATE);
+		}
+
 		return PortletPermissionUtil.contains(
 			_ddmWebRequestHelper.getPermissionChecker(),
-			_ddmWebRequestHelper.getLayout(), resourceName,
+			_ddmWebRequestHelper.getScopeGroupId(), resourceName,
 			ActionKeys.ADD_PORTLET_DISPLAY_TEMPLATE);
 	}
 
