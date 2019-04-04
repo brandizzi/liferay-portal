@@ -297,6 +297,7 @@
 					{param defaultSegmentsExperienceId: $defaultSegmentsExperienceId /}
 					{param dropTargetItemTypes: $dropTargetItemTypes /}
 					{param editableValues: $fragmentEntryLink.editableValues /}
+					{param error: $fragmentEntryLink.error /}
 					{param fragmentEntryLinkId: $fragmentEntryLink.fragmentEntryLinkId /}
 					{param dropTargetBorder: $dropTargetBorder /}
 					{param dropTargetItemId: $dropTargetItemId /}
@@ -337,6 +338,7 @@
 	{@param selectedMappingTypes: ?}
 	{@param store: ?}
 	{@param? content: ?}
+	{@param? error: bool}
 	{@param? rowType: ?}
 
 	{call com.liferay.layout.content.page.editor.web.FragmentEntryLink.render}
@@ -344,6 +346,7 @@
 		{param defaultEditorConfigurations: $defaultEditorConfigurations /}
 		{param defaultSegmentsExperienceId: $defaultSegmentsExperienceId /}
 		{param editableValues: $editableValues /}
+		{param error: $error /}
 		{param fragmentEntryLinkId: $fragmentEntryLinkId /}
 		{param key: $key /}
 		{param name: $name /}
