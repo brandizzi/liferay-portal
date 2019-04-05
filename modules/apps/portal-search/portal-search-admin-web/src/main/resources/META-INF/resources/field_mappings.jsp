@@ -30,10 +30,10 @@ FieldMappingsDisplayContext fieldMappingsDisplayContext = (FieldMappingsDisplayC
 
 Map<String, Object> context = new HashMap<>();
 
-context.put("spritemap", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
+context.put("fieldMappingsJson", fieldMappingsDisplayContext.getFieldMappings());
 context.put("indexList", fieldMappingsDisplayContext.getFieldMappingIndexDisplayContexts());
 context.put("selectedIndexName", fieldMappingsDisplayContext.getSelectedIndexName());
-context.put("fieldMappingsJson", fieldMappingsDisplayContext.getFieldMappings());
+context.put("spritemap", themeDisplay.getPathThemeImages() + "/lexicon/icons.svg");
 %>
 
 <soy:component-renderer
