@@ -1602,10 +1602,8 @@ definition {
 			portlet = "Pages"
 		);
 
-		SitePages.addPublicPage(pageName = "Web Content Staging Page");
-
 		Navigator.gotoSitePage(
-			pageName = "Web Content Staging Page",
+			pageName = "Staging Test Page",
 			siteName = "Site Name"
 		);
 
@@ -1626,7 +1624,7 @@ definition {
 		AssertElementNotPresent(locator1 = "Staging#STAGING_PUBLISH_TO_LIVE_BUTTON");
 
 		Navigator.gotoSitePage(
-			pageName = "Web Content Staging Page",
+			pageName = "Staging Test Page",
 			siteName = "Site Name"
 		);
 
@@ -1635,7 +1633,7 @@ definition {
 		Staging.publishToLive();
 
 		Navigator.gotoSitePage(
-			pageName = "Web Content Staging Page",
+			pageName = "Staging Test Page",
 			siteName = "Site Name"
 		);
 
@@ -1645,14 +1643,14 @@ definition {
 		);
 
 		Navigator.gotoSitePage(
-			pageName = "Web Content Staging Page",
+			pageName = "Staging Test Page",
 			siteName = "Site Name"
 		);
 
 		Staging.publishToLiveNowViaPortletPG();
 
 		Navigator.gotoSitePage(
-			pageName = "Web Content Staging Page",
+			pageName = "Staging Test Page",
 			siteName = "Remote Site"
 		);
 
@@ -1937,17 +1935,15 @@ definition {
 			portlet = "Pages"
 		);
 
-		SitePages.addPublicPage(pageName = "Test Page Name");
-
 		Navigator.gotoStagedSitePage(
-			pageName = "Test Page Name",
+			pageName = "Staging Test Page",
 			siteName = "Site Name"
 		);
 
 		Staging.addPageVariationPG(pageVariationName = "Test Page Variation Name");
 
 		Navigator.gotoStagedSitePage(
-			pageName = "Test Page Name",
+			pageName = "Staging Test Page",
 			siteName = "Site Name"
 		);
 
@@ -1977,7 +1973,7 @@ definition {
 		User.deleteCP();
 
 		Navigator.gotoStagedSitePage(
-			pageName = "Test Page Name",
+			pageName = "Staging Test Page",
 			siteName = "Site Name"
 		);
 
