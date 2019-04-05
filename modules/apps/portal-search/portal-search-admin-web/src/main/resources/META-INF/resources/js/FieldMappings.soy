@@ -46,10 +46,10 @@
 
 					<div class="sheet-section">
 						{call ClayButton.render}
-							{param icon: 'moon' /}
 							{param events: [
 								'click': $_switchTheme
 							] /}
+							{param icon: 'moon' /}
 							{param monospaced: true /}
 							{param spritemap: $spritemap /}
 							{param style: 'secondary' /}
@@ -57,36 +57,36 @@
 
 						<div class="btn-group btn-group-font-size" role="group">
 							{call ClayButton.render}
-								{param icon: 'plus' /}
+								{param elementClasses: 'btn-plus' /}
 								{param events: [
 									'click': $_increaseFontSize
 								] /}
+								{param icon: 'plus' /}
 								{param monospaced: true /}
 								{param spritemap: $spritemap /}
-								{param elementClasses: 'btn-plus' /}
 								{param style: 'secondary' /}
 							{/call}
 
 							{call ClayButton.render}
-								{param icon: 'hr' /}
+								{param elementClasses: 'btn-hr' /}
 								{param events: [
 									'click': $_decreaseFontSize
 								] /}
+								{param icon: 'hr' /}
 								{param monospaced: true /}
 								{param spritemap: $spritemap /}
-								{param elementClasses: 'btn-hr' /}
 								{param style: 'secondary' /}
 							{/call}
 						</div>
 
 						{call ClayButton.render}
+							{param elementClasses: 'btn-copy' /}
 							{param events: [
 								'click': $_selectText
 							] /}
 							{param icon: 'paste' /}
 							{param monospaced: true /}
 							{param spritemap: $spritemap /}
-							{param elementClasses: 'btn-copy' /}
 							{param style: 'secondary' /}
 						{/call}
 					</div>
