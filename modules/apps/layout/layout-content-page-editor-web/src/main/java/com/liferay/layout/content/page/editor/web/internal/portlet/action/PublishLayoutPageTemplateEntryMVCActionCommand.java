@@ -71,6 +71,8 @@ public class PublishLayoutPageTemplateEntryMVCActionCommand
 		catch (Throwable t) {
 			throw new Exception(t);
 		}
+
+		sendRedirect(actionRequest, actionResponse);
 	}
 
 	private static final TransactionConfig _transactionConfig =
