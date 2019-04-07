@@ -132,11 +132,16 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 					}
 
 					for (var i = 0; i < scopeAliases.length; i++) {
-						var scopeAlias = document.querySelector('#<portlet:namespace />globalAccordion #<portlet:namespace />' + scopeAliases[i].replace(/[\.#]/g, '') + '.panel');
+						document.querySelectorAll('#<portlet:namespace />globalAccordion .panel[data-master]').forEach(
+							function(globalAccordianPanel) {
+								var masterScopeAliases = globalAccordianPanel.getAttribute("data-master");
 
-						if (scopeAlias) {
-							scopeAlias.classList.remove('hide');
-						}
+								var array = masterScopeAliases.split(" ");
+
+								if (array.indexOf(scopeAliases[i]) >= 0) {
+									globalAccordianPanel.classList.remove('hide');
+								}
+							});
 					}
 
 					var globalAccordion = document.getElementById('<portlet:namespace />globalAccordion');
@@ -182,6 +187,13 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 				var checkbox = A.one(checkboxElement);
 
 				var value = checkbox.val();
+				if (!value) {
+					return;
+				}
+
+				var processedScopeAliases = value.split(" ");
+
+				var scopeAlias = processedScopeAliases[0];
 
 				<portlet:namespace />changeScopeAliasStickyStatus(value, checkbox.attr('checked'));
 
@@ -189,7 +201,7 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 					function() {
 						var array = this.attr("data-slave").split(" ");
 
-						return array.indexOf(value) >= 0;
+						return array.indexOf(scopeAlias) >= 0;
 					}
 				).each(
 					function() {
@@ -199,16 +211,27 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 
 						var logicalOR = checkbox.attr('checked');
 
-						for (var i = 0; i < scopeAliases.length; i++) {
-							var scopeAliasChecked = document.querySelectorAll('input[value="' + scopeAliases[i] + '"]:checked');
+						for (var i = 0; i < scopeAliases.length && !logicalOR; i++) {
 
-							logicalOR = logicalOR || scopeAliasChecked.length > 0;
-
-							if (logicalOR) {
-								slave.attr('checked', true);
-								slave.attr('disabled', true);
-								return;
+							if (processedScopeAliases.indexOf(scopeAliases[i]) >= 0) {
+								continue;
 							}
+
+							A.all('input[data-master]:checked').each(
+								function() {
+									var array = this.attr("data-master").split(" ");
+
+									if (array.indexOf(scopeAliases[i]) >= 0) {
+										logicalOR = true;
+										processedScopeAliases.concat(array);
+									}
+								});
+						}
+
+						if (logicalOR) {
+							slave.attr('checked', true);
+							slave.attr('disabled', true);
+							return;
 						}
 
 						var index = <portlet:namespace />getArrayIndexOfStickyScopeAlias(slave.val());

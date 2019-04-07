@@ -22,22 +22,32 @@
 
 		Set<String> scopeAliases = relations.getScopeAliases();
 
-		String scopeAlias = StringPool.BLANK;
+		List<String> scopeAliasesList = new ArrayList<>(scopeAliases);
 
-		if (!scopeAliases.isEmpty()) {
-			Iterator<String> iterator = scopeAliases.iterator();
+		Collections.sort(scopeAliasesList);
 
-			scopeAlias = iterator.next();
+		Iterator<String> iterator = scopeAliasesList.iterator();
+
+		StringBundler sb = new StringBundler(scopeAliases.size() * 2 - 1);
+
+		while (iterator.hasNext()) {
+			sb.append(LanguageUtil.get(request, iterator.next()));
+			if (iterator.hasNext()) {
+				sb.append(" / ");
+			}
 		}
+
+		String id = StringUtil.randomId();
+		String scopeAliasesString = StringUtil.merge(scopeAliasesList, StringPool.SPACE);
 	%>
 
-		<div class="panel panel-secondary" id="<portlet:namespace /><%= scopeAlias %>">
-			<div class="collapse-icon panel-header panel-header-link" id="<portlet:namespace />globalAccordionHeading<%= scopeAlias %>">
+		<div class="panel panel-secondary" data-master="<%= scopeAliasesString %>" id="<portlet:namespace /><%= id %>">
+			<div class="collapse-icon panel-header panel-header-link" id="<portlet:namespace />globalAccordionHeading<%= id %>">
 				<div class="inline">
-					<aui:input checked="<%= assignedScopes.contains(scopeAlias) %>" id="<%= StringUtil.randomId() %>" label="<%= HtmlUtil.escape(scopeAlias) %>" name="scopeAliases" onChange='<%= renderResponse.getNamespace() + "recalculateDependants(this)" %>' type="checkbox" value="<%= scopeAlias %>" />
+					<aui:input checked="<%= !Collections.disjoint(assignedScopes, scopeAliases) %>" id='<%= "scopeAlias" + id %>' label="<%= sb.toString() %>" name="scopeAliases" onChange='<%= renderResponse.getNamespace() + "recalculateDependants(this)" %>' type="checkbox" value="<%= scopeAliasesString %>" />
 				</div>
 
-				<a aria-controls="<portlet:namespace />globalAccordion<%= scopeAlias %>" aria-expanded="false" class="collapsed" data-parent="#<portlet:namespace />globalAccordion" data-toggle="collapse" href="#<portlet:namespace />globalAccordion<%= scopeAlias %>" role="tab">
+				<a aria-controls="<portlet:namespace />globalAccordion<%= id %>" aria-expanded="false" class="collapsed" data-parent="#<portlet:namespace />globalAccordion" data-toggle="collapse" href="#<portlet:namespace />globalAccordion<%= id %>" role="tab">
 					<span>(<liferay-ui:message key="details" />)</span>
 
 					<span class="collapse-icon-closed">
@@ -53,7 +63,7 @@
 				</a>
 			</div>
 
-			<div aria-labelledby="<portlet:namespace />globalAccordionHeading<%= scopeAlias %>" class="collapse panel-collapse" id="<portlet:namespace />globalAccordion<%= scopeAlias %>" role="tabpanel">
+			<div aria-labelledby="<portlet:namespace />globalAccordionHeading<%= id %>" class="collapse panel-collapse" id="<portlet:namespace />globalAccordion<%= id %>" role="tabpanel">
 				<div class="panel-body">
 
 					<%
