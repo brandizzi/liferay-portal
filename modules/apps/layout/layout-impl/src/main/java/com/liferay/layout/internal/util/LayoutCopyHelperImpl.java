@@ -325,9 +325,11 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 			Image image = _imageLocalService.getImage(
 				_sourceLayout.getIconImageId());
 
+			boolean iconImage = false;
 			byte[] imageBytes = null;
 
 			if (image != null) {
+				iconImage = true;
 				imageBytes = image.getTextObj();
 			}
 
@@ -349,8 +351,8 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 				_sourceLayout.getDescriptionMap(),
 				_sourceLayout.getKeywordsMap(), _sourceLayout.getRobotsMap(),
 				_targetLayout.getType(), _targetLayout.isHidden(),
-				_targetLayout.getFriendlyURLMap(), imageBytes != null,
-				imageBytes, serviceContext);
+				_targetLayout.getFriendlyURLMap(), iconImage, imageBytes,
+				serviceContext);
 		}
 
 		private CopyLayoutCallable(Layout sourceLayout, Layout targetLayout) {
