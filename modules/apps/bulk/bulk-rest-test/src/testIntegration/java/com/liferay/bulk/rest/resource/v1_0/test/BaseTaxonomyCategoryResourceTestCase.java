@@ -126,7 +126,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 		}
 
 		try {
-			return _outputObjectMapper.readValue(string, Response.class);
+			return outputObjectMapper.readValue(string, Response.class);
 		}
 		catch (Exception e) {
 			_log.error("Unable to process HTTP response: " + string, e);
@@ -176,7 +176,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 		}
 
 		try {
-			return _outputObjectMapper.readValue(string, Response.class);
+			return outputObjectMapper.readValue(string, Response.class);
 		}
 		catch (Exception e) {
 			_log.error("Unable to process HTTP response: " + string, e);

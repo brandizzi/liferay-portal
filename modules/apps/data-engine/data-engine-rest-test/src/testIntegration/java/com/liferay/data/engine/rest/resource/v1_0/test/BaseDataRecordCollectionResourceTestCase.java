@@ -312,7 +312,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			_log.debug("HTTP response: " + string);
 		}
 
-		return _outputObjectMapper.readValue(
+		return outputObjectMapper.readValue(
 			string,
 			new TypeReference<Page<DataRecordCollection>>() {
 			});
@@ -496,7 +496,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			_log.debug("HTTP response: " + string);
 		}
 
-		return _outputObjectMapper.readValue(
+		return outputObjectMapper.readValue(
 			string,
 			new TypeReference<Page<DataRecordCollection>>() {
 			});
@@ -556,7 +556,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 		Http.Options options = _createHttpOptions();
 
 		options.setBody(
-			_inputObjectMapper.writeValueAsString(dataRecordCollection),
+			inputObjectMapper.writeValueAsString(dataRecordCollection),
 			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
 
 		String location =
@@ -576,7 +576,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 		}
 
 		try {
-			return _outputObjectMapper.readValue(
+			return outputObjectMapper.readValue(
 				string, DataRecordCollection.class);
 		}
 		catch (Exception e) {
@@ -595,7 +595,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 		Http.Options options = _createHttpOptions();
 
 		options.setBody(
-			_inputObjectMapper.writeValueAsString(dataRecordCollection),
+			inputObjectMapper.writeValueAsString(dataRecordCollection),
 			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
 
 		String location =
@@ -721,7 +721,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 		}
 
 		try {
-			return _outputObjectMapper.readValue(
+			return outputObjectMapper.readValue(
 				string, DataRecordCollection.class);
 		}
 		catch (Exception e) {
@@ -788,7 +788,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 		Http.Options options = _createHttpOptions();
 
 		options.setBody(
-			_inputObjectMapper.writeValueAsString(dataRecordCollection),
+			inputObjectMapper.writeValueAsString(dataRecordCollection),
 			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
 
 		String location =
@@ -808,7 +808,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 		}
 
 		try {
-			return _outputObjectMapper.readValue(
+			return outputObjectMapper.readValue(
 				string, DataRecordCollection.class);
 		}
 		catch (Exception e) {
@@ -826,7 +826,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 		Http.Options options = _createHttpOptions();
 
 		options.setBody(
-			_inputObjectMapper.writeValueAsString(dataRecordCollection),
+			inputObjectMapper.writeValueAsString(dataRecordCollection),
 			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
 
 		String location =

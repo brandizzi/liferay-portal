@@ -140,8 +140,7 @@ public abstract class BaseMessageSelectionResourceTestCase {
 		}
 
 		try {
-			return _outputObjectMapper.readValue(
-				string, MessageSelection.class);
+			return outputObjectMapper.readValue(string, MessageSelection.class);
 		}
 		catch (Exception e) {
 			_log.error("Unable to process HTTP response: " + string, e);

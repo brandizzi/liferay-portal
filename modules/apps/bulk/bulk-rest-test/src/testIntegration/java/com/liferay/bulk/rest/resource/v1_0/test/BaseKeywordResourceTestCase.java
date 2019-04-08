@@ -128,7 +128,7 @@ public abstract class BaseKeywordResourceTestCase {
 		}
 
 		try {
-			return _outputObjectMapper.readValue(string, Response.class);
+			return outputObjectMapper.readValue(string, Response.class);
 		}
 		catch (Exception e) {
 			_log.error("Unable to process HTTP response: " + string, e);
@@ -178,7 +178,7 @@ public abstract class BaseKeywordResourceTestCase {
 		}
 
 		try {
-			return _outputObjectMapper.readValue(string, Response.class);
+			return outputObjectMapper.readValue(string, Response.class);
 		}
 		catch (Exception e) {
 			_log.error("Unable to process HTTP response: " + string, e);
@@ -227,7 +227,7 @@ public abstract class BaseKeywordResourceTestCase {
 			_log.debug("HTTP response: " + string);
 		}
 
-		return _outputObjectMapper.readValue(
+		return outputObjectMapper.readValue(
 			string,
 			new TypeReference<Page<Keyword>>() {
 			});

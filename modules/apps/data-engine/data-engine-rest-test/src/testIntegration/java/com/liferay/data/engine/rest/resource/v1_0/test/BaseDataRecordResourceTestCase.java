@@ -244,7 +244,7 @@ public abstract class BaseDataRecordResourceTestCase {
 			_log.debug("HTTP response: " + string);
 		}
 
-		return _outputObjectMapper.readValue(
+		return outputObjectMapper.readValue(
 			string,
 			new TypeReference<Page<DataRecord>>() {
 			});
@@ -302,7 +302,7 @@ public abstract class BaseDataRecordResourceTestCase {
 		Http.Options options = _createHttpOptions();
 
 		options.setBody(
-			_inputObjectMapper.writeValueAsString(dataRecord),
+			inputObjectMapper.writeValueAsString(dataRecord),
 			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
 
 		String location =
@@ -322,7 +322,7 @@ public abstract class BaseDataRecordResourceTestCase {
 		}
 
 		try {
-			return _outputObjectMapper.readValue(string, DataRecord.class);
+			return outputObjectMapper.readValue(string, DataRecord.class);
 		}
 		catch (Exception e) {
 			_log.error("Unable to process HTTP response: " + string, e);
@@ -338,7 +338,7 @@ public abstract class BaseDataRecordResourceTestCase {
 		Http.Options options = _createHttpOptions();
 
 		options.setBody(
-			_inputObjectMapper.writeValueAsString(dataRecord),
+			inputObjectMapper.writeValueAsString(dataRecord),
 			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
 
 		String location =
@@ -489,7 +489,7 @@ public abstract class BaseDataRecordResourceTestCase {
 		}
 
 		try {
-			return _outputObjectMapper.readValue(string, DataRecord.class);
+			return outputObjectMapper.readValue(string, DataRecord.class);
 		}
 		catch (Exception e) {
 			_log.error("Unable to process HTTP response: " + string, e);
@@ -544,7 +544,7 @@ public abstract class BaseDataRecordResourceTestCase {
 		Http.Options options = _createHttpOptions();
 
 		options.setBody(
-			_inputObjectMapper.writeValueAsString(dataRecord),
+			inputObjectMapper.writeValueAsString(dataRecord),
 			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
 
 		String location =
@@ -562,7 +562,7 @@ public abstract class BaseDataRecordResourceTestCase {
 		}
 
 		try {
-			return _outputObjectMapper.readValue(string, DataRecord.class);
+			return outputObjectMapper.readValue(string, DataRecord.class);
 		}
 		catch (Exception e) {
 			_log.error("Unable to process HTTP response: " + string, e);
@@ -578,7 +578,7 @@ public abstract class BaseDataRecordResourceTestCase {
 		Http.Options options = _createHttpOptions();
 
 		options.setBody(
-			_inputObjectMapper.writeValueAsString(dataRecord),
+			inputObjectMapper.writeValueAsString(dataRecord),
 			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
 
 		String location =

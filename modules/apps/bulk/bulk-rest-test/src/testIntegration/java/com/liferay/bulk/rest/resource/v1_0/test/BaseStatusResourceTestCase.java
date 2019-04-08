@@ -120,7 +120,7 @@ public abstract class BaseStatusResourceTestCase {
 		}
 
 		try {
-			return _outputObjectMapper.readValue(string, Status.class);
+			return outputObjectMapper.readValue(string, Status.class);
 		}
 		catch (Exception e) {
 			_log.error("Unable to process HTTP response: " + string, e);
