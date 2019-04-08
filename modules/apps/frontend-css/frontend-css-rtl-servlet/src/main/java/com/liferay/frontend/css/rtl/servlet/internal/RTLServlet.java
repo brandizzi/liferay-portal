@@ -180,7 +180,6 @@ public class RTLServlet extends HttpServlet {
 		response.setContentLength(urlConnection.getContentLength());
 
 		response.setContentType(ContentTypes.TEXT_CSS);
-
 		response.setStatus(HttpServletResponse.SC_OK);
 
 		StreamUtil.transfer(url.openStream(), response.getOutputStream());
