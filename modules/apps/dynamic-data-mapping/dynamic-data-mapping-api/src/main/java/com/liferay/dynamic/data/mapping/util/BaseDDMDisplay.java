@@ -413,7 +413,7 @@ public abstract class BaseDDMDisplay implements DDMDisplay {
 			return true;
 		}
 
-		return scopeGroup.isStagingGroup();
+		return false;
 	}
 
 	@Override
