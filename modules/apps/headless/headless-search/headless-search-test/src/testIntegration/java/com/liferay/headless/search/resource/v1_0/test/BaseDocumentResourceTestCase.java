@@ -23,9 +23,12 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.liferay.headless.search.dto.v1_0.Document;
 import com.liferay.headless.search.resource.v1_0.DocumentResource;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.Http;
@@ -86,6 +89,7 @@ public abstract class BaseDocumentResourceTestCase {
 
 	@Before
 	public void setUp() throws Exception {
+		irrelevantGroup = GroupTestUtil.addGroup();
 		testGroup = GroupTestUtil.addGroup();
 
 		_resourceURL = new URL("http://localhost:8080/o/headless-search/v1.0");
@@ -93,45 +97,63 @@ public abstract class BaseDocumentResourceTestCase {
 
 	@After
 	public void tearDown() throws Exception {
+		GroupTestUtil.deleteGroup(irrelevantGroup);
 		GroupTestUtil.deleteGroup(testGroup);
 	}
 
 	@Test
-	public void testGetDocumentIndexUid() throws Exception {
-		Document postDocument = testGetDocumentIndexUid_addDocument();
+	public void testGetDocument() throws Exception {
+		Document postDocument = testGetDocument_addDocument();
+
+		Document getDocument = invokeGetDocument(
+			postDocument.getIndex(), postDocument.getUid());
+
+		assertEquals(postDocument, getDocument);
+		assertValid(getDocument);
 	}
 
-	protected Document testGetDocumentIndexUid_addDocument() throws Exception {
+	protected Document testGetDocument_addDocument() throws Exception {
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Document invokeGetDocumentIndexUid(String index, String uid)
+	protected Document invokeGetDocument(String index, String uid)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
 
 		String location =
-			_resourceURL + _toPath("/document/{index}/{uid}", index);
+			_resourceURL + _toPath("/document/{index}/{uid}", index, uid);
 
 		options.setLocation(location);
 
-		return _outputObjectMapper.readValue(
-			HttpUtil.URLtoString(options), Document.class);
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		try {
+			return _outputObjectMapper.readValue(string, Document.class);
+		}
+		catch (Exception e) {
+			_log.error("Unable to process HTTP response: " + string, e);
+
+			throw e;
+		}
 	}
 
-	protected Http.Response invokeGetDocumentIndexUidResponse(
-			String index, String uid)
+	protected Http.Response invokeGetDocumentResponse(String index, String uid)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
 
 		String location =
-			_resourceURL + _toPath("/document/{index}/{uid}", index);
+			_resourceURL + _toPath("/document/{index}/{uid}", index, uid);
 
 		options.setLocation(location);
 
-		HttpUtil.URLtoString(options);
+		HttpUtil.URLtoByteArray(options);
 
 		return options.getResponse();
 	}
@@ -258,14 +280,6 @@ public abstract class BaseDocumentResourceTestCase {
 		sb.append(operator);
 		sb.append(" ");
 
-		if (entityFieldName.equals("resourceType")) {
-			sb.append("'");
-			sb.append(String.valueOf(document.getResourceType()));
-			sb.append("'");
-
-			return sb.toString();
-		}
-
 		if (entityFieldName.equals("author")) {
 			sb.append("'");
 			sb.append(String.valueOf(document.getAuthor()));
@@ -315,8 +329,13 @@ public abstract class BaseDocumentResourceTestCase {
 		}
 
 		if (entityFieldName.equals("pinned")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
+		if (entityFieldName.equals("resourceType")) {
 			sb.append("'");
-			sb.append(String.valueOf(document.getPinned()));
+			sb.append(String.valueOf(document.getResourceType()));
 			sb.append("'");
 
 			return sb.toString();
@@ -345,24 +364,29 @@ public abstract class BaseDocumentResourceTestCase {
 	protected Document randomDocument() {
 		return new Document() {
 			{
-				resourceType = RandomTestUtil.randomString();
 				author = RandomTestUtil.randomString();
 				clicks = RandomTestUtil.randomString();
 				date = RandomTestUtil.randomString();
 				description = RandomTestUtil.randomString();
 				hidden = RandomTestUtil.randomString();
 				id = RandomTestUtil.randomString();
-				pinned = RandomTestUtil.randomString();
+				pinned = RandomTestUtil.randomBoolean();
+				resourceType = RandomTestUtil.randomString();
 				title = RandomTestUtil.randomString();
 				type = RandomTestUtil.randomString();
 			}
 		};
 	}
 
+	protected Document randomIrrelevantDocument() {
+		return randomDocument();
+	}
+
 	protected Document randomPatchDocument() {
 		return randomDocument();
 	}
 
+	protected Group irrelevantGroup;
 	protected Group testGroup;
 
 	protected static class Page<T> {
@@ -422,9 +446,21 @@ public abstract class BaseDocumentResourceTestCase {
 		return options;
 	}
 
-	private String _toPath(String template, Object value) {
-		return template.replaceFirst("\\{.*\\}", String.valueOf(value));
+	private String _toPath(String template, Object... values) {
+		if (ArrayUtil.isEmpty(values)) {
+			return template;
+		}
+
+		for (int i = 0; i < values.length; i++) {
+			template = template.replaceFirst(
+				"\\{.*?\\}", String.valueOf(values[i]));
+		}
+
+		return template;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		BaseDocumentResourceTestCase.class);
 
 	private static BeanUtilsBean _beanUtilsBean = new BeanUtilsBean() {
 

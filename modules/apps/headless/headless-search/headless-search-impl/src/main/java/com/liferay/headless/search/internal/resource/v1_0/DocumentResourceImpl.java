@@ -37,7 +37,7 @@ import org.osgi.service.component.annotations.ServiceScope;
 public class DocumentResourceImpl extends BaseDocumentResourceImpl {
 
 	@Override
-	public Document getDocumentIndexUid(String index, String uid)
+	public Document getDocument(String index, String uid)
 		throws Exception {
 
 		System.out.println("called REST");

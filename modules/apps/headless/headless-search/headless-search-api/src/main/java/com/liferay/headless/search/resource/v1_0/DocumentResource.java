@@ -30,8 +30,7 @@ import javax.annotation.Generated;
 @Generated("")
 public interface DocumentResource {
 
-	public Document getDocumentIndexUid(String index, String uid)
-		throws Exception;
+	public Document getDocument(String index, String uid) throws Exception;
 
 	public void setContextCompany(Company contextCompany);
 

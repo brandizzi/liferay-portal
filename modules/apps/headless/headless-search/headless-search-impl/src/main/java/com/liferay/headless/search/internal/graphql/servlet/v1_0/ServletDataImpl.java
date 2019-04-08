@@ -16,11 +16,18 @@ package com.liferay.headless.search.internal.graphql.servlet.v1_0;
 
 import com.liferay.headless.search.internal.graphql.mutation.v1_0.Mutation;
 import com.liferay.headless.search.internal.graphql.query.v1_0.Query;
+import com.liferay.headless.search.resource.v1_0.DocumentResource;
+import com.liferay.headless.search.resource.v1_0.SearchResultResource;
 import com.liferay.portal.vulcan.graphql.servlet.ServletData;
 
 import javax.annotation.Generated;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentServiceObjects;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceScope;
 
 /**
  * @author Bryan Engler
@@ -29,6 +36,14 @@ import org.osgi.service.component.annotations.Component;
 @Component(immediate = true, service = ServletData.class)
 @Generated("")
 public class ServletDataImpl implements ServletData {
+
+	@Activate
+	public void activate(BundleContext bundleContext) {
+		Query.setDocumentResourceComponentServiceObjects(
+			_documentResourceComponentServiceObjects);
+		Query.setSearchResultResourceComponentServiceObjects(
+			_searchResultResourceComponentServiceObjects);
+	}
 
 	@Override
 	public Mutation getMutation() {
@@ -44,5 +59,13 @@ public class ServletDataImpl implements ServletData {
 	public Query getQuery() {
 		return new Query();
 	}
+
+	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
+	private ComponentServiceObjects<DocumentResource>
+		_documentResourceComponentServiceObjects;
+
+	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
+	private ComponentServiceObjects<SearchResultResource>
+		_searchResultResourceComponentServiceObjects;
 
 }

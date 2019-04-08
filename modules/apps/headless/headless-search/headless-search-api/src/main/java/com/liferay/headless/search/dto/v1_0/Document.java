@@ -24,6 +24,8 @@ import com.liferay.petra.string.StringBundler;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 
+import java.util.Objects;
+
 import javax.annotation.Generated;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -37,30 +39,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "Document")
 public class Document {
-
-	public String getResourceType() {
-		return resourceType;
-	}
-
-	public void setResourceType(String resourceType) {
-		this.resourceType = resourceType;
-	}
-
-	@JsonIgnore
-	public void setResourceType(
-		UnsafeSupplier<String, Exception> resourceTypeUnsafeSupplier) {
-
-		try {
-			resourceType = resourceTypeUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected String resourceType;
 
 	public String getAuthor() {
 		return author;
@@ -76,6 +54,9 @@ public class Document {
 
 		try {
 			author = authorUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
@@ -101,6 +82,9 @@ public class Document {
 		try {
 			clicks = clicksUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -122,6 +106,9 @@ public class Document {
 	public void setDate(UnsafeSupplier<String, Exception> dateUnsafeSupplier) {
 		try {
 			date = dateUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
@@ -147,6 +134,9 @@ public class Document {
 		try {
 			description = descriptionUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -171,6 +161,9 @@ public class Document {
 		try {
 			hidden = hiddenUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -193,6 +186,9 @@ public class Document {
 		try {
 			id = idUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -202,20 +198,23 @@ public class Document {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String id;
 
-	public String getPinned() {
+	public Boolean getPinned() {
 		return pinned;
 	}
 
-	public void setPinned(String pinned) {
+	public void setPinned(Boolean pinned) {
 		this.pinned = pinned;
 	}
 
 	@JsonIgnore
 	public void setPinned(
-		UnsafeSupplier<String, Exception> pinnedUnsafeSupplier) {
+		UnsafeSupplier<Boolean, Exception> pinnedUnsafeSupplier) {
 
 		try {
 			pinned = pinnedUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
@@ -224,7 +223,34 @@ public class Document {
 
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected String pinned;
+	protected Boolean pinned;
+
+	public String getResourceType() {
+		return resourceType;
+	}
+
+	public void setResourceType(String resourceType) {
+		this.resourceType = resourceType;
+	}
+
+	@JsonIgnore
+	public void setResourceType(
+		UnsafeSupplier<String, Exception> resourceTypeUnsafeSupplier) {
+
+		try {
+			resourceType = resourceTypeUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String resourceType;
 
 	public String getTitle() {
 		return title;
@@ -240,6 +266,9 @@ public class Document {
 
 		try {
 			title = titleUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
@@ -263,6 +292,9 @@ public class Document {
 		try {
 			type = typeUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -272,17 +304,32 @@ public class Document {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String type;
 
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+
+		if (!(object instanceof Document)) {
+			return false;
+		}
+
+		Document document = (Document)object;
+
+		return Objects.equals(toString(), document.toString());
+	}
+
+	@Override
+	public int hashCode() {
+		String string = toString();
+
+		return string.hashCode();
+	}
+
 	public String toString() {
 		StringBundler sb = new StringBundler();
 
 		sb.append("{");
-
-		sb.append("\"resourceType\": ");
-
-		sb.append("\"");
-		sb.append(resourceType);
-		sb.append("\"");
-		sb.append(", ");
 
 		sb.append("\"author\": ");
 
@@ -328,8 +375,13 @@ public class Document {
 
 		sb.append("\"pinned\": ");
 
-		sb.append("\"");
 		sb.append(pinned);
+		sb.append(", ");
+
+		sb.append("\"resourceType\": ");
+
+		sb.append("\"");
+		sb.append(resourceType);
 		sb.append("\"");
 		sb.append(", ");
 

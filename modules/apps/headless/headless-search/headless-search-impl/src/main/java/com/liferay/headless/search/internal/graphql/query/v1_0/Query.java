@@ -18,6 +18,8 @@ import com.liferay.headless.search.dto.v1_0.Document;
 import com.liferay.headless.search.dto.v1_0.SearchResult;
 import com.liferay.headless.search.resource.v1_0.DocumentResource;
 import com.liferay.headless.search.resource.v1_0.SearchResultResource;
+import com.liferay.petra.function.UnsafeConsumer;
+import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 
@@ -27,9 +29,7 @@ import graphql.annotations.annotationTypes.GraphQLName;
 
 import javax.annotation.Generated;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.service.component.ComponentServiceObjects;
 
 /**
  * @author Bryan Engler
@@ -38,82 +38,90 @@ import org.osgi.util.tracker.ServiceTracker;
 @Generated("")
 public class Query {
 
+	public static void setDocumentResourceComponentServiceObjects(
+		ComponentServiceObjects<DocumentResource>
+			documentResourceComponentServiceObjects) {
+
+		_documentResourceComponentServiceObjects =
+			documentResourceComponentServiceObjects;
+	}
+
+	public static void setSearchResultResourceComponentServiceObjects(
+		ComponentServiceObjects<SearchResultResource>
+			searchResultResourceComponentServiceObjects) {
+
+		_searchResultResourceComponentServiceObjects =
+			searchResultResourceComponentServiceObjects;
+	}
+
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public Document getDocumentIndexUid(
+	public Document getDocument(
 			@GraphQLName("index") String index, @GraphQLName("uid") String uid)
 		throws Exception {
 
-		DocumentResource documentResource = _createDocumentResource();
-
-		return documentResource.getDocumentIndexUid(index, uid);
+		return _applyComponentServiceObjects(
+			_documentResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			documentResource -> documentResource.getDocument(index, uid));
 	}
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public SearchResult getSearchIndexKeywordsHiddenStartDelta(
-			@GraphQLName("index") String index,
+	public SearchResult getSearchCompanyIdKeywordsHiddenFromSize(
+			@GraphQLName("companyId") Long companyId,
 			@GraphQLName("keywords") String keywords,
 			@GraphQLName("hidden") String hidden,
-			@GraphQLName("start") Long start, @GraphQLName("delta") Long delta)
+			@GraphQLName("from") Long from, @GraphQLName("size") Long size)
 		throws Exception {
 
-		SearchResultResource searchResultResource =
-			_createSearchResultResource();
-
-		return searchResultResource.getSearchIndexKeywordsHiddenStartDelta(
-			index, keywords, hidden, start, delta);
+		return _applyComponentServiceObjects(
+			_searchResultResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			searchResultResource ->
+				searchResultResource.getSearchCompanyIdKeywordsHiddenFromSize(
+					companyId, keywords, hidden, from, size));
 	}
 
-	private static DocumentResource _createDocumentResource() throws Exception {
-		DocumentResource documentResource =
-			_documentResourceServiceTracker.getService();
+	private <T, R, E1 extends Throwable, E2 extends Throwable> R
+			_applyComponentServiceObjects(
+				ComponentServiceObjects<T> componentServiceObjects,
+				UnsafeConsumer<T, E1> unsafeConsumer,
+				UnsafeFunction<T, R, E2> unsafeFunction)
+		throws E1, E2 {
+
+		T resource = componentServiceObjects.getService();
+
+		try {
+			unsafeConsumer.accept(resource);
+
+			return unsafeFunction.apply(resource);
+		}
+		finally {
+			componentServiceObjects.ungetService(resource);
+		}
+	}
+
+	private void _populateResourceContext(DocumentResource documentResource)
+		throws Exception {
 
 		documentResource.setContextCompany(
 			CompanyLocalServiceUtil.getCompany(
 				CompanyThreadLocal.getCompanyId()));
-
-		return documentResource;
 	}
 
-	private static final ServiceTracker<DocumentResource, DocumentResource>
-		_documentResourceServiceTracker;
-
-	private static SearchResultResource _createSearchResultResource()
+	private void _populateResourceContext(
+			SearchResultResource searchResultResource)
 		throws Exception {
-
-		SearchResultResource searchResultResource =
-			_searchResultResourceServiceTracker.getService();
 
 		searchResultResource.setContextCompany(
 			CompanyLocalServiceUtil.getCompany(
 				CompanyThreadLocal.getCompanyId()));
-
-		return searchResultResource;
 	}
 
-	private static final ServiceTracker
-		<SearchResultResource, SearchResultResource>
-			_searchResultResourceServiceTracker;
-
-	static {
-		Bundle bundle = FrameworkUtil.getBundle(Query.class);
-
-		ServiceTracker<DocumentResource, DocumentResource>
-			documentResourceServiceTracker = new ServiceTracker<>(
-				bundle.getBundleContext(), DocumentResource.class, null);
-
-		documentResourceServiceTracker.open();
-
-		_documentResourceServiceTracker = documentResourceServiceTracker;
-		ServiceTracker<SearchResultResource, SearchResultResource>
-			searchResultResourceServiceTracker = new ServiceTracker<>(
-				bundle.getBundleContext(), SearchResultResource.class, null);
-
-		searchResultResourceServiceTracker.open();
-
-		_searchResultResourceServiceTracker =
-			searchResultResourceServiceTracker;
-	}
+	private static ComponentServiceObjects<DocumentResource>
+		_documentResourceComponentServiceObjects;
+	private static ComponentServiceObjects<SearchResultResource>
+		_searchResultResourceComponentServiceObjects;
 
 }

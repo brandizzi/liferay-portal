@@ -24,6 +24,8 @@ import com.liferay.petra.string.StringBundler;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 
+import java.util.Objects;
+
 import javax.annotation.Generated;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -37,30 +39,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "SearchResult")
 public class SearchResult {
-
-	public String getResourceType() {
-		return resourceType;
-	}
-
-	public void setResourceType(String resourceType) {
-		this.resourceType = resourceType;
-	}
-
-	@JsonIgnore
-	public void setResourceType(
-		UnsafeSupplier<String, Exception> resourceTypeUnsafeSupplier) {
-
-		try {
-			resourceType = resourceTypeUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected String resourceType;
 
 	public Document[] getDocuments() {
 		return documents;
@@ -77,6 +55,9 @@ public class SearchResult {
 		try {
 			documents = documentsUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -86,18 +67,23 @@ public class SearchResult {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Document[] documents;
 
-	public Long getItems() {
-		return items;
+	public String getResourceType() {
+		return resourceType;
 	}
 
-	public void setItems(Long items) {
-		this.items = items;
+	public void setResourceType(String resourceType) {
+		this.resourceType = resourceType;
 	}
 
 	@JsonIgnore
-	public void setItems(UnsafeSupplier<Long, Exception> itemsUnsafeSupplier) {
+	public void setResourceType(
+		UnsafeSupplier<String, Exception> resourceTypeUnsafeSupplier) {
+
 		try {
-			items = itemsUnsafeSupplier.get();
+			resourceType = resourceTypeUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
@@ -106,19 +92,59 @@ public class SearchResult {
 
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Long items;
+	protected String resourceType;
+
+	public Long getTotal() {
+		return total;
+	}
+
+	public void setTotal(Long total) {
+		this.total = total;
+	}
+
+	@JsonIgnore
+	public void setTotal(UnsafeSupplier<Long, Exception> totalUnsafeSupplier) {
+		try {
+			total = totalUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long total;
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+
+		if (!(object instanceof SearchResult)) {
+			return false;
+		}
+
+		SearchResult searchResult = (SearchResult)object;
+
+		return Objects.equals(toString(), searchResult.toString());
+	}
+
+	@Override
+	public int hashCode() {
+		String string = toString();
+
+		return string.hashCode();
+	}
 
 	public String toString() {
 		StringBundler sb = new StringBundler();
 
 		sb.append("{");
-
-		sb.append("\"resourceType\": ");
-
-		sb.append("\"");
-		sb.append(resourceType);
-		sb.append("\"");
-		sb.append(", ");
 
 		sb.append("\"documents\": ");
 
@@ -141,9 +167,16 @@ public class SearchResult {
 
 		sb.append(", ");
 
-		sb.append("\"items\": ");
+		sb.append("\"resourceType\": ");
 
-		sb.append(items);
+		sb.append("\"");
+		sb.append(resourceType);
+		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"total\": ");
+
+		sb.append(total);
 
 		sb.append("}");
 

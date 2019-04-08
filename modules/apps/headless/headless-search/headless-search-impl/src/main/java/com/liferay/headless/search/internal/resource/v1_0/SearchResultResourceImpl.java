@@ -41,16 +41,16 @@ import java.util.List;
 public class SearchResultResourceImpl extends BaseSearchResultResourceImpl {
 
 	@Override
-	public SearchResult getSearchIndexKeywordsHiddenStartDelta(
-			String index, String keywords, String hidden, Long start, Long delta)
+	public SearchResult getSearchCompanyIdKeywordsHiddenFromSize(
+			Long companyId, String keywords, String hidden, Long from, Long size)
 		throws Exception {
 
 		SearchContext searchContext = new SearchContext();
 
+		searchContext.setCompanyId(companyId);
 		searchContext.setKeywords(keywords);
-		searchContext.setStart(start.intValue());
-		searchContext.setEnd(start.intValue() + delta.intValue());
-		searchContext.setCompanyId(start);
+		searchContext.setStart(from.intValue());
+		searchContext.setEnd(from.intValue() + size.intValue());
 
 		SearchRequestBuilder searchRequestBuilder =
 			searchRequestBuilderFactory.getSearchRequestBuilder(
@@ -82,14 +82,12 @@ public class SearchResultResourceImpl extends BaseSearchResultResourceImpl {
 				new com.liferay.headless.search.dto.v1_0.Document() {
 				{
 					author = document.get(Field.USER_NAME);
-					date = document.get(Field.CREATE_DATE);
 					clicks = document.get("clicks");
-					date = document.get(Field.CREATE_DATE);
 					description = document.get(Field.DESCRIPTION);
 					hidden = document.get(Field.HIDDEN);
 					id = document.get(Field.UID);
-					pinned = document.get("pinned");
-					title = document.get(Field.TITLE);
+					pinned = true;
+					title = document.get(Field.TITLE + "_en_US");
 					type = document.get(Field.ENTRY_CLASS_NAME);
 				}
 			};
@@ -99,7 +97,7 @@ public class SearchResultResourceImpl extends BaseSearchResultResourceImpl {
 
 		return new SearchResult() {
 			{
-				items = Long.valueOf(docs.size());
+				total = Long.valueOf(docs.size());
 				documents = restDocuments;
 			}
 		};

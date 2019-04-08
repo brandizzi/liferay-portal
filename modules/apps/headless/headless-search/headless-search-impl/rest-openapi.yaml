@@ -39,7 +39,7 @@ components:
                 id:
                     type: string
                 pinned:
-                    type: string
+                    type: boolean
                 title:
                     type: string
                 type:
@@ -54,7 +54,7 @@ components:
                     items:
                         $ref: "#/components/schemas/Document"
                     type: array
-                items:
+                total:
                     format: int64
                     type: integer
             type: object
@@ -85,14 +85,15 @@ paths:
                                 $ref: "#/components/schemas/Document"
                     description: ""
             tags: ["Document"]
-    "/search/{index}/{keywords}/{hidden}/{start}/{delta}":
+    "/search/{companyId}/{keywords}/{hidden}/{from}/{size}":
         get:
             parameters:
                 - in: path
-                  name: index
+                  name: companyId
                   required: true
                   schema:
-                      type: string
+                      format: int64
+                      type: integer
                 - in: path
                   name: keywords
                   required: true
@@ -104,13 +105,13 @@ paths:
                   schema:
                       type: string
                 - in: path
-                  name: start
+                  name: from
                   required: true
                   schema:
                       format: int64
                       type: integer
                 - in: path
-                  name: delta
+                  name: size
                   required: true
                   schema:
                       format: int64

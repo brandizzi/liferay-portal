@@ -23,9 +23,12 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.liferay.headless.search.dto.v1_0.SearchResult;
 import com.liferay.headless.search.resource.v1_0.SearchResultResource;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.Http;
@@ -86,6 +89,7 @@ public abstract class BaseSearchResultResourceTestCase {
 
 	@Before
 	public void setUp() throws Exception {
+		irrelevantGroup = GroupTestUtil.addGroup();
 		testGroup = GroupTestUtil.addGroup();
 
 		_resourceURL = new URL("http://localhost:8080/o/headless-search/v1.0");
@@ -93,26 +97,20 @@ public abstract class BaseSearchResultResourceTestCase {
 
 	@After
 	public void tearDown() throws Exception {
+		GroupTestUtil.deleteGroup(irrelevantGroup);
 		GroupTestUtil.deleteGroup(testGroup);
 	}
 
 	@Test
-	public void testGetSearchIndexKeywordsHiddenStartDelta() throws Exception {
-		SearchResult postSearchResult =
-			testGetSearchIndexKeywordsHiddenStartDelta_addSearchResult();
-	}
-
-	protected SearchResult
-			testGetSearchIndexKeywordsHiddenStartDelta_addSearchResult()
+	public void testGetSearchCompanyIdKeywordsHiddenFromSize()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		Assert.assertTrue(true);
 	}
 
-	protected SearchResult invokeGetSearchIndexKeywordsHiddenStartDelta(
-			String index, String keywords, String hidden, Long start,
-			Long delta)
+	protected SearchResult invokeGetSearchCompanyIdKeywordsHiddenFromSize(
+			Long companyId, String keywords, String hidden, Long from,
+			Long size)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -120,19 +118,31 @@ public abstract class BaseSearchResultResourceTestCase {
 		String location =
 			_resourceURL +
 				_toPath(
-					"/search/{index}/{keywords}/{hidden}/{start}/{delta}",
-					index);
+					"/search/{companyId}/{keywords}/{hidden}/{from}/{size}",
+					keywords, hidden, from, size);
 
 		options.setLocation(location);
 
-		return _outputObjectMapper.readValue(
-			HttpUtil.URLtoString(options), SearchResult.class);
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		try {
+			return _outputObjectMapper.readValue(string, SearchResult.class);
+		}
+		catch (Exception e) {
+			_log.error("Unable to process HTTP response: " + string, e);
+
+			throw e;
+		}
 	}
 
 	protected Http.Response
-			invokeGetSearchIndexKeywordsHiddenStartDeltaResponse(
-				String index, String keywords, String hidden, Long start,
-				Long delta)
+			invokeGetSearchCompanyIdKeywordsHiddenFromSizeResponse(
+				Long companyId, String keywords, String hidden, Long from,
+				Long size)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -140,12 +150,12 @@ public abstract class BaseSearchResultResourceTestCase {
 		String location =
 			_resourceURL +
 				_toPath(
-					"/search/{index}/{keywords}/{hidden}/{start}/{delta}",
-					index);
+					"/search/{companyId}/{keywords}/{hidden}/{from}/{size}",
+					keywords, hidden, from, size);
 
 		options.setLocation(location);
 
-		HttpUtil.URLtoString(options);
+		HttpUtil.URLtoByteArray(options);
 
 		return options.getResponse();
 	}
@@ -277,6 +287,11 @@ public abstract class BaseSearchResultResourceTestCase {
 		sb.append(operator);
 		sb.append(" ");
 
+		if (entityFieldName.equals("documents")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
 		if (entityFieldName.equals("resourceType")) {
 			sb.append("'");
 			sb.append(String.valueOf(searchResult.getResourceType()));
@@ -285,12 +300,7 @@ public abstract class BaseSearchResultResourceTestCase {
 			return sb.toString();
 		}
 
-		if (entityFieldName.equals("documents")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
-		if (entityFieldName.equals("items")) {
+		if (entityFieldName.equals("total")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
 		}
@@ -303,15 +313,20 @@ public abstract class BaseSearchResultResourceTestCase {
 		return new SearchResult() {
 			{
 				resourceType = RandomTestUtil.randomString();
-				items = RandomTestUtil.randomLong();
+				total = RandomTestUtil.randomLong();
 			}
 		};
+	}
+
+	protected SearchResult randomIrrelevantSearchResult() {
+		return randomSearchResult();
 	}
 
 	protected SearchResult randomPatchSearchResult() {
 		return randomSearchResult();
 	}
 
+	protected Group irrelevantGroup;
 	protected Group testGroup;
 
 	protected static class Page<T> {
@@ -371,9 +386,21 @@ public abstract class BaseSearchResultResourceTestCase {
 		return options;
 	}
 
-	private String _toPath(String template, Object value) {
-		return template.replaceFirst("\\{.*\\}", String.valueOf(value));
+	private String _toPath(String template, Object... values) {
+		if (ArrayUtil.isEmpty(values)) {
+			return template;
+		}
+
+		for (int i = 0; i < values.length; i++) {
+			template = template.replaceFirst(
+				"\\{.*?\\}", String.valueOf(values[i]));
+		}
+
+		return template;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		BaseSearchResultResourceTestCase.class);
 
 	private static BeanUtilsBean _beanUtilsBean = new BeanUtilsBean() {
 
