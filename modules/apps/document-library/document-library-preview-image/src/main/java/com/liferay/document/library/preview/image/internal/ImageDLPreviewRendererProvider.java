@@ -52,7 +52,7 @@ public class ImageDLPreviewRendererProvider
 
 		if (!DLProcessorRegistryUtil.isPreviewableSize(fileVersion)) {
 			return Optional.of(
-				(request, response) -> {
+				(httpServletRequest, httpServletResponse) -> {
 					throw new DLPreviewSizeException();
 				});
 		}
