@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCachable;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.BaseModelSearchResult;
@@ -829,6 +830,15 @@ public class AssetTagLocalServiceImpl extends AssetTagLocalServiceBaseImpl {
 				StringUtil.merge(
 					AssetUtil.INVALID_CHARACTERS, StringPool.SPACE),
 				AssetTagException.INVALID_CHARACTER);
+		}
+
+		int maxLength = ModelHintsUtil.getMaxLength(
+			AssetTag.class.getName(), "name");
+
+		if (name.length() > maxLength) {
+			throw new AssetTagException(
+				"Tag name cannot exceed " + maxLength + " characters",
+				AssetTagException.MAX_LENGTH);
 		}
 	}
 
