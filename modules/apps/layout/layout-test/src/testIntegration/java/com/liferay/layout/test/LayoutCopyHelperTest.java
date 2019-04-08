@@ -24,7 +24,6 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
-import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
@@ -33,17 +32,15 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
-import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
-import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
+import com.liferay.portal.util.test.LayoutTestUtil;
 import com.liferay.portlet.util.test.PortletKeys;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.portlet.Portlet;
@@ -74,7 +71,8 @@ public class LayoutCopyHelperTest {
 
 	@Test
 	public void testCopyContentLayoutStructure() throws Exception {
-		Layout sourceLayout = addLayout(_group.getGroupId(), StringPool.BLANK);
+		Layout sourceLayout = LayoutTestUtil.addLayout(
+			_group.getGroupId(), StringPool.BLANK);
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
@@ -108,7 +106,8 @@ public class LayoutCopyHelperTest {
 			_portal.getClassNameId(Layout.class), sourceLayout.getPlid(),
 			jsonObject.toString(), serviceContext);
 
-		Layout targetLayout = addLayout(_group.getGroupId(), StringPool.BLANK);
+		Layout targetLayout = LayoutTestUtil.addLayout(
+			_group.getGroupId(), StringPool.BLANK);
 
 		Assert.assertTrue(
 			ListUtil.isNotEmpty(
@@ -140,14 +139,16 @@ public class LayoutCopyHelperTest {
 
 	@Test
 	public void testCopyLayoutLookAndFeel() throws Exception {
-		Layout sourceLayout = addLayout(_group.getGroupId(), StringPool.BLANK);
+		Layout sourceLayout = LayoutTestUtil.addLayout(
+			_group.getGroupId(), StringPool.BLANK);
 
 		sourceLayout.setThemeId("l1-theme");
 		sourceLayout.setCss("l1-css");
 
 		LayoutLocalServiceUtil.updateLayout(sourceLayout);
 
-		Layout targetLayout = addLayout(_group.getGroupId(), StringPool.BLANK);
+		Layout targetLayout = LayoutTestUtil.addLayout(
+			_group.getGroupId(), StringPool.BLANK);
 
 		Assert.assertNotEquals(
 			sourceLayout.getThemeId(), targetLayout.getThemeId());
@@ -166,7 +167,7 @@ public class LayoutCopyHelperTest {
 	public void testCopyLayoutPortletPreferences() throws Exception {
 		String portletId = PortletKeys.TEST;
 
-		Layout sourceLayout = addLayout(
+		Layout sourceLayout = LayoutTestUtil.addLayout(
 			_group.getGroupId(), "column-1=" + portletId);
 
 		PortletPreferences sourcePortletPreferences =
@@ -174,7 +175,8 @@ public class LayoutCopyHelperTest {
 				sourceLayout, portletId,
 				"<portlet-preferences><layout1/></portlet-preferences>");
 
-		Layout targetLayout = addLayout(_group.getGroupId(), StringPool.BLANK);
+		Layout targetLayout = LayoutTestUtil.addLayout(
+			_group.getGroupId(), StringPool.BLANK);
 
 		PortletPreferences targetPortletPreferences =
 			PortletPreferencesFactoryUtil.getLayoutPortletSetup(
@@ -198,24 +200,6 @@ public class LayoutCopyHelperTest {
 		Assert.assertEquals(
 			PortletPreferencesFactoryUtil.toXML(sourcePortletPreferences),
 			PortletPreferencesFactoryUtil.toXML(targetPortletPreferences));
-	}
-
-	protected Layout addLayout(long groupId, String typeSettings)
-		throws Exception {
-
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext(groupId);
-
-		return _layoutLocalService.addLayout(
-			TestPropsValues.getUserId(), groupId, false,
-			LayoutConstants.DEFAULT_PARENT_LAYOUT_ID,
-			RandomTestUtil.randomLocaleStringMap(),
-			RandomTestUtil.randomLocaleStringMap(),
-			RandomTestUtil.randomLocaleStringMap(),
-			RandomTestUtil.randomLocaleStringMap(),
-			RandomTestUtil.randomLocaleStringMap(),
-			LayoutConstants.TYPE_PORTLET, typeSettings, false,
-			Collections.emptyMap(), serviceContext);
 	}
 
 	@Inject
