@@ -71,12 +71,12 @@ public class JSLoaderConfigServlet extends HttpServlet {
 			HttpServletRequest request, HttpServletResponse response)
 		throws IOException {
 
-		if (!_isLastServedContentStale()) {
+		if (!_isStale()) {
 			if (_log.isDebugEnabled()) {
 				_log.debug("Serving cached content for /js_loader_config");
 			}
 
-			_writeResponse(response, _lastServedContent.getValue());
+			_writeResponse(response, _objectValuePair.getValue());
 
 			return;
 		}
@@ -115,13 +115,13 @@ public class JSLoaderConfigServlet extends HttpServlet {
 
 		String content = stringWriter.toString();
 
-		_lastServedContent = new ObjectValuePair<>(getLastModified(), content);
+		_objectValuePair = new ObjectValuePair<>(getLastModified(), content);
 
 		_writeResponse(response, content);
 	}
 
-	private boolean _isLastServedContentStale() {
-		if (getLastModified() > _lastServedContent.getKey()) {
+	private boolean _isStale() {
+		if (getLastModified() > _objectValuePair.getKey()) {
 			return true;
 		}
 
@@ -149,7 +149,7 @@ public class JSLoaderConfigServlet extends HttpServlet {
 
 	private volatile Details _details;
 	private volatile long _lastModified;
-	private volatile ObjectValuePair<Long, String> _lastServedContent =
+	private volatile ObjectValuePair<Long, String> _objectValuePair =
 		new ObjectValuePair<>(0L, null);
 
 }
