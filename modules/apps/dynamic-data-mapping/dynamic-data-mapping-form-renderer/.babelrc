@@ -1,1 +1,5 @@
-{"ignore":["**/js/*.js"],"plugins":[],"presets":["@babel/preset-env"]}
+{
+	"ignore": ["**/js/*.js"],
+	"plugins" :[],
+	"presets" :["@babel/preset-env"]
+}
