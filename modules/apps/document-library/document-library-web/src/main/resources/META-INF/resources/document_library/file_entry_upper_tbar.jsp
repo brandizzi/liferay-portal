@@ -17,8 +17,8 @@
 <%@ include file="/document_library/init.jsp" %>
 
 <%
-String documentTitle = GetterUtil.getString(request.getAttribute("file_entry_upper_tbar.jsp-documentTitle"));
 DLViewFileVersionDisplayContext dlViewFileVersionDisplayContext = (DLViewFileVersionDisplayContext)request.getAttribute("file_entry_upper_tbar.jsp-dlViewFileVersionDisplayContext");
+String documentTitle = GetterUtil.getString(request.getAttribute("file_entry_upper_tbar.jsp-documentTitle"));
 FileEntry fileEntry = (FileEntry)request.getAttribute("file_entry_upper_tbar.jsp-fileEntry");
 FileVersion fileVersion = (FileVersion)request.getAttribute("file_entry_upper_tbar.jsp-fileVersion");
 %>
