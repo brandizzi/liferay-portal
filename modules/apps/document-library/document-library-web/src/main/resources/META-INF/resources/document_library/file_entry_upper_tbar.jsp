@@ -47,6 +47,7 @@ FileVersion fileVersion = (FileVersion)request.getAttribute("file_entry_upper_tb
 						id='<%= liferayPortletResponse.getNamespace() + "OpenContextualSidebar" %>'
 						monospaced="true"
 						size="sm"
+						style="<%= false %>"
 					/>
 				</li>
 
