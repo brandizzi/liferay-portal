@@ -333,20 +333,26 @@ const INITIAL_STATE = {
 				{
 					config: Config.object().value({}),
 					content: Config.any().value(''),
-					editableValues: Config.objectOf(
-						Config.shapeOf(
-							{
-								classNameId: Config.string().value(''),
-								classPK: Config.string().value(''),
-								defaultValue: Config.string().required(),
-								fieldId: Config.string().value(''),
-								mappedField: Config.string().value('')
-							}
-						)
+					editableValues: Config.shapeOf(
+						{
+							['com.liferay.fragment.entry.processor.editable.EditableFragmentEntryProcessor']: Config.objectOf(
+								Config.shapeOf(
+									{
+										classNameId: Config.string().value(''),
+										classPK: Config.string().value(''),
+										defaultValue: Config.string().required(),
+										fieldId: Config.string().value(''),
+										mappedField: Config.string().value('')
+									}
+								)
+							).value({})
+						}
 					).value({}),
+					fragmentEntryId: Config.oneOfType([Config.string(), Config.number()]).value(''),
 					fragmentEntryKey: Config.string().required(),
 					fragmentEntryLinkId: Config.string().required(),
-					name: Config.string().required()
+					name: Config.string().required(),
+					portletId: Config.string().value('')
 				}
 			)
 		)
