@@ -97,11 +97,10 @@ public class AddFragmentEntryLinkMVCActionCommand extends BaseMVCActionCommand {
 				fragmentEntry.getCss(), fragmentEntry.getHtml(),
 				fragmentEntry.getJs(), null, 0, serviceContext);
 
-		String data = ParamUtil.getString(actionRequest, "data");
-
 		long segmentsExperienceId = ParamUtil.getLong(
 			actionRequest, "segmentsExperienceId",
 			SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+		String data = ParamUtil.getString(actionRequest, "data");
 
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructure(
