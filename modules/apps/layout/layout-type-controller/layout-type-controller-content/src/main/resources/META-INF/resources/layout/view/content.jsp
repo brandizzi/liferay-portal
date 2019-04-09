@@ -131,14 +131,14 @@ String ppid = ParamUtil.getString(request, "p_p_id");
 
 													FragmentRendererController fragmentRendererController = (FragmentRendererController)request.getAttribute(FragmentActionKeys.FRAGMENT_RENDERER_CONTROLLER);
 
-													DefaultFragmentRendererContext fragmentRendererContext = new DefaultFragmentRendererContext(fragmentEntryLink);
+													DefaultFragmentRendererContext defaultFragmentRendererContext = new DefaultFragmentRendererContext(fragmentEntryLink);
 
-													fragmentRendererContext.setLocale(locale);
-													fragmentRendererContext.setMode(FragmentEntryLinkConstants.VIEW);
-													fragmentRendererContext.setSegmentsExperienceIds(segmentsExperienceIds);
+													defaultFragmentRendererContext.setLocale(locale);
+													defaultFragmentRendererContext.setMode(FragmentEntryLinkConstants.VIEW);
+													defaultFragmentRendererContext.setSegmentsExperienceIds(segmentsExperienceIds);
 												%>
 
-													<%= fragmentRendererController.render(fragmentRendererContext, request, response) %>
+													<%= fragmentRendererController.render(defaultFragmentRendererContext, request, response) %>
 
 												<%
 												}
