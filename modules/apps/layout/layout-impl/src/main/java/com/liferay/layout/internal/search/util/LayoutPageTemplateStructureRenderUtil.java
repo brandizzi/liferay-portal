@@ -42,7 +42,8 @@ public class LayoutPageTemplateStructureRenderUtil {
 
 	public static String renderLayoutContent(
 			FragmentRendererController fragmentRendererController,
-			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse,
 			LayoutPageTemplateStructure layoutPageTemplateStructure,
 			String mode, Map<String, Object> parameterMap, Locale locale,
 			long[] segmentsExperienceIds)
@@ -112,7 +113,8 @@ public class LayoutPageTemplateStructureRenderUtil {
 					try {
 						renderFragmentEntryLink =
 							fragmentRendererController.render(
-								fragmentRendererContext, httpServletRequest, httpServletResponse);
+								fragmentRendererContext, httpServletRequest,
+								httpServletResponse);
 					}
 					catch (IOException ioe) {
 						throw new PortalException(ioe);

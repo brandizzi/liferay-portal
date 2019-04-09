@@ -112,14 +112,16 @@ public class LayoutModelDocumentContributor
 
 		for (Locale locale : locales) {
 			try {
-				if ((httpServletRequest == null) || (httpServletResponse == null)) {
+				if ((httpServletRequest == null) ||
+					(httpServletResponse == null)) {
+
 					break;
 				}
 
 				String content =
 					LayoutPageTemplateStructureRenderUtil.renderLayoutContent(
-						_fragmentRendererController,
-						httpServletRequest, httpServletResponse, layoutPageTemplateStructure,
+						_fragmentRendererController, httpServletRequest,
+						httpServletResponse, layoutPageTemplateStructure,
 						FragmentEntryLinkConstants.VIEW, new HashMap<>(),
 						locale, segmentsExperienceIds);
 

@@ -105,7 +105,8 @@ public class AddPortletMVCActionCommand extends BaseMVCActionCommand {
 			DefaultFragmentRendererContext defaultFragmentRendererContext =
 				new DefaultFragmentRendererContext(fragmentEntryLink);
 
-			defaultFragmentRendererContext.setMode(FragmentEntryLinkConstants.EDIT);
+			defaultFragmentRendererContext.setMode(
+				FragmentEntryLinkConstants.EDIT);
 
 			jsonObject.put(
 				"content",

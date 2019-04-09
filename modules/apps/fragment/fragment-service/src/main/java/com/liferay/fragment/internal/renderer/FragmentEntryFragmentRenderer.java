@@ -33,7 +33,6 @@ import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateManager;
 import com.liferay.portal.kernel.template.TemplateManagerUtil;
-import com.liferay.portal.kernel.template.TemplateResource;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.taglib.servlet.PipingServletResponse;
@@ -127,22 +126,23 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 	private String _processTemplate(
 			String html, FragmentRendererContext fragmentRendererContext,
-			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse)
 		throws PortalException {
 
 		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
 
 		Template template = TemplateManagerUtil.getTemplate(
 			TemplateConstants.LANG_TYPE_FTL,
-			new StringTemplateResource(
-				"template_id", "[#ftl]\n" + html),
+			new StringTemplateResource("template_id", "[#ftl]\n" + html),
 			false);
 
 		TemplateManager templateManager =
 			TemplateManagerUtil.getTemplateManager(
 				TemplateConstants.LANG_TYPE_FTL);
 
-		templateManager.addTaglibSupport(template, httpServletRequest, httpServletResponse);
+		templateManager.addTaglibSupport(
+			template, httpServletRequest, httpServletResponse);
 		templateManager.addTaglibTheme(
 			template, "taglibLiferay", httpServletRequest, httpServletResponse);
 
@@ -206,7 +206,8 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 	private String _renderFragmentEntryLink(
 			FragmentRendererContext fragmentRendererContext,
-			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
+			HttpServletRequest httpServletRequest,
+			HttpServletResponse httpServletResponse)
 		throws PortalException {
 
 		String css =
@@ -220,7 +221,8 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 			Validator.isNotNull(css)) {
 
 			css = _processTemplate(
-				css, fragmentRendererContext, httpServletRequest, httpServletResponse);
+				css, fragmentRendererContext, httpServletRequest,
+				httpServletResponse);
 		}
 
 		String html =
@@ -234,12 +236,13 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 			Validator.isNotNull(html)) {
 
 			html = _processTemplate(
-				html, fragmentRendererContext, httpServletRequest, httpServletResponse);
+				html, fragmentRendererContext, httpServletRequest,
+				httpServletResponse);
 		}
 
 		html = _writePortletPaths(
-			fragmentRendererContext.getFragmentEntryLink(), html, httpServletRequest,
-			httpServletResponse);
+			fragmentRendererContext.getFragmentEntryLink(), html,
+			httpServletRequest, httpServletResponse);
 
 		FragmentEntryLink fragmentEntryLink =
 			fragmentRendererContext.getFragmentEntryLink();

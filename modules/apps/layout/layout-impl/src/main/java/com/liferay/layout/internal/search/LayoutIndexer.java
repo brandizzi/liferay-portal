@@ -178,7 +178,8 @@ public class LayoutIndexer extends BaseIndexer<Layout> {
 
 			String content =
 				LayoutPageTemplateStructureRenderUtil.renderLayoutContent(
-					null, httpServletRequest, response, layoutPageTemplateStructure,
+					null, httpServletRequest, response,
+					layoutPageTemplateStructure,
 					FragmentEntryLinkConstants.VIEW, new HashMap<>(), locale,
 					new long[0]);
 
