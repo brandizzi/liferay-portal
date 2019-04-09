@@ -34,11 +34,11 @@ public class TaxonomyVocabularyResourceTest
 	protected void assertValid(TaxonomyVocabulary taxonomyVocabulary) {
 		boolean valid = false;
 
-		if (Objects.equals(
-				taxonomyVocabulary.getSiteId(), testGroup.getGroupId()) &&
-			(taxonomyVocabulary.getDateCreated() != null) &&
+		if ((taxonomyVocabulary.getDateCreated() != null) &&
 			(taxonomyVocabulary.getDateModified() != null) &&
-			(taxonomyVocabulary.getId() != null)) {
+			(taxonomyVocabulary.getId() != null) &&
+			Objects.equals(
+				taxonomyVocabulary.getSiteId(), testGroup.getGroupId())) {
 
 			valid = true;
 		}
@@ -58,7 +58,10 @@ public class TaxonomyVocabularyResourceTest
 				taxonomyVocabulary1.getDescription(),
 				taxonomyVocabulary2.getDescription()) &&
 			Objects.equals(
-				taxonomyVocabulary1.getName(), taxonomyVocabulary2.getName())) {
+				taxonomyVocabulary1.getName(), taxonomyVocabulary2.getName()) &&
+			Objects.equals(
+				taxonomyVocabulary1.getSiteId(),
+				taxonomyVocabulary2.getSiteId())) {
 
 			return true;
 		}
