@@ -141,11 +141,11 @@ public class StructuredContentResourceTest
 	protected StructuredContent randomStructuredContent() {
 		return new StructuredContent() {
 			{
-				siteId = testGroup.getGroupId();
 				contentStructureId = _ddmStructure.getStructureId();
 				datePublished = RandomTestUtil.nextDate();
 				description = RandomTestUtil.randomString();
 				lastReviewed = RandomTestUtil.nextDate();
+				siteId = testGroup.getGroupId();
 				title = RandomTestUtil.randomString();
 			}
 		};
