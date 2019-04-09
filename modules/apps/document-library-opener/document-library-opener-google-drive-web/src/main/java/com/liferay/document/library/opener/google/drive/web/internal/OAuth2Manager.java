@@ -65,7 +65,7 @@ public class OAuth2Manager {
 
 		if (googleAuthorizationCodeFlow == null) {
 			throw new PortalException(
-				"No Google Authorization Code Flow found");
+				"No Google authorization code flow found");
 		}
 
 		GoogleAuthorizationCodeRequestUrl googleAuthorizationCodeRequestUrl =
