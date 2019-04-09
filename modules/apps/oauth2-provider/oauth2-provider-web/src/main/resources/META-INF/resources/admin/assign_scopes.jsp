@@ -277,16 +277,6 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 				return -1;
 			}
 
-			<%
-			for (String assignedScope : assignedScopes) {
-				%>
-
-					<portlet:namespace />changeScopeAliasStickyStatus('<%= HtmlUtil.escapeJS(assignedScope) %>', true);
-
-				<%
-				}
-			%>
-
 			<portlet:namespace />recalculateAll();
 
 			A.one('#<portlet:namespace />save').on(
