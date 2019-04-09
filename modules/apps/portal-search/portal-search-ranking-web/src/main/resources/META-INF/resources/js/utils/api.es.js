@@ -28,6 +28,10 @@ export function fetchDocuments(config) {
 		url = 'http://www.mocky.io/v2/5cabd9ab3000002900103266';
 	}
 
+	url = 'http://localhost:8080/o/headless-search/v1.0/search/20101/foo/null/1/1';
+
+	console.log(url);
+
 	return fetch(url)
 		.then(response => response.json())
 		.then(
