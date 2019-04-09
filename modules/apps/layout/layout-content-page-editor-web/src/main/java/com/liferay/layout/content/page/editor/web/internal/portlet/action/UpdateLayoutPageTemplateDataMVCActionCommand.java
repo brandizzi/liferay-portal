@@ -97,11 +97,10 @@ public class UpdateLayoutPageTemplateDataMVCActionCommand
 
 		long classNameId = ParamUtil.getLong(actionRequest, "classNameId");
 		long classPK = ParamUtil.getLong(actionRequest, "classPK");
-		String data = ParamUtil.getString(actionRequest, "data");
-
 		long segmentsExperienceId = ParamUtil.getLong(
 			actionRequest, "segmentsExperienceId",
 			SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT);
+		String data = ParamUtil.getString(actionRequest, "data");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			actionRequest);
