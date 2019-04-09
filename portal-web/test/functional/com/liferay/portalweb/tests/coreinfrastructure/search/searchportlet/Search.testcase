@@ -621,11 +621,8 @@ definition {
 		);
 	}
 
-	// Temporarily removing from search suite, see LRQA-47803
 	@priority = "4"
 	test SearchBlogsEntryTag {
-		property portal.suite.search.engine = "disable";
-
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
@@ -675,11 +672,8 @@ definition {
 		SearchResultPortlet.viewNoSearchResults(searchTerm = "name1");
 	}
 
-	// Temporarily removing from search suite, see LRQA-47803
 	@priority = "4"
 	test SearchBlogsEntryTagQuotes {
-		property portal.suite.search.engine = "disable";
-
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
@@ -956,10 +950,8 @@ definition {
 		);
 	}
 
-	// Temporarily removing from search suite, see LRQA-47803
 	@priority = "5"
 	test SearchDocumentsAndMediaDocument {
-		property portal.suite.search.engine = "disable";
 		property testray.component.names = "Training";
 
 		Navigator.openURL();
