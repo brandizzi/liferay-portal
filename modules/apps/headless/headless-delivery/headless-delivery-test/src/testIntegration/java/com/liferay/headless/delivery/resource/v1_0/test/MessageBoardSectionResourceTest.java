@@ -98,13 +98,6 @@ public class MessageBoardSectionResourceTest
 	}
 
 	@Override
-	protected Long testGetSiteMessageBoardSectionsPage_getSiteId()
-		throws Exception {
-
-		return testGroup.getGroupId();
-	}
-
-	@Override
 	protected MessageBoardSection
 			testPatchMessageBoardSection_addMessageBoardSection()
 		throws Exception {
