@@ -34,24 +34,6 @@ import java.util.stream.Stream;
 public class DataFieldOptionUtil {
 
 	public static List<DataFieldOption> toDataFieldOptions(
-		List<DataFieldOption> dataFieldOptions, String languageId) {
-
-		if (ListUtil.isEmpty(dataFieldOptions)) {
-			return Collections.emptyList();
-		}
-
-		Stream<DataFieldOption> stream = dataFieldOptions.stream();
-
-		return stream.map(
-			dataFieldOption -> new DataFieldOption(
-				dataFieldOption.getLabel(languageId), languageId,
-				dataFieldOption.getValue())
-		).collect(
-			Collectors.toList()
-		);
-	}
-
-	public static List<DataFieldOption> toDataFieldOptions(
 		JSONObject jsonObject) {
 
 		List<DataFieldOption> dataFieldOptions = new ArrayList<>();
@@ -76,6 +58,24 @@ public class DataFieldOptionUtil {
 		}
 
 		return dataFieldOptions;
+	}
+
+	public static List<DataFieldOption> toDataFieldOptions(
+		List<DataFieldOption> dataFieldOptions, String languageId) {
+
+		if (ListUtil.isEmpty(dataFieldOptions)) {
+			return Collections.emptyList();
+		}
+
+		Stream<DataFieldOption> stream = dataFieldOptions.stream();
+
+		return stream.map(
+			dataFieldOption -> new DataFieldOption(
+				dataFieldOption.getLabel(languageId), languageId,
+				dataFieldOption.getValue())
+		).collect(
+			Collectors.toList()
+		);
 	}
 
 	public static JSONObject toJSONObject(
