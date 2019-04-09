@@ -51,6 +51,8 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 			String data, ServiceContext serviceContext)
 		throws PortalException {
 
+		// Layout page template structure
+
 		User user = userLocalService.getUser(userId);
 
 		long layoutPageTemplateStructureId = counterLocalService.increment();
