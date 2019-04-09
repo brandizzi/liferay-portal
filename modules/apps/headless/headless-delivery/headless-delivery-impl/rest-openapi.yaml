@@ -21,7 +21,7 @@ components:
                     type: string
                 articleBody:
                     type: string
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 creator:
@@ -219,7 +219,7 @@ components:
                     items:
                         type: string
                     type: array
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 contentStructureFields:
@@ -380,7 +380,7 @@ components:
         DocumentFolder:
             description: https://www.schema.org/DocumentFolder
             properties:
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 creator:
@@ -416,7 +416,7 @@ components:
                     $ref: "#/components/schemas/AggregateRating"
                 articleBody:
                     type: string
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 creator:
@@ -502,7 +502,7 @@ components:
         KnowledgeBaseFolder:
             description: https://www.schema.org/KnowledgeBaseFolder
             properties:
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 creator:
@@ -569,7 +569,7 @@ components:
                     type: boolean
                 articleBody:
                     type: string
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 creator:
@@ -607,7 +607,7 @@ components:
         MessageBoardSection:
             description: https://www.schema.org/MessageBoardSection
             properties:
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 creator:
@@ -645,7 +645,7 @@ components:
                     $ref: "#/components/schemas/AggregateRating"
                 articleBody:
                     type: string
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 creator:
@@ -720,7 +720,7 @@ components:
                     items:
                         $ref: "#/components/schemas/ContentField"
                     type: array
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 contentStructureId:
@@ -795,7 +795,7 @@ components:
         StructuredContentFolder:
             description: https://www.schema.org/StructuredContentFolder
             properties:
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 creator:
@@ -1224,12 +1224,12 @@ paths:
                                 type: array
                     description: ""
             tags: ["ContentSetElement"]
-    "/content-spaces/{contentSpaceId}/blog-posting-images":
+    "/sites/{siteId}/blog-posting-images":
         get:
-            operationId: getContentSpaceBlogPostingImagesPage
+            operationId: getSiteBlogPostingImagesPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1265,10 +1265,10 @@ paths:
                     description: ""
             tags: ["BlogPostingImage"]
         post:
-            operationId: postContentSpaceBlogPostingImage
+            operationId: postSiteBlogPostingImage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1292,12 +1292,12 @@ paths:
                                 $ref: "#/components/schemas/BlogPostingImage"
                     description: ""
             tags: ["BlogPostingImage"]
-    "/content-spaces/{contentSpaceId}/blog-postings":
+    "/sites/{siteId}/blog-postings":
         get:
-            operationId: getContentSpaceBlogPostingsPage
+            operationId: getSiteBlogPostingsPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1333,10 +1333,10 @@ paths:
                     description: ""
             tags: ["BlogPosting"]
         post:
-            operationId: postContentSpaceBlogPosting
+            operationId: postSiteBlogPosting
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1354,12 +1354,12 @@ paths:
                                 $ref: "#/components/schemas/BlogPosting"
                     description: ""
             tags: ["BlogPosting"]
-    "/content-spaces/{contentSpaceId}/content-sets/by-key/{key}/content-set-elements":
+    "/sites/{siteId}/content-sets/by-key/{key}/content-set-elements":
         get:
-            operationId: getContentSpaceContentSetByKeyContentSetElementsPage
+            operationId: getSiteContentSetByKeyContentSetElementsPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1387,12 +1387,12 @@ paths:
                                 type: array
                     description: ""
             tags: ["ContentSetElement"]
-    "/content-spaces/{contentSpaceId}/content-sets/by-uuid/{uuid}/content-set-elements":
+    "/sites/{siteId}/content-sets/by-uuid/{uuid}/content-set-elements":
         get:
-            operationId: getContentSpaceContentSetByUuidContentSetElementsPage
+            operationId: getSiteContentSetByUuidContentSetElementsPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1420,12 +1420,12 @@ paths:
                                 type: array
                     description: ""
             tags: ["ContentSetElement"]
-    "/content-spaces/{contentSpaceId}/content-structures":
+    "/sites/{siteId}/content-structures":
         get:
-            operationId: getContentSpaceContentStructuresPage
+            operationId: getSiteContentStructuresPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1460,12 +1460,12 @@ paths:
                                 type: array
                     description: ""
             tags: ["ContentStructure"]
-    "/content-spaces/{contentSpaceId}/document-folders":
+    "/sites/{siteId}/document-folders":
         get:
-            operationId: getContentSpaceDocumentFoldersPage
+            operationId: getSiteDocumentFoldersPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1505,10 +1505,10 @@ paths:
                     description: ""
             tags: ["DocumentFolder"]
         post:
-            operationId: postContentSpaceDocumentFolder
+            operationId: postSiteDocumentFolder
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1526,12 +1526,12 @@ paths:
                                 $ref: "#/components/schemas/DocumentFolder"
                     description: ""
             tags: ["DocumentFolder"]
-    "/content-spaces/{contentSpaceId}/documents":
+    "/sites/{siteId}/documents":
         get:
-            operationId: getContentSpaceDocumentsPage
+            operationId: getSiteDocumentsPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1571,10 +1571,10 @@ paths:
                     description: ""
             tags: ["Document"]
         post:
-            operationId: postContentSpaceDocument
+            operationId: postSiteDocument
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1598,12 +1598,12 @@ paths:
                                 $ref: "#/components/schemas/Document"
                     description: ""
             tags: ["Document"]
-    "/content-spaces/{contentSpaceId}/knowledge-base-articles":
+    "/sites/{siteId}/knowledge-base-articles":
         get:
-            operationId: getContentSpaceKnowledgeBaseArticlesPage
+            operationId: getSiteKnowledgeBaseArticlesPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1643,10 +1643,10 @@ paths:
                     description: ""
             tags: ["KnowledgeBaseArticle"]
         post:
-            operationId: postContentSpaceKnowledgeBaseArticle
+            operationId: postSiteKnowledgeBaseArticle
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1664,12 +1664,12 @@ paths:
                                 $ref: "#/components/schemas/KnowledgeBaseArticle"
                     description: ""
             tags: ["KnowledgeBaseArticle"]
-    "/content-spaces/{contentSpaceId}/knowledge-base-folders":
+    "/sites/{siteId}/knowledge-base-folders":
         get:
-            operationId: getContentSpaceKnowledgeBaseFoldersPage
+            operationId: getSiteKnowledgeBaseFoldersPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1693,10 +1693,10 @@ paths:
                     description: ""
             tags: ["KnowledgeBaseFolder"]
         post:
-            operationId: postContentSpaceKnowledgeBaseFolder
+            operationId: postSiteKnowledgeBaseFolder
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1714,12 +1714,12 @@ paths:
                                 $ref: "#/components/schemas/KnowledgeBaseFolder"
                     description: ""
             tags: ["KnowledgeBaseFolder"]
-    "/content-spaces/{contentSpaceId}/message-board-sections":
+    "/sites/{siteId}/message-board-sections":
         get:
-            operationId: getContentSpaceMessageBoardSectionsPage
+            operationId: getSiteMessageBoardSectionsPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1759,10 +1759,10 @@ paths:
                     description: ""
             tags: ["MessageBoardSection"]
         post:
-            operationId: postContentSpaceMessageBoardSection
+            operationId: postSiteMessageBoardSection
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1780,12 +1780,12 @@ paths:
                                 $ref: "#/components/schemas/MessageBoardSection"
                     description: ""
             tags: ["MessageBoardSection"]
-    "/content-spaces/{contentSpaceId}/message-board-threads":
+    "/sites/{siteId}/message-board-threads":
         get:
-            operationId: getContentSpaceMessageBoardThreadsPage
+            operationId: getSiteMessageBoardThreadsPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1825,10 +1825,10 @@ paths:
                     description: ""
             tags: ["MessageBoardThread"]
         post:
-            operationId: postContentSpaceMessageBoardThread
+            operationId: postSiteMessageBoardThread
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1846,12 +1846,12 @@ paths:
                                 $ref: "#/components/schemas/MessageBoardThread"
                     description: ""
             tags: ["MessageBoardThread"]
-    "/content-spaces/{contentSpaceId}/structured-content-folders":
+    "/sites/{siteId}/structured-content-folders":
         get:
-            operationId: getContentSpaceStructuredContentFoldersPage
+            operationId: getSiteStructuredContentFoldersPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1891,10 +1891,10 @@ paths:
                     description: ""
             tags: ["StructuredContentFolder"]
         post:
-            operationId: postContentSpaceStructuredContentFolder
+            operationId: postSiteStructuredContentFolder
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1912,16 +1912,16 @@ paths:
                                 $ref: "#/components/schemas/StructuredContentFolder"
                     description: ""
             tags: ["StructuredContentFolder"]
-    "/content-spaces/{contentSpaceId}/structured-contents":
+    "/sites/{siteId}/structured-contents":
         get:
-            operationId: getContentSpaceStructuredContentsPage
+            operationId: getSiteStructuredContentsPage
             parameters:
                 - in: header
                   name: Accept-Language
                   schema:
                       type: string
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1961,14 +1961,14 @@ paths:
                     description: ""
             tags: ["StructuredContent"]
         post:
-            operationId: postContentSpaceStructuredContent
+            operationId: postSiteStructuredContent
             parameters:
                 - in: header
                   name: Accept-Language
                   schema:
                       type: string
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -1986,16 +1986,16 @@ paths:
                                 $ref: "#/components/schemas/StructuredContent"
                     description: ""
             tags: ["StructuredContent"]
-    "/content-spaces/{contentSpaceId}/structured-contents/by-key/{key}":
+    "/sites/{siteId}/structured-contents/by-key/{key}":
         get:
-            operationId: getContentSpaceStructuredContentByKey
+            operationId: getSiteStructuredContentByKey
             parameters:
                 - in: header
                   name: Accept-Language
                   schema:
                       type: string
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -2013,16 +2013,16 @@ paths:
                                 $ref: "#/components/schemas/StructuredContent"
                     description: ""
             tags: ["StructuredContent"]
-    "/content-spaces/{contentSpaceId}/structured-contents/by-uuid/{uuid}":
+    "/sites/{siteId}/structured-contents/by-uuid/{uuid}":
         get:
-            operationId: getContentSpaceStructuredContentByUuid
+            operationId: getSiteStructuredContentByUuid
             parameters:
                 - in: header
                   name: Accept-Language
                   schema:
                       type: string
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64

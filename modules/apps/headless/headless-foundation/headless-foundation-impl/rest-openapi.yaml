@@ -48,7 +48,7 @@ components:
         Keyword:
             description: https://www.schema.org/Keyword
             properties:
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 creator:
@@ -234,7 +234,7 @@ components:
             properties:
                 active:
                     type: boolean
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 criteria:
@@ -329,7 +329,7 @@ components:
                     items:
                         type: string
                     type: array
-                contentSpaceId:
+                siteId:
                     format: int64
                     type: integer
                 creator:
@@ -491,12 +491,12 @@ info:
     version: v1.0
 openapi: 3.0.1
 paths:
-    "/content-spaces/{contentSpaceId}/keywords":
+    "/sites/{siteId}/keywords":
         get:
-            operationId: getContentSpaceKeywordsPage
+            operationId: getSiteKeywordsPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -532,10 +532,10 @@ paths:
                     description: ""
             tags: ["Keyword"]
         post:
-            operationId: postContentSpaceKeyword
+            operationId: postSiteKeyword
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -553,12 +553,12 @@ paths:
                                 $ref: "#/components/schemas/Keyword"
                     description: ""
             tags: ["Keyword"]
-    "/content-spaces/{contentSpaceId}/segments":
+    "/sites/{siteId}/segments":
         get:
-            operationId: getContentSpaceSegmentsPage
+            operationId: getSiteSegmentsPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -581,12 +581,12 @@ paths:
                                 type: array
                     description: ""
             tags: ["Segment"]
-    "/content-spaces/{contentSpaceId}/taxonomy-vocabularies":
+    "/sites/{siteId}/taxonomy-vocabularies":
         get:
-            operationId: getContentSpaceTaxonomyVocabulariesPage
+            operationId: getSiteTaxonomyVocabulariesPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -622,10 +622,10 @@ paths:
                     description: ""
             tags: ["TaxonomyVocabulary"]
         post:
-            operationId: postContentSpaceTaxonomyVocabulary
+            operationId: postSiteTaxonomyVocabulary
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
@@ -643,12 +643,12 @@ paths:
                                 $ref: "#/components/schemas/TaxonomyVocabulary"
                     description: ""
             tags: ["TaxonomyVocabulary"]
-    "/content-spaces/{contentSpaceId}/user-accounts/{userAccountId}/segments":
+    "/sites/{siteId}/user-accounts/{userAccountId}/segments":
         get:
-            operationId: getContentSpaceUserAccountSegmentsPage
+            operationId: getSiteUserAccountSegmentsPage
             parameters:
                 - in: path
-                  name: contentSpaceId
+                  name: siteId
                   required: true
                   schema:
                       format: int64
