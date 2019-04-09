@@ -216,6 +216,13 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 				fragmentRendererContext.getLocale(),
 				fragmentRendererContext.getSegmentsExperienceIds());
 
+		if ((httpServletRequest != null) && (httpServletResponse != null) &&
+			Validator.isNotNull(css)) {
+
+			css = _processTemplate(
+				css, fragmentRendererContext, httpServletRequest, httpServletResponse);
+		}
+
 		String html =
 			_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
 				fragmentRendererContext.getFragmentEntryLink(),
@@ -228,13 +235,6 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 			html = _processTemplate(
 				html, fragmentRendererContext, httpServletRequest, httpServletResponse);
-		}
-
-		if ((httpServletRequest != null) && (httpServletResponse != null) &&
-			Validator.isNotNull(css)) {
-
-			css = _processTemplate(
-				css, fragmentRendererContext, httpServletRequest, httpServletResponse);
 		}
 
 		html = _writePortletPaths(
