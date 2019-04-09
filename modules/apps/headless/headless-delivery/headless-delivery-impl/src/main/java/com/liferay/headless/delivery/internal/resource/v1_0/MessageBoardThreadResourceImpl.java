@@ -323,7 +323,6 @@ public class MessageBoardThreadResourceImpl
 					_ratingsStatsLocalService.fetchStats(
 						MBMessage.class.getName(), mbMessage.getMessageId()));
 				articleBody = mbMessage.getBody();
-				siteId = mbThread.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal, _userService.getUserById(mbThread.getUserId()));
 				dateCreated = mbMessage.getCreateDate();
@@ -342,6 +341,7 @@ public class MessageBoardThreadResourceImpl
 						mbMessage.getMessageId(),
 						WorkflowConstants.STATUS_APPROVED);
 				showAsQuestion = mbThread.isQuestion();
+				siteId = mbThread.getGroupId();
 				threadType = _toThreadType(
 					mbThread.getGroupId(), mbThread.getPriority());
 			}
