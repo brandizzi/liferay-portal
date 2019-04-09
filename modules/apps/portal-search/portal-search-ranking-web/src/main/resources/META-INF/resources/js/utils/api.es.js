@@ -1,6 +1,6 @@
 // @TODO Replace with real endpoint. i.e. /o/headless-search/v1.0/search
 
-const DOCUMENT_API_BASE_URL = 'http://www.mocky.io/v2/5cabd1073000002900103260';
+const DOCUMENT_API_BASE_URL = 'http://localhost:8080/o/headless-search/v1.0/search';
 
 /**
  * Fetches documents.
@@ -15,10 +15,9 @@ export function fetchDocuments(config) {
 	const {companyId, end, hidden, keywords, searchIndex, start} = config;
 
 	let url = `${DOCUMENT_API_BASE_URL}
-		/${searchIndex}
+		/${companyId}
 		/${keywords}
 		/${hidden}
-		/${companyId}
 		/${start}
 		/${end}`;
 
@@ -27,10 +26,6 @@ export function fetchDocuments(config) {
 	if (hidden) {
 		url = 'http://www.mocky.io/v2/5cabd9ab3000002900103266';
 	}
-
-	url = 'http://localhost:8080/o/headless-search/v1.0/search/20101/foo/null/1/1';
-
-	console.log(url);
 
 	return fetch(url)
 		.then(response => response.json())
