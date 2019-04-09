@@ -1151,10 +1151,10 @@ public class UIItemsBuilder {
 	private PortletURL _getDeleteActionURL(
 		String mvcActionCommandName, String cmd) {
 
-		String currentMvcRenderCommandName = ParamUtil.getString(
+		String currentMVCRenderCommandName = ParamUtil.getString(
 			_request, "mvcRenderCommandName");
 
-		if (currentMvcRenderCommandName.equals(
+		if (currentMVCRenderCommandName.equals(
 				"/document_library/view_file_entry")) {
 
 			String redirect = ParamUtil.getString(_request, "redirect");
