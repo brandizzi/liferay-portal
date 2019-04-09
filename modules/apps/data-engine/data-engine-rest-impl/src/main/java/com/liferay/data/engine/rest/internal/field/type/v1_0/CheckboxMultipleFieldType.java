@@ -71,7 +71,7 @@ public class CheckboxMultipleFieldType extends FieldType {
 				dataDefinitionField.getCustomProperties(), "inline", false));
 		context.put(
 			"options",
-			DataFieldOptionUtil.getOptions(
+			DataFieldOptionUtil.toDataFieldOptions(
 				CustomPropertyUtil.getDataFieldOptions(
 					dataDefinitionField.getCustomProperties(), "options"),
 				LanguageUtil.getLanguageId(httpServletRequest)));

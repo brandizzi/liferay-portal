@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  */
 public class DataFieldOptionUtil {
 
-	public static List<DataFieldOption> getOptions(
+	public static List<DataFieldOption> toDataFieldOptions(
 		List<DataFieldOption> dataFieldOptions, String languageId) {
 
 		if (ListUtil.isEmpty(dataFieldOptions)) {
