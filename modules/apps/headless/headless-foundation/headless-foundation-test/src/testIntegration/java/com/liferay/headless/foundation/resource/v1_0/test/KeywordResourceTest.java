@@ -16,6 +16,7 @@ package com.liferay.headless.foundation.resource.v1_0.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.headless.foundation.dto.v1_0.Keyword;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import org.junit.runner.RunWith;
 
@@ -28,6 +29,15 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 	@Override
 	protected String[] getAdditionalAssertFieldNames() {
 		return new String[] {"name"};
+	}
+
+	@Override
+	protected Keyword randomKeyword() {
+		Keyword keyword = super.randomKeyword();
+
+		keyword.setName(StringUtil.toLowerCase(keyword.getName()));
+
+		return keyword;
 	}
 
 	@Override
