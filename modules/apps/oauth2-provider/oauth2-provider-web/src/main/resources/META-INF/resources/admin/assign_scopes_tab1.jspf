@@ -46,11 +46,10 @@
 					<ul class="list-group">
 
 						<%
-						Map<AssignableScopes, AssignScopesDisplayContext.Relations> applicationAssignableScopesAssignModel = assignScopesDisplayContext.getAssignableScopesRelations(applicationName);
+						Map<AssignableScopes, AssignScopesDisplayContext.Relations> applicationAssignableScopesRelations = assignScopesDisplayContext.getAssignableScopesRelations(applicationName);
 
-						for (Map.Entry<AssignableScopes, AssignScopesDisplayContext.Relations> scopeAliasAssignableScopesEntry : applicationAssignableScopesAssignModel.entrySet()) {
-							AssignableScopes assignableScopes = scopeAliasAssignableScopesEntry.getKey();
-							AssignScopesDisplayContext.Relations relations = scopeAliasAssignableScopesEntry.getValue();
+						for (Map.Entry<AssignableScopes, AssignScopesDisplayContext.Relations> applicationAssignableScopesRelationsEntry : applicationAssignableScopesRelations.entrySet()) {
+							AssignScopesDisplayContext.Relations relations = applicationAssignableScopesRelationsEntry.getValue();
 
 							Set<String> scopeAliases = relations.getScopeAliases();
 
