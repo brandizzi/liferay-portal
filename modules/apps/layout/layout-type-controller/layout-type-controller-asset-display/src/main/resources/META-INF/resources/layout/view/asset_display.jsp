@@ -17,10 +17,9 @@
 <%@ include file="/init.jsp" %>
 
 <%
-FragmentRendererController fragmentRendererController = (FragmentRendererController)request.getAttribute(FragmentActionKeys.FRAGMENT_RENDERER_CONTROLLER);
-
 AssetEntry assetEntry = assetDisplayLayoutTypeControllerDisplayContext.getAssetEntry();
 AssetRendererFactory assetRendererFactory = null;
+FragmentRendererController fragmentRendererController = (FragmentRendererController)request.getAttribute(FragmentActionKeys.FRAGMENT_RENDERER_CONTROLLER);
 LayoutPageTemplateStructure layoutPageTemplateStructure = null;
 long[] segmentsExperienceIds = GetterUtil.getLongValues(request.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS), new long[] {SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT});
 JSONArray structureJSONArray = null;
