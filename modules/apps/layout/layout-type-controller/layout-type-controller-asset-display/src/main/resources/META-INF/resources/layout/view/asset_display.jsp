@@ -40,6 +40,8 @@ if (assetEntry != null) {
 }
 %>
 
+<liferay-ui:success key="displayPagePublished" message="the-display-page-template-was-published-succesfully" />
+
 <c:if test="<%= assetRendererFactory != null %>">
 	<liferay-ui:success key='<%= assetRendererFactory.getPortletId() + "requestProcessed" %>' message="your-request-processed-successfully" />
 </c:if>

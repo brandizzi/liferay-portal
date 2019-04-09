@@ -27,6 +27,8 @@ List<LayoutPageTemplateCollection> layoutPageTemplateCollections = layoutPageTem
 	navigationItems="<%= layoutsAdminDisplayContext.getNavigationItems() %>"
 />
 
+<liferay-ui:success key="layoutPageTemplatePublished" message="the-page-template-was-published-succesfully" />
+
 <div class="container-fluid container-fluid-max-xl container-view">
 	<div class="row">
 		<div class="col-lg-3">

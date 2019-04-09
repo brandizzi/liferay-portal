@@ -20,6 +20,8 @@
 String ppid = ParamUtil.getString(request, "p_p_id");
 %>
 
+<liferay-ui:success key="layoutPublished" message="the-page-was-published-succesfully" />
+
 <c:choose>
 	<c:when test="<%= (themeDisplay.isStatePopUp() || themeDisplay.isWidget() || layoutTypePortlet.hasStateMax()) && Validator.isNotNull(ppid) %>">
 

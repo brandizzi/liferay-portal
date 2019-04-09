@@ -25,6 +25,8 @@ DisplayPageDisplayContext displayPageDisplayContext = new DisplayPageDisplayCont
 	navigationItems="<%= layoutsAdminDisplayContext.getNavigationItems() %>"
 />
 
+<liferay-ui:success key="displayPagePublished" message="the-display-page-template-was-published-succesfully" />
+
 <%
 DisplayPageManagementToolbarDisplayContext displayPageManagementToolbarDisplayContext = new DisplayPageManagementToolbarDisplayContext(liferayPortletRequest, liferayPortletResponse, request, displayPageDisplayContext);
 %>

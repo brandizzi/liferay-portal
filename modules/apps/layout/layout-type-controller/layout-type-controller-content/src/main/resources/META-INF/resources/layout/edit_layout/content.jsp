@@ -20,8 +20,6 @@
 
 <liferay-ui:success key="layoutPageTemplateAdded" message="the-page-template-was-created-succesfully" />
 
-<liferay-ui:success key="layoutPageTemplatePublished" message="the-page-template-was-published-succesfully" />
-
 <liferay-ui:success key="layoutPublished" message="the-page-was-published-succesfully" />
 
 <div class="layout-content" id="main-content" role="main">
