@@ -1145,7 +1145,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 				<#assign randomDataTypes = ["Boolean", "Double", "Long", "String"] />
 
 				<#list properties?keys as propertyName>
-					<#if randomDataTypes?seq_contains(properties[propertyName])>
+					<#if stringUtil.equals(propertyName, "siteId")>
+						${propertyName} = testGroup.getGroupId();
+					<#elseif randomDataTypes?seq_contains(properties[propertyName])>
 						${propertyName} = RandomTestUtil.random${properties[propertyName]}();
 					<#elseif stringUtil.equals(properties[propertyName], "Date")>
 						${propertyName} = RandomTestUtil.nextDate();
@@ -1156,7 +1158,13 @@ public abstract class Base${schemaName}ResourceTestCase {
 	}
 
 	protected ${schemaName} randomIrrelevant${schemaName}() {
-		return random${schemaName}();
+		${schemaName} randomIrrelevant${schemaName} = random${schemaName}();
+
+		<#if properties?keys?seq_contains("siteId")>
+			randomIrrelevant${schemaName}.setSiteId(irrelevantGroup.getGroupId());
+		</#if>
+
+		return randomIrrelevant${schemaName};
 	}
 
 	protected ${schemaName} randomPatch${schemaName}() {
