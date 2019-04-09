@@ -106,12 +106,12 @@ public class KeywordResourceImpl
 	private Keyword _toKeyword(AssetTag assetTag) {
 		return new Keyword() {
 			{
-				siteId = assetTag.getGroupId();
 				dateCreated = assetTag.getCreateDate();
 				dateModified = assetTag.getModifiedDate();
 				id = assetTag.getTagId();
 				keywordUsageCount = assetTag.getAssetCount();
 				name = assetTag.getName();
+				siteId = assetTag.getGroupId();
 
 				setCreator(
 					() -> {

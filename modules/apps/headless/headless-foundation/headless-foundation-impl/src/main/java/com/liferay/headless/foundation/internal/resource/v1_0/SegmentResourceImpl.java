@@ -134,6 +134,7 @@ public class SegmentResourceImpl extends BaseSegmentResourceImpl {
 				id = segmentsEntry.getSegmentsEntryId();
 				name = segmentsEntry.getName(
 					segmentsEntry.getDefaultLanguageId());
+				siteId = segmentsEntry.getGroupId();
 				source = segmentsEntry.getSource();
 			}
 		};
