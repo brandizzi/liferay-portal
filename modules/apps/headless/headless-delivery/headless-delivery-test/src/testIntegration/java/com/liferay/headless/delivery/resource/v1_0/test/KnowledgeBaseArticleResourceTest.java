@@ -56,63 +56,8 @@ public class KnowledgeBaseArticleResourceTest
 	}
 
 	@Override
-	protected void assertValid(KnowledgeBaseArticle knowledgeBaseArticle) {
-		boolean valid = false;
-
-		if ((knowledgeBaseArticle.getDateCreated() != null) &&
-			(knowledgeBaseArticle.getDateModified() != null) &&
-			(knowledgeBaseArticle.getDescription() != null) &&
-			(knowledgeBaseArticle.getId() != null) &&
-			Objects.equals(
-				knowledgeBaseArticle.getSiteId(),
-				knowledgeBaseArticle.getGroupId())
-			(knowledgeBaseArticle.getTitle() != null)) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(
-		KnowledgeBaseArticle knowledgeBaseArticle1,
-		KnowledgeBaseArticle knowledgeBaseArticle2) {
-
-		if (Objects.equals(
-				knowledgeBaseArticle1.getDescription(),
-				knowledgeBaseArticle2.getDescription()) &&
-			Objects.equals(
-				knowledgeBaseArticle1.getSiteId(),
-				knowledgeBaseArticle2.getSiteId()) &&			
-			Objects.equals(
-				knowledgeBaseArticle1.getTitle(),
-				knowledgeBaseArticle2.getTitle())) {
-
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	protected KnowledgeBaseArticle randomIrrelevantKnowledgeBaseArticle() {
-		KnowledgeBaseArticle knowledgeBaseArticle =
-			super.randomIrrelevantKnowledgeBaseArticle();
-
-		knowledgeBaseArticle.setSiteId(irrelevantGroup.getGroupId());
-
-		return knowledgeBaseArticle;
-	}
-
-	@Override
-	protected KnowledgeBaseArticle randomKnowledgeBaseArticle() {
-		KnowledgeBaseArticle knowledgeBaseArticle =
-			super.randomKnowledgeBaseArticle();
-
-		knowledgeBaseArticle.setSiteId(testGroup.getGroupId());
-
-		return knowledgeBaseArticle;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"description", "title"};
 	}
 
 	@Override
