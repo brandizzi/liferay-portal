@@ -40,11 +40,11 @@ public class DocumentFolderResourceTest
 	protected void assertValid(DocumentFolder documentFolder) {
 		boolean valid = false;
 
-		if (Objects.equals(
-				documentFolder.getSiteId(), testGroup.getGroupId()) &&
-			(documentFolder.getDateCreated() != null) &&
+		if ((documentFolder.getDateCreated() != null) &&
 			(documentFolder.getDateModified() != null) &&
-			(documentFolder.getId() != null)) {
+			(documentFolder.getId() != null) &&
+			Objects.equals(
+				documentFolder.getSiteId(), testGroup.getGroupId())) {
 
 			valid = true;
 		}
@@ -60,7 +60,9 @@ public class DocumentFolderResourceTest
 				documentFolder1.getDescription(),
 				documentFolder2.getDescription()) &&
 			Objects.equals(
-				documentFolder1.getName(), documentFolder2.getName())) {
+				documentFolder1.getName(), documentFolder2.getName()) &&
+			Objects.equals(
+				documentFolder1.getSiteId(), documentFolder2.getSiteId())) {
 
 			return true;
 		}
