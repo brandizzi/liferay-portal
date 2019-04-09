@@ -48,11 +48,11 @@ public class BlogPostingResourceTest extends BaseBlogPostingResourceTestCase {
 		BlogPosting blogPosting1, BlogPosting blogPosting2) {
 
 		if (Objects.equals(
-				blogPosting1.getSiteId(), blogPosting2.getSiteId()) &&
-			Objects.equals(
 				blogPosting1.getDescription(), blogPosting2.getDescription()) &&
 			Objects.equals(
-				blogPosting1.getHeadline(), blogPosting2.getHeadline())) {
+				blogPosting1.getHeadline(), blogPosting2.getHeadline()) &&
+			Objects.equals(
+				blogPosting1.getSiteId(), blogPosting2.getSiteId())) {
 
 			return true;
 		}

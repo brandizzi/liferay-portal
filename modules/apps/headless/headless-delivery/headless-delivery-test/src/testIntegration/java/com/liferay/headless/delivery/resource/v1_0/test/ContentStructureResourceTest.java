@@ -52,11 +52,11 @@ public class ContentStructureResourceTest
 	protected void assertValid(ContentStructure contentStructure) {
 		boolean valid = false;
 
-		if (Objects.equals(
-				contentStructure.getSiteId(), testGroup.getGroupId()) &&
-			(contentStructure.getDateCreated() != null) &&
+		if ((contentStructure.getDateCreated() != null) &&
 			(contentStructure.getDateModified() != null) &&
-			(contentStructure.getId() != null)) {
+			(contentStructure.getId() != null) &&
+			Objects.equals(
+				contentStructure.getSiteId(), testGroup.getGroupId())) {
 
 			valid = true;
 		}
@@ -70,9 +70,9 @@ public class ContentStructureResourceTest
 		ContentStructure contentStructure2) {
 
 		if (Objects.equals(
-				contentStructure1.getSiteId(), contentStructure2.getSiteId()) &&
+				contentStructure1.getName(), contentStructure2.getName()) &&
 			Objects.equals(
-				contentStructure1.getName(), contentStructure2.getName())) {
+				contentStructure1.getSiteId(), contentStructure2.getSiteId())) {
 
 			return true;
 		}
