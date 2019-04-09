@@ -132,11 +132,11 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
 
-		TemplateResource templateResource = new StringTemplateResource(
-			"template_id", "[#ftl]\n" + html);
-
 		Template template = TemplateManagerUtil.getTemplate(
-			TemplateConstants.LANG_TYPE_FTL, templateResource, false);
+			TemplateConstants.LANG_TYPE_FTL,
+			new StringTemplateResource(
+				"template_id", "[#ftl]\n" + html),
+			false);
 
 		TemplateManager templateManager =
 			TemplateManagerUtil.getTemplateManager(
