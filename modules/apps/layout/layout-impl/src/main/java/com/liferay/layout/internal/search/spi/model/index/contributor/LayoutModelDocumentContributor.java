@@ -90,17 +90,17 @@ public class LayoutModelDocumentContributor
 			return;
 		}
 
-		HttpServletRequest request = null;
-		HttpServletResponse response = null;
+		HttpServletRequest httpServletRequest = null;
+		HttpServletResponse httpServletResponse = null;
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
 		if (serviceContext != null) {
-			request = DynamicServletRequest.addQueryString(
+			httpServletRequest = DynamicServletRequest.addQueryString(
 				serviceContext.getRequest(), "p_l_id=" + layout.getPlid(),
 				false);
-			response = serviceContext.getResponse();
+			httpServletResponse = serviceContext.getResponse();
 		}
 
 		long[] segmentsExperienceIds = {
@@ -112,14 +112,14 @@ public class LayoutModelDocumentContributor
 
 		for (Locale locale : locales) {
 			try {
-				if ((request == null) || (response == null)) {
+				if ((httpServletRequest == null) || (httpServletResponse == null)) {
 					break;
 				}
 
 				String content =
 					LayoutPageTemplateStructureRenderUtil.renderLayoutContent(
 						_fragmentRendererController,
-						request, response, layoutPageTemplateStructure,
+						httpServletRequest, httpServletResponse, layoutPageTemplateStructure,
 						FragmentEntryLinkConstants.VIEW, new HashMap<>(),
 						locale, segmentsExperienceIds);
 

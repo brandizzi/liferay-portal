@@ -162,14 +162,14 @@ public class LayoutIndexer extends BaseIndexer<Layout> {
 			return document;
 		}
 
-		HttpServletRequest request = null;
+		HttpServletRequest httpServletRequest = null;
 		HttpServletResponse response = null;
 
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
 		if (serviceContext != null) {
-			request = serviceContext.getRequest();
+			httpServletRequest = serviceContext.getRequest();
 			response = serviceContext.getResponse();
 		}
 
@@ -178,7 +178,7 @@ public class LayoutIndexer extends BaseIndexer<Layout> {
 
 			String content =
 				LayoutPageTemplateStructureRenderUtil.renderLayoutContent(
-					null, request, response, layoutPageTemplateStructure,
+					null, httpServletRequest, response, layoutPageTemplateStructure,
 					FragmentEntryLinkConstants.VIEW, new HashMap<>(), locale,
 					new long[0]);
 
