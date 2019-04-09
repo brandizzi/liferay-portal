@@ -19,7 +19,6 @@
 <%
 AssetEntry assetEntry = assetDisplayLayoutTypeControllerDisplayContext.getAssetEntry();
 AssetRendererFactory assetRendererFactory = null;
-FragmentRendererController fragmentRendererController = (FragmentRendererController)request.getAttribute(FragmentActionKeys.FRAGMENT_RENDERER_CONTROLLER);
 LayoutPageTemplateStructure layoutPageTemplateStructure = null;
 long[] segmentsExperienceIds = GetterUtil.getLongValues(request.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS), new long[] {SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT});
 JSONArray structureJSONArray = null;
@@ -113,15 +112,17 @@ if (assetEntry != null) {
 												continue;
 											}
 
-											DefaultFragmentRendererContext fragmentRendererContext = new DefaultFragmentRendererContext(fragmentEntryLink);
+											FragmentRendererController fragmentRendererController = (FragmentRendererController)request.getAttribute(FragmentActionKeys.FRAGMENT_RENDERER_CONTROLLER);
 
-											fragmentRendererContext.setFieldValues(assetDisplayLayoutTypeControllerDisplayContext.getInfoDisplayFieldsValues());
-											fragmentRendererContext.setLocale(locale);
-											fragmentRendererContext.setMode(FragmentEntryLinkConstants.ASSET_DISPLAY_PAGE);
-											fragmentRendererContext.setSegmentsExperienceIds(segmentsExperienceIds);
+											DefaultFragmentRendererContext defaultFragmentRendererContext = new DefaultFragmentRendererContext(fragmentEntryLink);
+
+											defaultFragmentRendererContext.setFieldValues(assetDisplayLayoutTypeControllerDisplayContext.getInfoDisplayFieldsValues());
+											defaultFragmentRendererContext.setLocale(locale);
+											defaultFragmentRendererContext.setMode(FragmentEntryLinkConstants.ASSET_DISPLAY_PAGE);
+											defaultFragmentRendererContext.setSegmentsExperienceIds(segmentsExperienceIds);
 										%>
 
-											<%= fragmentRendererController.render(fragmentRendererContext, request, response) %>
+											<%= fragmentRendererController.render(defaultFragmentRendererContext, request, response) %>
 
 										<%
 										}
