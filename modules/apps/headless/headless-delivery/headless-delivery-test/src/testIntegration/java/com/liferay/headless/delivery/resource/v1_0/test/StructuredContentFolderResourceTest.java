@@ -33,52 +33,8 @@ public class StructuredContentFolderResourceTest
 	extends BaseStructuredContentFolderResourceTestCase {
 
 	@Override
-	protected void assertValid(
-		StructuredContentFolder structuredContentFolder) {
-
-		boolean valid = false;
-
-		if (Objects.equals(
-				structuredContentFolder.getSiteId(), testGroup.getGroupId()) &&
-			(structuredContentFolder.getDateCreated() != null) &&
-			(structuredContentFolder.getDateModified() != null) &&
-			(structuredContentFolder.getId() != null)) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(
-		StructuredContentFolder structuredContentFolder1,
-		StructuredContentFolder structuredContentFolder2) {
-
-		if (Objects.equals(
-				structuredContentFolder1.getSiteId(),
-				structuredContentFolder2.getSiteId()) &&
-			Objects.equals(
-				structuredContentFolder1.getDescription(),
-				structuredContentFolder2.getDescription()) &&
-			Objects.equals(
-				structuredContentFolder1.getName(),
-				structuredContentFolder2.getName())) {
-
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	protected StructuredContentFolder randomStructuredContentFolder() {
-		StructuredContentFolder structuredContentFolder =
-			super.randomStructuredContentFolder();
-
-		structuredContentFolder.setSiteId(testGroup.getGroupId());
-
-		return structuredContentFolder;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"description", "name"};
 	}
 
 	@Override

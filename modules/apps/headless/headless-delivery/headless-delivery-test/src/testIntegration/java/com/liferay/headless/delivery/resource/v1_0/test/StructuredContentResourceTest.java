@@ -88,42 +88,9 @@ public class StructuredContentResourceTest
 		super.tearDown();
 	}
 
-	protected void assertValid(StructuredContent structuredContent) {
-		boolean valid = false;
-
-		if (Objects.equals(
-				structuredContent.getSiteId(), testGroup.getGroupId()) &&
-			(structuredContent.getDateCreated() != null) &&
-			(structuredContent.getDateModified() != null) &&
-			(structuredContent.getId() != null)) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
 	@Override
-	protected boolean equals(
-		StructuredContent structuredContent1,
-		StructuredContent structuredContent2) {
-
-		if (Objects.equals(
-				structuredContent1.getSiteId(),
-				structuredContent2.getSiteId()) &&
-			Objects.equals(
-				structuredContent1.getContentStructureId(),
-				structuredContent2.getContentStructureId()) &&
-			Objects.equals(
-				structuredContent1.getDescription(),
-				structuredContent2.getDescription()) &&
-			Objects.equals(
-				structuredContent1.getTitle(), structuredContent2.getTitle())) {
-
-			return true;
-		}
-
-		return false;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"contentStructureId", "description", "title"};
 	}
 
 	@Override
