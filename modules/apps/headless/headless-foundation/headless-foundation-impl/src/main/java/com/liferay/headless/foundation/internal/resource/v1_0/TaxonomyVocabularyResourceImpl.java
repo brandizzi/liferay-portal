@@ -421,7 +421,6 @@ public class TaxonomyVocabularyResourceImpl
 					assetVocabulary.getGroupId());
 				availableLanguages = LocaleUtil.toW3cLanguageIds(
 					assetVocabulary.getAvailableLanguageIds());
-				siteId = assetVocabulary.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal,
 					_userLocalService.getUser(assetVocabulary.getUserId()));
@@ -432,6 +431,7 @@ public class TaxonomyVocabularyResourceImpl
 				id = assetVocabulary.getVocabularyId();
 				name = assetVocabulary.getTitle(
 					contextAcceptLanguage.getPreferredLocale());
+
 				numberOfTaxonomyCategories = Optional.ofNullable(
 					assetVocabulary.getCategories()
 				).map(
@@ -439,6 +439,8 @@ public class TaxonomyVocabularyResourceImpl
 				).orElse(
 					0
 				);
+
+				siteId = assetVocabulary.getGroupId();
 			}
 		};
 	}
