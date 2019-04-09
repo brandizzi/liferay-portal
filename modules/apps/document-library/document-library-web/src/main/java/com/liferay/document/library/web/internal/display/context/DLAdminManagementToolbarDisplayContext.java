@@ -346,11 +346,11 @@ public class DLAdminManagementToolbarDisplayContext {
 			for (URLMenuItem urlMenuItem : urlMenuItems) {
 				creationMenu.addDropdownItem(
 					dropdownItem -> {
+						dropdownItem.setData(urlMenuItem.getData());
 						dropdownItem.setHref(urlMenuItem.getURL());
 						dropdownItem.setIcon(urlMenuItem.getIcon());
 						dropdownItem.setLabel(urlMenuItem.getLabel());
 						dropdownItem.setSeparator(urlMenuItem.hasSeparator());
-						dropdownItem.setData(urlMenuItem.getData());
 					});
 			}
 		}
