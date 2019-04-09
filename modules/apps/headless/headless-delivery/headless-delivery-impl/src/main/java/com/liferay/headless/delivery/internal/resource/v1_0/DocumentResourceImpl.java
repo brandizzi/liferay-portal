@@ -86,8 +86,8 @@ public class DocumentResourceImpl
 	}
 
 	@Override
-	public Page<Document> getContentSpaceDocumentsPage(
-			Long contentSpaceId, Boolean flatten, String search, Filter filter,
+	public Page<Document> getSiteDocumentsPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -105,10 +105,10 @@ public class DocumentResourceImpl
 						BooleanClauseOccur.MUST);
 				}
 
-				if (contentSpaceId != null) {
+				if (siteId != null) {
 					booleanFilter.add(
 						new TermFilter(
-							Field.GROUP_ID, String.valueOf(contentSpaceId)),
+							Field.GROUP_ID, String.valueOf(siteId)),
 						BooleanClauseOccur.MUST);
 				}
 			},
@@ -217,11 +217,11 @@ public class DocumentResourceImpl
 	}
 
 	@Override
-	public Document postContentSpaceDocument(
-			Long contentSpaceId, MultipartBody multipartBody)
+	public Document postSiteDocument(
+			Long siteId, MultipartBody multipartBody)
 		throws Exception {
 
-		return _addDocument(contentSpaceId, 0L, contentSpaceId, multipartBody);
+		return _addDocument(siteId, 0L, siteId, multipartBody);
 	}
 
 	@Override

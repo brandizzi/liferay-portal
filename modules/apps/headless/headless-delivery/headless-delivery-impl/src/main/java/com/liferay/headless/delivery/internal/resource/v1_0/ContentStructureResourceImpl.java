@@ -50,8 +50,8 @@ public class ContentStructureResourceImpl
 	extends BaseContentStructureResourceImpl implements EntityModelResource {
 
 	@Override
-	public Page<ContentStructure> getContentSpaceContentStructuresPage(
-			Long contentSpaceId, String search, Filter filter,
+	public Page<ContentStructure> getSiteContentStructuresPage(
+			Long siteId, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -65,7 +65,7 @@ public class ContentStructureResourceImpl
 				searchContext.setAttribute(
 					"searchPermissionContext", StringPool.BLANK);
 				searchContext.setCompanyId(contextCompany.getCompanyId());
-				searchContext.setGroupIds(new long[] {contentSpaceId});
+				searchContext.setGroupIds(new long[] {siteId});
 			},
 			document -> _toContentStructure(
 				_ddmStructureService.getStructure(

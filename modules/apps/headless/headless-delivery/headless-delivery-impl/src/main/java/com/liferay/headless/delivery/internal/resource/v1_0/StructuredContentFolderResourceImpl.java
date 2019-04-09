@@ -63,8 +63,8 @@ public class StructuredContentFolderResourceImpl
 
 	@Override
 	public Page<StructuredContentFolder>
-			getContentSpaceStructuredContentFoldersPage(
-				Long contentSpaceId, Boolean flatten, String search,
+			getSiteStructuredContentFoldersPage(
+				Long siteId, Boolean flatten, String search,
 				Filter filter, Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -76,7 +76,7 @@ public class StructuredContentFolderResourceImpl
 		}
 
 		return _getFoldersPage(
-			contentSpaceId, parentStructuredContentFolderId, search, filter,
+			siteId, parentStructuredContentFolderId, search, filter,
 			pagination, sorts);
 	}
 
@@ -110,13 +110,13 @@ public class StructuredContentFolderResourceImpl
 	}
 
 	@Override
-	public StructuredContentFolder postContentSpaceStructuredContentFolder(
-			Long contentSpaceId,
+	public StructuredContentFolder postSiteStructuredContentFolder(
+			Long siteId,
 			StructuredContentFolder structuredContentFolder)
 		throws Exception {
 
 		return _addStructuredContentFolder(
-			contentSpaceId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			siteId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 			structuredContentFolder);
 	}
 
@@ -156,22 +156,22 @@ public class StructuredContentFolderResourceImpl
 	}
 
 	private StructuredContentFolder _addStructuredContentFolder(
-			Long contentSpaceId, Long parentFolderId,
+			Long siteId, Long parentFolderId,
 			StructuredContentFolder structuredContentFolder)
 		throws Exception {
 
 		return _toStructuredContentFolder(
 			_journalFolderService.addFolder(
-				contentSpaceId, parentFolderId,
+				siteId, parentFolderId,
 				structuredContentFolder.getName(),
 				structuredContentFolder.getDescription(),
 				ServiceContextUtil.createServiceContext(
-					contentSpaceId,
+					siteId,
 					structuredContentFolder.getViewableByAsString())));
 	}
 
 	private Page<StructuredContentFolder> _getFoldersPage(
-			Long contentSpaceId, Long parentStructuredContentFolderId,
+			Long siteId, Long parentStructuredContentFolderId,
 			String search, Filter filter, Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -193,7 +193,7 @@ public class StructuredContentFolderResourceImpl
 				Field.ENTRY_CLASS_PK),
 			searchContext -> {
 				searchContext.setCompanyId(contextCompany.getCompanyId());
-				searchContext.setGroupIds(new long[] {contentSpaceId});
+				searchContext.setGroupIds(new long[] {siteId});
 			},
 			document -> _toStructuredContentFolder(
 				_journalFolderService.getFolder(

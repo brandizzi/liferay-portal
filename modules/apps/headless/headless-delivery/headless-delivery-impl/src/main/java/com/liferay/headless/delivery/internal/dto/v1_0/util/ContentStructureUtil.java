@@ -51,7 +51,7 @@ public class ContentStructureUtil {
 			{
 				availableLanguages = LocaleUtil.toW3cLanguageIds(
 					ddmStructure.getAvailableLanguageIds());
-				contentSpaceId = ddmStructure.getGroupId();
+				siteId = ddmStructure.getGroupId();
 				contentStructureFields = TransformUtil.transformToArray(
 					ddmStructure.getRootFieldNames(),
 					fieldName -> _toContentStructureField(

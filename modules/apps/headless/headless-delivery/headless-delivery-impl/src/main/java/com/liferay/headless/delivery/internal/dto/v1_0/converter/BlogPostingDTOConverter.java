@@ -70,7 +70,7 @@ public class BlogPostingDTOConverter implements DTOConverter {
 					_ratingsStatsLocalService.fetchStats(
 						BlogsEntry.class.getName(), blogsEntry.getEntryId()));
 				articleBody = blogsEntry.getContent();
-				contentSpaceId = blogsEntry.getGroupId();
+				siteId = blogsEntry.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal, _userLocalService.getUser(blogsEntry.getUserId()));
 				dateCreated = blogsEntry.getCreateDate();

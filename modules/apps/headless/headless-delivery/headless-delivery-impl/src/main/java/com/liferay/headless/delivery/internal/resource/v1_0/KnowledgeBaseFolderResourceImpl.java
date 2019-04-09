@@ -50,17 +50,17 @@ public class KnowledgeBaseFolderResourceImpl
 	}
 
 	@Override
-	public Page<KnowledgeBaseFolder> getContentSpaceKnowledgeBaseFoldersPage(
-			Long contentSpaceId, Pagination pagination)
+	public Page<KnowledgeBaseFolder> getSiteKnowledgeBaseFoldersPage(
+			Long siteId, Pagination pagination)
 		throws Exception {
 
 		return Page.of(
 			transform(
 				_kbFolderService.getKBFolders(
-					contentSpaceId, 0, pagination.getStartPosition(),
+					siteId, 0, pagination.getStartPosition(),
 					pagination.getEndPosition()),
 				this::_toKnowledgeBaseFolder),
-			pagination, _kbFolderService.getKBFoldersCount(contentSpaceId, 0));
+			pagination, _kbFolderService.getKBFoldersCount(siteId, 0));
 	}
 
 	@Override
@@ -93,17 +93,17 @@ public class KnowledgeBaseFolderResourceImpl
 	}
 
 	@Override
-	public KnowledgeBaseFolder postContentSpaceKnowledgeBaseFolder(
-			Long contentSpaceId, KnowledgeBaseFolder knowledgeBaseFolder)
+	public KnowledgeBaseFolder postSiteKnowledgeBaseFolder(
+			Long siteId, KnowledgeBaseFolder knowledgeBaseFolder)
 		throws Exception {
 
 		return _toKnowledgeBaseFolder(
 			_kbFolderService.addKBFolder(
-				contentSpaceId, _getClassNameId(), 0,
+				siteId, _getClassNameId(), 0,
 				knowledgeBaseFolder.getName(),
 				knowledgeBaseFolder.getDescription(),
 				ServiceContextUtil.createServiceContext(
-					contentSpaceId,
+					siteId,
 					knowledgeBaseFolder.getViewableByAsString())));
 	}
 
@@ -158,7 +158,7 @@ public class KnowledgeBaseFolderResourceImpl
 
 		return new KnowledgeBaseFolder() {
 			{
-				contentSpaceId = kbFolder.getGroupId();
+				siteId = kbFolder.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal, _userLocalService.getUser(kbFolder.getUserId()));
 				dateCreated = kbFolder.getCreateDate();

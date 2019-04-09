@@ -66,25 +66,25 @@ public class ContentSetElementResourceImpl
 
 	@Override
 	public Page<ContentSetElement>
-			getContentSpaceContentSetByKeyContentSetElementsPage(
-				Long contentSpaceId, String key, Pagination pagination)
+			getSiteContentSetByKeyContentSetElementsPage(
+				Long siteId, String key, Pagination pagination)
 		throws Exception {
 
 		AssetListEntry assetListEntry =
-			_assetListEntryService.getAssetListEntry(contentSpaceId, key);
+			_assetListEntryService.getAssetListEntry(siteId, key);
 
 		return _getContentSetContentSetElementsPage(assetListEntry, pagination);
 	}
 
 	@Override
 	public Page<ContentSetElement>
-			getContentSpaceContentSetByUuidContentSetElementsPage(
-				Long contentSpaceId, String uuid, Pagination pagination)
+			getSiteContentSetByUuidContentSetElementsPage(
+				Long siteId, String uuid, Pagination pagination)
 		throws Exception {
 
 		AssetListEntry assetListEntry =
 			_assetListEntryService.getAssetListEntryByUuidAndGroupId(
-				uuid, contentSpaceId);
+				uuid, siteId);
 
 		return _getContentSetContentSetElementsPage(assetListEntry, pagination);
 	}

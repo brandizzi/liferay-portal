@@ -96,8 +96,8 @@ public class BlogPostingResourceImpl
 	}
 
 	@Override
-	public Page<BlogPosting> getContentSpaceBlogPostingsPage(
-			Long contentSpaceId, String search, Filter filter,
+	public Page<BlogPosting> getSiteBlogPostingsPage(
+			Long siteId, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -111,7 +111,7 @@ public class BlogPostingResourceImpl
 				searchContext.setAttribute(
 					Field.STATUS, WorkflowConstants.STATUS_APPROVED);
 				searchContext.setCompanyId(contextCompany.getCompanyId());
-				searchContext.setGroupIds(new long[] {contentSpaceId});
+				searchContext.setGroupIds(new long[] {siteId});
 			},
 			document -> _toBlogPosting(
 				_blogsEntryService.getEntry(
@@ -135,8 +135,8 @@ public class BlogPostingResourceImpl
 	}
 
 	@Override
-	public BlogPosting postContentSpaceBlogPosting(
-			Long contentSpaceId, BlogPosting blogPosting)
+	public BlogPosting postSiteBlogPosting(
+			Long siteId, BlogPosting blogPosting)
 		throws Exception {
 
 		LocalDateTime localDateTime = LocalDateTimeUtil.toLocalDateTime(
@@ -166,7 +166,7 @@ public class BlogPostingResourceImpl
 				null,
 				ServiceContextUtil.createServiceContext(
 					blogPosting.getKeywords(),
-					blogPosting.getTaxonomyCategoryIds(), contentSpaceId,
+					blogPosting.getTaxonomyCategoryIds(), siteId,
 					blogPosting.getViewableByAsString())));
 	}
 
@@ -204,7 +204,7 @@ public class BlogPostingResourceImpl
 				ServiceContextUtil.createServiceContext(
 					blogPosting.getKeywords(),
 					blogPosting.getTaxonomyCategoryIds(),
-					blogPosting.getContentSpaceId(),
+					blogPosting.getSiteId(),
 					blogPosting.getViewableByAsString())));
 	}
 

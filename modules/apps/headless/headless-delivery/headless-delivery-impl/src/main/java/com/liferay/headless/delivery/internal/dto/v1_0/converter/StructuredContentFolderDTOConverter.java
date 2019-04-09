@@ -53,7 +53,7 @@ public class StructuredContentFolderDTOConverter implements DTOConverter {
 
 		return new StructuredContentFolder() {
 			{
-				contentSpaceId = journalFolder.getGroupId();
+				siteId = journalFolder.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal,
 					_userLocalService.getUser(journalFolder.getUserId()));

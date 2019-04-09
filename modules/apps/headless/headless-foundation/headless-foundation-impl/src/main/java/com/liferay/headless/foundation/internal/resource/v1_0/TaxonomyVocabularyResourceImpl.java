@@ -92,8 +92,8 @@ public class TaxonomyVocabularyResourceImpl
 	}
 
 	@Override
-	public Page<TaxonomyVocabulary> getContentSpaceTaxonomyVocabulariesPage(
-			Long contentSpaceId, String search, Filter filter,
+	public Page<TaxonomyVocabulary> getSiteTaxonomyVocabulariesPage(
+			Long siteId, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -105,7 +105,7 @@ public class TaxonomyVocabularyResourceImpl
 				Field.ASSET_VOCABULARY_ID),
 			searchContext -> {
 				searchContext.setCompanyId(contextCompany.getCompanyId());
-				searchContext.setGroupIds(new long[] {contentSpaceId});
+				searchContext.setGroupIds(new long[] {siteId});
 			},
 			document -> _toTaxonomyVocabulary(
 				_assetVocabularyService.getVocabulary(
@@ -181,8 +181,8 @@ public class TaxonomyVocabularyResourceImpl
 	}
 
 	@Override
-	public TaxonomyVocabulary postContentSpaceTaxonomyVocabulary(
-			Long contentSpaceId, TaxonomyVocabulary taxonomyVocabulary)
+	public TaxonomyVocabulary postSiteTaxonomyVocabulary(
+			Long siteId, TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
 		Locale siteDefaultLocale = LocaleThreadLocal.getSiteDefaultLocale();
@@ -201,7 +201,7 @@ public class TaxonomyVocabularyResourceImpl
 
 		return _toTaxonomyVocabulary(
 			_assetVocabularyService.addVocabulary(
-				contentSpaceId, null,
+				siteId, null,
 				Collections.singletonMap(
 					contextAcceptLanguage.getPreferredLocale(),
 					taxonomyVocabulary.getName()),
@@ -209,9 +209,9 @@ public class TaxonomyVocabularyResourceImpl
 					contextAcceptLanguage.getPreferredLocale(),
 					taxonomyVocabulary.getDescription()),
 				_getSettings(
-					taxonomyVocabulary.getAssetTypes(), contentSpaceId),
+					taxonomyVocabulary.getAssetTypes(), siteId),
 				ServiceContextUtil.createServiceContext(
-					contentSpaceId,
+					siteId,
 					taxonomyVocabulary.getViewableByAsString())));
 	}
 
@@ -423,7 +423,7 @@ public class TaxonomyVocabularyResourceImpl
 					assetVocabulary.getGroupId());
 				availableLanguages = LocaleUtil.toW3cLanguageIds(
 					assetVocabulary.getAvailableLanguageIds());
-				contentSpaceId = assetVocabulary.getGroupId();
+				siteId = assetVocabulary.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal,
 					_userLocalService.getUser(assetVocabulary.getUserId()));

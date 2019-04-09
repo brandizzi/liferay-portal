@@ -143,24 +143,24 @@ public class StructuredContentResourceImpl
 	}
 
 	@Override
-	public StructuredContent getContentSpaceStructuredContentByKey(
-			Long contentSpaceId, String key)
+	public StructuredContent getSiteStructuredContentByKey(
+			Long siteId, String key)
 		throws Exception {
 
 		JournalArticle journalArticle = _journalArticleService.getArticle(
-			contentSpaceId, key);
+			siteId, key);
 
 		return _getStructuredContent(journalArticle);
 	}
 
 	@Override
-	public StructuredContent getContentSpaceStructuredContentByUuid(
-			Long contentSpaceId, String uuid)
+	public StructuredContent getSiteStructuredContentByUuid(
+			Long siteId, String uuid)
 		throws Exception {
 
 		JournalArticle journalArticle =
 			_journalArticleLocalService.fetchJournalArticleByUuidAndGroupId(
-				uuid, contentSpaceId);
+				uuid, siteId);
 
 		_journalArticleModelResourcePermission.check(
 			PermissionThreadLocal.getPermissionChecker(),
@@ -170,8 +170,8 @@ public class StructuredContentResourceImpl
 	}
 
 	@Override
-	public Page<StructuredContent> getContentSpaceStructuredContentsPage(
-			Long contentSpaceId, Boolean flatten, String search, Filter filter,
+	public Page<StructuredContent> getSiteStructuredContentsPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -190,7 +190,7 @@ public class StructuredContentResourceImpl
 						BooleanClauseOccur.MUST);
 				}
 			},
-			contentSpaceId, search, filter, pagination, sorts);
+			siteId, search, filter, pagination, sorts);
 	}
 
 	@Override
@@ -371,12 +371,12 @@ public class StructuredContentResourceImpl
 	}
 
 	@Override
-	public StructuredContent postContentSpaceStructuredContent(
-			Long contentSpaceId, StructuredContent structuredContent)
+	public StructuredContent postSiteStructuredContent(
+			Long siteId, StructuredContent structuredContent)
 		throws Exception {
 
 		return _addStructuredContent(
-			contentSpaceId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
+			siteId, JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 			structuredContent);
 	}
 
@@ -467,7 +467,7 @@ public class StructuredContentResourceImpl
 	}
 
 	private StructuredContent _addStructuredContent(
-			Long contentSpaceId, Long parentStructuredContentFolderId,
+			Long siteId, Long parentStructuredContentFolderId,
 			StructuredContent structuredContent)
 		throws Exception {
 
@@ -491,7 +491,7 @@ public class StructuredContentResourceImpl
 
 		return _toStructuredContent(
 			_journalArticleService.addArticle(
-				contentSpaceId, parentStructuredContentFolderId, 0, 0, null,
+				siteId, parentStructuredContentFolderId, 0, 0, null,
 				true,
 				new HashMap<Locale, String>() {
 					{
@@ -511,7 +511,7 @@ public class StructuredContentResourceImpl
 					DDMFormValuesUtil.toDDMFormValues(
 						structuredContent.getContentFields(),
 						ddmStructure.getDDMForm(), _dlAppService,
-						contentSpaceId, _journalArticleService,
+						siteId, _journalArticleService,
 						_layoutLocalService,
 						contextAcceptLanguage.getPreferredLocale(),
 						_getRootDDMFormFields(ddmStructure)),
@@ -524,7 +524,7 @@ public class StructuredContentResourceImpl
 				0, true, 0, 0, 0, 0, 0, true, true, null,
 				ServiceContextUtil.createServiceContext(
 					structuredContent.getKeywords(),
-					structuredContent.getTaxonomyCategoryIds(), contentSpaceId,
+					structuredContent.getTaxonomyCategoryIds(), siteId,
 					structuredContent.getViewableByAsString())));
 	}
 
@@ -640,7 +640,7 @@ public class StructuredContentResourceImpl
 
 	private Page<StructuredContent> _getStructuredContentsPage(
 			UnsafeConsumer<BooleanQuery, Exception> booleanQueryUnsafeConsumer,
-			Long contentSpaceId, String search, Filter filter,
+			Long siteId, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -657,8 +657,8 @@ public class StructuredContentResourceImpl
 				searchContext.setAttribute("head", Boolean.TRUE);
 				searchContext.setCompanyId(contextCompany.getCompanyId());
 
-				if (contentSpaceId != null) {
-					searchContext.setGroupIds(new long[] {contentSpaceId});
+				if (siteId != null) {
+					searchContext.setGroupIds(new long[] {siteId});
 				}
 			},
 			document -> _toStructuredContent(

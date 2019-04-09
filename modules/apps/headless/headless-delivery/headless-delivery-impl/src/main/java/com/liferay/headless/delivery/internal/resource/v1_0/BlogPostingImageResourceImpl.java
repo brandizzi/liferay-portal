@@ -74,12 +74,12 @@ public class BlogPostingImageResourceImpl
 	}
 
 	@Override
-	public Page<BlogPostingImage> getContentSpaceBlogPostingImagesPage(
-			Long contentSpaceId, String search, Filter filter,
+	public Page<BlogPostingImage> getSiteBlogPostingImagesPage(
+			Long siteId, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
-		Folder folder = _blogsEntryService.addAttachmentsFolder(contentSpaceId);
+		Folder folder = _blogsEntryService.addAttachmentsFolder(siteId);
 
 		return SearchUtil.search(
 			booleanQuery -> {
@@ -103,11 +103,11 @@ public class BlogPostingImageResourceImpl
 	}
 
 	@Override
-	public BlogPostingImage postContentSpaceBlogPostingImage(
-			Long contentSpaceId, MultipartBody multipartBody)
+	public BlogPostingImage postSiteBlogPostingImage(
+			Long siteId, MultipartBody multipartBody)
 		throws Exception {
 
-		Folder folder = _blogsEntryService.addAttachmentsFolder(contentSpaceId);
+		Folder folder = _blogsEntryService.addAttachmentsFolder(siteId);
 
 		BinaryFile binaryFile = multipartBody.getBinaryFile("file");
 
@@ -120,7 +120,7 @@ public class BlogPostingImageResourceImpl
 				"blogPostingImage", BlogPostingImage.class);
 
 		FileEntry fileEntry = _dlAppService.addFileEntry(
-			contentSpaceId, folder.getFolderId(), binaryFile.getFileName(),
+			siteId, folder.getFolderId(), binaryFile.getFileName(),
 			binaryFile.getContentType(),
 			blogPostingImageOptional.map(
 				BlogPostingImage::getTitle
@@ -129,7 +129,7 @@ public class BlogPostingImageResourceImpl
 			),
 			null, null, binaryFile.getInputStream(), binaryFile.getSize(),
 			ServiceContextUtil.createServiceContext(
-				contentSpaceId,
+				siteId,
 				blogPostingImageOptional.map(
 					BlogPostingImage::getViewableByAsString
 				).orElse(

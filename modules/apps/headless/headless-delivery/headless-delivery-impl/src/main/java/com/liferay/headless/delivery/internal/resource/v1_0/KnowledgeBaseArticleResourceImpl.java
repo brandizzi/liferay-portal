@@ -85,8 +85,8 @@ public class KnowledgeBaseArticleResourceImpl
 	}
 
 	@Override
-	public Page<KnowledgeBaseArticle> getContentSpaceKnowledgeBaseArticlesPage(
-			Long contentSpaceId, Boolean flatten, String search, Filter filter,
+	public Page<KnowledgeBaseArticle> getSiteKnowledgeBaseArticlesPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -104,7 +104,7 @@ public class KnowledgeBaseArticleResourceImpl
 						BooleanClauseOccur.MUST);
 				}
 			},
-			contentSpaceId, search, filter, pagination, sorts);
+			siteId, search, filter, pagination, sorts);
 	}
 
 	@Override
@@ -187,12 +187,12 @@ public class KnowledgeBaseArticleResourceImpl
 	}
 
 	@Override
-	public KnowledgeBaseArticle postContentSpaceKnowledgeBaseArticle(
-			Long contentSpaceId, KnowledgeBaseArticle knowledgeBaseArticle)
+	public KnowledgeBaseArticle postSiteKnowledgeBaseArticle(
+			Long siteId, KnowledgeBaseArticle knowledgeBaseArticle)
 		throws Exception {
 
 		return _getKnowledgeBaseArticle(
-			contentSpaceId, _portal.getClassNameId(KBFolder.class.getName()),
+			siteId, _portal.getClassNameId(KBFolder.class.getName()),
 			0L, knowledgeBaseArticle);
 	}
 
@@ -258,7 +258,7 @@ public class KnowledgeBaseArticleResourceImpl
 					).orElse(
 						new Long[0]
 					),
-					knowledgeBaseArticle.getContentSpaceId(),
+					knowledgeBaseArticle.getSiteId(),
 					knowledgeBaseArticle.getViewableByAsString())));
 	}
 
@@ -274,7 +274,7 @@ public class KnowledgeBaseArticleResourceImpl
 	}
 
 	private KnowledgeBaseArticle _getKnowledgeBaseArticle(
-			Long contentSpaceId, long parentResourceClassNameId,
+			Long siteId, long parentResourceClassNameId,
 			Long parentResourcePrimaryKey,
 			KnowledgeBaseArticle knowledgeBaseArticle)
 		throws Exception {
@@ -289,13 +289,13 @@ public class KnowledgeBaseArticleResourceImpl
 				ServiceContextUtil.createServiceContext(
 					knowledgeBaseArticle.getKeywords(),
 					knowledgeBaseArticle.getTaxonomyCategoryIds(),
-					contentSpaceId,
+					siteId,
 					knowledgeBaseArticle.getViewableByAsString())));
 	}
 
 	private Page<KnowledgeBaseArticle> _getKnowledgeBaseArticlesPage(
 			UnsafeConsumer<BooleanQuery, Exception> booleanQueryUnsafeConsumer,
-			Long contentSpaceId, String search, Filter filter,
+			Long siteId, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -308,7 +308,7 @@ public class KnowledgeBaseArticleResourceImpl
 				searchContext.setAttribute(
 					Field.STATUS, WorkflowConstants.STATUS_APPROVED);
 				searchContext.setCompanyId(contextCompany.getCompanyId());
-				searchContext.setGroupIds(new long[] {contentSpaceId});
+				searchContext.setGroupIds(new long[] {siteId});
 
 				if (search == null) {
 					searchContext.setKeywords("");

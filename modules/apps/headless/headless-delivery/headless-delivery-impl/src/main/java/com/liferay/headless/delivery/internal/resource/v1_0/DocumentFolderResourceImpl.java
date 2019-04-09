@@ -62,8 +62,8 @@ public class DocumentFolderResourceImpl
 	}
 
 	@Override
-	public Page<DocumentFolder> getContentSpaceDocumentFoldersPage(
-			Long contentSpaceId, Boolean flatten, String search, Filter filter,
+	public Page<DocumentFolder> getSiteDocumentFoldersPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -74,7 +74,7 @@ public class DocumentFolderResourceImpl
 		}
 
 		return _getDocumentFoldersPage(
-			contentSpaceId, search, filter, documentFolderId, pagination,
+			siteId, search, filter, documentFolderId, pagination,
 			sorts);
 	}
 
@@ -95,7 +95,7 @@ public class DocumentFolderResourceImpl
 			_dlAppService.getFolder(parentDocumentFolderId));
 
 		return _getDocumentFoldersPage(
-			parentDocumentFolder.getContentSpaceId(), search, filter,
+			parentDocumentFolder.getSiteId(), search, filter,
 			parentDocumentFolder.getId(), pagination, sorts);
 	}
 
@@ -126,11 +126,11 @@ public class DocumentFolderResourceImpl
 	}
 
 	@Override
-	public DocumentFolder postContentSpaceDocumentFolder(
-			Long contentSpaceId, DocumentFolder documentFolder)
+	public DocumentFolder postSiteDocumentFolder(
+			Long siteId, DocumentFolder documentFolder)
 		throws Exception {
 
-		return _addFolder(contentSpaceId, 0L, documentFolder);
+		return _addFolder(siteId, 0L, documentFolder);
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class DocumentFolderResourceImpl
 			_dlAppService.getFolder(parentDocumentFolderId));
 
 		return _addFolder(
-			parentDocumentFolder.getContentSpaceId(),
+			parentDocumentFolder.getSiteId(),
 			parentDocumentFolder.getId(), documentFolder);
 	}
 
@@ -157,20 +157,20 @@ public class DocumentFolderResourceImpl
 	}
 
 	private DocumentFolder _addFolder(
-			Long contentSpaceId, Long parentDocumentFolderId,
+			Long siteId, Long parentDocumentFolderId,
 			DocumentFolder documentFolder)
 		throws Exception {
 
 		return _toDocumentFolder(
 			_dlAppService.addFolder(
-				contentSpaceId, parentDocumentFolderId,
+				siteId, parentDocumentFolderId,
 				documentFolder.getName(), documentFolder.getDescription(),
 				ServiceContextUtil.createServiceContext(
-					contentSpaceId, documentFolder.getViewableByAsString())));
+					siteId, documentFolder.getViewableByAsString())));
 	}
 
 	private Page<DocumentFolder> _getDocumentFoldersPage(
-			Long contentSpaceId, String search, Filter filter,
+			Long siteId, String search, Filter filter,
 			Long parentDocumentFolderId, Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -192,7 +192,7 @@ public class DocumentFolderResourceImpl
 				Field.ENTRY_CLASS_PK),
 			searchContext -> {
 				searchContext.setCompanyId(contextCompany.getCompanyId());
-				searchContext.setGroupIds(new long[] {contentSpaceId});
+				searchContext.setGroupIds(new long[] {siteId});
 			},
 			document -> _toDocumentFolder(
 				_dlAppService.getFolder(

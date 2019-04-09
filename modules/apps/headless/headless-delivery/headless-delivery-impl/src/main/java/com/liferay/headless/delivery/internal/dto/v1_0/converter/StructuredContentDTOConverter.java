@@ -109,7 +109,7 @@ public class StructuredContentDTOConverter implements DTOConverter {
 					_dlAppService, _dlURLHelper,
 					_fieldsToDDMFormValuesConverter, _journalArticleService,
 					_journalConverter, _layoutLocalService);
-				contentSpaceId = journalArticle.getGroupId();
+				siteId = journalArticle.getGroupId();
 				contentStructureId = ddmStructure.getStructureId();
 				creator = CreatorUtil.toCreator(
 					_portal,

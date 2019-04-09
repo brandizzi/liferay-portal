@@ -49,7 +49,7 @@ public class DocumentFolderDTOConverter implements DTOConverter {
 
 		return new DocumentFolder() {
 			{
-				contentSpaceId = folder.getGroupId();
+				siteId = folder.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal, _userLocalService.getUser(folder.getUserId()));
 				dateCreated = folder.getCreateDate();

@@ -65,12 +65,12 @@ public class MessageBoardSectionResourceImpl
 	}
 
 	@Override
-	public Page<MessageBoardSection> getContentSpaceMessageBoardSectionsPage(
-			Long contentSpaceId, Boolean flatten, String search, Filter filter,
+	public Page<MessageBoardSection> getSiteMessageBoardSectionsPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
-		return _getContentSpaceMessageBoardSectionsPage(
+		return _getSiteMessageBoardSectionsPage(
 			booleanQuery -> {
 				if (!GetterUtil.getBoolean(flatten)) {
 					BooleanFilter booleanFilter =
@@ -81,7 +81,7 @@ public class MessageBoardSectionResourceImpl
 						BooleanClauseOccur.MUST);
 				}
 			},
-			contentSpaceId, search, filter, pagination, sorts);
+			siteId, search, filter, pagination, sorts);
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class MessageBoardSectionResourceImpl
 		MBCategory mbCategory = _mbCategoryService.getCategory(
 			parentMessageBoardSectionId);
 
-		return _getContentSpaceMessageBoardSectionsPage(
+		return _getSiteMessageBoardSectionsPage(
 			booleanQuery -> {
 				BooleanFilter booleanFilter =
 					booleanQuery.getPreBooleanFilter();
@@ -123,11 +123,11 @@ public class MessageBoardSectionResourceImpl
 	}
 
 	@Override
-	public MessageBoardSection postContentSpaceMessageBoardSection(
-			Long contentSpaceId, MessageBoardSection messageBoardSection)
+	public MessageBoardSection postSiteMessageBoardSection(
+			Long siteId, MessageBoardSection messageBoardSection)
 		throws Exception {
 
-		return _addMessageBoardSection(contentSpaceId, 0L, messageBoardSection);
+		return _addMessageBoardSection(siteId, 0L, messageBoardSection);
 	}
 
 	@Override
@@ -163,7 +163,7 @@ public class MessageBoardSectionResourceImpl
 	}
 
 	private MessageBoardSection _addMessageBoardSection(
-			long contentSpaceId, Long parentMessageBoardSectionId,
+			long siteId, Long parentMessageBoardSectionId,
 			MessageBoardSection messageBoardSection)
 		throws Exception {
 
@@ -173,13 +173,13 @@ public class MessageBoardSectionResourceImpl
 				messageBoardSection.getTitle(),
 				messageBoardSection.getDescription(),
 				ServiceContextUtil.createServiceContext(
-					contentSpaceId,
+					siteId,
 					messageBoardSection.getViewableByAsString())));
 	}
 
-	private Page<MessageBoardSection> _getContentSpaceMessageBoardSectionsPage(
+	private Page<MessageBoardSection> _getSiteMessageBoardSectionsPage(
 			UnsafeConsumer<BooleanQuery, Exception> booleanQueryUnsafeConsumer,
-			Long contentSpaceId, String search, Filter filter,
+			Long siteId, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -190,7 +190,7 @@ public class MessageBoardSectionResourceImpl
 				Field.ENTRY_CLASS_PK),
 			searchContext -> {
 				searchContext.setCompanyId(contextCompany.getCompanyId());
-				searchContext.setGroupIds(new long[] {contentSpaceId});
+				searchContext.setGroupIds(new long[] {siteId});
 			},
 			document -> _toMessageBoardSection(
 				_mbCategoryService.getCategory(
@@ -203,7 +203,7 @@ public class MessageBoardSectionResourceImpl
 
 		return new MessageBoardSection() {
 			{
-				contentSpaceId = mbCategory.getGroupId();
+				siteId = mbCategory.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal,
 					_userLocalService.getUserById(mbCategory.getUserId()));

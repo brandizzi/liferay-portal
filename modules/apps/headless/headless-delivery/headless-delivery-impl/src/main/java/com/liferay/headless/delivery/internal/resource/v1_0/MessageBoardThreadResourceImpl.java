@@ -104,12 +104,12 @@ public class MessageBoardThreadResourceImpl
 	}
 
 	@Override
-	public Page<MessageBoardThread> getContentSpaceMessageBoardThreadsPage(
-			Long contentSpaceId, Boolean flatten, String search, Filter filter,
+	public Page<MessageBoardThread> getSiteMessageBoardThreadsPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
-		return _getContentSpaceMessageBoardThreadsPage(
+		return _getSiteMessageBoardThreadsPage(
 			booleanQuery -> {
 				BooleanFilter booleanFilter =
 					booleanQuery.getPreBooleanFilter();
@@ -124,7 +124,7 @@ public class MessageBoardThreadResourceImpl
 					new TermFilter("parentMessageId", "0"),
 					BooleanClauseOccur.MUST);
 			},
-			contentSpaceId, search, filter, pagination, sorts);
+			siteId, search, filter, pagination, sorts);
 	}
 
 	@Override
@@ -142,7 +142,7 @@ public class MessageBoardThreadResourceImpl
 		MBCategory mbCategory = _mbCategoryService.getCategory(
 			messageBoardSectionId);
 
-		return _getContentSpaceMessageBoardThreadsPage(
+		return _getSiteMessageBoardThreadsPage(
 			booleanQuery -> {
 				BooleanFilter booleanFilter =
 					booleanQuery.getPreBooleanFilter();
@@ -180,11 +180,11 @@ public class MessageBoardThreadResourceImpl
 	}
 
 	@Override
-	public MessageBoardThread postContentSpaceMessageBoardThread(
-			Long contentSpaceId, MessageBoardThread messageBoardThread)
+	public MessageBoardThread postSiteMessageBoardThread(
+			Long siteId, MessageBoardThread messageBoardThread)
 		throws Exception {
 
-		return _addMessageBoardThread(contentSpaceId, 0L, messageBoardThread);
+		return _addMessageBoardThread(siteId, 0L, messageBoardThread);
 	}
 
 	@Override
@@ -258,19 +258,19 @@ public class MessageBoardThreadResourceImpl
 	}
 
 	private MessageBoardThread _addMessageBoardThread(
-			Long contentSpaceId, Long messageBoardSectionId,
+			Long siteId, Long messageBoardSectionId,
 			MessageBoardThread messageBoardThread)
 		throws Exception {
 
 		MBMessage mbMessage = _mbMessageService.addMessage(
-			contentSpaceId, messageBoardSectionId,
+			siteId, messageBoardSectionId,
 			messageBoardThread.getHeadline(),
 			messageBoardThread.getArticleBody(),
 			MBMessageConstants.DEFAULT_FORMAT, Collections.emptyList(), false,
-			_toPriority(contentSpaceId, messageBoardThread.getThreadType()),
+			_toPriority(siteId, messageBoardThread.getThreadType()),
 			false,
 			ServiceContextUtil.createServiceContext(
-				messageBoardThread.getKeywords(), null, contentSpaceId,
+				messageBoardThread.getKeywords(), null, siteId,
 				messageBoardThread.getViewableByAsString()));
 
 		_updateQuestion(mbMessage, messageBoardThread);
@@ -278,9 +278,9 @@ public class MessageBoardThreadResourceImpl
 		return _toMessageBoardThread(mbMessage);
 	}
 
-	private Page<MessageBoardThread> _getContentSpaceMessageBoardThreadsPage(
+	private Page<MessageBoardThread> _getSiteMessageBoardThreadsPage(
 			UnsafeConsumer<BooleanQuery, Exception> booleanQueryUnsafeConsumer,
-			Long contentSpaceId, String search, Filter filter,
+			Long siteId, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -291,7 +291,7 @@ public class MessageBoardThreadResourceImpl
 				Field.ENTRY_CLASS_PK),
 			searchContext -> {
 				searchContext.setCompanyId(contextCompany.getCompanyId());
-				searchContext.setGroupIds(new long[] {contentSpaceId});
+				searchContext.setGroupIds(new long[] {siteId});
 			},
 			document -> _toMessageBoardThread(
 				_mbMessageService.getMessage(
@@ -325,7 +325,7 @@ public class MessageBoardThreadResourceImpl
 					_ratingsStatsLocalService.fetchStats(
 						MBMessage.class.getName(), mbMessage.getMessageId()));
 				articleBody = mbMessage.getBody();
-				contentSpaceId = mbThread.getGroupId();
+				siteId = mbThread.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal, _userService.getUserById(mbThread.getUserId()));
 				dateCreated = mbMessage.getCreateDate();
@@ -350,7 +350,7 @@ public class MessageBoardThreadResourceImpl
 		};
 	}
 
-	private double _toPriority(Long contentSpaceId, String threadType)
+	private double _toPriority(Long siteId, String threadType)
 		throws Exception {
 
 		if (threadType == null) {
@@ -358,7 +358,7 @@ public class MessageBoardThreadResourceImpl
 		}
 
 		MBGroupServiceSettings mbGroupServiceSettings =
-			MBGroupServiceSettings.getInstance(contentSpaceId);
+			MBGroupServiceSettings.getInstance(siteId);
 
 		String[] priorities = mbGroupServiceSettings.getPriorities(
 			contextAcceptLanguage.getPreferredLanguageId());
@@ -386,11 +386,11 @@ public class MessageBoardThreadResourceImpl
 						String.class))));
 	}
 
-	private String _toThreadType(Long contentSpaceId, double priority)
+	private String _toThreadType(Long siteId, double priority)
 		throws Exception {
 
 		MBGroupServiceSettings mbGroupServiceSettings =
-			MBGroupServiceSettings.getInstance(contentSpaceId);
+			MBGroupServiceSettings.getInstance(siteId);
 
 		String[] priorities = mbGroupServiceSettings.getPriorities(
 			contextAcceptLanguage.getPreferredLanguageId());

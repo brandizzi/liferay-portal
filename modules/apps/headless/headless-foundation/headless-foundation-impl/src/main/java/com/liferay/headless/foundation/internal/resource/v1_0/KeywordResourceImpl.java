@@ -55,8 +55,8 @@ public class KeywordResourceImpl
 	}
 
 	@Override
-	public Page<Keyword> getContentSpaceKeywordsPage(
-			Long contentSpaceId, String search, Filter filter,
+	public Page<Keyword> getSiteKeywordsPage(
+			Long siteId, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
@@ -68,7 +68,7 @@ public class KeywordResourceImpl
 				Field.ENTRY_CLASS_PK),
 			searchContext -> {
 				searchContext.setCompanyId(contextCompany.getCompanyId());
-				searchContext.setGroupIds(new long[] {contentSpaceId});
+				searchContext.setGroupIds(new long[] {siteId});
 			},
 			document -> _toKeyword(
 				_assetTagService.getTag(
@@ -87,12 +87,12 @@ public class KeywordResourceImpl
 	}
 
 	@Override
-	public Keyword postContentSpaceKeyword(Long contentSpaceId, Keyword keyword)
+	public Keyword postSiteKeyword(Long siteId, Keyword keyword)
 		throws Exception {
 
 		return _toKeyword(
 			_assetTagService.addTag(
-				contentSpaceId, keyword.getName(), new ServiceContext()));
+				siteId, keyword.getName(), new ServiceContext()));
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class KeywordResourceImpl
 	private Keyword _toKeyword(AssetTag assetTag) {
 		return new Keyword() {
 			{
-				contentSpaceId = assetTag.getGroupId();
+				siteId = assetTag.getGroupId();
 				dateCreated = assetTag.getCreateDate();
 				dateModified = assetTag.getModifiedDate();
 				id = assetTag.getTagId();
