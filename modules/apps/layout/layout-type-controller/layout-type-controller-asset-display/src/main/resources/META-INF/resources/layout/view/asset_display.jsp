@@ -18,14 +18,10 @@
 
 <%
 AssetEntry assetEntry = assetDisplayLayoutTypeControllerDisplayContext.getAssetEntry();
-
 AssetRendererFactory assetRendererFactory = null;
-
 LayoutPageTemplateStructure layoutPageTemplateStructure = null;
-
-JSONArray structureJSONArray = null;
-
 long[] segmentsExperienceIds = GetterUtil.getLongValues(request.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS), new long[] {SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT});
+JSONArray structureJSONArray = null;
 
 if (assetEntry != null) {
 	assetRendererFactory = assetEntry.getAssetRendererFactory();

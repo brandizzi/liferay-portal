@@ -96,6 +96,8 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 	public LayoutPageTemplateStructure deleteLayoutPageTemplateStructure(
 		LayoutPageTemplateStructure layoutPageTemplateStructure) {
 
+		// Layout page template structure
+
 		layoutPageTemplateStructurePersistence.remove(
 			layoutPageTemplateStructure);
 
@@ -190,6 +192,8 @@ public class LayoutPageTemplateStructureLocalServiceImpl
 			long groupId, long classNameId, long classPK,
 			long segmentsExperienceId, String data)
 		throws PortalException {
+
+		// Layout page template structure
 
 		LayoutPageTemplateStructure layoutPageTemplateStructure =
 			layoutPageTemplateStructurePersistence.findByG_C_C(
