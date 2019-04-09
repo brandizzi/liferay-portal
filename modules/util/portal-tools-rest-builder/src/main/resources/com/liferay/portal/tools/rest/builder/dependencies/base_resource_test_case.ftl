@@ -130,7 +130,11 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 			<#if properties?keys?seq_contains("id")>
 				protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}() throws Exception {
-					throw new UnsupportedOperationException("This method needs to be implemented");
+					<#if freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "post", "site", schemaName)>
+						return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
+					<#else>
+						throw new UnsupportedOperationException("This method needs to be implemented");
+					</#if>
 				}
 			</#if>
 		<#elseif freeMarkerTool.hasHTTPMethod(javaMethodSignature, "get") && javaMethodSignature.returnType?contains("Page<")>
@@ -718,7 +722,11 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 			<#if properties?keys?seq_contains("id")>
 				protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}() throws Exception {
-					throw new UnsupportedOperationException("This method needs to be implemented");
+					<#if freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "post", "site", schemaName)>
+						return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
+					<#else>
+						throw new UnsupportedOperationException("This method needs to be implemented");
+					</#if>
 				}
 			</#if>
 		<#elseif freeMarkerTool.hasHTTPMethod(javaMethodSignature, "patch") && javaMethodSignature.returnType?ends_with(schemaName)>
@@ -746,7 +754,11 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 			<#if properties?keys?seq_contains("id")>
 				protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}() throws Exception {
-					throw new UnsupportedOperationException("This method needs to be implemented");
+					<#if freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "post", "site", schemaName)>
+						return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
+					<#else>
+						throw new UnsupportedOperationException("This method needs to be implemented");
+					</#if>
 				}
 			</#if>
 		<#elseif freeMarkerTool.hasHTTPMethod(javaMethodSignature, "post") && javaMethodSignature.returnType?ends_with(schemaName)>
@@ -765,7 +777,11 @@ public abstract class Base${schemaName}ResourceTestCase {
 			}
 
 			protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${schemaName} ${schemaVarName}) throws Exception {
-				throw new UnsupportedOperationException("This method needs to be implemented");
+				<#if freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "post", "site", schemaName)>
+					return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
+				<#else>
+					throw new UnsupportedOperationException("This method needs to be implemented");
+				</#if>
 			}
 		<#elseif freeMarkerTool.hasHTTPMethod(javaMethodSignature, "put") && javaMethodSignature.returnType?ends_with(schemaName)>
 			@Test
@@ -791,7 +807,11 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 			<#if properties?keys?seq_contains("id")>
 				protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}() throws Exception {
-					throw new UnsupportedOperationException("This method needs to be implemented");
+					<#if freeMarkerTool.hasJavaMethodSignature(javaMethodSignatures, "post", "site", schemaName)>
+						return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
+					<#else>
+						throw new UnsupportedOperationException("This method needs to be implemented");
+					</#if>
 				}
 			</#if>
 		<#else>
