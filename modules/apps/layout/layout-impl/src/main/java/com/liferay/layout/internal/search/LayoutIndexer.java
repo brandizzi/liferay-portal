@@ -178,9 +178,9 @@ public class LayoutIndexer extends BaseIndexer<Layout> {
 
 			String content =
 				LayoutPageTemplateStructureRenderUtil.renderLayoutContent(
-					request, response, layoutPageTemplateStructure,
+					null, request, response, layoutPageTemplateStructure,
 					FragmentEntryLinkConstants.VIEW, new HashMap<>(), locale,
-					new long[0], null);
+					new long[0]);
 
 			document.addText(
 				LocalizationUtil.getLocalizedName(Field.CONTENT, languageId),

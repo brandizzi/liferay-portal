@@ -118,10 +118,10 @@ public class LayoutModelDocumentContributor
 
 				String content =
 					LayoutPageTemplateStructureRenderUtil.renderLayoutContent(
+						_fragmentRendererController,
 						request, response, layoutPageTemplateStructure,
 						FragmentEntryLinkConstants.VIEW, new HashMap<>(),
-						locale, segmentsExperienceIds,
-						_fragmentRendererController);
+						locale, segmentsExperienceIds);
 
 				document.addText(
 					Field.getLocalizedName(locale, Field.CONTENT), content);

@@ -41,11 +41,11 @@ import javax.servlet.http.HttpServletResponse;
 public class LayoutPageTemplateStructureRenderUtil {
 
 	public static String renderLayoutContent(
+			FragmentRendererController fragmentRendererController,
 			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			LayoutPageTemplateStructure layoutPageTemplateStructure,
 			String mode, Map<String, Object> parameterMap, Locale locale,
-			long[] segmentsExperienceIds,
-			FragmentRendererController fragmentRendererController)
+			long[] segmentsExperienceIds)
 		throws PortalException {
 
 		if (fragmentRendererController == null) {
