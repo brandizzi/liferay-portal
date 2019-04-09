@@ -87,8 +87,8 @@ public class JournalContentPortletToolbarContributor
 			"hideDefaultSuccessMessage", Boolean.TRUE.toString());
 		portletURL.setParameter("groupId", String.valueOf(scopeGroupId));
 		portletURL.setParameter("mvcPath", "/edit_article.jsp");
-		portletURL.setParameter("portletResource", portletDisplay.getId());
 		portletURL.setParameter("redirect", themeDisplay.getURLCurrent());
+		portletURL.setParameter("portletResource", portletDisplay.getId());
 		portletURL.setParameter("refererPlid", String.valueOf(plid));
 
 		List<DDMStructure> ddmStructures =
