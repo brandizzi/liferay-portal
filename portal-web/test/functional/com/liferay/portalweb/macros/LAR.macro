@@ -299,7 +299,7 @@ definition {
 	macro _selectImportFileSite {
 		LexiconEntry.gotoAdd();
 
-		Pause(locator1 = "5000");
+		Pause(locator1 = "7000");
 
 		AssertElementPresent(locator1 = "Button#SELECT_FILE");
 
