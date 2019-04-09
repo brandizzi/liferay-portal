@@ -147,17 +147,18 @@ public class FragmentEntryRenderUtil {
 		FragmentRendererController fragmentRendererController =
 			_getFragmentRendererController();
 
-		DefaultFragmentRendererContext fragmentRendererContext =
+		DefaultFragmentRendererContext defaultFragmentRendererContext =
 			new DefaultFragmentRendererContext(fragmentEntryLink);
 
-		fragmentRendererContext.setFieldValues(parameterMap);
-		fragmentRendererContext.setLocale(locale);
-		fragmentRendererContext.setMode(mode);
-		fragmentRendererContext.setSegmentsExperienceIds(segmentsExperienceIds);
+		defaultFragmentRendererContext.setFieldValues(parameterMap);
+		defaultFragmentRendererContext.setLocale(locale);
+		defaultFragmentRendererContext.setMode(mode);
+		defaultFragmentRendererContext.setSegmentsExperienceIds(
+			segmentsExperienceIds);
 
 		try {
 			return fragmentRendererController.render(
-				fragmentRendererContext, request, response);
+				defaultFragmentRendererContext, request, response);
 		}
 		catch (IOException ioe) {
 			throw new PortalException(ioe);

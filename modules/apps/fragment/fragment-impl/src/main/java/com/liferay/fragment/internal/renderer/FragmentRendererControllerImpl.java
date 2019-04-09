@@ -48,15 +48,12 @@ public class FragmentRendererControllerImpl
 
 		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
 
-		HttpServletResponse pipingHttpServletResponse =
-			new PipingServletResponse(httpServletResponse, unsyncStringWriter);
-
 		FragmentRenderer fragmentRenderer = _getFragmentRenderer(
 			fragmentRendererContext.getFragmentEntryLink());
 
 		fragmentRenderer.render(
 			fragmentRendererContext, httpServletRequest,
-			pipingHttpServletResponse);
+			new PipingServletResponse(httpServletResponse, unsyncStringWriter));
 
 		return unsyncStringWriter.toString();
 	}
