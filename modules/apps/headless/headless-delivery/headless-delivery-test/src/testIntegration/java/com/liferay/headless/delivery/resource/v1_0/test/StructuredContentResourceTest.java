@@ -130,9 +130,9 @@ public class StructuredContentResourceTest
 	protected StructuredContent randomIrrelevantStructuredContent() {
 		StructuredContent structuredContent = randomStructuredContent();
 
-		structuredContent.setSiteId(irrelevantGroup.getGroupId());
 		structuredContent.setContentStructureId(
 			_irrelevantDDMStructure.getStructureId());
+		structuredContent.setSiteId(irrelevantGroup.getGroupId());
 
 		return structuredContent;
 	}
