@@ -130,10 +130,10 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 			HttpServletRequest request, HttpServletResponse response)
 		throws PortalException {
 
-		html = "[#ftl]\n" + html;
+		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
 
 		TemplateResource templateResource = new StringTemplateResource(
-			"template_id", html);
+			"template_id", "[#ftl]\n" + html);
 
 		Template template = TemplateManagerUtil.getTemplate(
 			TemplateConstants.LANG_TYPE_FTL, templateResource, false);
@@ -145,8 +145,6 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		templateManager.addTaglibSupport(template, request, response);
 		templateManager.addTaglibTheme(
 			template, "taglibLiferay", request, response);
-
-		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
 
 		template.put(TemplateConstants.WRITER, unsyncStringWriter);
 
