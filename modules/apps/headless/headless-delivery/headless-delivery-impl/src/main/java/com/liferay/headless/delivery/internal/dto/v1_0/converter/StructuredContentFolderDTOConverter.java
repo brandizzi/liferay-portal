@@ -53,7 +53,6 @@ public class StructuredContentFolderDTOConverter implements DTOConverter {
 
 		return new StructuredContentFolder() {
 			{
-				siteId = journalFolder.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal,
 					_userLocalService.getUser(journalFolder.getUserId()));
@@ -70,6 +69,7 @@ public class StructuredContentFolderDTOConverter implements DTOConverter {
 					_journalArticleService.getArticlesCount(
 						journalFolder.getGroupId(), journalFolder.getFolderId(),
 						WorkflowConstants.STATUS_APPROVED);
+				siteId = journalFolder.getGroupId();
 			}
 		};
 	}

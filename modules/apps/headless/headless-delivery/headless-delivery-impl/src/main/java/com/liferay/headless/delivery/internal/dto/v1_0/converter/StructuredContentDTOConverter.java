@@ -109,7 +109,6 @@ public class StructuredContentDTOConverter implements DTOConverter {
 					_dlAppService, _dlURLHelper,
 					_fieldsToDDMFormValuesConverter, _journalArticleService,
 					_journalConverter, _layoutLocalService);
-				siteId = journalArticle.getGroupId();
 				contentStructureId = ddmStructure.getStructureId();
 				creator = CreatorUtil.toCreator(
 					_portal,
@@ -136,6 +135,7 @@ public class StructuredContentDTOConverter implements DTOConverter {
 					ddmStructure, journalArticle,
 					dtoConverterContext.getLocale(),
 					dtoConverterContext.getUriInfoOptional());
+				siteId = journalArticle.getGroupId();
 				taxonomyCategories = TransformUtil.transformToArray(
 					_assetCategoryLocalService.getCategories(
 						JournalArticle.class.getName(),

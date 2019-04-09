@@ -61,7 +61,6 @@ public class MessageBoardMessageDTOConverter implements DTOConverter {
 						MBMessage.class.getName(), mbMessage.getMessageId()));
 				anonymous = mbMessage.isAnonymous();
 				articleBody = mbMessage.getBody();
-				siteId = mbMessage.getGroupId();
 				dateCreated = mbMessage.getCreateDate();
 				dateModified = mbMessage.getModifiedDate();
 				encodingFormat = mbMessage.getFormat();
@@ -78,6 +77,7 @@ public class MessageBoardMessageDTOConverter implements DTOConverter {
 						mbMessage.getMessageId(),
 						WorkflowConstants.STATUS_APPROVED);
 				showAsAnswer = mbMessage.isAnswer();
+				siteId = mbMessage.getGroupId();
 
 				setCreator(
 					() -> {

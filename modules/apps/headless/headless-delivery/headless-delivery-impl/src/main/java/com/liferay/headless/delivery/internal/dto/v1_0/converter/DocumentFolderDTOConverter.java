@@ -49,7 +49,6 @@ public class DocumentFolderDTOConverter implements DTOConverter {
 
 		return new DocumentFolder() {
 			{
-				siteId = folder.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal, _userLocalService.getUser(folder.getUserId()));
 				dateCreated = folder.getCreateDate();
@@ -61,6 +60,7 @@ public class DocumentFolderDTOConverter implements DTOConverter {
 					folder.getRepositoryId(), folder.getFolderId());
 				numberOfDocuments = _dlAppService.getFileEntriesCount(
 					folder.getRepositoryId(), folder.getFolderId());
+				siteId = folder.getGroupId();
 			}
 		};
 	}

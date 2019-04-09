@@ -76,7 +76,6 @@ public class KnowledgeBaseArticleDTOConverter implements DTOConverter {
 				articleBody = kbArticle.getContent();
 				creator = CreatorUtil.toCreator(
 					_portal, _userLocalService.getUser(kbArticle.getUserId()));
-				siteId = kbArticle.getGroupId();
 				dateCreated = kbArticle.getCreateDate();
 				dateModified = kbArticle.getModifiedDate();
 				description = kbArticle.getDescription();
@@ -99,6 +98,7 @@ public class KnowledgeBaseArticleDTOConverter implements DTOConverter {
 						kbArticle.getGroupId(), kbArticle.getResourcePrimKey(),
 						WorkflowConstants.STATUS_APPROVED);
 				parentKnowledgeBaseFolderId = kbArticle.getKbFolderId();
+				siteId = kbArticle.getGroupId();
 				taxonomyCategories = TransformUtil.transformToArray(
 					_assetCategoryLocalService.getCategories(
 						KBArticle.class.getName(), kbArticle.getClassPK()),

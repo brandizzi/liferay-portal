@@ -70,7 +70,6 @@ public class BlogPostingDTOConverter implements DTOConverter {
 					_ratingsStatsLocalService.fetchStats(
 						BlogsEntry.class.getName(), blogsEntry.getEntryId()));
 				articleBody = blogsEntry.getContent();
-				siteId = blogsEntry.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal, _userLocalService.getUser(blogsEntry.getUserId()));
 				dateCreated = blogsEntry.getCreateDate();
@@ -88,6 +87,7 @@ public class BlogPostingDTOConverter implements DTOConverter {
 					AssetTag.NAME_ACCESSOR);
 				numberOfComments = _commentManager.getCommentsCount(
 					BlogsEntry.class.getName(), blogsEntry.getEntryId());
+				siteId = blogsEntry.getGroupId();
 				taxonomyCategories = TransformUtil.transformToArray(
 					_assetCategoryLocalService.getCategories(
 						BlogsEntry.class.getName(), blogsEntry.getEntryId()),
