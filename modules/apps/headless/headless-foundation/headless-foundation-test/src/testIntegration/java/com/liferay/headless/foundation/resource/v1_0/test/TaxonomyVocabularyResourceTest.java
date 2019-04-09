@@ -73,38 +73,11 @@ public class TaxonomyVocabularyResourceTest
 
 	@Override
 	protected TaxonomyVocabulary
-			testDeleteTaxonomyVocabulary_addTaxonomyVocabulary()
-		throws Exception {
-
-		return invokePostSiteTaxonomyVocabulary(
-			testGroup.getGroupId(), randomTaxonomyVocabulary());
-	}
-
-	@Override
-	protected TaxonomyVocabulary
 			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
 				Long siteId, TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
 		return invokePostSiteTaxonomyVocabulary(siteId, taxonomyVocabulary);
-	}
-
-	@Override
-	protected TaxonomyVocabulary
-			testGetTaxonomyVocabulary_addTaxonomyVocabulary()
-		throws Exception {
-
-		return invokePostSiteTaxonomyVocabulary(
-			testGroup.getGroupId(), randomTaxonomyVocabulary());
-	}
-
-	@Override
-	protected TaxonomyVocabulary
-			testPatchTaxonomyVocabulary_addTaxonomyVocabulary()
-		throws Exception {
-
-		return invokePostSiteTaxonomyVocabulary(
-			testGroup.getGroupId(), randomTaxonomyVocabulary());
 	}
 
 	@Override
@@ -115,15 +88,6 @@ public class TaxonomyVocabularyResourceTest
 
 		return invokePostSiteTaxonomyVocabulary(
 			testGroup.getGroupId(), taxonomyVocabulary);
-	}
-
-	@Override
-	protected TaxonomyVocabulary
-			testPutTaxonomyVocabulary_addTaxonomyVocabulary()
-		throws Exception {
-
-		return invokePostSiteTaxonomyVocabulary(
-			testGroup.getGroupId(), randomTaxonomyVocabulary());
 	}
 
 	private boolean _equals(AssetType[] assetTypes1, AssetType[] assetTypes2) {

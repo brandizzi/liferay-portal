@@ -41,16 +41,6 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 	}
 
 	@Override
-	protected Keyword testDeleteKeyword_addKeyword() throws Exception {
-		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
-	}
-
-	@Override
-	protected Keyword testGetKeyword_addKeyword() throws Exception {
-		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
-	}
-
-	@Override
 	protected Keyword testGetSiteKeywordsPage_addKeyword(
 			Long siteId, Keyword keyword)
 		throws Exception {
@@ -63,11 +53,6 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteKeyword(testGroup.getGroupId(), keyword);
-	}
-
-	@Override
-	protected Keyword testPutKeyword_addKeyword() throws Exception {
-		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
 	}
 
 }
