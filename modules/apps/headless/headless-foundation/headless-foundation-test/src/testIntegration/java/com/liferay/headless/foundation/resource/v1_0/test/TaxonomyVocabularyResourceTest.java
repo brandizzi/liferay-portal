@@ -31,19 +31,9 @@ import org.junit.runner.RunWith;
 public class TaxonomyVocabularyResourceTest
 	extends BaseTaxonomyVocabularyResourceTestCase {
 
-	protected void assertValid(TaxonomyVocabulary taxonomyVocabulary) {
-		boolean valid = false;
-
-		if ((taxonomyVocabulary.getDateCreated() != null) &&
-			(taxonomyVocabulary.getDateModified() != null) &&
-			(taxonomyVocabulary.getId() != null) &&
-			Objects.equals(
-				taxonomyVocabulary.getSiteId(), testGroup.getGroupId())) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
+	@Override
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"description", "name"};
 	}
 
 	@Override
@@ -53,17 +43,9 @@ public class TaxonomyVocabularyResourceTest
 
 		if (_equals(
 				taxonomyVocabulary1.getAssetTypes(),
-				taxonomyVocabulary2.getAssetTypes()) &&
-			Objects.equals(
-				taxonomyVocabulary1.getDescription(),
-				taxonomyVocabulary2.getDescription()) &&
-			Objects.equals(
-				taxonomyVocabulary1.getName(), taxonomyVocabulary2.getName()) &&
-			Objects.equals(
-				taxonomyVocabulary1.getSiteId(),
-				taxonomyVocabulary2.getSiteId())) {
+				taxonomyVocabulary2.getAssetTypes())) {
 
-			return true;
+			return super.equals(taxonomyVocabulary1, taxonomyVocabulary2);
 		}
 
 		return false;
@@ -83,9 +65,9 @@ public class TaxonomyVocabularyResourceTest
 						}
 					}
 				};
-				siteId = testGroup.getGroupId();
 				description = RandomTestUtil.randomString();
 				name = RandomTestUtil.randomString();
+				siteId = testGroup.getGroupId();
 			}
 		};
 	}

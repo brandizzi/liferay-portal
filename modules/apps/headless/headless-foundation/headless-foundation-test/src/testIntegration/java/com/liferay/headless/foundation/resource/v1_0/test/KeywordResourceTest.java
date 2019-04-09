@@ -29,29 +29,9 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 
-	protected void assertValid(Keyword keyword) {
-		boolean valid = false;
-
-		if (Objects.equals(keyword.getSiteId(), testGroup.getGroupId()) &&
-			(keyword.getDateCreated() != null) &&
-			(keyword.getDateModified() != null) && (keyword.getId() != null)) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
 	@Override
-	protected boolean equals(Keyword keyword1, Keyword keyword2) {
-		if (Objects.equals(keyword1.getSiteId(), keyword2.getSiteId()) &&
-			StringUtil.equalsIgnoreCase(
-				keyword1.getName(), keyword2.getName())) {
-
-			return true;
-		}
-
-		return false;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"name"};
 	}
 
 	@Override
