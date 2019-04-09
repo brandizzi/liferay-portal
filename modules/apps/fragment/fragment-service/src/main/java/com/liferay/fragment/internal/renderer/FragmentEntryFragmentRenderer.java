@@ -104,11 +104,10 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		try {
 			PrintWriter printWriter = httpServletResponse.getWriter();
 
-			String result = _renderFragmentEntryLink(
-				fragmentRendererContext, httpServletRequest,
-				httpServletResponse);
-
-			printWriter.write(result);
+			printWriter.write(
+				_renderFragmentEntryLink(
+					fragmentRendererContext, httpServletRequest,
+					httpServletResponse));
 		}
 		catch (PortalException pe) {
 			throw new IOException(pe);
