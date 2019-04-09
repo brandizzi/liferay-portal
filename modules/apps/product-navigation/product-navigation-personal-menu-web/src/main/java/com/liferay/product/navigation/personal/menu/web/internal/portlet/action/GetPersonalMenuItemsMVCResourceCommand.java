@@ -98,7 +98,6 @@ public class GetPersonalMenuItemsMVCResourceCommand
 			_http.removeParameter(
 				ParamUtil.getString(portletRequest, "currentURL"),
 				"doAsUserId"));
-
 		jsonObject1.put("icon", "change");
 		jsonObject1.put(
 			"label",
@@ -151,7 +150,6 @@ public class GetPersonalMenuItemsMVCResourceCommand
 				_http.setParameter(
 					ParamUtil.getString(portletRequest, "currentURL"),
 					"doAsUserLanguageId", doAsUserLanguageId));
-
 			jsonObject2.put("icon", "globe");
 			jsonObject2.put("label", changeLanguageLabel);
 
