@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.odata.filter.ExpressionConvert;
 import com.liferay.portal.odata.filter.FilterParserProvider;
 import com.liferay.portal.odata.sort.SortParserProvider;
+import com.liferay.portal.vulcan.internal.jaxrs.container.request.filter.ServiceEventsContainerRequestFilter;
 import com.liferay.portal.vulcan.internal.jaxrs.container.request.filter.SiteValidatorContainerRequestFilter;
 import com.liferay.portal.vulcan.internal.jaxrs.context.provider.AcceptLanguageContextProvider;
 import com.liferay.portal.vulcan.internal.jaxrs.context.provider.CompanyContextProvider;
@@ -44,7 +45,6 @@ import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.PrincipalExcept
 import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.UnrecognizedPropertyExceptionMapper;
 import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.ValidationExceptionMapper;
 import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.WebApplicationExceptionMapper;
-import com.liferay.portal.vulcan.internal.jaxrs.filter.ServiceEventsContainerRequestFilter;
 import com.liferay.portal.vulcan.internal.jaxrs.message.body.JSONMessageBodyReader;
 import com.liferay.portal.vulcan.internal.jaxrs.message.body.JSONMessageBodyWriter;
 import com.liferay.portal.vulcan.internal.jaxrs.message.body.MultipartBodyMessageBodyReader;

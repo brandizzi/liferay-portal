@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.portal.vulcan.internal.jaxrs.filter;
+package com.liferay.portal.vulcan.internal.jaxrs.container.request.filter;
 
 import com.liferay.portal.events.EventsProcessorUtil;
 import com.liferay.portal.kernel.log.Log;
