@@ -35,7 +35,8 @@ public class BlogPostingResourceTest extends BaseBlogPostingResourceTestCase {
 		if ((blogPosting.getDateCreated() != null) &&
 			(blogPosting.getDateModified() != null) &&
 			(blogPosting.getHeadline() != null) &&
-			(blogPosting.getId() != null)) {
+			(blogPosting.getId() != null) &&
+			Objects.equals(blogPosting.getSiteId(), testGroup.getGroupId())) {
 
 			valid = true;
 		}
