@@ -143,7 +143,7 @@ public class DocumentResourceTest extends BaseDocumentResourceTestCase {
 	}
 
 	private MultipartBody _getMultipartBody(Document document) {
-		contentType = "multipart/form-data;boundary=PART";
+		testContentType = "multipart/form-data;boundary=PART";
 
 		Map<String, BinaryFile> binaryFileMap = new HashMap<>();
 
@@ -152,7 +152,7 @@ public class DocumentResourceTest extends BaseDocumentResourceTestCase {
 		binaryFileMap.put(
 			"file",
 			new BinaryFile(
-				contentType, RandomTestUtil.randomString(),
+				testContentType, RandomTestUtil.randomString(),
 				new ByteArrayInputStream(randomString.getBytes()), 0));
 
 		return MultipartBody.of(

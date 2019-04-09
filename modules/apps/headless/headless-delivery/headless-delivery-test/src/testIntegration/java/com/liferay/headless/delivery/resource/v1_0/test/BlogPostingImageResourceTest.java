@@ -93,7 +93,7 @@ public class BlogPostingImageResourceTest
 	}
 
 	private MultipartBody _getMultipartBody(BlogPostingImage blogPostingImage) {
-		contentType = "multipart/form-data;boundary=PART";
+		testContentType = "multipart/form-data;boundary=PART";
 
 		Map<String, BinaryFile> binaryFileMap = new HashMap<>();
 
@@ -102,7 +102,7 @@ public class BlogPostingImageResourceTest
 		binaryFileMap.put(
 			"file",
 			new BinaryFile(
-				contentType, RandomTestUtil.randomString(),
+				testContentType, RandomTestUtil.randomString(),
 				new ByteArrayInputStream(randomString.getBytes()), 0));
 
 		return MultipartBody.of(

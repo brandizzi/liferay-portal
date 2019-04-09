@@ -116,7 +116,7 @@ public class KnowledgeBaseAttachmentResourceTest
 	private MultipartBody _getMultipartBody(
 		KnowledgeBaseAttachment knowledgeBaseAttachment) {
 
-		contentType = "multipart/form-data;boundary=PART";
+		testContentType = "multipart/form-data;boundary=PART";
 
 		Map<String, BinaryFile> binaryFileMap = new HashMap<>();
 
@@ -125,7 +125,7 @@ public class KnowledgeBaseAttachmentResourceTest
 		binaryFileMap.put(
 			"file",
 			new BinaryFile(
-				contentType, RandomTestUtil.randomString(),
+				testContentType, RandomTestUtil.randomString(),
 				new ByteArrayInputStream(randomString.getBytes()), 0));
 
 		return MultipartBody.of(
