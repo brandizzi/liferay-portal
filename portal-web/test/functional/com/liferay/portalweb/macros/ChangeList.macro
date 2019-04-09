@@ -36,6 +36,8 @@ definition {
 	}
 
 	macro enableChangeList {
+		Pause(locator1 = "1000");
+
 		Check.checkToggleSwitch(
 			locator1 = "ChangeListSettings#CHANGE_LISTS_TOGGLE_SWITCH"
 		);
