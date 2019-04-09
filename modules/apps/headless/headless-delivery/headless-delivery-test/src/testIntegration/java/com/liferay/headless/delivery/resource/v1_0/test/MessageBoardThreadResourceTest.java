@@ -69,16 +69,6 @@ public class MessageBoardThreadResourceTest
 	}
 
 	@Override
-	protected MessageBoardThread randomPatchMessageBoardThread() {
-		MessageBoardThread messageBoardThread =
-			super.randomPatchMessageBoardThread();
-
-		messageBoardThread.setSiteId(testGroup.getGroupId());
-
-		return messageBoardThread;
-	}
-
-	@Override
 	protected MessageBoardThread
 			testDeleteMessageBoardThread_addMessageBoardThread()
 		throws Exception {
