@@ -284,6 +284,10 @@ public class DataRecordCollectionResourceImpl
 			PermissionThreadLocal.getPermissionChecker(),
 			dataRecordCollectionId, ActionKeys.UPDATE);
 
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setUserId(PrincipalThreadLocal.getUserId());
+
 		return DataRecordCollectionUtil.toDataRecordCollection(
 			_ddlRecordSetLocalService.updateRecordSet(
 				dataRecordCollectionId, ddlRecordSet.getDDMStructureId(),
@@ -291,7 +295,7 @@ public class DataRecordCollectionResourceImpl
 					dataRecordCollection.getName()),
 				LocalizedValueUtil.toLocalizationMap(
 					dataRecordCollection.getDescription()),
-				0, new ServiceContext()));
+				0, serviceContext));
 	}
 
 	@Reference(
