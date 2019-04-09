@@ -257,7 +257,9 @@ if (oAuth2Application.getOAuth2ApplicationScopeAliasesId() > 0) {
 
 			<portlet:namespace />changeScopeAliasStickyStatus = function(scopeAlias, sticky) {
 				if (sticky) {
-					<portlet:namespace />stickyScopeAliases.push(scopeAlias);
+					if (<portlet:namespace />stickyScopeAliases.indexOf(scopeAlias) < 0) {
+						<portlet:namespace />stickyScopeAliases.push(scopeAlias);
+					}
 				}
 				else {
 					var index = <portlet:namespace />getArrayIndexOfStickyScopeAlias(scopeAlias);
