@@ -202,7 +202,6 @@ public class MessageBoardSectionResourceImpl
 
 		return new MessageBoardSection() {
 			{
-				siteId = mbCategory.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal,
 					_userLocalService.getUserById(mbCategory.getUserId()));
@@ -214,6 +213,7 @@ public class MessageBoardSectionResourceImpl
 					_mbCategoryService.getCategoriesCount(
 						mbCategory.getGroupId(), mbCategory.getCategoryId());
 				numberOfMessageBoardThreads = mbCategory.getThreadCount();
+				siteId = mbCategory.getGroupId();
 				title = mbCategory.getName();
 			}
 		};

@@ -140,11 +140,11 @@ public class ContentStructureResourceTest
 	private ContentStructure _toContentStructure(DDMStructure structure) {
 		return new ContentStructure() {
 			{
-				siteId = structure.getGroupId();
 				dateCreated = structure.getCreateDate();
 				dateModified = structure.getModifiedDate();
 				id = structure.getStructureId();
 				name = structure.getName(LocaleUtil.getDefault());
+				siteId = structure.getGroupId();
 			}
 		};
 	}

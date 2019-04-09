@@ -156,7 +156,6 @@ public class KnowledgeBaseFolderResourceImpl
 
 		return new KnowledgeBaseFolder() {
 			{
-				siteId = kbFolder.getGroupId();
 				creator = CreatorUtil.toCreator(
 					_portal, _userLocalService.getUser(kbFolder.getUserId()));
 				dateCreated = kbFolder.getCreateDate();
@@ -173,6 +172,7 @@ public class KnowledgeBaseFolderResourceImpl
 				parentKnowledgeBaseFolder =
 					ParentKnowledgeBaseFolderUtil.toParentKnowledgeBaseFolder(
 						kbFolder.getParentKBFolder());
+				siteId = kbFolder.getGroupId();
 			}
 		};
 	}
