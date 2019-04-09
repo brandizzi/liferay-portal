@@ -32,8 +32,7 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 	protected void assertValid(Keyword keyword) {
 		boolean valid = false;
 
-		if (Objects.equals(
-				keyword.getSiteId(), testGroup.getGroupId()) &&
+		if (Objects.equals(keyword.getSiteId(), testGroup.getGroupId()) &&
 			(keyword.getDateCreated() != null) &&
 			(keyword.getDateModified() != null) && (keyword.getId() != null)) {
 
@@ -45,8 +44,7 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 
 	@Override
 	protected boolean equals(Keyword keyword1, Keyword keyword2) {
-		if (Objects.equals(
-				keyword1.getSiteId(), keyword2.getSiteId()) &&
+		if (Objects.equals(keyword1.getSiteId(), keyword2.getSiteId()) &&
 			StringUtil.equalsIgnoreCase(
 				keyword1.getName(), keyword2.getName())) {
 
@@ -67,8 +65,12 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 
 	@Override
 	protected Keyword testDeleteKeyword_addKeyword() throws Exception {
-		return invokePostSiteKeyword(
-			testGroup.getGroupId(), randomKeyword());
+		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
+	}
+
+	@Override
+	protected Keyword testGetKeyword_addKeyword() throws Exception {
+		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
 	}
 
 	@Override
@@ -80,12 +82,6 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 	}
 
 	@Override
-	protected Keyword testGetKeyword_addKeyword() throws Exception {
-		return invokePostSiteKeyword(
-			testGroup.getGroupId(), randomKeyword());
-	}
-
-	@Override
 	protected Keyword testPostSiteKeyword_addKeyword(Keyword keyword)
 		throws Exception {
 
@@ -94,8 +90,7 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 
 	@Override
 	protected Keyword testPutKeyword_addKeyword() throws Exception {
-		return invokePostSiteKeyword(
-			testGroup.getGroupId(), randomKeyword());
+		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
 	}
 
 }

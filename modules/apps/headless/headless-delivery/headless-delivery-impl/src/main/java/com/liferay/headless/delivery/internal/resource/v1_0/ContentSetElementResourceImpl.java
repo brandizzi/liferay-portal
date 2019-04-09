@@ -65,9 +65,8 @@ public class ContentSetElementResourceImpl
 	}
 
 	@Override
-	public Page<ContentSetElement>
-			getSiteContentSetByKeyContentSetElementsPage(
-				Long siteId, String key, Pagination pagination)
+	public Page<ContentSetElement> getSiteContentSetByKeyContentSetElementsPage(
+			Long siteId, String key, Pagination pagination)
 		throws Exception {
 
 		AssetListEntry assetListEntry =

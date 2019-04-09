@@ -40,8 +40,7 @@ public class MessageBoardSectionResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				messageBoardSection.getSiteId(),
-				testGroup.getGroupId()) &&
+				messageBoardSection.getSiteId(), testGroup.getGroupId()) &&
 			(messageBoardSection.getDateCreated() != null) &&
 			(messageBoardSection.getDateModified() != null) &&
 			(messageBoardSection.getId() != null) &&
@@ -102,24 +101,6 @@ public class MessageBoardSectionResourceTest
 
 	@Override
 	protected MessageBoardSection
-			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
-				Long siteId, MessageBoardSection messageBoardSection)
-		throws Exception {
-
-		return invokePostSiteMessageBoardSection(
-			siteId, messageBoardSection);
-	}
-
-	@Override
-	protected Long
-			testGetSiteMessageBoardSectionsPage_getSiteId()
-		throws Exception {
-
-		return testGroup.getGroupId();
-	}
-
-	@Override
-	protected MessageBoardSection
 			testGetMessageBoardSection_addMessageBoardSection()
 		throws Exception {
 
@@ -159,6 +140,22 @@ public class MessageBoardSectionResourceTest
 
 	@Override
 	protected MessageBoardSection
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				Long siteId, MessageBoardSection messageBoardSection)
+		throws Exception {
+
+		return invokePostSiteMessageBoardSection(siteId, messageBoardSection);
+	}
+
+	@Override
+	protected Long testGetSiteMessageBoardSectionsPage_getSiteId()
+		throws Exception {
+
+		return testGroup.getGroupId();
+	}
+
+	@Override
+	protected MessageBoardSection
 			testPatchMessageBoardSection_addMessageBoardSection()
 		throws Exception {
 
@@ -168,7 +165,7 @@ public class MessageBoardSectionResourceTest
 
 	@Override
 	protected MessageBoardSection
-			testPostSiteMessageBoardSection_addMessageBoardSection(
+			testPostMessageBoardSectionMessageBoardSection_addMessageBoardSection(
 				MessageBoardSection messageBoardSection)
 		throws Exception {
 
@@ -178,7 +175,7 @@ public class MessageBoardSectionResourceTest
 
 	@Override
 	protected MessageBoardSection
-			testPostMessageBoardSectionMessageBoardSection_addMessageBoardSection(
+			testPostSiteMessageBoardSection_addMessageBoardSection(
 				MessageBoardSection messageBoardSection)
 		throws Exception {
 

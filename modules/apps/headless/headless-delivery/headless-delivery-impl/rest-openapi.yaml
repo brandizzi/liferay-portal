@@ -21,9 +21,6 @@ components:
                     type: string
                 articleBody:
                     type: string
-                siteId:
-                    format: int64
-                    type: integer
                 creator:
                     $ref: "#/components/schemas/Creator"
                 dateCreated:
@@ -65,6 +62,9 @@ components:
                     type: array
                 numberOfComments:
                     type: number
+                siteId:
+                    format: int64
+                    type: integer
                 taxonomyCategories:
                     items:
                         properties:
@@ -219,9 +219,6 @@ components:
                     items:
                         type: string
                     type: array
-                siteId:
-                    format: int64
-                    type: integer
                 contentStructureFields:
                     items:
                         $ref: "#/components/schemas/ContentStructureField"
@@ -241,6 +238,9 @@ components:
                     type: integer
                 name:
                     type: string
+                siteId:
+                    format: int64
+                    type: integer
             type: object
         ContentStructureField:
             description: https://www.schema.org/ContentStructureField
@@ -380,9 +380,6 @@ components:
         DocumentFolder:
             description: https://www.schema.org/DocumentFolder
             properties:
-                siteId:
-                    format: int64
-                    type: integer
                 creator:
                     $ref: "#/components/schemas/Creator"
                 dateCreated:
@@ -402,6 +399,9 @@ components:
                     type: number
                 numberOfDocuments:
                     type: number
+                siteId:
+                    format: int64
+                    type: integer
                 viewableBy:
                     enum: [Anyone, Members, Owner]
                     type: string
@@ -416,9 +416,6 @@ components:
                     $ref: "#/components/schemas/AggregateRating"
                 articleBody:
                     type: string
-                siteId:
-                    format: int64
-                    type: integer
                 creator:
                     $ref: "#/components/schemas/Creator"
                 dateCreated:
@@ -456,6 +453,9 @@ components:
                     format: int64
                     type: integer
                     writeOnly: true
+                siteId:
+                    format: int64
+                    type: integer
                 taxonomyCategories:
                     items:
                         properties:
@@ -502,9 +502,6 @@ components:
         KnowledgeBaseFolder:
             description: https://www.schema.org/KnowledgeBaseFolder
             properties:
-                siteId:
-                    format: int64
-                    type: integer
                 creator:
                     $ref: "#/components/schemas/Creator"
                 dateCreated:
@@ -536,6 +533,9 @@ components:
                     format: int64
                     type: integer
                     writeOnly: true
+                siteId:
+                    format: int64
+                    type: integer
                 viewableBy:
                     enum: [Anyone, Members, Owner]
                     type: string
@@ -569,9 +569,6 @@ components:
                     type: boolean
                 articleBody:
                     type: string
-                siteId:
-                    format: int64
-                    type: integer
                 creator:
                     $ref: "#/components/schemas/Creator"
                 dateCreated:
@@ -599,6 +596,9 @@ components:
                     type: integer
                 showAsAnswer:
                     type: boolean
+                siteId:
+                    format: int64
+                    type: integer
                 viewableBy:
                     enum: [Anyone, Members, Owner]
                     type: string
@@ -607,9 +607,6 @@ components:
         MessageBoardSection:
             description: https://www.schema.org/MessageBoardSection
             properties:
-                siteId:
-                    format: int64
-                    type: integer
                 creator:
                     $ref: "#/components/schemas/Creator"
                 dateCreated:
@@ -629,6 +626,9 @@ components:
                 numberOfMessageBoardThreads:
                     readOnly: true
                     type: integer
+                siteId:
+                    format: int64
+                    type: integer
                 title:
                     type: string
                 viewableBy:
@@ -645,9 +645,6 @@ components:
                     $ref: "#/components/schemas/AggregateRating"
                 articleBody:
                     type: string
-                siteId:
-                    format: int64
-                    type: integer
                 creator:
                     $ref: "#/components/schemas/Creator"
                 dateCreated:
@@ -675,6 +672,9 @@ components:
                     type: integer
                 showAsQuestion:
                     type: boolean
+                siteId:
+                    format: int64
+                    type: integer
                 threadType:
                     type: string
                 viewableBy:
@@ -720,9 +720,6 @@ components:
                     items:
                         $ref: "#/components/schemas/ContentField"
                     type: array
-                siteId:
-                    format: int64
-                    type: integer
                 contentStructureId:
                     format: int64
                     type: integer
@@ -766,6 +763,9 @@ components:
                                 type: string
                         type: object
                     type: array
+                siteId:
+                    format: int64
+                    type: integer
                 taxonomyCategories:
                     items:
                         properties:
@@ -795,9 +795,6 @@ components:
         StructuredContentFolder:
             description: https://www.schema.org/StructuredContentFolder
             properties:
-                siteId:
-                    format: int64
-                    type: integer
                 creator:
                     $ref: "#/components/schemas/Creator"
                 dateCreated:
@@ -817,6 +814,9 @@ components:
                     type: number
                 numberOfStructuredContents:
                     type: number
+                siteId:
+                    format: int64
+                    type: integer
                 viewableBy:
                     enum: [Anyone, Members, Owner]
                     type: string
@@ -1224,822 +1224,6 @@ paths:
                                 type: array
                     description: ""
             tags: ["ContentSetElement"]
-    "/sites/{siteId}/blog-posting-images":
-        get:
-            operationId: getSiteBlogPostingImagesPage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/BlogPostingImage"
-                                type: array
-                    description: ""
-            tags: ["BlogPostingImage"]
-        post:
-            operationId: postSiteBlogPostingImage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            requestBody:
-                content:
-                    multipart/form-data:
-                        schema:
-                            properties:
-                                blogPostingImage:
-                                    $ref: "#/components/schemas/BlogPostingImage"
-                                file:
-                                    format: binary
-                                    type: string
-                            type: object
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/BlogPostingImage"
-                    description: ""
-            tags: ["BlogPostingImage"]
-    "/sites/{siteId}/blog-postings":
-        get:
-            operationId: getSiteBlogPostingsPage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/BlogPosting"
-                                type: array
-                    description: ""
-            tags: ["BlogPosting"]
-        post:
-            operationId: postSiteBlogPosting
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/BlogPosting"
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/BlogPosting"
-                    description: ""
-            tags: ["BlogPosting"]
-    "/sites/{siteId}/content-sets/by-key/{key}/content-set-elements":
-        get:
-            operationId: getSiteContentSetByKeyContentSetElementsPage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: path
-                  name: key
-                  required: true
-                  schema:
-                      type: string
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/ContentSetElement"
-                                type: array
-                    description: ""
-            tags: ["ContentSetElement"]
-    "/sites/{siteId}/content-sets/by-uuid/{uuid}/content-set-elements":
-        get:
-            operationId: getSiteContentSetByUuidContentSetElementsPage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: path
-                  name: uuid
-                  required: true
-                  schema:
-                      type: string
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/ContentSetElement"
-                                type: array
-                    description: ""
-            tags: ["ContentSetElement"]
-    "/sites/{siteId}/content-structures":
-        get:
-            operationId: getSiteContentStructuresPage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/ContentStructure"
-                                type: array
-                    description: ""
-            tags: ["ContentStructure"]
-    "/sites/{siteId}/document-folders":
-        get:
-            operationId: getSiteDocumentFoldersPage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: flatten
-                  schema:
-                      type: boolean
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/DocumentFolder"
-                                type: array
-                    description: ""
-            tags: ["DocumentFolder"]
-        post:
-            operationId: postSiteDocumentFolder
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/DocumentFolder"
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/DocumentFolder"
-                    description: ""
-            tags: ["DocumentFolder"]
-    "/sites/{siteId}/documents":
-        get:
-            operationId: getSiteDocumentsPage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: flatten
-                  schema:
-                      type: boolean
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/Document"
-                                type: array
-                    description: ""
-            tags: ["Document"]
-        post:
-            operationId: postSiteDocument
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            requestBody:
-                content:
-                    multipart/form-data:
-                        schema:
-                            properties:
-                                document:
-                                    $ref: "#/components/schemas/Document"
-                                file:
-                                    format: binary
-                                    type: string
-                            type: object
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Document"
-                    description: ""
-            tags: ["Document"]
-    "/sites/{siteId}/knowledge-base-articles":
-        get:
-            operationId: getSiteKnowledgeBaseArticlesPage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: flatten
-                  schema:
-                      type: boolean
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/KnowledgeBaseArticle"
-                                type: array
-                    description: ""
-            tags: ["KnowledgeBaseArticle"]
-        post:
-            operationId: postSiteKnowledgeBaseArticle
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/KnowledgeBaseArticle"
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/KnowledgeBaseArticle"
-                    description: ""
-            tags: ["KnowledgeBaseArticle"]
-    "/sites/{siteId}/knowledge-base-folders":
-        get:
-            operationId: getSiteKnowledgeBaseFoldersPage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/KnowledgeBaseFolder"
-                                type: array
-                    description: ""
-            tags: ["KnowledgeBaseFolder"]
-        post:
-            operationId: postSiteKnowledgeBaseFolder
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/KnowledgeBaseFolder"
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/KnowledgeBaseFolder"
-                    description: ""
-            tags: ["KnowledgeBaseFolder"]
-    "/sites/{siteId}/message-board-sections":
-        get:
-            operationId: getSiteMessageBoardSectionsPage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: flatten
-                  schema:
-                      type: boolean
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/MessageBoardSection"
-                                type: array
-                    description: ""
-            tags: ["MessageBoardSection"]
-        post:
-            operationId: postSiteMessageBoardSection
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/MessageBoardSection"
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/MessageBoardSection"
-                    description: ""
-            tags: ["MessageBoardSection"]
-    "/sites/{siteId}/message-board-threads":
-        get:
-            operationId: getSiteMessageBoardThreadsPage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: flatten
-                  schema:
-                      type: boolean
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/MessageBoardThread"
-                                type: array
-                    description: ""
-            tags: ["MessageBoardThread"]
-        post:
-            operationId: postSiteMessageBoardThread
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/MessageBoardThread"
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/MessageBoardThread"
-                    description: ""
-            tags: ["MessageBoardThread"]
-    "/sites/{siteId}/structured-content-folders":
-        get:
-            operationId: getSiteStructuredContentFoldersPage
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: flatten
-                  schema:
-                      type: boolean
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/StructuredContentFolder"
-                                type: array
-                    description: ""
-            tags: ["StructuredContentFolder"]
-        post:
-            operationId: postSiteStructuredContentFolder
-            parameters:
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/StructuredContentFolder"
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/StructuredContentFolder"
-                    description: ""
-            tags: ["StructuredContentFolder"]
-    "/sites/{siteId}/structured-contents":
-        get:
-            operationId: getSiteStructuredContentsPage
-            parameters:
-                - in: header
-                  name: Accept-Language
-                  schema:
-                      type: string
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: query
-                  name: filter
-                  schema:
-                      type: string
-                - in: query
-                  name: flatten
-                  schema:
-                      type: boolean
-                - in: query
-                  name: page
-                  schema:
-                      type: integer
-                - in: query
-                  name: pageSize
-                  schema:
-                      type: integer
-                - in: query
-                  name: search
-                  schema:
-                      type: string
-                - in: query
-                  name: sort
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                items:
-                                    $ref: "#/components/schemas/StructuredContent"
-                                type: array
-                    description: ""
-            tags: ["StructuredContent"]
-        post:
-            operationId: postSiteStructuredContent
-            parameters:
-                - in: header
-                  name: Accept-Language
-                  schema:
-                      type: string
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/StructuredContent"
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/StructuredContent"
-                    description: ""
-            tags: ["StructuredContent"]
-    "/sites/{siteId}/structured-contents/by-key/{key}":
-        get:
-            operationId: getSiteStructuredContentByKey
-            parameters:
-                - in: header
-                  name: Accept-Language
-                  schema:
-                      type: string
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: path
-                  name: key
-                  required: true
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/StructuredContent"
-                    description: ""
-            tags: ["StructuredContent"]
-    "/sites/{siteId}/structured-contents/by-uuid/{uuid}":
-        get:
-            operationId: getSiteStructuredContentByUuid
-            parameters:
-                - in: header
-                  name: Accept-Language
-                  schema:
-                      type: string
-                - in: path
-                  name: siteId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-                - in: path
-                  name: uuid
-                  required: true
-                  schema:
-                      type: string
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/StructuredContent"
-                    description: ""
-            tags: ["StructuredContent"]
     "/content-structures/{contentStructureId}":
         get:
             operationId: getContentStructure
@@ -3789,6 +2973,822 @@ paths:
                                 $ref: "#/components/schemas/Rating"
                     description: ""
             tags: ["MessageBoardThread"]
+    "/sites/{siteId}/blog-posting-images":
+        get:
+            operationId: getSiteBlogPostingImagesPage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/BlogPostingImage"
+                                type: array
+                    description: ""
+            tags: ["BlogPostingImage"]
+        post:
+            operationId: postSiteBlogPostingImage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            properties:
+                                blogPostingImage:
+                                    $ref: "#/components/schemas/BlogPostingImage"
+                                file:
+                                    format: binary
+                                    type: string
+                            type: object
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/BlogPostingImage"
+                    description: ""
+            tags: ["BlogPostingImage"]
+    "/sites/{siteId}/blog-postings":
+        get:
+            operationId: getSiteBlogPostingsPage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/BlogPosting"
+                                type: array
+                    description: ""
+            tags: ["BlogPosting"]
+        post:
+            operationId: postSiteBlogPosting
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/BlogPosting"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/BlogPosting"
+                    description: ""
+            tags: ["BlogPosting"]
+    "/sites/{siteId}/content-sets/by-key/{key}/content-set-elements":
+        get:
+            operationId: getSiteContentSetByKeyContentSetElementsPage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: key
+                  required: true
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/ContentSetElement"
+                                type: array
+                    description: ""
+            tags: ["ContentSetElement"]
+    "/sites/{siteId}/content-sets/by-uuid/{uuid}/content-set-elements":
+        get:
+            operationId: getSiteContentSetByUuidContentSetElementsPage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: uuid
+                  required: true
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/ContentSetElement"
+                                type: array
+                    description: ""
+            tags: ["ContentSetElement"]
+    "/sites/{siteId}/content-structures":
+        get:
+            operationId: getSiteContentStructuresPage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/ContentStructure"
+                                type: array
+                    description: ""
+            tags: ["ContentStructure"]
+    "/sites/{siteId}/document-folders":
+        get:
+            operationId: getSiteDocumentFoldersPage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: flatten
+                  schema:
+                      type: boolean
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/DocumentFolder"
+                                type: array
+                    description: ""
+            tags: ["DocumentFolder"]
+        post:
+            operationId: postSiteDocumentFolder
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/DocumentFolder"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/DocumentFolder"
+                    description: ""
+            tags: ["DocumentFolder"]
+    "/sites/{siteId}/documents":
+        get:
+            operationId: getSiteDocumentsPage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: flatten
+                  schema:
+                      type: boolean
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/Document"
+                                type: array
+                    description: ""
+            tags: ["Document"]
+        post:
+            operationId: postSiteDocument
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    multipart/form-data:
+                        schema:
+                            properties:
+                                document:
+                                    $ref: "#/components/schemas/Document"
+                                file:
+                                    format: binary
+                                    type: string
+                            type: object
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Document"
+                    description: ""
+            tags: ["Document"]
+    "/sites/{siteId}/knowledge-base-articles":
+        get:
+            operationId: getSiteKnowledgeBaseArticlesPage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: flatten
+                  schema:
+                      type: boolean
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/KnowledgeBaseArticle"
+                                type: array
+                    description: ""
+            tags: ["KnowledgeBaseArticle"]
+        post:
+            operationId: postSiteKnowledgeBaseArticle
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/KnowledgeBaseArticle"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/KnowledgeBaseArticle"
+                    description: ""
+            tags: ["KnowledgeBaseArticle"]
+    "/sites/{siteId}/knowledge-base-folders":
+        get:
+            operationId: getSiteKnowledgeBaseFoldersPage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/KnowledgeBaseFolder"
+                                type: array
+                    description: ""
+            tags: ["KnowledgeBaseFolder"]
+        post:
+            operationId: postSiteKnowledgeBaseFolder
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/KnowledgeBaseFolder"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/KnowledgeBaseFolder"
+                    description: ""
+            tags: ["KnowledgeBaseFolder"]
+    "/sites/{siteId}/message-board-sections":
+        get:
+            operationId: getSiteMessageBoardSectionsPage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: flatten
+                  schema:
+                      type: boolean
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/MessageBoardSection"
+                                type: array
+                    description: ""
+            tags: ["MessageBoardSection"]
+        post:
+            operationId: postSiteMessageBoardSection
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/MessageBoardSection"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/MessageBoardSection"
+                    description: ""
+            tags: ["MessageBoardSection"]
+    "/sites/{siteId}/message-board-threads":
+        get:
+            operationId: getSiteMessageBoardThreadsPage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: flatten
+                  schema:
+                      type: boolean
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/MessageBoardThread"
+                                type: array
+                    description: ""
+            tags: ["MessageBoardThread"]
+        post:
+            operationId: postSiteMessageBoardThread
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/MessageBoardThread"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/MessageBoardThread"
+                    description: ""
+            tags: ["MessageBoardThread"]
+    "/sites/{siteId}/structured-content-folders":
+        get:
+            operationId: getSiteStructuredContentFoldersPage
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: flatten
+                  schema:
+                      type: boolean
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/StructuredContentFolder"
+                                type: array
+                    description: ""
+            tags: ["StructuredContentFolder"]
+        post:
+            operationId: postSiteStructuredContentFolder
+            parameters:
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/StructuredContentFolder"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/StructuredContentFolder"
+                    description: ""
+            tags: ["StructuredContentFolder"]
+    "/sites/{siteId}/structured-contents":
+        get:
+            operationId: getSiteStructuredContentsPage
+            parameters:
+                - in: header
+                  name: Accept-Language
+                  schema:
+                      type: string
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: flatten
+                  schema:
+                      type: boolean
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  schema:
+                      type: integer
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/StructuredContent"
+                                type: array
+                    description: ""
+            tags: ["StructuredContent"]
+        post:
+            operationId: postSiteStructuredContent
+            parameters:
+                - in: header
+                  name: Accept-Language
+                  schema:
+                      type: string
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/StructuredContent"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/StructuredContent"
+                    description: ""
+            tags: ["StructuredContent"]
+    "/sites/{siteId}/structured-contents/by-key/{key}":
+        get:
+            operationId: getSiteStructuredContentByKey
+            parameters:
+                - in: header
+                  name: Accept-Language
+                  schema:
+                      type: string
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: key
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/StructuredContent"
+                    description: ""
+            tags: ["StructuredContent"]
+    "/sites/{siteId}/structured-contents/by-uuid/{uuid}":
+        get:
+            operationId: getSiteStructuredContentByUuid
+            parameters:
+                - in: header
+                  name: Accept-Language
+                  schema:
+                      type: string
+                - in: path
+                  name: siteId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: path
+                  name: uuid
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/StructuredContent"
+                    description: ""
+            tags: ["StructuredContent"]
     "/structured-content-folders/{parentStructuredContentFolderId}/structured-content-folders":
         get:
             operationId: getStructuredContentFolderStructuredContentFoldersPage

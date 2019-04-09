@@ -86,36 +86,6 @@ public class DocumentResourceImpl
 	}
 
 	@Override
-	public Page<Document> getSiteDocumentsPage(
-			Long siteId, Boolean flatten, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
-		throws Exception {
-
-		return _getDocumentsPage(
-			booleanQuery -> {
-				BooleanFilter booleanFilter =
-					booleanQuery.getPreBooleanFilter();
-
-				if (!GetterUtil.getBoolean(flatten)) {
-					booleanFilter.add(
-						new TermFilter(
-							Field.FOLDER_ID,
-							String.valueOf(
-								DLFolderConstants.DEFAULT_PARENT_FOLDER_ID)),
-						BooleanClauseOccur.MUST);
-				}
-
-				if (siteId != null) {
-					booleanFilter.add(
-						new TermFilter(
-							Field.GROUP_ID, String.valueOf(siteId)),
-						BooleanClauseOccur.MUST);
-				}
-			},
-			search, filter, pagination, sorts);
-	}
-
-	@Override
 	public Document getDocument(Long documentId) throws Exception {
 		FileEntry fileEntry = _dlAppService.getFileEntry(documentId);
 
@@ -152,6 +122,35 @@ public class DocumentResourceImpl
 	@Override
 	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
 		return _entityModel;
+	}
+
+	@Override
+	public Page<Document> getSiteDocumentsPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
+			Pagination pagination, Sort[] sorts)
+		throws Exception {
+
+		return _getDocumentsPage(
+			booleanQuery -> {
+				BooleanFilter booleanFilter =
+					booleanQuery.getPreBooleanFilter();
+
+				if (!GetterUtil.getBoolean(flatten)) {
+					booleanFilter.add(
+						new TermFilter(
+							Field.FOLDER_ID,
+							String.valueOf(
+								DLFolderConstants.DEFAULT_PARENT_FOLDER_ID)),
+						BooleanClauseOccur.MUST);
+				}
+
+				if (siteId != null) {
+					booleanFilter.add(
+						new TermFilter(Field.GROUP_ID, String.valueOf(siteId)),
+						BooleanClauseOccur.MUST);
+				}
+			},
+			search, filter, pagination, sorts);
 	}
 
 	@Override
@@ -217,14 +216,6 @@ public class DocumentResourceImpl
 	}
 
 	@Override
-	public Document postSiteDocument(
-			Long siteId, MultipartBody multipartBody)
-		throws Exception {
-
-		return _addDocument(siteId, 0L, siteId, multipartBody);
-	}
-
-	@Override
 	public Document postDocumentFolderDocument(
 			Long documentFolderId, MultipartBody multipartBody)
 		throws Exception {
@@ -243,6 +234,13 @@ public class DocumentResourceImpl
 
 		return spiRatingResource.addOrUpdateRating(
 			rating.getRatingValue(), documentId);
+	}
+
+	@Override
+	public Document postSiteDocument(Long siteId, MultipartBody multipartBody)
+		throws Exception {
+
+		return _addDocument(siteId, 0L, siteId, multipartBody);
 	}
 
 	@Override

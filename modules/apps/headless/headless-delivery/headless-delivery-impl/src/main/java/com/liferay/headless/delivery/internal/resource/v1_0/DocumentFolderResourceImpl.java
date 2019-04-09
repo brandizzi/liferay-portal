@@ -62,23 +62,6 @@ public class DocumentFolderResourceImpl
 	}
 
 	@Override
-	public Page<DocumentFolder> getSiteDocumentFoldersPage(
-			Long siteId, Boolean flatten, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
-		throws Exception {
-
-		Long documentFolderId = null;
-
-		if (!GetterUtil.getBoolean(flatten)) {
-			documentFolderId = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
-		}
-
-		return _getDocumentFoldersPage(
-			siteId, search, filter, documentFolderId, pagination,
-			sorts);
-	}
-
-	@Override
 	public DocumentFolder getDocumentFolder(Long documentFolderId)
 		throws Exception {
 
@@ -105,6 +88,22 @@ public class DocumentFolderResourceImpl
 	}
 
 	@Override
+	public Page<DocumentFolder> getSiteDocumentFoldersPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
+			Pagination pagination, Sort[] sorts)
+		throws Exception {
+
+		Long documentFolderId = null;
+
+		if (!GetterUtil.getBoolean(flatten)) {
+			documentFolderId = DLFolderConstants.DEFAULT_PARENT_FOLDER_ID;
+		}
+
+		return _getDocumentFoldersPage(
+			siteId, search, filter, documentFolderId, pagination, sorts);
+	}
+
+	@Override
 	public DocumentFolder patchDocumentFolder(
 			Long documentFolderId, DocumentFolder documentFolder)
 		throws Exception {
@@ -126,14 +125,6 @@ public class DocumentFolderResourceImpl
 	}
 
 	@Override
-	public DocumentFolder postSiteDocumentFolder(
-			Long siteId, DocumentFolder documentFolder)
-		throws Exception {
-
-		return _addFolder(siteId, 0L, documentFolder);
-	}
-
-	@Override
 	public DocumentFolder postDocumentFolderDocumentFolder(
 			Long parentDocumentFolderId, DocumentFolder documentFolder)
 		throws Exception {
@@ -142,8 +133,16 @@ public class DocumentFolderResourceImpl
 			_dlAppService.getFolder(parentDocumentFolderId));
 
 		return _addFolder(
-			parentDocumentFolder.getSiteId(),
-			parentDocumentFolder.getId(), documentFolder);
+			parentDocumentFolder.getSiteId(), parentDocumentFolder.getId(),
+			documentFolder);
+	}
+
+	@Override
+	public DocumentFolder postSiteDocumentFolder(
+			Long siteId, DocumentFolder documentFolder)
+		throws Exception {
+
+		return _addFolder(siteId, 0L, documentFolder);
 	}
 
 	@Override
@@ -163,8 +162,8 @@ public class DocumentFolderResourceImpl
 
 		return _toDocumentFolder(
 			_dlAppService.addFolder(
-				siteId, parentDocumentFolderId,
-				documentFolder.getName(), documentFolder.getDescription(),
+				siteId, parentDocumentFolderId, documentFolder.getName(),
+				documentFolder.getDescription(),
 				ServiceContextUtil.createServiceContext(
 					siteId, documentFolder.getViewableByAsString())));
 	}

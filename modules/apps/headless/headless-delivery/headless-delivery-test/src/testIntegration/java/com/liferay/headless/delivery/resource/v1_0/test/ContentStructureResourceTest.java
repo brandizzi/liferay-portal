@@ -70,8 +70,7 @@ public class ContentStructureResourceTest
 		ContentStructure contentStructure2) {
 
 		if (Objects.equals(
-				contentStructure1.getSiteId(),
-				contentStructure2.getSiteId()) &&
+				contentStructure1.getSiteId(), contentStructure2.getSiteId()) &&
 			Objects.equals(
 				contentStructure1.getName(), contentStructure2.getName())) {
 
@@ -79,6 +78,14 @@ public class ContentStructureResourceTest
 		}
 
 		return false;
+	}
+
+	@Override
+	protected ContentStructure testGetContentStructure_addContentStructure()
+		throws Exception {
+
+		return _toContentStructure(
+			_addDDMStructure(testGroup, RandomTestUtil.randomString()));
 	}
 
 	@Override
@@ -91,14 +98,6 @@ public class ContentStructureResourceTest
 			_addDDMStructure(
 				GroupLocalServiceUtil.getGroup(siteId),
 				contentStructure.getName()));
-	}
-
-	@Override
-	protected ContentStructure testGetContentStructure_addContentStructure()
-		throws Exception {
-
-		return _toContentStructure(
-			_addDDMStructure(testGroup, RandomTestUtil.randomString()));
 	}
 
 	private DDMStructure _addDDMStructure(Group group, String name)

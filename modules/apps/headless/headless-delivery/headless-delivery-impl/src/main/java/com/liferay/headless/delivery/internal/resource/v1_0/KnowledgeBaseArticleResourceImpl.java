@@ -85,29 +85,6 @@ public class KnowledgeBaseArticleResourceImpl
 	}
 
 	@Override
-	public Page<KnowledgeBaseArticle> getSiteKnowledgeBaseArticlesPage(
-			Long siteId, Boolean flatten, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
-		throws Exception {
-
-		return _getKnowledgeBaseArticlesPage(
-			booleanQuery -> {
-				if (!GetterUtil.getBoolean(flatten)) {
-					BooleanFilter booleanFilter =
-						booleanQuery.getPreBooleanFilter();
-
-					booleanFilter.add(
-						new TermFilter(Field.FOLDER_ID, "0"),
-						BooleanClauseOccur.MUST);
-					booleanFilter.add(
-						new TermFilter("parentMessageId", "0"),
-						BooleanClauseOccur.MUST);
-				}
-			},
-			siteId, search, filter, pagination, sorts);
-	}
-
-	@Override
 	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
 		return _entityModel;
 	}
@@ -187,13 +164,26 @@ public class KnowledgeBaseArticleResourceImpl
 	}
 
 	@Override
-	public KnowledgeBaseArticle postSiteKnowledgeBaseArticle(
-			Long siteId, KnowledgeBaseArticle knowledgeBaseArticle)
+	public Page<KnowledgeBaseArticle> getSiteKnowledgeBaseArticlesPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
+			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
-		return _getKnowledgeBaseArticle(
-			siteId, _portal.getClassNameId(KBFolder.class.getName()),
-			0L, knowledgeBaseArticle);
+		return _getKnowledgeBaseArticlesPage(
+			booleanQuery -> {
+				if (!GetterUtil.getBoolean(flatten)) {
+					BooleanFilter booleanFilter =
+						booleanQuery.getPreBooleanFilter();
+
+					booleanFilter.add(
+						new TermFilter(Field.FOLDER_ID, "0"),
+						BooleanClauseOccur.MUST);
+					booleanFilter.add(
+						new TermFilter("parentMessageId", "0"),
+						BooleanClauseOccur.MUST);
+				}
+			},
+			siteId, search, filter, pagination, sorts);
 	}
 
 	@Override
@@ -234,6 +224,16 @@ public class KnowledgeBaseArticleResourceImpl
 			kbFolder.getGroupId(),
 			_portal.getClassNameId(KBFolder.class.getName()),
 			knowledgeBaseFolderId, knowledgeBaseArticle);
+	}
+
+	@Override
+	public KnowledgeBaseArticle postSiteKnowledgeBaseArticle(
+			Long siteId, KnowledgeBaseArticle knowledgeBaseArticle)
+		throws Exception {
+
+		return _getKnowledgeBaseArticle(
+			siteId, _portal.getClassNameId(KBFolder.class.getName()), 0L,
+			knowledgeBaseArticle);
 	}
 
 	@Override
@@ -288,15 +288,14 @@ public class KnowledgeBaseArticleResourceImpl
 				knowledgeBaseArticle.getDescription(), null, null, null,
 				ServiceContextUtil.createServiceContext(
 					knowledgeBaseArticle.getKeywords(),
-					knowledgeBaseArticle.getTaxonomyCategoryIds(),
-					siteId,
+					knowledgeBaseArticle.getTaxonomyCategoryIds(), siteId,
 					knowledgeBaseArticle.getViewableByAsString())));
 	}
 
 	private Page<KnowledgeBaseArticle> _getKnowledgeBaseArticlesPage(
 			UnsafeConsumer<BooleanQuery, Exception> booleanQueryUnsafeConsumer,
-			Long siteId, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
+			Long siteId, String search, Filter filter, Pagination pagination,
+			Sort[] sorts)
 		throws Exception {
 
 		return SearchUtil.search(

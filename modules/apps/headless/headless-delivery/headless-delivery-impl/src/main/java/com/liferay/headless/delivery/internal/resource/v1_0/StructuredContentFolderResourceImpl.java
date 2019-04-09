@@ -62,10 +62,14 @@ public class StructuredContentFolderResourceImpl
 	}
 
 	@Override
-	public Page<StructuredContentFolder>
-			getSiteStructuredContentFoldersPage(
-				Long siteId, Boolean flatten, String search,
-				Filter filter, Pagination pagination, Sort[] sorts)
+	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
+		return _entityModel;
+	}
+
+	@Override
+	public Page<StructuredContentFolder> getSiteStructuredContentFoldersPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
+			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
 		Long parentStructuredContentFolderId = null;
@@ -76,13 +80,8 @@ public class StructuredContentFolderResourceImpl
 		}
 
 		return _getFoldersPage(
-			siteId, parentStructuredContentFolderId, search, filter,
-			pagination, sorts);
-	}
-
-	@Override
-	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
-		return _entityModel;
+			siteId, parentStructuredContentFolderId, search, filter, pagination,
+			sorts);
 	}
 
 	@Override
@@ -111,8 +110,7 @@ public class StructuredContentFolderResourceImpl
 
 	@Override
 	public StructuredContentFolder postSiteStructuredContentFolder(
-			Long siteId,
-			StructuredContentFolder structuredContentFolder)
+			Long siteId, StructuredContentFolder structuredContentFolder)
 		throws Exception {
 
 		return _addStructuredContentFolder(
@@ -162,17 +160,15 @@ public class StructuredContentFolderResourceImpl
 
 		return _toStructuredContentFolder(
 			_journalFolderService.addFolder(
-				siteId, parentFolderId,
-				structuredContentFolder.getName(),
+				siteId, parentFolderId, structuredContentFolder.getName(),
 				structuredContentFolder.getDescription(),
 				ServiceContextUtil.createServiceContext(
-					siteId,
-					structuredContentFolder.getViewableByAsString())));
+					siteId, structuredContentFolder.getViewableByAsString())));
 	}
 
 	private Page<StructuredContentFolder> _getFoldersPage(
-			Long siteId, Long parentStructuredContentFolderId,
-			String search, Filter filter, Pagination pagination, Sort[] sorts)
+			Long siteId, Long parentStructuredContentFolderId, String search,
+			Filter filter, Pagination pagination, Sort[] sorts)
 		throws Exception {
 
 		return SearchUtil.search(

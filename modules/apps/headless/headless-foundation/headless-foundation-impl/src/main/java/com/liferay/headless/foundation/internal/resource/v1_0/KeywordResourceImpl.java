@@ -55,9 +55,19 @@ public class KeywordResourceImpl
 	}
 
 	@Override
+	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
+		return _entityModel;
+	}
+
+	@Override
+	public Keyword getKeyword(Long keywordId) throws Exception {
+		return _toKeyword(_assetTagService.getTag(keywordId));
+	}
+
+	@Override
 	public Page<Keyword> getSiteKeywordsPage(
-			Long siteId, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
+			Long siteId, String search, Filter filter, Pagination pagination,
+			Sort[] sorts)
 		throws Exception {
 
 		return SearchUtil.search(
@@ -74,16 +84,6 @@ public class KeywordResourceImpl
 				_assetTagService.getTag(
 					GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK)))),
 			sorts);
-	}
-
-	@Override
-	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
-		return _entityModel;
-	}
-
-	@Override
-	public Keyword getKeyword(Long keywordId) throws Exception {
-		return _toKeyword(_assetTagService.getTag(keywordId));
 	}
 
 	@Override

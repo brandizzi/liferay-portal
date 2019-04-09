@@ -92,9 +92,14 @@ public class TaxonomyVocabularyResourceImpl
 	}
 
 	@Override
+	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
+		return _entityModel;
+	}
+
+	@Override
 	public Page<TaxonomyVocabulary> getSiteTaxonomyVocabulariesPage(
-			Long siteId, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
+			Long siteId, String search, Filter filter, Pagination pagination,
+			Sort[] sorts)
 		throws Exception {
 
 		return SearchUtil.search(
@@ -112,11 +117,6 @@ public class TaxonomyVocabularyResourceImpl
 					GetterUtil.getLong(
 						document.get(Field.ASSET_VOCABULARY_ID)))),
 			sorts);
-	}
-
-	@Override
-	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
-		return _entityModel;
 	}
 
 	@Override
@@ -208,11 +208,9 @@ public class TaxonomyVocabularyResourceImpl
 				Collections.singletonMap(
 					contextAcceptLanguage.getPreferredLocale(),
 					taxonomyVocabulary.getDescription()),
-				_getSettings(
-					taxonomyVocabulary.getAssetTypes(), siteId),
+				_getSettings(taxonomyVocabulary.getAssetTypes(), siteId),
 				ServiceContextUtil.createServiceContext(
-					siteId,
-					taxonomyVocabulary.getViewableByAsString())));
+					siteId, taxonomyVocabulary.getViewableByAsString())));
 	}
 
 	@Override

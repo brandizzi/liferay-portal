@@ -104,30 +104,6 @@ public class MessageBoardThreadResourceImpl
 	}
 
 	@Override
-	public Page<MessageBoardThread> getSiteMessageBoardThreadsPage(
-			Long siteId, Boolean flatten, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
-		throws Exception {
-
-		return _getSiteMessageBoardThreadsPage(
-			booleanQuery -> {
-				BooleanFilter booleanFilter =
-					booleanQuery.getPreBooleanFilter();
-
-				if (!GetterUtil.getBoolean(flatten)) {
-					booleanFilter.add(
-						new TermFilter(Field.CATEGORY_ID, "0"),
-						BooleanClauseOccur.MUST);
-				}
-
-				booleanFilter.add(
-					new TermFilter("parentMessageId", "0"),
-					BooleanClauseOccur.MUST);
-			},
-			siteId, search, filter, pagination, sorts);
-	}
-
-	@Override
 	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
 		return _entityModel;
 	}
@@ -180,11 +156,27 @@ public class MessageBoardThreadResourceImpl
 	}
 
 	@Override
-	public MessageBoardThread postSiteMessageBoardThread(
-			Long siteId, MessageBoardThread messageBoardThread)
+	public Page<MessageBoardThread> getSiteMessageBoardThreadsPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
+			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
-		return _addMessageBoardThread(siteId, 0L, messageBoardThread);
+		return _getSiteMessageBoardThreadsPage(
+			booleanQuery -> {
+				BooleanFilter booleanFilter =
+					booleanQuery.getPreBooleanFilter();
+
+				if (!GetterUtil.getBoolean(flatten)) {
+					booleanFilter.add(
+						new TermFilter(Field.CATEGORY_ID, "0"),
+						BooleanClauseOccur.MUST);
+				}
+
+				booleanFilter.add(
+					new TermFilter("parentMessageId", "0"),
+					BooleanClauseOccur.MUST);
+			},
+			siteId, search, filter, pagination, sorts);
 	}
 
 	@Override
@@ -211,6 +203,14 @@ public class MessageBoardThreadResourceImpl
 
 		return spiRatingResource.addOrUpdateRating(
 			rating.getRatingValue(), mbThread.getRootMessageId());
+	}
+
+	@Override
+	public MessageBoardThread postSiteMessageBoardThread(
+			Long siteId, MessageBoardThread messageBoardThread)
+		throws Exception {
+
+		return _addMessageBoardThread(siteId, 0L, messageBoardThread);
 	}
 
 	@Override
@@ -263,12 +263,10 @@ public class MessageBoardThreadResourceImpl
 		throws Exception {
 
 		MBMessage mbMessage = _mbMessageService.addMessage(
-			siteId, messageBoardSectionId,
-			messageBoardThread.getHeadline(),
+			siteId, messageBoardSectionId, messageBoardThread.getHeadline(),
 			messageBoardThread.getArticleBody(),
 			MBMessageConstants.DEFAULT_FORMAT, Collections.emptyList(), false,
-			_toPriority(siteId, messageBoardThread.getThreadType()),
-			false,
+			_toPriority(siteId, messageBoardThread.getThreadType()), false,
 			ServiceContextUtil.createServiceContext(
 				messageBoardThread.getKeywords(), null, siteId,
 				messageBoardThread.getViewableByAsString()));
@@ -280,8 +278,8 @@ public class MessageBoardThreadResourceImpl
 
 	private Page<MessageBoardThread> _getSiteMessageBoardThreadsPage(
 			UnsafeConsumer<BooleanQuery, Exception> booleanQueryUnsafeConsumer,
-			Long siteId, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
+			Long siteId, String search, Filter filter, Pagination pagination,
+			Sort[] sorts)
 		throws Exception {
 
 		return SearchUtil.search(

@@ -50,9 +50,22 @@ public class ContentStructureResourceImpl
 	extends BaseContentStructureResourceImpl implements EntityModelResource {
 
 	@Override
+	public ContentStructure getContentStructure(Long contentStructureId)
+		throws Exception {
+
+		return _toContentStructure(
+			_ddmStructureService.getStructure(contentStructureId));
+	}
+
+	@Override
+	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
+		return _entityModel;
+	}
+
+	@Override
 	public Page<ContentStructure> getSiteContentStructuresPage(
-			Long siteId, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
+			Long siteId, String search, Filter filter, Pagination pagination,
+			Sort[] sorts)
 		throws Exception {
 
 		return SearchUtil.search(
@@ -71,19 +84,6 @@ public class ContentStructureResourceImpl
 				_ddmStructureService.getStructure(
 					GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK)))),
 			sorts);
-	}
-
-	@Override
-	public ContentStructure getContentStructure(Long contentStructureId)
-		throws Exception {
-
-		return _toContentStructure(
-			_ddmStructureService.getStructure(contentStructureId));
-	}
-
-	@Override
-	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
-		return _entityModel;
 	}
 
 	private ContentStructure _toContentStructure(DDMStructure ddmStructure)

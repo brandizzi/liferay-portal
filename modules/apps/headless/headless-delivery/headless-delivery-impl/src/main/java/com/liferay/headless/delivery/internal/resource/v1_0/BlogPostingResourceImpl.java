@@ -96,9 +96,14 @@ public class BlogPostingResourceImpl
 	}
 
 	@Override
+	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
+		return _entityModel;
+	}
+
+	@Override
 	public Page<BlogPosting> getSiteBlogPostingsPage(
-			Long siteId, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
+			Long siteId, String search, Filter filter, Pagination pagination,
+			Sort[] sorts)
 		throws Exception {
 
 		return SearchUtil.search(
@@ -120,11 +125,6 @@ public class BlogPostingResourceImpl
 	}
 
 	@Override
-	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
-		return _entityModel;
-	}
-
-	@Override
 	public Rating postBlogPostingMyRating(Long blogPostingId, Rating rating)
 		throws Exception {
 
@@ -135,8 +135,7 @@ public class BlogPostingResourceImpl
 	}
 
 	@Override
-	public BlogPosting postSiteBlogPosting(
-			Long siteId, BlogPosting blogPosting)
+	public BlogPosting postSiteBlogPosting(Long siteId, BlogPosting blogPosting)
 		throws Exception {
 
 		LocalDateTime localDateTime = LocalDateTimeUtil.toLocalDateTime(

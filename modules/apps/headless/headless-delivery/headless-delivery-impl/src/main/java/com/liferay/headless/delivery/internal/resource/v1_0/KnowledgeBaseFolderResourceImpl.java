@@ -50,20 +50,6 @@ public class KnowledgeBaseFolderResourceImpl
 	}
 
 	@Override
-	public Page<KnowledgeBaseFolder> getSiteKnowledgeBaseFoldersPage(
-			Long siteId, Pagination pagination)
-		throws Exception {
-
-		return Page.of(
-			transform(
-				_kbFolderService.getKBFolders(
-					siteId, 0, pagination.getStartPosition(),
-					pagination.getEndPosition()),
-				this::_toKnowledgeBaseFolder),
-			pagination, _kbFolderService.getKBFoldersCount(siteId, 0));
-	}
-
-	@Override
 	public KnowledgeBaseFolder getKnowledgeBaseFolder(
 			Long knowledgeBaseFolderId)
 		throws Exception {
@@ -93,18 +79,17 @@ public class KnowledgeBaseFolderResourceImpl
 	}
 
 	@Override
-	public KnowledgeBaseFolder postSiteKnowledgeBaseFolder(
-			Long siteId, KnowledgeBaseFolder knowledgeBaseFolder)
+	public Page<KnowledgeBaseFolder> getSiteKnowledgeBaseFoldersPage(
+			Long siteId, Pagination pagination)
 		throws Exception {
 
-		return _toKnowledgeBaseFolder(
-			_kbFolderService.addKBFolder(
-				siteId, _getClassNameId(), 0,
-				knowledgeBaseFolder.getName(),
-				knowledgeBaseFolder.getDescription(),
-				ServiceContextUtil.createServiceContext(
-					siteId,
-					knowledgeBaseFolder.getViewableByAsString())));
+		return Page.of(
+			transform(
+				_kbFolderService.getKBFolders(
+					siteId, 0, pagination.getStartPosition(),
+					pagination.getEndPosition()),
+				this::_toKnowledgeBaseFolder),
+			pagination, _kbFolderService.getKBFoldersCount(siteId, 0));
 	}
 
 	@Override
@@ -124,6 +109,19 @@ public class KnowledgeBaseFolderResourceImpl
 				ServiceContextUtil.createServiceContext(
 					kbFolder.getGroupId(),
 					knowledgeBaseFolder.getViewableByAsString())));
+	}
+
+	@Override
+	public KnowledgeBaseFolder postSiteKnowledgeBaseFolder(
+			Long siteId, KnowledgeBaseFolder knowledgeBaseFolder)
+		throws Exception {
+
+		return _toKnowledgeBaseFolder(
+			_kbFolderService.addKBFolder(
+				siteId, _getClassNameId(), 0, knowledgeBaseFolder.getName(),
+				knowledgeBaseFolder.getDescription(),
+				ServiceContextUtil.createServiceContext(
+					siteId, knowledgeBaseFolder.getViewableByAsString())));
 	}
 
 	@Override

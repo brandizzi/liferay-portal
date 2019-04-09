@@ -65,26 +65,6 @@ public class MessageBoardSectionResourceImpl
 	}
 
 	@Override
-	public Page<MessageBoardSection> getSiteMessageBoardSectionsPage(
-			Long siteId, Boolean flatten, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
-		throws Exception {
-
-		return _getSiteMessageBoardSectionsPage(
-			booleanQuery -> {
-				if (!GetterUtil.getBoolean(flatten)) {
-					BooleanFilter booleanFilter =
-						booleanQuery.getPreBooleanFilter();
-
-					booleanFilter.add(
-						new TermFilter(Field.ASSET_PARENT_CATEGORY_ID, "0"),
-						BooleanClauseOccur.MUST);
-				}
-			},
-			siteId, search, filter, pagination, sorts);
-	}
-
-	@Override
 	public EntityModel getEntityModel(MultivaluedMap multivaluedMap) {
 		return _entityModel;
 	}
@@ -123,11 +103,23 @@ public class MessageBoardSectionResourceImpl
 	}
 
 	@Override
-	public MessageBoardSection postSiteMessageBoardSection(
-			Long siteId, MessageBoardSection messageBoardSection)
+	public Page<MessageBoardSection> getSiteMessageBoardSectionsPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
+			Pagination pagination, Sort[] sorts)
 		throws Exception {
 
-		return _addMessageBoardSection(siteId, 0L, messageBoardSection);
+		return _getSiteMessageBoardSectionsPage(
+			booleanQuery -> {
+				if (!GetterUtil.getBoolean(flatten)) {
+					BooleanFilter booleanFilter =
+						booleanQuery.getPreBooleanFilter();
+
+					booleanFilter.add(
+						new TermFilter(Field.ASSET_PARENT_CATEGORY_ID, "0"),
+						BooleanClauseOccur.MUST);
+				}
+			},
+			siteId, search, filter, pagination, sorts);
 	}
 
 	@Override
@@ -142,6 +134,14 @@ public class MessageBoardSectionResourceImpl
 		return _addMessageBoardSection(
 			mbCategory.getGroupId(), parentMessageBoardSectionId,
 			messageBoardSection);
+	}
+
+	@Override
+	public MessageBoardSection postSiteMessageBoardSection(
+			Long siteId, MessageBoardSection messageBoardSection)
+		throws Exception {
+
+		return _addMessageBoardSection(siteId, 0L, messageBoardSection);
 	}
 
 	@Override
@@ -173,14 +173,13 @@ public class MessageBoardSectionResourceImpl
 				messageBoardSection.getTitle(),
 				messageBoardSection.getDescription(),
 				ServiceContextUtil.createServiceContext(
-					siteId,
-					messageBoardSection.getViewableByAsString())));
+					siteId, messageBoardSection.getViewableByAsString())));
 	}
 
 	private Page<MessageBoardSection> _getSiteMessageBoardSectionsPage(
 			UnsafeConsumer<BooleanQuery, Exception> booleanQueryUnsafeConsumer,
-			Long siteId, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
+			Long siteId, String search, Filter filter, Pagination pagination,
+			Sort[] sorts)
 		throws Exception {
 
 		return SearchUtil.search(

@@ -92,8 +92,7 @@ public class StructuredContentResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				structuredContent.getSiteId(),
-				testGroup.getGroupId()) &&
+				structuredContent.getSiteId(), testGroup.getGroupId()) &&
 			(structuredContent.getDateCreated() != null) &&
 			(structuredContent.getDateModified() != null) &&
 			(structuredContent.getId() != null)) {
@@ -172,6 +171,24 @@ public class StructuredContentResourceTest
 
 	@Override
 	protected StructuredContent
+			testGetContentStructureStructuredContentsPage_addStructuredContent(
+				Long contentStructureId, StructuredContent structuredContent)
+		throws Exception {
+
+		return invokePostSiteStructuredContent(
+			testGroup.getGroupId(), structuredContent);
+	}
+
+	@Override
+	protected Long
+			testGetContentStructureStructuredContentsPage_getContentStructureId()
+		throws Exception {
+
+		return _ddmStructure.getStructureId();
+	}
+
+	@Override
+	protected StructuredContent
 			testGetSiteStructuredContentByKey_addStructuredContent()
 		throws Exception {
 
@@ -194,26 +211,7 @@ public class StructuredContentResourceTest
 				Long siteId, StructuredContent structuredContent)
 		throws Exception {
 
-		return invokePostSiteStructuredContent(
-			siteId, structuredContent);
-	}
-
-	@Override
-	protected StructuredContent
-			testGetContentStructureStructuredContentsPage_addStructuredContent(
-				Long contentStructureId, StructuredContent structuredContent)
-		throws Exception {
-
-		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), structuredContent);
-	}
-
-	@Override
-	protected Long
-			testGetContentStructureStructuredContentsPage_getContentStructureId()
-		throws Exception {
-
-		return _ddmStructure.getStructureId();
+		return invokePostSiteStructuredContent(siteId, structuredContent);
 	}
 
 	@Override

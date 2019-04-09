@@ -143,6 +143,51 @@ public class StructuredContentResourceImpl
 	}
 
 	@Override
+	public Page<StructuredContent> getContentStructureStructuredContentsPage(
+			Long contentStructureId, String search, Filter filter,
+			Pagination pagination, Sort[] sorts)
+		throws Exception {
+
+		return _getStructuredContentsPage(
+			booleanQuery -> {
+				if (contentStructureId != null) {
+					BooleanFilter booleanFilter =
+						booleanQuery.getPreBooleanFilter();
+
+					booleanFilter.add(
+						new TermFilter(
+							com.liferay.portal.kernel.search.Field.
+								CLASS_TYPE_ID,
+							contentStructureId.toString()),
+						BooleanClauseOccur.MUST);
+				}
+			},
+			null, search, filter, pagination, sorts);
+	}
+
+	@Override
+	public EntityModel getEntityModel(MultivaluedMap multivaluedMap)
+		throws Exception {
+
+		List<EntityField> entityFields = null;
+
+		Long contentStructureId = GetterUtil.getLong(
+			(String)multivaluedMap.getFirst("content-structure-id"));
+
+		if (contentStructureId > 0) {
+			DDMStructure ddmStructure = _ddmStructureService.getStructure(
+				contentStructureId);
+
+			entityFields = _entityFieldsProvider.provide(ddmStructure);
+		}
+		else {
+			entityFields = Collections.emptyList();
+		}
+
+		return new StructuredContentEntityModel(entityFields);
+	}
+
+	@Override
 	public StructuredContent getSiteStructuredContentByKey(
 			Long siteId, String key)
 		throws Exception {
@@ -191,51 +236,6 @@ public class StructuredContentResourceImpl
 				}
 			},
 			siteId, search, filter, pagination, sorts);
-	}
-
-	@Override
-	public Page<StructuredContent> getContentStructureStructuredContentsPage(
-			Long contentStructureId, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
-		throws Exception {
-
-		return _getStructuredContentsPage(
-			booleanQuery -> {
-				if (contentStructureId != null) {
-					BooleanFilter booleanFilter =
-						booleanQuery.getPreBooleanFilter();
-
-					booleanFilter.add(
-						new TermFilter(
-							com.liferay.portal.kernel.search.Field.
-								CLASS_TYPE_ID,
-							contentStructureId.toString()),
-						BooleanClauseOccur.MUST);
-				}
-			},
-			null, search, filter, pagination, sorts);
-	}
-
-	@Override
-	public EntityModel getEntityModel(MultivaluedMap multivaluedMap)
-		throws Exception {
-
-		List<EntityField> entityFields = null;
-
-		Long contentStructureId = GetterUtil.getLong(
-			(String)multivaluedMap.getFirst("content-structure-id"));
-
-		if (contentStructureId > 0) {
-			DDMStructure ddmStructure = _ddmStructureService.getStructure(
-				contentStructureId);
-
-			entityFields = _entityFieldsProvider.provide(ddmStructure);
-		}
-		else {
-			entityFields = Collections.emptyList();
-		}
-
-		return new StructuredContentEntityModel(entityFields);
 	}
 
 	@Override
@@ -491,8 +491,7 @@ public class StructuredContentResourceImpl
 
 		return _toStructuredContent(
 			_journalArticleService.addArticle(
-				siteId, parentStructuredContentFolderId, 0, 0, null,
-				true,
+				siteId, parentStructuredContentFolderId, 0, 0, null, true,
 				new HashMap<Locale, String>() {
 					{
 						put(
@@ -510,9 +509,8 @@ public class StructuredContentResourceImpl
 				_createJournalArticleContent(
 					DDMFormValuesUtil.toDDMFormValues(
 						structuredContent.getContentFields(),
-						ddmStructure.getDDMForm(), _dlAppService,
-						siteId, _journalArticleService,
-						_layoutLocalService,
+						ddmStructure.getDDMForm(), _dlAppService, siteId,
+						_journalArticleService, _layoutLocalService,
 						contextAcceptLanguage.getPreferredLocale(),
 						_getRootDDMFormFields(ddmStructure)),
 					ddmStructure),
@@ -640,8 +638,8 @@ public class StructuredContentResourceImpl
 
 	private Page<StructuredContent> _getStructuredContentsPage(
 			UnsafeConsumer<BooleanQuery, Exception> booleanQueryUnsafeConsumer,
-			Long siteId, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
+			Long siteId, String search, Filter filter, Pagination pagination,
+			Sort[] sorts)
 		throws Exception {
 
 		return SearchUtil.search(

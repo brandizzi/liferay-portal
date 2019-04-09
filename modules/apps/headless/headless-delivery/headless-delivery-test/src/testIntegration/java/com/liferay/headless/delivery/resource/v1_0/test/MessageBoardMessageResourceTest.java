@@ -60,8 +60,7 @@ public class MessageBoardMessageResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				messageBoardMessage.getSiteId(),
-				testGroup.getGroupId()) &&
+				messageBoardMessage.getSiteId(), testGroup.getGroupId()) &&
 			(messageBoardMessage.getDateCreated() != null) &&
 			(messageBoardMessage.getDateModified() != null) &&
 			(messageBoardMessage.getHeadline() != null) &&

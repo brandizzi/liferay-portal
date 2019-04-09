@@ -58,8 +58,7 @@ public class MessageBoardThreadResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				messageBoardThread.getSiteId(),
-				testGroup.getGroupId()) &&
+				messageBoardThread.getSiteId(), testGroup.getGroupId()) &&
 			(messageBoardThread.getDateCreated() != null) &&
 			(messageBoardThread.getDateModified() != null) &&
 			(messageBoardThread.getHeadline() != null) &&
@@ -133,16 +132,6 @@ public class MessageBoardThreadResourceTest
 
 	@Override
 	protected MessageBoardThread
-			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
-				Long siteId, MessageBoardThread messageBoardThread)
-		throws Exception {
-
-		return invokePostSiteMessageBoardThread(
-			siteId, messageBoardThread);
-	}
-
-	@Override
-	protected MessageBoardThread
 			testGetMessageBoardSectionMessageBoardThreadsPage_addMessageBoardThread(
 				Long messageBoardSectionId,
 				MessageBoardThread messageBoardThread)
@@ -171,6 +160,15 @@ public class MessageBoardThreadResourceTest
 
 	@Override
 	protected MessageBoardThread
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				Long siteId, MessageBoardThread messageBoardThread)
+		throws Exception {
+
+		return invokePostSiteMessageBoardThread(siteId, messageBoardThread);
+	}
+
+	@Override
+	protected MessageBoardThread
 			testPatchMessageBoardThread_addMessageBoardThread()
 		throws Exception {
 
@@ -180,7 +178,7 @@ public class MessageBoardThreadResourceTest
 
 	@Override
 	protected MessageBoardThread
-			testPostSiteMessageBoardThread_addMessageBoardThread(
+			testPostMessageBoardSectionMessageBoardThread_addMessageBoardThread(
 				MessageBoardThread messageBoardThread)
 		throws Exception {
 
@@ -190,7 +188,7 @@ public class MessageBoardThreadResourceTest
 
 	@Override
 	protected MessageBoardThread
-			testPostMessageBoardSectionMessageBoardThread_addMessageBoardThread(
+			testPostSiteMessageBoardThread_addMessageBoardThread(
 				MessageBoardThread messageBoardThread)
 		throws Exception {
 

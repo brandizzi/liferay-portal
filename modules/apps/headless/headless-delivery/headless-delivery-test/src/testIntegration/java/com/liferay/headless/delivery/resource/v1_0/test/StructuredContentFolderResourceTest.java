@@ -39,8 +39,7 @@ public class StructuredContentFolderResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				structuredContentFolder.getSiteId(),
-				testGroup.getGroupId()) &&
+				structuredContentFolder.getSiteId(), testGroup.getGroupId()) &&
 			(structuredContentFolder.getDateCreated() != null) &&
 			(structuredContentFolder.getDateModified() != null) &&
 			(structuredContentFolder.getId() != null)) {
@@ -94,8 +93,7 @@ public class StructuredContentFolderResourceTest
 	@Override
 	protected StructuredContentFolder
 			testGetSiteStructuredContentFoldersPage_addStructuredContentFolder(
-				Long siteId,
-				StructuredContentFolder structuredContentFolder)
+				Long siteId, StructuredContentFolder structuredContentFolder)
 		throws Exception {
 
 		return invokePostSiteStructuredContentFolder(

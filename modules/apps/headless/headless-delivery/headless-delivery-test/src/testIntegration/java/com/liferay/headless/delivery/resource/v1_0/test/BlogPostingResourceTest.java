@@ -48,8 +48,7 @@ public class BlogPostingResourceTest extends BaseBlogPostingResourceTestCase {
 		BlogPosting blogPosting1, BlogPosting blogPosting2) {
 
 		if (Objects.equals(
-				blogPosting1.getSiteId(),
-				blogPosting2.getSiteId()) &&
+				blogPosting1.getSiteId(), blogPosting2.getSiteId()) &&
 			Objects.equals(
 				blogPosting1.getDescription(), blogPosting2.getDescription()) &&
 			Objects.equals(
@@ -113,8 +112,7 @@ public class BlogPostingResourceTest extends BaseBlogPostingResourceTestCase {
 			BlogPosting blogPosting)
 		throws Exception {
 
-		return invokePostSiteBlogPosting(
-			testGroup.getGroupId(), blogPosting);
+		return invokePostSiteBlogPosting(testGroup.getGroupId(), blogPosting);
 	}
 
 	@Override

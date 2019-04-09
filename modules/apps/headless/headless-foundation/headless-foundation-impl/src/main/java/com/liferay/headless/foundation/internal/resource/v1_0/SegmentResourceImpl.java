@@ -61,8 +61,7 @@ public class SegmentResourceImpl extends BaseSegmentResourceImpl {
 					pagination.getEndPosition(), null),
 				this::_toSegment),
 			pagination,
-			_segmentsEntryService.getSegmentsEntriesCount(
-				siteId, true));
+			_segmentsEntryService.getSegmentsEntriesCount(siteId, true));
 	}
 
 	@Override

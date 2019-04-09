@@ -35,8 +35,7 @@ public class TaxonomyVocabularyResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				taxonomyVocabulary.getSiteId(),
-				testGroup.getGroupId()) &&
+				taxonomyVocabulary.getSiteId(), testGroup.getGroupId()) &&
 			(taxonomyVocabulary.getDateCreated() != null) &&
 			(taxonomyVocabulary.getDateModified() != null) &&
 			(taxonomyVocabulary.getId() != null)) {
@@ -103,8 +102,7 @@ public class TaxonomyVocabularyResourceTest
 				Long siteId, TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
-		return invokePostSiteTaxonomyVocabulary(
-			siteId, taxonomyVocabulary);
+		return invokePostSiteTaxonomyVocabulary(siteId, taxonomyVocabulary);
 	}
 
 	@Override

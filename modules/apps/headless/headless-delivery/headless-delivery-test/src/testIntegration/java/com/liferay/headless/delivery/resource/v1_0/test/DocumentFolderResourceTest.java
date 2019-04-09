@@ -95,22 +95,11 @@ public class DocumentFolderResourceTest
 	}
 
 	@Override
-	protected DocumentFolder
-			testGetSiteDocumentFoldersPage_addDocumentFolder(
-				Long siteId, DocumentFolder documentFolder)
-		throws Exception {
-
-		return invokePostSiteDocumentFolder(
-			siteId, documentFolder);
-	}
-
-	@Override
 	protected DocumentFolder testGetDocumentFolder_addDocumentFolder()
 		throws Exception {
 
-		DocumentFolder postDocumentFolder =
-			invokePostSiteDocumentFolder(
-				testGroup.getGroupId(), randomDocumentFolder());
+		DocumentFolder postDocumentFolder = invokePostSiteDocumentFolder(
+			testGroup.getGroupId(), randomDocumentFolder());
 
 		Assert.assertEquals(0, postDocumentFolder.getNumberOfDocuments());
 
@@ -150,6 +139,14 @@ public class DocumentFolderResourceTest
 	}
 
 	@Override
+	protected DocumentFolder testGetSiteDocumentFoldersPage_addDocumentFolder(
+			Long siteId, DocumentFolder documentFolder)
+		throws Exception {
+
+		return invokePostSiteDocumentFolder(siteId, documentFolder);
+	}
+
+	@Override
 	protected DocumentFolder testPatchDocumentFolder_addDocumentFolder()
 		throws Exception {
 
@@ -159,31 +156,28 @@ public class DocumentFolderResourceTest
 
 	@Override
 	protected DocumentFolder
-			testPostSiteDocumentFolder_addDocumentFolder(
-				DocumentFolder documentFolder)
-		throws Exception {
-
-		DocumentFolder postDocumentFolder =
-			invokePostSiteDocumentFolder(
-				testGroup.getGroupId(), documentFolder);
-
-		Assert.assertEquals(0, postDocumentFolder.getNumberOfDocuments());
-
-		return postDocumentFolder;
-	}
-
-	@Override
-	protected DocumentFolder
 			testPostDocumentFolderDocumentFolder_addDocumentFolder(
 				DocumentFolder documentFolder)
 		throws Exception {
 
-		DocumentFolder parentDocumentFolder =
-			invokePostSiteDocumentFolder(
-				testGroup.getGroupId(), randomDocumentFolder());
+		DocumentFolder parentDocumentFolder = invokePostSiteDocumentFolder(
+			testGroup.getGroupId(), randomDocumentFolder());
 
 		return invokePostDocumentFolderDocumentFolder(
 			parentDocumentFolder.getId(), documentFolder);
+	}
+
+	@Override
+	protected DocumentFolder testPostSiteDocumentFolder_addDocumentFolder(
+			DocumentFolder documentFolder)
+		throws Exception {
+
+		DocumentFolder postDocumentFolder = invokePostSiteDocumentFolder(
+			testGroup.getGroupId(), documentFolder);
+
+		Assert.assertEquals(0, postDocumentFolder.getNumberOfDocuments());
+
+		return postDocumentFolder;
 	}
 
 	@Override
