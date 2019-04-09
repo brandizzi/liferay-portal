@@ -165,17 +165,18 @@ public class DLOpenerGoogleDriveDLPortletToolbarContributorContext
 		return _language.get(resourceBundle, key);
 	}
 
-	private static final String _ICON_NAME_DOCUMENT = "document-text";
-
 	private static final String _ICON_COLOR_DOCUMENT = "6";
-
-	private static final String _ICON_NAME_PRESENTATION = "document-presentation";
 
 	private static final String _ICON_COLOR_PRESENTATION = "4";
 
-	private static final String _ICON_NAME_SPREADSHEET = "document-table";
-
 	private static final String _ICON_COLOR_SPREADSHEET = "2";
+
+	private static final String _ICON_NAME_DOCUMENT = "document-text";
+
+	private static final String _ICON_NAME_PRESENTATION =
+		"document-presentation";
+
+	private static final String _ICON_NAME_SPREADSHEET = "document-table";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DLOpenerGoogleDriveDLPortletToolbarContributorContext.class);
