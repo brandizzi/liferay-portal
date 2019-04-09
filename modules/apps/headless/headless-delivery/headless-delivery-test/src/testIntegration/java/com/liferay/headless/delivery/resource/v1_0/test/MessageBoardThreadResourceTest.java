@@ -54,41 +54,8 @@ public class MessageBoardThreadResourceTest
 	}
 
 	@Override
-	protected void assertValid(MessageBoardThread messageBoardThread) {
-		boolean valid = false;
-
-		if (Objects.equals(
-				messageBoardThread.getSiteId(), testGroup.getGroupId()) &&
-			(messageBoardThread.getDateCreated() != null) &&
-			(messageBoardThread.getDateModified() != null) &&
-			(messageBoardThread.getHeadline() != null) &&
-			(messageBoardThread.getId() != null)) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(
-		MessageBoardThread messageBoardThread1,
-		MessageBoardThread messageBoardThread2) {
-
-		if (Objects.equals(
-				messageBoardThread1.getArticleBody(),
-				messageBoardThread2.getArticleBody()) &&
-			Objects.equals(
-				messageBoardThread1.getSiteId(),
-				messageBoardThread2.getSiteId()) &&
-			Objects.equals(
-				messageBoardThread1.getHeadline(),
-				messageBoardThread2.getHeadline())) {
-
-			return true;
-		}
-
-		return false;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"articleBody", "headline"};
 	}
 
 	@Override
@@ -96,7 +63,6 @@ public class MessageBoardThreadResourceTest
 		MessageBoardThread messageBoardThread =
 			super.randomMessageBoardThread();
 
-		messageBoardThread.setSiteId(testGroup.getGroupId());
 		messageBoardThread.setThreadType("Urgent");
 
 		return messageBoardThread;
