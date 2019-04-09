@@ -127,7 +127,7 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 	private String _processTemplate(
 			String html, FragmentRendererContext fragmentRendererContext,
-			HttpServletRequest request, HttpServletResponse response)
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
 		throws PortalException {
 
 		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
@@ -142,9 +142,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 			TemplateManagerUtil.getTemplateManager(
 				TemplateConstants.LANG_TYPE_FTL);
 
-		templateManager.addTaglibSupport(template, request, response);
+		templateManager.addTaglibSupport(template, httpServletRequest, httpServletResponse);
 		templateManager.addTaglibTheme(
-			template, "taglibLiferay", request, response);
+			template, "taglibLiferay", httpServletRequest, httpServletResponse);
 
 		template.put(TemplateConstants.WRITER, unsyncStringWriter);
 		template.put("contentAccessorUtil", ContentAccessorUtil.getInstance());
@@ -158,7 +158,7 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 			template.putAll(fieldValuesOptional.get());
 		}
 
-		template.prepare(request);
+		template.prepare(httpServletRequest);
 
 		template.processTemplate(unsyncStringWriter);
 
@@ -206,7 +206,7 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 	private String _renderFragmentEntryLink(
 			FragmentRendererContext fragmentRendererContext,
-			HttpServletRequest request, HttpServletResponse response)
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
 		throws PortalException {
 
 		String css =
@@ -223,23 +223,23 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 				fragmentRendererContext.getLocale(),
 				fragmentRendererContext.getSegmentsExperienceIds());
 
-		if ((request != null) && (response != null) &&
+		if ((httpServletRequest != null) && (httpServletResponse != null) &&
 			Validator.isNotNull(html)) {
 
 			html = _processTemplate(
-				html, fragmentRendererContext, request, response);
+				html, fragmentRendererContext, httpServletRequest, httpServletResponse);
 		}
 
-		if ((request != null) && (response != null) &&
+		if ((httpServletRequest != null) && (httpServletResponse != null) &&
 			Validator.isNotNull(css)) {
 
 			css = _processTemplate(
-				css, fragmentRendererContext, request, response);
+				css, fragmentRendererContext, httpServletRequest, httpServletResponse);
 		}
 
 		html = _writePortletPaths(
-			fragmentRendererContext.getFragmentEntryLink(), html, request,
-			response);
+			fragmentRendererContext.getFragmentEntryLink(), html, httpServletRequest,
+			httpServletResponse);
 
 		FragmentEntryLink fragmentEntryLink =
 			fragmentRendererContext.getFragmentEntryLink();
