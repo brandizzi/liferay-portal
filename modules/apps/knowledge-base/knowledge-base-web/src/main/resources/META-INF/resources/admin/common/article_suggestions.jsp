@@ -120,10 +120,6 @@ if (ratingsType == null) {
 		</c:when>
 	</c:choose>
 
-	<%
-	boolean expanded = ParamUtil.getBoolean(request, "expanded");
-	%>
-
 	<c:if test="<%= kbCommentsCount > 0 %>">
 		<c:choose>
 			<c:when test="<%= showAdminSuggestionView %>">
