@@ -147,6 +147,7 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 			template, "taglibLiferay", request, response);
 
 		template.put(TemplateConstants.WRITER, unsyncStringWriter);
+		template.put("contentAccessorUtil", ContentAccessorUtil.getInstance());
 
 		Optional<Map<String, Object>> fieldValuesOptional =
 			fragmentRendererContext.getFieldValuesOptional();
@@ -156,8 +157,6 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 			template.putAll(fieldValuesOptional.get());
 		}
-
-		template.put("contentAccessorUtil", ContentAccessorUtil.getInstance());
 
 		template.prepare(request);
 
