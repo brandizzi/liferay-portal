@@ -19,10 +19,12 @@ import com.fasterxml.jackson.jaxrs.xml.JacksonXMLProvider;
 
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.search.filter.Filter;
+import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.odata.filter.ExpressionConvert;
 import com.liferay.portal.odata.filter.FilterParserProvider;
 import com.liferay.portal.odata.sort.SortParserProvider;
+import com.liferay.portal.vulcan.internal.jaxrs.container.request.filter.SiteValidatorContainerRequestFilter;
 import com.liferay.portal.vulcan.internal.jaxrs.context.provider.AcceptLanguageContextProvider;
 import com.liferay.portal.vulcan.internal.jaxrs.context.provider.CompanyContextProvider;
 import com.liferay.portal.vulcan.internal.jaxrs.context.provider.FieldsQueryParamContextProvider;
@@ -110,6 +112,9 @@ public class VulcanFeature implements Feature {
 			new FilterContextProvider(
 				_expressionConvert, _filterParserProvider, _language, _portal));
 		featureContext.register(
+			new SiteValidatorContainerRequestFilter(_groupLocalService));
+
+		featureContext.register(
 			new SortContextProvider(_language, _portal, _sortParserProvider));
 		featureContext.register(new UserContextProvider(_portal));
 
@@ -130,6 +135,9 @@ public class VulcanFeature implements Feature {
 
 	@Reference
 	private FilterParserProvider _filterParserProvider;
+
+	@Reference
+	private GroupLocalService _groupLocalService;
 
 	@Reference
 	private Language _language;
