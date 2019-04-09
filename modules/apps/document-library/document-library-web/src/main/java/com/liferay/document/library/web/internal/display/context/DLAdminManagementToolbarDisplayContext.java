@@ -350,6 +350,7 @@ public class DLAdminManagementToolbarDisplayContext {
 						dropdownItem.setIcon(urlMenuItem.getIcon());
 						dropdownItem.setLabel(urlMenuItem.getLabel());
 						dropdownItem.setSeparator(urlMenuItem.hasSeparator());
+						dropdownItem.setData(urlMenuItem.getData());
 					});
 			}
 		}
