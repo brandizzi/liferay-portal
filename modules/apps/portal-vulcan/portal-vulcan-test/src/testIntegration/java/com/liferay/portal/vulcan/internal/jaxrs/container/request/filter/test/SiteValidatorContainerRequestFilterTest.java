@@ -122,10 +122,10 @@ public class SiteValidatorContainerRequestFilterTest {
 
 		@GET
 		@Path("/{siteId}/name")
-		public String testClass(@PathParam("siteId") Long contentSpaceId)
+		public String testClass(@PathParam("siteId") Long siteId)
 			throws Exception {
 
-			Group group = GroupLocalServiceUtil.getGroup(contentSpaceId);
+			Group group = GroupLocalServiceUtil.getGroup(siteId);
 
 			return group.getName(LocaleUtil.getDefault());
 		}
