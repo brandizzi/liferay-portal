@@ -25,9 +25,6 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 
-import java.util.Objects;
-
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 

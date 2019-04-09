@@ -17,9 +17,6 @@ package com.liferay.headless.delivery.resource.v1_0.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.headless.delivery.dto.v1_0.BlogPosting;
 
-import java.util.Objects;
-
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 
 /**
@@ -29,45 +26,8 @@ import org.junit.runner.RunWith;
 public class BlogPostingResourceTest extends BaseBlogPostingResourceTestCase {
 
 	@Override
-	protected void assertValid(BlogPosting blogPosting) {
-		boolean valid = false;
-
-		if ((blogPosting.getDateCreated() != null) &&
-			(blogPosting.getDateModified() != null) &&
-			(blogPosting.getHeadline() != null) &&
-			(blogPosting.getId() != null) &&
-			Objects.equals(blogPosting.getSiteId(), testGroup.getGroupId())) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(
-		BlogPosting blogPosting1, BlogPosting blogPosting2) {
-
-		if (Objects.equals(
-				blogPosting1.getDescription(), blogPosting2.getDescription()) &&
-			Objects.equals(
-				blogPosting1.getHeadline(), blogPosting2.getHeadline()) &&
-			Objects.equals(
-				blogPosting1.getSiteId(), blogPosting2.getSiteId())) {
-
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	protected BlogPosting randomBlogPosting() {
-		BlogPosting blogPosting = super.randomBlogPosting();
-
-		blogPosting.setSiteId(testGroup.getGroupId());
-
-		return blogPosting;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"description", "headline"};
 	}
 
 	@Override

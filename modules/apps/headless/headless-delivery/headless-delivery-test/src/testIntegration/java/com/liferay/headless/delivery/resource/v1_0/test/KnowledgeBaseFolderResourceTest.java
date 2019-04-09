@@ -23,9 +23,6 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 
-import java.util.Objects;
-
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 
 /**
@@ -36,59 +33,8 @@ public class KnowledgeBaseFolderResourceTest
 	extends BaseKnowledgeBaseFolderResourceTestCase {
 
 	@Override
-	protected void assertValid(KnowledgeBaseFolder knowledgeBaseFolder) {
-		boolean valid = false;
-
-		if ((knowledgeBaseFolder.getDateCreated() != null) &&
-			(knowledgeBaseFolder.getDateModified() != null) &&
-			(knowledgeBaseFolder.getId() != null) &&
-			(knowledgeBaseFolder.getName() != null)) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(
-		KnowledgeBaseFolder knowledgeBaseFolder1,
-		KnowledgeBaseFolder knowledgeBaseFolder2) {
-
-		if (Objects.equals(
-				knowledgeBaseFolder1.getSiteId(),
-				knowledgeBaseFolder2.getSiteId()) &&
-			Objects.equals(
-				knowledgeBaseFolder1.getDescription(),
-				knowledgeBaseFolder2.getDescription()) &&
-			Objects.equals(
-				knowledgeBaseFolder1.getName(),
-				knowledgeBaseFolder2.getName())) {
-
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	protected KnowledgeBaseFolder randomIrrelevantKnowledgeBaseFolder() {
-		KnowledgeBaseFolder knowledgeBaseFolder =
-			super.randomIrrelevantKnowledgeBaseFolder();
-
-		knowledgeBaseFolder.setSiteId(irrelevantGroup.getGroupId());
-
-		return knowledgeBaseFolder;
-	}
-
-	@Override
-	protected KnowledgeBaseFolder randomKnowledgeBaseFolder() {
-		KnowledgeBaseFolder knowledgeBaseFolder =
-			super.randomKnowledgeBaseFolder();
-
-		knowledgeBaseFolder.setSiteId(testGroup.getGroupId());
-
-		return knowledgeBaseFolder;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"description", "name"};
 	}
 
 	@Override

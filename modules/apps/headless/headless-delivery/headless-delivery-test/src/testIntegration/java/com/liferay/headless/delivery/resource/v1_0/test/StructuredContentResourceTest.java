@@ -41,10 +41,7 @@ import com.liferay.registry.ServiceReference;
 
 import java.io.InputStream;
 
-import java.util.Objects;
-
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 

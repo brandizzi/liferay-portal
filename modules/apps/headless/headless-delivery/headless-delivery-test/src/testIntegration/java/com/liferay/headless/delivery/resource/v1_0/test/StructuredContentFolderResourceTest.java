@@ -20,9 +20,6 @@ import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.test.util.JournalTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 
-import java.util.Objects;
-
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 
 /**

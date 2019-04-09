@@ -24,9 +24,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 
-import java.util.Objects;
-
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
@@ -56,60 +53,8 @@ public class MessageBoardMessageResourceTest
 	}
 
 	@Override
-	protected void assertValid(MessageBoardMessage messageBoardMessage) {
-		boolean valid = false;
-
-		if (Objects.equals(
-				messageBoardMessage.getSiteId(), testGroup.getGroupId()) &&
-			(messageBoardMessage.getDateCreated() != null) &&
-			(messageBoardMessage.getDateModified() != null) &&
-			(messageBoardMessage.getHeadline() != null) &&
-			(messageBoardMessage.getId() != null)) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(
-		MessageBoardMessage messageBoardMessage1,
-		MessageBoardMessage messageBoardMessage2) {
-
-		if (Objects.equals(
-				messageBoardMessage1.getArticleBody(),
-				messageBoardMessage2.getArticleBody()) &&
-			Objects.equals(
-				messageBoardMessage1.getSiteId(),
-				messageBoardMessage2.getSiteId()) &&
-			Objects.equals(
-				messageBoardMessage1.getHeadline(),
-				messageBoardMessage2.getHeadline())) {
-
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	protected MessageBoardMessage randomIrrelevantMessageBoardMessage() {
-		MessageBoardMessage messageBoardMessage =
-			super.randomIrrelevantMessageBoardMessage();
-
-		messageBoardMessage.setSiteId(irrelevantGroup.getGroupId());
-
-		return messageBoardMessage;
-	}
-
-	protected MessageBoardMessage randomMessageBoardMessage() {
-		MessageBoardMessage messageBoardMessage =
-			super.randomMessageBoardMessage();
-
-		messageBoardMessage.setSiteId(testGroup.getGroupId());
-
-		return messageBoardMessage;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"articleBody", "headline"};
 	}
 
 	@Override

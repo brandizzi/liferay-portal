@@ -36,9 +36,6 @@ import com.liferay.portal.test.rule.Inject;
 
 import java.io.InputStream;
 
-import java.util.Objects;
-
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 
 /**
@@ -49,35 +46,8 @@ public class ContentStructureResourceTest
 	extends BaseContentStructureResourceTestCase {
 
 	@Override
-	protected void assertValid(ContentStructure contentStructure) {
-		boolean valid = false;
-
-		if ((contentStructure.getDateCreated() != null) &&
-			(contentStructure.getDateModified() != null) &&
-			(contentStructure.getId() != null) &&
-			Objects.equals(
-				contentStructure.getSiteId(), testGroup.getGroupId())) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(
-		ContentStructure contentStructure1,
-		ContentStructure contentStructure2) {
-
-		if (Objects.equals(
-				contentStructure1.getName(), contentStructure2.getName()) &&
-			Objects.equals(
-				contentStructure1.getSiteId(), contentStructure2.getSiteId())) {
-
-			return true;
-		}
-
-		return false;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"name"};
 	}
 
 	@Override

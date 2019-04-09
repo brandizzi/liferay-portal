@@ -22,8 +22,6 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
 
-import java.util.Objects;
-
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
@@ -37,37 +35,8 @@ public class DocumentFolderResourceTest
 	extends BaseDocumentFolderResourceTestCase {
 
 	@Override
-	protected void assertValid(DocumentFolder documentFolder) {
-		boolean valid = false;
-
-		if ((documentFolder.getDateCreated() != null) &&
-			(documentFolder.getDateModified() != null) &&
-			(documentFolder.getId() != null) &&
-			Objects.equals(
-				documentFolder.getSiteId(), testGroup.getGroupId())) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(
-		DocumentFolder documentFolder1, DocumentFolder documentFolder2) {
-
-		if (Objects.equals(
-				documentFolder1.getDescription(),
-				documentFolder2.getDescription()) &&
-			Objects.equals(
-				documentFolder1.getName(), documentFolder2.getName()) &&
-			Objects.equals(
-				documentFolder1.getSiteId(), documentFolder2.getSiteId())) {
-
-			return true;
-		}
-
-		return false;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"description", "name"};
 	}
 
 	@Override
@@ -76,6 +45,7 @@ public class DocumentFolderResourceTest
 			{
 				description = RandomTestUtil.randomString();
 				name = RandomTestUtil.randomString();
+				siteId = testGroup.getGroupId();
 			}
 		};
 	}
@@ -84,6 +54,7 @@ public class DocumentFolderResourceTest
 		return new DocumentFolder() {
 			{
 				description = RandomTestUtil.randomString();
+				siteId = testGroup.getGroupId();
 			}
 		};
 	}

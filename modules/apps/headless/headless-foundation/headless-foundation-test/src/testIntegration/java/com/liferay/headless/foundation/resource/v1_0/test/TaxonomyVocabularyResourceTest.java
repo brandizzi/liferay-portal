@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 
 import java.util.Objects;
 
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 
 /**
@@ -30,11 +29,6 @@ import org.junit.runner.RunWith;
 @RunWith(Arquillian.class)
 public class TaxonomyVocabularyResourceTest
 	extends BaseTaxonomyVocabularyResourceTestCase {
-
-	@Override
-	protected String[] getAdditionalAssertFieldNames() {
-		return new String[] {"description", "name"};
-	}
 
 	@Override
 	protected boolean equals(
@@ -49,6 +43,11 @@ public class TaxonomyVocabularyResourceTest
 		}
 
 		return false;
+	}
+
+	@Override
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"description", "name"};
 	}
 
 	@Override
