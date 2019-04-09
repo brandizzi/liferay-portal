@@ -94,8 +94,8 @@ public abstract class Base${schemaName}ResourceTestCase {
 	@Before
 	public void setUp() throws Exception {
 		irrelevantGroup = GroupTestUtil.addGroup();
-		locale = LocaleUtil.getDefault();
 		testGroup = GroupTestUtil.addGroup();
+		testLocale = LocaleUtil.getDefault();
 
 		_resourceURL = new URL("http://localhost:8080/o${configYAML.application.baseURI}/${openAPIYAML.info.version}");
 	}
@@ -839,7 +839,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 
 				BinaryFile binaryFile = multipartBody.getBinaryFile("file");
 
-				options.addFilePart("file", binaryFile.getFileName(), FileUtil.getBytes(binaryFile.getInputStream()), contentType, "UTF-8");
+				options.addFilePart("file", binaryFile.getFileName(), FileUtil.getBytes(binaryFile.getInputStream()), testContentType, "UTF-8");
 			</#if>
 
 			<#if freeMarkerTool.hasHTTPMethod(javaMethodSignature, "delete")>
@@ -1219,11 +1219,11 @@ public abstract class Base${schemaName}ResourceTestCase {
 		}
 	};
 
-	protected String contentType = "application/json";
 	protected Group irrelevantGroup;
-	protected Locale locale;
+	protected String testContentType = "application/json";
 	protected Group testGroup;
-	protected String userNameAndPassword = "test@liferay.com:test";
+	protected Locale testLocale;
+	protected String testUserNameAndPassword = "test@liferay.com:test";
 
 	protected static class Page<T> {
 
@@ -1268,14 +1268,13 @@ public abstract class Base${schemaName}ResourceTestCase {
 		Http.Options options = new Http.Options();
 
 		options.addHeader("Accept", "application/json");
+		options.addHeader("Accept-Language", LocaleUtil.toW3cLanguageId(testLocale));
 
-		options.addHeader("Accept-Language", LocaleUtil.toW3cLanguageId(locale));
+		String encodedTestUserNameAndPassword = Base64.encode(testUserNameAndPassword.getBytes());
 
-		String encodedUserNameAndPassword = Base64.encode(userNameAndPassword.getBytes());
+		options.addHeader("Authorization", "Basic " + encodedTestUserNameAndPassword);
 
-		options.addHeader("Authorization", "Basic " + encodedUserNameAndPassword);
-
-		options.addHeader("Content-Type", contentType);
+		options.addHeader("Content-Type", testContentType);
 
 		return options;
 	}

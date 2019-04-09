@@ -60,53 +60,6 @@ public abstract class BaseDataDefinitionResourceImpl
 	implements DataDefinitionResource {
 
 	@Override
-	@Consumes("application/json")
-	@POST
-	@Path("/sites/{siteId}/data-definition-permissions")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "DataDefinition")})
-	public void postSiteDataDefinitionPermission(
-			@NotNull @PathParam("siteId") Long siteId,
-			@NotNull @QueryParam("operation") String operation,
-			DataDefinitionPermission dataDefinitionPermission)
-		throws Exception {
-	}
-
-	@Override
-	@GET
-	@Parameters(
-		value = {
-			@Parameter(in = ParameterIn.QUERY, name = "page"),
-			@Parameter(in = ParameterIn.QUERY, name = "pageSize")
-		}
-	)
-	@Path("/sites/{siteId}/data-definitions")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "DataDefinition")})
-	public Page<DataDefinition> getSiteDataDefinitionsPage(
-			@NotNull @PathParam("siteId") Long siteId,
-			@QueryParam("keywords") String keywords,
-			@Context Pagination pagination)
-		throws Exception {
-
-		return Page.of(Collections.emptyList());
-	}
-
-	@Override
-	@Consumes("application/json")
-	@POST
-	@Path("/sites/{siteId}/data-definitions")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "DataDefinition")})
-	public DataDefinition postSiteDataDefinition(
-			@NotNull @PathParam("siteId") Long siteId,
-			DataDefinition dataDefinition)
-		throws Exception {
-
-		return new DataDefinition();
-	}
-
-	@Override
 	@DELETE
 	@Path("/data-definitions/{dataDefinitionId}")
 	@Produces("application/json")
@@ -153,6 +106,53 @@ public abstract class BaseDataDefinitionResourceImpl
 			@NotNull @QueryParam("operation") String operation,
 			DataDefinitionPermission dataDefinitionPermission)
 		throws Exception {
+	}
+
+	@Override
+	@Consumes("application/json")
+	@POST
+	@Path("/sites/{siteId}/data-definition-permissions")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "DataDefinition")})
+	public void postSiteDataDefinitionPermission(
+			@NotNull @PathParam("siteId") Long siteId,
+			@NotNull @QueryParam("operation") String operation,
+			DataDefinitionPermission dataDefinitionPermission)
+		throws Exception {
+	}
+
+	@Override
+	@GET
+	@Parameters(
+		value = {
+			@Parameter(in = ParameterIn.QUERY, name = "page"),
+			@Parameter(in = ParameterIn.QUERY, name = "pageSize")
+		}
+	)
+	@Path("/sites/{siteId}/data-definitions")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "DataDefinition")})
+	public Page<DataDefinition> getSiteDataDefinitionsPage(
+			@NotNull @PathParam("siteId") Long siteId,
+			@QueryParam("keywords") String keywords,
+			@Context Pagination pagination)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	@Override
+	@Consumes("application/json")
+	@POST
+	@Path("/sites/{siteId}/data-definitions")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "DataDefinition")})
+	public DataDefinition postSiteDataDefinition(
+			@NotNull @PathParam("siteId") Long siteId,
+			DataDefinition dataDefinition)
+		throws Exception {
+
+		return new DataDefinition();
 	}
 
 	public void setContextCompany(Company contextCompany) {

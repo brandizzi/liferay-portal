@@ -98,7 +98,7 @@ public class StructuredContentResourceTest
 
 		String title = structuredContent.getTitle();
 
-		locale = Locale.FRANCE;
+		testLocale = Locale.FRANCE;
 
 		String frenchTitle = RandomTestUtil.randomString();
 
@@ -112,7 +112,7 @@ public class StructuredContentResourceTest
 
 		Assert.assertEquals(frenchTitle, structuredContent.getTitle());
 
-		locale = LocaleUtil.getDefault();
+		testLocale = LocaleUtil.getDefault();
 
 		structuredContent = invokeGetStructuredContent(
 			structuredContent.getId());

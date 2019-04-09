@@ -33,15 +33,6 @@ import javax.annotation.Generated;
 @Generated("")
 public interface DataRecordCollectionResource {
 
-	public void postSiteDataRecordCollectionPermission(
-			Long siteId, String operation,
-			DataRecordCollectionPermission dataRecordCollectionPermission)
-		throws Exception;
-
-	public Page<DataRecordCollection> getSiteDataRecordCollectionsPage(
-			Long siteId, String keywords, Pagination pagination)
-		throws Exception;
-
 	public Page<DataRecordCollection>
 			getDataDefinitionDataRecordCollectionsPage(
 				Long dataDefinitionId, String keywords, Pagination pagination)
@@ -66,6 +57,15 @@ public interface DataRecordCollectionResource {
 	public void postDataRecordCollectionDataRecordCollectionPermission(
 			Long dataRecordCollectionId, String operation,
 			DataRecordCollectionPermission dataRecordCollectionPermission)
+		throws Exception;
+
+	public void postSiteDataRecordCollectionPermission(
+			Long siteId, String operation,
+			DataRecordCollectionPermission dataRecordCollectionPermission)
+		throws Exception;
+
+	public Page<DataRecordCollection> getSiteDataRecordCollectionsPage(
+			Long siteId, String keywords, Pagination pagination)
 		throws Exception;
 
 	public void setContextCompany(Company contextCompany);

@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
 import com.liferay.portal.test.rule.Inject;
@@ -55,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -97,6 +99,7 @@ public abstract class BaseDataLayoutResourceTestCase {
 	public void setUp() throws Exception {
 		irrelevantGroup = GroupTestUtil.addGroup();
 		testGroup = GroupTestUtil.addGroup();
+		testLocale = LocaleUtil.getDefault();
 
 		_resourceURL = new URL("http://localhost:8080/o/data-engine/v1.0");
 	}
@@ -105,197 +108,6 @@ public abstract class BaseDataLayoutResourceTestCase {
 	public void tearDown() throws Exception {
 		GroupTestUtil.deleteGroup(irrelevantGroup);
 		GroupTestUtil.deleteGroup(testGroup);
-	}
-
-	@Test
-	public void testGetSiteDataLayoutPage() throws Exception {
-		Long siteId = testGetSiteDataLayoutPage_getSiteId();
-		Long irrelevantSiteId = testGetSiteDataLayoutPage_getIrrelevantSiteId();
-
-		if ((irrelevantSiteId != null)) {
-			DataLayout irrelevantDataLayout =
-				testGetSiteDataLayoutPage_addDataLayout(
-					irrelevantSiteId, randomIrrelevantDataLayout());
-
-			Page<DataLayout> page = invokeGetSiteDataLayoutPage(
-				irrelevantSiteId, Pagination.of(1, 2));
-
-			Assert.assertEquals(1, page.getTotalCount());
-
-			assertEquals(
-				Arrays.asList(irrelevantDataLayout),
-				(List<DataLayout>)page.getItems());
-			assertValid(page);
-		}
-
-		DataLayout dataLayout1 = testGetSiteDataLayoutPage_addDataLayout(
-			siteId, randomDataLayout());
-
-		DataLayout dataLayout2 = testGetSiteDataLayoutPage_addDataLayout(
-			siteId, randomDataLayout());
-
-		Page<DataLayout> page = invokeGetSiteDataLayoutPage(
-			siteId, Pagination.of(1, 2));
-
-		Assert.assertEquals(2, page.getTotalCount());
-
-		assertEqualsIgnoringOrder(
-			Arrays.asList(dataLayout1, dataLayout2),
-			(List<DataLayout>)page.getItems());
-		assertValid(page);
-	}
-
-	@Test
-	public void testGetSiteDataLayoutPageWithPagination() throws Exception {
-		Long siteId = testGetSiteDataLayoutPage_getSiteId();
-
-		DataLayout dataLayout1 = testGetSiteDataLayoutPage_addDataLayout(
-			siteId, randomDataLayout());
-
-		DataLayout dataLayout2 = testGetSiteDataLayoutPage_addDataLayout(
-			siteId, randomDataLayout());
-
-		DataLayout dataLayout3 = testGetSiteDataLayoutPage_addDataLayout(
-			siteId, randomDataLayout());
-
-		Page<DataLayout> page1 = invokeGetSiteDataLayoutPage(
-			siteId, Pagination.of(1, 2));
-
-		List<DataLayout> dataLayouts1 = (List<DataLayout>)page1.getItems();
-
-		Assert.assertEquals(dataLayouts1.toString(), 2, dataLayouts1.size());
-
-		Page<DataLayout> page2 = invokeGetSiteDataLayoutPage(
-			siteId, Pagination.of(2, 2));
-
-		Assert.assertEquals(3, page2.getTotalCount());
-
-		List<DataLayout> dataLayouts2 = (List<DataLayout>)page2.getItems();
-
-		Assert.assertEquals(dataLayouts2.toString(), 1, dataLayouts2.size());
-
-		assertEqualsIgnoringOrder(
-			Arrays.asList(dataLayout1, dataLayout2, dataLayout3),
-			new ArrayList<DataLayout>() {
-				{
-					addAll(dataLayouts1);
-					addAll(dataLayouts2);
-				}
-			});
-	}
-
-	protected DataLayout testGetSiteDataLayoutPage_addDataLayout(
-			Long siteId, DataLayout dataLayout)
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected Long testGetSiteDataLayoutPage_getSiteId() throws Exception {
-		return testGroup.getGroupId();
-	}
-
-	protected Long testGetSiteDataLayoutPage_getIrrelevantSiteId()
-		throws Exception {
-
-		return irrelevantGroup.getGroupId();
-	}
-
-	protected Page<DataLayout> invokeGetSiteDataLayoutPage(
-			Long siteId, Pagination pagination)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL + _toPath("/sites/{siteId}/data-layout", siteId);
-
-		location = HttpUtil.addParameter(
-			location, "page", pagination.getPage());
-		location = HttpUtil.addParameter(
-			location, "pageSize", pagination.getPageSize());
-
-		options.setLocation(location);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-
-		return outputObjectMapper.readValue(
-			string,
-			new TypeReference<Page<DataLayout>>() {
-			});
-	}
-
-	protected Http.Response invokeGetSiteDataLayoutPageResponse(
-			Long siteId, Pagination pagination)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL + _toPath("/sites/{siteId}/data-layout", siteId);
-
-		location = HttpUtil.addParameter(
-			location, "page", pagination.getPage());
-		location = HttpUtil.addParameter(
-			location, "pageSize", pagination.getPageSize());
-
-		options.setLocation(location);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
-	public void testPostSiteDataLayoutPermission() throws Exception {
-		Assert.assertTrue(true);
-	}
-
-	protected void invokePostSiteDataLayoutPermission(
-			Long siteId, String operation,
-			DataLayoutPermission dataLayoutPermission)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath("/sites/{siteId}/data-layout-permissions", siteId);
-
-		options.setLocation(location);
-
-		options.setPost(true);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-	}
-
-	protected Http.Response invokePostSiteDataLayoutPermissionResponse(
-			Long siteId, String operation,
-			DataLayoutPermission dataLayoutPermission)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath("/sites/{siteId}/data-layout-permissions", siteId);
-
-		options.setLocation(location);
-
-		options.setPost(true);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
 	}
 
 	@Test
@@ -613,6 +425,197 @@ public abstract class BaseDataLayoutResourceTestCase {
 		options.setLocation(location);
 
 		options.setPut(true);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
+	@Test
+	public void testGetSiteDataLayoutPage() throws Exception {
+		Long siteId = testGetSiteDataLayoutPage_getSiteId();
+		Long irrelevantSiteId = testGetSiteDataLayoutPage_getIrrelevantSiteId();
+
+		if ((irrelevantSiteId != null)) {
+			DataLayout irrelevantDataLayout =
+				testGetSiteDataLayoutPage_addDataLayout(
+					irrelevantSiteId, randomIrrelevantDataLayout());
+
+			Page<DataLayout> page = invokeGetSiteDataLayoutPage(
+				irrelevantSiteId, Pagination.of(1, 2));
+
+			Assert.assertEquals(1, page.getTotalCount());
+
+			assertEquals(
+				Arrays.asList(irrelevantDataLayout),
+				(List<DataLayout>)page.getItems());
+			assertValid(page);
+		}
+
+		DataLayout dataLayout1 = testGetSiteDataLayoutPage_addDataLayout(
+			siteId, randomDataLayout());
+
+		DataLayout dataLayout2 = testGetSiteDataLayoutPage_addDataLayout(
+			siteId, randomDataLayout());
+
+		Page<DataLayout> page = invokeGetSiteDataLayoutPage(
+			siteId, Pagination.of(1, 2));
+
+		Assert.assertEquals(2, page.getTotalCount());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(dataLayout1, dataLayout2),
+			(List<DataLayout>)page.getItems());
+		assertValid(page);
+	}
+
+	@Test
+	public void testGetSiteDataLayoutPageWithPagination() throws Exception {
+		Long siteId = testGetSiteDataLayoutPage_getSiteId();
+
+		DataLayout dataLayout1 = testGetSiteDataLayoutPage_addDataLayout(
+			siteId, randomDataLayout());
+
+		DataLayout dataLayout2 = testGetSiteDataLayoutPage_addDataLayout(
+			siteId, randomDataLayout());
+
+		DataLayout dataLayout3 = testGetSiteDataLayoutPage_addDataLayout(
+			siteId, randomDataLayout());
+
+		Page<DataLayout> page1 = invokeGetSiteDataLayoutPage(
+			siteId, Pagination.of(1, 2));
+
+		List<DataLayout> dataLayouts1 = (List<DataLayout>)page1.getItems();
+
+		Assert.assertEquals(dataLayouts1.toString(), 2, dataLayouts1.size());
+
+		Page<DataLayout> page2 = invokeGetSiteDataLayoutPage(
+			siteId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
+
+		List<DataLayout> dataLayouts2 = (List<DataLayout>)page2.getItems();
+
+		Assert.assertEquals(dataLayouts2.toString(), 1, dataLayouts2.size());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(dataLayout1, dataLayout2, dataLayout3),
+			new ArrayList<DataLayout>() {
+				{
+					addAll(dataLayouts1);
+					addAll(dataLayouts2);
+				}
+			});
+	}
+
+	protected DataLayout testGetSiteDataLayoutPage_addDataLayout(
+			Long siteId, DataLayout dataLayout)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Long testGetSiteDataLayoutPage_getSiteId() throws Exception {
+		return testGroup.getGroupId();
+	}
+
+	protected Long testGetSiteDataLayoutPage_getIrrelevantSiteId()
+		throws Exception {
+
+		return irrelevantGroup.getGroupId();
+	}
+
+	protected Page<DataLayout> invokeGetSiteDataLayoutPage(
+			Long siteId, Pagination pagination)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL + _toPath("/sites/{siteId}/data-layout", siteId);
+
+		location = HttpUtil.addParameter(
+			location, "page", pagination.getPage());
+		location = HttpUtil.addParameter(
+			location, "pageSize", pagination.getPageSize());
+
+		options.setLocation(location);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		return outputObjectMapper.readValue(
+			string,
+			new TypeReference<Page<DataLayout>>() {
+			});
+	}
+
+	protected Http.Response invokeGetSiteDataLayoutPageResponse(
+			Long siteId, Pagination pagination)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL + _toPath("/sites/{siteId}/data-layout", siteId);
+
+		location = HttpUtil.addParameter(
+			location, "page", pagination.getPage());
+		location = HttpUtil.addParameter(
+			location, "pageSize", pagination.getPageSize());
+
+		options.setLocation(location);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
+	@Test
+	public void testPostSiteDataLayoutPermission() throws Exception {
+		Assert.assertTrue(true);
+	}
+
+	protected void invokePostSiteDataLayoutPermission(
+			Long siteId, String operation,
+			DataLayoutPermission dataLayoutPermission)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/data-layout-permissions", siteId);
+
+		options.setLocation(location);
+
+		options.setPost(true);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+	}
+
+	protected Http.Response invokePostSiteDataLayoutPermissionResponse(
+			Long siteId, String operation,
+			DataLayoutPermission dataLayoutPermission)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/data-layout-permissions", siteId);
+
+		options.setLocation(location);
+
+		options.setPost(true);
 
 		HttpUtil.URLtoByteArray(options);
 
@@ -1054,10 +1057,11 @@ public abstract class BaseDataLayoutResourceTestCase {
 			}
 		};
 
-	protected String contentType = "application/json";
 	protected Group irrelevantGroup;
+	protected String testContentType = "application/json";
 	protected Group testGroup;
-	protected String userNameAndPassword = "test@liferay.com:test";
+	protected Locale testLocale;
+	protected String testUserNameAndPassword = "test@liferay.com:test";
 
 	protected static class Page<T> {
 
@@ -1102,14 +1106,16 @@ public abstract class BaseDataLayoutResourceTestCase {
 		Http.Options options = new Http.Options();
 
 		options.addHeader("Accept", "application/json");
+		options.addHeader(
+			"Accept-Language", LocaleUtil.toW3cLanguageId(testLocale));
 
-		String encodedUserNameAndPassword = Base64.encode(
-			userNameAndPassword.getBytes());
+		String encodedTestUserNameAndPassword = Base64.encode(
+			testUserNameAndPassword.getBytes());
 
 		options.addHeader(
-			"Authorization", "Basic " + encodedUserNameAndPassword);
+			"Authorization", "Basic " + encodedTestUserNameAndPassword);
 
-		options.addHeader("Content-Type", contentType);
+		options.addHeader("Content-Type", testContentType);
 
 		return options;
 	}

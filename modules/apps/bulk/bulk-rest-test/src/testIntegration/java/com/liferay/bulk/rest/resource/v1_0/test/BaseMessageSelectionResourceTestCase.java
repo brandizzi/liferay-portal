@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
 import com.liferay.portal.test.rule.Inject;
@@ -50,6 +51,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -92,6 +94,7 @@ public abstract class BaseMessageSelectionResourceTestCase {
 	public void setUp() throws Exception {
 		irrelevantGroup = GroupTestUtil.addGroup();
 		testGroup = GroupTestUtil.addGroup();
+		testLocale = LocaleUtil.getDefault();
 
 		_resourceURL = new URL("http://localhost:8080/o/bulk-rest/v1.0");
 	}
@@ -222,8 +225,25 @@ public abstract class BaseMessageSelectionResourceTestCase {
 	}
 
 	protected void assertValid(MessageSelection messageSelection) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (messageSelection.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<MessageSelection> page) {
@@ -243,6 +263,10 @@ public abstract class BaseMessageSelectionResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		MessageSelection messageSelection1,
 		MessageSelection messageSelection2) {
@@ -251,7 +275,26 @@ public abstract class BaseMessageSelectionResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageSelection1.getDescription(),
+						messageSelection2.getDescription())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -321,7 +364,10 @@ public abstract class BaseMessageSelectionResourceTestCase {
 	}
 
 	protected MessageSelection randomIrrelevantMessageSelection() {
-		return randomMessageSelection();
+		MessageSelection randomIrrelevantMessageSelection =
+			randomMessageSelection();
+
+		return randomIrrelevantMessageSelection;
 	}
 
 	protected MessageSelection randomPatchMessageSelection() {
@@ -355,10 +401,11 @@ public abstract class BaseMessageSelectionResourceTestCase {
 			}
 		};
 
-	protected String contentType = "application/json";
 	protected Group irrelevantGroup;
+	protected String testContentType = "application/json";
 	protected Group testGroup;
-	protected String userNameAndPassword = "test@liferay.com:test";
+	protected Locale testLocale;
+	protected String testUserNameAndPassword = "test@liferay.com:test";
 
 	protected static class Page<T> {
 
@@ -403,14 +450,16 @@ public abstract class BaseMessageSelectionResourceTestCase {
 		Http.Options options = new Http.Options();
 
 		options.addHeader("Accept", "application/json");
+		options.addHeader(
+			"Accept-Language", LocaleUtil.toW3cLanguageId(testLocale));
 
-		String encodedUserNameAndPassword = Base64.encode(
-			userNameAndPassword.getBytes());
+		String encodedTestUserNameAndPassword = Base64.encode(
+			testUserNameAndPassword.getBytes());
 
 		options.addHeader(
-			"Authorization", "Basic " + encodedUserNameAndPassword);
+			"Authorization", "Basic " + encodedTestUserNameAndPassword);
 
-		options.addHeader("Content-Type", contentType);
+		options.addHeader("Content-Type", testContentType);
 
 		return options;
 	}

@@ -77,38 +77,6 @@ public class Mutation {
 			dataRecordCollectionResourceComponentServiceObjects;
 	}
 
-	@GraphQLField
-	@GraphQLInvokeDetached
-	public void postSiteDataDefinitionPermission(
-			@GraphQLName("siteId") Long siteId,
-			@GraphQLName("operation") String operation,
-			@GraphQLName("dataDefinitionPermission") DataDefinitionPermission
-				dataDefinitionPermission)
-		throws Exception {
-
-		_applyVoidComponentServiceObjects(
-			_dataDefinitionResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			dataDefinitionResource ->
-				dataDefinitionResource.postSiteDataDefinitionPermission(
-					siteId, operation, dataDefinitionPermission));
-	}
-
-	@GraphQLField
-	@GraphQLInvokeDetached
-	public DataDefinition postSiteDataDefinition(
-			@GraphQLName("siteId") Long siteId,
-			@GraphQLName("dataDefinition") DataDefinition dataDefinition)
-		throws Exception {
-
-		return _applyComponentServiceObjects(
-			_dataDefinitionResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			dataDefinitionResource ->
-				dataDefinitionResource.postSiteDataDefinition(
-					siteId, dataDefinition));
-	}
-
 	@GraphQLInvokeDetached
 	public void deleteDataDefinition(
 			@GraphQLName("dataDefinitionId") Long dataDefinitionId)
@@ -154,19 +122,34 @@ public class Mutation {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public void postSiteDataLayoutPermission(
+	public void postSiteDataDefinitionPermission(
 			@GraphQLName("siteId") Long siteId,
 			@GraphQLName("operation") String operation,
-			@GraphQLName("dataLayoutPermission") DataLayoutPermission
-				dataLayoutPermission)
+			@GraphQLName("dataDefinitionPermission") DataDefinitionPermission
+				dataDefinitionPermission)
 		throws Exception {
 
 		_applyVoidComponentServiceObjects(
-			_dataLayoutResourceComponentServiceObjects,
+			_dataDefinitionResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			dataLayoutResource ->
-				dataLayoutResource.postSiteDataLayoutPermission(
-					siteId, operation, dataLayoutPermission));
+			dataDefinitionResource ->
+				dataDefinitionResource.postSiteDataDefinitionPermission(
+					siteId, operation, dataDefinitionPermission));
+	}
+
+	@GraphQLField
+	@GraphQLInvokeDetached
+	public DataDefinition postSiteDataDefinition(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("dataDefinition") DataDefinition dataDefinition)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_dataDefinitionResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			dataDefinitionResource ->
+				dataDefinitionResource.postSiteDataDefinition(
+					siteId, dataDefinition));
 	}
 
 	@GraphQLField
@@ -227,6 +210,23 @@ public class Mutation {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
+	public void postSiteDataLayoutPermission(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("operation") String operation,
+			@GraphQLName("dataLayoutPermission") DataLayoutPermission
+				dataLayoutPermission)
+		throws Exception {
+
+		_applyVoidComponentServiceObjects(
+			_dataLayoutResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			dataLayoutResource ->
+				dataLayoutResource.postSiteDataLayoutPermission(
+					siteId, operation, dataLayoutPermission));
+	}
+
+	@GraphQLField
+	@GraphQLInvokeDetached
 	public DataRecord postDataRecordCollectionDataRecord(
 			@GraphQLName("dataRecordCollectionId") Long dataRecordCollectionId,
 			@GraphQLName("dataRecord") DataRecord dataRecord)
@@ -262,24 +262,6 @@ public class Mutation {
 			this::_populateResourceContext,
 			dataRecordResource -> dataRecordResource.putDataRecord(
 				dataRecordId, dataRecord));
-	}
-
-	@GraphQLField
-	@GraphQLInvokeDetached
-	public void postSiteDataRecordCollectionPermission(
-			@GraphQLName("siteId") Long siteId,
-			@GraphQLName("operation") String operation,
-			@GraphQLName("dataRecordCollectionPermission")
-				DataRecordCollectionPermission dataRecordCollectionPermission)
-		throws Exception {
-
-		_applyVoidComponentServiceObjects(
-			_dataRecordCollectionResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			dataRecordCollectionResource ->
-				dataRecordCollectionResource.
-					postSiteDataRecordCollectionPermission(
-						siteId, operation, dataRecordCollectionPermission));
 	}
 
 	@GraphQLField
@@ -344,6 +326,24 @@ public class Mutation {
 					postDataRecordCollectionDataRecordCollectionPermission(
 						dataRecordCollectionId, operation,
 						dataRecordCollectionPermission));
+	}
+
+	@GraphQLField
+	@GraphQLInvokeDetached
+	public void postSiteDataRecordCollectionPermission(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("operation") String operation,
+			@GraphQLName("dataRecordCollectionPermission")
+				DataRecordCollectionPermission dataRecordCollectionPermission)
+		throws Exception {
+
+		_applyVoidComponentServiceObjects(
+			_dataRecordCollectionResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			dataRecordCollectionResource ->
+				dataRecordCollectionResource.
+					postSiteDataRecordCollectionPermission(
+						siteId, operation, dataRecordCollectionPermission));
 	}
 
 	private <T, R, E1 extends Throwable, E2 extends Throwable> R

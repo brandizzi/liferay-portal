@@ -59,38 +59,6 @@ import javax.ws.rs.core.UriInfo;
 public abstract class BaseDataLayoutResourceImpl implements DataLayoutResource {
 
 	@Override
-	@GET
-	@Parameters(
-		value = {
-			@Parameter(in = ParameterIn.QUERY, name = "page"),
-			@Parameter(in = ParameterIn.QUERY, name = "pageSize")
-		}
-	)
-	@Path("/sites/{siteId}/data-layout")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "DataLayout")})
-	public Page<DataLayout> getSiteDataLayoutPage(
-			@NotNull @PathParam("siteId") Long siteId,
-			@Context Pagination pagination)
-		throws Exception {
-
-		return Page.of(Collections.emptyList());
-	}
-
-	@Override
-	@Consumes("application/json")
-	@POST
-	@Path("/sites/{siteId}/data-layout-permissions")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "DataLayout")})
-	public void postSiteDataLayoutPermission(
-			@NotNull @PathParam("siteId") Long siteId,
-			@NotNull @QueryParam("operation") String operation,
-			DataLayoutPermission dataLayoutPermission)
-		throws Exception {
-	}
-
-	@Override
 	@Consumes("application/json")
 	@POST
 	@Path("/data-definitions/{dataDefinitionId}/data-layouts")
@@ -151,6 +119,38 @@ public abstract class BaseDataLayoutResourceImpl implements DataLayoutResource {
 		throws Exception {
 
 		return new DataLayout();
+	}
+
+	@Override
+	@GET
+	@Parameters(
+		value = {
+			@Parameter(in = ParameterIn.QUERY, name = "page"),
+			@Parameter(in = ParameterIn.QUERY, name = "pageSize")
+		}
+	)
+	@Path("/sites/{siteId}/data-layout")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "DataLayout")})
+	public Page<DataLayout> getSiteDataLayoutPage(
+			@NotNull @PathParam("siteId") Long siteId,
+			@Context Pagination pagination)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	@Override
+	@Consumes("application/json")
+	@POST
+	@Path("/sites/{siteId}/data-layout-permissions")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "DataLayout")})
+	public void postSiteDataLayoutPermission(
+			@NotNull @PathParam("siteId") Long siteId,
+			@NotNull @QueryParam("operation") String operation,
+			DataLayoutPermission dataLayoutPermission)
+		throws Exception {
 	}
 
 	public void setContextCompany(Company contextCompany) {

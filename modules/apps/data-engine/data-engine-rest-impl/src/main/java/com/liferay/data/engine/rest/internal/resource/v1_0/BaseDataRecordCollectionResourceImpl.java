@@ -60,39 +60,6 @@ public abstract class BaseDataRecordCollectionResourceImpl
 	implements DataRecordCollectionResource {
 
 	@Override
-	@Consumes("application/json")
-	@POST
-	@Path("/sites/{siteId}/data-record-collection-permissions")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "DataRecordCollection")})
-	public void postSiteDataRecordCollectionPermission(
-			@NotNull @PathParam("siteId") Long siteId,
-			@NotNull @QueryParam("operation") String operation,
-			DataRecordCollectionPermission dataRecordCollectionPermission)
-		throws Exception {
-	}
-
-	@Override
-	@GET
-	@Parameters(
-		value = {
-			@Parameter(in = ParameterIn.QUERY, name = "page"),
-			@Parameter(in = ParameterIn.QUERY, name = "pageSize")
-		}
-	)
-	@Path("/sites/{siteId}/data-record-collections")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "DataRecordCollection")})
-	public Page<DataRecordCollection> getSiteDataRecordCollectionsPage(
-			@NotNull @PathParam("siteId") Long siteId,
-			@QueryParam("keywords") String keywords,
-			@Context Pagination pagination)
-		throws Exception {
-
-		return Page.of(Collections.emptyList());
-	}
-
-	@Override
 	@GET
 	@Parameters(
 		value = {
@@ -180,6 +147,39 @@ public abstract class BaseDataRecordCollectionResourceImpl
 			@NotNull @QueryParam("operation") String operation,
 			DataRecordCollectionPermission dataRecordCollectionPermission)
 		throws Exception {
+	}
+
+	@Override
+	@Consumes("application/json")
+	@POST
+	@Path("/sites/{siteId}/data-record-collection-permissions")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "DataRecordCollection")})
+	public void postSiteDataRecordCollectionPermission(
+			@NotNull @PathParam("siteId") Long siteId,
+			@NotNull @QueryParam("operation") String operation,
+			DataRecordCollectionPermission dataRecordCollectionPermission)
+		throws Exception {
+	}
+
+	@Override
+	@GET
+	@Parameters(
+		value = {
+			@Parameter(in = ParameterIn.QUERY, name = "page"),
+			@Parameter(in = ParameterIn.QUERY, name = "pageSize")
+		}
+	)
+	@Path("/sites/{siteId}/data-record-collections")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "DataRecordCollection")})
+	public Page<DataRecordCollection> getSiteDataRecordCollectionsPage(
+			@NotNull @PathParam("siteId") Long siteId,
+			@QueryParam("keywords") String keywords,
+			@Context Pagination pagination)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
 	}
 
 	public void setContextCompany(Company contextCompany) {

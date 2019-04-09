@@ -165,7 +165,7 @@ public class MessageBoardAttachmentResourceTest
 	private MultipartBody _getMultipartBody(
 		MessageBoardAttachment messageBoardAttachment) {
 
-		contentType = "multipart/form-data;boundary=PART";
+		testContentType = "multipart/form-data;boundary=PART";
 
 		Map<String, BinaryFile> binaryFileMap = new HashMap<>();
 
@@ -174,7 +174,7 @@ public class MessageBoardAttachmentResourceTest
 		binaryFileMap.put(
 			"file",
 			new BinaryFile(
-				contentType, RandomTestUtil.randomString(),
+				testContentType, RandomTestUtil.randomString(),
 				new ByteArrayInputStream(randomString.getBytes()), 0));
 
 		return MultipartBody.of(

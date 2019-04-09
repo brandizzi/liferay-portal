@@ -33,15 +33,6 @@ import javax.annotation.Generated;
 @Generated("")
 public interface DataLayoutResource {
 
-	public Page<DataLayout> getSiteDataLayoutPage(
-			Long siteId, Pagination pagination)
-		throws Exception;
-
-	public void postSiteDataLayoutPermission(
-			Long siteId, String operation,
-			DataLayoutPermission dataLayoutPermission)
-		throws Exception;
-
 	public DataLayout postDataDefinitionDataLayout(
 			Long dataDefinitionId, DataLayout dataLayout)
 		throws Exception;
@@ -56,6 +47,15 @@ public interface DataLayoutResource {
 	public DataLayout getDataLayout(Long dataLayoutId) throws Exception;
 
 	public DataLayout putDataLayout(Long dataLayoutId, DataLayout dataLayout)
+		throws Exception;
+
+	public Page<DataLayout> getSiteDataLayoutPage(
+			Long siteId, Pagination pagination)
+		throws Exception;
+
+	public void postSiteDataLayoutPermission(
+			Long siteId, String operation,
+			DataLayoutPermission dataLayoutPermission)
 		throws Exception;
 
 	public void setContextCompany(Company contextCompany);

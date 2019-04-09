@@ -33,19 +33,6 @@ import javax.annotation.Generated;
 @Generated("")
 public interface DataDefinitionResource {
 
-	public void postSiteDataDefinitionPermission(
-			Long siteId, String operation,
-			DataDefinitionPermission dataDefinitionPermission)
-		throws Exception;
-
-	public Page<DataDefinition> getSiteDataDefinitionsPage(
-			Long siteId, String keywords, Pagination pagination)
-		throws Exception;
-
-	public DataDefinition postSiteDataDefinition(
-			Long siteId, DataDefinition dataDefinition)
-		throws Exception;
-
 	public void deleteDataDefinition(Long dataDefinitionId) throws Exception;
 
 	public DataDefinition getDataDefinition(Long dataDefinitionId)
@@ -58,6 +45,19 @@ public interface DataDefinitionResource {
 	public void postDataDefinitionDataDefinitionPermission(
 			Long dataDefinitionId, String operation,
 			DataDefinitionPermission dataDefinitionPermission)
+		throws Exception;
+
+	public void postSiteDataDefinitionPermission(
+			Long siteId, String operation,
+			DataDefinitionPermission dataDefinitionPermission)
+		throws Exception;
+
+	public Page<DataDefinition> getSiteDataDefinitionsPage(
+			Long siteId, String keywords, Pagination pagination)
+		throws Exception;
+
+	public DataDefinition postSiteDataDefinition(
+			Long siteId, DataDefinition dataDefinition)
 		throws Exception;
 
 	public void setContextCompany(Company contextCompany);

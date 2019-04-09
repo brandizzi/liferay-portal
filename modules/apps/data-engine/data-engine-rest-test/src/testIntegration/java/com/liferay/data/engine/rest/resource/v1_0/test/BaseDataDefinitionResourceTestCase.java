@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
 import com.liferay.portal.test.rule.Inject;
@@ -55,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -97,6 +99,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 	public void setUp() throws Exception {
 		irrelevantGroup = GroupTestUtil.addGroup();
 		testGroup = GroupTestUtil.addGroup();
+		testLocale = LocaleUtil.getDefault();
 
 		_resourceURL = new URL("http://localhost:8080/o/data-engine/v1.0");
 	}
@@ -105,6 +108,271 @@ public abstract class BaseDataDefinitionResourceTestCase {
 	public void tearDown() throws Exception {
 		GroupTestUtil.deleteGroup(irrelevantGroup);
 		GroupTestUtil.deleteGroup(testGroup);
+	}
+
+	@Test
+	public void testDeleteDataDefinition() throws Exception {
+		DataDefinition dataDefinition =
+			testDeleteDataDefinition_addDataDefinition();
+
+		assertResponseCode(
+			204, invokeDeleteDataDefinitionResponse(dataDefinition.getId()));
+
+		assertResponseCode(
+			404, invokeGetDataDefinitionResponse(dataDefinition.getId()));
+	}
+
+	protected DataDefinition testDeleteDataDefinition_addDataDefinition()
+		throws Exception {
+
+		return invokePostSiteDataDefinition(
+			testGroup.getGroupId(), randomDataDefinition());
+	}
+
+	protected void invokeDeleteDataDefinition(Long dataDefinitionId)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		options.setDelete(true);
+
+		String location =
+			_resourceURL +
+				_toPath(
+					"/data-definitions/{dataDefinitionId}", dataDefinitionId);
+
+		options.setLocation(location);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+	}
+
+	protected Http.Response invokeDeleteDataDefinitionResponse(
+			Long dataDefinitionId)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		options.setDelete(true);
+
+		String location =
+			_resourceURL +
+				_toPath(
+					"/data-definitions/{dataDefinitionId}", dataDefinitionId);
+
+		options.setLocation(location);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
+	@Test
+	public void testGetDataDefinition() throws Exception {
+		DataDefinition postDataDefinition =
+			testGetDataDefinition_addDataDefinition();
+
+		DataDefinition getDataDefinition = invokeGetDataDefinition(
+			postDataDefinition.getId());
+
+		assertEquals(postDataDefinition, getDataDefinition);
+		assertValid(getDataDefinition);
+	}
+
+	protected DataDefinition testGetDataDefinition_addDataDefinition()
+		throws Exception {
+
+		return invokePostSiteDataDefinition(
+			testGroup.getGroupId(), randomDataDefinition());
+	}
+
+	protected DataDefinition invokeGetDataDefinition(Long dataDefinitionId)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath(
+					"/data-definitions/{dataDefinitionId}", dataDefinitionId);
+
+		options.setLocation(location);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		try {
+			return outputObjectMapper.readValue(string, DataDefinition.class);
+		}
+		catch (Exception e) {
+			_log.error("Unable to process HTTP response: " + string, e);
+
+			throw e;
+		}
+	}
+
+	protected Http.Response invokeGetDataDefinitionResponse(
+			Long dataDefinitionId)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath(
+					"/data-definitions/{dataDefinitionId}", dataDefinitionId);
+
+		options.setLocation(location);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
+	@Test
+	public void testPutDataDefinition() throws Exception {
+		DataDefinition postDataDefinition =
+			testPutDataDefinition_addDataDefinition();
+
+		DataDefinition randomDataDefinition = randomDataDefinition();
+
+		DataDefinition putDataDefinition = invokePutDataDefinition(
+			postDataDefinition.getId(), randomDataDefinition);
+
+		assertEquals(randomDataDefinition, putDataDefinition);
+		assertValid(putDataDefinition);
+
+		DataDefinition getDataDefinition = invokeGetDataDefinition(
+			putDataDefinition.getId());
+
+		assertEquals(randomDataDefinition, getDataDefinition);
+		assertValid(getDataDefinition);
+	}
+
+	protected DataDefinition testPutDataDefinition_addDataDefinition()
+		throws Exception {
+
+		return invokePostSiteDataDefinition(
+			testGroup.getGroupId(), randomDataDefinition());
+	}
+
+	protected DataDefinition invokePutDataDefinition(
+			Long dataDefinitionId, DataDefinition dataDefinition)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		options.setBody(
+			inputObjectMapper.writeValueAsString(dataDefinition),
+			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
+
+		String location =
+			_resourceURL +
+				_toPath(
+					"/data-definitions/{dataDefinitionId}", dataDefinitionId);
+
+		options.setLocation(location);
+
+		options.setPut(true);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		try {
+			return outputObjectMapper.readValue(string, DataDefinition.class);
+		}
+		catch (Exception e) {
+			_log.error("Unable to process HTTP response: " + string, e);
+
+			throw e;
+		}
+	}
+
+	protected Http.Response invokePutDataDefinitionResponse(
+			Long dataDefinitionId, DataDefinition dataDefinition)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		options.setBody(
+			inputObjectMapper.writeValueAsString(dataDefinition),
+			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
+
+		String location =
+			_resourceURL +
+				_toPath(
+					"/data-definitions/{dataDefinitionId}", dataDefinitionId);
+
+		options.setLocation(location);
+
+		options.setPut(true);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
+	@Test
+	public void testPostDataDefinitionDataDefinitionPermission()
+		throws Exception {
+
+		Assert.assertTrue(true);
+	}
+
+	protected void invokePostDataDefinitionDataDefinitionPermission(
+			Long dataDefinitionId, String operation,
+			DataDefinitionPermission dataDefinitionPermission)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath(
+					"/data-definitions/{dataDefinitionId}/data-definition-permissions",
+					dataDefinitionId);
+
+		options.setLocation(location);
+
+		options.setPost(true);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+	}
+
+	protected Http.Response
+			invokePostDataDefinitionDataDefinitionPermissionResponse(
+				Long dataDefinitionId, String operation,
+				DataDefinitionPermission dataDefinitionPermission)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath(
+					"/data-definitions/{dataDefinitionId}/data-definition-permissions",
+					dataDefinitionId);
+
+		options.setLocation(location);
+
+		options.setPost(true);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
 	}
 
 	@Test
@@ -325,8 +593,8 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			DataDefinition dataDefinition)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteDataDefinition(
+			testGroup.getGroupId(), randomDataDefinition());
 	}
 
 	protected DataDefinition invokePostSiteDataDefinition(
@@ -374,271 +642,6 @@ public abstract class BaseDataDefinitionResourceTestCase {
 
 		String location =
 			_resourceURL + _toPath("/sites/{siteId}/data-definitions", siteId);
-
-		options.setLocation(location);
-
-		options.setPost(true);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
-	public void testDeleteDataDefinition() throws Exception {
-		DataDefinition dataDefinition =
-			testDeleteDataDefinition_addDataDefinition();
-
-		assertResponseCode(
-			204, invokeDeleteDataDefinitionResponse(dataDefinition.getId()));
-
-		assertResponseCode(
-			404, invokeGetDataDefinitionResponse(dataDefinition.getId()));
-	}
-
-	protected DataDefinition testDeleteDataDefinition_addDataDefinition()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected void invokeDeleteDataDefinition(Long dataDefinitionId)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		options.setDelete(true);
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/data-definitions/{dataDefinitionId}", dataDefinitionId);
-
-		options.setLocation(location);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-	}
-
-	protected Http.Response invokeDeleteDataDefinitionResponse(
-			Long dataDefinitionId)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		options.setDelete(true);
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/data-definitions/{dataDefinitionId}", dataDefinitionId);
-
-		options.setLocation(location);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
-	public void testGetDataDefinition() throws Exception {
-		DataDefinition postDataDefinition =
-			testGetDataDefinition_addDataDefinition();
-
-		DataDefinition getDataDefinition = invokeGetDataDefinition(
-			postDataDefinition.getId());
-
-		assertEquals(postDataDefinition, getDataDefinition);
-		assertValid(getDataDefinition);
-	}
-
-	protected DataDefinition testGetDataDefinition_addDataDefinition()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected DataDefinition invokeGetDataDefinition(Long dataDefinitionId)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/data-definitions/{dataDefinitionId}", dataDefinitionId);
-
-		options.setLocation(location);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-
-		try {
-			return outputObjectMapper.readValue(string, DataDefinition.class);
-		}
-		catch (Exception e) {
-			_log.error("Unable to process HTTP response: " + string, e);
-
-			throw e;
-		}
-	}
-
-	protected Http.Response invokeGetDataDefinitionResponse(
-			Long dataDefinitionId)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/data-definitions/{dataDefinitionId}", dataDefinitionId);
-
-		options.setLocation(location);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
-	public void testPutDataDefinition() throws Exception {
-		DataDefinition postDataDefinition =
-			testPutDataDefinition_addDataDefinition();
-
-		DataDefinition randomDataDefinition = randomDataDefinition();
-
-		DataDefinition putDataDefinition = invokePutDataDefinition(
-			postDataDefinition.getId(), randomDataDefinition);
-
-		assertEquals(randomDataDefinition, putDataDefinition);
-		assertValid(putDataDefinition);
-
-		DataDefinition getDataDefinition = invokeGetDataDefinition(
-			putDataDefinition.getId());
-
-		assertEquals(randomDataDefinition, getDataDefinition);
-		assertValid(getDataDefinition);
-	}
-
-	protected DataDefinition testPutDataDefinition_addDataDefinition()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected DataDefinition invokePutDataDefinition(
-			Long dataDefinitionId, DataDefinition dataDefinition)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		options.setBody(
-			inputObjectMapper.writeValueAsString(dataDefinition),
-			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/data-definitions/{dataDefinitionId}", dataDefinitionId);
-
-		options.setLocation(location);
-
-		options.setPut(true);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-
-		try {
-			return outputObjectMapper.readValue(string, DataDefinition.class);
-		}
-		catch (Exception e) {
-			_log.error("Unable to process HTTP response: " + string, e);
-
-			throw e;
-		}
-	}
-
-	protected Http.Response invokePutDataDefinitionResponse(
-			Long dataDefinitionId, DataDefinition dataDefinition)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		options.setBody(
-			inputObjectMapper.writeValueAsString(dataDefinition),
-			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/data-definitions/{dataDefinitionId}", dataDefinitionId);
-
-		options.setLocation(location);
-
-		options.setPut(true);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
-	public void testPostDataDefinitionDataDefinitionPermission()
-		throws Exception {
-
-		Assert.assertTrue(true);
-	}
-
-	protected void invokePostDataDefinitionDataDefinitionPermission(
-			Long dataDefinitionId, String operation,
-			DataDefinitionPermission dataDefinitionPermission)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/data-definitions/{dataDefinitionId}/data-definition-permissions",
-					dataDefinitionId);
-
-		options.setLocation(location);
-
-		options.setPost(true);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-	}
-
-	protected Http.Response
-			invokePostDataDefinitionDataDefinitionPermissionResponse(
-				Long dataDefinitionId, String operation,
-				DataDefinitionPermission dataDefinitionPermission)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/data-definitions/{dataDefinitionId}/data-definition-permissions",
-					dataDefinitionId);
 
 		options.setLocation(location);
 
@@ -1088,10 +1091,11 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			}
 		};
 
-	protected String contentType = "application/json";
 	protected Group irrelevantGroup;
+	protected String testContentType = "application/json";
 	protected Group testGroup;
-	protected String userNameAndPassword = "test@liferay.com:test";
+	protected Locale testLocale;
+	protected String testUserNameAndPassword = "test@liferay.com:test";
 
 	protected static class Page<T> {
 
@@ -1136,14 +1140,16 @@ public abstract class BaseDataDefinitionResourceTestCase {
 		Http.Options options = new Http.Options();
 
 		options.addHeader("Accept", "application/json");
+		options.addHeader(
+			"Accept-Language", LocaleUtil.toW3cLanguageId(testLocale));
 
-		String encodedUserNameAndPassword = Base64.encode(
-			userNameAndPassword.getBytes());
+		String encodedTestUserNameAndPassword = Base64.encode(
+			testUserNameAndPassword.getBytes());
 
 		options.addHeader(
-			"Authorization", "Basic " + encodedUserNameAndPassword);
+			"Authorization", "Basic " + encodedTestUserNameAndPassword);
 
-		options.addHeader("Content-Type", contentType);
+		options.addHeader("Content-Type", testContentType);
 
 		return options;
 	}
