@@ -60,14 +60,11 @@ public class RenderFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-		DefaultFragmentRendererContext fragmentRendererContext =
-			new DefaultFragmentRendererContext(fragmentEntryLink);
-
 		if (fragmentEntryLink != null) {
 			jsonObject.put(
 				"content",
 				_fragmentRendererController.render(
-					fragmentRendererContext,
+					new DefaultFragmentRendererContext(fragmentEntryLink),
 					_portal.getHttpServletRequest(actionRequest),
 					_portal.getHttpServletResponse(actionResponse)));
 		}
