@@ -100,13 +100,13 @@ public class KeywordResourceImpl extends BaseKeywordResourceImpl {
 
 		Set<String> assetTagNames = new HashSet<>();
 
+		AtomicBoolean flag = new AtomicBoolean(true);
+
 		BulkSelection<?> bulkSelection = _documentBulkSelectionFactory.create(
 			documentSelection);
 
 		BulkSelection<AssetEntry> assetEntryBulkSelection =
 			bulkSelection.toAssetEntryBulkSelection();
-
-		AtomicBoolean flag = new AtomicBoolean(true);
 
 		assetEntryBulkSelection.forEach(
 			assetEntry -> {
@@ -115,16 +115,19 @@ public class KeywordResourceImpl extends BaseKeywordResourceImpl {
 						assetEntry.getClassName(), assetEntry.getClassPK(),
 						ActionKeys.UPDATE)) {
 
-					String[] tagNames = _assetTagLocalService.getTagNames(
-						assetEntry.getClassName(), assetEntry.getClassPK());
+					String[] assetEntryAssetTagNames =
+						_assetTagLocalService.getTagNames(
+							assetEntry.getClassName(), assetEntry.getClassPK());
 
 					if (flag.get()) {
 						flag.set(false);
 
-						Collections.addAll(assetTagNames, tagNames);
+						Collections.addAll(
+							assetTagNames, assetEntryAssetTagNames);
 					}
 					else {
-						assetTagNames.retainAll(Arrays.asList(tagNames));
+						assetTagNames.retainAll(
+							Arrays.asList(assetEntryAssetTagNames));
 					}
 				}
 			});
