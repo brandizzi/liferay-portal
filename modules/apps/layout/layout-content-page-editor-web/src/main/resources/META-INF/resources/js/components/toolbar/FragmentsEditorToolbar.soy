@@ -10,6 +10,7 @@
 	{@param? classPK: ?}
 	{@param? defaultSegmentsExperienceId: string }
 	{@param? discardDraftURL: string}
+	{@param? discardDraftRedirectURL: string}
 	{@param? draft: bool}
 	{@param? fragmentsEditorSidebarVisible: bool}
 	{@param? lastSaveDate: string}
@@ -75,7 +76,7 @@
 							<input
 								name="{$portletNamespace}redirect"
 								type="hidden"
-								value="{$redirectURL}"
+								value="{$discardDraftRedirectURL}"
 							/>
 
 							<button class="btn btn-secondary nav-btn" type="submit" {if not $lastSaveDate and not $draft}disabled{/if}>

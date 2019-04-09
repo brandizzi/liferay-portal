@@ -202,6 +202,16 @@ const INITIAL_STATE = {
 		.value(''),
 
 	/**
+	 * URL to redirect after discard draft action.
+	 * @default ''
+	 * @review
+	 * @type {!string}
+	 */
+	discardDraftRedirectURL: Config
+		.string()
+		.value(''),
+
+	/**
 	 * Border of the target item where another item is being dragged to
 	 * @default null
 	 * @review
