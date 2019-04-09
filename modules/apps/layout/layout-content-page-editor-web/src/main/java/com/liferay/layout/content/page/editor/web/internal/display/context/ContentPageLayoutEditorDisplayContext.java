@@ -69,9 +69,9 @@ public class ContentPageLayoutEditorDisplayContext
 			"defaultSegmentsExperienceId",
 			String.valueOf(SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT)
 		).put(
-			"sidebarPanels", getSidebarPanelSoyContexts(false)
-		).put(
 			"layoutDataList", _getLayoutDataListSoyContext()
+		).put(
+			"sidebarPanels", getSidebarPanelSoyContexts(false)
 		);
 
 		_editorSoyContext = soyContext;
