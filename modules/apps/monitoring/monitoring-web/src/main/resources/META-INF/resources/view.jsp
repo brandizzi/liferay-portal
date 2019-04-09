@@ -20,14 +20,6 @@
 String displayStyle = ParamUtil.getString(request, "displayStyle", "list");
 String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 
-PortletURL portletURL = renderResponse.createRenderURL();
-
-portletURL.setParameter("mvcRenderCommandName", "/monitoring/view");
-
-PortletURL sortingURL = PortletURLUtil.clone(portletURL, renderResponse);
-
-sortingURL.setParameter("orderByType", orderByType.equals("asc") ? "desc" : "asc");
-
 List<UserTracker> userTrackers = null;
 
 if (PropsValues.LIVE_USERS_ENABLED && PropsValues.SESSION_TRACKER_MEMORY_ENABLED) {
@@ -37,6 +29,14 @@ if (PropsValues.LIVE_USERS_ENABLED && PropsValues.SESSION_TRACKER_MEMORY_ENABLED
 
 	userTrackers = ListUtil.sort(userTrackers, new UserTrackerModifiedDateComparator(orderByType.equals("asc")));
 }
+
+PortletURL portletURL = renderResponse.createRenderURL();
+
+portletURL.setParameter("mvcRenderCommandName", "/monitoring/view");
+
+PortletURL sortingURL = PortletURLUtil.clone(portletURL, renderResponse);
+
+sortingURL.setParameter("orderByType", orderByType.equals("asc") ? "desc" : "asc");
 %>
 
 <clay:navigation-bar
