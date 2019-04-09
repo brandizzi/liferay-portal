@@ -39,7 +39,7 @@ public class ScoreFunctionsInstantiationTest {
 		new LiferayIntegrationTestRule();
 
 	@Test
-	public void testExponentialDecay() {
+	public void testExponentialDecay1() {
 		Assert.assertNotNull(
 			_scoreFunctions.exponentialDecay(
 				"field", "origin", "scale", "offset"));
