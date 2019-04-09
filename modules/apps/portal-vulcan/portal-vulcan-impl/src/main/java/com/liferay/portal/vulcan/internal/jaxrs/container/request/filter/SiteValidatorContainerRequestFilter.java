@@ -41,10 +41,10 @@ public class SiteValidatorContainerRequestFilter
 
 	@Override
 	public void filter(ContainerRequestContext requestContext) {
-		MultivaluedMap<String, String> pathParameters =
+		MultivaluedMap<String, String> multivaluedMap =
 			_uriInfo.getPathParameters();
 
-		String siteId = pathParameters.getFirst("siteId");
+		String siteId = multivaluedMap.getFirst("siteId");
 
 		if (siteId == null) {
 			return;
