@@ -102,15 +102,15 @@ public class AddPortletMVCActionCommand extends BaseMVCActionCommand {
 					StringPool.BLANK, html, StringPool.BLANK,
 					editableValueJSONObject.toString(), 0, serviceContext);
 
-			DefaultFragmentRendererContext fragmentRendererContext =
+			DefaultFragmentRendererContext defaultFragmentRendererContext =
 				new DefaultFragmentRendererContext(fragmentEntryLink);
 
-			fragmentRendererContext.setMode(FragmentEntryLinkConstants.EDIT);
+			defaultFragmentRendererContext.setMode(FragmentEntryLinkConstants.EDIT);
 
 			jsonObject.put(
 				"content",
 				_fragmentRendererController.render(
-					fragmentRendererContext,
+					defaultFragmentRendererContext,
 					_portal.getHttpServletRequest(actionRequest),
 					_portal.getHttpServletResponse(actionResponse)));
 
