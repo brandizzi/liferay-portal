@@ -89,9 +89,9 @@ public class DataFieldOptionUtil {
 		}
 
 		for (DataFieldOption dataFieldOption : dataFieldOptions) {
-			Map<String, String> labels = dataFieldOption.getLabels();
-
 			JSONObject labelJSONObject = JSONFactoryUtil.createJSONObject();
+
+			Map<String, String> labels = dataFieldOption.getLabels();
 
 			for (Map.Entry<String, String> entry : labels.entrySet()) {
 				labelJSONObject.put(entry.getKey(), entry.getValue());
