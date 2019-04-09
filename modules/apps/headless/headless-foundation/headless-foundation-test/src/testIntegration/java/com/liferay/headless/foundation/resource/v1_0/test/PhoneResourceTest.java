@@ -30,9 +30,7 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 
 import java.util.List;
-import java.util.Objects;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
@@ -52,28 +50,8 @@ public class PhoneResourceTest extends BasePhoneResourceTestCase {
 	}
 
 	@Override
-	protected void assertValid(Phone phone) {
-		boolean valid = false;
-
-		if ((phone.getId() != null) && (phone.getPhoneNumber() != null) &&
-			(phone.getPrimary() != null)) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(Phone phone1, Phone phone2) {
-		if (Objects.equals(phone1.getExtension(), phone2.getExtension()) &&
-			Objects.equals(phone1.getPhoneNumber(), phone2.getPhoneNumber()) &&
-			Objects.equals(phone1.getPrimary(), phone2.getPrimary())) {
-
-			return true;
-		}
-
-		return false;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"extension", "phoneNumber", "primary"};
 	}
 
 	@Override

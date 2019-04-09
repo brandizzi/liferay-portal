@@ -31,9 +31,7 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 
 import java.util.List;
-import java.util.Objects;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
@@ -53,27 +51,8 @@ public class EmailResourceTest extends BaseEmailResourceTestCase {
 	}
 
 	@Override
-	protected void assertValid(Email email) {
-		boolean valid = false;
-
-		if ((email.getEmail() != null) && (email.getId() != null) &&
-			(email.getPrimary() != null)) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(Email email1, Email email2) {
-		if (Objects.equals(email1.getEmail(), email2.getEmail()) &&
-			Objects.equals(email1.getPrimary(), email2.getPrimary())) {
-
-			return true;
-		}
-
-		return false;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"email", "primary"};
 	}
 
 	@Override
