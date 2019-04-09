@@ -35,15 +35,6 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 	}
 
 	@Override
-	protected Keyword randomKeyword() {
-		Keyword keyword = super.randomKeyword();
-
-		keyword.setSiteId(testGroup.getGroupId());
-
-		return keyword;
-	}
-
-	@Override
 	protected Keyword testDeleteKeyword_addKeyword() throws Exception {
 		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
 	}
