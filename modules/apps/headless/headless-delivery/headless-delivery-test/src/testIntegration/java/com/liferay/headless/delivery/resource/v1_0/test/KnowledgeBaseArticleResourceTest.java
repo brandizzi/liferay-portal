@@ -61,7 +61,11 @@ public class KnowledgeBaseArticleResourceTest
 
 		if ((knowledgeBaseArticle.getDateCreated() != null) &&
 			(knowledgeBaseArticle.getDateModified() != null) &&
+			(knowledgeBaseArticle.getDescription() != null) &&
 			(knowledgeBaseArticle.getId() != null) &&
+			Objects.equals(
+				knowledgeBaseArticle.getSiteId(),
+				knowledgeBaseArticle.getGroupId())
 			(knowledgeBaseArticle.getTitle() != null)) {
 
 			valid = true;
@@ -76,11 +80,11 @@ public class KnowledgeBaseArticleResourceTest
 		KnowledgeBaseArticle knowledgeBaseArticle2) {
 
 		if (Objects.equals(
-				knowledgeBaseArticle1.getSiteId(),
-				knowledgeBaseArticle2.getSiteId()) &&
-			Objects.equals(
 				knowledgeBaseArticle1.getDescription(),
 				knowledgeBaseArticle2.getDescription()) &&
+			Objects.equals(
+				knowledgeBaseArticle1.getSiteId(),
+				knowledgeBaseArticle2.getSiteId()) &&			
 			Objects.equals(
 				knowledgeBaseArticle1.getTitle(),
 				knowledgeBaseArticle2.getTitle())) {
