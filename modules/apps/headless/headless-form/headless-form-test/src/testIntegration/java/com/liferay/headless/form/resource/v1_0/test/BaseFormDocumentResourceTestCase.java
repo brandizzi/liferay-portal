@@ -270,8 +270,61 @@ public abstract class BaseFormDocumentResourceTestCase {
 	}
 
 	protected void assertValid(FormDocument formDocument) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (formDocument.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
+				if (formDocument.getContentUrl() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (formDocument.getEncodingFormat() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
+				if (formDocument.getFileExtension() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
+				if (formDocument.getSizeInBytes() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (formDocument.getTitle() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<FormDocument> page) {
@@ -291,6 +344,10 @@ public abstract class BaseFormDocumentResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		FormDocument formDocument1, FormDocument formDocument2) {
 
@@ -298,7 +355,79 @@ public abstract class BaseFormDocumentResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formDocument1.getContentUrl(),
+						formDocument2.getContentUrl())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formDocument1.getEncodingFormat(),
+						formDocument2.getEncodingFormat())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formDocument1.getFileExtension(),
+						formDocument2.getFileExtension())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formDocument1.getId(), formDocument2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formDocument1.getSizeInBytes(),
+						formDocument2.getSizeInBytes())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formDocument1.getTitle(), formDocument2.getTitle())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -405,7 +534,9 @@ public abstract class BaseFormDocumentResourceTestCase {
 	}
 
 	protected FormDocument randomIrrelevantFormDocument() {
-		return randomFormDocument();
+		FormDocument randomIrrelevantFormDocument = randomFormDocument();
+
+		return randomIrrelevantFormDocument;
 	}
 
 	protected FormDocument randomPatchFormDocument() {

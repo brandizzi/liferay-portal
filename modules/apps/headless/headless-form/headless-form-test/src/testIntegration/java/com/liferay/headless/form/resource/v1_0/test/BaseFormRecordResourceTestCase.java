@@ -486,8 +486,77 @@ public abstract class BaseFormRecordResourceTestCase {
 	}
 
 	protected void assertValid(FormRecord formRecord) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (formRecord.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (formRecord.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (formRecord.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (formRecord.getCreator() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("datePublished", additionalAssertFieldName)) {
+				if (formRecord.getDatePublished() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("draft", additionalAssertFieldName)) {
+				if (formRecord.getDraft() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fieldValues", additionalAssertFieldName)) {
+				if (formRecord.getFieldValues() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("form", additionalAssertFieldName)) {
+				if (formRecord.getForm() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("formId", additionalAssertFieldName)) {
+				if (formRecord.getFormId() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<FormRecord> page) {
@@ -507,12 +576,116 @@ public abstract class BaseFormRecordResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(FormRecord formRecord1, FormRecord formRecord2) {
 		if (formRecord1 == formRecord2) {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formRecord1.getCreator(), formRecord2.getCreator())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formRecord1.getDateCreated(),
+						formRecord2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formRecord1.getDateModified(),
+						formRecord2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("datePublished", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formRecord1.getDatePublished(),
+						formRecord2.getDatePublished())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("draft", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formRecord1.getDraft(), formRecord2.getDraft())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fieldValues", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formRecord1.getFieldValues(),
+						formRecord2.getFieldValues())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("form", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formRecord1.getForm(), formRecord2.getForm())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("formId", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formRecord1.getFormId(), formRecord2.getFormId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(formRecord1.getId(), formRecord2.getId())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -626,7 +799,9 @@ public abstract class BaseFormRecordResourceTestCase {
 	}
 
 	protected FormRecord randomIrrelevantFormRecord() {
-		return randomFormRecord();
+		FormRecord randomIrrelevantFormRecord = randomFormRecord();
+
+		return randomIrrelevantFormRecord;
 	}
 
 	protected FormRecord randomPatchFormRecord() {

@@ -257,17 +257,16 @@ public class Mutation {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public BlogPosting postContentSpaceBlogPosting(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
+	public BlogPosting postSiteBlogPosting(
+			@GraphQLName("siteId") Long siteId,
 			@GraphQLName("blogPosting") BlogPosting blogPosting)
 		throws Exception {
 
 		return _applyComponentServiceObjects(
 			_blogPostingResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			blogPostingResource ->
-				blogPostingResource.postContentSpaceBlogPosting(
-					contentSpaceId, blogPosting));
+			blogPostingResource -> blogPostingResource.postSiteBlogPosting(
+				siteId, blogPosting));
 	}
 
 	@GraphQLInvokeDetached
@@ -285,9 +284,9 @@ public class Mutation {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	@GraphQLName("postContentSpaceBlogPostingImageContentSpaceIdMultipartBody")
-	public BlogPostingImage postContentSpaceBlogPostingImage(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
+	@GraphQLName("postSiteBlogPostingImageSiteIdMultipartBody")
+	public BlogPostingImage postSiteBlogPostingImage(
+			@GraphQLName("siteId") Long siteId,
 			@GraphQLName("multipartBody") MultipartBody multipartBody)
 		throws Exception {
 
@@ -295,8 +294,8 @@ public class Mutation {
 			_blogPostingImageResourceComponentServiceObjects,
 			this::_populateResourceContext,
 			blogPostingImageResource ->
-				blogPostingImageResource.postContentSpaceBlogPostingImage(
-					contentSpaceId, multipartBody));
+				blogPostingImageResource.postSiteBlogPostingImage(
+					siteId, multipartBody));
 	}
 
 	@GraphQLField
@@ -375,21 +374,6 @@ public class Mutation {
 			this::_populateResourceContext,
 			commentResource -> commentResource.postStructuredContentComment(
 				structuredContentId, comment));
-	}
-
-	@GraphQLField
-	@GraphQLInvokeDetached
-	@GraphQLName("postContentSpaceDocumentContentSpaceIdMultipartBody")
-	public Document postContentSpaceDocument(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
-			@GraphQLName("multipartBody") MultipartBody multipartBody)
-		throws Exception {
-
-		return _applyComponentServiceObjects(
-			_documentResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			documentResource -> documentResource.postContentSpaceDocument(
-				contentSpaceId, multipartBody));
 	}
 
 	@GraphQLField
@@ -486,17 +470,17 @@ public class Mutation {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public DocumentFolder postContentSpaceDocumentFolder(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
-			@GraphQLName("documentFolder") DocumentFolder documentFolder)
+	@GraphQLName("postSiteDocumentSiteIdMultipartBody")
+	public Document postSiteDocument(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("multipartBody") MultipartBody multipartBody)
 		throws Exception {
 
 		return _applyComponentServiceObjects(
-			_documentFolderResourceComponentServiceObjects,
+			_documentResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			documentFolderResource ->
-				documentFolderResource.postContentSpaceDocumentFolder(
-					contentSpaceId, documentFolder));
+			documentResource -> documentResource.postSiteDocument(
+				siteId, multipartBody));
 	}
 
 	@GraphQLInvokeDetached
@@ -555,19 +539,17 @@ public class Mutation {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public KnowledgeBaseArticle postContentSpaceKnowledgeBaseArticle(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
-			@GraphQLName("knowledgeBaseArticle") KnowledgeBaseArticle
-				knowledgeBaseArticle)
+	public DocumentFolder postSiteDocumentFolder(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("documentFolder") DocumentFolder documentFolder)
 		throws Exception {
 
 		return _applyComponentServiceObjects(
-			_knowledgeBaseArticleResourceComponentServiceObjects,
+			_documentFolderResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			knowledgeBaseArticleResource ->
-				knowledgeBaseArticleResource.
-					postContentSpaceKnowledgeBaseArticle(
-						contentSpaceId, knowledgeBaseArticle));
+			documentFolderResource ->
+				documentFolderResource.postSiteDocumentFolder(
+					siteId, documentFolder));
 	}
 
 	@GraphQLInvokeDetached
@@ -692,6 +674,22 @@ public class Mutation {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
+	public KnowledgeBaseArticle postSiteKnowledgeBaseArticle(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("knowledgeBaseArticle") KnowledgeBaseArticle
+				knowledgeBaseArticle)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_knowledgeBaseArticleResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			knowledgeBaseArticleResource ->
+				knowledgeBaseArticleResource.postSiteKnowledgeBaseArticle(
+					siteId, knowledgeBaseArticle));
+	}
+
+	@GraphQLField
+	@GraphQLInvokeDetached
 	@GraphQLName(
 		"postKnowledgeBaseArticleKnowledgeBaseAttachmentKnowledgeBaseArticleIdMultipartBody"
 	)
@@ -723,22 +721,6 @@ public class Mutation {
 			knowledgeBaseAttachmentResource ->
 				knowledgeBaseAttachmentResource.deleteKnowledgeBaseAttachment(
 					knowledgeBaseAttachmentId));
-	}
-
-	@GraphQLField
-	@GraphQLInvokeDetached
-	public KnowledgeBaseFolder postContentSpaceKnowledgeBaseFolder(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
-			@GraphQLName("knowledgeBaseFolder") KnowledgeBaseFolder
-				knowledgeBaseFolder)
-		throws Exception {
-
-		return _applyComponentServiceObjects(
-			_knowledgeBaseFolderResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			knowledgeBaseFolderResource ->
-				knowledgeBaseFolderResource.postContentSpaceKnowledgeBaseFolder(
-					contentSpaceId, knowledgeBaseFolder));
 	}
 
 	@GraphQLInvokeDetached
@@ -800,6 +782,22 @@ public class Mutation {
 				knowledgeBaseFolderResource.
 					postKnowledgeBaseFolderKnowledgeBaseFolder(
 						parentKnowledgeBaseFolderId, knowledgeBaseFolder));
+	}
+
+	@GraphQLField
+	@GraphQLInvokeDetached
+	public KnowledgeBaseFolder postSiteKnowledgeBaseFolder(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("knowledgeBaseFolder") KnowledgeBaseFolder
+				knowledgeBaseFolder)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_knowledgeBaseFolderResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			knowledgeBaseFolderResource ->
+				knowledgeBaseFolderResource.postSiteKnowledgeBaseFolder(
+					siteId, knowledgeBaseFolder));
 	}
 
 	@GraphQLInvokeDetached
@@ -974,22 +972,6 @@ public class Mutation {
 						messageBoardThreadId, messageBoardMessage));
 	}
 
-	@GraphQLField
-	@GraphQLInvokeDetached
-	public MessageBoardSection postContentSpaceMessageBoardSection(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
-			@GraphQLName("messageBoardSection") MessageBoardSection
-				messageBoardSection)
-		throws Exception {
-
-		return _applyComponentServiceObjects(
-			_messageBoardSectionResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			messageBoardSectionResource ->
-				messageBoardSectionResource.postContentSpaceMessageBoardSection(
-					contentSpaceId, messageBoardSection));
-	}
-
 	@GraphQLInvokeDetached
 	public void deleteMessageBoardSection(
 			@GraphQLName("messageBoardSectionId") Long messageBoardSectionId)
@@ -1053,18 +1035,18 @@ public class Mutation {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public MessageBoardThread postContentSpaceMessageBoardThread(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
-			@GraphQLName("messageBoardThread") MessageBoardThread
-				messageBoardThread)
+	public MessageBoardSection postSiteMessageBoardSection(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("messageBoardSection") MessageBoardSection
+				messageBoardSection)
 		throws Exception {
 
 		return _applyComponentServiceObjects(
-			_messageBoardThreadResourceComponentServiceObjects,
+			_messageBoardSectionResourceComponentServiceObjects,
 			this::_populateResourceContext,
-			messageBoardThreadResource ->
-				messageBoardThreadResource.postContentSpaceMessageBoardThread(
-					contentSpaceId, messageBoardThread));
+			messageBoardSectionResource ->
+				messageBoardSectionResource.postSiteMessageBoardSection(
+					siteId, messageBoardSection));
 	}
 
 	@GraphQLField
@@ -1171,8 +1153,24 @@ public class Mutation {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public StructuredContent postContentSpaceStructuredContent(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
+	public MessageBoardThread postSiteMessageBoardThread(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("messageBoardThread") MessageBoardThread
+				messageBoardThread)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_messageBoardThreadResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			messageBoardThreadResource ->
+				messageBoardThreadResource.postSiteMessageBoardThread(
+					siteId, messageBoardThread));
+	}
+
+	@GraphQLField
+	@GraphQLInvokeDetached
+	public StructuredContent postSiteStructuredContent(
+			@GraphQLName("siteId") Long siteId,
 			@GraphQLName("structuredContent") StructuredContent
 				structuredContent)
 		throws Exception {
@@ -1181,8 +1179,8 @@ public class Mutation {
 			_structuredContentResourceComponentServiceObjects,
 			this::_populateResourceContext,
 			structuredContentResource ->
-				structuredContentResource.postContentSpaceStructuredContent(
-					contentSpaceId, structuredContent));
+				structuredContentResource.postSiteStructuredContent(
+					siteId, structuredContent));
 	}
 
 	@GraphQLField
@@ -1290,8 +1288,8 @@ public class Mutation {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public StructuredContentFolder postContentSpaceStructuredContentFolder(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
+	public StructuredContentFolder postSiteStructuredContentFolder(
+			@GraphQLName("siteId") Long siteId,
 			@GraphQLName("structuredContentFolder") StructuredContentFolder
 				structuredContentFolder)
 		throws Exception {
@@ -1300,9 +1298,8 @@ public class Mutation {
 			_structuredContentFolderResourceComponentServiceObjects,
 			this::_populateResourceContext,
 			structuredContentFolderResource ->
-				structuredContentFolderResource.
-					postContentSpaceStructuredContentFolder(
-						contentSpaceId, structuredContentFolder));
+				structuredContentFolderResource.postSiteStructuredContentFolder(
+					siteId, structuredContentFolder));
 	}
 
 	@GraphQLField

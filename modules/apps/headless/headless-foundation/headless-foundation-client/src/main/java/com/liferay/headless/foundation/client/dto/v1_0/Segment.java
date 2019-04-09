@@ -48,27 +48,6 @@ public class Segment {
 
 	protected Boolean active;
 
-	public Long getContentSpaceId() {
-		return contentSpaceId;
-	}
-
-	public void setContentSpaceId(Long contentSpaceId) {
-		this.contentSpaceId = contentSpaceId;
-	}
-
-	public void setContentSpaceId(
-		UnsafeSupplier<Long, Exception> contentSpaceIdUnsafeSupplier) {
-
-		try {
-			contentSpaceId = contentSpaceIdUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	protected Long contentSpaceId;
-
 	public String getCriteria() {
 		return criteria;
 	}
@@ -169,6 +148,27 @@ public class Segment {
 	}
 
 	protected String name;
+
+	public Long getSiteId() {
+		return siteId;
+	}
+
+	public void setSiteId(Long siteId) {
+		this.siteId = siteId;
+	}
+
+	public void setSiteId(
+		UnsafeSupplier<Long, Exception> siteIdUnsafeSupplier) {
+
+		try {
+			siteId = siteIdUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected Long siteId;
 
 	public String getSource() {
 		return source;

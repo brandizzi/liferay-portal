@@ -92,11 +92,11 @@ public abstract class BaseBlogPostingImageResourceImpl
 			@Parameter(in = ParameterIn.QUERY, name = "sorts")
 		}
 	)
-	@Path("/content-spaces/{contentSpaceId}/blog-posting-images")
+	@Path("/sites/{siteId}/blog-posting-images")
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "BlogPostingImage")})
-	public Page<BlogPostingImage> getContentSpaceBlogPostingImagesPage(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
+	public Page<BlogPostingImage> getSiteBlogPostingImagesPage(
+			@NotNull @PathParam("siteId") Long siteId,
 			@QueryParam("search") String search, @Context Filter filter,
 			@Context Pagination pagination, @Context Sort[] sorts)
 		throws Exception {
@@ -107,11 +107,11 @@ public abstract class BaseBlogPostingImageResourceImpl
 	@Override
 	@Consumes("multipart/form-data")
 	@POST
-	@Path("/content-spaces/{contentSpaceId}/blog-posting-images")
+	@Path("/sites/{siteId}/blog-posting-images")
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "BlogPostingImage")})
-	public BlogPostingImage postContentSpaceBlogPostingImage(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
+	public BlogPostingImage postSiteBlogPostingImage(
+			@NotNull @PathParam("siteId") Long siteId,
 			MultipartBody multipartBody)
 		throws Exception {
 

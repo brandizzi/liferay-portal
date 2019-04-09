@@ -1072,8 +1072,117 @@ public abstract class BaseOrganizationResourceTestCase {
 	}
 
 	protected void assertValid(Organization organization) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (organization.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (organization.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (organization.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("comment", additionalAssertFieldName)) {
+				if (organization.getComment() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"contactInformation", additionalAssertFieldName)) {
+
+				if (organization.getContactInformation() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("image", additionalAssertFieldName)) {
+				if (organization.getImage() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
+				if (organization.getKeywords() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("location", additionalAssertFieldName)) {
+				if (organization.getLocation() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (organization.getName() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfOrganizations", additionalAssertFieldName)) {
+
+				if (organization.getNumberOfOrganizations() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentOrganization", additionalAssertFieldName)) {
+
+				if (organization.getParentOrganization() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentOrganizationId", additionalAssertFieldName)) {
+
+				if (organization.getParentOrganizationId() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("services", additionalAssertFieldName)) {
+				if (organization.getServices() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<Organization> page) {
@@ -1093,6 +1202,10 @@ public abstract class BaseOrganizationResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		Organization organization1, Organization organization2) {
 
@@ -1100,7 +1213,163 @@ public abstract class BaseOrganizationResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("comment", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						organization1.getComment(),
+						organization2.getComment())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"contactInformation", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						organization1.getContactInformation(),
+						organization2.getContactInformation())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						organization1.getDateCreated(),
+						organization2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						organization1.getDateModified(),
+						organization2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						organization1.getId(), organization2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("image", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						organization1.getImage(), organization2.getImage())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						organization1.getKeywords(),
+						organization2.getKeywords())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("location", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						organization1.getLocation(),
+						organization2.getLocation())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						organization1.getName(), organization2.getName())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfOrganizations", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						organization1.getNumberOfOrganizations(),
+						organization2.getNumberOfOrganizations())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentOrganization", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						organization1.getParentOrganization(),
+						organization2.getParentOrganization())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentOrganizationId", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						organization1.getParentOrganizationId(),
+						organization2.getParentOrganizationId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("services", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						organization1.getServices(),
+						organization2.getServices())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -1243,7 +1512,9 @@ public abstract class BaseOrganizationResourceTestCase {
 	}
 
 	protected Organization randomIrrelevantOrganization() {
-		return randomOrganization();
+		Organization randomIrrelevantOrganization = randomOrganization();
+
+		return randomIrrelevantOrganization;
 	}
 
 	protected Organization randomPatchOrganization() {

@@ -112,22 +112,19 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceTaxonomyVocabulariesPage() throws Exception {
-		Long contentSpaceId =
-			testGetContentSpaceTaxonomyVocabulariesPage_getContentSpaceId();
-		Long irrelevantContentSpaceId =
-			testGetContentSpaceTaxonomyVocabulariesPage_getIrrelevantContentSpaceId();
+	public void testGetSiteTaxonomyVocabulariesPage() throws Exception {
+		Long siteId = testGetSiteTaxonomyVocabulariesPage_getSiteId();
+		Long irrelevantSiteId =
+			testGetSiteTaxonomyVocabulariesPage_getIrrelevantSiteId();
 
-		if ((irrelevantContentSpaceId != null)) {
+		if ((irrelevantSiteId != null)) {
 			TaxonomyVocabulary irrelevantTaxonomyVocabulary =
-				testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-					irrelevantContentSpaceId,
-					randomIrrelevantTaxonomyVocabulary());
+				testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+					irrelevantSiteId, randomIrrelevantTaxonomyVocabulary());
 
 			Page<TaxonomyVocabulary> page =
-				invokeGetContentSpaceTaxonomyVocabulariesPage(
-					irrelevantContentSpaceId, null, null, Pagination.of(1, 2),
-					null);
+				invokeGetSiteTaxonomyVocabulariesPage(
+					irrelevantSiteId, null, null, Pagination.of(1, 2), null);
 
 			Assert.assertEquals(1, page.getTotalCount());
 
@@ -138,16 +135,15 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 		}
 
 		TaxonomyVocabulary taxonomyVocabulary1 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, randomTaxonomyVocabulary());
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, randomTaxonomyVocabulary());
 
 		TaxonomyVocabulary taxonomyVocabulary2 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, randomTaxonomyVocabulary());
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, randomTaxonomyVocabulary());
 
-		Page<TaxonomyVocabulary> page =
-			invokeGetContentSpaceTaxonomyVocabulariesPage(
-				contentSpaceId, null, null, Pagination.of(1, 2), null);
+		Page<TaxonomyVocabulary> page = invokeGetSiteTaxonomyVocabulariesPage(
+			siteId, null, null, Pagination.of(1, 2), null);
 
 		Assert.assertEquals(2, page.getTotalCount());
 
@@ -158,7 +154,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceTaxonomyVocabulariesPageWithFilterDateTimeEquals()
+	public void testGetSiteTaxonomyVocabulariesPageWithFilterDateTimeEquals()
 		throws Exception {
 
 		List<EntityField> entityFields = getEntityFields(
@@ -168,8 +164,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			return;
 		}
 
-		Long contentSpaceId =
-			testGetContentSpaceTaxonomyVocabulariesPage_getContentSpaceId();
+		Long siteId = testGetSiteTaxonomyVocabulariesPage_getSiteId();
 
 		TaxonomyVocabulary taxonomyVocabulary1 = randomTaxonomyVocabulary();
 		TaxonomyVocabulary taxonomyVocabulary2 = randomTaxonomyVocabulary();
@@ -181,19 +176,19 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 		}
 
 		taxonomyVocabulary1 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, taxonomyVocabulary1);
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, taxonomyVocabulary1);
 
 		Thread.sleep(1000);
 
 		taxonomyVocabulary2 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, taxonomyVocabulary2);
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, taxonomyVocabulary2);
 
 		for (EntityField entityField : entityFields) {
 			Page<TaxonomyVocabulary> page =
-				invokeGetContentSpaceTaxonomyVocabulariesPage(
-					contentSpaceId, null,
+				invokeGetSiteTaxonomyVocabulariesPage(
+					siteId, null,
 					getFilterString(entityField, "eq", taxonomyVocabulary1),
 					Pagination.of(1, 2), null);
 
@@ -204,7 +199,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceTaxonomyVocabulariesPageWithFilterStringEquals()
+	public void testGetSiteTaxonomyVocabulariesPageWithFilterStringEquals()
 		throws Exception {
 
 		List<EntityField> entityFields = getEntityFields(
@@ -214,22 +209,21 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			return;
 		}
 
-		Long contentSpaceId =
-			testGetContentSpaceTaxonomyVocabulariesPage_getContentSpaceId();
+		Long siteId = testGetSiteTaxonomyVocabulariesPage_getSiteId();
 
 		TaxonomyVocabulary taxonomyVocabulary1 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, randomTaxonomyVocabulary());
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, randomTaxonomyVocabulary());
 
 		@SuppressWarnings("PMD.UnusedLocalVariable")
 		TaxonomyVocabulary taxonomyVocabulary2 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, randomTaxonomyVocabulary());
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, randomTaxonomyVocabulary());
 
 		for (EntityField entityField : entityFields) {
 			Page<TaxonomyVocabulary> page =
-				invokeGetContentSpaceTaxonomyVocabulariesPage(
-					contentSpaceId, null,
+				invokeGetSiteTaxonomyVocabulariesPage(
+					siteId, null,
 					getFilterString(entityField, "eq", taxonomyVocabulary1),
 					Pagination.of(1, 2), null);
 
@@ -240,27 +234,25 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceTaxonomyVocabulariesPageWithPagination()
+	public void testGetSiteTaxonomyVocabulariesPageWithPagination()
 		throws Exception {
 
-		Long contentSpaceId =
-			testGetContentSpaceTaxonomyVocabulariesPage_getContentSpaceId();
+		Long siteId = testGetSiteTaxonomyVocabulariesPage_getSiteId();
 
 		TaxonomyVocabulary taxonomyVocabulary1 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, randomTaxonomyVocabulary());
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, randomTaxonomyVocabulary());
 
 		TaxonomyVocabulary taxonomyVocabulary2 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, randomTaxonomyVocabulary());
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, randomTaxonomyVocabulary());
 
 		TaxonomyVocabulary taxonomyVocabulary3 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, randomTaxonomyVocabulary());
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, randomTaxonomyVocabulary());
 
-		Page<TaxonomyVocabulary> page1 =
-			invokeGetContentSpaceTaxonomyVocabulariesPage(
-				contentSpaceId, null, null, Pagination.of(1, 2), null);
+		Page<TaxonomyVocabulary> page1 = invokeGetSiteTaxonomyVocabulariesPage(
+			siteId, null, null, Pagination.of(1, 2), null);
 
 		List<TaxonomyVocabulary> taxonomyVocabularies1 =
 			(List<TaxonomyVocabulary>)page1.getItems();
@@ -268,9 +260,8 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 		Assert.assertEquals(
 			taxonomyVocabularies1.toString(), 2, taxonomyVocabularies1.size());
 
-		Page<TaxonomyVocabulary> page2 =
-			invokeGetContentSpaceTaxonomyVocabulariesPage(
-				contentSpaceId, null, null, Pagination.of(2, 2), null);
+		Page<TaxonomyVocabulary> page2 = invokeGetSiteTaxonomyVocabulariesPage(
+			siteId, null, null, Pagination.of(2, 2), null);
 
 		Assert.assertEquals(3, page2.getTotalCount());
 
@@ -292,7 +283,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceTaxonomyVocabulariesPageWithSortDateTime()
+	public void testGetSiteTaxonomyVocabulariesPageWithSortDateTime()
 		throws Exception {
 
 		List<EntityField> entityFields = getEntityFields(
@@ -302,8 +293,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			return;
 		}
 
-		Long contentSpaceId =
-			testGetContentSpaceTaxonomyVocabulariesPage_getContentSpaceId();
+		Long siteId = testGetSiteTaxonomyVocabulariesPage_getSiteId();
 
 		TaxonomyVocabulary taxonomyVocabulary1 = randomTaxonomyVocabulary();
 		TaxonomyVocabulary taxonomyVocabulary2 = randomTaxonomyVocabulary();
@@ -315,19 +305,19 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 		}
 
 		taxonomyVocabulary1 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, taxonomyVocabulary1);
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, taxonomyVocabulary1);
 
 		Thread.sleep(1000);
 
 		taxonomyVocabulary2 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, taxonomyVocabulary2);
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, taxonomyVocabulary2);
 
 		for (EntityField entityField : entityFields) {
 			Page<TaxonomyVocabulary> ascPage =
-				invokeGetContentSpaceTaxonomyVocabulariesPage(
-					contentSpaceId, null, null, Pagination.of(1, 2),
+				invokeGetSiteTaxonomyVocabulariesPage(
+					siteId, null, null, Pagination.of(1, 2),
 					entityField.getName() + ":asc");
 
 			assertEquals(
@@ -335,8 +325,8 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				(List<TaxonomyVocabulary>)ascPage.getItems());
 
 			Page<TaxonomyVocabulary> descPage =
-				invokeGetContentSpaceTaxonomyVocabulariesPage(
-					contentSpaceId, null, null, Pagination.of(1, 2),
+				invokeGetSiteTaxonomyVocabulariesPage(
+					siteId, null, null, Pagination.of(1, 2),
 					entityField.getName() + ":desc");
 
 			assertEquals(
@@ -346,7 +336,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceTaxonomyVocabulariesPageWithSortString()
+	public void testGetSiteTaxonomyVocabulariesPageWithSortString()
 		throws Exception {
 
 		List<EntityField> entityFields = getEntityFields(
@@ -356,8 +346,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			return;
 		}
 
-		Long contentSpaceId =
-			testGetContentSpaceTaxonomyVocabulariesPage_getContentSpaceId();
+		Long siteId = testGetSiteTaxonomyVocabulariesPage_getSiteId();
 
 		TaxonomyVocabulary taxonomyVocabulary1 = randomTaxonomyVocabulary();
 		TaxonomyVocabulary taxonomyVocabulary2 = randomTaxonomyVocabulary();
@@ -370,17 +359,17 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 		}
 
 		taxonomyVocabulary1 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, taxonomyVocabulary1);
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, taxonomyVocabulary1);
 
 		taxonomyVocabulary2 =
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				contentSpaceId, taxonomyVocabulary2);
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				siteId, taxonomyVocabulary2);
 
 		for (EntityField entityField : entityFields) {
 			Page<TaxonomyVocabulary> ascPage =
-				invokeGetContentSpaceTaxonomyVocabulariesPage(
-					contentSpaceId, null, null, Pagination.of(1, 2),
+				invokeGetSiteTaxonomyVocabulariesPage(
+					siteId, null, null, Pagination.of(1, 2),
 					entityField.getName() + ":asc");
 
 			assertEquals(
@@ -388,8 +377,8 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				(List<TaxonomyVocabulary>)ascPage.getItems());
 
 			Page<TaxonomyVocabulary> descPage =
-				invokeGetContentSpaceTaxonomyVocabulariesPage(
-					contentSpaceId, null, null, Pagination.of(1, 2),
+				invokeGetSiteTaxonomyVocabulariesPage(
+					siteId, null, null, Pagination.of(1, 2),
 					entityField.getName() + ":desc");
 
 			assertEquals(
@@ -399,41 +388,36 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 	}
 
 	protected TaxonomyVocabulary
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				Long contentSpaceId, TaxonomyVocabulary taxonomyVocabulary)
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				Long siteId, TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long
-			testGetContentSpaceTaxonomyVocabulariesPage_getContentSpaceId()
+	protected Long testGetSiteTaxonomyVocabulariesPage_getSiteId()
 		throws Exception {
 
 		return testGroup.getGroupId();
 	}
 
-	protected Long
-			testGetContentSpaceTaxonomyVocabulariesPage_getIrrelevantContentSpaceId()
+	protected Long testGetSiteTaxonomyVocabulariesPage_getIrrelevantSiteId()
 		throws Exception {
 
 		return irrelevantGroup.getGroupId();
 	}
 
-	protected Page<TaxonomyVocabulary>
-			invokeGetContentSpaceTaxonomyVocabulariesPage(
-				Long contentSpaceId, String search, String filterString,
-				Pagination pagination, String sortString)
+	protected Page<TaxonomyVocabulary> invokeGetSiteTaxonomyVocabulariesPage(
+			Long siteId, String search, String filterString,
+			Pagination pagination, String sortString)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
 
 		String location =
 			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/taxonomy-vocabularies",
-					contentSpaceId);
+				_toPath("/sites/{siteId}/taxonomy-vocabularies", siteId);
 
 		location = HttpUtil.addParameter(location, "filter", filterString);
 
@@ -458,19 +442,16 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			});
 	}
 
-	protected Http.Response
-			invokeGetContentSpaceTaxonomyVocabulariesPageResponse(
-				Long contentSpaceId, String search, String filterString,
-				Pagination pagination, String sortString)
+	protected Http.Response invokeGetSiteTaxonomyVocabulariesPageResponse(
+			Long siteId, String search, String filterString,
+			Pagination pagination, String sortString)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
 
 		String location =
 			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/taxonomy-vocabularies",
-					contentSpaceId);
+				_toPath("/sites/{siteId}/taxonomy-vocabularies", siteId);
 
 		location = HttpUtil.addParameter(location, "filter", filterString);
 
@@ -489,12 +470,12 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 	}
 
 	@Test
-	public void testPostContentSpaceTaxonomyVocabulary() throws Exception {
+	public void testPostSiteTaxonomyVocabulary() throws Exception {
 		TaxonomyVocabulary randomTaxonomyVocabulary =
 			randomTaxonomyVocabulary();
 
 		TaxonomyVocabulary postTaxonomyVocabulary =
-			testPostContentSpaceTaxonomyVocabulary_addTaxonomyVocabulary(
+			testPostSiteTaxonomyVocabulary_addTaxonomyVocabulary(
 				randomTaxonomyVocabulary);
 
 		assertEquals(randomTaxonomyVocabulary, postTaxonomyVocabulary);
@@ -502,7 +483,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 	}
 
 	protected TaxonomyVocabulary
-			testPostContentSpaceTaxonomyVocabulary_addTaxonomyVocabulary(
+			testPostSiteTaxonomyVocabulary_addTaxonomyVocabulary(
 				TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
@@ -510,8 +491,8 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected TaxonomyVocabulary invokePostContentSpaceTaxonomyVocabulary(
-			Long contentSpaceId, TaxonomyVocabulary taxonomyVocabulary)
+	protected TaxonomyVocabulary invokePostSiteTaxonomyVocabulary(
+			Long siteId, TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -522,9 +503,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 
 		String location =
 			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/taxonomy-vocabularies",
-					contentSpaceId);
+				_toPath("/sites/{siteId}/taxonomy-vocabularies", siteId);
 
 		options.setLocation(location);
 
@@ -547,8 +526,8 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 		}
 	}
 
-	protected Http.Response invokePostContentSpaceTaxonomyVocabularyResponse(
-			Long contentSpaceId, TaxonomyVocabulary taxonomyVocabulary)
+	protected Http.Response invokePostSiteTaxonomyVocabularyResponse(
+			Long siteId, TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -559,9 +538,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 
 		String location =
 			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/taxonomy-vocabularies",
-					contentSpaceId);
+				_toPath("/sites/{siteId}/taxonomy-vocabularies", siteId);
 
 		options.setLocation(location);
 
@@ -954,8 +931,97 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 	}
 
 	protected void assertValid(TaxonomyVocabulary taxonomyVocabulary) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (taxonomyVocabulary.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (taxonomyVocabulary.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (taxonomyVocabulary.getId() == null) {
+			valid = false;
+		}
+
+		if (!Objects.equals(
+				taxonomyVocabulary.getSiteId(), testGroup.getGroupId())) {
+
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("assetTypes", additionalAssertFieldName)) {
+				if (taxonomyVocabulary.getAssetTypes() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"availableLanguages", additionalAssertFieldName)) {
+
+				if (taxonomyVocabulary.getAvailableLanguages() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (taxonomyVocabulary.getCreator() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (taxonomyVocabulary.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (taxonomyVocabulary.getName() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfTaxonomyCategories", additionalAssertFieldName)) {
+
+				if (taxonomyVocabulary.getNumberOfTaxonomyCategories() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (taxonomyVocabulary.getViewableBy() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<TaxonomyVocabulary> page) {
@@ -975,6 +1041,10 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		TaxonomyVocabulary taxonomyVocabulary1,
 		TaxonomyVocabulary taxonomyVocabulary2) {
@@ -983,7 +1053,136 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			return true;
 		}
 
-		return false;
+		if (!Objects.equals(
+				taxonomyVocabulary1.getSiteId(),
+				taxonomyVocabulary2.getSiteId())) {
+
+			return false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("assetTypes", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyVocabulary1.getAssetTypes(),
+						taxonomyVocabulary2.getAssetTypes())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"availableLanguages", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						taxonomyVocabulary1.getAvailableLanguages(),
+						taxonomyVocabulary2.getAvailableLanguages())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyVocabulary1.getCreator(),
+						taxonomyVocabulary2.getCreator())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyVocabulary1.getDateCreated(),
+						taxonomyVocabulary2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyVocabulary1.getDateModified(),
+						taxonomyVocabulary2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyVocabulary1.getDescription(),
+						taxonomyVocabulary2.getDescription())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyVocabulary1.getId(),
+						taxonomyVocabulary2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyVocabulary1.getName(),
+						taxonomyVocabulary2.getName())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfTaxonomyCategories", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						taxonomyVocabulary1.getNumberOfTaxonomyCategories(),
+						taxonomyVocabulary2.getNumberOfTaxonomyCategories())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyVocabulary1.getViewableBy(),
+						taxonomyVocabulary2.getViewableBy())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -1042,11 +1241,6 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
-		if (entityFieldName.equals("contentSpaceId")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
 		if (entityFieldName.equals("creator")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
@@ -1090,6 +1284,11 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
+		if (entityFieldName.equals("siteId")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
 		if (entityFieldName.equals("viewableBy")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
@@ -1102,18 +1301,24 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 	protected TaxonomyVocabulary randomTaxonomyVocabulary() {
 		return new TaxonomyVocabulary() {
 			{
-				contentSpaceId = RandomTestUtil.randomLong();
 				dateCreated = RandomTestUtil.nextDate();
 				dateModified = RandomTestUtil.nextDate();
 				description = RandomTestUtil.randomString();
 				id = RandomTestUtil.randomLong();
 				name = RandomTestUtil.randomString();
+				siteId = testGroup.getGroupId();
 			}
 		};
 	}
 
 	protected TaxonomyVocabulary randomIrrelevantTaxonomyVocabulary() {
-		return randomTaxonomyVocabulary();
+		TaxonomyVocabulary randomIrrelevantTaxonomyVocabulary =
+			randomTaxonomyVocabulary();
+
+		randomIrrelevantTaxonomyVocabulary.setSiteId(
+			irrelevantGroup.getGroupId());
+
+		return randomIrrelevantTaxonomyVocabulary;
 	}
 
 	protected TaxonomyVocabulary randomPatchTaxonomyVocabulary() {

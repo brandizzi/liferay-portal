@@ -219,8 +219,33 @@ public abstract class BaseFormRecordFormResourceTestCase {
 	}
 
 	protected void assertValid(FormRecordForm formRecordForm) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("draft", additionalAssertFieldName)) {
+				if (formRecordForm.getDraft() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fieldValues", additionalAssertFieldName)) {
+				if (formRecordForm.getFieldValues() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<FormRecordForm> page) {
@@ -240,6 +265,10 @@ public abstract class BaseFormRecordFormResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		FormRecordForm formRecordForm1, FormRecordForm formRecordForm2) {
 
@@ -247,7 +276,37 @@ public abstract class BaseFormRecordFormResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("draft", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formRecordForm1.getDraft(),
+						formRecordForm2.getDraft())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fieldValues", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formRecordForm1.getFieldValues(),
+						formRecordForm2.getFieldValues())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -323,7 +382,9 @@ public abstract class BaseFormRecordFormResourceTestCase {
 	}
 
 	protected FormRecordForm randomIrrelevantFormRecordForm() {
-		return randomFormRecordForm();
+		FormRecordForm randomIrrelevantFormRecordForm = randomFormRecordForm();
+
+		return randomIrrelevantFormRecordForm;
 	}
 
 	protected FormRecordForm randomPatchFormRecordForm() {

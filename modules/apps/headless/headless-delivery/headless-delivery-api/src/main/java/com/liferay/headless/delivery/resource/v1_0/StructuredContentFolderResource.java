@@ -34,15 +34,13 @@ import javax.annotation.Generated;
 @Generated("")
 public interface StructuredContentFolderResource {
 
-	public Page<StructuredContentFolder>
-			getContentSpaceStructuredContentFoldersPage(
-				Long contentSpaceId, Boolean flatten, String search,
-				Filter filter, Pagination pagination, Sort[] sorts)
+	public Page<StructuredContentFolder> getSiteStructuredContentFoldersPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
+			Pagination pagination, Sort[] sorts)
 		throws Exception;
 
-	public StructuredContentFolder postContentSpaceStructuredContentFolder(
-			Long contentSpaceId,
-			StructuredContentFolder structuredContentFolder)
+	public StructuredContentFolder postSiteStructuredContentFolder(
+			Long siteId, StructuredContentFolder structuredContentFolder)
 		throws Exception;
 
 	public Page<StructuredContentFolder>

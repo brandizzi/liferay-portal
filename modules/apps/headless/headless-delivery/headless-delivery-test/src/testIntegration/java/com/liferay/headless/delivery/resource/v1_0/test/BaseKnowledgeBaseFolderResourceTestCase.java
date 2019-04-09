@@ -109,268 +109,6 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceKnowledgeBaseFoldersPage() throws Exception {
-		Long contentSpaceId =
-			testGetContentSpaceKnowledgeBaseFoldersPage_getContentSpaceId();
-		Long irrelevantContentSpaceId =
-			testGetContentSpaceKnowledgeBaseFoldersPage_getIrrelevantContentSpaceId();
-
-		if ((irrelevantContentSpaceId != null)) {
-			KnowledgeBaseFolder irrelevantKnowledgeBaseFolder =
-				testGetContentSpaceKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
-					irrelevantContentSpaceId,
-					randomIrrelevantKnowledgeBaseFolder());
-
-			Page<KnowledgeBaseFolder> page =
-				invokeGetContentSpaceKnowledgeBaseFoldersPage(
-					irrelevantContentSpaceId, Pagination.of(1, 2));
-
-			Assert.assertEquals(1, page.getTotalCount());
-
-			assertEquals(
-				Arrays.asList(irrelevantKnowledgeBaseFolder),
-				(List<KnowledgeBaseFolder>)page.getItems());
-			assertValid(page);
-		}
-
-		KnowledgeBaseFolder knowledgeBaseFolder1 =
-			testGetContentSpaceKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
-				contentSpaceId, randomKnowledgeBaseFolder());
-
-		KnowledgeBaseFolder knowledgeBaseFolder2 =
-			testGetContentSpaceKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
-				contentSpaceId, randomKnowledgeBaseFolder());
-
-		Page<KnowledgeBaseFolder> page =
-			invokeGetContentSpaceKnowledgeBaseFoldersPage(
-				contentSpaceId, Pagination.of(1, 2));
-
-		Assert.assertEquals(2, page.getTotalCount());
-
-		assertEqualsIgnoringOrder(
-			Arrays.asList(knowledgeBaseFolder1, knowledgeBaseFolder2),
-			(List<KnowledgeBaseFolder>)page.getItems());
-		assertValid(page);
-	}
-
-	@Test
-	public void testGetContentSpaceKnowledgeBaseFoldersPageWithPagination()
-		throws Exception {
-
-		Long contentSpaceId =
-			testGetContentSpaceKnowledgeBaseFoldersPage_getContentSpaceId();
-
-		KnowledgeBaseFolder knowledgeBaseFolder1 =
-			testGetContentSpaceKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
-				contentSpaceId, randomKnowledgeBaseFolder());
-
-		KnowledgeBaseFolder knowledgeBaseFolder2 =
-			testGetContentSpaceKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
-				contentSpaceId, randomKnowledgeBaseFolder());
-
-		KnowledgeBaseFolder knowledgeBaseFolder3 =
-			testGetContentSpaceKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
-				contentSpaceId, randomKnowledgeBaseFolder());
-
-		Page<KnowledgeBaseFolder> page1 =
-			invokeGetContentSpaceKnowledgeBaseFoldersPage(
-				contentSpaceId, Pagination.of(1, 2));
-
-		List<KnowledgeBaseFolder> knowledgeBaseFolders1 =
-			(List<KnowledgeBaseFolder>)page1.getItems();
-
-		Assert.assertEquals(
-			knowledgeBaseFolders1.toString(), 2, knowledgeBaseFolders1.size());
-
-		Page<KnowledgeBaseFolder> page2 =
-			invokeGetContentSpaceKnowledgeBaseFoldersPage(
-				contentSpaceId, Pagination.of(2, 2));
-
-		Assert.assertEquals(3, page2.getTotalCount());
-
-		List<KnowledgeBaseFolder> knowledgeBaseFolders2 =
-			(List<KnowledgeBaseFolder>)page2.getItems();
-
-		Assert.assertEquals(
-			knowledgeBaseFolders2.toString(), 1, knowledgeBaseFolders2.size());
-
-		assertEqualsIgnoringOrder(
-			Arrays.asList(
-				knowledgeBaseFolder1, knowledgeBaseFolder2,
-				knowledgeBaseFolder3),
-			new ArrayList<KnowledgeBaseFolder>() {
-				{
-					addAll(knowledgeBaseFolders1);
-					addAll(knowledgeBaseFolders2);
-				}
-			});
-	}
-
-	protected KnowledgeBaseFolder
-			testGetContentSpaceKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
-				Long contentSpaceId, KnowledgeBaseFolder knowledgeBaseFolder)
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected Long
-			testGetContentSpaceKnowledgeBaseFoldersPage_getContentSpaceId()
-		throws Exception {
-
-		return testGroup.getGroupId();
-	}
-
-	protected Long
-			testGetContentSpaceKnowledgeBaseFoldersPage_getIrrelevantContentSpaceId()
-		throws Exception {
-
-		return irrelevantGroup.getGroupId();
-	}
-
-	protected Page<KnowledgeBaseFolder>
-			invokeGetContentSpaceKnowledgeBaseFoldersPage(
-				Long contentSpaceId, Pagination pagination)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/knowledge-base-folders",
-					contentSpaceId);
-
-		location = HttpUtil.addParameter(
-			location, "page", pagination.getPage());
-		location = HttpUtil.addParameter(
-			location, "pageSize", pagination.getPageSize());
-
-		options.setLocation(location);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-
-		return outputObjectMapper.readValue(
-			string,
-			new TypeReference<Page<KnowledgeBaseFolder>>() {
-			});
-	}
-
-	protected Http.Response
-			invokeGetContentSpaceKnowledgeBaseFoldersPageResponse(
-				Long contentSpaceId, Pagination pagination)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/knowledge-base-folders",
-					contentSpaceId);
-
-		location = HttpUtil.addParameter(
-			location, "page", pagination.getPage());
-		location = HttpUtil.addParameter(
-			location, "pageSize", pagination.getPageSize());
-
-		options.setLocation(location);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
-	public void testPostContentSpaceKnowledgeBaseFolder() throws Exception {
-		KnowledgeBaseFolder randomKnowledgeBaseFolder =
-			randomKnowledgeBaseFolder();
-
-		KnowledgeBaseFolder postKnowledgeBaseFolder =
-			testPostContentSpaceKnowledgeBaseFolder_addKnowledgeBaseFolder(
-				randomKnowledgeBaseFolder);
-
-		assertEquals(randomKnowledgeBaseFolder, postKnowledgeBaseFolder);
-		assertValid(postKnowledgeBaseFolder);
-	}
-
-	protected KnowledgeBaseFolder
-			testPostContentSpaceKnowledgeBaseFolder_addKnowledgeBaseFolder(
-				KnowledgeBaseFolder knowledgeBaseFolder)
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected KnowledgeBaseFolder invokePostContentSpaceKnowledgeBaseFolder(
-			Long contentSpaceId, KnowledgeBaseFolder knowledgeBaseFolder)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		options.setBody(
-			inputObjectMapper.writeValueAsString(knowledgeBaseFolder),
-			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/knowledge-base-folders",
-					contentSpaceId);
-
-		options.setLocation(location);
-
-		options.setPost(true);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-
-		try {
-			return outputObjectMapper.readValue(
-				string, KnowledgeBaseFolder.class);
-		}
-		catch (Exception e) {
-			_log.error("Unable to process HTTP response: " + string, e);
-
-			throw e;
-		}
-	}
-
-	protected Http.Response invokePostContentSpaceKnowledgeBaseFolderResponse(
-			Long contentSpaceId, KnowledgeBaseFolder knowledgeBaseFolder)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		options.setBody(
-			inputObjectMapper.writeValueAsString(knowledgeBaseFolder),
-			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/knowledge-base-folders",
-					contentSpaceId);
-
-		options.setLocation(location);
-
-		options.setPost(true);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
 	public void testDeleteKnowledgeBaseFolder() throws Exception {
 		KnowledgeBaseFolder knowledgeBaseFolder =
 			testDeleteKnowledgeBaseFolder_addKnowledgeBaseFolder();
@@ -966,6 +704,250 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 		return options.getResponse();
 	}
 
+	@Test
+	public void testGetSiteKnowledgeBaseFoldersPage() throws Exception {
+		Long siteId = testGetSiteKnowledgeBaseFoldersPage_getSiteId();
+		Long irrelevantSiteId =
+			testGetSiteKnowledgeBaseFoldersPage_getIrrelevantSiteId();
+
+		if ((irrelevantSiteId != null)) {
+			KnowledgeBaseFolder irrelevantKnowledgeBaseFolder =
+				testGetSiteKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
+					irrelevantSiteId, randomIrrelevantKnowledgeBaseFolder());
+
+			Page<KnowledgeBaseFolder> page =
+				invokeGetSiteKnowledgeBaseFoldersPage(
+					irrelevantSiteId, Pagination.of(1, 2));
+
+			Assert.assertEquals(1, page.getTotalCount());
+
+			assertEquals(
+				Arrays.asList(irrelevantKnowledgeBaseFolder),
+				(List<KnowledgeBaseFolder>)page.getItems());
+			assertValid(page);
+		}
+
+		KnowledgeBaseFolder knowledgeBaseFolder1 =
+			testGetSiteKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
+				siteId, randomKnowledgeBaseFolder());
+
+		KnowledgeBaseFolder knowledgeBaseFolder2 =
+			testGetSiteKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
+				siteId, randomKnowledgeBaseFolder());
+
+		Page<KnowledgeBaseFolder> page = invokeGetSiteKnowledgeBaseFoldersPage(
+			siteId, Pagination.of(1, 2));
+
+		Assert.assertEquals(2, page.getTotalCount());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(knowledgeBaseFolder1, knowledgeBaseFolder2),
+			(List<KnowledgeBaseFolder>)page.getItems());
+		assertValid(page);
+	}
+
+	@Test
+	public void testGetSiteKnowledgeBaseFoldersPageWithPagination()
+		throws Exception {
+
+		Long siteId = testGetSiteKnowledgeBaseFoldersPage_getSiteId();
+
+		KnowledgeBaseFolder knowledgeBaseFolder1 =
+			testGetSiteKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
+				siteId, randomKnowledgeBaseFolder());
+
+		KnowledgeBaseFolder knowledgeBaseFolder2 =
+			testGetSiteKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
+				siteId, randomKnowledgeBaseFolder());
+
+		KnowledgeBaseFolder knowledgeBaseFolder3 =
+			testGetSiteKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
+				siteId, randomKnowledgeBaseFolder());
+
+		Page<KnowledgeBaseFolder> page1 = invokeGetSiteKnowledgeBaseFoldersPage(
+			siteId, Pagination.of(1, 2));
+
+		List<KnowledgeBaseFolder> knowledgeBaseFolders1 =
+			(List<KnowledgeBaseFolder>)page1.getItems();
+
+		Assert.assertEquals(
+			knowledgeBaseFolders1.toString(), 2, knowledgeBaseFolders1.size());
+
+		Page<KnowledgeBaseFolder> page2 = invokeGetSiteKnowledgeBaseFoldersPage(
+			siteId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
+
+		List<KnowledgeBaseFolder> knowledgeBaseFolders2 =
+			(List<KnowledgeBaseFolder>)page2.getItems();
+
+		Assert.assertEquals(
+			knowledgeBaseFolders2.toString(), 1, knowledgeBaseFolders2.size());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(
+				knowledgeBaseFolder1, knowledgeBaseFolder2,
+				knowledgeBaseFolder3),
+			new ArrayList<KnowledgeBaseFolder>() {
+				{
+					addAll(knowledgeBaseFolders1);
+					addAll(knowledgeBaseFolders2);
+				}
+			});
+	}
+
+	protected KnowledgeBaseFolder
+			testGetSiteKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
+				Long siteId, KnowledgeBaseFolder knowledgeBaseFolder)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Long testGetSiteKnowledgeBaseFoldersPage_getSiteId()
+		throws Exception {
+
+		return testGroup.getGroupId();
+	}
+
+	protected Long testGetSiteKnowledgeBaseFoldersPage_getIrrelevantSiteId()
+		throws Exception {
+
+		return irrelevantGroup.getGroupId();
+	}
+
+	protected Page<KnowledgeBaseFolder> invokeGetSiteKnowledgeBaseFoldersPage(
+			Long siteId, Pagination pagination)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/knowledge-base-folders", siteId);
+
+		location = HttpUtil.addParameter(
+			location, "page", pagination.getPage());
+		location = HttpUtil.addParameter(
+			location, "pageSize", pagination.getPageSize());
+
+		options.setLocation(location);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		return outputObjectMapper.readValue(
+			string,
+			new TypeReference<Page<KnowledgeBaseFolder>>() {
+			});
+	}
+
+	protected Http.Response invokeGetSiteKnowledgeBaseFoldersPageResponse(
+			Long siteId, Pagination pagination)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/knowledge-base-folders", siteId);
+
+		location = HttpUtil.addParameter(
+			location, "page", pagination.getPage());
+		location = HttpUtil.addParameter(
+			location, "pageSize", pagination.getPageSize());
+
+		options.setLocation(location);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
+	@Test
+	public void testPostSiteKnowledgeBaseFolder() throws Exception {
+		KnowledgeBaseFolder randomKnowledgeBaseFolder =
+			randomKnowledgeBaseFolder();
+
+		KnowledgeBaseFolder postKnowledgeBaseFolder =
+			testPostSiteKnowledgeBaseFolder_addKnowledgeBaseFolder(
+				randomKnowledgeBaseFolder);
+
+		assertEquals(randomKnowledgeBaseFolder, postKnowledgeBaseFolder);
+		assertValid(postKnowledgeBaseFolder);
+	}
+
+	protected KnowledgeBaseFolder
+			testPostSiteKnowledgeBaseFolder_addKnowledgeBaseFolder(
+				KnowledgeBaseFolder knowledgeBaseFolder)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected KnowledgeBaseFolder invokePostSiteKnowledgeBaseFolder(
+			Long siteId, KnowledgeBaseFolder knowledgeBaseFolder)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		options.setBody(
+			inputObjectMapper.writeValueAsString(knowledgeBaseFolder),
+			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/knowledge-base-folders", siteId);
+
+		options.setLocation(location);
+
+		options.setPost(true);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		try {
+			return outputObjectMapper.readValue(
+				string, KnowledgeBaseFolder.class);
+		}
+		catch (Exception e) {
+			_log.error("Unable to process HTTP response: " + string, e);
+
+			throw e;
+		}
+	}
+
+	protected Http.Response invokePostSiteKnowledgeBaseFolderResponse(
+			Long siteId, KnowledgeBaseFolder knowledgeBaseFolder)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		options.setBody(
+			inputObjectMapper.writeValueAsString(knowledgeBaseFolder),
+			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/knowledge-base-folders", siteId);
+
+		options.setLocation(location);
+
+		options.setPost(true);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
 	protected void assertResponseCode(
 		int expectedResponseCode, Http.Response actualResponse) {
 
@@ -1027,8 +1009,117 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 	}
 
 	protected void assertValid(KnowledgeBaseFolder knowledgeBaseFolder) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (knowledgeBaseFolder.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (knowledgeBaseFolder.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (knowledgeBaseFolder.getId() == null) {
+			valid = false;
+		}
+
+		if (!Objects.equals(
+				knowledgeBaseFolder.getSiteId(), testGroup.getGroupId())) {
+
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (knowledgeBaseFolder.getCreator() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (knowledgeBaseFolder.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (knowledgeBaseFolder.getName() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfKnowledgeBaseArticles",
+					additionalAssertFieldName)) {
+
+				if (knowledgeBaseFolder.getNumberOfKnowledgeBaseArticles() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfKnowledgeBaseFolders",
+					additionalAssertFieldName)) {
+
+				if (knowledgeBaseFolder.getNumberOfKnowledgeBaseFolders() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentKnowledgeBaseFolder", additionalAssertFieldName)) {
+
+				if (knowledgeBaseFolder.getParentKnowledgeBaseFolder() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentKnowledgeBaseFolderId", additionalAssertFieldName)) {
+
+				if (knowledgeBaseFolder.getParentKnowledgeBaseFolderId() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (knowledgeBaseFolder.getViewableBy() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<KnowledgeBaseFolder> page) {
@@ -1048,6 +1139,10 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		KnowledgeBaseFolder knowledgeBaseFolder1,
 		KnowledgeBaseFolder knowledgeBaseFolder2) {
@@ -1056,7 +1151,156 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 			return true;
 		}
 
-		return false;
+		if (!Objects.equals(
+				knowledgeBaseFolder1.getSiteId(),
+				knowledgeBaseFolder2.getSiteId())) {
+
+			return false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseFolder1.getCreator(),
+						knowledgeBaseFolder2.getCreator())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseFolder1.getDateCreated(),
+						knowledgeBaseFolder2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseFolder1.getDateModified(),
+						knowledgeBaseFolder2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseFolder1.getDescription(),
+						knowledgeBaseFolder2.getDescription())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseFolder1.getId(),
+						knowledgeBaseFolder2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseFolder1.getName(),
+						knowledgeBaseFolder2.getName())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfKnowledgeBaseArticles",
+					additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						knowledgeBaseFolder1.getNumberOfKnowledgeBaseArticles(),
+						knowledgeBaseFolder2.
+							getNumberOfKnowledgeBaseArticles())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfKnowledgeBaseFolders",
+					additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						knowledgeBaseFolder1.getNumberOfKnowledgeBaseFolders(),
+						knowledgeBaseFolder2.
+							getNumberOfKnowledgeBaseFolders())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentKnowledgeBaseFolder", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						knowledgeBaseFolder1.getParentKnowledgeBaseFolder(),
+						knowledgeBaseFolder2.getParentKnowledgeBaseFolder())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentKnowledgeBaseFolderId", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						knowledgeBaseFolder1.getParentKnowledgeBaseFolderId(),
+						knowledgeBaseFolder2.
+							getParentKnowledgeBaseFolderId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseFolder1.getViewableBy(),
+						knowledgeBaseFolder2.getViewableBy())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -1104,11 +1348,6 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 		sb.append(" ");
 		sb.append(operator);
 		sb.append(" ");
-
-		if (entityFieldName.equals("contentSpaceId")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
 
 		if (entityFieldName.equals("creator")) {
 			throw new IllegalArgumentException(
@@ -1169,6 +1408,11 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
+		if (entityFieldName.equals("siteId")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
 		if (entityFieldName.equals("viewableBy")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
@@ -1181,19 +1425,25 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 	protected KnowledgeBaseFolder randomKnowledgeBaseFolder() {
 		return new KnowledgeBaseFolder() {
 			{
-				contentSpaceId = RandomTestUtil.randomLong();
 				dateCreated = RandomTestUtil.nextDate();
 				dateModified = RandomTestUtil.nextDate();
 				description = RandomTestUtil.randomString();
 				id = RandomTestUtil.randomLong();
 				name = RandomTestUtil.randomString();
 				parentKnowledgeBaseFolderId = RandomTestUtil.randomLong();
+				siteId = testGroup.getGroupId();
 			}
 		};
 	}
 
 	protected KnowledgeBaseFolder randomIrrelevantKnowledgeBaseFolder() {
-		return randomKnowledgeBaseFolder();
+		KnowledgeBaseFolder randomIrrelevantKnowledgeBaseFolder =
+			randomKnowledgeBaseFolder();
+
+		randomIrrelevantKnowledgeBaseFolder.setSiteId(
+			irrelevantGroup.getGroupId());
+
+		return randomIrrelevantKnowledgeBaseFolder;
 	}
 
 	protected KnowledgeBaseFolder randomPatchKnowledgeBaseFolder() {

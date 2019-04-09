@@ -67,11 +67,6 @@ public class KnowledgeBaseArticleSerDes {
 		sb.append("\"");
 		sb.append(", ");
 
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(knowledgeBaseArticle.getContentSpaceId());
-		sb.append(", ");
-
 		sb.append("\"creator\": ");
 
 		sb.append(knowledgeBaseArticle.getCreator());
@@ -160,6 +155,11 @@ public class KnowledgeBaseArticleSerDes {
 		sb.append("\"parentKnowledgeBaseFolderId\": ");
 
 		sb.append(knowledgeBaseArticle.getParentKnowledgeBaseFolderId());
+		sb.append(", ");
+
+		sb.append("\"siteId\": ");
+
+		sb.append(knowledgeBaseArticle.getSiteId());
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategories\": ");
@@ -285,12 +285,6 @@ public class KnowledgeBaseArticleSerDes {
 						(String)jsonParserFieldValue);
 				}
 			}
-			else if (Objects.equals(jsonParserFieldName, "contentSpaceId")) {
-				if (jsonParserFieldValue != null) {
-					knowledgeBaseArticle.setContentSpaceId(
-						(Long)jsonParserFieldValue);
-				}
-			}
 			else if (Objects.equals(jsonParserFieldName, "creator")) {
 				if (jsonParserFieldValue != null) {
 					knowledgeBaseArticle.setCreator(
@@ -369,6 +363,11 @@ public class KnowledgeBaseArticleSerDes {
 				if (jsonParserFieldValue != null) {
 					knowledgeBaseArticle.setParentKnowledgeBaseFolderId(
 						(Long)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "siteId")) {
+				if (jsonParserFieldValue != null) {
+					knowledgeBaseArticle.setSiteId((Long)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(

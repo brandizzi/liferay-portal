@@ -56,11 +56,6 @@ public class SegmentSerDes {
 		sb.append(segment.getActive());
 		sb.append(", ");
 
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(segment.getContentSpaceId());
-		sb.append(", ");
-
 		sb.append("\"criteria\": ");
 
 		sb.append("\"");
@@ -92,6 +87,11 @@ public class SegmentSerDes {
 		sb.append("\"");
 		sb.append(segment.getName());
 		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"siteId\": ");
+
+		sb.append(segment.getSiteId());
 		sb.append(", ");
 
 		sb.append("\"source\": ");
@@ -146,11 +146,6 @@ public class SegmentSerDes {
 					segment.setActive((Boolean)jsonParserFieldValue);
 				}
 			}
-			else if (Objects.equals(jsonParserFieldName, "contentSpaceId")) {
-				if (jsonParserFieldValue != null) {
-					segment.setContentSpaceId((Long)jsonParserFieldValue);
-				}
-			}
 			else if (Objects.equals(jsonParserFieldName, "criteria")) {
 				if (jsonParserFieldValue != null) {
 					segment.setCriteria((String)jsonParserFieldValue);
@@ -174,6 +169,11 @@ public class SegmentSerDes {
 			else if (Objects.equals(jsonParserFieldName, "name")) {
 				if (jsonParserFieldValue != null) {
 					segment.setName((String)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "siteId")) {
+				if (jsonParserFieldValue != null) {
+					segment.setSiteId((Long)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "source")) {

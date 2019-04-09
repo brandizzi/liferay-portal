@@ -395,8 +395,53 @@ public abstract class BasePhoneResourceTestCase {
 	}
 
 	protected void assertValid(Phone phone) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (phone.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("extension", additionalAssertFieldName)) {
+				if (phone.getExtension() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("phoneNumber", additionalAssertFieldName)) {
+				if (phone.getPhoneNumber() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("phoneType", additionalAssertFieldName)) {
+				if (phone.getPhoneType() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("primary", additionalAssertFieldName)) {
+				if (phone.getPrimary() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<Phone> page) {
@@ -416,12 +461,70 @@ public abstract class BasePhoneResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(Phone phone1, Phone phone2) {
 		if (phone1 == phone2) {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("extension", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						phone1.getExtension(), phone2.getExtension())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(phone1.getId(), phone2.getId())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("phoneNumber", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						phone1.getPhoneNumber(), phone2.getPhoneNumber())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("phoneType", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						phone1.getPhoneType(), phone2.getPhoneType())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("primary", additionalAssertFieldName)) {
+				if (!Objects.equals(phone1.getPrimary(), phone2.getPrimary())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -520,7 +623,9 @@ public abstract class BasePhoneResourceTestCase {
 	}
 
 	protected Phone randomIrrelevantPhone() {
-		return randomPhone();
+		Phone randomIrrelevantPhone = randomPhone();
+
+		return randomIrrelevantPhone;
 	}
 
 	protected Phone randomPatchPhone() {

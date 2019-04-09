@@ -112,11 +112,6 @@ public class StructuredContentSerDes {
 
 		sb.append(", ");
 
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(structuredContent.getContentSpaceId());
-		sb.append(", ");
-
 		sb.append("\"contentStructureId\": ");
 
 		sb.append(structuredContent.getContentStructureId());
@@ -230,6 +225,11 @@ public class StructuredContentSerDes {
 			sb.append("]");
 		}
 
+		sb.append(", ");
+
+		sb.append("\"siteId\": ");
+
+		sb.append(structuredContent.getSiteId());
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategories\": ");
@@ -373,12 +373,6 @@ public class StructuredContentSerDes {
 						));
 				}
 			}
-			else if (Objects.equals(jsonParserFieldName, "contentSpaceId")) {
-				if (jsonParserFieldValue != null) {
-					structuredContent.setContentSpaceId(
-						(Long)jsonParserFieldValue);
-				}
-			}
 			else if (Objects.equals(
 						jsonParserFieldName, "contentStructureId")) {
 
@@ -462,6 +456,11 @@ public class StructuredContentSerDes {
 						).toArray(
 							size -> new RenderedContent[size]
 						));
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "siteId")) {
+				if (jsonParserFieldValue != null) {
+					structuredContent.setSiteId((Long)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(

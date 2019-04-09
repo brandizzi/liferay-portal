@@ -71,11 +71,11 @@ public abstract class BaseTaxonomyVocabularyResourceImpl
 			@Parameter(in = ParameterIn.QUERY, name = "sorts")
 		}
 	)
-	@Path("/content-spaces/{contentSpaceId}/taxonomy-vocabularies")
+	@Path("/sites/{siteId}/taxonomy-vocabularies")
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "TaxonomyVocabulary")})
-	public Page<TaxonomyVocabulary> getContentSpaceTaxonomyVocabulariesPage(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
+	public Page<TaxonomyVocabulary> getSiteTaxonomyVocabulariesPage(
+			@NotNull @PathParam("siteId") Long siteId,
 			@QueryParam("search") String search, @Context Filter filter,
 			@Context Pagination pagination, @Context Sort[] sorts)
 		throws Exception {
@@ -86,11 +86,11 @@ public abstract class BaseTaxonomyVocabularyResourceImpl
 	@Override
 	@Consumes("application/json")
 	@POST
-	@Path("/content-spaces/{contentSpaceId}/taxonomy-vocabularies")
+	@Path("/sites/{siteId}/taxonomy-vocabularies")
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "TaxonomyVocabulary")})
-	public TaxonomyVocabulary postContentSpaceTaxonomyVocabulary(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
+	public TaxonomyVocabulary postSiteTaxonomyVocabulary(
+			@NotNull @PathParam("siteId") Long siteId,
 			TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
@@ -141,11 +141,6 @@ public abstract class BaseTaxonomyVocabularyResourceImpl
 				taxonomyVocabulary.getAvailableLanguages());
 		}
 
-		if (taxonomyVocabulary.getContentSpaceId() != null) {
-			existingTaxonomyVocabulary.setContentSpaceId(
-				taxonomyVocabulary.getContentSpaceId());
-		}
-
 		if (taxonomyVocabulary.getDateCreated() != null) {
 			existingTaxonomyVocabulary.setDateCreated(
 				taxonomyVocabulary.getDateCreated());
@@ -168,6 +163,11 @@ public abstract class BaseTaxonomyVocabularyResourceImpl
 		if (taxonomyVocabulary.getNumberOfTaxonomyCategories() != null) {
 			existingTaxonomyVocabulary.setNumberOfTaxonomyCategories(
 				taxonomyVocabulary.getNumberOfTaxonomyCategories());
+		}
+
+		if (taxonomyVocabulary.getSiteId() != null) {
+			existingTaxonomyVocabulary.setSiteId(
+				taxonomyVocabulary.getSiteId());
 		}
 
 		if (taxonomyVocabulary.getViewableBy() != null) {

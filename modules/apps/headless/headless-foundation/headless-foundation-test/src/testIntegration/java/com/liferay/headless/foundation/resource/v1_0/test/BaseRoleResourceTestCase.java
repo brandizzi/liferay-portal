@@ -445,8 +445,71 @@ public abstract class BaseRoleResourceTestCase {
 	}
 
 	protected void assertValid(Role role) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (role.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (role.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (role.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals(
+					"availableLanguages", additionalAssertFieldName)) {
+
+				if (role.getAvailableLanguages() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (role.getCreator() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (role.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (role.getName() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("roleType", additionalAssertFieldName)) {
+				if (role.getRoleType() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<Role> page) {
@@ -466,12 +529,99 @@ public abstract class BaseRoleResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(Role role1, Role role2) {
 		if (role1 == role2) {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals(
+					"availableLanguages", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						role1.getAvailableLanguages(),
+						role2.getAvailableLanguages())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (!Objects.equals(role1.getCreator(), role2.getCreator())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						role1.getDateCreated(), role2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						role1.getDateModified(), role2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						role1.getDescription(), role2.getDescription())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(role1.getId(), role2.getId())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (!Objects.equals(role1.getName(), role2.getName())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("roleType", additionalAssertFieldName)) {
+				if (!Objects.equals(role1.getRoleType(), role2.getRoleType())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -588,7 +738,9 @@ public abstract class BaseRoleResourceTestCase {
 	}
 
 	protected Role randomIrrelevantRole() {
-		return randomRole();
+		Role randomIrrelevantRole = randomRole();
+
+		return randomIrrelevantRole;
 	}
 
 	protected Role randomPatchRole() {

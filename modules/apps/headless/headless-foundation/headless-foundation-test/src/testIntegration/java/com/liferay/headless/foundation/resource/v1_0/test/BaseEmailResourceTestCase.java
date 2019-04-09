@@ -395,8 +395,45 @@ public abstract class BaseEmailResourceTestCase {
 	}
 
 	protected void assertValid(Email email) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (email.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("email", additionalAssertFieldName)) {
+				if (email.getEmail() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("primary", additionalAssertFieldName)) {
+				if (email.getPrimary() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("type", additionalAssertFieldName)) {
+				if (email.getType() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<Email> page) {
@@ -416,12 +453,56 @@ public abstract class BaseEmailResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(Email email1, Email email2) {
 		if (email1 == email2) {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("email", additionalAssertFieldName)) {
+				if (!Objects.equals(email1.getEmail(), email2.getEmail())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(email1.getId(), email2.getId())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("primary", additionalAssertFieldName)) {
+				if (!Objects.equals(email1.getPrimary(), email2.getPrimary())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("type", additionalAssertFieldName)) {
+				if (!Objects.equals(email1.getType(), email2.getType())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -511,7 +592,9 @@ public abstract class BaseEmailResourceTestCase {
 	}
 
 	protected Email randomIrrelevantEmail() {
-		return randomEmail();
+		Email randomIrrelevantEmail = randomEmail();
+
+		return randomIrrelevantEmail;
 	}
 
 	protected Email randomPatchEmail() {

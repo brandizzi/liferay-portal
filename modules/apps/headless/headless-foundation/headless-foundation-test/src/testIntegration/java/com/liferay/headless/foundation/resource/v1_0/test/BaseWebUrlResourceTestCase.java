@@ -400,8 +400,37 @@ public abstract class BaseWebUrlResourceTestCase {
 	}
 
 	protected void assertValid(WebUrl webUrl) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (webUrl.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("url", additionalAssertFieldName)) {
+				if (webUrl.getUrl() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("urlType", additionalAssertFieldName)) {
+				if (webUrl.getUrlType() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<WebUrl> page) {
@@ -421,12 +450,50 @@ public abstract class BaseWebUrlResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(WebUrl webUrl1, WebUrl webUrl2) {
 		if (webUrl1 == webUrl2) {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(webUrl1.getId(), webUrl2.getId())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("url", additionalAssertFieldName)) {
+				if (!Objects.equals(webUrl1.getUrl(), webUrl2.getUrl())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("urlType", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						webUrl1.getUrlType(), webUrl2.getUrlType())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -510,7 +577,9 @@ public abstract class BaseWebUrlResourceTestCase {
 	}
 
 	protected WebUrl randomIrrelevantWebUrl() {
-		return randomWebUrl();
+		WebUrl randomIrrelevantWebUrl = randomWebUrl();
+
+		return randomIrrelevantWebUrl;
 	}
 
 	protected WebUrl randomPatchWebUrl() {

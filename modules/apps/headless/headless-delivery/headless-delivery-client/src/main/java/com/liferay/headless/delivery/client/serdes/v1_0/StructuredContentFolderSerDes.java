@@ -55,11 +55,6 @@ public class StructuredContentFolderSerDes {
 
 		sb.append("{");
 
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(structuredContentFolder.getContentSpaceId());
-		sb.append(", ");
-
 		sb.append("\"creator\": ");
 
 		sb.append(structuredContentFolder.getCreator());
@@ -107,6 +102,11 @@ public class StructuredContentFolderSerDes {
 		sb.append("\"numberOfStructuredContents\": ");
 
 		sb.append(structuredContentFolder.getNumberOfStructuredContents());
+		sb.append(", ");
+
+		sb.append("\"siteId\": ");
+
+		sb.append(structuredContentFolder.getSiteId());
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
@@ -161,13 +161,7 @@ public class StructuredContentFolderSerDes {
 			StructuredContentFolder structuredContentFolder,
 			String jsonParserFieldName, Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "contentSpaceId")) {
-				if (jsonParserFieldValue != null) {
-					structuredContentFolder.setContentSpaceId(
-						(Long)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "creator")) {
+			if (Objects.equals(jsonParserFieldName, "creator")) {
 				if (jsonParserFieldValue != null) {
 					structuredContentFolder.setCreator(
 						CreatorSerDes.toDTO((String)jsonParserFieldValue));
@@ -217,6 +211,12 @@ public class StructuredContentFolderSerDes {
 				if (jsonParserFieldValue != null) {
 					structuredContentFolder.setNumberOfStructuredContents(
 						(Number)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "siteId")) {
+				if (jsonParserFieldValue != null) {
+					structuredContentFolder.setSiteId(
+						(Long)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "viewableBy")) {

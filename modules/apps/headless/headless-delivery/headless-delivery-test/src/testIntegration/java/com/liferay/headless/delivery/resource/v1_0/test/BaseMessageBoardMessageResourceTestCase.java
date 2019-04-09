@@ -1682,8 +1682,133 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 	}
 
 	protected void assertValid(MessageBoardMessage messageBoardMessage) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (messageBoardMessage.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (messageBoardMessage.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (messageBoardMessage.getId() == null) {
+			valid = false;
+		}
+
+		if (!Objects.equals(
+				messageBoardMessage.getSiteId(), testGroup.getGroupId())) {
+
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
+				if (messageBoardMessage.getAggregateRating() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("anonymous", additionalAssertFieldName)) {
+				if (messageBoardMessage.getAnonymous() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("articleBody", additionalAssertFieldName)) {
+				if (messageBoardMessage.getArticleBody() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (messageBoardMessage.getCreator() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (messageBoardMessage.getEncodingFormat() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("headline", additionalAssertFieldName)) {
+				if (messageBoardMessage.getHeadline() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
+				if (messageBoardMessage.getKeywords() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfMessageBoardAttachments",
+					additionalAssertFieldName)) {
+
+				if (messageBoardMessage.getNumberOfMessageBoardAttachments() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfMessageBoardMessages",
+					additionalAssertFieldName)) {
+
+				if (messageBoardMessage.getNumberOfMessageBoardMessages() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("showAsAnswer", additionalAssertFieldName)) {
+				if (messageBoardMessage.getShowAsAnswer() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (messageBoardMessage.getViewableBy() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<MessageBoardMessage> page) {
@@ -1703,6 +1828,10 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		MessageBoardMessage messageBoardMessage1,
 		MessageBoardMessage messageBoardMessage2) {
@@ -1711,7 +1840,185 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			return true;
 		}
 
-		return false;
+		if (!Objects.equals(
+				messageBoardMessage1.getSiteId(),
+				messageBoardMessage2.getSiteId())) {
+
+			return false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardMessage1.getAggregateRating(),
+						messageBoardMessage2.getAggregateRating())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("anonymous", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardMessage1.getAnonymous(),
+						messageBoardMessage2.getAnonymous())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("articleBody", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardMessage1.getArticleBody(),
+						messageBoardMessage2.getArticleBody())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardMessage1.getCreator(),
+						messageBoardMessage2.getCreator())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardMessage1.getDateCreated(),
+						messageBoardMessage2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardMessage1.getDateModified(),
+						messageBoardMessage2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardMessage1.getEncodingFormat(),
+						messageBoardMessage2.getEncodingFormat())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("headline", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardMessage1.getHeadline(),
+						messageBoardMessage2.getHeadline())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardMessage1.getId(),
+						messageBoardMessage2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardMessage1.getKeywords(),
+						messageBoardMessage2.getKeywords())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfMessageBoardAttachments",
+					additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						messageBoardMessage1.
+							getNumberOfMessageBoardAttachments(),
+						messageBoardMessage2.
+							getNumberOfMessageBoardAttachments())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfMessageBoardMessages",
+					additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						messageBoardMessage1.getNumberOfMessageBoardMessages(),
+						messageBoardMessage2.
+							getNumberOfMessageBoardMessages())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("showAsAnswer", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardMessage1.getShowAsAnswer(),
+						messageBoardMessage2.getShowAsAnswer())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardMessage1.getViewableBy(),
+						messageBoardMessage2.getViewableBy())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -1778,11 +2085,6 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			return sb.toString();
 		}
 
-		if (entityFieldName.equals("contentSpaceId")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
 		if (entityFieldName.equals("creator")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
@@ -1842,6 +2144,11 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
+		if (entityFieldName.equals("siteId")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
 		if (entityFieldName.equals("viewableBy")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
@@ -1856,19 +2163,25 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			{
 				anonymous = RandomTestUtil.randomBoolean();
 				articleBody = RandomTestUtil.randomString();
-				contentSpaceId = RandomTestUtil.randomLong();
 				dateCreated = RandomTestUtil.nextDate();
 				dateModified = RandomTestUtil.nextDate();
 				encodingFormat = RandomTestUtil.randomString();
 				headline = RandomTestUtil.randomString();
 				id = RandomTestUtil.randomLong();
 				showAsAnswer = RandomTestUtil.randomBoolean();
+				siteId = testGroup.getGroupId();
 			}
 		};
 	}
 
 	protected MessageBoardMessage randomIrrelevantMessageBoardMessage() {
-		return randomMessageBoardMessage();
+		MessageBoardMessage randomIrrelevantMessageBoardMessage =
+			randomMessageBoardMessage();
+
+		randomIrrelevantMessageBoardMessage.setSiteId(
+			irrelevantGroup.getGroupId());
+
+		return randomIrrelevantMessageBoardMessage;
 	}
 
 	protected MessageBoardMessage randomPatchMessageBoardMessage() {

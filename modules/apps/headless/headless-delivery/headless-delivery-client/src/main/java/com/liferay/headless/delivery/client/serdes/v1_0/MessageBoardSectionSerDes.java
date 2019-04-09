@@ -53,11 +53,6 @@ public class MessageBoardSectionSerDes {
 
 		sb.append("{");
 
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(messageBoardSection.getContentSpaceId());
-		sb.append(", ");
-
 		sb.append("\"creator\": ");
 
 		sb.append(messageBoardSection.getCreator());
@@ -97,6 +92,11 @@ public class MessageBoardSectionSerDes {
 		sb.append("\"numberOfMessageBoardThreads\": ");
 
 		sb.append(messageBoardSection.getNumberOfMessageBoardThreads());
+		sb.append(", ");
+
+		sb.append("\"siteId\": ");
+
+		sb.append(messageBoardSection.getSiteId());
 		sb.append(", ");
 
 		sb.append("\"title\": ");
@@ -156,13 +156,7 @@ public class MessageBoardSectionSerDes {
 			MessageBoardSection messageBoardSection, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "contentSpaceId")) {
-				if (jsonParserFieldValue != null) {
-					messageBoardSection.setContentSpaceId(
-						(Long)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "creator")) {
+			if (Objects.equals(jsonParserFieldName, "creator")) {
 				if (jsonParserFieldValue != null) {
 					messageBoardSection.setCreator(
 						CreatorSerDes.toDTO((String)jsonParserFieldValue));
@@ -205,6 +199,11 @@ public class MessageBoardSectionSerDes {
 				if (jsonParserFieldValue != null) {
 					messageBoardSection.setNumberOfMessageBoardThreads(
 						(Integer)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "siteId")) {
+				if (jsonParserFieldValue != null) {
+					messageBoardSection.setSiteId((Long)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "title")) {

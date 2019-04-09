@@ -312,8 +312,37 @@ public abstract class BaseSegmentUserResourceTestCase {
 	}
 
 	protected void assertValid(SegmentUser segmentUser) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (segmentUser.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("email", additionalAssertFieldName)) {
+				if (segmentUser.getEmail() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (segmentUser.getName() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<SegmentUser> page) {
@@ -333,6 +362,10 @@ public abstract class BaseSegmentUserResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		SegmentUser segmentUser1, SegmentUser segmentUser2) {
 
@@ -340,7 +373,45 @@ public abstract class BaseSegmentUserResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("email", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						segmentUser1.getEmail(), segmentUser2.getEmail())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						segmentUser1.getId(), segmentUser2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						segmentUser1.getName(), segmentUser2.getName())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -424,7 +495,9 @@ public abstract class BaseSegmentUserResourceTestCase {
 	}
 
 	protected SegmentUser randomIrrelevantSegmentUser() {
-		return randomSegmentUser();
+		SegmentUser randomIrrelevantSegmentUser = randomSegmentUser();
+
+		return randomIrrelevantSegmentUser;
 	}
 
 	protected SegmentUser randomPatchSegmentUser() {

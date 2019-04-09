@@ -80,16 +80,13 @@ public abstract class BaseContentSetElementResourceImpl
 			@Parameter(in = ParameterIn.QUERY, name = "pageSize")
 		}
 	)
-	@Path(
-		"/content-spaces/{contentSpaceId}/content-sets/by-key/{key}/content-set-elements"
-	)
+	@Path("/sites/{siteId}/content-sets/by-key/{key}/content-set-elements")
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "ContentSetElement")})
-	public Page<ContentSetElement>
-			getContentSpaceContentSetByKeyContentSetElementsPage(
-				@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-				@NotNull @PathParam("key") String key,
-				@Context Pagination pagination)
+	public Page<ContentSetElement> getSiteContentSetByKeyContentSetElementsPage(
+			@NotNull @PathParam("siteId") Long siteId,
+			@NotNull @PathParam("key") String key,
+			@Context Pagination pagination)
 		throws Exception {
 
 		return Page.of(Collections.emptyList());
@@ -103,14 +100,12 @@ public abstract class BaseContentSetElementResourceImpl
 			@Parameter(in = ParameterIn.QUERY, name = "pageSize")
 		}
 	)
-	@Path(
-		"/content-spaces/{contentSpaceId}/content-sets/by-uuid/{uuid}/content-set-elements"
-	)
+	@Path("/sites/{siteId}/content-sets/by-uuid/{uuid}/content-set-elements")
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "ContentSetElement")})
 	public Page<ContentSetElement>
-			getContentSpaceContentSetByUuidContentSetElementsPage(
-				@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
+			getSiteContentSetByUuidContentSetElementsPage(
+				@NotNull @PathParam("siteId") Long siteId,
 				@NotNull @PathParam("uuid") String uuid,
 				@Context Pagination pagination)
 		throws Exception {

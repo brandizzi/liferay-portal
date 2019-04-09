@@ -516,8 +516,61 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 	protected void assertValid(
 		KnowledgeBaseAttachment knowledgeBaseAttachment) {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (knowledgeBaseAttachment.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
+				if (knowledgeBaseAttachment.getContentUrl() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (knowledgeBaseAttachment.getEncodingFormat() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
+				if (knowledgeBaseAttachment.getFileExtension() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
+				if (knowledgeBaseAttachment.getSizeInBytes() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (knowledgeBaseAttachment.getTitle() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<KnowledgeBaseAttachment> page) {
@@ -538,6 +591,10 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		KnowledgeBaseAttachment knowledgeBaseAttachment1,
 		KnowledgeBaseAttachment knowledgeBaseAttachment2) {
@@ -546,7 +603,81 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseAttachment1.getContentUrl(),
+						knowledgeBaseAttachment2.getContentUrl())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseAttachment1.getEncodingFormat(),
+						knowledgeBaseAttachment2.getEncodingFormat())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseAttachment1.getFileExtension(),
+						knowledgeBaseAttachment2.getFileExtension())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseAttachment1.getId(),
+						knowledgeBaseAttachment2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseAttachment1.getSizeInBytes(),
+						knowledgeBaseAttachment2.getSizeInBytes())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						knowledgeBaseAttachment1.getTitle(),
+						knowledgeBaseAttachment2.getTitle())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -660,7 +791,10 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 	protected KnowledgeBaseAttachment
 		randomIrrelevantKnowledgeBaseAttachment() {
 
-		return randomKnowledgeBaseAttachment();
+		KnowledgeBaseAttachment randomIrrelevantKnowledgeBaseAttachment =
+			randomKnowledgeBaseAttachment();
+
+		return randomIrrelevantKnowledgeBaseAttachment;
 	}
 
 	protected KnowledgeBaseAttachment randomPatchKnowledgeBaseAttachment() {

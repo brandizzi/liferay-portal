@@ -70,11 +70,6 @@ public class MessageBoardMessageSerDes {
 		sb.append("\"");
 		sb.append(", ");
 
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(messageBoardMessage.getContentSpaceId());
-		sb.append(", ");
-
 		sb.append("\"creator\": ");
 
 		sb.append(messageBoardMessage.getCreator());
@@ -151,6 +146,11 @@ public class MessageBoardMessageSerDes {
 		sb.append(messageBoardMessage.getShowAsAnswer());
 		sb.append(", ");
 
+		sb.append("\"siteId\": ");
+
+		sb.append(messageBoardMessage.getSiteId());
+		sb.append(", ");
+
 		sb.append("\"viewableBy\": ");
 
 		sb.append("\"");
@@ -220,12 +220,6 @@ public class MessageBoardMessageSerDes {
 						(String)jsonParserFieldValue);
 				}
 			}
-			else if (Objects.equals(jsonParserFieldName, "contentSpaceId")) {
-				if (jsonParserFieldValue != null) {
-					messageBoardMessage.setContentSpaceId(
-						(Long)jsonParserFieldValue);
-				}
-			}
 			else if (Objects.equals(jsonParserFieldName, "creator")) {
 				if (jsonParserFieldValue != null) {
 					messageBoardMessage.setCreator(
@@ -288,6 +282,11 @@ public class MessageBoardMessageSerDes {
 				if (jsonParserFieldValue != null) {
 					messageBoardMessage.setShowAsAnswer(
 						(Boolean)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "siteId")) {
+				if (jsonParserFieldValue != null) {
+					messageBoardMessage.setSiteId((Long)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "viewableBy")) {

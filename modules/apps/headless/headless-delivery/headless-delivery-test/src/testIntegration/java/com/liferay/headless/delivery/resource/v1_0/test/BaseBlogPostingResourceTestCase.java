@@ -618,20 +618,18 @@ public abstract class BaseBlogPostingResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceBlogPostingsPage() throws Exception {
-		Long contentSpaceId =
-			testGetContentSpaceBlogPostingsPage_getContentSpaceId();
-		Long irrelevantContentSpaceId =
-			testGetContentSpaceBlogPostingsPage_getIrrelevantContentSpaceId();
+	public void testGetSiteBlogPostingsPage() throws Exception {
+		Long siteId = testGetSiteBlogPostingsPage_getSiteId();
+		Long irrelevantSiteId =
+			testGetSiteBlogPostingsPage_getIrrelevantSiteId();
 
-		if ((irrelevantContentSpaceId != null)) {
+		if ((irrelevantSiteId != null)) {
 			BlogPosting irrelevantBlogPosting =
-				testGetContentSpaceBlogPostingsPage_addBlogPosting(
-					irrelevantContentSpaceId, randomIrrelevantBlogPosting());
+				testGetSiteBlogPostingsPage_addBlogPosting(
+					irrelevantSiteId, randomIrrelevantBlogPosting());
 
-			Page<BlogPosting> page = invokeGetContentSpaceBlogPostingsPage(
-				irrelevantContentSpaceId, null, null, Pagination.of(1, 2),
-				null);
+			Page<BlogPosting> page = invokeGetSiteBlogPostingsPage(
+				irrelevantSiteId, null, null, Pagination.of(1, 2), null);
 
 			Assert.assertEquals(1, page.getTotalCount());
 
@@ -641,16 +639,14 @@ public abstract class BaseBlogPostingResourceTestCase {
 			assertValid(page);
 		}
 
-		BlogPosting blogPosting1 =
-			testGetContentSpaceBlogPostingsPage_addBlogPosting(
-				contentSpaceId, randomBlogPosting());
+		BlogPosting blogPosting1 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, randomBlogPosting());
 
-		BlogPosting blogPosting2 =
-			testGetContentSpaceBlogPostingsPage_addBlogPosting(
-				contentSpaceId, randomBlogPosting());
+		BlogPosting blogPosting2 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, randomBlogPosting());
 
-		Page<BlogPosting> page = invokeGetContentSpaceBlogPostingsPage(
-			contentSpaceId, null, null, Pagination.of(1, 2), null);
+		Page<BlogPosting> page = invokeGetSiteBlogPostingsPage(
+			siteId, null, null, Pagination.of(1, 2), null);
 
 		Assert.assertEquals(2, page.getTotalCount());
 
@@ -661,7 +657,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceBlogPostingsPageWithFilterDateTimeEquals()
+	public void testGetSiteBlogPostingsPageWithFilterDateTimeEquals()
 		throws Exception {
 
 		List<EntityField> entityFields = getEntityFields(
@@ -671,8 +667,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			return;
 		}
 
-		Long contentSpaceId =
-			testGetContentSpaceBlogPostingsPage_getContentSpaceId();
+		Long siteId = testGetSiteBlogPostingsPage_getSiteId();
 
 		BlogPosting blogPosting1 = randomBlogPosting();
 		BlogPosting blogPosting2 = randomBlogPosting();
@@ -683,18 +678,17 @@ public abstract class BaseBlogPostingResourceTestCase {
 				DateUtils.addMinutes(new Date(), -2));
 		}
 
-		blogPosting1 = testGetContentSpaceBlogPostingsPage_addBlogPosting(
-			contentSpaceId, blogPosting1);
+		blogPosting1 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, blogPosting1);
 
 		Thread.sleep(1000);
 
-		blogPosting2 = testGetContentSpaceBlogPostingsPage_addBlogPosting(
-			contentSpaceId, blogPosting2);
+		blogPosting2 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, blogPosting2);
 
 		for (EntityField entityField : entityFields) {
-			Page<BlogPosting> page = invokeGetContentSpaceBlogPostingsPage(
-				contentSpaceId, null,
-				getFilterString(entityField, "eq", blogPosting1),
+			Page<BlogPosting> page = invokeGetSiteBlogPostingsPage(
+				siteId, null, getFilterString(entityField, "eq", blogPosting1),
 				Pagination.of(1, 2), null);
 
 			assertEquals(
@@ -704,7 +698,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceBlogPostingsPageWithFilterStringEquals()
+	public void testGetSiteBlogPostingsPageWithFilterStringEquals()
 		throws Exception {
 
 		List<EntityField> entityFields = getEntityFields(
@@ -714,22 +708,18 @@ public abstract class BaseBlogPostingResourceTestCase {
 			return;
 		}
 
-		Long contentSpaceId =
-			testGetContentSpaceBlogPostingsPage_getContentSpaceId();
+		Long siteId = testGetSiteBlogPostingsPage_getSiteId();
 
-		BlogPosting blogPosting1 =
-			testGetContentSpaceBlogPostingsPage_addBlogPosting(
-				contentSpaceId, randomBlogPosting());
+		BlogPosting blogPosting1 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, randomBlogPosting());
 
 		@SuppressWarnings("PMD.UnusedLocalVariable")
-		BlogPosting blogPosting2 =
-			testGetContentSpaceBlogPostingsPage_addBlogPosting(
-				contentSpaceId, randomBlogPosting());
+		BlogPosting blogPosting2 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, randomBlogPosting());
 
 		for (EntityField entityField : entityFields) {
-			Page<BlogPosting> page = invokeGetContentSpaceBlogPostingsPage(
-				contentSpaceId, null,
-				getFilterString(entityField, "eq", blogPosting1),
+			Page<BlogPosting> page = invokeGetSiteBlogPostingsPage(
+				siteId, null, getFilterString(entityField, "eq", blogPosting1),
 				Pagination.of(1, 2), null);
 
 			assertEquals(
@@ -739,33 +729,27 @@ public abstract class BaseBlogPostingResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceBlogPostingsPageWithPagination()
-		throws Exception {
+	public void testGetSiteBlogPostingsPageWithPagination() throws Exception {
+		Long siteId = testGetSiteBlogPostingsPage_getSiteId();
 
-		Long contentSpaceId =
-			testGetContentSpaceBlogPostingsPage_getContentSpaceId();
+		BlogPosting blogPosting1 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, randomBlogPosting());
 
-		BlogPosting blogPosting1 =
-			testGetContentSpaceBlogPostingsPage_addBlogPosting(
-				contentSpaceId, randomBlogPosting());
+		BlogPosting blogPosting2 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, randomBlogPosting());
 
-		BlogPosting blogPosting2 =
-			testGetContentSpaceBlogPostingsPage_addBlogPosting(
-				contentSpaceId, randomBlogPosting());
+		BlogPosting blogPosting3 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, randomBlogPosting());
 
-		BlogPosting blogPosting3 =
-			testGetContentSpaceBlogPostingsPage_addBlogPosting(
-				contentSpaceId, randomBlogPosting());
-
-		Page<BlogPosting> page1 = invokeGetContentSpaceBlogPostingsPage(
-			contentSpaceId, null, null, Pagination.of(1, 2), null);
+		Page<BlogPosting> page1 = invokeGetSiteBlogPostingsPage(
+			siteId, null, null, Pagination.of(1, 2), null);
 
 		List<BlogPosting> blogPostings1 = (List<BlogPosting>)page1.getItems();
 
 		Assert.assertEquals(blogPostings1.toString(), 2, blogPostings1.size());
 
-		Page<BlogPosting> page2 = invokeGetContentSpaceBlogPostingsPage(
-			contentSpaceId, null, null, Pagination.of(2, 2), null);
+		Page<BlogPosting> page2 = invokeGetSiteBlogPostingsPage(
+			siteId, null, null, Pagination.of(2, 2), null);
 
 		Assert.assertEquals(3, page2.getTotalCount());
 
@@ -784,9 +768,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceBlogPostingsPageWithSortDateTime()
-		throws Exception {
-
+	public void testGetSiteBlogPostingsPageWithSortDateTime() throws Exception {
 		List<EntityField> entityFields = getEntityFields(
 			EntityField.Type.DATE_TIME);
 
@@ -794,8 +776,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			return;
 		}
 
-		Long contentSpaceId =
-			testGetContentSpaceBlogPostingsPage_getContentSpaceId();
+		Long siteId = testGetSiteBlogPostingsPage_getSiteId();
 
 		BlogPosting blogPosting1 = randomBlogPosting();
 		BlogPosting blogPosting2 = randomBlogPosting();
@@ -806,25 +787,25 @@ public abstract class BaseBlogPostingResourceTestCase {
 				DateUtils.addMinutes(new Date(), -2));
 		}
 
-		blogPosting1 = testGetContentSpaceBlogPostingsPage_addBlogPosting(
-			contentSpaceId, blogPosting1);
+		blogPosting1 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, blogPosting1);
 
 		Thread.sleep(1000);
 
-		blogPosting2 = testGetContentSpaceBlogPostingsPage_addBlogPosting(
-			contentSpaceId, blogPosting2);
+		blogPosting2 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, blogPosting2);
 
 		for (EntityField entityField : entityFields) {
-			Page<BlogPosting> ascPage = invokeGetContentSpaceBlogPostingsPage(
-				contentSpaceId, null, null, Pagination.of(1, 2),
+			Page<BlogPosting> ascPage = invokeGetSiteBlogPostingsPage(
+				siteId, null, null, Pagination.of(1, 2),
 				entityField.getName() + ":asc");
 
 			assertEquals(
 				Arrays.asList(blogPosting1, blogPosting2),
 				(List<BlogPosting>)ascPage.getItems());
 
-			Page<BlogPosting> descPage = invokeGetContentSpaceBlogPostingsPage(
-				contentSpaceId, null, null, Pagination.of(1, 2),
+			Page<BlogPosting> descPage = invokeGetSiteBlogPostingsPage(
+				siteId, null, null, Pagination.of(1, 2),
 				entityField.getName() + ":desc");
 
 			assertEquals(
@@ -834,9 +815,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceBlogPostingsPageWithSortString()
-		throws Exception {
-
+	public void testGetSiteBlogPostingsPageWithSortString() throws Exception {
 		List<EntityField> entityFields = getEntityFields(
 			EntityField.Type.STRING);
 
@@ -844,8 +823,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			return;
 		}
 
-		Long contentSpaceId =
-			testGetContentSpaceBlogPostingsPage_getContentSpaceId();
+		Long siteId = testGetSiteBlogPostingsPage_getSiteId();
 
 		BlogPosting blogPosting1 = randomBlogPosting();
 		BlogPosting blogPosting2 = randomBlogPosting();
@@ -855,23 +833,23 @@ public abstract class BaseBlogPostingResourceTestCase {
 			BeanUtils.setProperty(blogPosting2, entityField.getName(), "Bbb");
 		}
 
-		blogPosting1 = testGetContentSpaceBlogPostingsPage_addBlogPosting(
-			contentSpaceId, blogPosting1);
+		blogPosting1 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, blogPosting1);
 
-		blogPosting2 = testGetContentSpaceBlogPostingsPage_addBlogPosting(
-			contentSpaceId, blogPosting2);
+		blogPosting2 = testGetSiteBlogPostingsPage_addBlogPosting(
+			siteId, blogPosting2);
 
 		for (EntityField entityField : entityFields) {
-			Page<BlogPosting> ascPage = invokeGetContentSpaceBlogPostingsPage(
-				contentSpaceId, null, null, Pagination.of(1, 2),
+			Page<BlogPosting> ascPage = invokeGetSiteBlogPostingsPage(
+				siteId, null, null, Pagination.of(1, 2),
 				entityField.getName() + ":asc");
 
 			assertEquals(
 				Arrays.asList(blogPosting1, blogPosting2),
 				(List<BlogPosting>)ascPage.getItems());
 
-			Page<BlogPosting> descPage = invokeGetContentSpaceBlogPostingsPage(
-				contentSpaceId, null, null, Pagination.of(1, 2),
+			Page<BlogPosting> descPage = invokeGetSiteBlogPostingsPage(
+				siteId, null, null, Pagination.of(1, 2),
 				entityField.getName() + ":desc");
 
 			assertEquals(
@@ -880,39 +858,33 @@ public abstract class BaseBlogPostingResourceTestCase {
 		}
 	}
 
-	protected BlogPosting testGetContentSpaceBlogPostingsPage_addBlogPosting(
-			Long contentSpaceId, BlogPosting blogPosting)
+	protected BlogPosting testGetSiteBlogPostingsPage_addBlogPosting(
+			Long siteId, BlogPosting blogPosting)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetContentSpaceBlogPostingsPage_getContentSpaceId()
-		throws Exception {
-
+	protected Long testGetSiteBlogPostingsPage_getSiteId() throws Exception {
 		return testGroup.getGroupId();
 	}
 
-	protected Long
-			testGetContentSpaceBlogPostingsPage_getIrrelevantContentSpaceId()
+	protected Long testGetSiteBlogPostingsPage_getIrrelevantSiteId()
 		throws Exception {
 
 		return irrelevantGroup.getGroupId();
 	}
 
-	protected Page<BlogPosting> invokeGetContentSpaceBlogPostingsPage(
-			Long contentSpaceId, String search, String filterString,
+	protected Page<BlogPosting> invokeGetSiteBlogPostingsPage(
+			Long siteId, String search, String filterString,
 			Pagination pagination, String sortString)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
 
 		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/blog-postings",
-					contentSpaceId);
+			_resourceURL + _toPath("/sites/{siteId}/blog-postings", siteId);
 
 		location = HttpUtil.addParameter(location, "filter", filterString);
 
@@ -937,18 +909,15 @@ public abstract class BaseBlogPostingResourceTestCase {
 			});
 	}
 
-	protected Http.Response invokeGetContentSpaceBlogPostingsPageResponse(
-			Long contentSpaceId, String search, String filterString,
+	protected Http.Response invokeGetSiteBlogPostingsPageResponse(
+			Long siteId, String search, String filterString,
 			Pagination pagination, String sortString)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
 
 		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/blog-postings",
-					contentSpaceId);
+			_resourceURL + _toPath("/sites/{siteId}/blog-postings", siteId);
 
 		location = HttpUtil.addParameter(location, "filter", filterString);
 
@@ -967,17 +936,17 @@ public abstract class BaseBlogPostingResourceTestCase {
 	}
 
 	@Test
-	public void testPostContentSpaceBlogPosting() throws Exception {
+	public void testPostSiteBlogPosting() throws Exception {
 		BlogPosting randomBlogPosting = randomBlogPosting();
 
-		BlogPosting postBlogPosting =
-			testPostContentSpaceBlogPosting_addBlogPosting(randomBlogPosting);
+		BlogPosting postBlogPosting = testPostSiteBlogPosting_addBlogPosting(
+			randomBlogPosting);
 
 		assertEquals(randomBlogPosting, postBlogPosting);
 		assertValid(postBlogPosting);
 	}
 
-	protected BlogPosting testPostContentSpaceBlogPosting_addBlogPosting(
+	protected BlogPosting testPostSiteBlogPosting_addBlogPosting(
 			BlogPosting blogPosting)
 		throws Exception {
 
@@ -985,8 +954,8 @@ public abstract class BaseBlogPostingResourceTestCase {
 			"This method needs to be implemented");
 	}
 
-	protected BlogPosting invokePostContentSpaceBlogPosting(
-			Long contentSpaceId, BlogPosting blogPosting)
+	protected BlogPosting invokePostSiteBlogPosting(
+			Long siteId, BlogPosting blogPosting)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -996,10 +965,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
 
 		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/blog-postings",
-					contentSpaceId);
+			_resourceURL + _toPath("/sites/{siteId}/blog-postings", siteId);
 
 		options.setLocation(location);
 
@@ -1021,8 +987,8 @@ public abstract class BaseBlogPostingResourceTestCase {
 		}
 	}
 
-	protected Http.Response invokePostContentSpaceBlogPostingResponse(
-			Long contentSpaceId, BlogPosting blogPosting)
+	protected Http.Response invokePostSiteBlogPostingResponse(
+			Long siteId, BlogPosting blogPosting)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -1032,10 +998,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
 
 		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/blog-postings",
-					contentSpaceId);
+			_resourceURL + _toPath("/sites/{siteId}/blog-postings", siteId);
 
 		options.setLocation(location);
 
@@ -1096,8 +1059,159 @@ public abstract class BaseBlogPostingResourceTestCase {
 	}
 
 	protected void assertValid(BlogPosting blogPosting) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (blogPosting.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (blogPosting.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (blogPosting.getId() == null) {
+			valid = false;
+		}
+
+		if (!Objects.equals(blogPosting.getSiteId(), testGroup.getGroupId())) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
+				if (blogPosting.getAggregateRating() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"alternativeHeadline", additionalAssertFieldName)) {
+
+				if (blogPosting.getAlternativeHeadline() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("articleBody", additionalAssertFieldName)) {
+				if (blogPosting.getArticleBody() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (blogPosting.getCreator() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("datePublished", additionalAssertFieldName)) {
+				if (blogPosting.getDatePublished() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (blogPosting.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (blogPosting.getEncodingFormat() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("friendlyUrlPath", additionalAssertFieldName)) {
+				if (blogPosting.getFriendlyUrlPath() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("headline", additionalAssertFieldName)) {
+				if (blogPosting.getHeadline() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("image", additionalAssertFieldName)) {
+				if (blogPosting.getImage() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
+				if (blogPosting.getKeywords() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
+				if (blogPosting.getNumberOfComments() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"taxonomyCategories", additionalAssertFieldName)) {
+
+				if (blogPosting.getTaxonomyCategories() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"taxonomyCategoryIds", additionalAssertFieldName)) {
+
+				if (blogPosting.getTaxonomyCategoryIds() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (blogPosting.getViewableBy() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<BlogPosting> page) {
@@ -1117,6 +1231,10 @@ public abstract class BaseBlogPostingResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		BlogPosting blogPosting1, BlogPosting blogPosting2) {
 
@@ -1124,7 +1242,222 @@ public abstract class BaseBlogPostingResourceTestCase {
 			return true;
 		}
 
-		return false;
+		if (!Objects.equals(
+				blogPosting1.getSiteId(), blogPosting2.getSiteId())) {
+
+			return false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getAggregateRating(),
+						blogPosting2.getAggregateRating())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"alternativeHeadline", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						blogPosting1.getAlternativeHeadline(),
+						blogPosting2.getAlternativeHeadline())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("articleBody", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getArticleBody(),
+						blogPosting2.getArticleBody())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getCreator(), blogPosting2.getCreator())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getDateCreated(),
+						blogPosting2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getDateModified(),
+						blogPosting2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("datePublished", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getDatePublished(),
+						blogPosting2.getDatePublished())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getDescription(),
+						blogPosting2.getDescription())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getEncodingFormat(),
+						blogPosting2.getEncodingFormat())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("friendlyUrlPath", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getFriendlyUrlPath(),
+						blogPosting2.getFriendlyUrlPath())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("headline", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getHeadline(),
+						blogPosting2.getHeadline())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getId(), blogPosting2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("image", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getImage(), blogPosting2.getImage())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getKeywords(),
+						blogPosting2.getKeywords())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getNumberOfComments(),
+						blogPosting2.getNumberOfComments())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"taxonomyCategories", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						blogPosting1.getTaxonomyCategories(),
+						blogPosting2.getTaxonomyCategories())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"taxonomyCategoryIds", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						blogPosting1.getTaxonomyCategoryIds(),
+						blogPosting2.getTaxonomyCategoryIds())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPosting1.getViewableBy(),
+						blogPosting2.getViewableBy())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -1191,11 +1524,6 @@ public abstract class BaseBlogPostingResourceTestCase {
 			sb.append("'");
 
 			return sb.toString();
-		}
-
-		if (entityFieldName.equals("contentSpaceId")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
 		}
 
 		if (entityFieldName.equals("creator")) {
@@ -1273,6 +1601,11 @@ public abstract class BaseBlogPostingResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
+		if (entityFieldName.equals("siteId")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
 		if (entityFieldName.equals("taxonomyCategories")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
@@ -1297,7 +1630,6 @@ public abstract class BaseBlogPostingResourceTestCase {
 			{
 				alternativeHeadline = RandomTestUtil.randomString();
 				articleBody = RandomTestUtil.randomString();
-				contentSpaceId = RandomTestUtil.randomLong();
 				dateCreated = RandomTestUtil.nextDate();
 				dateModified = RandomTestUtil.nextDate();
 				datePublished = RandomTestUtil.nextDate();
@@ -1306,12 +1638,17 @@ public abstract class BaseBlogPostingResourceTestCase {
 				friendlyUrlPath = RandomTestUtil.randomString();
 				headline = RandomTestUtil.randomString();
 				id = RandomTestUtil.randomLong();
+				siteId = testGroup.getGroupId();
 			}
 		};
 	}
 
 	protected BlogPosting randomIrrelevantBlogPosting() {
-		return randomBlogPosting();
+		BlogPosting randomIrrelevantBlogPosting = randomBlogPosting();
+
+		randomIrrelevantBlogPosting.setSiteId(irrelevantGroup.getGroupId());
+
+		return randomIrrelevantBlogPosting;
 	}
 
 	protected BlogPosting randomPatchBlogPosting() {

@@ -57,13 +57,12 @@ public interface BlogPostingResource {
 	public Rating putBlogPostingMyRating(Long blogPostingId, Rating rating)
 		throws Exception;
 
-	public Page<BlogPosting> getContentSpaceBlogPostingsPage(
-			Long contentSpaceId, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
+	public Page<BlogPosting> getSiteBlogPostingsPage(
+			Long siteId, String search, Filter filter, Pagination pagination,
+			Sort[] sorts)
 		throws Exception;
 
-	public BlogPosting postContentSpaceBlogPosting(
-			Long contentSpaceId, BlogPosting blogPosting)
+	public BlogPosting postSiteBlogPosting(Long siteId, BlogPosting blogPosting)
 		throws Exception;
 
 	public void setContextCompany(Company contextCompany);

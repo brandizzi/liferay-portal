@@ -244,22 +244,18 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceBlogPostingImagesPage() throws Exception {
-		Long contentSpaceId =
-			testGetContentSpaceBlogPostingImagesPage_getContentSpaceId();
-		Long irrelevantContentSpaceId =
-			testGetContentSpaceBlogPostingImagesPage_getIrrelevantContentSpaceId();
+	public void testGetSiteBlogPostingImagesPage() throws Exception {
+		Long siteId = testGetSiteBlogPostingImagesPage_getSiteId();
+		Long irrelevantSiteId =
+			testGetSiteBlogPostingImagesPage_getIrrelevantSiteId();
 
-		if ((irrelevantContentSpaceId != null)) {
+		if ((irrelevantSiteId != null)) {
 			BlogPostingImage irrelevantBlogPostingImage =
-				testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-					irrelevantContentSpaceId,
-					randomIrrelevantBlogPostingImage());
+				testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+					irrelevantSiteId, randomIrrelevantBlogPostingImage());
 
-			Page<BlogPostingImage> page =
-				invokeGetContentSpaceBlogPostingImagesPage(
-					irrelevantContentSpaceId, null, null, Pagination.of(1, 2),
-					null);
+			Page<BlogPostingImage> page = invokeGetSiteBlogPostingImagesPage(
+				irrelevantSiteId, null, null, Pagination.of(1, 2), null);
 
 			Assert.assertEquals(1, page.getTotalCount());
 
@@ -270,16 +266,15 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		}
 
 		BlogPostingImage blogPostingImage1 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, randomBlogPostingImage());
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, randomBlogPostingImage());
 
 		BlogPostingImage blogPostingImage2 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, randomBlogPostingImage());
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, randomBlogPostingImage());
 
-		Page<BlogPostingImage> page =
-			invokeGetContentSpaceBlogPostingImagesPage(
-				contentSpaceId, null, null, Pagination.of(1, 2), null);
+		Page<BlogPostingImage> page = invokeGetSiteBlogPostingImagesPage(
+			siteId, null, null, Pagination.of(1, 2), null);
 
 		Assert.assertEquals(2, page.getTotalCount());
 
@@ -290,7 +285,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceBlogPostingImagesPageWithFilterDateTimeEquals()
+	public void testGetSiteBlogPostingImagesPageWithFilterDateTimeEquals()
 		throws Exception {
 
 		List<EntityField> entityFields = getEntityFields(
@@ -300,8 +295,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 			return;
 		}
 
-		Long contentSpaceId =
-			testGetContentSpaceBlogPostingImagesPage_getContentSpaceId();
+		Long siteId = testGetSiteBlogPostingImagesPage_getSiteId();
 
 		BlogPostingImage blogPostingImage1 = randomBlogPostingImage();
 		BlogPostingImage blogPostingImage2 = randomBlogPostingImage();
@@ -313,21 +307,20 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		}
 
 		blogPostingImage1 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, blogPostingImage1);
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, blogPostingImage1);
 
 		Thread.sleep(1000);
 
 		blogPostingImage2 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, blogPostingImage2);
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, blogPostingImage2);
 
 		for (EntityField entityField : entityFields) {
-			Page<BlogPostingImage> page =
-				invokeGetContentSpaceBlogPostingImagesPage(
-					contentSpaceId, null,
-					getFilterString(entityField, "eq", blogPostingImage1),
-					Pagination.of(1, 2), null);
+			Page<BlogPostingImage> page = invokeGetSiteBlogPostingImagesPage(
+				siteId, null,
+				getFilterString(entityField, "eq", blogPostingImage1),
+				Pagination.of(1, 2), null);
 
 			assertEquals(
 				Collections.singletonList(blogPostingImage1),
@@ -336,7 +329,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceBlogPostingImagesPageWithFilterStringEquals()
+	public void testGetSiteBlogPostingImagesPageWithFilterStringEquals()
 		throws Exception {
 
 		List<EntityField> entityFields = getEntityFields(
@@ -346,24 +339,22 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 			return;
 		}
 
-		Long contentSpaceId =
-			testGetContentSpaceBlogPostingImagesPage_getContentSpaceId();
+		Long siteId = testGetSiteBlogPostingImagesPage_getSiteId();
 
 		BlogPostingImage blogPostingImage1 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, randomBlogPostingImage());
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, randomBlogPostingImage());
 
 		@SuppressWarnings("PMD.UnusedLocalVariable")
 		BlogPostingImage blogPostingImage2 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, randomBlogPostingImage());
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, randomBlogPostingImage());
 
 		for (EntityField entityField : entityFields) {
-			Page<BlogPostingImage> page =
-				invokeGetContentSpaceBlogPostingImagesPage(
-					contentSpaceId, null,
-					getFilterString(entityField, "eq", blogPostingImage1),
-					Pagination.of(1, 2), null);
+			Page<BlogPostingImage> page = invokeGetSiteBlogPostingImagesPage(
+				siteId, null,
+				getFilterString(entityField, "eq", blogPostingImage1),
+				Pagination.of(1, 2), null);
 
 			assertEquals(
 				Collections.singletonList(blogPostingImage1),
@@ -372,27 +363,25 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceBlogPostingImagesPageWithPagination()
+	public void testGetSiteBlogPostingImagesPageWithPagination()
 		throws Exception {
 
-		Long contentSpaceId =
-			testGetContentSpaceBlogPostingImagesPage_getContentSpaceId();
+		Long siteId = testGetSiteBlogPostingImagesPage_getSiteId();
 
 		BlogPostingImage blogPostingImage1 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, randomBlogPostingImage());
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, randomBlogPostingImage());
 
 		BlogPostingImage blogPostingImage2 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, randomBlogPostingImage());
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, randomBlogPostingImage());
 
 		BlogPostingImage blogPostingImage3 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, randomBlogPostingImage());
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, randomBlogPostingImage());
 
-		Page<BlogPostingImage> page1 =
-			invokeGetContentSpaceBlogPostingImagesPage(
-				contentSpaceId, null, null, Pagination.of(1, 2), null);
+		Page<BlogPostingImage> page1 = invokeGetSiteBlogPostingImagesPage(
+			siteId, null, null, Pagination.of(1, 2), null);
 
 		List<BlogPostingImage> blogPostingImages1 =
 			(List<BlogPostingImage>)page1.getItems();
@@ -400,9 +389,8 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		Assert.assertEquals(
 			blogPostingImages1.toString(), 2, blogPostingImages1.size());
 
-		Page<BlogPostingImage> page2 =
-			invokeGetContentSpaceBlogPostingImagesPage(
-				contentSpaceId, null, null, Pagination.of(2, 2), null);
+		Page<BlogPostingImage> page2 = invokeGetSiteBlogPostingImagesPage(
+			siteId, null, null, Pagination.of(2, 2), null);
 
 		Assert.assertEquals(3, page2.getTotalCount());
 
@@ -424,7 +412,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceBlogPostingImagesPageWithSortDateTime()
+	public void testGetSiteBlogPostingImagesPageWithSortDateTime()
 		throws Exception {
 
 		List<EntityField> entityFields = getEntityFields(
@@ -434,8 +422,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 			return;
 		}
 
-		Long contentSpaceId =
-			testGetContentSpaceBlogPostingImagesPage_getContentSpaceId();
+		Long siteId = testGetSiteBlogPostingImagesPage_getSiteId();
 
 		BlogPostingImage blogPostingImage1 = randomBlogPostingImage();
 		BlogPostingImage blogPostingImage2 = randomBlogPostingImage();
@@ -447,28 +434,27 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		}
 
 		blogPostingImage1 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, blogPostingImage1);
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, blogPostingImage1);
 
 		Thread.sleep(1000);
 
 		blogPostingImage2 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, blogPostingImage2);
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, blogPostingImage2);
 
 		for (EntityField entityField : entityFields) {
-			Page<BlogPostingImage> ascPage =
-				invokeGetContentSpaceBlogPostingImagesPage(
-					contentSpaceId, null, null, Pagination.of(1, 2),
-					entityField.getName() + ":asc");
+			Page<BlogPostingImage> ascPage = invokeGetSiteBlogPostingImagesPage(
+				siteId, null, null, Pagination.of(1, 2),
+				entityField.getName() + ":asc");
 
 			assertEquals(
 				Arrays.asList(blogPostingImage1, blogPostingImage2),
 				(List<BlogPostingImage>)ascPage.getItems());
 
 			Page<BlogPostingImage> descPage =
-				invokeGetContentSpaceBlogPostingImagesPage(
-					contentSpaceId, null, null, Pagination.of(1, 2),
+				invokeGetSiteBlogPostingImagesPage(
+					siteId, null, null, Pagination.of(1, 2),
 					entityField.getName() + ":desc");
 
 			assertEquals(
@@ -478,7 +464,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceBlogPostingImagesPageWithSortString()
+	public void testGetSiteBlogPostingImagesPageWithSortString()
 		throws Exception {
 
 		List<EntityField> entityFields = getEntityFields(
@@ -488,8 +474,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 			return;
 		}
 
-		Long contentSpaceId =
-			testGetContentSpaceBlogPostingImagesPage_getContentSpaceId();
+		Long siteId = testGetSiteBlogPostingImagesPage_getSiteId();
 
 		BlogPostingImage blogPostingImage1 = randomBlogPostingImage();
 		BlogPostingImage blogPostingImage2 = randomBlogPostingImage();
@@ -502,26 +487,25 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		}
 
 		blogPostingImage1 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, blogPostingImage1);
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, blogPostingImage1);
 
 		blogPostingImage2 =
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				contentSpaceId, blogPostingImage2);
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				siteId, blogPostingImage2);
 
 		for (EntityField entityField : entityFields) {
-			Page<BlogPostingImage> ascPage =
-				invokeGetContentSpaceBlogPostingImagesPage(
-					contentSpaceId, null, null, Pagination.of(1, 2),
-					entityField.getName() + ":asc");
+			Page<BlogPostingImage> ascPage = invokeGetSiteBlogPostingImagesPage(
+				siteId, null, null, Pagination.of(1, 2),
+				entityField.getName() + ":asc");
 
 			assertEquals(
 				Arrays.asList(blogPostingImage1, blogPostingImage2),
 				(List<BlogPostingImage>)ascPage.getItems());
 
 			Page<BlogPostingImage> descPage =
-				invokeGetContentSpaceBlogPostingImagesPage(
-					contentSpaceId, null, null, Pagination.of(1, 2),
+				invokeGetSiteBlogPostingImagesPage(
+					siteId, null, null, Pagination.of(1, 2),
 					entityField.getName() + ":desc");
 
 			assertEquals(
@@ -531,29 +515,28 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 	}
 
 	protected BlogPostingImage
-			testGetContentSpaceBlogPostingImagesPage_addBlogPostingImage(
-				Long contentSpaceId, BlogPostingImage blogPostingImage)
+			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
+				Long siteId, BlogPostingImage blogPostingImage)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetContentSpaceBlogPostingImagesPage_getContentSpaceId()
+	protected Long testGetSiteBlogPostingImagesPage_getSiteId()
 		throws Exception {
 
 		return testGroup.getGroupId();
 	}
 
-	protected Long
-			testGetContentSpaceBlogPostingImagesPage_getIrrelevantContentSpaceId()
+	protected Long testGetSiteBlogPostingImagesPage_getIrrelevantSiteId()
 		throws Exception {
 
 		return irrelevantGroup.getGroupId();
 	}
 
-	protected Page<BlogPostingImage> invokeGetContentSpaceBlogPostingImagesPage(
-			Long contentSpaceId, String search, String filterString,
+	protected Page<BlogPostingImage> invokeGetSiteBlogPostingImagesPage(
+			Long siteId, String search, String filterString,
 			Pagination pagination, String sortString)
 		throws Exception {
 
@@ -561,9 +544,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 
 		String location =
 			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/blog-posting-images",
-					contentSpaceId);
+				_toPath("/sites/{siteId}/blog-posting-images", siteId);
 
 		location = HttpUtil.addParameter(location, "filter", filterString);
 
@@ -588,8 +569,8 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 			});
 	}
 
-	protected Http.Response invokeGetContentSpaceBlogPostingImagesPageResponse(
-			Long contentSpaceId, String search, String filterString,
+	protected Http.Response invokeGetSiteBlogPostingImagesPageResponse(
+			Long siteId, String search, String filterString,
 			Pagination pagination, String sortString)
 		throws Exception {
 
@@ -597,9 +578,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 
 		String location =
 			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/blog-posting-images",
-					contentSpaceId);
+				_toPath("/sites/{siteId}/blog-posting-images", siteId);
 
 		location = HttpUtil.addParameter(location, "filter", filterString);
 
@@ -618,21 +597,20 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 	}
 
 	@Test
-	public void testPostContentSpaceBlogPostingImage() throws Exception {
+	public void testPostSiteBlogPostingImage() throws Exception {
 		Assert.assertTrue(true);
 	}
 
-	protected BlogPostingImage
-			testPostContentSpaceBlogPostingImage_addBlogPostingImage(
-				BlogPostingImage blogPostingImage)
+	protected BlogPostingImage testPostSiteBlogPostingImage_addBlogPostingImage(
+			BlogPostingImage blogPostingImage)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected BlogPostingImage invokePostContentSpaceBlogPostingImage(
-			Long contentSpaceId, MultipartBody multipartBody)
+	protected BlogPostingImage invokePostSiteBlogPostingImage(
+			Long siteId, MultipartBody multipartBody)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -650,9 +628,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 
 		String location =
 			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/blog-posting-images",
-					contentSpaceId);
+				_toPath("/sites/{siteId}/blog-posting-images", siteId);
 
 		options.setLocation(location);
 
@@ -674,17 +650,15 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		}
 	}
 
-	protected Http.Response invokePostContentSpaceBlogPostingImageResponse(
-			Long contentSpaceId, MultipartBody multipartBody)
+	protected Http.Response invokePostSiteBlogPostingImageResponse(
+			Long siteId, MultipartBody multipartBody)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
 
 		String location =
 			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/blog-posting-images",
-					contentSpaceId);
+				_toPath("/sites/{siteId}/blog-posting-images", siteId);
 
 		options.setLocation(location);
 
@@ -751,8 +725,69 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 	}
 
 	protected void assertValid(BlogPostingImage blogPostingImage) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (blogPostingImage.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
+				if (blogPostingImage.getContentUrl() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (blogPostingImage.getEncodingFormat() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
+				if (blogPostingImage.getFileExtension() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
+				if (blogPostingImage.getSizeInBytes() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (blogPostingImage.getTitle() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (blogPostingImage.getViewableBy() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<BlogPostingImage> page) {
@@ -772,6 +807,10 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		BlogPostingImage blogPostingImage1,
 		BlogPostingImage blogPostingImage2) {
@@ -780,7 +819,91 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPostingImage1.getContentUrl(),
+						blogPostingImage2.getContentUrl())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPostingImage1.getEncodingFormat(),
+						blogPostingImage2.getEncodingFormat())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPostingImage1.getFileExtension(),
+						blogPostingImage2.getFileExtension())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPostingImage1.getId(), blogPostingImage2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPostingImage1.getSizeInBytes(),
+						blogPostingImage2.getSizeInBytes())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPostingImage1.getTitle(),
+						blogPostingImage2.getTitle())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						blogPostingImage1.getViewableBy(),
+						blogPostingImage2.getViewableBy())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -893,7 +1016,10 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 	}
 
 	protected BlogPostingImage randomIrrelevantBlogPostingImage() {
-		return randomBlogPostingImage();
+		BlogPostingImage randomIrrelevantBlogPostingImage =
+			randomBlogPostingImage();
+
+		return randomIrrelevantBlogPostingImage;
 	}
 
 	protected BlogPostingImage randomPatchBlogPostingImage() {

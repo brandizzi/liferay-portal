@@ -281,28 +281,26 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceContentSetByKeyContentSetElementsPage()
+	public void testGetSiteContentSetByKeyContentSetElementsPage()
 		throws Exception {
 
-		Long contentSpaceId =
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_getContentSpaceId();
-		Long irrelevantContentSpaceId =
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_getIrrelevantContentSpaceId();
-		String key =
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_getKey();
+		Long siteId =
+			testGetSiteContentSetByKeyContentSetElementsPage_getSiteId();
+		Long irrelevantSiteId =
+			testGetSiteContentSetByKeyContentSetElementsPage_getIrrelevantSiteId();
+		String key = testGetSiteContentSetByKeyContentSetElementsPage_getKey();
 		String irrelevantKey =
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_getIrrelevantKey();
+			testGetSiteContentSetByKeyContentSetElementsPage_getIrrelevantKey();
 
-		if ((irrelevantContentSpaceId != null) && (irrelevantKey != null)) {
+		if ((irrelevantSiteId != null) && (irrelevantKey != null)) {
 			ContentSetElement irrelevantContentSetElement =
-				testGetContentSpaceContentSetByKeyContentSetElementsPage_addContentSetElement(
-					irrelevantContentSpaceId, irrelevantKey,
+				testGetSiteContentSetByKeyContentSetElementsPage_addContentSetElement(
+					irrelevantSiteId, irrelevantKey,
 					randomIrrelevantContentSetElement());
 
 			Page<ContentSetElement> page =
-				invokeGetContentSpaceContentSetByKeyContentSetElementsPage(
-					irrelevantContentSpaceId, irrelevantKey,
-					Pagination.of(1, 2));
+				invokeGetSiteContentSetByKeyContentSetElementsPage(
+					irrelevantSiteId, irrelevantKey, Pagination.of(1, 2));
 
 			Assert.assertEquals(1, page.getTotalCount());
 
@@ -313,16 +311,16 @@ public abstract class BaseContentSetElementResourceTestCase {
 		}
 
 		ContentSetElement contentSetElement1 =
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_addContentSetElement(
-				contentSpaceId, key, randomContentSetElement());
+			testGetSiteContentSetByKeyContentSetElementsPage_addContentSetElement(
+				siteId, key, randomContentSetElement());
 
 		ContentSetElement contentSetElement2 =
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_addContentSetElement(
-				contentSpaceId, key, randomContentSetElement());
+			testGetSiteContentSetByKeyContentSetElementsPage_addContentSetElement(
+				siteId, key, randomContentSetElement());
 
 		Page<ContentSetElement> page =
-			invokeGetContentSpaceContentSetByKeyContentSetElementsPage(
-				contentSpaceId, key, Pagination.of(1, 2));
+			invokeGetSiteContentSetByKeyContentSetElementsPage(
+				siteId, key, Pagination.of(1, 2));
 
 		Assert.assertEquals(2, page.getTotalCount());
 
@@ -333,29 +331,28 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceContentSetByKeyContentSetElementsPageWithPagination()
+	public void testGetSiteContentSetByKeyContentSetElementsPageWithPagination()
 		throws Exception {
 
-		Long contentSpaceId =
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_getContentSpaceId();
-		String key =
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_getKey();
+		Long siteId =
+			testGetSiteContentSetByKeyContentSetElementsPage_getSiteId();
+		String key = testGetSiteContentSetByKeyContentSetElementsPage_getKey();
 
 		ContentSetElement contentSetElement1 =
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_addContentSetElement(
-				contentSpaceId, key, randomContentSetElement());
+			testGetSiteContentSetByKeyContentSetElementsPage_addContentSetElement(
+				siteId, key, randomContentSetElement());
 
 		ContentSetElement contentSetElement2 =
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_addContentSetElement(
-				contentSpaceId, key, randomContentSetElement());
+			testGetSiteContentSetByKeyContentSetElementsPage_addContentSetElement(
+				siteId, key, randomContentSetElement());
 
 		ContentSetElement contentSetElement3 =
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_addContentSetElement(
-				contentSpaceId, key, randomContentSetElement());
+			testGetSiteContentSetByKeyContentSetElementsPage_addContentSetElement(
+				siteId, key, randomContentSetElement());
 
 		Page<ContentSetElement> page1 =
-			invokeGetContentSpaceContentSetByKeyContentSetElementsPage(
-				contentSpaceId, key, Pagination.of(1, 2));
+			invokeGetSiteContentSetByKeyContentSetElementsPage(
+				siteId, key, Pagination.of(1, 2));
 
 		List<ContentSetElement> contentSetElements1 =
 			(List<ContentSetElement>)page1.getItems();
@@ -364,8 +361,8 @@ public abstract class BaseContentSetElementResourceTestCase {
 			contentSetElements1.toString(), 2, contentSetElements1.size());
 
 		Page<ContentSetElement> page2 =
-			invokeGetContentSpaceContentSetByKeyContentSetElementsPage(
-				contentSpaceId, key, Pagination.of(2, 2));
+			invokeGetSiteContentSetByKeyContentSetElementsPage(
+				siteId, key, Pagination.of(2, 2));
 
 		Assert.assertEquals(3, page2.getTotalCount());
 
@@ -387,31 +384,28 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	protected ContentSetElement
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_addContentSetElement(
-				Long contentSpaceId, String key,
-				ContentSetElement contentSetElement)
+			testGetSiteContentSetByKeyContentSetElementsPage_addContentSetElement(
+				Long siteId, String key, ContentSetElement contentSetElement)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_getContentSpaceId()
+	protected Long testGetSiteContentSetByKeyContentSetElementsPage_getSiteId()
 		throws Exception {
 
 		return testGroup.getGroupId();
 	}
 
 	protected Long
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_getIrrelevantContentSpaceId()
+			testGetSiteContentSetByKeyContentSetElementsPage_getIrrelevantSiteId()
 		throws Exception {
 
 		return irrelevantGroup.getGroupId();
 	}
 
-	protected String
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_getKey()
+	protected String testGetSiteContentSetByKeyContentSetElementsPage_getKey()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -419,15 +413,15 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	protected String
-			testGetContentSpaceContentSetByKeyContentSetElementsPage_getIrrelevantKey()
+			testGetSiteContentSetByKeyContentSetElementsPage_getIrrelevantKey()
 		throws Exception {
 
 		return null;
 	}
 
 	protected Page<ContentSetElement>
-			invokeGetContentSpaceContentSetByKeyContentSetElementsPage(
-				Long contentSpaceId, String key, Pagination pagination)
+			invokeGetSiteContentSetByKeyContentSetElementsPage(
+				Long siteId, String key, Pagination pagination)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -435,8 +429,8 @@ public abstract class BaseContentSetElementResourceTestCase {
 		String location =
 			_resourceURL +
 				_toPath(
-					"/content-spaces/{contentSpaceId}/content-sets/by-key/{key}/content-set-elements",
-					contentSpaceId, key);
+					"/sites/{siteId}/content-sets/by-key/{key}/content-set-elements",
+					siteId, key);
 
 		location = HttpUtil.addParameter(
 			location, "page", pagination.getPage());
@@ -458,8 +452,8 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	protected Http.Response
-			invokeGetContentSpaceContentSetByKeyContentSetElementsPageResponse(
-				Long contentSpaceId, String key, Pagination pagination)
+			invokeGetSiteContentSetByKeyContentSetElementsPageResponse(
+				Long siteId, String key, Pagination pagination)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -467,8 +461,8 @@ public abstract class BaseContentSetElementResourceTestCase {
 		String location =
 			_resourceURL +
 				_toPath(
-					"/content-spaces/{contentSpaceId}/content-sets/by-key/{key}/content-set-elements",
-					contentSpaceId, key);
+					"/sites/{siteId}/content-sets/by-key/{key}/content-set-elements",
+					siteId, key);
 
 		location = HttpUtil.addParameter(
 			location, "page", pagination.getPage());
@@ -483,28 +477,27 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceContentSetByUuidContentSetElementsPage()
+	public void testGetSiteContentSetByUuidContentSetElementsPage()
 		throws Exception {
 
-		Long contentSpaceId =
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_getContentSpaceId();
-		Long irrelevantContentSpaceId =
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_getIrrelevantContentSpaceId();
+		Long siteId =
+			testGetSiteContentSetByUuidContentSetElementsPage_getSiteId();
+		Long irrelevantSiteId =
+			testGetSiteContentSetByUuidContentSetElementsPage_getIrrelevantSiteId();
 		String uuid =
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_getUuid();
+			testGetSiteContentSetByUuidContentSetElementsPage_getUuid();
 		String irrelevantUuid =
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_getIrrelevantUuid();
+			testGetSiteContentSetByUuidContentSetElementsPage_getIrrelevantUuid();
 
-		if ((irrelevantContentSpaceId != null) && (irrelevantUuid != null)) {
+		if ((irrelevantSiteId != null) && (irrelevantUuid != null)) {
 			ContentSetElement irrelevantContentSetElement =
-				testGetContentSpaceContentSetByUuidContentSetElementsPage_addContentSetElement(
-					irrelevantContentSpaceId, irrelevantUuid,
+				testGetSiteContentSetByUuidContentSetElementsPage_addContentSetElement(
+					irrelevantSiteId, irrelevantUuid,
 					randomIrrelevantContentSetElement());
 
 			Page<ContentSetElement> page =
-				invokeGetContentSpaceContentSetByUuidContentSetElementsPage(
-					irrelevantContentSpaceId, irrelevantUuid,
-					Pagination.of(1, 2));
+				invokeGetSiteContentSetByUuidContentSetElementsPage(
+					irrelevantSiteId, irrelevantUuid, Pagination.of(1, 2));
 
 			Assert.assertEquals(1, page.getTotalCount());
 
@@ -515,16 +508,16 @@ public abstract class BaseContentSetElementResourceTestCase {
 		}
 
 		ContentSetElement contentSetElement1 =
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_addContentSetElement(
-				contentSpaceId, uuid, randomContentSetElement());
+			testGetSiteContentSetByUuidContentSetElementsPage_addContentSetElement(
+				siteId, uuid, randomContentSetElement());
 
 		ContentSetElement contentSetElement2 =
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_addContentSetElement(
-				contentSpaceId, uuid, randomContentSetElement());
+			testGetSiteContentSetByUuidContentSetElementsPage_addContentSetElement(
+				siteId, uuid, randomContentSetElement());
 
 		Page<ContentSetElement> page =
-			invokeGetContentSpaceContentSetByUuidContentSetElementsPage(
-				contentSpaceId, uuid, Pagination.of(1, 2));
+			invokeGetSiteContentSetByUuidContentSetElementsPage(
+				siteId, uuid, Pagination.of(1, 2));
 
 		Assert.assertEquals(2, page.getTotalCount());
 
@@ -535,29 +528,29 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceContentSetByUuidContentSetElementsPageWithPagination()
+	public void testGetSiteContentSetByUuidContentSetElementsPageWithPagination()
 		throws Exception {
 
-		Long contentSpaceId =
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_getContentSpaceId();
+		Long siteId =
+			testGetSiteContentSetByUuidContentSetElementsPage_getSiteId();
 		String uuid =
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_getUuid();
+			testGetSiteContentSetByUuidContentSetElementsPage_getUuid();
 
 		ContentSetElement contentSetElement1 =
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_addContentSetElement(
-				contentSpaceId, uuid, randomContentSetElement());
+			testGetSiteContentSetByUuidContentSetElementsPage_addContentSetElement(
+				siteId, uuid, randomContentSetElement());
 
 		ContentSetElement contentSetElement2 =
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_addContentSetElement(
-				contentSpaceId, uuid, randomContentSetElement());
+			testGetSiteContentSetByUuidContentSetElementsPage_addContentSetElement(
+				siteId, uuid, randomContentSetElement());
 
 		ContentSetElement contentSetElement3 =
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_addContentSetElement(
-				contentSpaceId, uuid, randomContentSetElement());
+			testGetSiteContentSetByUuidContentSetElementsPage_addContentSetElement(
+				siteId, uuid, randomContentSetElement());
 
 		Page<ContentSetElement> page1 =
-			invokeGetContentSpaceContentSetByUuidContentSetElementsPage(
-				contentSpaceId, uuid, Pagination.of(1, 2));
+			invokeGetSiteContentSetByUuidContentSetElementsPage(
+				siteId, uuid, Pagination.of(1, 2));
 
 		List<ContentSetElement> contentSetElements1 =
 			(List<ContentSetElement>)page1.getItems();
@@ -566,8 +559,8 @@ public abstract class BaseContentSetElementResourceTestCase {
 			contentSetElements1.toString(), 2, contentSetElements1.size());
 
 		Page<ContentSetElement> page2 =
-			invokeGetContentSpaceContentSetByUuidContentSetElementsPage(
-				contentSpaceId, uuid, Pagination.of(2, 2));
+			invokeGetSiteContentSetByUuidContentSetElementsPage(
+				siteId, uuid, Pagination.of(2, 2));
 
 		Assert.assertEquals(3, page2.getTotalCount());
 
@@ -589,31 +582,28 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	protected ContentSetElement
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_addContentSetElement(
-				Long contentSpaceId, String uuid,
-				ContentSetElement contentSetElement)
+			testGetSiteContentSetByUuidContentSetElementsPage_addContentSetElement(
+				Long siteId, String uuid, ContentSetElement contentSetElement)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_getContentSpaceId()
+	protected Long testGetSiteContentSetByUuidContentSetElementsPage_getSiteId()
 		throws Exception {
 
 		return testGroup.getGroupId();
 	}
 
 	protected Long
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_getIrrelevantContentSpaceId()
+			testGetSiteContentSetByUuidContentSetElementsPage_getIrrelevantSiteId()
 		throws Exception {
 
 		return irrelevantGroup.getGroupId();
 	}
 
-	protected String
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_getUuid()
+	protected String testGetSiteContentSetByUuidContentSetElementsPage_getUuid()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -621,15 +611,15 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	protected String
-			testGetContentSpaceContentSetByUuidContentSetElementsPage_getIrrelevantUuid()
+			testGetSiteContentSetByUuidContentSetElementsPage_getIrrelevantUuid()
 		throws Exception {
 
 		return null;
 	}
 
 	protected Page<ContentSetElement>
-			invokeGetContentSpaceContentSetByUuidContentSetElementsPage(
-				Long contentSpaceId, String uuid, Pagination pagination)
+			invokeGetSiteContentSetByUuidContentSetElementsPage(
+				Long siteId, String uuid, Pagination pagination)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -637,8 +627,8 @@ public abstract class BaseContentSetElementResourceTestCase {
 		String location =
 			_resourceURL +
 				_toPath(
-					"/content-spaces/{contentSpaceId}/content-sets/by-uuid/{uuid}/content-set-elements",
-					contentSpaceId, uuid);
+					"/sites/{siteId}/content-sets/by-uuid/{uuid}/content-set-elements",
+					siteId, uuid);
 
 		location = HttpUtil.addParameter(
 			location, "page", pagination.getPage());
@@ -660,8 +650,8 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	protected Http.Response
-			invokeGetContentSpaceContentSetByUuidContentSetElementsPageResponse(
-				Long contentSpaceId, String uuid, Pagination pagination)
+			invokeGetSiteContentSetByUuidContentSetElementsPageResponse(
+				Long siteId, String uuid, Pagination pagination)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -669,8 +659,8 @@ public abstract class BaseContentSetElementResourceTestCase {
 		String location =
 			_resourceURL +
 				_toPath(
-					"/content-spaces/{contentSpaceId}/content-sets/by-uuid/{uuid}/content-set-elements",
-					contentSpaceId, uuid);
+					"/sites/{siteId}/content-sets/by-uuid/{uuid}/content-set-elements",
+					siteId, uuid);
 
 		location = HttpUtil.addParameter(
 			location, "page", pagination.getPage());
@@ -740,8 +730,45 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	protected void assertValid(ContentSetElement contentSetElement) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (contentSetElement.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("content", additionalAssertFieldName)) {
+				if (contentSetElement.getContent() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("contentType", additionalAssertFieldName)) {
+				if (contentSetElement.getContentType() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (contentSetElement.getTitle() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<ContentSetElement> page) {
@@ -761,6 +788,10 @@ public abstract class BaseContentSetElementResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		ContentSetElement contentSetElement1,
 		ContentSetElement contentSetElement2) {
@@ -769,7 +800,59 @@ public abstract class BaseContentSetElementResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("content", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						contentSetElement1.getContent(),
+						contentSetElement2.getContent())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("contentType", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						contentSetElement1.getContentType(),
+						contentSetElement2.getContentType())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						contentSetElement1.getId(),
+						contentSetElement2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						contentSetElement1.getTitle(),
+						contentSetElement2.getTitle())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -859,7 +942,10 @@ public abstract class BaseContentSetElementResourceTestCase {
 	}
 
 	protected ContentSetElement randomIrrelevantContentSetElement() {
-		return randomContentSetElement();
+		ContentSetElement randomIrrelevantContentSetElement =
+			randomContentSetElement();
+
+		return randomIrrelevantContentSetElement;
 	}
 
 	protected ContentSetElement randomPatchContentSetElement() {

@@ -74,11 +74,6 @@ public class BlogPostingSerDes {
 		sb.append("\"");
 		sb.append(", ");
 
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(blogPosting.getContentSpaceId());
-		sb.append(", ");
-
 		sb.append("\"creator\": ");
 
 		sb.append(blogPosting.getCreator());
@@ -169,6 +164,11 @@ public class BlogPostingSerDes {
 		sb.append("\"numberOfComments\": ");
 
 		sb.append(blogPosting.getNumberOfComments());
+		sb.append(", ");
+
+		sb.append("\"siteId\": ");
+
+		sb.append(blogPosting.getSiteId());
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategories\": ");
@@ -285,11 +285,6 @@ public class BlogPostingSerDes {
 					blogPosting.setArticleBody((String)jsonParserFieldValue);
 				}
 			}
-			else if (Objects.equals(jsonParserFieldName, "contentSpaceId")) {
-				if (jsonParserFieldValue != null) {
-					blogPosting.setContentSpaceId((Long)jsonParserFieldValue);
-				}
-			}
 			else if (Objects.equals(jsonParserFieldName, "creator")) {
 				if (jsonParserFieldValue != null) {
 					blogPosting.setCreator(
@@ -353,6 +348,11 @@ public class BlogPostingSerDes {
 				if (jsonParserFieldValue != null) {
 					blogPosting.setNumberOfComments(
 						(Number)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "siteId")) {
+				if (jsonParserFieldValue != null) {
+					blogPosting.setSiteId((Long)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(

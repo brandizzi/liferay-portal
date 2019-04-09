@@ -106,19 +106,16 @@ public abstract class BaseSegmentResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceSegmentsPage() throws Exception {
-		Long contentSpaceId =
-			testGetContentSpaceSegmentsPage_getContentSpaceId();
-		Long irrelevantContentSpaceId =
-			testGetContentSpaceSegmentsPage_getIrrelevantContentSpaceId();
+	public void testGetSiteSegmentsPage() throws Exception {
+		Long siteId = testGetSiteSegmentsPage_getSiteId();
+		Long irrelevantSiteId = testGetSiteSegmentsPage_getIrrelevantSiteId();
 
-		if ((irrelevantContentSpaceId != null)) {
-			Segment irrelevantSegment =
-				testGetContentSpaceSegmentsPage_addSegment(
-					irrelevantContentSpaceId, randomIrrelevantSegment());
+		if ((irrelevantSiteId != null)) {
+			Segment irrelevantSegment = testGetSiteSegmentsPage_addSegment(
+				irrelevantSiteId, randomIrrelevantSegment());
 
-			Page<Segment> page = invokeGetContentSpaceSegmentsPage(
-				irrelevantContentSpaceId, Pagination.of(1, 2));
+			Page<Segment> page = invokeGetSiteSegmentsPage(
+				irrelevantSiteId, Pagination.of(1, 2));
 
 			Assert.assertEquals(1, page.getTotalCount());
 
@@ -128,14 +125,14 @@ public abstract class BaseSegmentResourceTestCase {
 			assertValid(page);
 		}
 
-		Segment segment1 = testGetContentSpaceSegmentsPage_addSegment(
-			contentSpaceId, randomSegment());
+		Segment segment1 = testGetSiteSegmentsPage_addSegment(
+			siteId, randomSegment());
 
-		Segment segment2 = testGetContentSpaceSegmentsPage_addSegment(
-			contentSpaceId, randomSegment());
+		Segment segment2 = testGetSiteSegmentsPage_addSegment(
+			siteId, randomSegment());
 
-		Page<Segment> page = invokeGetContentSpaceSegmentsPage(
-			contentSpaceId, Pagination.of(1, 2));
+		Page<Segment> page = invokeGetSiteSegmentsPage(
+			siteId, Pagination.of(1, 2));
 
 		Assert.assertEquals(2, page.getTotalCount());
 
@@ -145,30 +142,27 @@ public abstract class BaseSegmentResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceSegmentsPageWithPagination()
-		throws Exception {
+	public void testGetSiteSegmentsPageWithPagination() throws Exception {
+		Long siteId = testGetSiteSegmentsPage_getSiteId();
 
-		Long contentSpaceId =
-			testGetContentSpaceSegmentsPage_getContentSpaceId();
+		Segment segment1 = testGetSiteSegmentsPage_addSegment(
+			siteId, randomSegment());
 
-		Segment segment1 = testGetContentSpaceSegmentsPage_addSegment(
-			contentSpaceId, randomSegment());
+		Segment segment2 = testGetSiteSegmentsPage_addSegment(
+			siteId, randomSegment());
 
-		Segment segment2 = testGetContentSpaceSegmentsPage_addSegment(
-			contentSpaceId, randomSegment());
+		Segment segment3 = testGetSiteSegmentsPage_addSegment(
+			siteId, randomSegment());
 
-		Segment segment3 = testGetContentSpaceSegmentsPage_addSegment(
-			contentSpaceId, randomSegment());
-
-		Page<Segment> page1 = invokeGetContentSpaceSegmentsPage(
-			contentSpaceId, Pagination.of(1, 2));
+		Page<Segment> page1 = invokeGetSiteSegmentsPage(
+			siteId, Pagination.of(1, 2));
 
 		List<Segment> segments1 = (List<Segment>)page1.getItems();
 
 		Assert.assertEquals(segments1.toString(), 2, segments1.size());
 
-		Page<Segment> page2 = invokeGetContentSpaceSegmentsPage(
-			contentSpaceId, Pagination.of(2, 2));
+		Page<Segment> page2 = invokeGetSiteSegmentsPage(
+			siteId, Pagination.of(2, 2));
 
 		Assert.assertEquals(3, page2.getTotalCount());
 
@@ -186,37 +180,32 @@ public abstract class BaseSegmentResourceTestCase {
 			});
 	}
 
-	protected Segment testGetContentSpaceSegmentsPage_addSegment(
-			Long contentSpaceId, Segment segment)
+	protected Segment testGetSiteSegmentsPage_addSegment(
+			Long siteId, Segment segment)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long testGetContentSpaceSegmentsPage_getContentSpaceId()
-		throws Exception {
-
+	protected Long testGetSiteSegmentsPage_getSiteId() throws Exception {
 		return testGroup.getGroupId();
 	}
 
-	protected Long testGetContentSpaceSegmentsPage_getIrrelevantContentSpaceId()
+	protected Long testGetSiteSegmentsPage_getIrrelevantSiteId()
 		throws Exception {
 
 		return irrelevantGroup.getGroupId();
 	}
 
-	protected Page<Segment> invokeGetContentSpaceSegmentsPage(
-			Long contentSpaceId, Pagination pagination)
+	protected Page<Segment> invokeGetSiteSegmentsPage(
+			Long siteId, Pagination pagination)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
 
 		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/segments",
-					contentSpaceId);
+			_resourceURL + _toPath("/sites/{siteId}/segments", siteId);
 
 		location = HttpUtil.addParameter(
 			location, "page", pagination.getPage());
@@ -237,17 +226,14 @@ public abstract class BaseSegmentResourceTestCase {
 			});
 	}
 
-	protected Http.Response invokeGetContentSpaceSegmentsPageResponse(
-			Long contentSpaceId, Pagination pagination)
+	protected Http.Response invokeGetSiteSegmentsPageResponse(
+			Long siteId, Pagination pagination)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
 
 		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/segments",
-					contentSpaceId);
+			_resourceURL + _toPath("/sites/{siteId}/segments", siteId);
 
 		location = HttpUtil.addParameter(
 			location, "page", pagination.getPage());
@@ -262,27 +248,23 @@ public abstract class BaseSegmentResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceUserAccountSegmentsPage() throws Exception {
-		Long contentSpaceId =
-			testGetContentSpaceUserAccountSegmentsPage_getContentSpaceId();
-		Long irrelevantContentSpaceId =
-			testGetContentSpaceUserAccountSegmentsPage_getIrrelevantContentSpaceId();
+	public void testGetSiteUserAccountSegmentsPage() throws Exception {
+		Long siteId = testGetSiteUserAccountSegmentsPage_getSiteId();
+		Long irrelevantSiteId =
+			testGetSiteUserAccountSegmentsPage_getIrrelevantSiteId();
 		Long userAccountId =
-			testGetContentSpaceUserAccountSegmentsPage_getUserAccountId();
+			testGetSiteUserAccountSegmentsPage_getUserAccountId();
 		Long irrelevantUserAccountId =
-			testGetContentSpaceUserAccountSegmentsPage_getIrrelevantUserAccountId();
+			testGetSiteUserAccountSegmentsPage_getIrrelevantUserAccountId();
 
-		if ((irrelevantContentSpaceId != null) &&
-			(irrelevantUserAccountId != null)) {
-
+		if ((irrelevantSiteId != null) && (irrelevantUserAccountId != null)) {
 			Segment irrelevantSegment =
-				testGetContentSpaceUserAccountSegmentsPage_addSegment(
-					irrelevantContentSpaceId, irrelevantUserAccountId,
+				testGetSiteUserAccountSegmentsPage_addSegment(
+					irrelevantSiteId, irrelevantUserAccountId,
 					randomIrrelevantSegment());
 
-			Page<Segment> page = invokeGetContentSpaceUserAccountSegmentsPage(
-				irrelevantContentSpaceId, irrelevantUserAccountId,
-				Pagination.of(1, 2));
+			Page<Segment> page = invokeGetSiteUserAccountSegmentsPage(
+				irrelevantSiteId, irrelevantUserAccountId, Pagination.of(1, 2));
 
 			Assert.assertEquals(1, page.getTotalCount());
 
@@ -292,16 +274,14 @@ public abstract class BaseSegmentResourceTestCase {
 			assertValid(page);
 		}
 
-		Segment segment1 =
-			testGetContentSpaceUserAccountSegmentsPage_addSegment(
-				contentSpaceId, userAccountId, randomSegment());
+		Segment segment1 = testGetSiteUserAccountSegmentsPage_addSegment(
+			siteId, userAccountId, randomSegment());
 
-		Segment segment2 =
-			testGetContentSpaceUserAccountSegmentsPage_addSegment(
-				contentSpaceId, userAccountId, randomSegment());
+		Segment segment2 = testGetSiteUserAccountSegmentsPage_addSegment(
+			siteId, userAccountId, randomSegment());
 
-		Page<Segment> page = invokeGetContentSpaceUserAccountSegmentsPage(
-			contentSpaceId, userAccountId, Pagination.of(1, 2));
+		Page<Segment> page = invokeGetSiteUserAccountSegmentsPage(
+			siteId, userAccountId, Pagination.of(1, 2));
 
 		Assert.assertEquals(2, page.getTotalCount());
 
@@ -311,35 +291,31 @@ public abstract class BaseSegmentResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceUserAccountSegmentsPageWithPagination()
+	public void testGetSiteUserAccountSegmentsPageWithPagination()
 		throws Exception {
 
-		Long contentSpaceId =
-			testGetContentSpaceUserAccountSegmentsPage_getContentSpaceId();
+		Long siteId = testGetSiteUserAccountSegmentsPage_getSiteId();
 		Long userAccountId =
-			testGetContentSpaceUserAccountSegmentsPage_getUserAccountId();
+			testGetSiteUserAccountSegmentsPage_getUserAccountId();
 
-		Segment segment1 =
-			testGetContentSpaceUserAccountSegmentsPage_addSegment(
-				contentSpaceId, userAccountId, randomSegment());
+		Segment segment1 = testGetSiteUserAccountSegmentsPage_addSegment(
+			siteId, userAccountId, randomSegment());
 
-		Segment segment2 =
-			testGetContentSpaceUserAccountSegmentsPage_addSegment(
-				contentSpaceId, userAccountId, randomSegment());
+		Segment segment2 = testGetSiteUserAccountSegmentsPage_addSegment(
+			siteId, userAccountId, randomSegment());
 
-		Segment segment3 =
-			testGetContentSpaceUserAccountSegmentsPage_addSegment(
-				contentSpaceId, userAccountId, randomSegment());
+		Segment segment3 = testGetSiteUserAccountSegmentsPage_addSegment(
+			siteId, userAccountId, randomSegment());
 
-		Page<Segment> page1 = invokeGetContentSpaceUserAccountSegmentsPage(
-			contentSpaceId, userAccountId, Pagination.of(1, 2));
+		Page<Segment> page1 = invokeGetSiteUserAccountSegmentsPage(
+			siteId, userAccountId, Pagination.of(1, 2));
 
 		List<Segment> segments1 = (List<Segment>)page1.getItems();
 
 		Assert.assertEquals(segments1.toString(), 2, segments1.size());
 
-		Page<Segment> page2 = invokeGetContentSpaceUserAccountSegmentsPage(
-			contentSpaceId, userAccountId, Pagination.of(2, 2));
+		Page<Segment> page2 = invokeGetSiteUserAccountSegmentsPage(
+			siteId, userAccountId, Pagination.of(2, 2));
 
 		Assert.assertEquals(3, page2.getTotalCount());
 
@@ -357,29 +333,27 @@ public abstract class BaseSegmentResourceTestCase {
 			});
 	}
 
-	protected Segment testGetContentSpaceUserAccountSegmentsPage_addSegment(
-			Long contentSpaceId, Long userAccountId, Segment segment)
+	protected Segment testGetSiteUserAccountSegmentsPage_addSegment(
+			Long siteId, Long userAccountId, Segment segment)
 		throws Exception {
 
 		throw new UnsupportedOperationException(
 			"This method needs to be implemented");
 	}
 
-	protected Long
-			testGetContentSpaceUserAccountSegmentsPage_getContentSpaceId()
+	protected Long testGetSiteUserAccountSegmentsPage_getSiteId()
 		throws Exception {
 
 		return testGroup.getGroupId();
 	}
 
-	protected Long
-			testGetContentSpaceUserAccountSegmentsPage_getIrrelevantContentSpaceId()
+	protected Long testGetSiteUserAccountSegmentsPage_getIrrelevantSiteId()
 		throws Exception {
 
 		return irrelevantGroup.getGroupId();
 	}
 
-	protected Long testGetContentSpaceUserAccountSegmentsPage_getUserAccountId()
+	protected Long testGetSiteUserAccountSegmentsPage_getUserAccountId()
 		throws Exception {
 
 		throw new UnsupportedOperationException(
@@ -387,14 +361,14 @@ public abstract class BaseSegmentResourceTestCase {
 	}
 
 	protected Long
-			testGetContentSpaceUserAccountSegmentsPage_getIrrelevantUserAccountId()
+			testGetSiteUserAccountSegmentsPage_getIrrelevantUserAccountId()
 		throws Exception {
 
 		return null;
 	}
 
-	protected Page<Segment> invokeGetContentSpaceUserAccountSegmentsPage(
-			Long contentSpaceId, Long userAccountId, Pagination pagination)
+	protected Page<Segment> invokeGetSiteUserAccountSegmentsPage(
+			Long siteId, Long userAccountId, Pagination pagination)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -402,8 +376,8 @@ public abstract class BaseSegmentResourceTestCase {
 		String location =
 			_resourceURL +
 				_toPath(
-					"/content-spaces/{contentSpaceId}/user-accounts/{userAccountId}/segments",
-					contentSpaceId, userAccountId);
+					"/sites/{siteId}/user-accounts/{userAccountId}/segments",
+					siteId, userAccountId);
 
 		location = HttpUtil.addParameter(
 			location, "page", pagination.getPage());
@@ -424,9 +398,8 @@ public abstract class BaseSegmentResourceTestCase {
 			});
 	}
 
-	protected Http.Response
-			invokeGetContentSpaceUserAccountSegmentsPageResponse(
-				Long contentSpaceId, Long userAccountId, Pagination pagination)
+	protected Http.Response invokeGetSiteUserAccountSegmentsPageResponse(
+			Long siteId, Long userAccountId, Pagination pagination)
 		throws Exception {
 
 		Http.Options options = _createHttpOptions();
@@ -434,8 +407,8 @@ public abstract class BaseSegmentResourceTestCase {
 		String location =
 			_resourceURL +
 				_toPath(
-					"/content-spaces/{contentSpaceId}/user-accounts/{userAccountId}/segments",
-					contentSpaceId, userAccountId);
+					"/sites/{siteId}/user-accounts/{userAccountId}/segments",
+					siteId, userAccountId);
 
 		location = HttpUtil.addParameter(
 			location, "page", pagination.getPage());
@@ -497,8 +470,65 @@ public abstract class BaseSegmentResourceTestCase {
 	}
 
 	protected void assertValid(Segment segment) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (segment.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (segment.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (segment.getId() == null) {
+			valid = false;
+		}
+
+		if (!Objects.equals(segment.getSiteId(), testGroup.getGroupId())) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("active", additionalAssertFieldName)) {
+				if (segment.getActive() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("criteria", additionalAssertFieldName)) {
+				if (segment.getCriteria() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (segment.getName() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("source", additionalAssertFieldName)) {
+				if (segment.getSource() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<Segment> page) {
@@ -518,12 +548,95 @@ public abstract class BaseSegmentResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(Segment segment1, Segment segment2) {
 		if (segment1 == segment2) {
 			return true;
 		}
 
-		return false;
+		if (!Objects.equals(segment1.getSiteId(), segment2.getSiteId())) {
+			return false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("active", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						segment1.getActive(), segment2.getActive())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("criteria", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						segment1.getCriteria(), segment2.getCriteria())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						segment1.getDateCreated(), segment2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						segment1.getDateModified(),
+						segment2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(segment1.getId(), segment2.getId())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (!Objects.equals(segment1.getName(), segment2.getName())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("source", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						segment1.getSource(), segment2.getSource())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -576,11 +689,6 @@ public abstract class BaseSegmentResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
-		if (entityFieldName.equals("contentSpaceId")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
 		if (entityFieldName.equals("criteria")) {
 			sb.append("'");
 			sb.append(String.valueOf(segment.getCriteria()));
@@ -614,6 +722,11 @@ public abstract class BaseSegmentResourceTestCase {
 			return sb.toString();
 		}
 
+		if (entityFieldName.equals("siteId")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
 		if (entityFieldName.equals("source")) {
 			sb.append("'");
 			sb.append(String.valueOf(segment.getSource()));
@@ -630,19 +743,23 @@ public abstract class BaseSegmentResourceTestCase {
 		return new Segment() {
 			{
 				active = RandomTestUtil.randomBoolean();
-				contentSpaceId = RandomTestUtil.randomLong();
 				criteria = RandomTestUtil.randomString();
 				dateCreated = RandomTestUtil.nextDate();
 				dateModified = RandomTestUtil.nextDate();
 				id = RandomTestUtil.randomLong();
 				name = RandomTestUtil.randomString();
+				siteId = testGroup.getGroupId();
 				source = RandomTestUtil.randomString();
 			}
 		};
 	}
 
 	protected Segment randomIrrelevantSegment() {
-		return randomSegment();
+		Segment randomIrrelevantSegment = randomSegment();
+
+		randomIrrelevantSegment.setSiteId(irrelevantGroup.getGroupId());
+
+		return randomIrrelevantSegment;
 	}
 
 	protected Segment randomPatchSegment() {

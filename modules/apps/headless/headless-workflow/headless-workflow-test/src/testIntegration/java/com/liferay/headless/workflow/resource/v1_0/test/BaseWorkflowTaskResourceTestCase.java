@@ -776,8 +776,89 @@ public abstract class BaseWorkflowTaskResourceTestCase {
 	}
 
 	protected void assertValid(WorkflowTask workflowTask) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (workflowTask.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (workflowTask.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("completed", additionalAssertFieldName)) {
+				if (workflowTask.getCompleted() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCompleted", additionalAssertFieldName)) {
+				if (workflowTask.getDateCompleted() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("definitionName", additionalAssertFieldName)) {
+				if (workflowTask.getDefinitionName() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (workflowTask.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dueDate", additionalAssertFieldName)) {
+				if (workflowTask.getDueDate() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (workflowTask.getName() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("objectReviewed", additionalAssertFieldName)) {
+				if (workflowTask.getObjectReviewed() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("transitions", additionalAssertFieldName)) {
+				if (workflowTask.getTransitions() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<WorkflowTask> page) {
@@ -797,6 +878,10 @@ public abstract class BaseWorkflowTaskResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		WorkflowTask workflowTask1, WorkflowTask workflowTask2) {
 
@@ -804,7 +889,123 @@ public abstract class BaseWorkflowTaskResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("completed", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowTask1.getCompleted(),
+						workflowTask2.getCompleted())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCompleted", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowTask1.getDateCompleted(),
+						workflowTask2.getDateCompleted())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowTask1.getDateCreated(),
+						workflowTask2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("definitionName", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowTask1.getDefinitionName(),
+						workflowTask2.getDefinitionName())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowTask1.getDescription(),
+						workflowTask2.getDescription())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dueDate", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowTask1.getDueDate(),
+						workflowTask2.getDueDate())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowTask1.getId(), workflowTask2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowTask1.getName(), workflowTask2.getName())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("objectReviewed", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowTask1.getObjectReviewed(),
+						workflowTask2.getObjectReviewed())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("transitions", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowTask1.getTransitions(),
+						workflowTask2.getTransitions())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -934,7 +1135,9 @@ public abstract class BaseWorkflowTaskResourceTestCase {
 	}
 
 	protected WorkflowTask randomIrrelevantWorkflowTask() {
-		return randomWorkflowTask();
+		WorkflowTask randomIrrelevantWorkflowTask = randomWorkflowTask();
+
+		return randomIrrelevantWorkflowTask;
 	}
 
 	protected WorkflowTask randomPatchWorkflowTask() {

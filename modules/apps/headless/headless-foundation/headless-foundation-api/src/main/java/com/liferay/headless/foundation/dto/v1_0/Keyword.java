@@ -46,33 +46,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "Keyword")
 public class Keyword {
 
-	public Long getContentSpaceId() {
-		return contentSpaceId;
-	}
-
-	public void setContentSpaceId(Long contentSpaceId) {
-		this.contentSpaceId = contentSpaceId;
-	}
-
-	@JsonIgnore
-	public void setContentSpaceId(
-		UnsafeSupplier<Long, Exception> contentSpaceIdUnsafeSupplier) {
-
-		try {
-			contentSpaceId = contentSpaceIdUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Long contentSpaceId;
-
 	public Creator getCreator() {
 		return creator;
 	}
@@ -232,6 +205,33 @@ public class Keyword {
 	@NotEmpty
 	protected String name;
 
+	public Long getSiteId() {
+		return siteId;
+	}
+
+	public void setSiteId(Long siteId) {
+		this.siteId = siteId;
+	}
+
+	@JsonIgnore
+	public void setSiteId(
+		UnsafeSupplier<Long, Exception> siteIdUnsafeSupplier) {
+
+		try {
+			siteId = siteIdUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long siteId;
+
 	@Override
 	public boolean equals(Object object) {
 		if (this == object) {
@@ -258,11 +258,6 @@ public class Keyword {
 		StringBundler sb = new StringBundler();
 
 		sb.append("{");
-
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(contentSpaceId);
-		sb.append(", ");
 
 		sb.append("\"creator\": ");
 
@@ -298,6 +293,11 @@ public class Keyword {
 		sb.append("\"");
 		sb.append(name);
 		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"siteId\": ");
+
+		sb.append(siteId);
 
 		sb.append("}");
 

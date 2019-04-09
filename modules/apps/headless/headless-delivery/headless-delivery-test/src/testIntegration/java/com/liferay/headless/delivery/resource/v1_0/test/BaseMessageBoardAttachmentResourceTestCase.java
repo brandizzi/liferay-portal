@@ -713,8 +713,61 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 	}
 
 	protected void assertValid(MessageBoardAttachment messageBoardAttachment) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (messageBoardAttachment.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
+				if (messageBoardAttachment.getContentUrl() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (messageBoardAttachment.getEncodingFormat() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
+				if (messageBoardAttachment.getFileExtension() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
+				if (messageBoardAttachment.getSizeInBytes() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (messageBoardAttachment.getTitle() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<MessageBoardAttachment> page) {
@@ -735,6 +788,10 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		MessageBoardAttachment messageBoardAttachment1,
 		MessageBoardAttachment messageBoardAttachment2) {
@@ -743,7 +800,81 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardAttachment1.getContentUrl(),
+						messageBoardAttachment2.getContentUrl())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardAttachment1.getEncodingFormat(),
+						messageBoardAttachment2.getEncodingFormat())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardAttachment1.getFileExtension(),
+						messageBoardAttachment2.getFileExtension())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardAttachment1.getId(),
+						messageBoardAttachment2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardAttachment1.getSizeInBytes(),
+						messageBoardAttachment2.getSizeInBytes())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardAttachment1.getTitle(),
+						messageBoardAttachment2.getTitle())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -853,7 +984,10 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 	}
 
 	protected MessageBoardAttachment randomIrrelevantMessageBoardAttachment() {
-		return randomMessageBoardAttachment();
+		MessageBoardAttachment randomIrrelevantMessageBoardAttachment =
+			randomMessageBoardAttachment();
+
+		return randomIrrelevantMessageBoardAttachment;
 	}
 
 	protected MessageBoardAttachment randomPatchMessageBoardAttachment() {

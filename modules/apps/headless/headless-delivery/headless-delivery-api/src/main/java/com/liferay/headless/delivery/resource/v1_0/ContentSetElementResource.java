@@ -36,14 +36,13 @@ public interface ContentSetElementResource {
 			Long contentSetId, Pagination pagination)
 		throws Exception;
 
-	public Page<ContentSetElement>
-			getContentSpaceContentSetByKeyContentSetElementsPage(
-				Long contentSpaceId, String key, Pagination pagination)
+	public Page<ContentSetElement> getSiteContentSetByKeyContentSetElementsPage(
+			Long siteId, String key, Pagination pagination)
 		throws Exception;
 
 	public Page<ContentSetElement>
-			getContentSpaceContentSetByUuidContentSetElementsPage(
-				Long contentSpaceId, String uuid, Pagination pagination)
+			getSiteContentSetByUuidContentSetElementsPage(
+				Long siteId, String uuid, Pagination pagination)
 		throws Exception;
 
 	public void setContextCompany(Company contextCompany);

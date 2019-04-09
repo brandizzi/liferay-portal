@@ -1407,8 +1407,111 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 	}
 
 	protected void assertValid(TaxonomyCategory taxonomyCategory) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (taxonomyCategory.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (taxonomyCategory.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (taxonomyCategory.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals(
+					"availableLanguages", additionalAssertFieldName)) {
+
+				if (taxonomyCategory.getAvailableLanguages() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (taxonomyCategory.getCreator() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (taxonomyCategory.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (taxonomyCategory.getName() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfTaxonomyCategories", additionalAssertFieldName)) {
+
+				if (taxonomyCategory.getNumberOfTaxonomyCategories() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentTaxonomyCategory", additionalAssertFieldName)) {
+
+				if (taxonomyCategory.getParentTaxonomyCategory() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentTaxonomyVocabulary", additionalAssertFieldName)) {
+
+				if (taxonomyCategory.getParentTaxonomyVocabulary() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentVocabularyId", additionalAssertFieldName)) {
+
+				if (taxonomyCategory.getParentVocabularyId() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (taxonomyCategory.getViewableBy() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<TaxonomyCategory> page) {
@@ -1428,6 +1531,10 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		TaxonomyCategory taxonomyCategory1,
 		TaxonomyCategory taxonomyCategory2) {
@@ -1436,7 +1543,156 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals(
+					"availableLanguages", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						taxonomyCategory1.getAvailableLanguages(),
+						taxonomyCategory2.getAvailableLanguages())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyCategory1.getCreator(),
+						taxonomyCategory2.getCreator())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyCategory1.getDateCreated(),
+						taxonomyCategory2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyCategory1.getDateModified(),
+						taxonomyCategory2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyCategory1.getDescription(),
+						taxonomyCategory2.getDescription())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyCategory1.getId(), taxonomyCategory2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyCategory1.getName(),
+						taxonomyCategory2.getName())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfTaxonomyCategories", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						taxonomyCategory1.getNumberOfTaxonomyCategories(),
+						taxonomyCategory2.getNumberOfTaxonomyCategories())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentTaxonomyCategory", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						taxonomyCategory1.getParentTaxonomyCategory(),
+						taxonomyCategory2.getParentTaxonomyCategory())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentTaxonomyVocabulary", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						taxonomyCategory1.getParentTaxonomyVocabulary(),
+						taxonomyCategory2.getParentTaxonomyVocabulary())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"parentVocabularyId", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						taxonomyCategory1.getParentVocabularyId(),
+						taxonomyCategory2.getParentVocabularyId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						taxonomyCategory1.getViewableBy(),
+						taxonomyCategory2.getViewableBy())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -1571,7 +1827,10 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 	}
 
 	protected TaxonomyCategory randomIrrelevantTaxonomyCategory() {
-		return randomTaxonomyCategory();
+		TaxonomyCategory randomIrrelevantTaxonomyCategory =
+			randomTaxonomyCategory();
+
+		return randomIrrelevantTaxonomyCategory;
 	}
 
 	protected TaxonomyCategory randomPatchTaxonomyCategory() {

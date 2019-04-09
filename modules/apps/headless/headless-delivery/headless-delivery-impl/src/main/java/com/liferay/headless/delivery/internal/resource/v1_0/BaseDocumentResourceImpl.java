@@ -72,43 +72,6 @@ public abstract class BaseDocumentResourceImpl implements DocumentResource {
 			@Parameter(in = ParameterIn.QUERY, name = "sorts")
 		}
 	)
-	@Path("/content-spaces/{contentSpaceId}/documents")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "Document")})
-	public Page<Document> getContentSpaceDocumentsPage(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			@QueryParam("flatten") Boolean flatten,
-			@QueryParam("search") String search, @Context Filter filter,
-			@Context Pagination pagination, @Context Sort[] sorts)
-		throws Exception {
-
-		return Page.of(Collections.emptyList());
-	}
-
-	@Override
-	@Consumes("multipart/form-data")
-	@POST
-	@Path("/content-spaces/{contentSpaceId}/documents")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "Document")})
-	public Document postContentSpaceDocument(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			MultipartBody multipartBody)
-		throws Exception {
-
-		return new Document();
-	}
-
-	@Override
-	@GET
-	@Parameters(
-		value = {
-			@Parameter(in = ParameterIn.QUERY, name = "filter"),
-			@Parameter(in = ParameterIn.QUERY, name = "page"),
-			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
-			@Parameter(in = ParameterIn.QUERY, name = "sorts")
-		}
-	)
 	@Path("/document-folders/{documentFolderId}/documents")
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "Document")})
@@ -231,6 +194,43 @@ public abstract class BaseDocumentResourceImpl implements DocumentResource {
 		throws Exception {
 
 		return new Rating();
+	}
+
+	@Override
+	@GET
+	@Parameters(
+		value = {
+			@Parameter(in = ParameterIn.QUERY, name = "filter"),
+			@Parameter(in = ParameterIn.QUERY, name = "page"),
+			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
+			@Parameter(in = ParameterIn.QUERY, name = "sorts")
+		}
+	)
+	@Path("/sites/{siteId}/documents")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "Document")})
+	public Page<Document> getSiteDocumentsPage(
+			@NotNull @PathParam("siteId") Long siteId,
+			@QueryParam("flatten") Boolean flatten,
+			@QueryParam("search") String search, @Context Filter filter,
+			@Context Pagination pagination, @Context Sort[] sorts)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	@Override
+	@Consumes("multipart/form-data")
+	@POST
+	@Path("/sites/{siteId}/documents")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "Document")})
+	public Document postSiteDocument(
+			@NotNull @PathParam("siteId") Long siteId,
+			MultipartBody multipartBody)
+		throws Exception {
+
+		return new Document();
 	}
 
 	public void setContextCompany(Company contextCompany) {

@@ -113,467 +113,6 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceMessageBoardThreadsPage() throws Exception {
-		Long contentSpaceId =
-			testGetContentSpaceMessageBoardThreadsPage_getContentSpaceId();
-		Long irrelevantContentSpaceId =
-			testGetContentSpaceMessageBoardThreadsPage_getIrrelevantContentSpaceId();
-
-		if ((irrelevantContentSpaceId != null)) {
-			MessageBoardThread irrelevantMessageBoardThread =
-				testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-					irrelevantContentSpaceId,
-					randomIrrelevantMessageBoardThread());
-
-			Page<MessageBoardThread> page =
-				invokeGetContentSpaceMessageBoardThreadsPage(
-					irrelevantContentSpaceId, null, null, null,
-					Pagination.of(1, 2), null);
-
-			Assert.assertEquals(1, page.getTotalCount());
-
-			assertEquals(
-				Arrays.asList(irrelevantMessageBoardThread),
-				(List<MessageBoardThread>)page.getItems());
-			assertValid(page);
-		}
-
-		MessageBoardThread messageBoardThread1 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, randomMessageBoardThread());
-
-		MessageBoardThread messageBoardThread2 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, randomMessageBoardThread());
-
-		Page<MessageBoardThread> page =
-			invokeGetContentSpaceMessageBoardThreadsPage(
-				contentSpaceId, null, null, null, Pagination.of(1, 2), null);
-
-		Assert.assertEquals(2, page.getTotalCount());
-
-		assertEqualsIgnoringOrder(
-			Arrays.asList(messageBoardThread1, messageBoardThread2),
-			(List<MessageBoardThread>)page.getItems());
-		assertValid(page);
-	}
-
-	@Test
-	public void testGetContentSpaceMessageBoardThreadsPageWithFilterDateTimeEquals()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.DATE_TIME);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Long contentSpaceId =
-			testGetContentSpaceMessageBoardThreadsPage_getContentSpaceId();
-
-		MessageBoardThread messageBoardThread1 = randomMessageBoardThread();
-		MessageBoardThread messageBoardThread2 = randomMessageBoardThread();
-
-		for (EntityField entityField : entityFields) {
-			BeanUtils.setProperty(
-				messageBoardThread1, entityField.getName(),
-				DateUtils.addMinutes(new Date(), -2));
-		}
-
-		messageBoardThread1 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, messageBoardThread1);
-
-		Thread.sleep(1000);
-
-		messageBoardThread2 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, messageBoardThread2);
-
-		for (EntityField entityField : entityFields) {
-			Page<MessageBoardThread> page =
-				invokeGetContentSpaceMessageBoardThreadsPage(
-					contentSpaceId, null, null,
-					getFilterString(entityField, "eq", messageBoardThread1),
-					Pagination.of(1, 2), null);
-
-			assertEquals(
-				Collections.singletonList(messageBoardThread1),
-				(List<MessageBoardThread>)page.getItems());
-		}
-	}
-
-	@Test
-	public void testGetContentSpaceMessageBoardThreadsPageWithFilterStringEquals()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.STRING);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Long contentSpaceId =
-			testGetContentSpaceMessageBoardThreadsPage_getContentSpaceId();
-
-		MessageBoardThread messageBoardThread1 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, randomMessageBoardThread());
-
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		MessageBoardThread messageBoardThread2 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, randomMessageBoardThread());
-
-		for (EntityField entityField : entityFields) {
-			Page<MessageBoardThread> page =
-				invokeGetContentSpaceMessageBoardThreadsPage(
-					contentSpaceId, null, null,
-					getFilterString(entityField, "eq", messageBoardThread1),
-					Pagination.of(1, 2), null);
-
-			assertEquals(
-				Collections.singletonList(messageBoardThread1),
-				(List<MessageBoardThread>)page.getItems());
-		}
-	}
-
-	@Test
-	public void testGetContentSpaceMessageBoardThreadsPageWithPagination()
-		throws Exception {
-
-		Long contentSpaceId =
-			testGetContentSpaceMessageBoardThreadsPage_getContentSpaceId();
-
-		MessageBoardThread messageBoardThread1 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, randomMessageBoardThread());
-
-		MessageBoardThread messageBoardThread2 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, randomMessageBoardThread());
-
-		MessageBoardThread messageBoardThread3 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, randomMessageBoardThread());
-
-		Page<MessageBoardThread> page1 =
-			invokeGetContentSpaceMessageBoardThreadsPage(
-				contentSpaceId, null, null, null, Pagination.of(1, 2), null);
-
-		List<MessageBoardThread> messageBoardThreads1 =
-			(List<MessageBoardThread>)page1.getItems();
-
-		Assert.assertEquals(
-			messageBoardThreads1.toString(), 2, messageBoardThreads1.size());
-
-		Page<MessageBoardThread> page2 =
-			invokeGetContentSpaceMessageBoardThreadsPage(
-				contentSpaceId, null, null, null, Pagination.of(2, 2), null);
-
-		Assert.assertEquals(3, page2.getTotalCount());
-
-		List<MessageBoardThread> messageBoardThreads2 =
-			(List<MessageBoardThread>)page2.getItems();
-
-		Assert.assertEquals(
-			messageBoardThreads2.toString(), 1, messageBoardThreads2.size());
-
-		assertEqualsIgnoringOrder(
-			Arrays.asList(
-				messageBoardThread1, messageBoardThread2, messageBoardThread3),
-			new ArrayList<MessageBoardThread>() {
-				{
-					addAll(messageBoardThreads1);
-					addAll(messageBoardThreads2);
-				}
-			});
-	}
-
-	@Test
-	public void testGetContentSpaceMessageBoardThreadsPageWithSortDateTime()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.DATE_TIME);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Long contentSpaceId =
-			testGetContentSpaceMessageBoardThreadsPage_getContentSpaceId();
-
-		MessageBoardThread messageBoardThread1 = randomMessageBoardThread();
-		MessageBoardThread messageBoardThread2 = randomMessageBoardThread();
-
-		for (EntityField entityField : entityFields) {
-			BeanUtils.setProperty(
-				messageBoardThread1, entityField.getName(),
-				DateUtils.addMinutes(new Date(), -2));
-		}
-
-		messageBoardThread1 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, messageBoardThread1);
-
-		Thread.sleep(1000);
-
-		messageBoardThread2 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, messageBoardThread2);
-
-		for (EntityField entityField : entityFields) {
-			Page<MessageBoardThread> ascPage =
-				invokeGetContentSpaceMessageBoardThreadsPage(
-					contentSpaceId, null, null, null, Pagination.of(1, 2),
-					entityField.getName() + ":asc");
-
-			assertEquals(
-				Arrays.asList(messageBoardThread1, messageBoardThread2),
-				(List<MessageBoardThread>)ascPage.getItems());
-
-			Page<MessageBoardThread> descPage =
-				invokeGetContentSpaceMessageBoardThreadsPage(
-					contentSpaceId, null, null, null, Pagination.of(1, 2),
-					entityField.getName() + ":desc");
-
-			assertEquals(
-				Arrays.asList(messageBoardThread2, messageBoardThread1),
-				(List<MessageBoardThread>)descPage.getItems());
-		}
-	}
-
-	@Test
-	public void testGetContentSpaceMessageBoardThreadsPageWithSortString()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.STRING);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Long contentSpaceId =
-			testGetContentSpaceMessageBoardThreadsPage_getContentSpaceId();
-
-		MessageBoardThread messageBoardThread1 = randomMessageBoardThread();
-		MessageBoardThread messageBoardThread2 = randomMessageBoardThread();
-
-		for (EntityField entityField : entityFields) {
-			BeanUtils.setProperty(
-				messageBoardThread1, entityField.getName(), "Aaa");
-			BeanUtils.setProperty(
-				messageBoardThread2, entityField.getName(), "Bbb");
-		}
-
-		messageBoardThread1 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, messageBoardThread1);
-
-		messageBoardThread2 =
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				contentSpaceId, messageBoardThread2);
-
-		for (EntityField entityField : entityFields) {
-			Page<MessageBoardThread> ascPage =
-				invokeGetContentSpaceMessageBoardThreadsPage(
-					contentSpaceId, null, null, null, Pagination.of(1, 2),
-					entityField.getName() + ":asc");
-
-			assertEquals(
-				Arrays.asList(messageBoardThread1, messageBoardThread2),
-				(List<MessageBoardThread>)ascPage.getItems());
-
-			Page<MessageBoardThread> descPage =
-				invokeGetContentSpaceMessageBoardThreadsPage(
-					contentSpaceId, null, null, null, Pagination.of(1, 2),
-					entityField.getName() + ":desc");
-
-			assertEquals(
-				Arrays.asList(messageBoardThread2, messageBoardThread1),
-				(List<MessageBoardThread>)descPage.getItems());
-		}
-	}
-
-	protected MessageBoardThread
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				Long contentSpaceId, MessageBoardThread messageBoardThread)
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected Long
-			testGetContentSpaceMessageBoardThreadsPage_getContentSpaceId()
-		throws Exception {
-
-		return testGroup.getGroupId();
-	}
-
-	protected Long
-			testGetContentSpaceMessageBoardThreadsPage_getIrrelevantContentSpaceId()
-		throws Exception {
-
-		return irrelevantGroup.getGroupId();
-	}
-
-	protected Page<MessageBoardThread>
-			invokeGetContentSpaceMessageBoardThreadsPage(
-				Long contentSpaceId, Boolean flatten, String search,
-				String filterString, Pagination pagination, String sortString)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/message-board-threads",
-					contentSpaceId);
-
-		location = HttpUtil.addParameter(location, "filter", filterString);
-
-		location = HttpUtil.addParameter(
-			location, "page", pagination.getPage());
-		location = HttpUtil.addParameter(
-			location, "pageSize", pagination.getPageSize());
-
-		location = HttpUtil.addParameter(location, "sort", sortString);
-
-		options.setLocation(location);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-
-		return outputObjectMapper.readValue(
-			string,
-			new TypeReference<Page<MessageBoardThread>>() {
-			});
-	}
-
-	protected Http.Response
-			invokeGetContentSpaceMessageBoardThreadsPageResponse(
-				Long contentSpaceId, Boolean flatten, String search,
-				String filterString, Pagination pagination, String sortString)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/message-board-threads",
-					contentSpaceId);
-
-		location = HttpUtil.addParameter(location, "filter", filterString);
-
-		location = HttpUtil.addParameter(
-			location, "page", pagination.getPage());
-		location = HttpUtil.addParameter(
-			location, "pageSize", pagination.getPageSize());
-
-		location = HttpUtil.addParameter(location, "sort", sortString);
-
-		options.setLocation(location);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
-	public void testPostContentSpaceMessageBoardThread() throws Exception {
-		MessageBoardThread randomMessageBoardThread =
-			randomMessageBoardThread();
-
-		MessageBoardThread postMessageBoardThread =
-			testPostContentSpaceMessageBoardThread_addMessageBoardThread(
-				randomMessageBoardThread);
-
-		assertEquals(randomMessageBoardThread, postMessageBoardThread);
-		assertValid(postMessageBoardThread);
-	}
-
-	protected MessageBoardThread
-			testPostContentSpaceMessageBoardThread_addMessageBoardThread(
-				MessageBoardThread messageBoardThread)
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected MessageBoardThread invokePostContentSpaceMessageBoardThread(
-			Long contentSpaceId, MessageBoardThread messageBoardThread)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		options.setBody(
-			inputObjectMapper.writeValueAsString(messageBoardThread),
-			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/message-board-threads",
-					contentSpaceId);
-
-		options.setLocation(location);
-
-		options.setPost(true);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-
-		try {
-			return outputObjectMapper.readValue(
-				string, MessageBoardThread.class);
-		}
-		catch (Exception e) {
-			_log.error("Unable to process HTTP response: " + string, e);
-
-			throw e;
-		}
-	}
-
-	protected Http.Response invokePostContentSpaceMessageBoardThreadResponse(
-			Long contentSpaceId, MessageBoardThread messageBoardThread)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		options.setBody(
-			inputObjectMapper.writeValueAsString(messageBoardThread),
-			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/message-board-threads",
-					contentSpaceId);
-
-		options.setLocation(location);
-
-		options.setPost(true);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
 	public void testGetMessageBoardSectionMessageBoardThreadsPage()
 		throws Exception {
 
@@ -1603,6 +1142,445 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 		return options.getResponse();
 	}
 
+	@Test
+	public void testGetSiteMessageBoardThreadsPage() throws Exception {
+		Long siteId = testGetSiteMessageBoardThreadsPage_getSiteId();
+		Long irrelevantSiteId =
+			testGetSiteMessageBoardThreadsPage_getIrrelevantSiteId();
+
+		if ((irrelevantSiteId != null)) {
+			MessageBoardThread irrelevantMessageBoardThread =
+				testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+					irrelevantSiteId, randomIrrelevantMessageBoardThread());
+
+			Page<MessageBoardThread> page =
+				invokeGetSiteMessageBoardThreadsPage(
+					irrelevantSiteId, null, null, null, Pagination.of(1, 2),
+					null);
+
+			Assert.assertEquals(1, page.getTotalCount());
+
+			assertEquals(
+				Arrays.asList(irrelevantMessageBoardThread),
+				(List<MessageBoardThread>)page.getItems());
+			assertValid(page);
+		}
+
+		MessageBoardThread messageBoardThread1 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, randomMessageBoardThread());
+
+		MessageBoardThread messageBoardThread2 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, randomMessageBoardThread());
+
+		Page<MessageBoardThread> page = invokeGetSiteMessageBoardThreadsPage(
+			siteId, null, null, null, Pagination.of(1, 2), null);
+
+		Assert.assertEquals(2, page.getTotalCount());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(messageBoardThread1, messageBoardThread2),
+			(List<MessageBoardThread>)page.getItems());
+		assertValid(page);
+	}
+
+	@Test
+	public void testGetSiteMessageBoardThreadsPageWithFilterDateTimeEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.DATE_TIME);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Long siteId = testGetSiteMessageBoardThreadsPage_getSiteId();
+
+		MessageBoardThread messageBoardThread1 = randomMessageBoardThread();
+		MessageBoardThread messageBoardThread2 = randomMessageBoardThread();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				messageBoardThread1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		messageBoardThread1 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, messageBoardThread1);
+
+		Thread.sleep(1000);
+
+		messageBoardThread2 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, messageBoardThread2);
+
+		for (EntityField entityField : entityFields) {
+			Page<MessageBoardThread> page =
+				invokeGetSiteMessageBoardThreadsPage(
+					siteId, null, null,
+					getFilterString(entityField, "eq", messageBoardThread1),
+					Pagination.of(1, 2), null);
+
+			assertEquals(
+				Collections.singletonList(messageBoardThread1),
+				(List<MessageBoardThread>)page.getItems());
+		}
+	}
+
+	@Test
+	public void testGetSiteMessageBoardThreadsPageWithFilterStringEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.STRING);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Long siteId = testGetSiteMessageBoardThreadsPage_getSiteId();
+
+		MessageBoardThread messageBoardThread1 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, randomMessageBoardThread());
+
+		@SuppressWarnings("PMD.UnusedLocalVariable")
+		MessageBoardThread messageBoardThread2 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, randomMessageBoardThread());
+
+		for (EntityField entityField : entityFields) {
+			Page<MessageBoardThread> page =
+				invokeGetSiteMessageBoardThreadsPage(
+					siteId, null, null,
+					getFilterString(entityField, "eq", messageBoardThread1),
+					Pagination.of(1, 2), null);
+
+			assertEquals(
+				Collections.singletonList(messageBoardThread1),
+				(List<MessageBoardThread>)page.getItems());
+		}
+	}
+
+	@Test
+	public void testGetSiteMessageBoardThreadsPageWithPagination()
+		throws Exception {
+
+		Long siteId = testGetSiteMessageBoardThreadsPage_getSiteId();
+
+		MessageBoardThread messageBoardThread1 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, randomMessageBoardThread());
+
+		MessageBoardThread messageBoardThread2 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, randomMessageBoardThread());
+
+		MessageBoardThread messageBoardThread3 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, randomMessageBoardThread());
+
+		Page<MessageBoardThread> page1 = invokeGetSiteMessageBoardThreadsPage(
+			siteId, null, null, null, Pagination.of(1, 2), null);
+
+		List<MessageBoardThread> messageBoardThreads1 =
+			(List<MessageBoardThread>)page1.getItems();
+
+		Assert.assertEquals(
+			messageBoardThreads1.toString(), 2, messageBoardThreads1.size());
+
+		Page<MessageBoardThread> page2 = invokeGetSiteMessageBoardThreadsPage(
+			siteId, null, null, null, Pagination.of(2, 2), null);
+
+		Assert.assertEquals(3, page2.getTotalCount());
+
+		List<MessageBoardThread> messageBoardThreads2 =
+			(List<MessageBoardThread>)page2.getItems();
+
+		Assert.assertEquals(
+			messageBoardThreads2.toString(), 1, messageBoardThreads2.size());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(
+				messageBoardThread1, messageBoardThread2, messageBoardThread3),
+			new ArrayList<MessageBoardThread>() {
+				{
+					addAll(messageBoardThreads1);
+					addAll(messageBoardThreads2);
+				}
+			});
+	}
+
+	@Test
+	public void testGetSiteMessageBoardThreadsPageWithSortDateTime()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.DATE_TIME);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Long siteId = testGetSiteMessageBoardThreadsPage_getSiteId();
+
+		MessageBoardThread messageBoardThread1 = randomMessageBoardThread();
+		MessageBoardThread messageBoardThread2 = randomMessageBoardThread();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				messageBoardThread1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		messageBoardThread1 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, messageBoardThread1);
+
+		Thread.sleep(1000);
+
+		messageBoardThread2 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, messageBoardThread2);
+
+		for (EntityField entityField : entityFields) {
+			Page<MessageBoardThread> ascPage =
+				invokeGetSiteMessageBoardThreadsPage(
+					siteId, null, null, null, Pagination.of(1, 2),
+					entityField.getName() + ":asc");
+
+			assertEquals(
+				Arrays.asList(messageBoardThread1, messageBoardThread2),
+				(List<MessageBoardThread>)ascPage.getItems());
+
+			Page<MessageBoardThread> descPage =
+				invokeGetSiteMessageBoardThreadsPage(
+					siteId, null, null, null, Pagination.of(1, 2),
+					entityField.getName() + ":desc");
+
+			assertEquals(
+				Arrays.asList(messageBoardThread2, messageBoardThread1),
+				(List<MessageBoardThread>)descPage.getItems());
+		}
+	}
+
+	@Test
+	public void testGetSiteMessageBoardThreadsPageWithSortString()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.STRING);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Long siteId = testGetSiteMessageBoardThreadsPage_getSiteId();
+
+		MessageBoardThread messageBoardThread1 = randomMessageBoardThread();
+		MessageBoardThread messageBoardThread2 = randomMessageBoardThread();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				messageBoardThread1, entityField.getName(), "Aaa");
+			BeanUtils.setProperty(
+				messageBoardThread2, entityField.getName(), "Bbb");
+		}
+
+		messageBoardThread1 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, messageBoardThread1);
+
+		messageBoardThread2 =
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				siteId, messageBoardThread2);
+
+		for (EntityField entityField : entityFields) {
+			Page<MessageBoardThread> ascPage =
+				invokeGetSiteMessageBoardThreadsPage(
+					siteId, null, null, null, Pagination.of(1, 2),
+					entityField.getName() + ":asc");
+
+			assertEquals(
+				Arrays.asList(messageBoardThread1, messageBoardThread2),
+				(List<MessageBoardThread>)ascPage.getItems());
+
+			Page<MessageBoardThread> descPage =
+				invokeGetSiteMessageBoardThreadsPage(
+					siteId, null, null, null, Pagination.of(1, 2),
+					entityField.getName() + ":desc");
+
+			assertEquals(
+				Arrays.asList(messageBoardThread2, messageBoardThread1),
+				(List<MessageBoardThread>)descPage.getItems());
+		}
+	}
+
+	protected MessageBoardThread
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				Long siteId, MessageBoardThread messageBoardThread)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Long testGetSiteMessageBoardThreadsPage_getSiteId()
+		throws Exception {
+
+		return testGroup.getGroupId();
+	}
+
+	protected Long testGetSiteMessageBoardThreadsPage_getIrrelevantSiteId()
+		throws Exception {
+
+		return irrelevantGroup.getGroupId();
+	}
+
+	protected Page<MessageBoardThread> invokeGetSiteMessageBoardThreadsPage(
+			Long siteId, Boolean flatten, String search, String filterString,
+			Pagination pagination, String sortString)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/message-board-threads", siteId);
+
+		location = HttpUtil.addParameter(location, "filter", filterString);
+
+		location = HttpUtil.addParameter(
+			location, "page", pagination.getPage());
+		location = HttpUtil.addParameter(
+			location, "pageSize", pagination.getPageSize());
+
+		location = HttpUtil.addParameter(location, "sort", sortString);
+
+		options.setLocation(location);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		return outputObjectMapper.readValue(
+			string,
+			new TypeReference<Page<MessageBoardThread>>() {
+			});
+	}
+
+	protected Http.Response invokeGetSiteMessageBoardThreadsPageResponse(
+			Long siteId, Boolean flatten, String search, String filterString,
+			Pagination pagination, String sortString)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/message-board-threads", siteId);
+
+		location = HttpUtil.addParameter(location, "filter", filterString);
+
+		location = HttpUtil.addParameter(
+			location, "page", pagination.getPage());
+		location = HttpUtil.addParameter(
+			location, "pageSize", pagination.getPageSize());
+
+		location = HttpUtil.addParameter(location, "sort", sortString);
+
+		options.setLocation(location);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
+	@Test
+	public void testPostSiteMessageBoardThread() throws Exception {
+		MessageBoardThread randomMessageBoardThread =
+			randomMessageBoardThread();
+
+		MessageBoardThread postMessageBoardThread =
+			testPostSiteMessageBoardThread_addMessageBoardThread(
+				randomMessageBoardThread);
+
+		assertEquals(randomMessageBoardThread, postMessageBoardThread);
+		assertValid(postMessageBoardThread);
+	}
+
+	protected MessageBoardThread
+			testPostSiteMessageBoardThread_addMessageBoardThread(
+				MessageBoardThread messageBoardThread)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected MessageBoardThread invokePostSiteMessageBoardThread(
+			Long siteId, MessageBoardThread messageBoardThread)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		options.setBody(
+			inputObjectMapper.writeValueAsString(messageBoardThread),
+			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/message-board-threads", siteId);
+
+		options.setLocation(location);
+
+		options.setPost(true);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		try {
+			return outputObjectMapper.readValue(
+				string, MessageBoardThread.class);
+		}
+		catch (Exception e) {
+			_log.error("Unable to process HTTP response: " + string, e);
+
+			throw e;
+		}
+	}
+
+	protected Http.Response invokePostSiteMessageBoardThreadResponse(
+			Long siteId, MessageBoardThread messageBoardThread)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		options.setBody(
+			inputObjectMapper.writeValueAsString(messageBoardThread),
+			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/message-board-threads", siteId);
+
+		options.setLocation(location);
+
+		options.setPost(true);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
 	protected void assertResponseCode(
 		int expectedResponseCode, Http.Response actualResponse) {
 
@@ -1664,8 +1642,133 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 	}
 
 	protected void assertValid(MessageBoardThread messageBoardThread) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (messageBoardThread.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (messageBoardThread.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (messageBoardThread.getId() == null) {
+			valid = false;
+		}
+
+		if (!Objects.equals(
+				messageBoardThread.getSiteId(), testGroup.getGroupId())) {
+
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
+				if (messageBoardThread.getAggregateRating() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("articleBody", additionalAssertFieldName)) {
+				if (messageBoardThread.getArticleBody() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (messageBoardThread.getCreator() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (messageBoardThread.getEncodingFormat() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("headline", additionalAssertFieldName)) {
+				if (messageBoardThread.getHeadline() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
+				if (messageBoardThread.getKeywords() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfMessageBoardAttachments",
+					additionalAssertFieldName)) {
+
+				if (messageBoardThread.getNumberOfMessageBoardAttachments() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfMessageBoardMessages",
+					additionalAssertFieldName)) {
+
+				if (messageBoardThread.getNumberOfMessageBoardMessages() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("showAsQuestion", additionalAssertFieldName)) {
+				if (messageBoardThread.getShowAsQuestion() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("threadType", additionalAssertFieldName)) {
+				if (messageBoardThread.getThreadType() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (messageBoardThread.getViewableBy() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<MessageBoardThread> page) {
@@ -1685,6 +1788,10 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		MessageBoardThread messageBoardThread1,
 		MessageBoardThread messageBoardThread2) {
@@ -1693,7 +1800,185 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 			return true;
 		}
 
-		return false;
+		if (!Objects.equals(
+				messageBoardThread1.getSiteId(),
+				messageBoardThread2.getSiteId())) {
+
+			return false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardThread1.getAggregateRating(),
+						messageBoardThread2.getAggregateRating())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("articleBody", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardThread1.getArticleBody(),
+						messageBoardThread2.getArticleBody())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardThread1.getCreator(),
+						messageBoardThread2.getCreator())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardThread1.getDateCreated(),
+						messageBoardThread2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardThread1.getDateModified(),
+						messageBoardThread2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardThread1.getEncodingFormat(),
+						messageBoardThread2.getEncodingFormat())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("headline", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardThread1.getHeadline(),
+						messageBoardThread2.getHeadline())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardThread1.getId(),
+						messageBoardThread2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardThread1.getKeywords(),
+						messageBoardThread2.getKeywords())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfMessageBoardAttachments",
+					additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						messageBoardThread1.
+							getNumberOfMessageBoardAttachments(),
+						messageBoardThread2.
+							getNumberOfMessageBoardAttachments())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfMessageBoardMessages",
+					additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						messageBoardThread1.getNumberOfMessageBoardMessages(),
+						messageBoardThread2.
+							getNumberOfMessageBoardMessages())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("showAsQuestion", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardThread1.getShowAsQuestion(),
+						messageBoardThread2.getShowAsQuestion())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("threadType", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardThread1.getThreadType(),
+						messageBoardThread2.getThreadType())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardThread1.getViewableBy(),
+						messageBoardThread2.getViewableBy())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -1755,11 +2040,6 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 			return sb.toString();
 		}
 
-		if (entityFieldName.equals("contentSpaceId")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
 		if (entityFieldName.equals("creator")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
@@ -1818,6 +2098,11 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
+		if (entityFieldName.equals("siteId")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
 		if (entityFieldName.equals("threadType")) {
 			sb.append("'");
 			sb.append(String.valueOf(messageBoardThread.getThreadType()));
@@ -1839,20 +2124,26 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 		return new MessageBoardThread() {
 			{
 				articleBody = RandomTestUtil.randomString();
-				contentSpaceId = RandomTestUtil.randomLong();
 				dateCreated = RandomTestUtil.nextDate();
 				dateModified = RandomTestUtil.nextDate();
 				encodingFormat = RandomTestUtil.randomString();
 				headline = RandomTestUtil.randomString();
 				id = RandomTestUtil.randomLong();
 				showAsQuestion = RandomTestUtil.randomBoolean();
+				siteId = testGroup.getGroupId();
 				threadType = RandomTestUtil.randomString();
 			}
 		};
 	}
 
 	protected MessageBoardThread randomIrrelevantMessageBoardThread() {
-		return randomMessageBoardThread();
+		MessageBoardThread randomIrrelevantMessageBoardThread =
+			randomMessageBoardThread();
+
+		randomIrrelevantMessageBoardThread.setSiteId(
+			irrelevantGroup.getGroupId());
+
+		return randomIrrelevantMessageBoardThread;
 	}
 
 	protected MessageBoardThread randomPatchMessageBoardThread() {

@@ -81,33 +81,6 @@ public class KnowledgeBaseFolder {
 
 	}
 
-	public Long getContentSpaceId() {
-		return contentSpaceId;
-	}
-
-	public void setContentSpaceId(Long contentSpaceId) {
-		this.contentSpaceId = contentSpaceId;
-	}
-
-	@JsonIgnore
-	public void setContentSpaceId(
-		UnsafeSupplier<Long, Exception> contentSpaceIdUnsafeSupplier) {
-
-		try {
-			contentSpaceId = contentSpaceIdUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Long contentSpaceId;
-
 	public Creator getCreator() {
 		return creator;
 	}
@@ -391,6 +364,33 @@ public class KnowledgeBaseFolder {
 	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	protected Long parentKnowledgeBaseFolderId;
 
+	public Long getSiteId() {
+		return siteId;
+	}
+
+	public void setSiteId(Long siteId) {
+		this.siteId = siteId;
+	}
+
+	@JsonIgnore
+	public void setSiteId(
+		UnsafeSupplier<Long, Exception> siteIdUnsafeSupplier) {
+
+		try {
+			siteId = siteIdUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long siteId;
+
 	public ViewableBy getViewableBy() {
 		return viewableBy;
 	}
@@ -454,11 +454,6 @@ public class KnowledgeBaseFolder {
 
 		sb.append("{");
 
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(contentSpaceId);
-		sb.append(", ");
-
 		sb.append("\"creator\": ");
 
 		sb.append(creator);
@@ -515,6 +510,11 @@ public class KnowledgeBaseFolder {
 		sb.append("\"parentKnowledgeBaseFolderId\": ");
 
 		sb.append(parentKnowledgeBaseFolderId);
+		sb.append(", ");
+
+		sb.append("\"siteId\": ");
+
+		sb.append(siteId);
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");

@@ -207,8 +207,19 @@ public class Query {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public Collection<Keyword> getContentSpaceKeywordsPage(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
+	public Keyword getKeyword(@GraphQLName("keywordId") Long keywordId)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_keywordResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			keywordResource -> keywordResource.getKeyword(keywordId));
+	}
+
+	@GraphQLField
+	@GraphQLInvokeDetached
+	public Collection<Keyword> getSiteKeywordsPage(
+			@GraphQLName("siteId") Long siteId,
 			@GraphQLName("search") String search,
 			@GraphQLName("filter") Filter filter,
 			@GraphQLName("pageSize") int pageSize,
@@ -219,24 +230,12 @@ public class Query {
 			_keywordResourceComponentServiceObjects,
 			this::_populateResourceContext,
 			keywordResource -> {
-				Page paginationPage =
-					keywordResource.getContentSpaceKeywordsPage(
-						contentSpaceId, search, filter,
-						Pagination.of(pageSize, page), sorts);
+				Page paginationPage = keywordResource.getSiteKeywordsPage(
+					siteId, search, filter, Pagination.of(pageSize, page),
+					sorts);
 
 				return paginationPage.getItems();
 			});
-	}
-
-	@GraphQLField
-	@GraphQLInvokeDetached
-	public Keyword getKeyword(@GraphQLName("keywordId") Long keywordId)
-		throws Exception {
-
-		return _applyComponentServiceObjects(
-			_keywordResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			keywordResource -> keywordResource.getKeyword(keywordId));
 	}
 
 	@GraphQLField
@@ -488,8 +487,8 @@ public class Query {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public Collection<Segment> getContentSpaceSegmentsPage(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
+	public Collection<Segment> getSiteSegmentsPage(
+			@GraphQLName("siteId") Long siteId,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page)
 		throws Exception {
@@ -498,9 +497,8 @@ public class Query {
 			_segmentResourceComponentServiceObjects,
 			this::_populateResourceContext,
 			segmentResource -> {
-				Page paginationPage =
-					segmentResource.getContentSpaceSegmentsPage(
-						contentSpaceId, Pagination.of(pageSize, page));
+				Page paginationPage = segmentResource.getSiteSegmentsPage(
+					siteId, Pagination.of(pageSize, page));
 
 				return paginationPage.getItems();
 			});
@@ -508,8 +506,8 @@ public class Query {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public Collection<Segment> getContentSpaceUserAccountSegmentsPage(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
+	public Collection<Segment> getSiteUserAccountSegmentsPage(
+			@GraphQLName("siteId") Long siteId,
 			@GraphQLName("userAccountId") Long userAccountId,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page)
@@ -520,9 +518,8 @@ public class Query {
 			this::_populateResourceContext,
 			segmentResource -> {
 				Page paginationPage =
-					segmentResource.getContentSpaceUserAccountSegmentsPage(
-						contentSpaceId, userAccountId,
-						Pagination.of(pageSize, page));
+					segmentResource.getSiteUserAccountSegmentsPage(
+						siteId, userAccountId, Pagination.of(pageSize, page));
 
 				return paginationPage.getItems();
 			});
@@ -617,14 +614,12 @@ public class Query {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public Collection<TaxonomyVocabulary>
-			getContentSpaceTaxonomyVocabulariesPage(
-				@GraphQLName("contentSpaceId") Long contentSpaceId,
-				@GraphQLName("search") String search,
-				@GraphQLName("filter") Filter filter,
-				@GraphQLName("pageSize") int pageSize,
-				@GraphQLName("page") int page,
-				@GraphQLName("sorts") Sort[] sorts)
+	public Collection<TaxonomyVocabulary> getSiteTaxonomyVocabulariesPage(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("search") String search,
+			@GraphQLName("filter") Filter filter,
+			@GraphQLName("pageSize") int pageSize,
+			@GraphQLName("page") int page, @GraphQLName("sorts") Sort[] sorts)
 		throws Exception {
 
 		return _applyComponentServiceObjects(
@@ -632,10 +627,9 @@ public class Query {
 			this::_populateResourceContext,
 			taxonomyVocabularyResource -> {
 				Page paginationPage =
-					taxonomyVocabularyResource.
-						getContentSpaceTaxonomyVocabulariesPage(
-							contentSpaceId, search, filter,
-							Pagination.of(pageSize, page), sorts);
+					taxonomyVocabularyResource.getSiteTaxonomyVocabulariesPage(
+						siteId, search, filter, Pagination.of(pageSize, page),
+						sorts);
 
 				return paginationPage.getItems();
 			});

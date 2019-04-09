@@ -51,11 +51,6 @@ public class KeywordSerDes {
 
 		sb.append("{");
 
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(keyword.getContentSpaceId());
-		sb.append(", ");
-
 		sb.append("\"creator\": ");
 
 		sb.append(keyword.getCreator());
@@ -90,6 +85,11 @@ public class KeywordSerDes {
 		sb.append("\"");
 		sb.append(keyword.getName());
 		sb.append("\"");
+		sb.append(", ");
+
+		sb.append("\"siteId\": ");
+
+		sb.append(keyword.getSiteId());
 
 		sb.append("}");
 
@@ -132,12 +132,7 @@ public class KeywordSerDes {
 			Keyword keyword, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "contentSpaceId")) {
-				if (jsonParserFieldValue != null) {
-					keyword.setContentSpaceId((Long)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "creator")) {
+			if (Objects.equals(jsonParserFieldName, "creator")) {
 				if (jsonParserFieldValue != null) {
 					keyword.setCreator(
 						CreatorSerDes.toDTO((String)jsonParserFieldValue));
@@ -166,6 +161,11 @@ public class KeywordSerDes {
 			else if (Objects.equals(jsonParserFieldName, "name")) {
 				if (jsonParserFieldValue != null) {
 					keyword.setName((String)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "siteId")) {
+				if (jsonParserFieldValue != null) {
+					keyword.setSiteId((Long)jsonParserFieldValue);
 				}
 			}
 			else {

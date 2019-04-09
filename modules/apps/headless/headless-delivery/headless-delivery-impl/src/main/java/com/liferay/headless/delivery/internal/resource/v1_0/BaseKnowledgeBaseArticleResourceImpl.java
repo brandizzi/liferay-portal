@@ -63,43 +63,6 @@ public abstract class BaseKnowledgeBaseArticleResourceImpl
 	implements KnowledgeBaseArticleResource {
 
 	@Override
-	@GET
-	@Parameters(
-		value = {
-			@Parameter(in = ParameterIn.QUERY, name = "filter"),
-			@Parameter(in = ParameterIn.QUERY, name = "page"),
-			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
-			@Parameter(in = ParameterIn.QUERY, name = "sorts")
-		}
-	)
-	@Path("/content-spaces/{contentSpaceId}/knowledge-base-articles")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "KnowledgeBaseArticle")})
-	public Page<KnowledgeBaseArticle> getContentSpaceKnowledgeBaseArticlesPage(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			@QueryParam("flatten") Boolean flatten,
-			@QueryParam("search") String search, @Context Filter filter,
-			@Context Pagination pagination, @Context Sort[] sorts)
-		throws Exception {
-
-		return Page.of(Collections.emptyList());
-	}
-
-	@Override
-	@Consumes("application/json")
-	@POST
-	@Path("/content-spaces/{contentSpaceId}/knowledge-base-articles")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "KnowledgeBaseArticle")})
-	public KnowledgeBaseArticle postContentSpaceKnowledgeBaseArticle(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			KnowledgeBaseArticle knowledgeBaseArticle)
-		throws Exception {
-
-		return new KnowledgeBaseArticle();
-	}
-
-	@Override
 	@DELETE
 	@Path("/knowledge-base-articles/{knowledgeBaseArticleId}")
 	@Produces("application/json")
@@ -141,11 +104,6 @@ public abstract class BaseKnowledgeBaseArticleResourceImpl
 		if (knowledgeBaseArticle.getArticleBody() != null) {
 			existingKnowledgeBaseArticle.setArticleBody(
 				knowledgeBaseArticle.getArticleBody());
-		}
-
-		if (knowledgeBaseArticle.getContentSpaceId() != null) {
-			existingKnowledgeBaseArticle.setContentSpaceId(
-				knowledgeBaseArticle.getContentSpaceId());
 		}
 
 		if (knowledgeBaseArticle.getDateCreated() != null) {
@@ -191,6 +149,11 @@ public abstract class BaseKnowledgeBaseArticleResourceImpl
 		if (knowledgeBaseArticle.getParentKnowledgeBaseFolderId() != null) {
 			existingKnowledgeBaseArticle.setParentKnowledgeBaseFolderId(
 				knowledgeBaseArticle.getParentKnowledgeBaseFolderId());
+		}
+
+		if (knowledgeBaseArticle.getSiteId() != null) {
+			existingKnowledgeBaseArticle.setSiteId(
+				knowledgeBaseArticle.getSiteId());
 		}
 
 		if (knowledgeBaseArticle.getTaxonomyCategoryIds() != null) {
@@ -364,6 +327,43 @@ public abstract class BaseKnowledgeBaseArticleResourceImpl
 	public KnowledgeBaseArticle postKnowledgeBaseFolderKnowledgeBaseArticle(
 			@NotNull @PathParam("knowledgeBaseFolderId") Long
 				knowledgeBaseFolderId,
+			KnowledgeBaseArticle knowledgeBaseArticle)
+		throws Exception {
+
+		return new KnowledgeBaseArticle();
+	}
+
+	@Override
+	@GET
+	@Parameters(
+		value = {
+			@Parameter(in = ParameterIn.QUERY, name = "filter"),
+			@Parameter(in = ParameterIn.QUERY, name = "page"),
+			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
+			@Parameter(in = ParameterIn.QUERY, name = "sorts")
+		}
+	)
+	@Path("/sites/{siteId}/knowledge-base-articles")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "KnowledgeBaseArticle")})
+	public Page<KnowledgeBaseArticle> getSiteKnowledgeBaseArticlesPage(
+			@NotNull @PathParam("siteId") Long siteId,
+			@QueryParam("flatten") Boolean flatten,
+			@QueryParam("search") String search, @Context Filter filter,
+			@Context Pagination pagination, @Context Sort[] sorts)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	@Override
+	@Consumes("application/json")
+	@POST
+	@Path("/sites/{siteId}/knowledge-base-articles")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "KnowledgeBaseArticle")})
+	public KnowledgeBaseArticle postSiteKnowledgeBaseArticle(
+			@NotNull @PathParam("siteId") Long siteId,
 			KnowledgeBaseArticle knowledgeBaseArticle)
 		throws Exception {
 

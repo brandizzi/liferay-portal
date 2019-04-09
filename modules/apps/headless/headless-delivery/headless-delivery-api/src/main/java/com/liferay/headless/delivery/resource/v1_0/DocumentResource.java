@@ -36,15 +36,6 @@ import javax.annotation.Generated;
 @Generated("")
 public interface DocumentResource {
 
-	public Page<Document> getContentSpaceDocumentsPage(
-			Long contentSpaceId, Boolean flatten, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
-		throws Exception;
-
-	public Document postContentSpaceDocument(
-			Long contentSpaceId, MultipartBody multipartBody)
-		throws Exception;
-
 	public Page<Document> getDocumentFolderDocumentsPage(
 			Long documentFolderId, String search, Filter filter,
 			Pagination pagination, Sort[] sorts)
@@ -72,6 +63,14 @@ public interface DocumentResource {
 		throws Exception;
 
 	public Rating putDocumentMyRating(Long documentId, Rating rating)
+		throws Exception;
+
+	public Page<Document> getSiteDocumentsPage(
+			Long siteId, Boolean flatten, String search, Filter filter,
+			Pagination pagination, Sort[] sorts)
+		throws Exception;
+
+	public Document postSiteDocument(Long siteId, MultipartBody multipartBody)
 		throws Exception;
 
 	public void setContextCompany(Company contextCompany);

@@ -60,42 +60,6 @@ import javax.ws.rs.core.UriInfo;
 public abstract class BaseKeywordResourceImpl implements KeywordResource {
 
 	@Override
-	@GET
-	@Parameters(
-		value = {
-			@Parameter(in = ParameterIn.QUERY, name = "filter"),
-			@Parameter(in = ParameterIn.QUERY, name = "page"),
-			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
-			@Parameter(in = ParameterIn.QUERY, name = "sorts")
-		}
-	)
-	@Path("/content-spaces/{contentSpaceId}/keywords")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "Keyword")})
-	public Page<Keyword> getContentSpaceKeywordsPage(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			@QueryParam("search") String search, @Context Filter filter,
-			@Context Pagination pagination, @Context Sort[] sorts)
-		throws Exception {
-
-		return Page.of(Collections.emptyList());
-	}
-
-	@Override
-	@Consumes("application/json")
-	@POST
-	@Path("/content-spaces/{contentSpaceId}/keywords")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "Keyword")})
-	public Keyword postContentSpaceKeyword(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			Keyword keyword)
-		throws Exception {
-
-		return new Keyword();
-	}
-
-	@Override
 	@DELETE
 	@Path("/keywords/{keywordId}")
 	@Produces("application/json")
@@ -123,6 +87,41 @@ public abstract class BaseKeywordResourceImpl implements KeywordResource {
 	@Tags(value = {@Tag(name = "Keyword")})
 	public Keyword putKeyword(
 			@NotNull @PathParam("keywordId") Long keywordId, Keyword keyword)
+		throws Exception {
+
+		return new Keyword();
+	}
+
+	@Override
+	@GET
+	@Parameters(
+		value = {
+			@Parameter(in = ParameterIn.QUERY, name = "filter"),
+			@Parameter(in = ParameterIn.QUERY, name = "page"),
+			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
+			@Parameter(in = ParameterIn.QUERY, name = "sorts")
+		}
+	)
+	@Path("/sites/{siteId}/keywords")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "Keyword")})
+	public Page<Keyword> getSiteKeywordsPage(
+			@NotNull @PathParam("siteId") Long siteId,
+			@QueryParam("search") String search, @Context Filter filter,
+			@Context Pagination pagination, @Context Sort[] sorts)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	@Override
+	@Consumes("application/json")
+	@POST
+	@Path("/sites/{siteId}/keywords")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "Keyword")})
+	public Keyword postSiteKeyword(
+			@NotNull @PathParam("siteId") Long siteId, Keyword keyword)
 		throws Exception {
 
 		return new Keyword();

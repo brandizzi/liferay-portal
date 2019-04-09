@@ -112,468 +112,6 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceMessageBoardSectionsPage() throws Exception {
-		Long contentSpaceId =
-			testGetContentSpaceMessageBoardSectionsPage_getContentSpaceId();
-		Long irrelevantContentSpaceId =
-			testGetContentSpaceMessageBoardSectionsPage_getIrrelevantContentSpaceId();
-
-		if ((irrelevantContentSpaceId != null)) {
-			MessageBoardSection irrelevantMessageBoardSection =
-				testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-					irrelevantContentSpaceId,
-					randomIrrelevantMessageBoardSection());
-
-			Page<MessageBoardSection> page =
-				invokeGetContentSpaceMessageBoardSectionsPage(
-					irrelevantContentSpaceId, null, null, null,
-					Pagination.of(1, 2), null);
-
-			Assert.assertEquals(1, page.getTotalCount());
-
-			assertEquals(
-				Arrays.asList(irrelevantMessageBoardSection),
-				(List<MessageBoardSection>)page.getItems());
-			assertValid(page);
-		}
-
-		MessageBoardSection messageBoardSection1 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, randomMessageBoardSection());
-
-		MessageBoardSection messageBoardSection2 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, randomMessageBoardSection());
-
-		Page<MessageBoardSection> page =
-			invokeGetContentSpaceMessageBoardSectionsPage(
-				contentSpaceId, null, null, null, Pagination.of(1, 2), null);
-
-		Assert.assertEquals(2, page.getTotalCount());
-
-		assertEqualsIgnoringOrder(
-			Arrays.asList(messageBoardSection1, messageBoardSection2),
-			(List<MessageBoardSection>)page.getItems());
-		assertValid(page);
-	}
-
-	@Test
-	public void testGetContentSpaceMessageBoardSectionsPageWithFilterDateTimeEquals()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.DATE_TIME);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Long contentSpaceId =
-			testGetContentSpaceMessageBoardSectionsPage_getContentSpaceId();
-
-		MessageBoardSection messageBoardSection1 = randomMessageBoardSection();
-		MessageBoardSection messageBoardSection2 = randomMessageBoardSection();
-
-		for (EntityField entityField : entityFields) {
-			BeanUtils.setProperty(
-				messageBoardSection1, entityField.getName(),
-				DateUtils.addMinutes(new Date(), -2));
-		}
-
-		messageBoardSection1 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, messageBoardSection1);
-
-		Thread.sleep(1000);
-
-		messageBoardSection2 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, messageBoardSection2);
-
-		for (EntityField entityField : entityFields) {
-			Page<MessageBoardSection> page =
-				invokeGetContentSpaceMessageBoardSectionsPage(
-					contentSpaceId, null, null,
-					getFilterString(entityField, "eq", messageBoardSection1),
-					Pagination.of(1, 2), null);
-
-			assertEquals(
-				Collections.singletonList(messageBoardSection1),
-				(List<MessageBoardSection>)page.getItems());
-		}
-	}
-
-	@Test
-	public void testGetContentSpaceMessageBoardSectionsPageWithFilterStringEquals()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.STRING);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Long contentSpaceId =
-			testGetContentSpaceMessageBoardSectionsPage_getContentSpaceId();
-
-		MessageBoardSection messageBoardSection1 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, randomMessageBoardSection());
-
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		MessageBoardSection messageBoardSection2 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, randomMessageBoardSection());
-
-		for (EntityField entityField : entityFields) {
-			Page<MessageBoardSection> page =
-				invokeGetContentSpaceMessageBoardSectionsPage(
-					contentSpaceId, null, null,
-					getFilterString(entityField, "eq", messageBoardSection1),
-					Pagination.of(1, 2), null);
-
-			assertEquals(
-				Collections.singletonList(messageBoardSection1),
-				(List<MessageBoardSection>)page.getItems());
-		}
-	}
-
-	@Test
-	public void testGetContentSpaceMessageBoardSectionsPageWithPagination()
-		throws Exception {
-
-		Long contentSpaceId =
-			testGetContentSpaceMessageBoardSectionsPage_getContentSpaceId();
-
-		MessageBoardSection messageBoardSection1 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, randomMessageBoardSection());
-
-		MessageBoardSection messageBoardSection2 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, randomMessageBoardSection());
-
-		MessageBoardSection messageBoardSection3 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, randomMessageBoardSection());
-
-		Page<MessageBoardSection> page1 =
-			invokeGetContentSpaceMessageBoardSectionsPage(
-				contentSpaceId, null, null, null, Pagination.of(1, 2), null);
-
-		List<MessageBoardSection> messageBoardSections1 =
-			(List<MessageBoardSection>)page1.getItems();
-
-		Assert.assertEquals(
-			messageBoardSections1.toString(), 2, messageBoardSections1.size());
-
-		Page<MessageBoardSection> page2 =
-			invokeGetContentSpaceMessageBoardSectionsPage(
-				contentSpaceId, null, null, null, Pagination.of(2, 2), null);
-
-		Assert.assertEquals(3, page2.getTotalCount());
-
-		List<MessageBoardSection> messageBoardSections2 =
-			(List<MessageBoardSection>)page2.getItems();
-
-		Assert.assertEquals(
-			messageBoardSections2.toString(), 1, messageBoardSections2.size());
-
-		assertEqualsIgnoringOrder(
-			Arrays.asList(
-				messageBoardSection1, messageBoardSection2,
-				messageBoardSection3),
-			new ArrayList<MessageBoardSection>() {
-				{
-					addAll(messageBoardSections1);
-					addAll(messageBoardSections2);
-				}
-			});
-	}
-
-	@Test
-	public void testGetContentSpaceMessageBoardSectionsPageWithSortDateTime()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.DATE_TIME);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Long contentSpaceId =
-			testGetContentSpaceMessageBoardSectionsPage_getContentSpaceId();
-
-		MessageBoardSection messageBoardSection1 = randomMessageBoardSection();
-		MessageBoardSection messageBoardSection2 = randomMessageBoardSection();
-
-		for (EntityField entityField : entityFields) {
-			BeanUtils.setProperty(
-				messageBoardSection1, entityField.getName(),
-				DateUtils.addMinutes(new Date(), -2));
-		}
-
-		messageBoardSection1 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, messageBoardSection1);
-
-		Thread.sleep(1000);
-
-		messageBoardSection2 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, messageBoardSection2);
-
-		for (EntityField entityField : entityFields) {
-			Page<MessageBoardSection> ascPage =
-				invokeGetContentSpaceMessageBoardSectionsPage(
-					contentSpaceId, null, null, null, Pagination.of(1, 2),
-					entityField.getName() + ":asc");
-
-			assertEquals(
-				Arrays.asList(messageBoardSection1, messageBoardSection2),
-				(List<MessageBoardSection>)ascPage.getItems());
-
-			Page<MessageBoardSection> descPage =
-				invokeGetContentSpaceMessageBoardSectionsPage(
-					contentSpaceId, null, null, null, Pagination.of(1, 2),
-					entityField.getName() + ":desc");
-
-			assertEquals(
-				Arrays.asList(messageBoardSection2, messageBoardSection1),
-				(List<MessageBoardSection>)descPage.getItems());
-		}
-	}
-
-	@Test
-	public void testGetContentSpaceMessageBoardSectionsPageWithSortString()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.STRING);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Long contentSpaceId =
-			testGetContentSpaceMessageBoardSectionsPage_getContentSpaceId();
-
-		MessageBoardSection messageBoardSection1 = randomMessageBoardSection();
-		MessageBoardSection messageBoardSection2 = randomMessageBoardSection();
-
-		for (EntityField entityField : entityFields) {
-			BeanUtils.setProperty(
-				messageBoardSection1, entityField.getName(), "Aaa");
-			BeanUtils.setProperty(
-				messageBoardSection2, entityField.getName(), "Bbb");
-		}
-
-		messageBoardSection1 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, messageBoardSection1);
-
-		messageBoardSection2 =
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				contentSpaceId, messageBoardSection2);
-
-		for (EntityField entityField : entityFields) {
-			Page<MessageBoardSection> ascPage =
-				invokeGetContentSpaceMessageBoardSectionsPage(
-					contentSpaceId, null, null, null, Pagination.of(1, 2),
-					entityField.getName() + ":asc");
-
-			assertEquals(
-				Arrays.asList(messageBoardSection1, messageBoardSection2),
-				(List<MessageBoardSection>)ascPage.getItems());
-
-			Page<MessageBoardSection> descPage =
-				invokeGetContentSpaceMessageBoardSectionsPage(
-					contentSpaceId, null, null, null, Pagination.of(1, 2),
-					entityField.getName() + ":desc");
-
-			assertEquals(
-				Arrays.asList(messageBoardSection2, messageBoardSection1),
-				(List<MessageBoardSection>)descPage.getItems());
-		}
-	}
-
-	protected MessageBoardSection
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				Long contentSpaceId, MessageBoardSection messageBoardSection)
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected Long
-			testGetContentSpaceMessageBoardSectionsPage_getContentSpaceId()
-		throws Exception {
-
-		return testGroup.getGroupId();
-	}
-
-	protected Long
-			testGetContentSpaceMessageBoardSectionsPage_getIrrelevantContentSpaceId()
-		throws Exception {
-
-		return irrelevantGroup.getGroupId();
-	}
-
-	protected Page<MessageBoardSection>
-			invokeGetContentSpaceMessageBoardSectionsPage(
-				Long contentSpaceId, Boolean flatten, String search,
-				String filterString, Pagination pagination, String sortString)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/message-board-sections",
-					contentSpaceId);
-
-		location = HttpUtil.addParameter(location, "filter", filterString);
-
-		location = HttpUtil.addParameter(
-			location, "page", pagination.getPage());
-		location = HttpUtil.addParameter(
-			location, "pageSize", pagination.getPageSize());
-
-		location = HttpUtil.addParameter(location, "sort", sortString);
-
-		options.setLocation(location);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-
-		return outputObjectMapper.readValue(
-			string,
-			new TypeReference<Page<MessageBoardSection>>() {
-			});
-	}
-
-	protected Http.Response
-			invokeGetContentSpaceMessageBoardSectionsPageResponse(
-				Long contentSpaceId, Boolean flatten, String search,
-				String filterString, Pagination pagination, String sortString)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/message-board-sections",
-					contentSpaceId);
-
-		location = HttpUtil.addParameter(location, "filter", filterString);
-
-		location = HttpUtil.addParameter(
-			location, "page", pagination.getPage());
-		location = HttpUtil.addParameter(
-			location, "pageSize", pagination.getPageSize());
-
-		location = HttpUtil.addParameter(location, "sort", sortString);
-
-		options.setLocation(location);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
-	public void testPostContentSpaceMessageBoardSection() throws Exception {
-		MessageBoardSection randomMessageBoardSection =
-			randomMessageBoardSection();
-
-		MessageBoardSection postMessageBoardSection =
-			testPostContentSpaceMessageBoardSection_addMessageBoardSection(
-				randomMessageBoardSection);
-
-		assertEquals(randomMessageBoardSection, postMessageBoardSection);
-		assertValid(postMessageBoardSection);
-	}
-
-	protected MessageBoardSection
-			testPostContentSpaceMessageBoardSection_addMessageBoardSection(
-				MessageBoardSection messageBoardSection)
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected MessageBoardSection invokePostContentSpaceMessageBoardSection(
-			Long contentSpaceId, MessageBoardSection messageBoardSection)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		options.setBody(
-			inputObjectMapper.writeValueAsString(messageBoardSection),
-			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/message-board-sections",
-					contentSpaceId);
-
-		options.setLocation(location);
-
-		options.setPost(true);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-
-		try {
-			return outputObjectMapper.readValue(
-				string, MessageBoardSection.class);
-		}
-		catch (Exception e) {
-			_log.error("Unable to process HTTP response: " + string, e);
-
-			throw e;
-		}
-	}
-
-	protected Http.Response invokePostContentSpaceMessageBoardSectionResponse(
-			Long contentSpaceId, MessageBoardSection messageBoardSection)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		options.setBody(
-			inputObjectMapper.writeValueAsString(messageBoardSection),
-			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/message-board-sections",
-					contentSpaceId);
-
-		options.setLocation(location);
-
-		options.setPost(true);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
 	public void testDeleteMessageBoardSection() throws Exception {
 		MessageBoardSection messageBoardSection =
 			testDeleteMessageBoardSection_addMessageBoardSection();
@@ -1372,6 +910,446 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 		return options.getResponse();
 	}
 
+	@Test
+	public void testGetSiteMessageBoardSectionsPage() throws Exception {
+		Long siteId = testGetSiteMessageBoardSectionsPage_getSiteId();
+		Long irrelevantSiteId =
+			testGetSiteMessageBoardSectionsPage_getIrrelevantSiteId();
+
+		if ((irrelevantSiteId != null)) {
+			MessageBoardSection irrelevantMessageBoardSection =
+				testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+					irrelevantSiteId, randomIrrelevantMessageBoardSection());
+
+			Page<MessageBoardSection> page =
+				invokeGetSiteMessageBoardSectionsPage(
+					irrelevantSiteId, null, null, null, Pagination.of(1, 2),
+					null);
+
+			Assert.assertEquals(1, page.getTotalCount());
+
+			assertEquals(
+				Arrays.asList(irrelevantMessageBoardSection),
+				(List<MessageBoardSection>)page.getItems());
+			assertValid(page);
+		}
+
+		MessageBoardSection messageBoardSection1 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, randomMessageBoardSection());
+
+		MessageBoardSection messageBoardSection2 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, randomMessageBoardSection());
+
+		Page<MessageBoardSection> page = invokeGetSiteMessageBoardSectionsPage(
+			siteId, null, null, null, Pagination.of(1, 2), null);
+
+		Assert.assertEquals(2, page.getTotalCount());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(messageBoardSection1, messageBoardSection2),
+			(List<MessageBoardSection>)page.getItems());
+		assertValid(page);
+	}
+
+	@Test
+	public void testGetSiteMessageBoardSectionsPageWithFilterDateTimeEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.DATE_TIME);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Long siteId = testGetSiteMessageBoardSectionsPage_getSiteId();
+
+		MessageBoardSection messageBoardSection1 = randomMessageBoardSection();
+		MessageBoardSection messageBoardSection2 = randomMessageBoardSection();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				messageBoardSection1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		messageBoardSection1 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, messageBoardSection1);
+
+		Thread.sleep(1000);
+
+		messageBoardSection2 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, messageBoardSection2);
+
+		for (EntityField entityField : entityFields) {
+			Page<MessageBoardSection> page =
+				invokeGetSiteMessageBoardSectionsPage(
+					siteId, null, null,
+					getFilterString(entityField, "eq", messageBoardSection1),
+					Pagination.of(1, 2), null);
+
+			assertEquals(
+				Collections.singletonList(messageBoardSection1),
+				(List<MessageBoardSection>)page.getItems());
+		}
+	}
+
+	@Test
+	public void testGetSiteMessageBoardSectionsPageWithFilterStringEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.STRING);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Long siteId = testGetSiteMessageBoardSectionsPage_getSiteId();
+
+		MessageBoardSection messageBoardSection1 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, randomMessageBoardSection());
+
+		@SuppressWarnings("PMD.UnusedLocalVariable")
+		MessageBoardSection messageBoardSection2 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, randomMessageBoardSection());
+
+		for (EntityField entityField : entityFields) {
+			Page<MessageBoardSection> page =
+				invokeGetSiteMessageBoardSectionsPage(
+					siteId, null, null,
+					getFilterString(entityField, "eq", messageBoardSection1),
+					Pagination.of(1, 2), null);
+
+			assertEquals(
+				Collections.singletonList(messageBoardSection1),
+				(List<MessageBoardSection>)page.getItems());
+		}
+	}
+
+	@Test
+	public void testGetSiteMessageBoardSectionsPageWithPagination()
+		throws Exception {
+
+		Long siteId = testGetSiteMessageBoardSectionsPage_getSiteId();
+
+		MessageBoardSection messageBoardSection1 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, randomMessageBoardSection());
+
+		MessageBoardSection messageBoardSection2 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, randomMessageBoardSection());
+
+		MessageBoardSection messageBoardSection3 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, randomMessageBoardSection());
+
+		Page<MessageBoardSection> page1 = invokeGetSiteMessageBoardSectionsPage(
+			siteId, null, null, null, Pagination.of(1, 2), null);
+
+		List<MessageBoardSection> messageBoardSections1 =
+			(List<MessageBoardSection>)page1.getItems();
+
+		Assert.assertEquals(
+			messageBoardSections1.toString(), 2, messageBoardSections1.size());
+
+		Page<MessageBoardSection> page2 = invokeGetSiteMessageBoardSectionsPage(
+			siteId, null, null, null, Pagination.of(2, 2), null);
+
+		Assert.assertEquals(3, page2.getTotalCount());
+
+		List<MessageBoardSection> messageBoardSections2 =
+			(List<MessageBoardSection>)page2.getItems();
+
+		Assert.assertEquals(
+			messageBoardSections2.toString(), 1, messageBoardSections2.size());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(
+				messageBoardSection1, messageBoardSection2,
+				messageBoardSection3),
+			new ArrayList<MessageBoardSection>() {
+				{
+					addAll(messageBoardSections1);
+					addAll(messageBoardSections2);
+				}
+			});
+	}
+
+	@Test
+	public void testGetSiteMessageBoardSectionsPageWithSortDateTime()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.DATE_TIME);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Long siteId = testGetSiteMessageBoardSectionsPage_getSiteId();
+
+		MessageBoardSection messageBoardSection1 = randomMessageBoardSection();
+		MessageBoardSection messageBoardSection2 = randomMessageBoardSection();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				messageBoardSection1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		messageBoardSection1 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, messageBoardSection1);
+
+		Thread.sleep(1000);
+
+		messageBoardSection2 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, messageBoardSection2);
+
+		for (EntityField entityField : entityFields) {
+			Page<MessageBoardSection> ascPage =
+				invokeGetSiteMessageBoardSectionsPage(
+					siteId, null, null, null, Pagination.of(1, 2),
+					entityField.getName() + ":asc");
+
+			assertEquals(
+				Arrays.asList(messageBoardSection1, messageBoardSection2),
+				(List<MessageBoardSection>)ascPage.getItems());
+
+			Page<MessageBoardSection> descPage =
+				invokeGetSiteMessageBoardSectionsPage(
+					siteId, null, null, null, Pagination.of(1, 2),
+					entityField.getName() + ":desc");
+
+			assertEquals(
+				Arrays.asList(messageBoardSection2, messageBoardSection1),
+				(List<MessageBoardSection>)descPage.getItems());
+		}
+	}
+
+	@Test
+	public void testGetSiteMessageBoardSectionsPageWithSortString()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.STRING);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Long siteId = testGetSiteMessageBoardSectionsPage_getSiteId();
+
+		MessageBoardSection messageBoardSection1 = randomMessageBoardSection();
+		MessageBoardSection messageBoardSection2 = randomMessageBoardSection();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				messageBoardSection1, entityField.getName(), "Aaa");
+			BeanUtils.setProperty(
+				messageBoardSection2, entityField.getName(), "Bbb");
+		}
+
+		messageBoardSection1 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, messageBoardSection1);
+
+		messageBoardSection2 =
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				siteId, messageBoardSection2);
+
+		for (EntityField entityField : entityFields) {
+			Page<MessageBoardSection> ascPage =
+				invokeGetSiteMessageBoardSectionsPage(
+					siteId, null, null, null, Pagination.of(1, 2),
+					entityField.getName() + ":asc");
+
+			assertEquals(
+				Arrays.asList(messageBoardSection1, messageBoardSection2),
+				(List<MessageBoardSection>)ascPage.getItems());
+
+			Page<MessageBoardSection> descPage =
+				invokeGetSiteMessageBoardSectionsPage(
+					siteId, null, null, null, Pagination.of(1, 2),
+					entityField.getName() + ":desc");
+
+			assertEquals(
+				Arrays.asList(messageBoardSection2, messageBoardSection1),
+				(List<MessageBoardSection>)descPage.getItems());
+		}
+	}
+
+	protected MessageBoardSection
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				Long siteId, MessageBoardSection messageBoardSection)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Long testGetSiteMessageBoardSectionsPage_getSiteId()
+		throws Exception {
+
+		return testGroup.getGroupId();
+	}
+
+	protected Long testGetSiteMessageBoardSectionsPage_getIrrelevantSiteId()
+		throws Exception {
+
+		return irrelevantGroup.getGroupId();
+	}
+
+	protected Page<MessageBoardSection> invokeGetSiteMessageBoardSectionsPage(
+			Long siteId, Boolean flatten, String search, String filterString,
+			Pagination pagination, String sortString)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/message-board-sections", siteId);
+
+		location = HttpUtil.addParameter(location, "filter", filterString);
+
+		location = HttpUtil.addParameter(
+			location, "page", pagination.getPage());
+		location = HttpUtil.addParameter(
+			location, "pageSize", pagination.getPageSize());
+
+		location = HttpUtil.addParameter(location, "sort", sortString);
+
+		options.setLocation(location);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		return outputObjectMapper.readValue(
+			string,
+			new TypeReference<Page<MessageBoardSection>>() {
+			});
+	}
+
+	protected Http.Response invokeGetSiteMessageBoardSectionsPageResponse(
+			Long siteId, Boolean flatten, String search, String filterString,
+			Pagination pagination, String sortString)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/message-board-sections", siteId);
+
+		location = HttpUtil.addParameter(location, "filter", filterString);
+
+		location = HttpUtil.addParameter(
+			location, "page", pagination.getPage());
+		location = HttpUtil.addParameter(
+			location, "pageSize", pagination.getPageSize());
+
+		location = HttpUtil.addParameter(location, "sort", sortString);
+
+		options.setLocation(location);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
+	@Test
+	public void testPostSiteMessageBoardSection() throws Exception {
+		MessageBoardSection randomMessageBoardSection =
+			randomMessageBoardSection();
+
+		MessageBoardSection postMessageBoardSection =
+			testPostSiteMessageBoardSection_addMessageBoardSection(
+				randomMessageBoardSection);
+
+		assertEquals(randomMessageBoardSection, postMessageBoardSection);
+		assertValid(postMessageBoardSection);
+	}
+
+	protected MessageBoardSection
+			testPostSiteMessageBoardSection_addMessageBoardSection(
+				MessageBoardSection messageBoardSection)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected MessageBoardSection invokePostSiteMessageBoardSection(
+			Long siteId, MessageBoardSection messageBoardSection)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		options.setBody(
+			inputObjectMapper.writeValueAsString(messageBoardSection),
+			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/message-board-sections", siteId);
+
+		options.setLocation(location);
+
+		options.setPost(true);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		try {
+			return outputObjectMapper.readValue(
+				string, MessageBoardSection.class);
+		}
+		catch (Exception e) {
+			_log.error("Unable to process HTTP response: " + string, e);
+
+			throw e;
+		}
+	}
+
+	protected Http.Response invokePostSiteMessageBoardSectionResponse(
+			Long siteId, MessageBoardSection messageBoardSection)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		options.setBody(
+			inputObjectMapper.writeValueAsString(messageBoardSection),
+			ContentTypes.APPLICATION_JSON, StringPool.UTF8);
+
+		String location =
+			_resourceURL +
+				_toPath("/sites/{siteId}/message-board-sections", siteId);
+
+		options.setLocation(location);
+
+		options.setPost(true);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
 	protected void assertResponseCode(
 		int expectedResponseCode, Http.Response actualResponse) {
 
@@ -1433,8 +1411,92 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 	}
 
 	protected void assertValid(MessageBoardSection messageBoardSection) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (messageBoardSection.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (messageBoardSection.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (messageBoardSection.getId() == null) {
+			valid = false;
+		}
+
+		if (!Objects.equals(
+				messageBoardSection.getSiteId(), testGroup.getGroupId())) {
+
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (messageBoardSection.getCreator() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (messageBoardSection.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfMessageBoardSections",
+					additionalAssertFieldName)) {
+
+				if (messageBoardSection.getNumberOfMessageBoardSections() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfMessageBoardThreads", additionalAssertFieldName)) {
+
+				if (messageBoardSection.getNumberOfMessageBoardThreads() ==
+						null) {
+
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (messageBoardSection.getTitle() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (messageBoardSection.getViewableBy() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<MessageBoardSection> page) {
@@ -1454,6 +1516,10 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		MessageBoardSection messageBoardSection1,
 		MessageBoardSection messageBoardSection2) {
@@ -1462,7 +1528,128 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 			return true;
 		}
 
-		return false;
+		if (!Objects.equals(
+				messageBoardSection1.getSiteId(),
+				messageBoardSection2.getSiteId())) {
+
+			return false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardSection1.getCreator(),
+						messageBoardSection2.getCreator())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardSection1.getDateCreated(),
+						messageBoardSection2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardSection1.getDateModified(),
+						messageBoardSection2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardSection1.getDescription(),
+						messageBoardSection2.getDescription())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardSection1.getId(),
+						messageBoardSection2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfMessageBoardSections",
+					additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						messageBoardSection1.getNumberOfMessageBoardSections(),
+						messageBoardSection2.
+							getNumberOfMessageBoardSections())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"numberOfMessageBoardThreads", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						messageBoardSection1.getNumberOfMessageBoardThreads(),
+						messageBoardSection2.
+							getNumberOfMessageBoardThreads())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardSection1.getTitle(),
+						messageBoardSection2.getTitle())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						messageBoardSection1.getViewableBy(),
+						messageBoardSection2.getViewableBy())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -1511,11 +1698,6 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 		sb.append(operator);
 		sb.append(" ");
 
-		if (entityFieldName.equals("contentSpaceId")) {
-			throw new IllegalArgumentException(
-				"Invalid entity field " + entityFieldName);
-		}
-
 		if (entityFieldName.equals("creator")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
@@ -1557,6 +1739,11 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 				"Invalid entity field " + entityFieldName);
 		}
 
+		if (entityFieldName.equals("siteId")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
 		if (entityFieldName.equals("title")) {
 			sb.append("'");
 			sb.append(String.valueOf(messageBoardSection.getTitle()));
@@ -1577,18 +1764,24 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 	protected MessageBoardSection randomMessageBoardSection() {
 		return new MessageBoardSection() {
 			{
-				contentSpaceId = RandomTestUtil.randomLong();
 				dateCreated = RandomTestUtil.nextDate();
 				dateModified = RandomTestUtil.nextDate();
 				description = RandomTestUtil.randomString();
 				id = RandomTestUtil.randomLong();
+				siteId = testGroup.getGroupId();
 				title = RandomTestUtil.randomString();
 			}
 		};
 	}
 
 	protected MessageBoardSection randomIrrelevantMessageBoardSection() {
-		return randomMessageBoardSection();
+		MessageBoardSection randomIrrelevantMessageBoardSection =
+			randomMessageBoardSection();
+
+		randomIrrelevantMessageBoardSection.setSiteId(
+			irrelevantGroup.getGroupId());
+
+		return randomIrrelevantMessageBoardSection;
 	}
 
 	protected MessageBoardSection randomPatchMessageBoardSection() {

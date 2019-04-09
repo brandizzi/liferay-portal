@@ -75,20 +75,6 @@ public class Mutation {
 			userAccountResourceComponentServiceObjects;
 	}
 
-	@GraphQLField
-	@GraphQLInvokeDetached
-	public Keyword postContentSpaceKeyword(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
-			@GraphQLName("keyword") Keyword keyword)
-		throws Exception {
-
-		return _applyComponentServiceObjects(
-			_keywordResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			keywordResource -> keywordResource.postContentSpaceKeyword(
-				contentSpaceId, keyword));
-	}
-
 	@GraphQLInvokeDetached
 	public void deleteKeyword(@GraphQLName("keywordId") Long keywordId)
 		throws Exception {
@@ -109,6 +95,20 @@ public class Mutation {
 			_keywordResourceComponentServiceObjects,
 			this::_populateResourceContext,
 			keywordResource -> keywordResource.putKeyword(keywordId, keyword));
+	}
+
+	@GraphQLField
+	@GraphQLInvokeDetached
+	public Keyword postSiteKeyword(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("keyword") Keyword keyword)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_keywordResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			keywordResource -> keywordResource.postSiteKeyword(
+				siteId, keyword));
 	}
 
 	@GraphQLField
@@ -185,8 +185,8 @@ public class Mutation {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public TaxonomyVocabulary postContentSpaceTaxonomyVocabulary(
-			@GraphQLName("contentSpaceId") Long contentSpaceId,
+	public TaxonomyVocabulary postSiteTaxonomyVocabulary(
+			@GraphQLName("siteId") Long siteId,
 			@GraphQLName("taxonomyVocabulary") TaxonomyVocabulary
 				taxonomyVocabulary)
 		throws Exception {
@@ -195,8 +195,8 @@ public class Mutation {
 			_taxonomyVocabularyResourceComponentServiceObjects,
 			this::_populateResourceContext,
 			taxonomyVocabularyResource ->
-				taxonomyVocabularyResource.postContentSpaceTaxonomyVocabulary(
-					contentSpaceId, taxonomyVocabulary));
+				taxonomyVocabularyResource.postSiteTaxonomyVocabulary(
+					siteId, taxonomyVocabulary));
 	}
 
 	@GraphQLInvokeDetached

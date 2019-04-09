@@ -72,43 +72,6 @@ public abstract class BaseMessageBoardThreadResourceImpl
 			@Parameter(in = ParameterIn.QUERY, name = "sorts")
 		}
 	)
-	@Path("/content-spaces/{contentSpaceId}/message-board-threads")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "MessageBoardThread")})
-	public Page<MessageBoardThread> getContentSpaceMessageBoardThreadsPage(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			@QueryParam("flatten") Boolean flatten,
-			@QueryParam("search") String search, @Context Filter filter,
-			@Context Pagination pagination, @Context Sort[] sorts)
-		throws Exception {
-
-		return Page.of(Collections.emptyList());
-	}
-
-	@Override
-	@Consumes("application/json")
-	@POST
-	@Path("/content-spaces/{contentSpaceId}/message-board-threads")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "MessageBoardThread")})
-	public MessageBoardThread postContentSpaceMessageBoardThread(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			MessageBoardThread messageBoardThread)
-		throws Exception {
-
-		return new MessageBoardThread();
-	}
-
-	@Override
-	@GET
-	@Parameters(
-		value = {
-			@Parameter(in = ParameterIn.QUERY, name = "filter"),
-			@Parameter(in = ParameterIn.QUERY, name = "page"),
-			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
-			@Parameter(in = ParameterIn.QUERY, name = "sorts")
-		}
-	)
 	@Path(
 		"/message-board-sections/{messageBoardSectionId}/message-board-threads"
 	)
@@ -186,11 +149,6 @@ public abstract class BaseMessageBoardThreadResourceImpl
 				messageBoardThread.getArticleBody());
 		}
 
-		if (messageBoardThread.getContentSpaceId() != null) {
-			existingMessageBoardThread.setContentSpaceId(
-				messageBoardThread.getContentSpaceId());
-		}
-
 		if (messageBoardThread.getDateCreated() != null) {
 			existingMessageBoardThread.setDateCreated(
 				messageBoardThread.getDateCreated());
@@ -229,6 +187,11 @@ public abstract class BaseMessageBoardThreadResourceImpl
 		if (messageBoardThread.getShowAsQuestion() != null) {
 			existingMessageBoardThread.setShowAsQuestion(
 				messageBoardThread.getShowAsQuestion());
+		}
+
+		if (messageBoardThread.getSiteId() != null) {
+			existingMessageBoardThread.setSiteId(
+				messageBoardThread.getSiteId());
 		}
 
 		if (messageBoardThread.getThreadType() != null) {
@@ -314,6 +277,43 @@ public abstract class BaseMessageBoardThreadResourceImpl
 		throws Exception {
 
 		return new Rating();
+	}
+
+	@Override
+	@GET
+	@Parameters(
+		value = {
+			@Parameter(in = ParameterIn.QUERY, name = "filter"),
+			@Parameter(in = ParameterIn.QUERY, name = "page"),
+			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
+			@Parameter(in = ParameterIn.QUERY, name = "sorts")
+		}
+	)
+	@Path("/sites/{siteId}/message-board-threads")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "MessageBoardThread")})
+	public Page<MessageBoardThread> getSiteMessageBoardThreadsPage(
+			@NotNull @PathParam("siteId") Long siteId,
+			@QueryParam("flatten") Boolean flatten,
+			@QueryParam("search") String search, @Context Filter filter,
+			@Context Pagination pagination, @Context Sort[] sorts)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	@Override
+	@Consumes("application/json")
+	@POST
+	@Path("/sites/{siteId}/message-board-threads")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "MessageBoardThread")})
+	public MessageBoardThread postSiteMessageBoardThread(
+			@NotNull @PathParam("siteId") Long siteId,
+			MessageBoardThread messageBoardThread)
+		throws Exception {
+
+		return new MessageBoardThread();
 	}
 
 	public void setContextCompany(Company contextCompany) {

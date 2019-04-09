@@ -32,14 +32,6 @@ import javax.annotation.Generated;
 @Generated("")
 public interface KnowledgeBaseFolderResource {
 
-	public Page<KnowledgeBaseFolder> getContentSpaceKnowledgeBaseFoldersPage(
-			Long contentSpaceId, Pagination pagination)
-		throws Exception;
-
-	public KnowledgeBaseFolder postContentSpaceKnowledgeBaseFolder(
-			Long contentSpaceId, KnowledgeBaseFolder knowledgeBaseFolder)
-		throws Exception;
-
 	public void deleteKnowledgeBaseFolder(Long knowledgeBaseFolderId)
 		throws Exception;
 
@@ -63,6 +55,14 @@ public interface KnowledgeBaseFolderResource {
 	public KnowledgeBaseFolder postKnowledgeBaseFolderKnowledgeBaseFolder(
 			Long parentKnowledgeBaseFolderId,
 			KnowledgeBaseFolder knowledgeBaseFolder)
+		throws Exception;
+
+	public Page<KnowledgeBaseFolder> getSiteKnowledgeBaseFoldersPage(
+			Long siteId, Pagination pagination)
+		throws Exception;
+
+	public KnowledgeBaseFolder postSiteKnowledgeBaseFolder(
+			Long siteId, KnowledgeBaseFolder knowledgeBaseFolder)
 		throws Exception;
 
 	public void setContextCompany(Company contextCompany);

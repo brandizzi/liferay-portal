@@ -136,33 +136,6 @@ public class MessageBoardThread {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected String articleBody;
 
-	public Long getContentSpaceId() {
-		return contentSpaceId;
-	}
-
-	public void setContentSpaceId(Long contentSpaceId) {
-		this.contentSpaceId = contentSpaceId;
-	}
-
-	@JsonIgnore
-	public void setContentSpaceId(
-		UnsafeSupplier<Long, Exception> contentSpaceIdUnsafeSupplier) {
-
-		try {
-			contentSpaceId = contentSpaceIdUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Long contentSpaceId;
-
 	public Creator getCreator() {
 		return creator;
 	}
@@ -440,6 +413,33 @@ public class MessageBoardThread {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Boolean showAsQuestion;
 
+	public Long getSiteId() {
+		return siteId;
+	}
+
+	public void setSiteId(Long siteId) {
+		this.siteId = siteId;
+	}
+
+	@JsonIgnore
+	public void setSiteId(
+		UnsafeSupplier<Long, Exception> siteIdUnsafeSupplier) {
+
+		try {
+			siteId = siteIdUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long siteId;
+
 	public String getThreadType() {
 		return threadType;
 	}
@@ -542,11 +542,6 @@ public class MessageBoardThread {
 		sb.append("\"");
 		sb.append(", ");
 
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(contentSpaceId);
-		sb.append(", ");
-
 		sb.append("\"creator\": ");
 
 		sb.append(creator);
@@ -621,6 +616,11 @@ public class MessageBoardThread {
 		sb.append("\"showAsQuestion\": ");
 
 		sb.append(showAsQuestion);
+		sb.append(", ");
+
+		sb.append("\"siteId\": ");
+
+		sb.append(siteId);
 		sb.append(", ");
 
 		sb.append("\"threadType\": ");

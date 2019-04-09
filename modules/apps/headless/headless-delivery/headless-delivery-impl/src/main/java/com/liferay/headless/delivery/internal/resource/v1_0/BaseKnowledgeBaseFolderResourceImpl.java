@@ -59,39 +59,6 @@ public abstract class BaseKnowledgeBaseFolderResourceImpl
 	implements KnowledgeBaseFolderResource {
 
 	@Override
-	@GET
-	@Parameters(
-		value = {
-			@Parameter(in = ParameterIn.QUERY, name = "page"),
-			@Parameter(in = ParameterIn.QUERY, name = "pageSize")
-		}
-	)
-	@Path("/content-spaces/{contentSpaceId}/knowledge-base-folders")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "KnowledgeBaseFolder")})
-	public Page<KnowledgeBaseFolder> getContentSpaceKnowledgeBaseFoldersPage(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			@Context Pagination pagination)
-		throws Exception {
-
-		return Page.of(Collections.emptyList());
-	}
-
-	@Override
-	@Consumes("application/json")
-	@POST
-	@Path("/content-spaces/{contentSpaceId}/knowledge-base-folders")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "KnowledgeBaseFolder")})
-	public KnowledgeBaseFolder postContentSpaceKnowledgeBaseFolder(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			KnowledgeBaseFolder knowledgeBaseFolder)
-		throws Exception {
-
-		return new KnowledgeBaseFolder();
-	}
-
-	@Override
 	@DELETE
 	@Path("/knowledge-base-folders/{knowledgeBaseFolderId}")
 	@Produces("application/json")
@@ -130,11 +97,6 @@ public abstract class BaseKnowledgeBaseFolderResourceImpl
 		KnowledgeBaseFolder existingKnowledgeBaseFolder =
 			getKnowledgeBaseFolder(knowledgeBaseFolderId);
 
-		if (knowledgeBaseFolder.getContentSpaceId() != null) {
-			existingKnowledgeBaseFolder.setContentSpaceId(
-				knowledgeBaseFolder.getContentSpaceId());
-		}
-
 		if (knowledgeBaseFolder.getDateCreated() != null) {
 			existingKnowledgeBaseFolder.setDateCreated(
 				knowledgeBaseFolder.getDateCreated());
@@ -167,6 +129,11 @@ public abstract class BaseKnowledgeBaseFolderResourceImpl
 		if (knowledgeBaseFolder.getParentKnowledgeBaseFolderId() != null) {
 			existingKnowledgeBaseFolder.setParentKnowledgeBaseFolderId(
 				knowledgeBaseFolder.getParentKnowledgeBaseFolderId());
+		}
+
+		if (knowledgeBaseFolder.getSiteId() != null) {
+			existingKnowledgeBaseFolder.setSiteId(
+				knowledgeBaseFolder.getSiteId());
 		}
 
 		if (knowledgeBaseFolder.getViewableBy() != null) {
@@ -229,6 +196,39 @@ public abstract class BaseKnowledgeBaseFolderResourceImpl
 	public KnowledgeBaseFolder postKnowledgeBaseFolderKnowledgeBaseFolder(
 			@NotNull @PathParam("parentKnowledgeBaseFolderId") Long
 				parentKnowledgeBaseFolderId,
+			KnowledgeBaseFolder knowledgeBaseFolder)
+		throws Exception {
+
+		return new KnowledgeBaseFolder();
+	}
+
+	@Override
+	@GET
+	@Parameters(
+		value = {
+			@Parameter(in = ParameterIn.QUERY, name = "page"),
+			@Parameter(in = ParameterIn.QUERY, name = "pageSize")
+		}
+	)
+	@Path("/sites/{siteId}/knowledge-base-folders")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "KnowledgeBaseFolder")})
+	public Page<KnowledgeBaseFolder> getSiteKnowledgeBaseFoldersPage(
+			@NotNull @PathParam("siteId") Long siteId,
+			@Context Pagination pagination)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	@Override
+	@Consumes("application/json")
+	@POST
+	@Path("/sites/{siteId}/knowledge-base-folders")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "KnowledgeBaseFolder")})
+	public KnowledgeBaseFolder postSiteKnowledgeBaseFolder(
+			@NotNull @PathParam("siteId") Long siteId,
 			KnowledgeBaseFolder knowledgeBaseFolder)
 		throws Exception {
 

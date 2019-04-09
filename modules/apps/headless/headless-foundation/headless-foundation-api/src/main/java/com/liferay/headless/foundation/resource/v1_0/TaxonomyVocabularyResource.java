@@ -34,13 +34,13 @@ import javax.annotation.Generated;
 @Generated("")
 public interface TaxonomyVocabularyResource {
 
-	public Page<TaxonomyVocabulary> getContentSpaceTaxonomyVocabulariesPage(
-			Long contentSpaceId, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
+	public Page<TaxonomyVocabulary> getSiteTaxonomyVocabulariesPage(
+			Long siteId, String search, Filter filter, Pagination pagination,
+			Sort[] sorts)
 		throws Exception;
 
-	public TaxonomyVocabulary postContentSpaceTaxonomyVocabulary(
-			Long contentSpaceId, TaxonomyVocabulary taxonomyVocabulary)
+	public TaxonomyVocabulary postSiteTaxonomyVocabulary(
+			Long siteId, TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception;
 
 	public void deleteTaxonomyVocabulary(Long taxonomyVocabularyId)

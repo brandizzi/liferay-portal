@@ -439,8 +439,99 @@ public abstract class BasePostalAddressResourceTestCase {
 	}
 
 	protected void assertValid(PostalAddress postalAddress) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (postalAddress.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("addressCountry", additionalAssertFieldName)) {
+				if (postalAddress.getAddressCountry() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("addressLocality", additionalAssertFieldName)) {
+				if (postalAddress.getAddressLocality() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("addressRegion", additionalAssertFieldName)) {
+				if (postalAddress.getAddressRegion() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("addressType", additionalAssertFieldName)) {
+				if (postalAddress.getAddressType() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("postalCode", additionalAssertFieldName)) {
+				if (postalAddress.getPostalCode() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("primary", additionalAssertFieldName)) {
+				if (postalAddress.getPrimary() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"streetAddressLine1", additionalAssertFieldName)) {
+
+				if (postalAddress.getStreetAddressLine1() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"streetAddressLine2", additionalAssertFieldName)) {
+
+				if (postalAddress.getStreetAddressLine2() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"streetAddressLine3", additionalAssertFieldName)) {
+
+				if (postalAddress.getStreetAddressLine3() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<PostalAddress> page) {
@@ -460,6 +551,10 @@ public abstract class BasePostalAddressResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		PostalAddress postalAddress1, PostalAddress postalAddress2) {
 
@@ -467,7 +562,130 @@ public abstract class BasePostalAddressResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("addressCountry", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						postalAddress1.getAddressCountry(),
+						postalAddress2.getAddressCountry())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("addressLocality", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						postalAddress1.getAddressLocality(),
+						postalAddress2.getAddressLocality())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("addressRegion", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						postalAddress1.getAddressRegion(),
+						postalAddress2.getAddressRegion())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("addressType", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						postalAddress1.getAddressType(),
+						postalAddress2.getAddressType())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						postalAddress1.getId(), postalAddress2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("postalCode", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						postalAddress1.getPostalCode(),
+						postalAddress2.getPostalCode())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("primary", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						postalAddress1.getPrimary(),
+						postalAddress2.getPrimary())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"streetAddressLine1", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						postalAddress1.getStreetAddressLine1(),
+						postalAddress2.getStreetAddressLine1())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"streetAddressLine2", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						postalAddress1.getStreetAddressLine2(),
+						postalAddress2.getStreetAddressLine2())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"streetAddressLine3", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						postalAddress1.getStreetAddressLine3(),
+						postalAddress2.getStreetAddressLine3())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -611,7 +829,9 @@ public abstract class BasePostalAddressResourceTestCase {
 	}
 
 	protected PostalAddress randomIrrelevantPostalAddress() {
-		return randomPostalAddress();
+		PostalAddress randomIrrelevantPostalAddress = randomPostalAddress();
+
+		return randomIrrelevantPostalAddress;
 	}
 
 	protected PostalAddress randomPatchPostalAddress() {

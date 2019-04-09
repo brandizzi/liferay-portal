@@ -106,11 +106,6 @@ public abstract class BaseBlogPostingResourceImpl
 			existingBlogPosting.setArticleBody(blogPosting.getArticleBody());
 		}
 
-		if (blogPosting.getContentSpaceId() != null) {
-			existingBlogPosting.setContentSpaceId(
-				blogPosting.getContentSpaceId());
-		}
-
 		if (blogPosting.getDateCreated() != null) {
 			existingBlogPosting.setDateCreated(blogPosting.getDateCreated());
 		}
@@ -149,6 +144,10 @@ public abstract class BaseBlogPostingResourceImpl
 		if (blogPosting.getNumberOfComments() != null) {
 			existingBlogPosting.setNumberOfComments(
 				blogPosting.getNumberOfComments());
+		}
+
+		if (blogPosting.getSiteId() != null) {
+			existingBlogPosting.setSiteId(blogPosting.getSiteId());
 		}
 
 		if (blogPosting.getTaxonomyCategoryIds() != null) {
@@ -239,11 +238,11 @@ public abstract class BaseBlogPostingResourceImpl
 			@Parameter(in = ParameterIn.QUERY, name = "sorts")
 		}
 	)
-	@Path("/content-spaces/{contentSpaceId}/blog-postings")
+	@Path("/sites/{siteId}/blog-postings")
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "BlogPosting")})
-	public Page<BlogPosting> getContentSpaceBlogPostingsPage(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
+	public Page<BlogPosting> getSiteBlogPostingsPage(
+			@NotNull @PathParam("siteId") Long siteId,
 			@QueryParam("search") String search, @Context Filter filter,
 			@Context Pagination pagination, @Context Sort[] sorts)
 		throws Exception {
@@ -254,12 +253,11 @@ public abstract class BaseBlogPostingResourceImpl
 	@Override
 	@Consumes("application/json")
 	@POST
-	@Path("/content-spaces/{contentSpaceId}/blog-postings")
+	@Path("/sites/{siteId}/blog-postings")
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "BlogPosting")})
-	public BlogPosting postContentSpaceBlogPosting(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			BlogPosting blogPosting)
+	public BlogPosting postSiteBlogPosting(
+			@NotNull @PathParam("siteId") Long siteId, BlogPosting blogPosting)
 		throws Exception {
 
 		return new BlogPosting();

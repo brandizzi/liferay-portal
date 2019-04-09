@@ -207,14 +207,15 @@ public abstract class BaseFormStructureResourceTestCase {
 	protected Long testGetContentSpaceFormStructuresPage_getContentSpaceId()
 		throws Exception {
 
-		return testGroup.getGroupId();
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected Long
 			testGetContentSpaceFormStructuresPage_getIrrelevantContentSpaceId()
 		throws Exception {
 
-		return irrelevantGroup.getGroupId();
+		return null;
 	}
 
 	protected Page<FormStructure> invokeGetContentSpaceFormStructuresPage(
@@ -387,8 +388,87 @@ public abstract class BaseFormStructureResourceTestCase {
 	}
 
 	protected void assertValid(FormStructure formStructure) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (formStructure.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (formStructure.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (formStructure.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals(
+					"availableLanguages", additionalAssertFieldName)) {
+
+				if (formStructure.getAvailableLanguages() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("contentSpaceId", additionalAssertFieldName)) {
+				if (formStructure.getContentSpaceId() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (formStructure.getCreator() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (formStructure.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("formPages", additionalAssertFieldName)) {
+				if (formStructure.getFormPages() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (formStructure.getName() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("successPage", additionalAssertFieldName)) {
+				if (formStructure.getSuccessPage() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<FormStructure> page) {
@@ -408,6 +488,10 @@ public abstract class BaseFormStructureResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		FormStructure formStructure1, FormStructure formStructure2) {
 
@@ -415,7 +499,125 @@ public abstract class BaseFormStructureResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals(
+					"availableLanguages", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						formStructure1.getAvailableLanguages(),
+						formStructure2.getAvailableLanguages())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("contentSpaceId", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formStructure1.getContentSpaceId(),
+						formStructure2.getContentSpaceId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formStructure1.getCreator(),
+						formStructure2.getCreator())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formStructure1.getDateCreated(),
+						formStructure2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formStructure1.getDateModified(),
+						formStructure2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formStructure1.getDescription(),
+						formStructure2.getDescription())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("formPages", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formStructure1.getFormPages(),
+						formStructure2.getFormPages())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formStructure1.getId(), formStructure2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("name", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formStructure1.getName(), formStructure2.getName())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("successPage", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						formStructure1.getSuccessPage(),
+						formStructure2.getSuccessPage())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -539,7 +741,9 @@ public abstract class BaseFormStructureResourceTestCase {
 	}
 
 	protected FormStructure randomIrrelevantFormStructure() {
-		return randomFormStructure();
+		FormStructure randomIrrelevantFormStructure = randomFormStructure();
+
+		return randomIrrelevantFormStructure;
 	}
 
 	protected FormStructure randomPatchFormStructure() {

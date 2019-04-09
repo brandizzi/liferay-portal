@@ -378,8 +378,89 @@ public abstract class BaseWorkflowLogResourceTestCase {
 	}
 
 	protected void assertValid(WorkflowLog workflowLog) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (workflowLog.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (workflowLog.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("auditPerson", additionalAssertFieldName)) {
+				if (workflowLog.getAuditPerson() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("commentLog", additionalAssertFieldName)) {
+				if (workflowLog.getCommentLog() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("person", additionalAssertFieldName)) {
+				if (workflowLog.getPerson() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("previousPerson", additionalAssertFieldName)) {
+				if (workflowLog.getPreviousPerson() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("previousState", additionalAssertFieldName)) {
+				if (workflowLog.getPreviousState() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("state", additionalAssertFieldName)) {
+				if (workflowLog.getState() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("taskId", additionalAssertFieldName)) {
+				if (workflowLog.getTaskId() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("type", additionalAssertFieldName)) {
+				if (workflowLog.getType() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<WorkflowLog> page) {
@@ -399,6 +480,10 @@ public abstract class BaseWorkflowLogResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(
 		WorkflowLog workflowLog1, WorkflowLog workflowLog2) {
 
@@ -406,7 +491,120 @@ public abstract class BaseWorkflowLogResourceTestCase {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("auditPerson", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowLog1.getAuditPerson(),
+						workflowLog2.getAuditPerson())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("commentLog", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowLog1.getCommentLog(),
+						workflowLog2.getCommentLog())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowLog1.getDateCreated(),
+						workflowLog2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowLog1.getId(), workflowLog2.getId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("person", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowLog1.getPerson(), workflowLog2.getPerson())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("previousPerson", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowLog1.getPreviousPerson(),
+						workflowLog2.getPreviousPerson())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("previousState", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowLog1.getPreviousState(),
+						workflowLog2.getPreviousState())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("state", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowLog1.getState(), workflowLog2.getState())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("taskId", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowLog1.getTaskId(), workflowLog2.getTaskId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("type", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						workflowLog1.getType(), workflowLog2.getType())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -536,7 +734,9 @@ public abstract class BaseWorkflowLogResourceTestCase {
 	}
 
 	protected WorkflowLog randomIrrelevantWorkflowLog() {
-		return randomWorkflowLog();
+		WorkflowLog randomIrrelevantWorkflowLog = randomWorkflowLog();
+
+		return randomIrrelevantWorkflowLog;
 	}
 
 	protected WorkflowLog randomPatchWorkflowLog() {

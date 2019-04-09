@@ -41,13 +41,13 @@ public interface BlogPostingImageResource {
 	public BlogPostingImage getBlogPostingImage(Long blogPostingImageId)
 		throws Exception;
 
-	public Page<BlogPostingImage> getContentSpaceBlogPostingImagesPage(
-			Long contentSpaceId, String search, Filter filter,
-			Pagination pagination, Sort[] sorts)
+	public Page<BlogPostingImage> getSiteBlogPostingImagesPage(
+			Long siteId, String search, Filter filter, Pagination pagination,
+			Sort[] sorts)
 		throws Exception;
 
-	public BlogPostingImage postContentSpaceBlogPostingImage(
-			Long contentSpaceId, MultipartBody multipartBody)
+	public BlogPostingImage postSiteBlogPostingImage(
+			Long siteId, MultipartBody multipartBody)
 		throws Exception;
 
 	public void setContextCompany(Company contextCompany);

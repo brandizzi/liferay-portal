@@ -62,43 +62,6 @@ public abstract class BaseMessageBoardSectionResourceImpl
 	implements MessageBoardSectionResource {
 
 	@Override
-	@GET
-	@Parameters(
-		value = {
-			@Parameter(in = ParameterIn.QUERY, name = "filter"),
-			@Parameter(in = ParameterIn.QUERY, name = "page"),
-			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
-			@Parameter(in = ParameterIn.QUERY, name = "sorts")
-		}
-	)
-	@Path("/content-spaces/{contentSpaceId}/message-board-sections")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "MessageBoardSection")})
-	public Page<MessageBoardSection> getContentSpaceMessageBoardSectionsPage(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			@QueryParam("flatten") Boolean flatten,
-			@QueryParam("search") String search, @Context Filter filter,
-			@Context Pagination pagination, @Context Sort[] sorts)
-		throws Exception {
-
-		return Page.of(Collections.emptyList());
-	}
-
-	@Override
-	@Consumes("application/json")
-	@POST
-	@Path("/content-spaces/{contentSpaceId}/message-board-sections")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "MessageBoardSection")})
-	public MessageBoardSection postContentSpaceMessageBoardSection(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			MessageBoardSection messageBoardSection)
-		throws Exception {
-
-		return new MessageBoardSection();
-	}
-
-	@Override
 	@DELETE
 	@Path("/message-board-sections/{messageBoardSectionId}")
 	@Produces("application/json")
@@ -137,11 +100,6 @@ public abstract class BaseMessageBoardSectionResourceImpl
 		MessageBoardSection existingMessageBoardSection =
 			getMessageBoardSection(messageBoardSectionId);
 
-		if (messageBoardSection.getContentSpaceId() != null) {
-			existingMessageBoardSection.setContentSpaceId(
-				messageBoardSection.getContentSpaceId());
-		}
-
 		if (messageBoardSection.getDateCreated() != null) {
 			existingMessageBoardSection.setDateCreated(
 				messageBoardSection.getDateCreated());
@@ -165,6 +123,11 @@ public abstract class BaseMessageBoardSectionResourceImpl
 		if (messageBoardSection.getNumberOfMessageBoardThreads() != null) {
 			existingMessageBoardSection.setNumberOfMessageBoardThreads(
 				messageBoardSection.getNumberOfMessageBoardThreads());
+		}
+
+		if (messageBoardSection.getSiteId() != null) {
+			existingMessageBoardSection.setSiteId(
+				messageBoardSection.getSiteId());
 		}
 
 		if (messageBoardSection.getTitle() != null) {
@@ -235,6 +198,43 @@ public abstract class BaseMessageBoardSectionResourceImpl
 	public MessageBoardSection postMessageBoardSectionMessageBoardSection(
 			@NotNull @PathParam("parentMessageBoardSectionId") Long
 				parentMessageBoardSectionId,
+			MessageBoardSection messageBoardSection)
+		throws Exception {
+
+		return new MessageBoardSection();
+	}
+
+	@Override
+	@GET
+	@Parameters(
+		value = {
+			@Parameter(in = ParameterIn.QUERY, name = "filter"),
+			@Parameter(in = ParameterIn.QUERY, name = "page"),
+			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
+			@Parameter(in = ParameterIn.QUERY, name = "sorts")
+		}
+	)
+	@Path("/sites/{siteId}/message-board-sections")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "MessageBoardSection")})
+	public Page<MessageBoardSection> getSiteMessageBoardSectionsPage(
+			@NotNull @PathParam("siteId") Long siteId,
+			@QueryParam("flatten") Boolean flatten,
+			@QueryParam("search") String search, @Context Filter filter,
+			@Context Pagination pagination, @Context Sort[] sorts)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	@Override
+	@Consumes("application/json")
+	@POST
+	@Path("/sites/{siteId}/message-board-sections")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "MessageBoardSection")})
+	public MessageBoardSection postSiteMessageBoardSection(
+			@NotNull @PathParam("siteId") Long siteId,
 			MessageBoardSection messageBoardSection)
 		throws Exception {
 

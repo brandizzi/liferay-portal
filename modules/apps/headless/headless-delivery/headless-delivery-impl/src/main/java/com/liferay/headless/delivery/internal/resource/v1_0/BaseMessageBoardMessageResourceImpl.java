@@ -111,11 +111,6 @@ public abstract class BaseMessageBoardMessageResourceImpl
 				messageBoardMessage.getArticleBody());
 		}
 
-		if (messageBoardMessage.getContentSpaceId() != null) {
-			existingMessageBoardMessage.setContentSpaceId(
-				messageBoardMessage.getContentSpaceId());
-		}
-
 		if (messageBoardMessage.getDateCreated() != null) {
 			existingMessageBoardMessage.setDateCreated(
 				messageBoardMessage.getDateCreated());
@@ -154,6 +149,11 @@ public abstract class BaseMessageBoardMessageResourceImpl
 		if (messageBoardMessage.getShowAsAnswer() != null) {
 			existingMessageBoardMessage.setShowAsAnswer(
 				messageBoardMessage.getShowAsAnswer());
+		}
+
+		if (messageBoardMessage.getSiteId() != null) {
+			existingMessageBoardMessage.setSiteId(
+				messageBoardMessage.getSiteId());
 		}
 
 		if (messageBoardMessage.getViewableBy() != null) {

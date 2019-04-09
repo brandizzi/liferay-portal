@@ -53,11 +53,6 @@ public class DocumentFolderSerDes {
 
 		sb.append("{");
 
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(documentFolder.getContentSpaceId());
-		sb.append(", ");
-
 		sb.append("\"creator\": ");
 
 		sb.append(documentFolder.getCreator());
@@ -104,6 +99,11 @@ public class DocumentFolderSerDes {
 		sb.append("\"numberOfDocuments\": ");
 
 		sb.append(documentFolder.getNumberOfDocuments());
+		sb.append(", ");
+
+		sb.append("\"siteId\": ");
+
+		sb.append(documentFolder.getSiteId());
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
@@ -154,13 +154,7 @@ public class DocumentFolderSerDes {
 			DocumentFolder documentFolder, String jsonParserFieldName,
 			Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "contentSpaceId")) {
-				if (jsonParserFieldValue != null) {
-					documentFolder.setContentSpaceId(
-						(Long)jsonParserFieldValue);
-				}
-			}
-			else if (Objects.equals(jsonParserFieldName, "creator")) {
+			if (Objects.equals(jsonParserFieldName, "creator")) {
 				if (jsonParserFieldValue != null) {
 					documentFolder.setCreator(
 						CreatorSerDes.toDTO((String)jsonParserFieldValue));
@@ -203,6 +197,11 @@ public class DocumentFolderSerDes {
 				if (jsonParserFieldValue != null) {
 					documentFolder.setNumberOfDocuments(
 						(Number)jsonParserFieldValue);
+				}
+			}
+			else if (Objects.equals(jsonParserFieldName, "siteId")) {
+				if (jsonParserFieldValue != null) {
+					documentFolder.setSiteId((Long)jsonParserFieldValue);
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "viewableBy")) {

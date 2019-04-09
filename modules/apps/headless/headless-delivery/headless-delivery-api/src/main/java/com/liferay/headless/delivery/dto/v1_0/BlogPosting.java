@@ -164,33 +164,6 @@ public class BlogPosting {
 	@NotEmpty
 	protected String articleBody;
 
-	public Long getContentSpaceId() {
-		return contentSpaceId;
-	}
-
-	public void setContentSpaceId(Long contentSpaceId) {
-		this.contentSpaceId = contentSpaceId;
-	}
-
-	@JsonIgnore
-	public void setContentSpaceId(
-		UnsafeSupplier<Long, Exception> contentSpaceIdUnsafeSupplier) {
-
-		try {
-			contentSpaceId = contentSpaceIdUnsafeSupplier.get();
-		}
-		catch (RuntimeException re) {
-			throw re;
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@GraphQLField
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected Long contentSpaceId;
-
 	public Creator getCreator() {
 		return creator;
 	}
@@ -512,6 +485,33 @@ public class BlogPosting {
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected Number numberOfComments;
 
+	public Long getSiteId() {
+		return siteId;
+	}
+
+	public void setSiteId(Long siteId) {
+		this.siteId = siteId;
+	}
+
+	@JsonIgnore
+	public void setSiteId(
+		UnsafeSupplier<Long, Exception> siteIdUnsafeSupplier) {
+
+		try {
+			siteId = siteIdUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long siteId;
+
 	public TaxonomyCategory[] getTaxonomyCategories() {
 		return taxonomyCategories;
 	}
@@ -649,11 +649,6 @@ public class BlogPosting {
 		sb.append("\"");
 		sb.append(", ");
 
-		sb.append("\"contentSpaceId\": ");
-
-		sb.append(contentSpaceId);
-		sb.append(", ");
-
 		sb.append("\"creator\": ");
 
 		sb.append(creator);
@@ -744,6 +739,11 @@ public class BlogPosting {
 		sb.append("\"numberOfComments\": ");
 
 		sb.append(numberOfComments);
+		sb.append(", ");
+
+		sb.append("\"siteId\": ");
+
+		sb.append(siteId);
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategories\": ");

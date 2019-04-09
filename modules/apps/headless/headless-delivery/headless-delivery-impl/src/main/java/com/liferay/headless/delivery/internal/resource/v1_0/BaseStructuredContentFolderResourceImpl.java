@@ -71,15 +71,14 @@ public abstract class BaseStructuredContentFolderResourceImpl
 			@Parameter(in = ParameterIn.QUERY, name = "sorts")
 		}
 	)
-	@Path("/content-spaces/{contentSpaceId}/structured-content-folders")
+	@Path("/sites/{siteId}/structured-content-folders")
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "StructuredContentFolder")})
-	public Page<StructuredContentFolder>
-			getContentSpaceStructuredContentFoldersPage(
-				@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-				@QueryParam("flatten") Boolean flatten,
-				@QueryParam("search") String search, @Context Filter filter,
-				@Context Pagination pagination, @Context Sort[] sorts)
+	public Page<StructuredContentFolder> getSiteStructuredContentFoldersPage(
+			@NotNull @PathParam("siteId") Long siteId,
+			@QueryParam("flatten") Boolean flatten,
+			@QueryParam("search") String search, @Context Filter filter,
+			@Context Pagination pagination, @Context Sort[] sorts)
 		throws Exception {
 
 		return Page.of(Collections.emptyList());
@@ -88,11 +87,11 @@ public abstract class BaseStructuredContentFolderResourceImpl
 	@Override
 	@Consumes("application/json")
 	@POST
-	@Path("/content-spaces/{contentSpaceId}/structured-content-folders")
+	@Path("/sites/{siteId}/structured-content-folders")
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "StructuredContentFolder")})
-	public StructuredContentFolder postContentSpaceStructuredContentFolder(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
+	public StructuredContentFolder postSiteStructuredContentFolder(
+			@NotNull @PathParam("siteId") Long siteId,
 			StructuredContentFolder structuredContentFolder)
 		throws Exception {
 
@@ -182,11 +181,6 @@ public abstract class BaseStructuredContentFolderResourceImpl
 		StructuredContentFolder existingStructuredContentFolder =
 			getStructuredContentFolder(structuredContentFolderId);
 
-		if (structuredContentFolder.getContentSpaceId() != null) {
-			existingStructuredContentFolder.setContentSpaceId(
-				structuredContentFolder.getContentSpaceId());
-		}
-
 		if (structuredContentFolder.getDateCreated() != null) {
 			existingStructuredContentFolder.setDateCreated(
 				structuredContentFolder.getDateCreated());
@@ -217,6 +211,11 @@ public abstract class BaseStructuredContentFolderResourceImpl
 		if (structuredContentFolder.getNumberOfStructuredContents() != null) {
 			existingStructuredContentFolder.setNumberOfStructuredContents(
 				structuredContentFolder.getNumberOfStructuredContents());
+		}
+
+		if (structuredContentFolder.getSiteId() != null) {
+			existingStructuredContentFolder.setSiteId(
+				structuredContentFolder.getSiteId());
 		}
 
 		if (structuredContentFolder.getViewableBy() != null) {

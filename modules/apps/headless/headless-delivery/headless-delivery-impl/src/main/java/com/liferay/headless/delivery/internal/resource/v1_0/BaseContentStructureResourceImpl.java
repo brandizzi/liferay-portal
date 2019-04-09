@@ -58,28 +58,6 @@ public abstract class BaseContentStructureResourceImpl
 
 	@Override
 	@GET
-	@Parameters(
-		value = {
-			@Parameter(in = ParameterIn.QUERY, name = "filter"),
-			@Parameter(in = ParameterIn.QUERY, name = "page"),
-			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
-			@Parameter(in = ParameterIn.QUERY, name = "sorts")
-		}
-	)
-	@Path("/content-spaces/{contentSpaceId}/content-structures")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "ContentStructure")})
-	public Page<ContentStructure> getContentSpaceContentStructuresPage(
-			@NotNull @PathParam("contentSpaceId") Long contentSpaceId,
-			@QueryParam("search") String search, @Context Filter filter,
-			@Context Pagination pagination, @Context Sort[] sorts)
-		throws Exception {
-
-		return Page.of(Collections.emptyList());
-	}
-
-	@Override
-	@GET
 	@Path("/content-structures/{contentStructureId}")
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "ContentStructure")})
@@ -88,6 +66,28 @@ public abstract class BaseContentStructureResourceImpl
 		throws Exception {
 
 		return new ContentStructure();
+	}
+
+	@Override
+	@GET
+	@Parameters(
+		value = {
+			@Parameter(in = ParameterIn.QUERY, name = "filter"),
+			@Parameter(in = ParameterIn.QUERY, name = "page"),
+			@Parameter(in = ParameterIn.QUERY, name = "pageSize"),
+			@Parameter(in = ParameterIn.QUERY, name = "sorts")
+		}
+	)
+	@Path("/sites/{siteId}/content-structures")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "ContentStructure")})
+	public Page<ContentStructure> getSiteContentStructuresPage(
+			@NotNull @PathParam("siteId") Long siteId,
+			@QueryParam("search") String search, @Context Filter filter,
+			@Context Pagination pagination, @Context Sort[] sorts)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
 	}
 
 	public void setContextCompany(Company contextCompany) {

@@ -1960,8 +1960,53 @@ public abstract class BaseCommentResourceTestCase {
 	}
 
 	protected void assertValid(Comment comment) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (comment.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (comment.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (comment.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (comment.getCreator() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
+				if (comment.getNumberOfComments() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("text", additionalAssertFieldName)) {
+				if (comment.getText() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<Comment> page) {
@@ -1981,12 +2026,82 @@ public abstract class BaseCommentResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(Comment comment1, Comment comment2) {
 		if (comment1 == comment2) {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						comment1.getCreator(), comment2.getCreator())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						comment1.getDateCreated(), comment2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						comment1.getDateModified(),
+						comment2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(comment1.getId(), comment2.getId())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						comment1.getNumberOfComments(),
+						comment2.getNumberOfComments())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("text", additionalAssertFieldName)) {
+				if (!Objects.equals(comment1.getText(), comment2.getText())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -2085,7 +2200,9 @@ public abstract class BaseCommentResourceTestCase {
 	}
 
 	protected Comment randomIrrelevantComment() {
-		return randomComment();
+		Comment randomIrrelevantComment = randomComment();
+
+		return randomIrrelevantComment;
 	}
 
 	protected Comment randomPatchComment() {

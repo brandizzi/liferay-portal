@@ -114,425 +114,6 @@ public abstract class BaseDocumentResourceTestCase {
 	}
 
 	@Test
-	public void testGetContentSpaceDocumentsPage() throws Exception {
-		Long contentSpaceId =
-			testGetContentSpaceDocumentsPage_getContentSpaceId();
-		Long irrelevantContentSpaceId =
-			testGetContentSpaceDocumentsPage_getIrrelevantContentSpaceId();
-
-		if ((irrelevantContentSpaceId != null)) {
-			Document irrelevantDocument =
-				testGetContentSpaceDocumentsPage_addDocument(
-					irrelevantContentSpaceId, randomIrrelevantDocument());
-
-			Page<Document> page = invokeGetContentSpaceDocumentsPage(
-				irrelevantContentSpaceId, null, null, null, Pagination.of(1, 2),
-				null);
-
-			Assert.assertEquals(1, page.getTotalCount());
-
-			assertEquals(
-				Arrays.asList(irrelevantDocument),
-				(List<Document>)page.getItems());
-			assertValid(page);
-		}
-
-		Document document1 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, randomDocument());
-
-		Document document2 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, randomDocument());
-
-		Page<Document> page = invokeGetContentSpaceDocumentsPage(
-			contentSpaceId, null, null, null, Pagination.of(1, 2), null);
-
-		Assert.assertEquals(2, page.getTotalCount());
-
-		assertEqualsIgnoringOrder(
-			Arrays.asList(document1, document2),
-			(List<Document>)page.getItems());
-		assertValid(page);
-	}
-
-	@Test
-	public void testGetContentSpaceDocumentsPageWithFilterDateTimeEquals()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.DATE_TIME);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Long contentSpaceId =
-			testGetContentSpaceDocumentsPage_getContentSpaceId();
-
-		Document document1 = randomDocument();
-		Document document2 = randomDocument();
-
-		for (EntityField entityField : entityFields) {
-			BeanUtils.setProperty(
-				document1, entityField.getName(),
-				DateUtils.addMinutes(new Date(), -2));
-		}
-
-		document1 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, document1);
-
-		Thread.sleep(1000);
-
-		document2 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, document2);
-
-		for (EntityField entityField : entityFields) {
-			Page<Document> page = invokeGetContentSpaceDocumentsPage(
-				contentSpaceId, null, null,
-				getFilterString(entityField, "eq", document1),
-				Pagination.of(1, 2), null);
-
-			assertEquals(
-				Collections.singletonList(document1),
-				(List<Document>)page.getItems());
-		}
-	}
-
-	@Test
-	public void testGetContentSpaceDocumentsPageWithFilterStringEquals()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.STRING);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Long contentSpaceId =
-			testGetContentSpaceDocumentsPage_getContentSpaceId();
-
-		Document document1 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, randomDocument());
-
-		@SuppressWarnings("PMD.UnusedLocalVariable")
-		Document document2 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, randomDocument());
-
-		for (EntityField entityField : entityFields) {
-			Page<Document> page = invokeGetContentSpaceDocumentsPage(
-				contentSpaceId, null, null,
-				getFilterString(entityField, "eq", document1),
-				Pagination.of(1, 2), null);
-
-			assertEquals(
-				Collections.singletonList(document1),
-				(List<Document>)page.getItems());
-		}
-	}
-
-	@Test
-	public void testGetContentSpaceDocumentsPageWithPagination()
-		throws Exception {
-
-		Long contentSpaceId =
-			testGetContentSpaceDocumentsPage_getContentSpaceId();
-
-		Document document1 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, randomDocument());
-
-		Document document2 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, randomDocument());
-
-		Document document3 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, randomDocument());
-
-		Page<Document> page1 = invokeGetContentSpaceDocumentsPage(
-			contentSpaceId, null, null, null, Pagination.of(1, 2), null);
-
-		List<Document> documents1 = (List<Document>)page1.getItems();
-
-		Assert.assertEquals(documents1.toString(), 2, documents1.size());
-
-		Page<Document> page2 = invokeGetContentSpaceDocumentsPage(
-			contentSpaceId, null, null, null, Pagination.of(2, 2), null);
-
-		Assert.assertEquals(3, page2.getTotalCount());
-
-		List<Document> documents2 = (List<Document>)page2.getItems();
-
-		Assert.assertEquals(documents2.toString(), 1, documents2.size());
-
-		assertEqualsIgnoringOrder(
-			Arrays.asList(document1, document2, document3),
-			new ArrayList<Document>() {
-				{
-					addAll(documents1);
-					addAll(documents2);
-				}
-			});
-	}
-
-	@Test
-	public void testGetContentSpaceDocumentsPageWithSortDateTime()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.DATE_TIME);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Long contentSpaceId =
-			testGetContentSpaceDocumentsPage_getContentSpaceId();
-
-		Document document1 = randomDocument();
-		Document document2 = randomDocument();
-
-		for (EntityField entityField : entityFields) {
-			BeanUtils.setProperty(
-				document1, entityField.getName(),
-				DateUtils.addMinutes(new Date(), -2));
-		}
-
-		document1 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, document1);
-
-		Thread.sleep(1000);
-
-		document2 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, document2);
-
-		for (EntityField entityField : entityFields) {
-			Page<Document> ascPage = invokeGetContentSpaceDocumentsPage(
-				contentSpaceId, null, null, null, Pagination.of(1, 2),
-				entityField.getName() + ":asc");
-
-			assertEquals(
-				Arrays.asList(document1, document2),
-				(List<Document>)ascPage.getItems());
-
-			Page<Document> descPage = invokeGetContentSpaceDocumentsPage(
-				contentSpaceId, null, null, null, Pagination.of(1, 2),
-				entityField.getName() + ":desc");
-
-			assertEquals(
-				Arrays.asList(document2, document1),
-				(List<Document>)descPage.getItems());
-		}
-	}
-
-	@Test
-	public void testGetContentSpaceDocumentsPageWithSortString()
-		throws Exception {
-
-		List<EntityField> entityFields = getEntityFields(
-			EntityField.Type.STRING);
-
-		if (entityFields.isEmpty()) {
-			return;
-		}
-
-		Long contentSpaceId =
-			testGetContentSpaceDocumentsPage_getContentSpaceId();
-
-		Document document1 = randomDocument();
-		Document document2 = randomDocument();
-
-		for (EntityField entityField : entityFields) {
-			BeanUtils.setProperty(document1, entityField.getName(), "Aaa");
-			BeanUtils.setProperty(document2, entityField.getName(), "Bbb");
-		}
-
-		document1 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, document1);
-
-		document2 = testGetContentSpaceDocumentsPage_addDocument(
-			contentSpaceId, document2);
-
-		for (EntityField entityField : entityFields) {
-			Page<Document> ascPage = invokeGetContentSpaceDocumentsPage(
-				contentSpaceId, null, null, null, Pagination.of(1, 2),
-				entityField.getName() + ":asc");
-
-			assertEquals(
-				Arrays.asList(document1, document2),
-				(List<Document>)ascPage.getItems());
-
-			Page<Document> descPage = invokeGetContentSpaceDocumentsPage(
-				contentSpaceId, null, null, null, Pagination.of(1, 2),
-				entityField.getName() + ":desc");
-
-			assertEquals(
-				Arrays.asList(document2, document1),
-				(List<Document>)descPage.getItems());
-		}
-	}
-
-	protected Document testGetContentSpaceDocumentsPage_addDocument(
-			Long contentSpaceId, Document document)
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected Long testGetContentSpaceDocumentsPage_getContentSpaceId()
-		throws Exception {
-
-		return testGroup.getGroupId();
-	}
-
-	protected Long
-			testGetContentSpaceDocumentsPage_getIrrelevantContentSpaceId()
-		throws Exception {
-
-		return irrelevantGroup.getGroupId();
-	}
-
-	protected Page<Document> invokeGetContentSpaceDocumentsPage(
-			Long contentSpaceId, Boolean flatten, String search,
-			String filterString, Pagination pagination, String sortString)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/documents",
-					contentSpaceId);
-
-		location = HttpUtil.addParameter(location, "filter", filterString);
-
-		location = HttpUtil.addParameter(
-			location, "page", pagination.getPage());
-		location = HttpUtil.addParameter(
-			location, "pageSize", pagination.getPageSize());
-
-		location = HttpUtil.addParameter(location, "sort", sortString);
-
-		options.setLocation(location);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-
-		return outputObjectMapper.readValue(
-			string,
-			new TypeReference<Page<Document>>() {
-			});
-	}
-
-	protected Http.Response invokeGetContentSpaceDocumentsPageResponse(
-			Long contentSpaceId, Boolean flatten, String search,
-			String filterString, Pagination pagination, String sortString)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/documents",
-					contentSpaceId);
-
-		location = HttpUtil.addParameter(location, "filter", filterString);
-
-		location = HttpUtil.addParameter(
-			location, "page", pagination.getPage());
-		location = HttpUtil.addParameter(
-			location, "pageSize", pagination.getPageSize());
-
-		location = HttpUtil.addParameter(location, "sort", sortString);
-
-		options.setLocation(location);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
-	public void testPostContentSpaceDocument() throws Exception {
-		Assert.assertTrue(true);
-	}
-
-	protected Document testPostContentSpaceDocument_addDocument(
-			Document document)
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected Document invokePostContentSpaceDocument(
-			Long contentSpaceId, MultipartBody multipartBody)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		options.addPart(
-			"document",
-			inputObjectMapper.writeValueAsString(multipartBody.getValues()));
-
-		BinaryFile binaryFile = multipartBody.getBinaryFile("file");
-
-		options.addFilePart(
-			"file", binaryFile.getFileName(),
-			FileUtil.getBytes(binaryFile.getInputStream()), contentType,
-			"UTF-8");
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/documents",
-					contentSpaceId);
-
-		options.setLocation(location);
-
-		options.setPost(true);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-
-		try {
-			return outputObjectMapper.readValue(string, Document.class);
-		}
-		catch (Exception e) {
-			_log.error("Unable to process HTTP response: " + string, e);
-
-			throw e;
-		}
-	}
-
-	protected Http.Response invokePostContentSpaceDocumentResponse(
-			Long contentSpaceId, MultipartBody multipartBody)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath(
-					"/content-spaces/{contentSpaceId}/documents",
-					contentSpaceId);
-
-		options.setLocation(location);
-
-		options.setPost(true);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
 	public void testGetDocumentFolderDocumentsPage() throws Exception {
 		Long documentFolderId =
 			testGetDocumentFolderDocumentsPage_getDocumentFolderId();
@@ -1401,6 +982,388 @@ public abstract class BaseDocumentResourceTestCase {
 		return options.getResponse();
 	}
 
+	@Test
+	public void testGetSiteDocumentsPage() throws Exception {
+		Long siteId = testGetSiteDocumentsPage_getSiteId();
+		Long irrelevantSiteId = testGetSiteDocumentsPage_getIrrelevantSiteId();
+
+		if ((irrelevantSiteId != null)) {
+			Document irrelevantDocument = testGetSiteDocumentsPage_addDocument(
+				irrelevantSiteId, randomIrrelevantDocument());
+
+			Page<Document> page = invokeGetSiteDocumentsPage(
+				irrelevantSiteId, null, null, null, Pagination.of(1, 2), null);
+
+			Assert.assertEquals(1, page.getTotalCount());
+
+			assertEquals(
+				Arrays.asList(irrelevantDocument),
+				(List<Document>)page.getItems());
+			assertValid(page);
+		}
+
+		Document document1 = testGetSiteDocumentsPage_addDocument(
+			siteId, randomDocument());
+
+		Document document2 = testGetSiteDocumentsPage_addDocument(
+			siteId, randomDocument());
+
+		Page<Document> page = invokeGetSiteDocumentsPage(
+			siteId, null, null, null, Pagination.of(1, 2), null);
+
+		Assert.assertEquals(2, page.getTotalCount());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(document1, document2),
+			(List<Document>)page.getItems());
+		assertValid(page);
+	}
+
+	@Test
+	public void testGetSiteDocumentsPageWithFilterDateTimeEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.DATE_TIME);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Long siteId = testGetSiteDocumentsPage_getSiteId();
+
+		Document document1 = randomDocument();
+		Document document2 = randomDocument();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				document1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		document1 = testGetSiteDocumentsPage_addDocument(siteId, document1);
+
+		Thread.sleep(1000);
+
+		document2 = testGetSiteDocumentsPage_addDocument(siteId, document2);
+
+		for (EntityField entityField : entityFields) {
+			Page<Document> page = invokeGetSiteDocumentsPage(
+				siteId, null, null,
+				getFilterString(entityField, "eq", document1),
+				Pagination.of(1, 2), null);
+
+			assertEquals(
+				Collections.singletonList(document1),
+				(List<Document>)page.getItems());
+		}
+	}
+
+	@Test
+	public void testGetSiteDocumentsPageWithFilterStringEquals()
+		throws Exception {
+
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.STRING);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Long siteId = testGetSiteDocumentsPage_getSiteId();
+
+		Document document1 = testGetSiteDocumentsPage_addDocument(
+			siteId, randomDocument());
+
+		@SuppressWarnings("PMD.UnusedLocalVariable")
+		Document document2 = testGetSiteDocumentsPage_addDocument(
+			siteId, randomDocument());
+
+		for (EntityField entityField : entityFields) {
+			Page<Document> page = invokeGetSiteDocumentsPage(
+				siteId, null, null,
+				getFilterString(entityField, "eq", document1),
+				Pagination.of(1, 2), null);
+
+			assertEquals(
+				Collections.singletonList(document1),
+				(List<Document>)page.getItems());
+		}
+	}
+
+	@Test
+	public void testGetSiteDocumentsPageWithPagination() throws Exception {
+		Long siteId = testGetSiteDocumentsPage_getSiteId();
+
+		Document document1 = testGetSiteDocumentsPage_addDocument(
+			siteId, randomDocument());
+
+		Document document2 = testGetSiteDocumentsPage_addDocument(
+			siteId, randomDocument());
+
+		Document document3 = testGetSiteDocumentsPage_addDocument(
+			siteId, randomDocument());
+
+		Page<Document> page1 = invokeGetSiteDocumentsPage(
+			siteId, null, null, null, Pagination.of(1, 2), null);
+
+		List<Document> documents1 = (List<Document>)page1.getItems();
+
+		Assert.assertEquals(documents1.toString(), 2, documents1.size());
+
+		Page<Document> page2 = invokeGetSiteDocumentsPage(
+			siteId, null, null, null, Pagination.of(2, 2), null);
+
+		Assert.assertEquals(3, page2.getTotalCount());
+
+		List<Document> documents2 = (List<Document>)page2.getItems();
+
+		Assert.assertEquals(documents2.toString(), 1, documents2.size());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(document1, document2, document3),
+			new ArrayList<Document>() {
+				{
+					addAll(documents1);
+					addAll(documents2);
+				}
+			});
+	}
+
+	@Test
+	public void testGetSiteDocumentsPageWithSortDateTime() throws Exception {
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.DATE_TIME);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Long siteId = testGetSiteDocumentsPage_getSiteId();
+
+		Document document1 = randomDocument();
+		Document document2 = randomDocument();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(
+				document1, entityField.getName(),
+				DateUtils.addMinutes(new Date(), -2));
+		}
+
+		document1 = testGetSiteDocumentsPage_addDocument(siteId, document1);
+
+		Thread.sleep(1000);
+
+		document2 = testGetSiteDocumentsPage_addDocument(siteId, document2);
+
+		for (EntityField entityField : entityFields) {
+			Page<Document> ascPage = invokeGetSiteDocumentsPage(
+				siteId, null, null, null, Pagination.of(1, 2),
+				entityField.getName() + ":asc");
+
+			assertEquals(
+				Arrays.asList(document1, document2),
+				(List<Document>)ascPage.getItems());
+
+			Page<Document> descPage = invokeGetSiteDocumentsPage(
+				siteId, null, null, null, Pagination.of(1, 2),
+				entityField.getName() + ":desc");
+
+			assertEquals(
+				Arrays.asList(document2, document1),
+				(List<Document>)descPage.getItems());
+		}
+	}
+
+	@Test
+	public void testGetSiteDocumentsPageWithSortString() throws Exception {
+		List<EntityField> entityFields = getEntityFields(
+			EntityField.Type.STRING);
+
+		if (entityFields.isEmpty()) {
+			return;
+		}
+
+		Long siteId = testGetSiteDocumentsPage_getSiteId();
+
+		Document document1 = randomDocument();
+		Document document2 = randomDocument();
+
+		for (EntityField entityField : entityFields) {
+			BeanUtils.setProperty(document1, entityField.getName(), "Aaa");
+			BeanUtils.setProperty(document2, entityField.getName(), "Bbb");
+		}
+
+		document1 = testGetSiteDocumentsPage_addDocument(siteId, document1);
+
+		document2 = testGetSiteDocumentsPage_addDocument(siteId, document2);
+
+		for (EntityField entityField : entityFields) {
+			Page<Document> ascPage = invokeGetSiteDocumentsPage(
+				siteId, null, null, null, Pagination.of(1, 2),
+				entityField.getName() + ":asc");
+
+			assertEquals(
+				Arrays.asList(document1, document2),
+				(List<Document>)ascPage.getItems());
+
+			Page<Document> descPage = invokeGetSiteDocumentsPage(
+				siteId, null, null, null, Pagination.of(1, 2),
+				entityField.getName() + ":desc");
+
+			assertEquals(
+				Arrays.asList(document2, document1),
+				(List<Document>)descPage.getItems());
+		}
+	}
+
+	protected Document testGetSiteDocumentsPage_addDocument(
+			Long siteId, Document document)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Long testGetSiteDocumentsPage_getSiteId() throws Exception {
+		return testGroup.getGroupId();
+	}
+
+	protected Long testGetSiteDocumentsPage_getIrrelevantSiteId()
+		throws Exception {
+
+		return irrelevantGroup.getGroupId();
+	}
+
+	protected Page<Document> invokeGetSiteDocumentsPage(
+			Long siteId, Boolean flatten, String search, String filterString,
+			Pagination pagination, String sortString)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL + _toPath("/sites/{siteId}/documents", siteId);
+
+		location = HttpUtil.addParameter(location, "filter", filterString);
+
+		location = HttpUtil.addParameter(
+			location, "page", pagination.getPage());
+		location = HttpUtil.addParameter(
+			location, "pageSize", pagination.getPageSize());
+
+		location = HttpUtil.addParameter(location, "sort", sortString);
+
+		options.setLocation(location);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		return outputObjectMapper.readValue(
+			string,
+			new TypeReference<Page<Document>>() {
+			});
+	}
+
+	protected Http.Response invokeGetSiteDocumentsPageResponse(
+			Long siteId, Boolean flatten, String search, String filterString,
+			Pagination pagination, String sortString)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL + _toPath("/sites/{siteId}/documents", siteId);
+
+		location = HttpUtil.addParameter(location, "filter", filterString);
+
+		location = HttpUtil.addParameter(
+			location, "page", pagination.getPage());
+		location = HttpUtil.addParameter(
+			location, "pageSize", pagination.getPageSize());
+
+		location = HttpUtil.addParameter(location, "sort", sortString);
+
+		options.setLocation(location);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
+	@Test
+	public void testPostSiteDocument() throws Exception {
+		Assert.assertTrue(true);
+	}
+
+	protected Document testPostSiteDocument_addDocument(Document document)
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Document invokePostSiteDocument(
+			Long siteId, MultipartBody multipartBody)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		options.addPart(
+			"document",
+			inputObjectMapper.writeValueAsString(multipartBody.getValues()));
+
+		BinaryFile binaryFile = multipartBody.getBinaryFile("file");
+
+		options.addFilePart(
+			"file", binaryFile.getFileName(),
+			FileUtil.getBytes(binaryFile.getInputStream()), contentType,
+			"UTF-8");
+
+		String location =
+			_resourceURL + _toPath("/sites/{siteId}/documents", siteId);
+
+		options.setLocation(location);
+
+		options.setPost(true);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		try {
+			return outputObjectMapper.readValue(string, Document.class);
+		}
+		catch (Exception e) {
+			_log.error("Unable to process HTTP response: " + string, e);
+
+			throw e;
+		}
+	}
+
+	protected Http.Response invokePostSiteDocumentResponse(
+			Long siteId, MultipartBody multipartBody)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL + _toPath("/sites/{siteId}/documents", siteId);
+
+		options.setLocation(location);
+
+		options.setPost(true);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
 	protected void assertResponseCode(
 		int expectedResponseCode, Http.Response actualResponse) {
 
@@ -1449,8 +1412,153 @@ public abstract class BaseDocumentResourceTestCase {
 	}
 
 	protected void assertValid(Document document) {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		boolean valid = true;
+
+		if (document.getDateCreated() == null) {
+			valid = false;
+		}
+
+		if (document.getDateModified() == null) {
+			valid = false;
+		}
+
+		if (document.getId() == null) {
+			valid = false;
+		}
+
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("adaptedImages", additionalAssertFieldName)) {
+				if (document.getAdaptedImages() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
+				if (document.getAggregateRating() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
+				if (document.getContentUrl() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (document.getCreator() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (document.getDescription() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("documentFolderId", additionalAssertFieldName)) {
+				if (document.getDocumentFolderId() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (document.getEncodingFormat() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
+				if (document.getFileExtension() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
+				if (document.getKeywords() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
+				if (document.getNumberOfComments() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
+				if (document.getSizeInBytes() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"taxonomyCategories", additionalAssertFieldName)) {
+
+				if (document.getTaxonomyCategories() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"taxonomyCategoryIds", additionalAssertFieldName)) {
+
+				if (document.getTaxonomyCategoryIds() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (document.getTitle() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (document.getViewableBy() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<Document> page) {
@@ -1470,12 +1578,218 @@ public abstract class BaseDocumentResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(Document document1, Document document2) {
 		if (document1 == document2) {
 			return true;
 		}
 
-		return false;
+		for (String additionalAssertFieldName :
+				getAdditionalAssertFieldNames()) {
+
+			if (Objects.equals("adaptedImages", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getAdaptedImages(),
+						document2.getAdaptedImages())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getAggregateRating(),
+						document2.getAggregateRating())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getContentUrl(), document2.getContentUrl())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("creator", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getCreator(), document2.getCreator())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getDateCreated(),
+						document2.getDateCreated())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("dateModified", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getDateModified(),
+						document2.getDateModified())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("description", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getDescription(),
+						document2.getDescription())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("documentFolderId", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getDocumentFolderId(),
+						document2.getDocumentFolderId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getEncodingFormat(),
+						document2.getEncodingFormat())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getFileExtension(),
+						document2.getFileExtension())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("id", additionalAssertFieldName)) {
+				if (!Objects.equals(document1.getId(), document2.getId())) {
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getKeywords(), document2.getKeywords())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getNumberOfComments(),
+						document2.getNumberOfComments())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getSizeInBytes(),
+						document2.getSizeInBytes())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"taxonomyCategories", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						document1.getTaxonomyCategories(),
+						document2.getTaxonomyCategories())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals(
+					"taxonomyCategoryIds", additionalAssertFieldName)) {
+
+				if (!Objects.equals(
+						document1.getTaxonomyCategoryIds(),
+						document2.getTaxonomyCategoryIds())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("title", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getTitle(), document2.getTitle())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+				if (!Objects.equals(
+						document1.getViewableBy(), document2.getViewableBy())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			throw new IllegalArgumentException(
+				"Invalid additional assert field name " +
+					additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
@@ -1651,7 +1965,9 @@ public abstract class BaseDocumentResourceTestCase {
 	}
 
 	protected Document randomIrrelevantDocument() {
-		return randomDocument();
+		Document randomIrrelevantDocument = randomDocument();
+
+		return randomIrrelevantDocument;
 	}
 
 	protected Document randomPatchDocument() {
