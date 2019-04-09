@@ -985,7 +985,6 @@ public class DDMFormAdminDisplayContext {
 		}
 
 		ThemeDisplay themeDisplay = formAdminRequestHelper.getThemeDisplay();
-
 		long fieldSetClassNameId = PortalUtil.getClassNameId(
 			DDMFormInstance.class);
 
