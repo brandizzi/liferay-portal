@@ -487,8 +487,8 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteTaxonomyVocabulary(
+			testGroup.getGroupId(), randomTaxonomyVocabulary());
 	}
 
 	protected TaxonomyVocabulary invokePostSiteTaxonomyVocabulary(
@@ -567,8 +567,8 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			testDeleteTaxonomyVocabulary_addTaxonomyVocabulary()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteTaxonomyVocabulary(
+			testGroup.getGroupId(), randomTaxonomyVocabulary());
 	}
 
 	protected void invokeDeleteTaxonomyVocabulary(Long taxonomyVocabularyId)
@@ -630,8 +630,8 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			testGetTaxonomyVocabulary_addTaxonomyVocabulary()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteTaxonomyVocabulary(
+			testGroup.getGroupId(), randomTaxonomyVocabulary());
 	}
 
 	protected TaxonomyVocabulary invokeGetTaxonomyVocabulary(
@@ -713,8 +713,8 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			testPatchTaxonomyVocabulary_addTaxonomyVocabulary()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteTaxonomyVocabulary(
+			testGroup.getGroupId(), randomTaxonomyVocabulary());
 	}
 
 	protected TaxonomyVocabulary invokePatchTaxonomyVocabulary(
@@ -804,8 +804,8 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			testPutTaxonomyVocabulary_addTaxonomyVocabulary()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteTaxonomyVocabulary(
+			testGroup.getGroupId(), randomTaxonomyVocabulary());
 	}
 
 	protected TaxonomyVocabulary invokePutTaxonomyVocabulary(

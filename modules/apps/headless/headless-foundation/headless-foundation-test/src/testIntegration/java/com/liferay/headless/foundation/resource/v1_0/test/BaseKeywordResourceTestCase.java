@@ -121,8 +121,7 @@ public abstract class BaseKeywordResourceTestCase {
 	}
 
 	protected Keyword testDeleteKeyword_addKeyword() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
 	}
 
 	protected void invokeDeleteKeyword(Long keywordId) throws Exception {
@@ -170,8 +169,7 @@ public abstract class BaseKeywordResourceTestCase {
 	}
 
 	protected Keyword testGetKeyword_addKeyword() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
 	}
 
 	protected Keyword invokeGetKeyword(Long keywordId) throws Exception {
@@ -232,8 +230,7 @@ public abstract class BaseKeywordResourceTestCase {
 	}
 
 	protected Keyword testPutKeyword_addKeyword() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
 	}
 
 	protected Keyword invokePutKeyword(Long keywordId, Keyword keyword)
@@ -612,8 +609,7 @@ public abstract class BaseKeywordResourceTestCase {
 	protected Keyword testPostSiteKeyword_addKeyword(Keyword keyword)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
 	}
 
 	protected Keyword invokePostSiteKeyword(Long siteId, Keyword keyword)
