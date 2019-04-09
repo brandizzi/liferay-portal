@@ -99,7 +99,6 @@ public class StructuredContentResourceTest
 
 		structuredContent.setContentStructureId(
 			_irrelevantDDMStructure.getStructureId());
-		structuredContent.setSiteId(irrelevantGroup.getGroupId());
 
 		return structuredContent;
 	}
