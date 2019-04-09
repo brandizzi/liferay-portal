@@ -61,7 +61,7 @@ public class CustomPropertyUtil {
 		return defaultValue;
 	}
 
-	public static List<DataFieldOption> getDataFieldOption(
+	public static List<DataFieldOption> getDataFieldOptions(
 		CustomProperty[] customProperties, String key) {
 
 		if (ArrayUtil.isEmpty(customProperties)) {

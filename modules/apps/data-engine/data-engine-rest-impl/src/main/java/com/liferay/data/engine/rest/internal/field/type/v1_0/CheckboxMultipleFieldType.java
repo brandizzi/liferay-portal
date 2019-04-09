@@ -72,7 +72,7 @@ public class CheckboxMultipleFieldType extends FieldType {
 		context.put(
 			"options",
 			DataFieldOptionUtil.getOptions(
-				CustomPropertyUtil.getDataFieldOption(
+				CustomPropertyUtil.getDataFieldOptions(
 					dataDefinitionField.getCustomProperties(), "options"),
 				LanguageUtil.getLanguageId(httpServletRequest)));
 		context.put(
@@ -103,7 +103,7 @@ public class CheckboxMultipleFieldType extends FieldType {
 		).put(
 			"options",
 			DataFieldOptionUtil.toJSONObject(
-				CustomPropertyUtil.getDataFieldOption(
+				CustomPropertyUtil.getDataFieldOptions(
 					dataDefinitionField.getCustomProperties(), "options"))
 		).put(
 			"predefinedValue",
