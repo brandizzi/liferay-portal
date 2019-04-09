@@ -60,7 +60,7 @@ public class MessageBoardMessageResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				messageBoardMessage.getContentSpaceId(),
+				messageBoardMessage.getSiteId(),
 				testGroup.getGroupId()) &&
 			(messageBoardMessage.getDateCreated() != null) &&
 			(messageBoardMessage.getDateModified() != null) &&
@@ -82,8 +82,8 @@ public class MessageBoardMessageResourceTest
 				messageBoardMessage1.getArticleBody(),
 				messageBoardMessage2.getArticleBody()) &&
 			Objects.equals(
-				messageBoardMessage1.getContentSpaceId(),
-				messageBoardMessage2.getContentSpaceId()) &&
+				messageBoardMessage1.getSiteId(),
+				messageBoardMessage2.getSiteId()) &&
 			Objects.equals(
 				messageBoardMessage1.getHeadline(),
 				messageBoardMessage2.getHeadline())) {
@@ -99,7 +99,7 @@ public class MessageBoardMessageResourceTest
 		MessageBoardMessage messageBoardMessage =
 			super.randomIrrelevantMessageBoardMessage();
 
-		messageBoardMessage.setContentSpaceId(irrelevantGroup.getGroupId());
+		messageBoardMessage.setSiteId(irrelevantGroup.getGroupId());
 
 		return messageBoardMessage;
 	}
@@ -108,7 +108,7 @@ public class MessageBoardMessageResourceTest
 		MessageBoardMessage messageBoardMessage =
 			super.randomMessageBoardMessage();
 
-		messageBoardMessage.setContentSpaceId(testGroup.getGroupId());
+		messageBoardMessage.setSiteId(testGroup.getGroupId());
 
 		return messageBoardMessage;
 	}

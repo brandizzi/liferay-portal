@@ -39,7 +39,7 @@ public class StructuredContentFolderResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				structuredContentFolder.getContentSpaceId(),
+				structuredContentFolder.getSiteId(),
 				testGroup.getGroupId()) &&
 			(structuredContentFolder.getDateCreated() != null) &&
 			(structuredContentFolder.getDateModified() != null) &&
@@ -57,8 +57,8 @@ public class StructuredContentFolderResourceTest
 		StructuredContentFolder structuredContentFolder2) {
 
 		if (Objects.equals(
-				structuredContentFolder1.getContentSpaceId(),
-				structuredContentFolder2.getContentSpaceId()) &&
+				structuredContentFolder1.getSiteId(),
+				structuredContentFolder2.getSiteId()) &&
 			Objects.equals(
 				structuredContentFolder1.getDescription(),
 				structuredContentFolder2.getDescription()) &&
@@ -77,7 +77,7 @@ public class StructuredContentFolderResourceTest
 		StructuredContentFolder structuredContentFolder =
 			super.randomStructuredContentFolder();
 
-		structuredContentFolder.setContentSpaceId(testGroup.getGroupId());
+		structuredContentFolder.setSiteId(testGroup.getGroupId());
 
 		return structuredContentFolder;
 	}
@@ -87,19 +87,19 @@ public class StructuredContentFolderResourceTest
 			testDeleteStructuredContentFolder_addStructuredContentFolder()
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContentFolder(
+		return invokePostSiteStructuredContentFolder(
 			testGroup.getGroupId(), randomStructuredContentFolder());
 	}
 
 	@Override
 	protected StructuredContentFolder
-			testGetContentSpaceStructuredContentFoldersPage_addStructuredContentFolder(
-				Long contentSpaceId,
+			testGetSiteStructuredContentFoldersPage_addStructuredContentFolder(
+				Long siteId,
 				StructuredContentFolder structuredContentFolder)
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContentFolder(
-			contentSpaceId, structuredContentFolder);
+		return invokePostSiteStructuredContentFolder(
+			siteId, structuredContentFolder);
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class StructuredContentFolderResourceTest
 			testGetStructuredContentFolder_addStructuredContentFolder()
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContentFolder(
+		return invokePostSiteStructuredContentFolder(
 			testGroup.getGroupId(), randomStructuredContentFolder());
 	}
 
@@ -149,17 +149,17 @@ public class StructuredContentFolderResourceTest
 			testPatchStructuredContentFolder_addStructuredContentFolder()
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContentFolder(
+		return invokePostSiteStructuredContentFolder(
 			testGroup.getGroupId(), randomStructuredContentFolder());
 	}
 
 	@Override
 	protected StructuredContentFolder
-			testPostContentSpaceStructuredContentFolder_addStructuredContentFolder(
+			testPostSiteStructuredContentFolder_addStructuredContentFolder(
 				StructuredContentFolder structuredContentFolder)
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContentFolder(
+		return invokePostSiteStructuredContentFolder(
 			testGroup.getGroupId(), structuredContentFolder);
 	}
 
@@ -169,7 +169,7 @@ public class StructuredContentFolderResourceTest
 				StructuredContentFolder structuredContentFolder)
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContentFolder(
+		return invokePostSiteStructuredContentFolder(
 			testGroup.getGroupId(), structuredContentFolder);
 	}
 
@@ -178,7 +178,7 @@ public class StructuredContentFolderResourceTest
 			testPutStructuredContentFolder_addStructuredContentFolder()
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContentFolder(
+		return invokePostSiteStructuredContentFolder(
 			testGroup.getGroupId(), randomStructuredContentFolder());
 	}
 

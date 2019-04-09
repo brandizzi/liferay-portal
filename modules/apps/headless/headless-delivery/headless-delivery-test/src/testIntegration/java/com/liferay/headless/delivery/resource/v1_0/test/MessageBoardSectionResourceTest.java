@@ -40,7 +40,7 @@ public class MessageBoardSectionResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				messageBoardSection.getContentSpaceId(),
+				messageBoardSection.getSiteId(),
 				testGroup.getGroupId()) &&
 			(messageBoardSection.getDateCreated() != null) &&
 			(messageBoardSection.getDateModified() != null) &&
@@ -59,8 +59,8 @@ public class MessageBoardSectionResourceTest
 		MessageBoardSection messageBoardSection2) {
 
 		if (Objects.equals(
-				messageBoardSection1.getContentSpaceId(),
-				messageBoardSection2.getContentSpaceId()) &&
+				messageBoardSection1.getSiteId(),
+				messageBoardSection2.getSiteId()) &&
 			Objects.equals(
 				messageBoardSection1.getTitle(),
 				messageBoardSection2.getTitle())) {
@@ -76,7 +76,7 @@ public class MessageBoardSectionResourceTest
 		MessageBoardSection messageBoardSection =
 			super.randomIrrelevantMessageBoardSection();
 
-		messageBoardSection.setContentSpaceId(irrelevantGroup.getGroupId());
+		messageBoardSection.setSiteId(irrelevantGroup.getGroupId());
 
 		return messageBoardSection;
 	}
@@ -86,7 +86,7 @@ public class MessageBoardSectionResourceTest
 		MessageBoardSection messageBoardSection =
 			super.randomMessageBoardSection();
 
-		messageBoardSection.setContentSpaceId(testGroup.getGroupId());
+		messageBoardSection.setSiteId(testGroup.getGroupId());
 
 		return messageBoardSection;
 	}
@@ -96,23 +96,23 @@ public class MessageBoardSectionResourceTest
 			testDeleteMessageBoardSection_addMessageBoardSection()
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardSection(
+		return invokePostSiteMessageBoardSection(
 			testGroup.getGroupId(), randomMessageBoardSection());
 	}
 
 	@Override
 	protected MessageBoardSection
-			testGetContentSpaceMessageBoardSectionsPage_addMessageBoardSection(
-				Long contentSpaceId, MessageBoardSection messageBoardSection)
+			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
+				Long siteId, MessageBoardSection messageBoardSection)
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardSection(
-			contentSpaceId, messageBoardSection);
+		return invokePostSiteMessageBoardSection(
+			siteId, messageBoardSection);
 	}
 
 	@Override
 	protected Long
-			testGetContentSpaceMessageBoardSectionsPage_getContentSpaceId()
+			testGetSiteMessageBoardSectionsPage_getSiteId()
 		throws Exception {
 
 		return testGroup.getGroupId();
@@ -123,7 +123,7 @@ public class MessageBoardSectionResourceTest
 			testGetMessageBoardSection_addMessageBoardSection()
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardSection(
+		return invokePostSiteMessageBoardSection(
 			testGroup.getGroupId(), randomMessageBoardSection());
 	}
 
@@ -162,17 +162,17 @@ public class MessageBoardSectionResourceTest
 			testPatchMessageBoardSection_addMessageBoardSection()
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardSection(
+		return invokePostSiteMessageBoardSection(
 			testGroup.getGroupId(), randomMessageBoardSection());
 	}
 
 	@Override
 	protected MessageBoardSection
-			testPostContentSpaceMessageBoardSection_addMessageBoardSection(
+			testPostSiteMessageBoardSection_addMessageBoardSection(
 				MessageBoardSection messageBoardSection)
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardSection(
+		return invokePostSiteMessageBoardSection(
 			testGroup.getGroupId(), messageBoardSection);
 	}
 
@@ -182,7 +182,7 @@ public class MessageBoardSectionResourceTest
 				MessageBoardSection messageBoardSection)
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardSection(
+		return invokePostSiteMessageBoardSection(
 			testGroup.getGroupId(), messageBoardSection);
 	}
 
@@ -191,7 +191,7 @@ public class MessageBoardSectionResourceTest
 			testPutMessageBoardSection_addMessageBoardSection()
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardSection(
+		return invokePostSiteMessageBoardSection(
 			testGroup.getGroupId(), randomMessageBoardSection());
 	}
 

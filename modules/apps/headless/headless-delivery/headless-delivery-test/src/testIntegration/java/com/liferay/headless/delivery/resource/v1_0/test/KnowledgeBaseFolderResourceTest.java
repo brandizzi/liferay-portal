@@ -56,8 +56,8 @@ public class KnowledgeBaseFolderResourceTest
 		KnowledgeBaseFolder knowledgeBaseFolder2) {
 
 		if (Objects.equals(
-				knowledgeBaseFolder1.getContentSpaceId(),
-				knowledgeBaseFolder2.getContentSpaceId()) &&
+				knowledgeBaseFolder1.getSiteId(),
+				knowledgeBaseFolder2.getSiteId()) &&
 			Objects.equals(
 				knowledgeBaseFolder1.getDescription(),
 				knowledgeBaseFolder2.getDescription()) &&
@@ -76,7 +76,7 @@ public class KnowledgeBaseFolderResourceTest
 		KnowledgeBaseFolder knowledgeBaseFolder =
 			super.randomIrrelevantKnowledgeBaseFolder();
 
-		knowledgeBaseFolder.setContentSpaceId(irrelevantGroup.getGroupId());
+		knowledgeBaseFolder.setSiteId(irrelevantGroup.getGroupId());
 
 		return knowledgeBaseFolder;
 	}
@@ -86,7 +86,7 @@ public class KnowledgeBaseFolderResourceTest
 		KnowledgeBaseFolder knowledgeBaseFolder =
 			super.randomKnowledgeBaseFolder();
 
-		knowledgeBaseFolder.setContentSpaceId(testGroup.getGroupId());
+		knowledgeBaseFolder.setSiteId(testGroup.getGroupId());
 
 		return knowledgeBaseFolder;
 	}
@@ -96,18 +96,18 @@ public class KnowledgeBaseFolderResourceTest
 			testDeleteKnowledgeBaseFolder_addKnowledgeBaseFolder()
 		throws Exception {
 
-		return invokePostContentSpaceKnowledgeBaseFolder(
+		return invokePostSiteKnowledgeBaseFolder(
 			testGroup.getGroupId(), randomKnowledgeBaseFolder());
 	}
 
 	@Override
 	protected KnowledgeBaseFolder
-			testGetContentSpaceKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
-				Long contentSpaceId, KnowledgeBaseFolder knowledgeBaseFolder)
+			testGetSiteKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
+				Long siteId, KnowledgeBaseFolder knowledgeBaseFolder)
 		throws Exception {
 
-		return invokePostContentSpaceKnowledgeBaseFolder(
-			contentSpaceId, knowledgeBaseFolder);
+		return invokePostSiteKnowledgeBaseFolder(
+			siteId, knowledgeBaseFolder);
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public class KnowledgeBaseFolderResourceTest
 			testGetKnowledgeBaseFolder_addKnowledgeBaseFolder()
 		throws Exception {
 
-		return invokePostContentSpaceKnowledgeBaseFolder(
+		return invokePostSiteKnowledgeBaseFolder(
 			testGroup.getGroupId(), randomKnowledgeBaseFolder());
 	}
 
@@ -154,17 +154,17 @@ public class KnowledgeBaseFolderResourceTest
 			testPatchKnowledgeBaseFolder_addKnowledgeBaseFolder()
 		throws Exception {
 
-		return invokePostContentSpaceKnowledgeBaseFolder(
+		return invokePostSiteKnowledgeBaseFolder(
 			testGroup.getGroupId(), randomKnowledgeBaseFolder());
 	}
 
 	@Override
 	protected KnowledgeBaseFolder
-			testPostContentSpaceKnowledgeBaseFolder_addKnowledgeBaseFolder(
+			testPostSiteKnowledgeBaseFolder_addKnowledgeBaseFolder(
 				KnowledgeBaseFolder knowledgeBaseFolder)
 		throws Exception {
 
-		return invokePostContentSpaceKnowledgeBaseFolder(
+		return invokePostSiteKnowledgeBaseFolder(
 			testGroup.getGroupId(), knowledgeBaseFolder);
 	}
 
@@ -184,7 +184,7 @@ public class KnowledgeBaseFolderResourceTest
 			testPutKnowledgeBaseFolder_addKnowledgeBaseFolder()
 		throws Exception {
 
-		return invokePostContentSpaceKnowledgeBaseFolder(
+		return invokePostSiteKnowledgeBaseFolder(
 			testGroup.getGroupId(), randomKnowledgeBaseFolder());
 	}
 

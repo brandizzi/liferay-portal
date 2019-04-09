@@ -48,8 +48,8 @@ public class BlogPostingResourceTest extends BaseBlogPostingResourceTestCase {
 		BlogPosting blogPosting1, BlogPosting blogPosting2) {
 
 		if (Objects.equals(
-				blogPosting1.getContentSpaceId(),
-				blogPosting2.getContentSpaceId()) &&
+				blogPosting1.getSiteId(),
+				blogPosting2.getSiteId()) &&
 			Objects.equals(
 				blogPosting1.getDescription(), blogPosting2.getDescription()) &&
 			Objects.equals(
@@ -65,7 +65,7 @@ public class BlogPostingResourceTest extends BaseBlogPostingResourceTestCase {
 	protected BlogPosting randomBlogPosting() {
 		BlogPosting blogPosting = super.randomBlogPosting();
 
-		blogPosting.setContentSpaceId(testGroup.getGroupId());
+		blogPosting.setSiteId(testGroup.getGroupId());
 
 		return blogPosting;
 	}
@@ -74,7 +74,7 @@ public class BlogPostingResourceTest extends BaseBlogPostingResourceTestCase {
 	protected BlogPosting testDeleteBlogPosting_addBlogPosting()
 		throws Exception {
 
-		return invokePostContentSpaceBlogPosting(
+		return invokePostSiteBlogPosting(
 			testGroup.getGroupId(), randomBlogPosting());
 	}
 
@@ -82,44 +82,44 @@ public class BlogPostingResourceTest extends BaseBlogPostingResourceTestCase {
 	protected BlogPosting testDeleteBlogPostingMyRating_addBlogPosting()
 		throws Exception {
 
-		return invokePostContentSpaceBlogPosting(
+		return invokePostSiteBlogPosting(
 			testGroup.getGroupId(), randomBlogPosting());
 	}
 
 	@Override
 	protected BlogPosting testGetBlogPosting_addBlogPosting() throws Exception {
-		return invokePostContentSpaceBlogPosting(
+		return invokePostSiteBlogPosting(
 			testGroup.getGroupId(), randomBlogPosting());
 	}
 
 	@Override
-	protected BlogPosting testGetContentSpaceBlogPostingsPage_addBlogPosting(
-			Long contentSpaceId, BlogPosting blogPosting)
+	protected BlogPosting testGetSiteBlogPostingsPage_addBlogPosting(
+			Long siteId, BlogPosting blogPosting)
 		throws Exception {
 
-		return invokePostContentSpaceBlogPosting(contentSpaceId, blogPosting);
+		return invokePostSiteBlogPosting(siteId, blogPosting);
 	}
 
 	@Override
 	protected BlogPosting testPatchBlogPosting_addBlogPosting()
 		throws Exception {
 
-		return invokePostContentSpaceBlogPosting(
+		return invokePostSiteBlogPosting(
 			testGroup.getGroupId(), randomBlogPosting());
 	}
 
 	@Override
-	protected BlogPosting testPostContentSpaceBlogPosting_addBlogPosting(
+	protected BlogPosting testPostSiteBlogPosting_addBlogPosting(
 			BlogPosting blogPosting)
 		throws Exception {
 
-		return invokePostContentSpaceBlogPosting(
+		return invokePostSiteBlogPosting(
 			testGroup.getGroupId(), blogPosting);
 	}
 
 	@Override
 	protected BlogPosting testPutBlogPosting_addBlogPosting() throws Exception {
-		return invokePostContentSpaceBlogPosting(
+		return invokePostSiteBlogPosting(
 			testGroup.getGroupId(), randomBlogPosting());
 	}
 

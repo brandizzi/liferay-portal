@@ -35,7 +35,7 @@ public class TaxonomyVocabularyResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				taxonomyVocabulary.getContentSpaceId(),
+				taxonomyVocabulary.getSiteId(),
 				testGroup.getGroupId()) &&
 			(taxonomyVocabulary.getDateCreated() != null) &&
 			(taxonomyVocabulary.getDateModified() != null) &&
@@ -81,7 +81,7 @@ public class TaxonomyVocabularyResourceTest
 						}
 					}
 				};
-				contentSpaceId = testGroup.getGroupId();
+				siteId = testGroup.getGroupId();
 				description = RandomTestUtil.randomString();
 				name = RandomTestUtil.randomString();
 			}
@@ -93,18 +93,18 @@ public class TaxonomyVocabularyResourceTest
 			testDeleteTaxonomyVocabulary_addTaxonomyVocabulary()
 		throws Exception {
 
-		return invokePostContentSpaceTaxonomyVocabulary(
+		return invokePostSiteTaxonomyVocabulary(
 			testGroup.getGroupId(), randomTaxonomyVocabulary());
 	}
 
 	@Override
 	protected TaxonomyVocabulary
-			testGetContentSpaceTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				Long contentSpaceId, TaxonomyVocabulary taxonomyVocabulary)
+			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
+				Long siteId, TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
-		return invokePostContentSpaceTaxonomyVocabulary(
-			contentSpaceId, taxonomyVocabulary);
+		return invokePostSiteTaxonomyVocabulary(
+			siteId, taxonomyVocabulary);
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class TaxonomyVocabularyResourceTest
 			testGetTaxonomyVocabulary_addTaxonomyVocabulary()
 		throws Exception {
 
-		return invokePostContentSpaceTaxonomyVocabulary(
+		return invokePostSiteTaxonomyVocabulary(
 			testGroup.getGroupId(), randomTaxonomyVocabulary());
 	}
 
@@ -121,17 +121,17 @@ public class TaxonomyVocabularyResourceTest
 			testPatchTaxonomyVocabulary_addTaxonomyVocabulary()
 		throws Exception {
 
-		return invokePostContentSpaceTaxonomyVocabulary(
+		return invokePostSiteTaxonomyVocabulary(
 			testGroup.getGroupId(), randomTaxonomyVocabulary());
 	}
 
 	@Override
 	protected TaxonomyVocabulary
-			testPostContentSpaceTaxonomyVocabulary_addTaxonomyVocabulary(
+			testPostSiteTaxonomyVocabulary_addTaxonomyVocabulary(
 				TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
-		return invokePostContentSpaceTaxonomyVocabulary(
+		return invokePostSiteTaxonomyVocabulary(
 			testGroup.getGroupId(), taxonomyVocabulary);
 	}
 
@@ -140,7 +140,7 @@ public class TaxonomyVocabularyResourceTest
 			testPutTaxonomyVocabulary_addTaxonomyVocabulary()
 		throws Exception {
 
-		return invokePostContentSpaceTaxonomyVocabulary(
+		return invokePostSiteTaxonomyVocabulary(
 			testGroup.getGroupId(), randomTaxonomyVocabulary());
 	}
 

@@ -53,7 +53,7 @@ public class ContentStructureResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				contentStructure.getContentSpaceId(), testGroup.getGroupId()) &&
+				contentStructure.getSiteId(), testGroup.getGroupId()) &&
 			(contentStructure.getDateCreated() != null) &&
 			(contentStructure.getDateModified() != null) &&
 			(contentStructure.getId() != null)) {
@@ -70,8 +70,8 @@ public class ContentStructureResourceTest
 		ContentStructure contentStructure2) {
 
 		if (Objects.equals(
-				contentStructure1.getContentSpaceId(),
-				contentStructure2.getContentSpaceId()) &&
+				contentStructure1.getSiteId(),
+				contentStructure2.getSiteId()) &&
 			Objects.equals(
 				contentStructure1.getName(), contentStructure2.getName())) {
 
@@ -83,13 +83,13 @@ public class ContentStructureResourceTest
 
 	@Override
 	protected ContentStructure
-			testGetContentSpaceContentStructuresPage_addContentStructure(
-				Long contentSpaceId, ContentStructure contentStructure)
+			testGetSiteContentStructuresPage_addContentStructure(
+				Long siteId, ContentStructure contentStructure)
 		throws Exception {
 
 		return _toContentStructure(
 			_addDDMStructure(
-				GroupLocalServiceUtil.getGroup(contentSpaceId),
+				GroupLocalServiceUtil.getGroup(siteId),
 				contentStructure.getName()));
 	}
 
@@ -141,7 +141,7 @@ public class ContentStructureResourceTest
 	private ContentStructure _toContentStructure(DDMStructure structure) {
 		return new ContentStructure() {
 			{
-				contentSpaceId = structure.getGroupId();
+				siteId = structure.getGroupId();
 				dateCreated = structure.getCreateDate();
 				dateModified = structure.getModifiedDate();
 				id = structure.getStructureId();

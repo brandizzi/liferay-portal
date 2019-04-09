@@ -92,7 +92,7 @@ public class StructuredContentResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				structuredContent.getContentSpaceId(),
+				structuredContent.getSiteId(),
 				testGroup.getGroupId()) &&
 			(structuredContent.getDateCreated() != null) &&
 			(structuredContent.getDateModified() != null) &&
@@ -110,8 +110,8 @@ public class StructuredContentResourceTest
 		StructuredContent structuredContent2) {
 
 		if (Objects.equals(
-				structuredContent1.getContentSpaceId(),
-				structuredContent2.getContentSpaceId()) &&
+				structuredContent1.getSiteId(),
+				structuredContent2.getSiteId()) &&
 			Objects.equals(
 				structuredContent1.getContentStructureId(),
 				structuredContent2.getContentStructureId()) &&
@@ -131,7 +131,7 @@ public class StructuredContentResourceTest
 	protected StructuredContent randomIrrelevantStructuredContent() {
 		StructuredContent structuredContent = randomStructuredContent();
 
-		structuredContent.setContentSpaceId(irrelevantGroup.getGroupId());
+		structuredContent.setSiteId(irrelevantGroup.getGroupId());
 		structuredContent.setContentStructureId(
 			_irrelevantDDMStructure.getStructureId());
 
@@ -142,7 +142,7 @@ public class StructuredContentResourceTest
 	protected StructuredContent randomStructuredContent() {
 		return new StructuredContent() {
 			{
-				contentSpaceId = testGroup.getGroupId();
+				siteId = testGroup.getGroupId();
 				contentStructureId = _ddmStructure.getStructureId();
 				datePublished = RandomTestUtil.nextDate();
 				description = RandomTestUtil.randomString();
@@ -157,7 +157,7 @@ public class StructuredContentResourceTest
 			testDeleteStructuredContent_addStructuredContent()
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContent(
+		return invokePostSiteStructuredContent(
 			testGroup.getGroupId(), randomStructuredContent());
 	}
 
@@ -166,36 +166,36 @@ public class StructuredContentResourceTest
 			testDeleteStructuredContentMyRating_addStructuredContent()
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContent(
+		return invokePostSiteStructuredContent(
 			testGroup.getGroupId(), randomStructuredContent());
 	}
 
 	@Override
 	protected StructuredContent
-			testGetContentSpaceStructuredContentByKey_addStructuredContent()
+			testGetSiteStructuredContentByKey_addStructuredContent()
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContent(
+		return invokePostSiteStructuredContent(
 			testGroup.getGroupId(), randomStructuredContent());
 	}
 
 	@Override
 	protected StructuredContent
-			testGetContentSpaceStructuredContentByUuid_addStructuredContent()
+			testGetSiteStructuredContentByUuid_addStructuredContent()
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContent(
+		return invokePostSiteStructuredContent(
 			testGroup.getGroupId(), randomStructuredContent());
 	}
 
 	@Override
 	protected StructuredContent
-			testGetContentSpaceStructuredContentsPage_addStructuredContent(
-				Long contentSpaceId, StructuredContent structuredContent)
+			testGetSiteStructuredContentsPage_addStructuredContent(
+				Long siteId, StructuredContent structuredContent)
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContent(
-			contentSpaceId, structuredContent);
+		return invokePostSiteStructuredContent(
+			siteId, structuredContent);
 	}
 
 	@Override
@@ -204,7 +204,7 @@ public class StructuredContentResourceTest
 				Long contentStructureId, StructuredContent structuredContent)
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContent(
+		return invokePostSiteStructuredContent(
 			testGroup.getGroupId(), structuredContent);
 	}
 
@@ -220,7 +220,7 @@ public class StructuredContentResourceTest
 	protected StructuredContent testGetStructuredContent_addStructuredContent()
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContent(
+		return invokePostSiteStructuredContent(
 			testGroup.getGroupId(), randomStructuredContent());
 	}
 
@@ -254,17 +254,17 @@ public class StructuredContentResourceTest
 			testPatchStructuredContent_addStructuredContent()
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContent(
+		return invokePostSiteStructuredContent(
 			testGroup.getGroupId(), randomStructuredContent());
 	}
 
 	@Override
 	protected StructuredContent
-			testPostContentSpaceStructuredContent_addStructuredContent(
+			testPostSiteStructuredContent_addStructuredContent(
 				StructuredContent structuredContent)
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContent(
+		return invokePostSiteStructuredContent(
 			testGroup.getGroupId(), structuredContent);
 	}
 
@@ -274,7 +274,7 @@ public class StructuredContentResourceTest
 				StructuredContent structuredContent)
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContent(
+		return invokePostSiteStructuredContent(
 			testGroup.getGroupId(), structuredContent);
 	}
 
@@ -282,7 +282,7 @@ public class StructuredContentResourceTest
 	protected StructuredContent testPutStructuredContent_addStructuredContent()
 		throws Exception {
 
-		return invokePostContentSpaceStructuredContent(
+		return invokePostSiteStructuredContent(
 			testGroup.getGroupId(), randomStructuredContent());
 	}
 

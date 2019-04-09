@@ -33,7 +33,7 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 		boolean valid = false;
 
 		if (Objects.equals(
-				keyword.getContentSpaceId(), testGroup.getGroupId()) &&
+				keyword.getSiteId(), testGroup.getGroupId()) &&
 			(keyword.getDateCreated() != null) &&
 			(keyword.getDateModified() != null) && (keyword.getId() != null)) {
 
@@ -46,7 +46,7 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 	@Override
 	protected boolean equals(Keyword keyword1, Keyword keyword2) {
 		if (Objects.equals(
-				keyword1.getContentSpaceId(), keyword2.getContentSpaceId()) &&
+				keyword1.getSiteId(), keyword2.getSiteId()) &&
 			StringUtil.equalsIgnoreCase(
 				keyword1.getName(), keyword2.getName())) {
 
@@ -60,41 +60,41 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 	protected Keyword randomKeyword() {
 		Keyword keyword = super.randomKeyword();
 
-		keyword.setContentSpaceId(testGroup.getGroupId());
+		keyword.setSiteId(testGroup.getGroupId());
 
 		return keyword;
 	}
 
 	@Override
 	protected Keyword testDeleteKeyword_addKeyword() throws Exception {
-		return invokePostContentSpaceKeyword(
+		return invokePostSiteKeyword(
 			testGroup.getGroupId(), randomKeyword());
 	}
 
 	@Override
-	protected Keyword testGetContentSpaceKeywordsPage_addKeyword(
-			Long contentSpaceId, Keyword keyword)
+	protected Keyword testGetSiteKeywordsPage_addKeyword(
+			Long siteId, Keyword keyword)
 		throws Exception {
 
-		return invokePostContentSpaceKeyword(contentSpaceId, keyword);
+		return invokePostSiteKeyword(siteId, keyword);
 	}
 
 	@Override
 	protected Keyword testGetKeyword_addKeyword() throws Exception {
-		return invokePostContentSpaceKeyword(
+		return invokePostSiteKeyword(
 			testGroup.getGroupId(), randomKeyword());
 	}
 
 	@Override
-	protected Keyword testPostContentSpaceKeyword_addKeyword(Keyword keyword)
+	protected Keyword testPostSiteKeyword_addKeyword(Keyword keyword)
 		throws Exception {
 
-		return invokePostContentSpaceKeyword(testGroup.getGroupId(), keyword);
+		return invokePostSiteKeyword(testGroup.getGroupId(), keyword);
 	}
 
 	@Override
 	protected Keyword testPutKeyword_addKeyword() throws Exception {
-		return invokePostContentSpaceKeyword(
+		return invokePostSiteKeyword(
 			testGroup.getGroupId(), randomKeyword());
 	}
 

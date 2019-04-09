@@ -58,7 +58,7 @@ public class MessageBoardThreadResourceTest
 		boolean valid = false;
 
 		if (Objects.equals(
-				messageBoardThread.getContentSpaceId(),
+				messageBoardThread.getSiteId(),
 				testGroup.getGroupId()) &&
 			(messageBoardThread.getDateCreated() != null) &&
 			(messageBoardThread.getDateModified() != null) &&
@@ -80,8 +80,8 @@ public class MessageBoardThreadResourceTest
 				messageBoardThread1.getArticleBody(),
 				messageBoardThread2.getArticleBody()) &&
 			Objects.equals(
-				messageBoardThread1.getContentSpaceId(),
-				messageBoardThread2.getContentSpaceId()) &&
+				messageBoardThread1.getSiteId(),
+				messageBoardThread2.getSiteId()) &&
 			Objects.equals(
 				messageBoardThread1.getHeadline(),
 				messageBoardThread2.getHeadline())) {
@@ -97,7 +97,7 @@ public class MessageBoardThreadResourceTest
 		MessageBoardThread messageBoardThread =
 			super.randomMessageBoardThread();
 
-		messageBoardThread.setContentSpaceId(testGroup.getGroupId());
+		messageBoardThread.setSiteId(testGroup.getGroupId());
 		messageBoardThread.setThreadType("Urgent");
 
 		return messageBoardThread;
@@ -108,7 +108,7 @@ public class MessageBoardThreadResourceTest
 		MessageBoardThread messageBoardThread =
 			super.randomPatchMessageBoardThread();
 
-		messageBoardThread.setContentSpaceId(testGroup.getGroupId());
+		messageBoardThread.setSiteId(testGroup.getGroupId());
 
 		return messageBoardThread;
 	}
@@ -118,7 +118,7 @@ public class MessageBoardThreadResourceTest
 			testDeleteMessageBoardThread_addMessageBoardThread()
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardThread(
+		return invokePostSiteMessageBoardThread(
 			testGroup.getGroupId(), randomMessageBoardThread());
 	}
 
@@ -127,18 +127,18 @@ public class MessageBoardThreadResourceTest
 			testDeleteMessageBoardThreadMyRating_addMessageBoardThread()
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardThread(
+		return invokePostSiteMessageBoardThread(
 			testGroup.getGroupId(), randomMessageBoardThread());
 	}
 
 	@Override
 	protected MessageBoardThread
-			testGetContentSpaceMessageBoardThreadsPage_addMessageBoardThread(
-				Long contentSpaceId, MessageBoardThread messageBoardThread)
+			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
+				Long siteId, MessageBoardThread messageBoardThread)
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardThread(
-			contentSpaceId, messageBoardThread);
+		return invokePostSiteMessageBoardThread(
+			siteId, messageBoardThread);
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class MessageBoardThreadResourceTest
 			testGetMessageBoardThread_addMessageBoardThread()
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardThread(
+		return invokePostSiteMessageBoardThread(
 			testGroup.getGroupId(), randomMessageBoardThread());
 	}
 
@@ -174,17 +174,17 @@ public class MessageBoardThreadResourceTest
 			testPatchMessageBoardThread_addMessageBoardThread()
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardThread(
+		return invokePostSiteMessageBoardThread(
 			testGroup.getGroupId(), randomMessageBoardThread());
 	}
 
 	@Override
 	protected MessageBoardThread
-			testPostContentSpaceMessageBoardThread_addMessageBoardThread(
+			testPostSiteMessageBoardThread_addMessageBoardThread(
 				MessageBoardThread messageBoardThread)
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardThread(
+		return invokePostSiteMessageBoardThread(
 			testGroup.getGroupId(), messageBoardThread);
 	}
 
@@ -194,7 +194,7 @@ public class MessageBoardThreadResourceTest
 				MessageBoardThread messageBoardThread)
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardThread(
+		return invokePostSiteMessageBoardThread(
 			testGroup.getGroupId(), messageBoardThread);
 	}
 
@@ -203,7 +203,7 @@ public class MessageBoardThreadResourceTest
 			testPutMessageBoardThread_addMessageBoardThread()
 		throws Exception {
 
-		return invokePostContentSpaceMessageBoardThread(
+		return invokePostSiteMessageBoardThread(
 			testGroup.getGroupId(), randomMessageBoardThread());
 	}
 
