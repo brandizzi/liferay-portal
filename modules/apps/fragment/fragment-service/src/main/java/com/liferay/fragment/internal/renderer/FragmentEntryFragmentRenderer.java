@@ -258,11 +258,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
 
-		HttpServletResponse pipingHttpServletResponse =
-			new PipingServletResponse(httpServletResponse, unsyncStringWriter);
-
 		_portletRegistry.writePortletPaths(
-			fragmentEntryLink, httpServletRequest, pipingHttpServletResponse);
+			fragmentEntryLink, httpServletRequest,
+			new PipingServletResponse(httpServletResponse, unsyncStringWriter));
 
 		unsyncStringWriter.append(html);
 
