@@ -32,14 +32,14 @@ fragmentEntryLink.setHtml(html);
 fragmentEntryLink.setJs(js);
 fragmentEntryLink.setFragmentEntryId(fragmentEntryId);
 
-DefaultFragmentRendererContext fragmentRendererContext = new DefaultFragmentRendererContext(fragmentEntryLink);
+DefaultFragmentRendererContext defaultFragmentRendererContext = new DefaultFragmentRendererContext(fragmentEntryLink);
 
-fragmentRendererContext.setMode(FragmentEntryLinkConstants.VIEW);
+defaultFragmentRendererContext.setMode(FragmentEntryLinkConstants.VIEW);
 
 try {
 %>
 
-	<%= fragmentRendererController.render(fragmentRendererContext, request, response) %>
+	<%= fragmentRendererController.render(defaultFragmentRendererContext, request, response) %>
 
 <%
 }
