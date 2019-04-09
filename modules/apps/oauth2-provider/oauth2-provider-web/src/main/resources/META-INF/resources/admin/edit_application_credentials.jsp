@@ -327,6 +327,7 @@ String clientSecret = (oAuth2Application == null) ? "" : oAuth2Application.getCl
 					on: {
 						click: function() {
 							<portlet:namespace />updateComponent(applyField, populateField.val());
+
 							modal.hide();
 						}
 					}
@@ -337,6 +338,7 @@ String clientSecret = (oAuth2Application == null) ? "" : oAuth2Application.getCl
 					on: {
 						click: function() {
 							<portlet:namespace />updateComponent(populateField, applyField.val());
+
 							modal.hide();
 						}
 					}
