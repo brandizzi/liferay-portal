@@ -202,11 +202,8 @@ definition {
 		SearchResultPortlet.viewNoSearchResults(searchTerm = "Title1");
 	}
 
-	// Temporarily removing from search suite, see LRQA-47803
 	@priority = "4"
 	test SearchBlogsEntryCategory {
-		property portal.suite.search.engine = "disable";
-
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
