@@ -980,7 +980,55 @@ public abstract class Base${schemaName}ResourceTestCase {
 	}
 
 	protected void assertValid(${schemaName} ${schemaVarName}) {
-		throw new UnsupportedOperationException("This method needs to be implemented");
+		boolean valid = true;
+
+		<#if properties?keys?seq_contains("dateCreated")>
+			if (${schemaVarName}.getDateCreated() == null) {
+				valid = false;
+			}
+		</#if>
+
+		<#if properties?keys?seq_contains("dateModified")>
+			if (${schemaVarName}.getDateModified() == null) {
+				valid = false;
+			}
+		</#if>
+
+		<#if properties?keys?seq_contains("id")>
+			if (${schemaVarName}.getId() == null) {
+				valid = false;
+			}
+		</#if>
+
+		<#if properties?keys?seq_contains("siteId")>
+			if (!Objects.equals(${schemaVarName}.getSiteId(), testGroup.getGroupId())) {
+				valid = false;
+			}
+		</#if>
+
+		for (String additionalAssertFieldName : getAdditionalAssertFieldNames()) {
+			<#list properties?keys as propertyName>
+				<#if stringUtil.equals(propertyName, "dateCreated") ||
+					 stringUtil.equals(propertyName, "dateModified") ||
+					 stringUtil.equals(propertyName, "id") ||
+					 stringUtil.equals(propertyName, "siteId")>
+
+					 <#continue>
+				</#if>
+
+				if (Objects.equals("${propertyName}", additionalAssertFieldName)) {
+					if (${schemaVarName}.get${propertyName?cap_first}() == null) {
+						valid = false;
+					}
+
+					continue;
+				}
+			</#list>
+
+			throw new IllegalArgumentException("Invalid additional assert field name " + additionalAssertFieldName);
+		}
+
+		Assert.assertTrue(valid);
 	}
 
 	protected void assertValid(Page<${schemaName}> page) {
@@ -997,12 +1045,40 @@ public abstract class Base${schemaName}ResourceTestCase {
 		Assert.assertTrue(valid);
 	}
 
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[0];
+	}
+
 	protected boolean equals(${schemaName} ${schemaVarName}1, ${schemaName} ${schemaVarName}2) {
 		if (${schemaVarName}1 == ${schemaVarName}2) {
 			return true;
 		}
 
-		return false;
+		<#if properties?keys?seq_contains("siteId")>
+			if (!Objects.equals(${schemaVarName}1.getSiteId(), ${schemaVarName}2.getSiteId())) {
+				return false;
+			}
+		</#if>
+
+		for (String additionalAssertFieldName : getAdditionalAssertFieldNames()) {
+			<#list properties?keys as propertyName>
+				<#if stringUtil.equals(propertyName, "siteId")>
+					 <#continue>
+				</#if>
+
+				if (Objects.equals("${propertyName}", additionalAssertFieldName)) {
+					if (!Objects.equals(${schemaVarName}1.get${propertyName?cap_first}(), ${schemaVarName}2.get${propertyName?cap_first}())) {
+						return false;
+					}
+
+					continue;
+				}
+			</#list>
+
+			throw new IllegalArgumentException("Invalid additional assert field name " + additionalAssertFieldName);
+		}
+
+		return true;
 	}
 
 	protected Collection<EntityField> getEntityFields() throws Exception {
