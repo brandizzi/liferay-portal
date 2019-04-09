@@ -41,7 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 public class LayoutPageTemplateStructureRenderUtil {
 
 	public static String renderLayoutContent(
-			HttpServletRequest request, HttpServletResponse response,
+			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			LayoutPageTemplateStructure layoutPageTemplateStructure,
 			String mode, Map<String, Object> parameterMap, Locale locale,
 			long[] segmentsExperienceIds,
@@ -112,7 +112,7 @@ public class LayoutPageTemplateStructureRenderUtil {
 					try {
 						renderFragmentEntryLink =
 							fragmentRendererController.render(
-								fragmentRendererContext, request, response);
+								fragmentRendererContext, httpServletRequest, httpServletResponse);
 					}
 					catch (IOException ioe) {
 						throw new PortalException(ioe);
