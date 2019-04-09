@@ -36,58 +36,8 @@ public class MessageBoardSectionResourceTest
 	extends BaseMessageBoardSectionResourceTestCase {
 
 	@Override
-	protected void assertValid(MessageBoardSection messageBoardSection) {
-		boolean valid = false;
-
-		if (Objects.equals(
-				messageBoardSection.getSiteId(), testGroup.getGroupId()) &&
-			(messageBoardSection.getDateCreated() != null) &&
-			(messageBoardSection.getDateModified() != null) &&
-			(messageBoardSection.getId() != null) &&
-			(messageBoardSection.getTitle() != null)) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(
-		MessageBoardSection messageBoardSection1,
-		MessageBoardSection messageBoardSection2) {
-
-		if (Objects.equals(
-				messageBoardSection1.getSiteId(),
-				messageBoardSection2.getSiteId()) &&
-			Objects.equals(
-				messageBoardSection1.getTitle(),
-				messageBoardSection2.getTitle())) {
-
-			return true;
-		}
-
-		return false;
-	}
-
-	@Override
-	protected MessageBoardSection randomIrrelevantMessageBoardSection() {
-		MessageBoardSection messageBoardSection =
-			super.randomIrrelevantMessageBoardSection();
-
-		messageBoardSection.setSiteId(irrelevantGroup.getGroupId());
-
-		return messageBoardSection;
-	}
-
-	@Override
-	protected MessageBoardSection randomMessageBoardSection() {
-		MessageBoardSection messageBoardSection =
-			super.randomMessageBoardSection();
-
-		messageBoardSection.setSiteId(testGroup.getGroupId());
-
-		return messageBoardSection;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"title"};
 	}
 
 	@Override
