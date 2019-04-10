@@ -1154,7 +1154,6 @@ information.
 
 	<macrodef name="manifest-helper">
 		<attribute default="false" name="analyze" />
-
 		<sequential>
 			<trycatch>
 				<try>
