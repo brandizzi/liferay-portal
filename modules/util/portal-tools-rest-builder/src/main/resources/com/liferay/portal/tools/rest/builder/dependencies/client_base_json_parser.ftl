@@ -240,6 +240,14 @@ public abstract class BaseJSONParser<T> {
 		return false;
 	}
 
+	private boolean _isLastCharDecimalSeparator() {
+		if (_lastChar == '.') {
+			return true;
+		}
+
+		return false;
+	}
+
 	private boolean _isLastCharDigit() {
 		if ((_lastChar >= '0') && (_lastChar <= '9')) {
 			return true;
@@ -391,12 +399,18 @@ public abstract class BaseJSONParser<T> {
 
 		_readNextChar();
 
+		if (_isLastChar('}')) {
+			_readNextChar();
+
+			return _getCapturedSubstring();
+		}
+
 		_readWhileLastCharIsWhiteSpace();
 
 		if (_isLastChar('}')) {
 			_readNextChar();
 
-			return "{}";
+			return _getCapturedSubstring();
 		}
 
 		do {
@@ -433,7 +447,7 @@ public abstract class BaseJSONParser<T> {
 		do {
 			_readNextChar();
 		}
-		while (_isLastCharDigit());
+		while (_isLastCharDigit() || _isLastCharDecimalSeparator());
 
 		return _getCapturedSubstring();
 	}
