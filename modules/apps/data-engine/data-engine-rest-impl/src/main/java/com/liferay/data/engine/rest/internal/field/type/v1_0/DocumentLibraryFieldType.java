@@ -114,7 +114,7 @@ public class DocumentLibraryFieldType extends FieldType {
 
 			if (valueJSONObject.length() > 0) {
 				FileEntry fileEntry = _getFileEntry(
-					valueJSONObject, dlAppService);
+					dlAppService, valueJSONObject);
 
 				context.put(
 					"fileEntryTitle", _getFileEntryTitle(fileEntry, html));
@@ -124,12 +124,10 @@ public class DocumentLibraryFieldType extends FieldType {
 			}
 		}
 
-		Locale displayLocale = _getDisplayLocale(httpServletRequest);
+		Map<String, String> values = new HashMap<>();
 
 		ResourceBundle resourceBundle = _getResourceBundle(
-			displayLocale, portal);
-
-		Map<String, String> values = new HashMap<>();
+			_getDisplayLocale(httpServletRequest), portal);
 
 		values.put("select", LanguageUtil.get(resourceBundle, "select"));
 
@@ -171,7 +169,7 @@ public class DocumentLibraryFieldType extends FieldType {
 	}
 
 	private FileEntry _getFileEntry(
-		JSONObject valueJSONObject, DLAppService dlAppService) {
+		DLAppService dlAppService, JSONObject valueJSONObject) {
 
 		try {
 			return dlAppService.getFileEntryByUuidAndGroupId(
