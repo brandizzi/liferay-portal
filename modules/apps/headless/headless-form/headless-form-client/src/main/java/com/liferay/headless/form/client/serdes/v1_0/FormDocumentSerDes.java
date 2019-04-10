@@ -54,40 +54,67 @@ public class FormDocumentSerDes {
 
 		sb.append("\"contentUrl\": ");
 
-		sb.append("\"");
-		sb.append(formDocument.getContentUrl());
-		sb.append("\"");
+		if (formDocument.getContentUrl() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formDocument.getContentUrl());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(formDocument.getEncodingFormat());
-		sb.append("\"");
+		if (formDocument.getEncodingFormat() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formDocument.getEncodingFormat());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"fileExtension\": ");
 
-		sb.append("\"");
-		sb.append(formDocument.getFileExtension());
-		sb.append("\"");
+		if (formDocument.getFileExtension() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formDocument.getFileExtension());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(formDocument.getId());
+		if (formDocument.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formDocument.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"sizeInBytes\": ");
 
-		sb.append(formDocument.getSizeInBytes());
+		if (formDocument.getSizeInBytes() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formDocument.getSizeInBytes());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(formDocument.getTitle());
-		sb.append("\"");
+		if (formDocument.getTitle() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formDocument.getTitle());
+		}
 
 		sb.append("}");
 
@@ -149,7 +176,8 @@ public class FormDocumentSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					formDocument.setId((Long)jsonParserFieldValue);
+					formDocument.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "sizeInBytes")) {

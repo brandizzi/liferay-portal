@@ -54,14 +54,23 @@ public class StructuredContentLinkSerDes {
 
 		sb.append("\"id\": ");
 
-		sb.append(structuredContentLink.getId());
+		if (structuredContentLink.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContentLink.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(structuredContentLink.getTitle());
-		sb.append("\"");
+		if (structuredContentLink.getTitle() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContentLink.getTitle());
+		}
 
 		sb.append("}");
 
@@ -111,7 +120,8 @@ public class StructuredContentLinkSerDes {
 
 			if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					structuredContentLink.setId((Long)jsonParserFieldValue);
+					structuredContentLink.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "title")) {

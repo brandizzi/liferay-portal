@@ -124,14 +124,23 @@ public class ParentKnowledgeBaseFolder {
 
 		sb.append("\"folderId\": ");
 
-		sb.append(folderId);
+		if (folderId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(folderId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"folderName\": ");
 
-		sb.append("\"");
-		sb.append(folderName);
-		sb.append("\"");
+		if (folderName == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(folderName);
+		}
 
 		sb.append("}");
 

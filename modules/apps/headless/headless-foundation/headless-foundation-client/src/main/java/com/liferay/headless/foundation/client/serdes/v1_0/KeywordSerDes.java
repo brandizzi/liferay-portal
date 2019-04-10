@@ -17,6 +17,10 @@ package com.liferay.headless.foundation.client.serdes.v1_0;
 import com.liferay.headless.foundation.client.dto.v1_0.Keyword;
 import com.liferay.headless.foundation.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -53,43 +57,78 @@ public class KeywordSerDes {
 
 		sb.append("\"creator\": ");
 
-		sb.append(keyword.getCreator());
+		if (keyword.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(keyword.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(keyword.getDateCreated());
-		sb.append("\"");
+		if (keyword.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(keyword.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(keyword.getDateModified());
-		sb.append("\"");
+		if (keyword.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(keyword.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(keyword.getId());
+		if (keyword.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(keyword.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywordUsageCount\": ");
 
-		sb.append(keyword.getKeywordUsageCount());
+		if (keyword.getKeywordUsageCount() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(keyword.getKeywordUsageCount());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(keyword.getName());
-		sb.append("\"");
+		if (keyword.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(keyword.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(keyword.getSiteId());
+		if (keyword.getSiteId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(keyword.getSiteId());
+		}
 
 		sb.append("}");
 
@@ -140,17 +179,19 @@ public class KeywordSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
-					keyword.setDateCreated((Date)jsonParserFieldValue);
+					keyword.setDateCreated(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
-					keyword.setDateModified((Date)jsonParserFieldValue);
+					keyword.setDateModified(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					keyword.setId((Long)jsonParserFieldValue);
+					keyword.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "keywordUsageCount")) {
@@ -165,12 +206,25 @@ public class KeywordSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {
 				if (jsonParserFieldValue != null) {
-					keyword.setSiteId((Long)jsonParserFieldValue);
+					keyword.setSiteId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

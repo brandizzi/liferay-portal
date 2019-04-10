@@ -54,40 +54,67 @@ public class MessageBoardAttachmentSerDes {
 
 		sb.append("\"contentUrl\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardAttachment.getContentUrl());
-		sb.append("\"");
+		if (messageBoardAttachment.getContentUrl() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardAttachment.getContentUrl());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardAttachment.getEncodingFormat());
-		sb.append("\"");
+		if (messageBoardAttachment.getEncodingFormat() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardAttachment.getEncodingFormat());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"fileExtension\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardAttachment.getFileExtension());
-		sb.append("\"");
+		if (messageBoardAttachment.getFileExtension() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardAttachment.getFileExtension());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(messageBoardAttachment.getId());
+		if (messageBoardAttachment.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardAttachment.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"sizeInBytes\": ");
 
-		sb.append(messageBoardAttachment.getSizeInBytes());
+		if (messageBoardAttachment.getSizeInBytes() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardAttachment.getSizeInBytes());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardAttachment.getTitle());
-		sb.append("\"");
+		if (messageBoardAttachment.getTitle() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardAttachment.getTitle());
+		}
 
 		sb.append("}");
 
@@ -155,7 +182,8 @@ public class MessageBoardAttachmentSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					messageBoardAttachment.setId((Long)jsonParserFieldValue);
+					messageBoardAttachment.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "sizeInBytes")) {

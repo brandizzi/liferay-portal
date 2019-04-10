@@ -17,6 +17,10 @@ package com.liferay.headless.workflow.client.serdes.v1_0;
 import com.liferay.headless.workflow.client.dto.v1_0.WorkflowTaskAssignToUser;
 import com.liferay.headless.workflow.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -57,21 +61,34 @@ public class WorkflowTaskAssignToUserSerDes {
 
 		sb.append("\"assigneeId\": ");
 
-		sb.append(workflowTaskAssignToUser.getAssigneeId());
+		if (workflowTaskAssignToUser.getAssigneeId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowTaskAssignToUser.getAssigneeId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"comment\": ");
 
-		sb.append("\"");
-		sb.append(workflowTaskAssignToUser.getComment());
-		sb.append("\"");
+		if (workflowTaskAssignToUser.getComment() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowTaskAssignToUser.getComment());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dueDate\": ");
 
-		sb.append("\"");
-		sb.append(workflowTaskAssignToUser.getDueDate());
-		sb.append("\"");
+		if (workflowTaskAssignToUser.getDueDate() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowTaskAssignToUser.getDueDate());
+		}
 
 		sb.append("}");
 
@@ -122,7 +139,7 @@ public class WorkflowTaskAssignToUserSerDes {
 			if (Objects.equals(jsonParserFieldName, "assigneeId")) {
 				if (jsonParserFieldValue != null) {
 					workflowTaskAssignToUser.setAssigneeId(
-						(Long)jsonParserFieldValue);
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "comment")) {
@@ -134,12 +151,24 @@ public class WorkflowTaskAssignToUserSerDes {
 			else if (Objects.equals(jsonParserFieldName, "dueDate")) {
 				if (jsonParserFieldValue != null) {
 					workflowTaskAssignToUser.setDueDate(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

@@ -54,14 +54,23 @@ public class ObjectReviewedSerDes {
 
 		sb.append("\"id\": ");
 
-		sb.append(objectReviewed.getId());
+		if (objectReviewed.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(objectReviewed.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"resourceType\": ");
 
-		sb.append("\"");
-		sb.append(objectReviewed.getResourceType());
-		sb.append("\"");
+		if (objectReviewed.getResourceType() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(objectReviewed.getResourceType());
+		}
 
 		sb.append("}");
 
@@ -107,7 +116,8 @@ public class ObjectReviewedSerDes {
 
 			if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					objectReviewed.setId((Long)jsonParserFieldValue);
+					objectReviewed.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "resourceType")) {

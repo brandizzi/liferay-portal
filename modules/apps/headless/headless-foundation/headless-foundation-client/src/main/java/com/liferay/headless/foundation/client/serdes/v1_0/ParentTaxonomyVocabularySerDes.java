@@ -56,14 +56,23 @@ public class ParentTaxonomyVocabularySerDes {
 
 		sb.append("\"id\": ");
 
-		sb.append(parentTaxonomyVocabulary.getId());
+		if (parentTaxonomyVocabulary.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentTaxonomyVocabulary.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(parentTaxonomyVocabulary.getName());
-		sb.append("\"");
+		if (parentTaxonomyVocabulary.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentTaxonomyVocabulary.getName());
+		}
 
 		sb.append("}");
 
@@ -113,7 +122,8 @@ public class ParentTaxonomyVocabularySerDes {
 
 			if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					parentTaxonomyVocabulary.setId((Long)jsonParserFieldValue);
+					parentTaxonomyVocabulary.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "name")) {

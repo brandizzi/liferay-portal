@@ -52,26 +52,45 @@ public class EmailSerDes {
 
 		sb.append("\"email\": ");
 
-		sb.append("\"");
-		sb.append(email.getEmail());
-		sb.append("\"");
+		if (email.getEmail() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(email.getEmail());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(email.getId());
+		if (email.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(email.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"primary\": ");
 
-		sb.append(email.getPrimary());
+		if (email.getPrimary() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(email.getPrimary());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"type\": ");
 
-		sb.append("\"");
-		sb.append(email.getType());
-		sb.append("\"");
+		if (email.getType() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(email.getType());
+		}
 
 		sb.append("}");
 
@@ -121,7 +140,7 @@ public class EmailSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					email.setId((Long)jsonParserFieldValue);
+					email.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "primary")) {

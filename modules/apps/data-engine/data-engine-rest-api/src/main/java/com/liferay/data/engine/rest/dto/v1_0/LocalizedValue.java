@@ -121,14 +121,23 @@ public class LocalizedValue {
 
 		sb.append("\"key\": ");
 
-		sb.append("\"");
-		sb.append(key);
-		sb.append("\"");
+		if (key == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(key);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"value\": ");
 
-		sb.append(value);
+		if (value == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(value);
+		}
 
 		sb.append("}");
 

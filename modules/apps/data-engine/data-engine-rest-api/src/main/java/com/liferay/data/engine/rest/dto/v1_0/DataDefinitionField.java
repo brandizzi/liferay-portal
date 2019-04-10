@@ -379,19 +379,35 @@ public class DataDefinitionField {
 
 		sb.append("\"fieldType\": ");
 
-		sb.append("\"");
-		sb.append(fieldType);
-		sb.append("\"");
+		if (fieldType == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(fieldType);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"indexable\": ");
 
-		sb.append(indexable);
+		if (indexable == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(indexable);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"label\": ");
@@ -417,19 +433,35 @@ public class DataDefinitionField {
 
 		sb.append("\"localizable\": ");
 
-		sb.append(localizable);
+		if (localizable == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(localizable);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"repeatable\": ");
 
-		sb.append(repeatable);
+		if (repeatable == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(repeatable);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"tip\": ");

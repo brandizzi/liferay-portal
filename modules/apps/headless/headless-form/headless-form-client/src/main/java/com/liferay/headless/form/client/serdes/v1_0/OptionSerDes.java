@@ -52,21 +52,34 @@ public class OptionSerDes {
 
 		sb.append("\"id\": ");
 
-		sb.append(option.getId());
+		if (option.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(option.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"label\": ");
 
-		sb.append("\"");
-		sb.append(option.getLabel());
-		sb.append("\"");
+		if (option.getLabel() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(option.getLabel());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"value\": ");
 
-		sb.append("\"");
-		sb.append(option.getValue());
-		sb.append("\"");
+		if (option.getValue() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(option.getValue());
+		}
 
 		sb.append("}");
 
@@ -111,7 +124,7 @@ public class OptionSerDes {
 
 			if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					option.setId((Long)jsonParserFieldValue);
+					option.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "label")) {

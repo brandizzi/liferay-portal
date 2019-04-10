@@ -339,7 +339,13 @@ public class DataLayout {
 
 		sb.append("\"dataDefinitionId\": ");
 
-		sb.append(dataDefinitionId);
+		if (dataDefinitionId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dataDefinitionId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dataLayoutPages\": ");
@@ -365,23 +371,35 @@ public class DataLayout {
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"defaultLanguageId\": ");
 
-		sb.append("\"");
-		sb.append(defaultLanguageId);
-		sb.append("\"");
+		if (defaultLanguageId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(defaultLanguageId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
@@ -407,7 +425,13 @@ public class DataLayout {
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
@@ -433,14 +457,23 @@ public class DataLayout {
 
 		sb.append("\"paginationMode\": ");
 
-		sb.append("\"");
-		sb.append(paginationMode);
-		sb.append("\"");
+		if (paginationMode == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(paginationMode);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"userId\": ");
 
-		sb.append(userId);
+		if (userId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userId);
+		}
 
 		sb.append("}");
 

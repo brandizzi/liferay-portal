@@ -18,6 +18,10 @@ import com.liferay.headless.delivery.client.dto.v1_0.BlogPosting;
 import com.liferay.headless.delivery.client.dto.v1_0.TaxonomyCategory;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -57,85 +61,145 @@ public class BlogPostingSerDes {
 
 		sb.append("\"aggregateRating\": ");
 
-		sb.append(blogPosting.getAggregateRating());
+		if (blogPosting.getAggregateRating() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getAggregateRating());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"alternativeHeadline\": ");
 
-		sb.append("\"");
-		sb.append(blogPosting.getAlternativeHeadline());
-		sb.append("\"");
+		if (blogPosting.getAlternativeHeadline() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getAlternativeHeadline());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"articleBody\": ");
 
-		sb.append("\"");
-		sb.append(blogPosting.getArticleBody());
-		sb.append("\"");
+		if (blogPosting.getArticleBody() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getArticleBody());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"creator\": ");
 
-		sb.append(blogPosting.getCreator());
+		if (blogPosting.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(blogPosting.getDateCreated());
-		sb.append("\"");
+		if (blogPosting.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(blogPosting.getDateModified());
-		sb.append("\"");
+		if (blogPosting.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"datePublished\": ");
 
-		sb.append("\"");
-		sb.append(blogPosting.getDatePublished());
-		sb.append("\"");
+		if (blogPosting.getDatePublished() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getDatePublished());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(blogPosting.getDescription());
-		sb.append("\"");
+		if (blogPosting.getDescription() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getDescription());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(blogPosting.getEncodingFormat());
-		sb.append("\"");
+		if (blogPosting.getEncodingFormat() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getEncodingFormat());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"friendlyUrlPath\": ");
 
-		sb.append("\"");
-		sb.append(blogPosting.getFriendlyUrlPath());
-		sb.append("\"");
+		if (blogPosting.getFriendlyUrlPath() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getFriendlyUrlPath());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"headline\": ");
 
-		sb.append("\"");
-		sb.append(blogPosting.getHeadline());
-		sb.append("\"");
+		if (blogPosting.getHeadline() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getHeadline());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(blogPosting.getId());
+		if (blogPosting.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"image\": ");
 
-		sb.append(blogPosting.getImage());
+		if (blogPosting.getImage() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getImage());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywords\": ");
@@ -163,12 +227,24 @@ public class BlogPostingSerDes {
 
 		sb.append("\"numberOfComments\": ");
 
-		sb.append(blogPosting.getNumberOfComments());
+		if (blogPosting.getNumberOfComments() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getNumberOfComments());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(blogPosting.getSiteId());
+		if (blogPosting.getSiteId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPosting.getSiteId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategories\": ");
@@ -219,9 +295,14 @@ public class BlogPostingSerDes {
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(blogPosting.getViewableBy());
-		sb.append("\"");
+		if (blogPosting.getViewableBy() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(blogPosting.getViewableBy());
+			sb.append("\"");
+		}
 
 		sb.append("}");
 
@@ -293,17 +374,20 @@ public class BlogPostingSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
-					blogPosting.setDateCreated((Date)jsonParserFieldValue);
+					blogPosting.setDateCreated(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
-					blogPosting.setDateModified((Date)jsonParserFieldValue);
+					blogPosting.setDateModified(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "datePublished")) {
 				if (jsonParserFieldValue != null) {
-					blogPosting.setDatePublished((Date)jsonParserFieldValue);
+					blogPosting.setDatePublished(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "description")) {
@@ -329,7 +413,8 @@ public class BlogPostingSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					blogPosting.setId((Long)jsonParserFieldValue);
+					blogPosting.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "image")) {
@@ -352,7 +437,8 @@ public class BlogPostingSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {
 				if (jsonParserFieldValue != null) {
-					blogPosting.setSiteId((Long)jsonParserFieldValue);
+					blogPosting.setSiteId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(
@@ -388,6 +474,18 @@ public class BlogPostingSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

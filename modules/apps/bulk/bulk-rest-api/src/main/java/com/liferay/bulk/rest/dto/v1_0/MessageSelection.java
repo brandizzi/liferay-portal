@@ -96,9 +96,12 @@ public class MessageSelection {
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
+		if (description == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(description);
+		}
 
 		sb.append("}");
 

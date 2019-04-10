@@ -54,14 +54,23 @@ public class TaxonomyCategorySerDes {
 
 		sb.append("\"taxonomyCategoryId\": ");
 
-		sb.append(taxonomyCategory.getTaxonomyCategoryId());
+		if (taxonomyCategory.getTaxonomyCategoryId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taxonomyCategory.getTaxonomyCategoryId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategoryName\": ");
 
-		sb.append("\"");
-		sb.append(taxonomyCategory.getTaxonomyCategoryName());
-		sb.append("\"");
+		if (taxonomyCategory.getTaxonomyCategoryName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taxonomyCategory.getTaxonomyCategoryName());
+		}
 
 		sb.append("}");
 
@@ -110,7 +119,7 @@ public class TaxonomyCategorySerDes {
 			if (Objects.equals(jsonParserFieldName, "taxonomyCategoryId")) {
 				if (jsonParserFieldValue != null) {
 					taxonomyCategory.setTaxonomyCategoryId(
-						(Long)jsonParserFieldValue);
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(

@@ -80,21 +80,35 @@ public class ContactInformationSerDes {
 
 		sb.append("\"facebook\": ");
 
-		sb.append("\"");
-		sb.append(contactInformation.getFacebook());
-		sb.append("\"");
+		if (contactInformation.getFacebook() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contactInformation.getFacebook());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(contactInformation.getId());
+		if (contactInformation.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contactInformation.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"jabber\": ");
 
-		sb.append("\"");
-		sb.append(contactInformation.getJabber());
-		sb.append("\"");
+		if (contactInformation.getJabber() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contactInformation.getJabber());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"postalAddresses\": ");
@@ -122,16 +136,24 @@ public class ContactInformationSerDes {
 
 		sb.append("\"skype\": ");
 
-		sb.append("\"");
-		sb.append(contactInformation.getSkype());
-		sb.append("\"");
+		if (contactInformation.getSkype() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contactInformation.getSkype());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"sms\": ");
 
-		sb.append("\"");
-		sb.append(contactInformation.getSms());
-		sb.append("\"");
+		if (contactInformation.getSms() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contactInformation.getSms());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"telephones\": ");
@@ -159,9 +181,13 @@ public class ContactInformationSerDes {
 
 		sb.append("\"twitter\": ");
 
-		sb.append("\"");
-		sb.append(contactInformation.getTwitter());
-		sb.append("\"");
+		if (contactInformation.getTwitter() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contactInformation.getTwitter());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"webUrls\": ");
@@ -247,7 +273,8 @@ public class ContactInformationSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					contactInformation.setId((Long)jsonParserFieldValue);
+					contactInformation.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "jabber")) {

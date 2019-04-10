@@ -54,31 +54,56 @@ public class AdaptedImageSerDes {
 
 		sb.append("\"contentUrl\": ");
 
-		sb.append("\"");
-		sb.append(adaptedImage.getContentUrl());
-		sb.append("\"");
+		if (adaptedImage.getContentUrl() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(adaptedImage.getContentUrl());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"height\": ");
 
-		sb.append(adaptedImage.getHeight());
+		if (adaptedImage.getHeight() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(adaptedImage.getHeight());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"resolutionName\": ");
 
-		sb.append("\"");
-		sb.append(adaptedImage.getResolutionName());
-		sb.append("\"");
+		if (adaptedImage.getResolutionName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(adaptedImage.getResolutionName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"sizeInBytes\": ");
 
-		sb.append(adaptedImage.getSizeInBytes());
+		if (adaptedImage.getSizeInBytes() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(adaptedImage.getSizeInBytes());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"width\": ");
 
-		sb.append(adaptedImage.getWidth());
+		if (adaptedImage.getWidth() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(adaptedImage.getWidth());
+		}
 
 		sb.append("}");
 

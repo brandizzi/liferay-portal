@@ -52,21 +52,34 @@ public class RowSerDes {
 
 		sb.append("\"id\": ");
 
-		sb.append(row.getId());
+		if (row.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(row.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"label\": ");
 
-		sb.append("\"");
-		sb.append(row.getLabel());
-		sb.append("\"");
+		if (row.getLabel() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(row.getLabel());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"value\": ");
 
-		sb.append("\"");
-		sb.append(row.getValue());
-		sb.append("\"");
+		if (row.getValue() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(row.getValue());
+		}
 
 		sb.append("}");
 
@@ -110,7 +123,7 @@ public class RowSerDes {
 
 			if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					row.setId((Long)jsonParserFieldValue);
+					row.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "label")) {

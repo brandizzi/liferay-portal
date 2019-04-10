@@ -54,21 +54,34 @@ public class SuccessPageSerDes {
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(successPage.getDescription());
-		sb.append("\"");
+		if (successPage.getDescription() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(successPage.getDescription());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"headline\": ");
 
-		sb.append("\"");
-		sb.append(successPage.getHeadline());
-		sb.append("\"");
+		if (successPage.getHeadline() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(successPage.getHeadline());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(successPage.getId());
+		if (successPage.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(successPage.getId());
+		}
 
 		sb.append("}");
 
@@ -124,7 +137,8 @@ public class SuccessPageSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					successPage.setId((Long)jsonParserFieldValue);
+					successPage.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else {

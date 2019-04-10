@@ -52,33 +52,56 @@ public class PhoneSerDes {
 
 		sb.append("\"extension\": ");
 
-		sb.append("\"");
-		sb.append(phone.getExtension());
-		sb.append("\"");
+		if (phone.getExtension() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(phone.getExtension());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(phone.getId());
+		if (phone.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(phone.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"phoneNumber\": ");
 
-		sb.append("\"");
-		sb.append(phone.getPhoneNumber());
-		sb.append("\"");
+		if (phone.getPhoneNumber() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(phone.getPhoneNumber());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"phoneType\": ");
 
-		sb.append("\"");
-		sb.append(phone.getPhoneType());
-		sb.append("\"");
+		if (phone.getPhoneType() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(phone.getPhoneType());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"primary\": ");
 
-		sb.append(phone.getPrimary());
+		if (phone.getPrimary() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(phone.getPrimary());
+		}
 
 		sb.append("}");
 
@@ -128,7 +151,7 @@ public class PhoneSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					phone.setId((Long)jsonParserFieldValue);
+					phone.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "phoneNumber")) {

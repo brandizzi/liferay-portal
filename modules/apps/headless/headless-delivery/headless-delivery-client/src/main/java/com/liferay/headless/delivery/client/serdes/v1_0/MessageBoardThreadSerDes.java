@@ -17,6 +17,10 @@ package com.liferay.headless.delivery.client.serdes.v1_0;
 import com.liferay.headless.delivery.client.dto.v1_0.MessageBoardThread;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -55,52 +59,90 @@ public class MessageBoardThreadSerDes {
 
 		sb.append("\"aggregateRating\": ");
 
-		sb.append(messageBoardThread.getAggregateRating());
+		if (messageBoardThread.getAggregateRating() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getAggregateRating());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"articleBody\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardThread.getArticleBody());
-		sb.append("\"");
+		if (messageBoardThread.getArticleBody() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getArticleBody());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"creator\": ");
 
-		sb.append(messageBoardThread.getCreator());
+		if (messageBoardThread.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardThread.getDateCreated());
-		sb.append("\"");
+		if (messageBoardThread.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardThread.getDateModified());
-		sb.append("\"");
+		if (messageBoardThread.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardThread.getEncodingFormat());
-		sb.append("\"");
+		if (messageBoardThread.getEncodingFormat() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getEncodingFormat());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"headline\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardThread.getHeadline());
-		sb.append("\"");
+		if (messageBoardThread.getHeadline() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getHeadline());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(messageBoardThread.getId());
+		if (messageBoardThread.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywords\": ");
@@ -128,36 +170,69 @@ public class MessageBoardThreadSerDes {
 
 		sb.append("\"numberOfMessageBoardAttachments\": ");
 
-		sb.append(messageBoardThread.getNumberOfMessageBoardAttachments());
+		if (messageBoardThread.getNumberOfMessageBoardAttachments() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getNumberOfMessageBoardAttachments());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfMessageBoardMessages\": ");
 
-		sb.append(messageBoardThread.getNumberOfMessageBoardMessages());
+		if (messageBoardThread.getNumberOfMessageBoardMessages() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getNumberOfMessageBoardMessages());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"showAsQuestion\": ");
 
-		sb.append(messageBoardThread.getShowAsQuestion());
+		if (messageBoardThread.getShowAsQuestion() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getShowAsQuestion());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(messageBoardThread.getSiteId());
+		if (messageBoardThread.getSiteId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getSiteId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"threadType\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardThread.getThreadType());
-		sb.append("\"");
+		if (messageBoardThread.getThreadType() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardThread.getThreadType());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardThread.getViewableBy());
-		sb.append("\"");
+		if (messageBoardThread.getViewableBy() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(messageBoardThread.getViewableBy());
+			sb.append("\"");
+		}
 
 		sb.append("}");
 
@@ -225,13 +300,13 @@ public class MessageBoardThreadSerDes {
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
 					messageBoardThread.setDateCreated(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
 					messageBoardThread.setDateModified(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "encodingFormat")) {
@@ -248,7 +323,8 @@ public class MessageBoardThreadSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					messageBoardThread.setId((Long)jsonParserFieldValue);
+					messageBoardThread.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "keywords")) {
@@ -282,7 +358,8 @@ public class MessageBoardThreadSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {
 				if (jsonParserFieldValue != null) {
-					messageBoardThread.setSiteId((Long)jsonParserFieldValue);
+					messageBoardThread.setSiteId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "threadType")) {
@@ -301,6 +378,18 @@ public class MessageBoardThreadSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

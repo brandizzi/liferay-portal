@@ -175,28 +175,45 @@ public class MediaForm {
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
+		if (description == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(description);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"folderId\": ");
 
-		sb.append(folderId);
+		if (folderId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(folderId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(title);
-		sb.append("\"");
+		if (title == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(title);
+		}
 
 		sb.append("}");
 

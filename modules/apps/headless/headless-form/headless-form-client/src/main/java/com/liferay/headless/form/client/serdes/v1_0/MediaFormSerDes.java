@@ -52,28 +52,45 @@ public class MediaFormSerDes {
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(mediaForm.getDescription());
-		sb.append("\"");
+		if (mediaForm.getDescription() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(mediaForm.getDescription());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"folderId\": ");
 
-		sb.append(mediaForm.getFolderId());
+		if (mediaForm.getFolderId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(mediaForm.getFolderId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(mediaForm.getName());
-		sb.append("\"");
+		if (mediaForm.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(mediaForm.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(mediaForm.getTitle());
-		sb.append("\"");
+		if (mediaForm.getTitle() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(mediaForm.getTitle());
+		}
 
 		sb.append("}");
 
@@ -123,7 +140,8 @@ public class MediaFormSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "folderId")) {
 				if (jsonParserFieldValue != null) {
-					mediaForm.setFolderId((Long)jsonParserFieldValue);
+					mediaForm.setFolderId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "name")) {

@@ -20,6 +20,10 @@ import com.liferay.headless.delivery.client.dto.v1_0.StructuredContent;
 import com.liferay.headless.delivery.client.dto.v1_0.TaxonomyCategory;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -59,7 +63,13 @@ public class StructuredContentSerDes {
 
 		sb.append("\"aggregateRating\": ");
 
-		sb.append(structuredContent.getAggregateRating());
+		if (structuredContent.getAggregateRating() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getAggregateRating());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"availableLanguages\": ");
@@ -114,59 +124,101 @@ public class StructuredContentSerDes {
 
 		sb.append("\"contentStructureId\": ");
 
-		sb.append(structuredContent.getContentStructureId());
+		if (structuredContent.getContentStructureId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getContentStructureId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"creator\": ");
 
-		sb.append(structuredContent.getCreator());
+		if (structuredContent.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(structuredContent.getDateCreated());
-		sb.append("\"");
+		if (structuredContent.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(structuredContent.getDateModified());
-		sb.append("\"");
+		if (structuredContent.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"datePublished\": ");
 
-		sb.append("\"");
-		sb.append(structuredContent.getDatePublished());
-		sb.append("\"");
+		if (structuredContent.getDatePublished() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getDatePublished());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(structuredContent.getDescription());
-		sb.append("\"");
+		if (structuredContent.getDescription() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getDescription());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"friendlyUrlPath\": ");
 
-		sb.append("\"");
-		sb.append(structuredContent.getFriendlyUrlPath());
-		sb.append("\"");
+		if (structuredContent.getFriendlyUrlPath() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getFriendlyUrlPath());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(structuredContent.getId());
+		if (structuredContent.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"key\": ");
 
-		sb.append("\"");
-		sb.append(structuredContent.getKey());
-		sb.append("\"");
+		if (structuredContent.getKey() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getKey());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywords\": ");
@@ -194,14 +246,24 @@ public class StructuredContentSerDes {
 
 		sb.append("\"lastReviewed\": ");
 
-		sb.append("\"");
-		sb.append(structuredContent.getLastReviewed());
-		sb.append("\"");
+		if (structuredContent.getLastReviewed() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getLastReviewed());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfComments\": ");
 
-		sb.append(structuredContent.getNumberOfComments());
+		if (structuredContent.getNumberOfComments() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getNumberOfComments());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"renderedContents\": ");
@@ -229,7 +291,13 @@ public class StructuredContentSerDes {
 
 		sb.append("\"siteId\": ");
 
-		sb.append(structuredContent.getSiteId());
+		if (structuredContent.getSiteId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getSiteId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategories\": ");
@@ -284,23 +352,36 @@ public class StructuredContentSerDes {
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(structuredContent.getTitle());
-		sb.append("\"");
+		if (structuredContent.getTitle() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getTitle());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"uuid\": ");
 
-		sb.append("\"");
-		sb.append(structuredContent.getUuid());
-		sb.append("\"");
+		if (structuredContent.getUuid() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContent.getUuid());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(structuredContent.getViewableBy());
-		sb.append("\"");
+		if (structuredContent.getViewableBy() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(structuredContent.getViewableBy());
+			sb.append("\"");
+		}
 
 		sb.append("}");
 
@@ -378,7 +459,7 @@ public class StructuredContentSerDes {
 
 				if (jsonParserFieldValue != null) {
 					structuredContent.setContentStructureId(
-						(Long)jsonParserFieldValue);
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "creator")) {
@@ -390,19 +471,19 @@ public class StructuredContentSerDes {
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
 					structuredContent.setDateCreated(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
 					structuredContent.setDateModified(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "datePublished")) {
 				if (jsonParserFieldValue != null) {
 					structuredContent.setDatePublished(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "description")) {
@@ -419,7 +500,8 @@ public class StructuredContentSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					structuredContent.setId((Long)jsonParserFieldValue);
+					structuredContent.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "key")) {
@@ -436,7 +518,7 @@ public class StructuredContentSerDes {
 			else if (Objects.equals(jsonParserFieldName, "lastReviewed")) {
 				if (jsonParserFieldValue != null) {
 					structuredContent.setLastReviewed(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "numberOfComments")) {
@@ -460,7 +542,8 @@ public class StructuredContentSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {
 				if (jsonParserFieldValue != null) {
-					structuredContent.setSiteId((Long)jsonParserFieldValue);
+					structuredContent.setSiteId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(
@@ -506,6 +589,18 @@ public class StructuredContentSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

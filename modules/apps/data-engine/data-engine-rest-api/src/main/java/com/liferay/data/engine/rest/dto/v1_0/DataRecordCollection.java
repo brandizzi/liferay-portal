@@ -176,7 +176,13 @@ public class DataRecordCollection {
 
 		sb.append("\"dataDefinitionId\": ");
 
-		sb.append(dataDefinitionId);
+		if (dataDefinitionId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dataDefinitionId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
@@ -202,7 +208,13 @@ public class DataRecordCollection {
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");

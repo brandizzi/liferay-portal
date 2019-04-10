@@ -76,7 +76,13 @@ public class GridSerDes {
 
 		sb.append("\"id\": ");
 
-		sb.append(grid.getId());
+		if (grid.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(grid.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"rows\": ");
@@ -153,7 +159,7 @@ public class GridSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					grid.setId((Long)jsonParserFieldValue);
+					grid.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "rows")) {

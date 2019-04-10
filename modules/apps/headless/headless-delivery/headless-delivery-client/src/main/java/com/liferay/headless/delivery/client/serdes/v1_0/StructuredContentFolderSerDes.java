@@ -17,6 +17,10 @@ package com.liferay.headless.delivery.client.serdes.v1_0;
 import com.liferay.headless.delivery.client.dto.v1_0.StructuredContentFolder;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -57,63 +61,116 @@ public class StructuredContentFolderSerDes {
 
 		sb.append("\"creator\": ");
 
-		sb.append(structuredContentFolder.getCreator());
+		if (structuredContentFolder.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContentFolder.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(structuredContentFolder.getDateCreated());
-		sb.append("\"");
+		if (structuredContentFolder.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContentFolder.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(structuredContentFolder.getDateModified());
-		sb.append("\"");
+		if (structuredContentFolder.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContentFolder.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(structuredContentFolder.getDescription());
-		sb.append("\"");
+		if (structuredContentFolder.getDescription() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContentFolder.getDescription());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(structuredContentFolder.getId());
+		if (structuredContentFolder.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContentFolder.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(structuredContentFolder.getName());
-		sb.append("\"");
+		if (structuredContentFolder.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContentFolder.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfStructuredContentFolders\": ");
 
-		sb.append(
-			structuredContentFolder.getNumberOfStructuredContentFolders());
+		if (structuredContentFolder.getNumberOfStructuredContentFolders() ==
+				null) {
+
+			sb.append("null");
+		}
+		else {
+			sb.append(
+				structuredContentFolder.getNumberOfStructuredContentFolders());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfStructuredContents\": ");
 
-		sb.append(structuredContentFolder.getNumberOfStructuredContents());
+		if (structuredContentFolder.getNumberOfStructuredContents() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContentFolder.getNumberOfStructuredContents());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(structuredContentFolder.getSiteId());
+		if (structuredContentFolder.getSiteId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContentFolder.getSiteId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(structuredContentFolder.getViewableBy());
-		sb.append("\"");
+		if (structuredContentFolder.getViewableBy() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(structuredContentFolder.getViewableBy());
+			sb.append("\"");
+		}
 
 		sb.append("}");
 
@@ -170,13 +227,13 @@ public class StructuredContentFolderSerDes {
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
 					structuredContentFolder.setDateCreated(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
 					structuredContentFolder.setDateModified(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "description")) {
@@ -187,7 +244,8 @@ public class StructuredContentFolderSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					structuredContentFolder.setId((Long)jsonParserFieldValue);
+					structuredContentFolder.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "name")) {
@@ -216,7 +274,7 @@ public class StructuredContentFolderSerDes {
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {
 				if (jsonParserFieldValue != null) {
 					structuredContentFolder.setSiteId(
-						(Long)jsonParserFieldValue);
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "viewableBy")) {
@@ -229,6 +287,18 @@ public class StructuredContentFolderSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

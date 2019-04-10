@@ -282,52 +282,89 @@ public class Segment {
 
 		sb.append("\"active\": ");
 
-		sb.append(active);
+		if (active == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(active);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"criteria\": ");
 
-		sb.append("\"");
-		sb.append(criteria);
-		sb.append("\"");
+		if (criteria == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(criteria);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(siteId);
+		if (siteId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(siteId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"source\": ");
 
-		sb.append("\"");
-		sb.append(source);
-		sb.append("\"");
+		if (source == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(source);
+		}
 
 		sb.append("}");
 

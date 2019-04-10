@@ -148,21 +148,34 @@ public class SuccessPage {
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
+		if (description == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(description);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"headline\": ");
 
-		sb.append("\"");
-		sb.append(headline);
-		sb.append("\"");
+		if (headline == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(headline);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
 
 		sb.append("}");
 

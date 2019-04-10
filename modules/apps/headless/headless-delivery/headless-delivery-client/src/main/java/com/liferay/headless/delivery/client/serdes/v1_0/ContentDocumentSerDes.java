@@ -54,47 +54,78 @@ public class ContentDocumentSerDes {
 
 		sb.append("\"contentUrl\": ");
 
-		sb.append("\"");
-		sb.append(contentDocument.getContentUrl());
-		sb.append("\"");
+		if (contentDocument.getContentUrl() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentDocument.getContentUrl());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(contentDocument.getDescription());
-		sb.append("\"");
+		if (contentDocument.getDescription() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentDocument.getDescription());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(contentDocument.getEncodingFormat());
-		sb.append("\"");
+		if (contentDocument.getEncodingFormat() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentDocument.getEncodingFormat());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"fileExtension\": ");
 
-		sb.append("\"");
-		sb.append(contentDocument.getFileExtension());
-		sb.append("\"");
+		if (contentDocument.getFileExtension() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentDocument.getFileExtension());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(contentDocument.getId());
+		if (contentDocument.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentDocument.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"sizeInBytes\": ");
 
-		sb.append(contentDocument.getSizeInBytes());
+		if (contentDocument.getSizeInBytes() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentDocument.getSizeInBytes());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(contentDocument.getTitle());
-		sb.append("\"");
+		if (contentDocument.getTitle() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentDocument.getTitle());
+		}
 
 		sb.append("}");
 
@@ -163,7 +194,8 @@ public class ContentDocumentSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					contentDocument.setId((Long)jsonParserFieldValue);
+					contentDocument.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "sizeInBytes")) {

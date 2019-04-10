@@ -467,42 +467,68 @@ public class Form {
 
 		sb.append("\"creator\": ");
 
-		sb.append(creator);
+		if (creator == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"datePublished\": ");
 
-		sb.append("\"");
-		sb.append(datePublished);
-		sb.append("\"");
+		if (datePublished == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(datePublished);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"defaultLanguage\": ");
 
-		sb.append("\"");
-		sb.append(defaultLanguage);
-		sb.append("\"");
+		if (defaultLanguage == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(defaultLanguage);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
+		if (description == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(description);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"formRecords\": ");
@@ -549,29 +575,56 @@ public class Form {
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(siteId);
+		if (siteId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(siteId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"structure\": ");
 
-		sb.append(structure);
+		if (structure == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structure);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"structureId\": ");
 
-		sb.append(structureId);
+		if (structureId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structureId);
+		}
 
 		sb.append("}");
 

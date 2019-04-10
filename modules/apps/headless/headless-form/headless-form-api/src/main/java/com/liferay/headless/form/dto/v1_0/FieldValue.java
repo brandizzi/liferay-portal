@@ -200,31 +200,56 @@ public class FieldValue {
 
 		sb.append("\"document\": ");
 
-		sb.append(document);
+		if (document == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(document);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"documentId\": ");
 
-		sb.append(documentId);
+		if (documentId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(documentId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"value\": ");
 
-		sb.append("\"");
-		sb.append(value);
-		sb.append("\"");
+		if (value == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(value);
+		}
 
 		sb.append("}");
 

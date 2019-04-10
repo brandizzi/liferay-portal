@@ -474,67 +474,124 @@ public class TaxonomyCategory {
 
 		sb.append("\"creator\": ");
 
-		sb.append(creator);
+		if (creator == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
+		if (description == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(description);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfTaxonomyCategories\": ");
 
-		sb.append(numberOfTaxonomyCategories);
+		if (numberOfTaxonomyCategories == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(numberOfTaxonomyCategories);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"parentTaxonomyCategory\": ");
 
-		sb.append(parentTaxonomyCategory);
+		if (parentTaxonomyCategory == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentTaxonomyCategory);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"parentTaxonomyVocabulary\": ");
 
-		sb.append(parentTaxonomyVocabulary);
+		if (parentTaxonomyVocabulary == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentTaxonomyVocabulary);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"parentVocabularyId\": ");
 
-		sb.append(parentVocabularyId);
+		if (parentVocabularyId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentVocabularyId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(viewableBy);
-		sb.append("\"");
+		if (viewableBy == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(viewableBy);
+			sb.append("\"");
+		}
 
 		sb.append("}");
 

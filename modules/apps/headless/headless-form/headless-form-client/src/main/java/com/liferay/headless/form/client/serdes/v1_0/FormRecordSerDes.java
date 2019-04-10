@@ -18,6 +18,10 @@ import com.liferay.headless.form.client.dto.v1_0.FieldValue;
 import com.liferay.headless.form.client.dto.v1_0.FormRecord;
 import com.liferay.headless.form.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -55,33 +59,57 @@ public class FormRecordSerDes {
 
 		sb.append("\"creator\": ");
 
-		sb.append(formRecord.getCreator());
+		if (formRecord.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formRecord.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(formRecord.getDateCreated());
-		sb.append("\"");
+		if (formRecord.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formRecord.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(formRecord.getDateModified());
-		sb.append("\"");
+		if (formRecord.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formRecord.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"datePublished\": ");
 
-		sb.append("\"");
-		sb.append(formRecord.getDatePublished());
-		sb.append("\"");
+		if (formRecord.getDatePublished() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formRecord.getDatePublished());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"draft\": ");
 
-		sb.append(formRecord.getDraft());
+		if (formRecord.getDraft() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formRecord.getDraft());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"fieldValues\": ");
@@ -107,17 +135,34 @@ public class FormRecordSerDes {
 
 		sb.append("\"form\": ");
 
-		sb.append(formRecord.getForm());
+		if (formRecord.getForm() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formRecord.getForm());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"formId\": ");
 
-		sb.append(formRecord.getFormId());
+		if (formRecord.getFormId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formRecord.getFormId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(formRecord.getId());
+		if (formRecord.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formRecord.getId());
+		}
 
 		sb.append("}");
 
@@ -169,17 +214,20 @@ public class FormRecordSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
-					formRecord.setDateCreated((Date)jsonParserFieldValue);
+					formRecord.setDateCreated(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
-					formRecord.setDateModified((Date)jsonParserFieldValue);
+					formRecord.setDateModified(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "datePublished")) {
 				if (jsonParserFieldValue != null) {
-					formRecord.setDatePublished((Date)jsonParserFieldValue);
+					formRecord.setDatePublished(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "draft")) {
@@ -207,17 +255,31 @@ public class FormRecordSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "formId")) {
 				if (jsonParserFieldValue != null) {
-					formRecord.setFormId((Long)jsonParserFieldValue);
+					formRecord.setFormId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					formRecord.setId((Long)jsonParserFieldValue);
+					formRecord.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

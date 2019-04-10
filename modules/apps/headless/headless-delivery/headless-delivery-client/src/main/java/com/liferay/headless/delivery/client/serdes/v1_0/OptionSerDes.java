@@ -52,16 +52,23 @@ public class OptionSerDes {
 
 		sb.append("\"label\": ");
 
-		sb.append("\"");
-		sb.append(option.getLabel());
-		sb.append("\"");
+		if (option.getLabel() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(option.getLabel());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"value\": ");
 
-		sb.append("\"");
-		sb.append(option.getValue());
-		sb.append("\"");
+		if (option.getValue() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(option.getValue());
+		}
 
 		sb.append("}");
 

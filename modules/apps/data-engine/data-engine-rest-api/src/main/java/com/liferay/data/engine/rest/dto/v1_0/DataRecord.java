@@ -149,7 +149,13 @@ public class DataRecord {
 
 		sb.append("\"dataRecordCollectionId\": ");
 
-		sb.append(dataRecordCollectionId);
+		if (dataRecordCollectionId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dataRecordCollectionId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dataRecordValues\": ");
@@ -175,7 +181,12 @@ public class DataRecord {
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
 
 		sb.append("}");
 

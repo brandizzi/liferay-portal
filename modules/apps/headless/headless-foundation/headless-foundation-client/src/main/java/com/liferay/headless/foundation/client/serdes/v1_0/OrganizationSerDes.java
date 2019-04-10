@@ -18,6 +18,10 @@ import com.liferay.headless.foundation.client.dto.v1_0.Organization;
 import com.liferay.headless.foundation.client.dto.v1_0.Service;
 import com.liferay.headless.foundation.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -57,40 +61,68 @@ public class OrganizationSerDes {
 
 		sb.append("\"comment\": ");
 
-		sb.append("\"");
-		sb.append(organization.getComment());
-		sb.append("\"");
+		if (organization.getComment() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(organization.getComment());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"contactInformation\": ");
 
-		sb.append(organization.getContactInformation());
+		if (organization.getContactInformation() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(organization.getContactInformation());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(organization.getDateCreated());
-		sb.append("\"");
+		if (organization.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(organization.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(organization.getDateModified());
-		sb.append("\"");
+		if (organization.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(organization.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(organization.getId());
+		if (organization.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(organization.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"image\": ");
 
-		sb.append("\"");
-		sb.append(organization.getImage());
-		sb.append("\"");
+		if (organization.getImage() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(organization.getImage());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywords\": ");
@@ -118,29 +150,57 @@ public class OrganizationSerDes {
 
 		sb.append("\"location\": ");
 
-		sb.append(organization.getLocation());
+		if (organization.getLocation() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(organization.getLocation());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(organization.getName());
-		sb.append("\"");
+		if (organization.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(organization.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfOrganizations\": ");
 
-		sb.append(organization.getNumberOfOrganizations());
+		if (organization.getNumberOfOrganizations() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(organization.getNumberOfOrganizations());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"parentOrganization\": ");
 
-		sb.append(organization.getParentOrganization());
+		if (organization.getParentOrganization() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(organization.getParentOrganization());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"parentOrganizationId\": ");
 
-		sb.append(organization.getParentOrganizationId());
+		if (organization.getParentOrganizationId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(organization.getParentOrganizationId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"services\": ");
@@ -220,17 +280,20 @@ public class OrganizationSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
-					organization.setDateCreated((Date)jsonParserFieldValue);
+					organization.setDateCreated(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
-					organization.setDateModified((Date)jsonParserFieldValue);
+					organization.setDateModified(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					organization.setId((Long)jsonParserFieldValue);
+					organization.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "image")) {
@@ -276,7 +339,7 @@ public class OrganizationSerDes {
 
 				if (jsonParserFieldValue != null) {
 					organization.setParentOrganizationId(
-						(Long)jsonParserFieldValue);
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "services")) {
@@ -294,6 +357,18 @@ public class OrganizationSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

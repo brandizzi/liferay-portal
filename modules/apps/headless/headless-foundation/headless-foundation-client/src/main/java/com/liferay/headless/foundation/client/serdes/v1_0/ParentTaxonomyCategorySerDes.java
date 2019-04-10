@@ -54,14 +54,23 @@ public class ParentTaxonomyCategorySerDes {
 
 		sb.append("\"id\": ");
 
-		sb.append(parentTaxonomyCategory.getId());
+		if (parentTaxonomyCategory.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentTaxonomyCategory.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(parentTaxonomyCategory.getName());
-		sb.append("\"");
+		if (parentTaxonomyCategory.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentTaxonomyCategory.getName());
+		}
 
 		sb.append("}");
 
@@ -111,7 +120,8 @@ public class ParentTaxonomyCategorySerDes {
 
 			if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					parentTaxonomyCategory.setId((Long)jsonParserFieldValue);
+					parentTaxonomyCategory.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "name")) {

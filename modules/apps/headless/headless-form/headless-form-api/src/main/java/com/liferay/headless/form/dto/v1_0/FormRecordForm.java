@@ -123,14 +123,23 @@ public class FormRecordForm {
 
 		sb.append("\"draft\": ");
 
-		sb.append(draft);
+		if (draft == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(draft);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"fieldValues\": ");
 
-		sb.append("\"");
-		sb.append(fieldValues);
-		sb.append("\"");
+		if (fieldValues == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(fieldValues);
+		}
 
 		sb.append("}");
 

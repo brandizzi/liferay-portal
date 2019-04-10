@@ -461,57 +461,102 @@ public class TaxonomyVocabulary {
 
 		sb.append("\"creator\": ");
 
-		sb.append(creator);
+		if (creator == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
+		if (description == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(description);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfTaxonomyCategories\": ");
 
-		sb.append(numberOfTaxonomyCategories);
+		if (numberOfTaxonomyCategories == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(numberOfTaxonomyCategories);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(siteId);
+		if (siteId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(siteId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(viewableBy);
-		sb.append("\"");
+		if (viewableBy == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(viewableBy);
+			sb.append("\"");
+		}
 
 		sb.append("}");
 

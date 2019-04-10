@@ -161,7 +161,13 @@ public class TaxonomyCategoryBulkSelection {
 
 		sb.append("\"documentBulkSelection\": ");
 
-		sb.append(documentBulkSelection);
+		if (documentBulkSelection == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(documentBulkSelection);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategoryIdsToAdd\": ");

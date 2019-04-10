@@ -424,40 +424,68 @@ public class Organization {
 
 		sb.append("\"comment\": ");
 
-		sb.append("\"");
-		sb.append(comment);
-		sb.append("\"");
+		if (comment == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(comment);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"contactInformation\": ");
 
-		sb.append(contactInformation);
+		if (contactInformation == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contactInformation);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"image\": ");
 
-		sb.append("\"");
-		sb.append(image);
-		sb.append("\"");
+		if (image == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(image);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywords\": ");
@@ -485,29 +513,57 @@ public class Organization {
 
 		sb.append("\"location\": ");
 
-		sb.append(location);
+		if (location == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(location);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfOrganizations\": ");
 
-		sb.append(numberOfOrganizations);
+		if (numberOfOrganizations == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(numberOfOrganizations);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"parentOrganization\": ");
 
-		sb.append(parentOrganization);
+		if (parentOrganization == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentOrganization);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"parentOrganizationId\": ");
 
-		sb.append(parentOrganizationId);
+		if (parentOrganizationId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentOrganizationId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"services\": ");

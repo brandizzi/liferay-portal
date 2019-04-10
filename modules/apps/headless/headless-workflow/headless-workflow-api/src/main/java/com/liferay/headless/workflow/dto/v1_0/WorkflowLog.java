@@ -336,62 +336,111 @@ public class WorkflowLog {
 
 		sb.append("\"auditPerson\": ");
 
-		sb.append(auditPerson);
+		if (auditPerson == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(auditPerson);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"commentLog\": ");
 
-		sb.append("\"");
-		sb.append(commentLog);
-		sb.append("\"");
+		if (commentLog == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(commentLog);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"person\": ");
 
-		sb.append(person);
+		if (person == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(person);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"previousPerson\": ");
 
-		sb.append(previousPerson);
+		if (previousPerson == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(previousPerson);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"previousState\": ");
 
-		sb.append("\"");
-		sb.append(previousState);
-		sb.append("\"");
+		if (previousState == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(previousState);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"state\": ");
 
-		sb.append("\"");
-		sb.append(state);
-		sb.append("\"");
+		if (state == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(state);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"taskId\": ");
 
-		sb.append(taskId);
+		if (taskId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taskId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"type\": ");
 
-		sb.append("\"");
-		sb.append(type);
-		sb.append("\"");
+		if (type == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(type);
+		}
 
 		sb.append("}");
 

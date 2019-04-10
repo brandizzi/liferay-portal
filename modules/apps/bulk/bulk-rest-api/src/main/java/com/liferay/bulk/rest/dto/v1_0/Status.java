@@ -96,7 +96,12 @@ public class Status {
 
 		sb.append("\"actionInProgress\": ");
 
-		sb.append(actionInProgress);
+		if (actionInProgress == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(actionInProgress);
+		}
 
 		sb.append("}");
 

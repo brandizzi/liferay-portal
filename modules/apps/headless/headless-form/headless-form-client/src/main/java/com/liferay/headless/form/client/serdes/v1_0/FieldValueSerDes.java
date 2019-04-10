@@ -52,31 +52,56 @@ public class FieldValueSerDes {
 
 		sb.append("\"document\": ");
 
-		sb.append(fieldValue.getDocument());
+		if (fieldValue.getDocument() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(fieldValue.getDocument());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"documentId\": ");
 
-		sb.append(fieldValue.getDocumentId());
+		if (fieldValue.getDocumentId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(fieldValue.getDocumentId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(fieldValue.getId());
+		if (fieldValue.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(fieldValue.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(fieldValue.getName());
-		sb.append("\"");
+		if (fieldValue.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(fieldValue.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"value\": ");
 
-		sb.append("\"");
-		sb.append(fieldValue.getValue());
-		sb.append("\"");
+		if (fieldValue.getValue() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(fieldValue.getValue());
+		}
 
 		sb.append("}");
 
@@ -128,12 +153,14 @@ public class FieldValueSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "documentId")) {
 				if (jsonParserFieldValue != null) {
-					fieldValue.setDocumentId((Long)jsonParserFieldValue);
+					fieldValue.setDocumentId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					fieldValue.setId((Long)jsonParserFieldValue);
+					fieldValue.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "name")) {

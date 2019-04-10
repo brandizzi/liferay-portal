@@ -56,40 +56,68 @@ public class ContentStructureFieldSerDes {
 
 		sb.append("\"dataType\": ");
 
-		sb.append("\"");
-		sb.append(contentStructureField.getDataType());
-		sb.append("\"");
+		if (contentStructureField.getDataType() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructureField.getDataType());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"inputControl\": ");
 
-		sb.append("\"");
-		sb.append(contentStructureField.getInputControl());
-		sb.append("\"");
+		if (contentStructureField.getInputControl() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructureField.getInputControl());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"label\": ");
 
-		sb.append("\"");
-		sb.append(contentStructureField.getLabel());
-		sb.append("\"");
+		if (contentStructureField.getLabel() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructureField.getLabel());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"localizable\": ");
 
-		sb.append(contentStructureField.getLocalizable());
+		if (contentStructureField.getLocalizable() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructureField.getLocalizable());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"multiple\": ");
 
-		sb.append(contentStructureField.getMultiple());
+		if (contentStructureField.getMultiple() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructureField.getMultiple());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(contentStructureField.getName());
-		sb.append("\"");
+		if (contentStructureField.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructureField.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"nestedContentStructureFields\": ");
@@ -145,24 +173,45 @@ public class ContentStructureFieldSerDes {
 
 		sb.append("\"predefinedValue\": ");
 
-		sb.append("\"");
-		sb.append(contentStructureField.getPredefinedValue());
-		sb.append("\"");
+		if (contentStructureField.getPredefinedValue() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructureField.getPredefinedValue());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"repeatable\": ");
 
-		sb.append(contentStructureField.getRepeatable());
+		if (contentStructureField.getRepeatable() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructureField.getRepeatable());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"required\": ");
 
-		sb.append(contentStructureField.getRequired());
+		if (contentStructureField.getRequired() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructureField.getRequired());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"showLabel\": ");
 
-		sb.append(contentStructureField.getShowLabel());
+		if (contentStructureField.getShowLabel() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructureField.getShowLabel());
+		}
 
 		sb.append("}");
 

@@ -231,36 +231,67 @@ public class Value {
 
 		sb.append("\"data\": ");
 
-		sb.append("\"");
-		sb.append(data);
-		sb.append("\"");
+		if (data == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(data);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"document\": ");
 
-		sb.append(document);
+		if (document == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(document);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"geo\": ");
 
-		sb.append(geo);
+		if (geo == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(geo);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"image\": ");
 
-		sb.append(image);
+		if (image == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(image);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"link\": ");
 
-		sb.append("\"");
-		sb.append(link);
-		sb.append("\"");
+		if (link == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(link);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"structuredContentLink\": ");
 
-		sb.append(structuredContentLink);
+		if (structuredContentLink == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(structuredContentLink);
+		}
 
 		sb.append("}");
 

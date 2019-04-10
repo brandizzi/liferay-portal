@@ -96,9 +96,12 @@ public class ChangeTransition {
 
 		sb.append("\"transition\": ");
 
-		sb.append("\"");
-		sb.append(transition);
-		sb.append("\"");
+		if (transition == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(transition);
+		}
 
 		sb.append("}");
 

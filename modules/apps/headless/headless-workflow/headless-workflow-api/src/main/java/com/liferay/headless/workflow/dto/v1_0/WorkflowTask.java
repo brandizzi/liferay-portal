@@ -337,59 +337,101 @@ public class WorkflowTask {
 
 		sb.append("\"completed\": ");
 
-		sb.append(completed);
+		if (completed == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(completed);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCompleted\": ");
 
-		sb.append("\"");
-		sb.append(dateCompleted);
-		sb.append("\"");
+		if (dateCompleted == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCompleted);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"definitionName\": ");
 
-		sb.append("\"");
-		sb.append(definitionName);
-		sb.append("\"");
+		if (definitionName == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(definitionName);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
+		if (description == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(description);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dueDate\": ");
 
-		sb.append("\"");
-		sb.append(dueDate);
-		sb.append("\"");
+		if (dueDate == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dueDate);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"objectReviewed\": ");
 
-		sb.append(objectReviewed);
+		if (objectReviewed == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(objectReviewed);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"transitions\": ");

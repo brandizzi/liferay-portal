@@ -196,21 +196,36 @@ public class AssetType {
 
 		sb.append("\"required\": ");
 
-		sb.append(required);
+		if (required == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(required);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"subtype\": ");
 
-		sb.append("\"");
-		sb.append(subtype);
-		sb.append("\"");
+		if (subtype == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(subtype);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"type\": ");
 
-		sb.append("\"");
-		sb.append(type);
-		sb.append("\"");
+		if (type == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(type);
+			sb.append("\"");
+		}
 
 		sb.append("}");
 

@@ -254,49 +254,78 @@ public class Creator {
 
 		sb.append("\"additionalName\": ");
 
-		sb.append("\"");
-		sb.append(additionalName);
-		sb.append("\"");
+		if (additionalName == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(additionalName);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"familyName\": ");
 
-		sb.append("\"");
-		sb.append(familyName);
-		sb.append("\"");
+		if (familyName == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(familyName);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"givenName\": ");
 
-		sb.append("\"");
-		sb.append(givenName);
-		sb.append("\"");
+		if (givenName == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(givenName);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"image\": ");
 
-		sb.append("\"");
-		sb.append(image);
-		sb.append("\"");
+		if (image == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(image);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"profileURL\": ");
 
-		sb.append("\"");
-		sb.append(profileURL);
-		sb.append("\"");
+		if (profileURL == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(profileURL);
+		}
 
 		sb.append("}");
 

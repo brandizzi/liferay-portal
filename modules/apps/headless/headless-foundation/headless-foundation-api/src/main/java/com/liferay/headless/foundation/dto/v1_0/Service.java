@@ -173,14 +173,23 @@ public class Service {
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"serviceType\": ");
 
-		sb.append("\"");
-		sb.append(serviceType);
-		sb.append("\"");
+		if (serviceType == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(serviceType);
+		}
 
 		sb.append("}");
 

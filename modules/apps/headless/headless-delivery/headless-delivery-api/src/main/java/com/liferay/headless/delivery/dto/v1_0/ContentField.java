@@ -254,30 +254,46 @@ public class ContentField {
 
 		sb.append("\"dataType\": ");
 
-		sb.append("\"");
-		sb.append(dataType);
-		sb.append("\"");
+		if (dataType == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dataType);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"inputControl\": ");
 
-		sb.append("\"");
-		sb.append(inputControl);
-		sb.append("\"");
+		if (inputControl == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(inputControl);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"label\": ");
 
-		sb.append("\"");
-		sb.append(label);
-		sb.append("\"");
+		if (label == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(label);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"nestedFields\": ");
@@ -303,12 +319,23 @@ public class ContentField {
 
 		sb.append("\"repeatable\": ");
 
-		sb.append(repeatable);
+		if (repeatable == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(repeatable);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"value\": ");
 
-		sb.append(value);
+		if (value == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(value);
+		}
 
 		sb.append("}");
 

@@ -54,9 +54,12 @@ public class ChangeTransitionSerDes {
 
 		sb.append("\"transition\": ");
 
-		sb.append("\"");
-		sb.append(changeTransition.getTransition());
-		sb.append("\"");
+		if (changeTransition.getTransition() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(changeTransition.getTransition());
+		}
 
 		sb.append("}");
 

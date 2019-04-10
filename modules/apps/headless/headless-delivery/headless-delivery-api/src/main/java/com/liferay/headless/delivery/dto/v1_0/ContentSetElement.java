@@ -175,26 +175,45 @@ public class ContentSetElement {
 
 		sb.append("\"content\": ");
 
-		sb.append(content);
+		if (content == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(content);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"contentType\": ");
 
-		sb.append("\"");
-		sb.append(contentType);
-		sb.append("\"");
+		if (contentType == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentType);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(title);
-		sb.append("\"");
+		if (title == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(title);
+		}
 
 		sb.append("}");
 

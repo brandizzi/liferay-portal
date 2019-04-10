@@ -17,6 +17,10 @@ package com.liferay.headless.workflow.client.serdes.v1_0;
 import com.liferay.headless.workflow.client.dto.v1_0.WorkflowLog;
 import com.liferay.headless.workflow.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -55,62 +59,111 @@ public class WorkflowLogSerDes {
 
 		sb.append("\"auditPerson\": ");
 
-		sb.append(workflowLog.getAuditPerson());
+		if (workflowLog.getAuditPerson() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowLog.getAuditPerson());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"commentLog\": ");
 
-		sb.append("\"");
-		sb.append(workflowLog.getCommentLog());
-		sb.append("\"");
+		if (workflowLog.getCommentLog() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowLog.getCommentLog());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(workflowLog.getDateCreated());
-		sb.append("\"");
+		if (workflowLog.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowLog.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(workflowLog.getId());
+		if (workflowLog.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowLog.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"person\": ");
 
-		sb.append(workflowLog.getPerson());
+		if (workflowLog.getPerson() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowLog.getPerson());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"previousPerson\": ");
 
-		sb.append(workflowLog.getPreviousPerson());
+		if (workflowLog.getPreviousPerson() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowLog.getPreviousPerson());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"previousState\": ");
 
-		sb.append("\"");
-		sb.append(workflowLog.getPreviousState());
-		sb.append("\"");
+		if (workflowLog.getPreviousState() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowLog.getPreviousState());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"state\": ");
 
-		sb.append("\"");
-		sb.append(workflowLog.getState());
-		sb.append("\"");
+		if (workflowLog.getState() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowLog.getState());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"taskId\": ");
 
-		sb.append(workflowLog.getTaskId());
+		if (workflowLog.getTaskId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowLog.getTaskId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"type\": ");
 
-		sb.append("\"");
-		sb.append(workflowLog.getType());
-		sb.append("\"");
+		if (workflowLog.getType() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(workflowLog.getType());
+		}
 
 		sb.append("}");
 
@@ -167,12 +220,14 @@ public class WorkflowLogSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
-					workflowLog.setDateCreated((Date)jsonParserFieldValue);
+					workflowLog.setDateCreated(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					workflowLog.setId((Long)jsonParserFieldValue);
+					workflowLog.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "person")) {
@@ -199,7 +254,8 @@ public class WorkflowLogSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "taskId")) {
 				if (jsonParserFieldValue != null) {
-					workflowLog.setTaskId((Long)jsonParserFieldValue);
+					workflowLog.setTaskId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "type")) {
@@ -210,6 +266,18 @@ public class WorkflowLogSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

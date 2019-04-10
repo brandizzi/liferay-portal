@@ -396,62 +396,113 @@ public class MessageBoardSection {
 
 		sb.append("\"creator\": ");
 
-		sb.append(creator);
+		if (creator == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
+		if (description == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(description);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfMessageBoardSections\": ");
 
-		sb.append(numberOfMessageBoardSections);
+		if (numberOfMessageBoardSections == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(numberOfMessageBoardSections);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfMessageBoardThreads\": ");
 
-		sb.append(numberOfMessageBoardThreads);
+		if (numberOfMessageBoardThreads == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(numberOfMessageBoardThreads);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(siteId);
+		if (siteId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(siteId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(title);
-		sb.append("\"");
+		if (title == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(title);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(viewableBy);
-		sb.append("\"");
+		if (viewableBy == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(viewableBy);
+			sb.append("\"");
+		}
 
 		sb.append("}");
 

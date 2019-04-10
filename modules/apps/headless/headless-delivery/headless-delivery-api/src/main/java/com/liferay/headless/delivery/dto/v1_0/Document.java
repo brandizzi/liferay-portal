@@ -624,64 +624,112 @@ public class Document {
 
 		sb.append("\"aggregateRating\": ");
 
-		sb.append(aggregateRating);
+		if (aggregateRating == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(aggregateRating);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"contentUrl\": ");
 
-		sb.append("\"");
-		sb.append(contentUrl);
-		sb.append("\"");
+		if (contentUrl == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentUrl);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"creator\": ");
 
-		sb.append(creator);
+		if (creator == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
+		if (description == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(description);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"documentFolderId\": ");
 
-		sb.append(documentFolderId);
+		if (documentFolderId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(documentFolderId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(encodingFormat);
-		sb.append("\"");
+		if (encodingFormat == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(encodingFormat);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"fileExtension\": ");
 
-		sb.append("\"");
-		sb.append(fileExtension);
-		sb.append("\"");
+		if (fileExtension == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(fileExtension);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywords\": ");
@@ -709,12 +757,24 @@ public class Document {
 
 		sb.append("\"numberOfComments\": ");
 
-		sb.append(numberOfComments);
+		if (numberOfComments == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(numberOfComments);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"sizeInBytes\": ");
 
-		sb.append(sizeInBytes);
+		if (sizeInBytes == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(sizeInBytes);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategories\": ");
@@ -761,16 +821,25 @@ public class Document {
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(title);
-		sb.append("\"");
+		if (title == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(title);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(viewableBy);
-		sb.append("\"");
+		if (viewableBy == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(viewableBy);
+			sb.append("\"");
+		}
 
 		sb.append("}");
 

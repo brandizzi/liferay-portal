@@ -173,26 +173,45 @@ public class Email {
 
 		sb.append("\"email\": ");
 
-		sb.append("\"");
-		sb.append(email);
-		sb.append("\"");
+		if (email == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(email);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"primary\": ");
 
-		sb.append(primary);
+		if (primary == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(primary);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"type\": ");
 
-		sb.append("\"");
-		sb.append(type);
-		sb.append("\"");
+		if (type == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(type);
+		}
 
 		sb.append("}");
 

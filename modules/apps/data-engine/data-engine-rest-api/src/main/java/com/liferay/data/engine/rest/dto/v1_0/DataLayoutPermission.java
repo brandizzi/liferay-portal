@@ -230,17 +230,35 @@ public class DataLayoutPermission {
 
 		sb.append("\"addDataLayout\": ");
 
-		sb.append(addDataLayout);
+		if (addDataLayout == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(addDataLayout);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"definePermissions\": ");
 
-		sb.append(definePermissions);
+		if (definePermissions == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(definePermissions);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"delete\": ");
 
-		sb.append(delete);
+		if (delete == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(delete);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"roleNames\": ");
@@ -268,12 +286,23 @@ public class DataLayoutPermission {
 
 		sb.append("\"update\": ");
 
-		sb.append(update);
+		if (update == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(update);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"view\": ");
 
-		sb.append(view);
+		if (view == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(view);
+		}
 
 		sb.append("}");
 

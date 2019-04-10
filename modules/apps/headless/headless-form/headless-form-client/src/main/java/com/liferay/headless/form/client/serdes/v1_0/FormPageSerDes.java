@@ -75,21 +75,34 @@ public class FormPageSerDes {
 
 		sb.append("\"headline\": ");
 
-		sb.append("\"");
-		sb.append(formPage.getHeadline());
-		sb.append("\"");
+		if (formPage.getHeadline() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formPage.getHeadline());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(formPage.getId());
+		if (formPage.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formPage.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"text\": ");
 
-		sb.append("\"");
-		sb.append(formPage.getText());
-		sb.append("\"");
+		if (formPage.getText() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formPage.getText());
+		}
 
 		sb.append("}");
 
@@ -151,7 +164,7 @@ public class FormPageSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					formPage.setId((Long)jsonParserFieldValue);
+					formPage.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "text")) {

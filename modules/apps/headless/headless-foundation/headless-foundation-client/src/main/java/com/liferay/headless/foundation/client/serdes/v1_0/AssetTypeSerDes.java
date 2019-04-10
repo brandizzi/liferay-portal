@@ -52,21 +52,36 @@ public class AssetTypeSerDes {
 
 		sb.append("\"required\": ");
 
-		sb.append(assetType.getRequired());
+		if (assetType.getRequired() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(assetType.getRequired());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"subtype\": ");
 
-		sb.append("\"");
-		sb.append(assetType.getSubtype());
-		sb.append("\"");
+		if (assetType.getSubtype() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(assetType.getSubtype());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"type\": ");
 
-		sb.append("\"");
-		sb.append(assetType.getType());
-		sb.append("\"");
+		if (assetType.getType() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(assetType.getType());
+			sb.append("\"");
+		}
 
 		sb.append("}");
 

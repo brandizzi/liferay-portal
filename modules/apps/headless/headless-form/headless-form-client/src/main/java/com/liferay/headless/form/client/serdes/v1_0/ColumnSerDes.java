@@ -52,21 +52,34 @@ public class ColumnSerDes {
 
 		sb.append("\"id\": ");
 
-		sb.append(column.getId());
+		if (column.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(column.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"label\": ");
 
-		sb.append("\"");
-		sb.append(column.getLabel());
-		sb.append("\"");
+		if (column.getLabel() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(column.getLabel());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"value\": ");
 
-		sb.append("\"");
-		sb.append(column.getValue());
-		sb.append("\"");
+		if (column.getValue() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(column.getValue());
+		}
 
 		sb.append("}");
 
@@ -111,7 +124,7 @@ public class ColumnSerDes {
 
 			if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					column.setId((Long)jsonParserFieldValue);
+					column.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "label")) {

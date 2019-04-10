@@ -52,21 +52,34 @@ public class WebUrlSerDes {
 
 		sb.append("\"id\": ");
 
-		sb.append(webUrl.getId());
+		if (webUrl.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(webUrl.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"url\": ");
 
-		sb.append("\"");
-		sb.append(webUrl.getUrl());
-		sb.append("\"");
+		if (webUrl.getUrl() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(webUrl.getUrl());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"urlType\": ");
 
-		sb.append("\"");
-		sb.append(webUrl.getUrlType());
-		sb.append("\"");
+		if (webUrl.getUrlType() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(webUrl.getUrlType());
+		}
 
 		sb.append("}");
 
@@ -111,7 +124,7 @@ public class WebUrlSerDes {
 
 			if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					webUrl.setId((Long)jsonParserFieldValue);
+					webUrl.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "url")) {

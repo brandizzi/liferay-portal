@@ -52,21 +52,34 @@ public class ImageSerDes {
 
 		sb.append("\"caption\": ");
 
-		sb.append("\"");
-		sb.append(image.getCaption());
-		sb.append("\"");
+		if (image.getCaption() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(image.getCaption());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"contentUrl\": ");
 
-		sb.append("\"");
-		sb.append(image.getContentUrl());
-		sb.append("\"");
+		if (image.getContentUrl() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(image.getContentUrl());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"imageId\": ");
 
-		sb.append(image.getImageId());
+		if (image.getImageId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(image.getImageId());
+		}
 
 		sb.append("}");
 
@@ -121,7 +134,8 @@ public class ImageSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "imageId")) {
 				if (jsonParserFieldValue != null) {
-					image.setImageId((Long)jsonParserFieldValue);
+					image.setImageId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else {

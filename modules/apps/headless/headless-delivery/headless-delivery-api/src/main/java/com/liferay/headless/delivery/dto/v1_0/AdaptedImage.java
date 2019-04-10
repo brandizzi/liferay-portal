@@ -204,31 +204,56 @@ public class AdaptedImage {
 
 		sb.append("\"contentUrl\": ");
 
-		sb.append("\"");
-		sb.append(contentUrl);
-		sb.append("\"");
+		if (contentUrl == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentUrl);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"height\": ");
 
-		sb.append(height);
+		if (height == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(height);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"resolutionName\": ");
 
-		sb.append("\"");
-		sb.append(resolutionName);
-		sb.append("\"");
+		if (resolutionName == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(resolutionName);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"sizeInBytes\": ");
 
-		sb.append(sizeInBytes);
+		if (sizeInBytes == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(sizeInBytes);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"width\": ");
 
-		sb.append(width);
+		if (width == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(width);
+		}
 
 		sb.append("}");
 

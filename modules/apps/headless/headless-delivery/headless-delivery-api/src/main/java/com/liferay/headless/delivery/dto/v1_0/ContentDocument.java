@@ -256,47 +256,78 @@ public class ContentDocument {
 
 		sb.append("\"contentUrl\": ");
 
-		sb.append("\"");
-		sb.append(contentUrl);
-		sb.append("\"");
+		if (contentUrl == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentUrl);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
+		if (description == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(description);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(encodingFormat);
-		sb.append("\"");
+		if (encodingFormat == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(encodingFormat);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"fileExtension\": ");
 
-		sb.append("\"");
-		sb.append(fileExtension);
-		sb.append("\"");
+		if (fileExtension == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(fileExtension);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"sizeInBytes\": ");
 
-		sb.append(sizeInBytes);
+		if (sizeInBytes == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(sizeInBytes);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(title);
-		sb.append("\"");
+		if (title == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(title);
+		}
 
 		sb.append("}");
 

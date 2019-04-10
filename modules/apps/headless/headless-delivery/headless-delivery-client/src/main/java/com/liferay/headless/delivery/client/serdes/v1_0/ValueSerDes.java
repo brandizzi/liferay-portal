@@ -52,36 +52,67 @@ public class ValueSerDes {
 
 		sb.append("\"data\": ");
 
-		sb.append("\"");
-		sb.append(value.getData());
-		sb.append("\"");
+		if (value.getData() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(value.getData());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"document\": ");
 
-		sb.append(value.getDocument());
+		if (value.getDocument() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(value.getDocument());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"geo\": ");
 
-		sb.append(value.getGeo());
+		if (value.getGeo() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(value.getGeo());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"image\": ");
 
-		sb.append(value.getImage());
+		if (value.getImage() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(value.getImage());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"link\": ");
 
-		sb.append("\"");
-		sb.append(value.getLink());
-		sb.append("\"");
+		if (value.getLink() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(value.getLink());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"structuredContentLink\": ");
 
-		sb.append(value.getStructuredContentLink());
+		if (value.getStructuredContentLink() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(value.getStructuredContentLink());
+		}
 
 		sb.append("}");
 

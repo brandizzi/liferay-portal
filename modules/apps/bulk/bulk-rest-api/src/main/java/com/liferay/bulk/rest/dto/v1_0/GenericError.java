@@ -96,9 +96,12 @@ public class GenericError {
 
 		sb.append("\"message\": ");
 
-		sb.append("\"");
-		sb.append(message);
-		sb.append("\"");
+		if (message == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(message);
+		}
 
 		sb.append("}");
 

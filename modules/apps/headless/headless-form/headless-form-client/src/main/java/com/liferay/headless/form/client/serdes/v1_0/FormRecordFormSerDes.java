@@ -54,14 +54,23 @@ public class FormRecordFormSerDes {
 
 		sb.append("\"draft\": ");
 
-		sb.append(formRecordForm.getDraft());
+		if (formRecordForm.getDraft() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formRecordForm.getDraft());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"fieldValues\": ");
 
-		sb.append("\"");
-		sb.append(formRecordForm.getFieldValues());
-		sb.append("\"");
+		if (formRecordForm.getFieldValues() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formRecordForm.getFieldValues());
+		}
 
 		sb.append("}");
 

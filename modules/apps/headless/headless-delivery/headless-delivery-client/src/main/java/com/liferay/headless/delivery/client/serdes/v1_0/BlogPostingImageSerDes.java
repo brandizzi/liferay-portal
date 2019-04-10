@@ -54,47 +54,80 @@ public class BlogPostingImageSerDes {
 
 		sb.append("\"contentUrl\": ");
 
-		sb.append("\"");
-		sb.append(blogPostingImage.getContentUrl());
-		sb.append("\"");
+		if (blogPostingImage.getContentUrl() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPostingImage.getContentUrl());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(blogPostingImage.getEncodingFormat());
-		sb.append("\"");
+		if (blogPostingImage.getEncodingFormat() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPostingImage.getEncodingFormat());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"fileExtension\": ");
 
-		sb.append("\"");
-		sb.append(blogPostingImage.getFileExtension());
-		sb.append("\"");
+		if (blogPostingImage.getFileExtension() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPostingImage.getFileExtension());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(blogPostingImage.getId());
+		if (blogPostingImage.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPostingImage.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"sizeInBytes\": ");
 
-		sb.append(blogPostingImage.getSizeInBytes());
+		if (blogPostingImage.getSizeInBytes() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPostingImage.getSizeInBytes());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(blogPostingImage.getTitle());
-		sb.append("\"");
+		if (blogPostingImage.getTitle() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(blogPostingImage.getTitle());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(blogPostingImage.getViewableBy());
-		sb.append("\"");
+		if (blogPostingImage.getViewableBy() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(blogPostingImage.getViewableBy());
+			sb.append("\"");
+		}
 
 		sb.append("}");
 
@@ -160,7 +193,8 @@ public class BlogPostingImageSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					blogPostingImage.setId((Long)jsonParserFieldValue);
+					blogPostingImage.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "sizeInBytes")) {

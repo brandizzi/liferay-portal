@@ -202,33 +202,56 @@ public class Phone {
 
 		sb.append("\"extension\": ");
 
-		sb.append("\"");
-		sb.append(extension);
-		sb.append("\"");
+		if (extension == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(extension);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"phoneNumber\": ");
 
-		sb.append("\"");
-		sb.append(phoneNumber);
-		sb.append("\"");
+		if (phoneNumber == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(phoneNumber);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"phoneType\": ");
 
-		sb.append("\"");
-		sb.append(phoneType);
-		sb.append("\"");
+		if (phoneType == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(phoneType);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"primary\": ");
 
-		sb.append(primary);
+		if (primary == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(primary);
+		}
 
 		sb.append("}");
 

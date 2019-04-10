@@ -257,41 +257,78 @@ public class Rating {
 
 		sb.append("\"bestRating\": ");
 
-		sb.append(bestRating);
+		if (bestRating == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(bestRating);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"creator\": ");
 
-		sb.append(creator);
+		if (creator == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"ratingValue\": ");
 
-		sb.append(ratingValue);
+		if (ratingValue == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(ratingValue);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"worstRating\": ");
 
-		sb.append(worstRating);
+		if (worstRating == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(worstRating);
+		}
 
 		sb.append("}");
 

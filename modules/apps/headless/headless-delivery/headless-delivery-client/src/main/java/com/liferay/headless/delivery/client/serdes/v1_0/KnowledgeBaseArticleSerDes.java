@@ -18,6 +18,10 @@ import com.liferay.headless.delivery.client.dto.v1_0.KnowledgeBaseArticle;
 import com.liferay.headless.delivery.client.dto.v1_0.TaxonomyCategory;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -57,59 +61,101 @@ public class KnowledgeBaseArticleSerDes {
 
 		sb.append("\"aggregateRating\": ");
 
-		sb.append(knowledgeBaseArticle.getAggregateRating());
+		if (knowledgeBaseArticle.getAggregateRating() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getAggregateRating());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"articleBody\": ");
 
-		sb.append("\"");
-		sb.append(knowledgeBaseArticle.getArticleBody());
-		sb.append("\"");
+		if (knowledgeBaseArticle.getArticleBody() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getArticleBody());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"creator\": ");
 
-		sb.append(knowledgeBaseArticle.getCreator());
+		if (knowledgeBaseArticle.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(knowledgeBaseArticle.getDateCreated());
-		sb.append("\"");
+		if (knowledgeBaseArticle.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(knowledgeBaseArticle.getDateModified());
-		sb.append("\"");
+		if (knowledgeBaseArticle.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(knowledgeBaseArticle.getDescription());
-		sb.append("\"");
+		if (knowledgeBaseArticle.getDescription() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getDescription());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(knowledgeBaseArticle.getEncodingFormat());
-		sb.append("\"");
+		if (knowledgeBaseArticle.getEncodingFormat() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getEncodingFormat());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"friendlyUrlPath\": ");
 
-		sb.append("\"");
-		sb.append(knowledgeBaseArticle.getFriendlyUrlPath());
-		sb.append("\"");
+		if (knowledgeBaseArticle.getFriendlyUrlPath() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getFriendlyUrlPath());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(knowledgeBaseArticle.getId());
+		if (knowledgeBaseArticle.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywords\": ");
@@ -139,27 +185,57 @@ public class KnowledgeBaseArticleSerDes {
 
 		sb.append("\"numberOfAttachments\": ");
 
-		sb.append(knowledgeBaseArticle.getNumberOfAttachments());
+		if (knowledgeBaseArticle.getNumberOfAttachments() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getNumberOfAttachments());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfKnowledgeBaseArticles\": ");
 
-		sb.append(knowledgeBaseArticle.getNumberOfKnowledgeBaseArticles());
+		if (knowledgeBaseArticle.getNumberOfKnowledgeBaseArticles() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getNumberOfKnowledgeBaseArticles());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"parentKnowledgeBaseFolder\": ");
 
-		sb.append(knowledgeBaseArticle.getParentKnowledgeBaseFolder());
+		if (knowledgeBaseArticle.getParentKnowledgeBaseFolder() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getParentKnowledgeBaseFolder());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"parentKnowledgeBaseFolderId\": ");
 
-		sb.append(knowledgeBaseArticle.getParentKnowledgeBaseFolderId());
+		if (knowledgeBaseArticle.getParentKnowledgeBaseFolderId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getParentKnowledgeBaseFolderId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(knowledgeBaseArticle.getSiteId());
+		if (knowledgeBaseArticle.getSiteId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getSiteId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategories\": ");
@@ -215,16 +291,25 @@ public class KnowledgeBaseArticleSerDes {
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(knowledgeBaseArticle.getTitle());
-		sb.append("\"");
+		if (knowledgeBaseArticle.getTitle() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseArticle.getTitle());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(knowledgeBaseArticle.getViewableBy());
-		sb.append("\"");
+		if (knowledgeBaseArticle.getViewableBy() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(knowledgeBaseArticle.getViewableBy());
+			sb.append("\"");
+		}
 
 		sb.append("}");
 
@@ -294,13 +379,13 @@ public class KnowledgeBaseArticleSerDes {
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
 					knowledgeBaseArticle.setDateCreated(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
 					knowledgeBaseArticle.setDateModified(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "description")) {
@@ -323,7 +408,8 @@ public class KnowledgeBaseArticleSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					knowledgeBaseArticle.setId((Long)jsonParserFieldValue);
+					knowledgeBaseArticle.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "keywords")) {
@@ -362,12 +448,13 @@ public class KnowledgeBaseArticleSerDes {
 
 				if (jsonParserFieldValue != null) {
 					knowledgeBaseArticle.setParentKnowledgeBaseFolderId(
-						(Long)jsonParserFieldValue);
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {
 				if (jsonParserFieldValue != null) {
-					knowledgeBaseArticle.setSiteId((Long)jsonParserFieldValue);
+					knowledgeBaseArticle.setSiteId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(
@@ -408,6 +495,18 @@ public class KnowledgeBaseArticleSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

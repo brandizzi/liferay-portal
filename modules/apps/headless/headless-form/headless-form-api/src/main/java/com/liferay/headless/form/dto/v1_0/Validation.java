@@ -148,21 +148,34 @@ public class Validation {
 
 		sb.append("\"errorMessage\": ");
 
-		sb.append("\"");
-		sb.append(errorMessage);
-		sb.append("\"");
+		if (errorMessage == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(errorMessage);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"expression\": ");
 
-		sb.append("\"");
-		sb.append(expression);
-		sb.append("\"");
+		if (expression == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(expression);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
 
 		sb.append("}");
 

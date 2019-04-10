@@ -17,6 +17,10 @@ package com.liferay.headless.delivery.client.serdes.v1_0;
 import com.liferay.headless.delivery.client.dto.v1_0.Comment;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -53,38 +57,67 @@ public class CommentSerDes {
 
 		sb.append("\"creator\": ");
 
-		sb.append(comment.getCreator());
+		if (comment.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(comment.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(comment.getDateCreated());
-		sb.append("\"");
+		if (comment.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(comment.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(comment.getDateModified());
-		sb.append("\"");
+		if (comment.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(comment.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(comment.getId());
+		if (comment.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(comment.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfComments\": ");
 
-		sb.append(comment.getNumberOfComments());
+		if (comment.getNumberOfComments() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(comment.getNumberOfComments());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"text\": ");
 
-		sb.append("\"");
-		sb.append(comment.getText());
-		sb.append("\"");
+		if (comment.getText() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(comment.getText());
+		}
 
 		sb.append("}");
 
@@ -135,17 +168,19 @@ public class CommentSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
-					comment.setDateCreated((Date)jsonParserFieldValue);
+					comment.setDateCreated(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
-					comment.setDateModified((Date)jsonParserFieldValue);
+					comment.setDateModified(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					comment.setId((Long)jsonParserFieldValue);
+					comment.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "numberOfComments")) {
@@ -161,6 +196,18 @@ public class CommentSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

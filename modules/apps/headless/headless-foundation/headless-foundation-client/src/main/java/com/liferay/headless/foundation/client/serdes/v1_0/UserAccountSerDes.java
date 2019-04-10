@@ -19,6 +19,10 @@ import com.liferay.headless.foundation.client.dto.v1_0.Role;
 import com.liferay.headless.foundation.client.dto.v1_0.UserAccount;
 import com.liferay.headless.foundation.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -58,103 +62,167 @@ public class UserAccountSerDes {
 
 		sb.append("\"additionalName\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getAdditionalName());
-		sb.append("\"");
+		if (userAccount.getAdditionalName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getAdditionalName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"alternateName\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getAlternateName());
-		sb.append("\"");
+		if (userAccount.getAlternateName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getAlternateName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"birthDate\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getBirthDate());
-		sb.append("\"");
+		if (userAccount.getBirthDate() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getBirthDate());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"contactInformation\": ");
 
-		sb.append(userAccount.getContactInformation());
+		if (userAccount.getContactInformation() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getContactInformation());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dashboardURL\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getDashboardURL());
-		sb.append("\"");
+		if (userAccount.getDashboardURL() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getDashboardURL());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getDateCreated());
-		sb.append("\"");
+		if (userAccount.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getDateModified());
-		sb.append("\"");
+		if (userAccount.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"email\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getEmail());
-		sb.append("\"");
+		if (userAccount.getEmail() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getEmail());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"familyName\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getFamilyName());
-		sb.append("\"");
+		if (userAccount.getFamilyName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getFamilyName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"givenName\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getGivenName());
-		sb.append("\"");
+		if (userAccount.getGivenName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getGivenName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"honorificPrefix\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getHonorificPrefix());
-		sb.append("\"");
+		if (userAccount.getHonorificPrefix() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getHonorificPrefix());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"honorificSuffix\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getHonorificSuffix());
-		sb.append("\"");
+		if (userAccount.getHonorificSuffix() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getHonorificSuffix());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(userAccount.getId());
+		if (userAccount.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"image\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getImage());
-		sb.append("\"");
+		if (userAccount.getImage() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getImage());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"jobTitle\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getJobTitle());
-		sb.append("\"");
+		if (userAccount.getJobTitle() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getJobTitle());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywords\": ");
@@ -226,16 +294,24 @@ public class UserAccountSerDes {
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getName());
-		sb.append("\"");
+		if (userAccount.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"profileURL\": ");
 
-		sb.append("\"");
-		sb.append(userAccount.getProfileURL());
-		sb.append("\"");
+		if (userAccount.getProfileURL() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userAccount.getProfileURL());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"roles\": ");
@@ -382,7 +458,8 @@ public class UserAccountSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "birthDate")) {
 				if (jsonParserFieldValue != null) {
-					userAccount.setBirthDate((Date)jsonParserFieldValue);
+					userAccount.setBirthDate(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(
@@ -401,12 +478,14 @@ public class UserAccountSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
-					userAccount.setDateCreated((Date)jsonParserFieldValue);
+					userAccount.setDateCreated(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
-					userAccount.setDateModified((Date)jsonParserFieldValue);
+					userAccount.setDateModified(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "email")) {
@@ -438,7 +517,8 @@ public class UserAccountSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					userAccount.setId((Long)jsonParserFieldValue);
+					userAccount.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "image")) {
@@ -522,6 +602,18 @@ public class UserAccountSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

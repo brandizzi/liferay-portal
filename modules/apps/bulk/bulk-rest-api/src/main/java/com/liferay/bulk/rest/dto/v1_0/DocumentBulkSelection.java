@@ -148,7 +148,12 @@ public class DocumentBulkSelection {
 
 		sb.append("\"selectionScope\": ");
 
-		sb.append(selectionScope);
+		if (selectionScope == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(selectionScope);
+		}
 
 		sb.append("}");
 

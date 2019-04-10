@@ -146,21 +146,34 @@ public class WebUrl {
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"url\": ");
 
-		sb.append("\"");
-		sb.append(url);
-		sb.append("\"");
+		if (url == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(url);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"urlType\": ");
 
-		sb.append("\"");
-		sb.append(urlType);
-		sb.append("\"");
+		if (urlType == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(urlType);
+		}
 
 		sb.append("}");
 

@@ -54,68 +54,111 @@ public class PostalAddressSerDes {
 
 		sb.append("\"addressCountry\": ");
 
-		sb.append("\"");
-		sb.append(postalAddress.getAddressCountry());
-		sb.append("\"");
+		if (postalAddress.getAddressCountry() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(postalAddress.getAddressCountry());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"addressLocality\": ");
 
-		sb.append("\"");
-		sb.append(postalAddress.getAddressLocality());
-		sb.append("\"");
+		if (postalAddress.getAddressLocality() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(postalAddress.getAddressLocality());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"addressRegion\": ");
 
-		sb.append("\"");
-		sb.append(postalAddress.getAddressRegion());
-		sb.append("\"");
+		if (postalAddress.getAddressRegion() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(postalAddress.getAddressRegion());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"addressType\": ");
 
-		sb.append("\"");
-		sb.append(postalAddress.getAddressType());
-		sb.append("\"");
+		if (postalAddress.getAddressType() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(postalAddress.getAddressType());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(postalAddress.getId());
+		if (postalAddress.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(postalAddress.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"postalCode\": ");
 
-		sb.append("\"");
-		sb.append(postalAddress.getPostalCode());
-		sb.append("\"");
+		if (postalAddress.getPostalCode() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(postalAddress.getPostalCode());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"primary\": ");
 
-		sb.append(postalAddress.getPrimary());
+		if (postalAddress.getPrimary() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(postalAddress.getPrimary());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"streetAddressLine1\": ");
 
-		sb.append("\"");
-		sb.append(postalAddress.getStreetAddressLine1());
-		sb.append("\"");
+		if (postalAddress.getStreetAddressLine1() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(postalAddress.getStreetAddressLine1());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"streetAddressLine2\": ");
 
-		sb.append("\"");
-		sb.append(postalAddress.getStreetAddressLine2());
-		sb.append("\"");
+		if (postalAddress.getStreetAddressLine2() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(postalAddress.getStreetAddressLine2());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"streetAddressLine3\": ");
 
-		sb.append("\"");
-		sb.append(postalAddress.getStreetAddressLine3());
-		sb.append("\"");
+		if (postalAddress.getStreetAddressLine3() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(postalAddress.getStreetAddressLine3());
+		}
 
 		sb.append("}");
 
@@ -184,7 +227,8 @@ public class PostalAddressSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					postalAddress.setId((Long)jsonParserFieldValue);
+					postalAddress.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "postalCode")) {

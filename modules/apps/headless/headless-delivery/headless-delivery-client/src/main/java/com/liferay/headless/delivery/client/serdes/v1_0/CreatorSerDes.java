@@ -52,49 +52,78 @@ public class CreatorSerDes {
 
 		sb.append("\"additionalName\": ");
 
-		sb.append("\"");
-		sb.append(creator.getAdditionalName());
-		sb.append("\"");
+		if (creator.getAdditionalName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator.getAdditionalName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"familyName\": ");
 
-		sb.append("\"");
-		sb.append(creator.getFamilyName());
-		sb.append("\"");
+		if (creator.getFamilyName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator.getFamilyName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"givenName\": ");
 
-		sb.append("\"");
-		sb.append(creator.getGivenName());
-		sb.append("\"");
+		if (creator.getGivenName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator.getGivenName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(creator.getId());
+		if (creator.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"image\": ");
 
-		sb.append("\"");
-		sb.append(creator.getImage());
-		sb.append("\"");
+		if (creator.getImage() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator.getImage());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(creator.getName());
-		sb.append("\"");
+		if (creator.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"profileURL\": ");
 
-		sb.append("\"");
-		sb.append(creator.getProfileURL());
-		sb.append("\"");
+		if (creator.getProfileURL() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator.getProfileURL());
+		}
 
 		sb.append("}");
 
@@ -154,7 +183,7 @@ public class CreatorSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					creator.setId((Long)jsonParserFieldValue);
+					creator.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "image")) {

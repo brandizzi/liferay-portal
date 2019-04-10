@@ -18,6 +18,10 @@ import com.liferay.headless.foundation.client.dto.v1_0.AssetType;
 import com.liferay.headless.foundation.client.dto.v1_0.TaxonomyVocabulary;
 import com.liferay.headless.foundation.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -107,57 +111,102 @@ public class TaxonomyVocabularySerDes {
 
 		sb.append("\"creator\": ");
 
-		sb.append(taxonomyVocabulary.getCreator());
+		if (taxonomyVocabulary.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taxonomyVocabulary.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(taxonomyVocabulary.getDateCreated());
-		sb.append("\"");
+		if (taxonomyVocabulary.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taxonomyVocabulary.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(taxonomyVocabulary.getDateModified());
-		sb.append("\"");
+		if (taxonomyVocabulary.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taxonomyVocabulary.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(taxonomyVocabulary.getDescription());
-		sb.append("\"");
+		if (taxonomyVocabulary.getDescription() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taxonomyVocabulary.getDescription());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(taxonomyVocabulary.getId());
+		if (taxonomyVocabulary.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taxonomyVocabulary.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(taxonomyVocabulary.getName());
-		sb.append("\"");
+		if (taxonomyVocabulary.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taxonomyVocabulary.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfTaxonomyCategories\": ");
 
-		sb.append(taxonomyVocabulary.getNumberOfTaxonomyCategories());
+		if (taxonomyVocabulary.getNumberOfTaxonomyCategories() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taxonomyVocabulary.getNumberOfTaxonomyCategories());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(taxonomyVocabulary.getSiteId());
+		if (taxonomyVocabulary.getSiteId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taxonomyVocabulary.getSiteId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(taxonomyVocabulary.getViewableBy());
-		sb.append("\"");
+		if (taxonomyVocabulary.getViewableBy() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(taxonomyVocabulary.getViewableBy());
+			sb.append("\"");
+		}
 
 		sb.append("}");
 
@@ -232,13 +281,13 @@ public class TaxonomyVocabularySerDes {
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
 					taxonomyVocabulary.setDateCreated(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
 					taxonomyVocabulary.setDateModified(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "description")) {
@@ -249,7 +298,8 @@ public class TaxonomyVocabularySerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					taxonomyVocabulary.setId((Long)jsonParserFieldValue);
+					taxonomyVocabulary.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "name")) {
@@ -267,7 +317,8 @@ public class TaxonomyVocabularySerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {
 				if (jsonParserFieldValue != null) {
-					taxonomyVocabulary.setSiteId((Long)jsonParserFieldValue);
+					taxonomyVocabulary.setSiteId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "viewableBy")) {
@@ -280,6 +331,18 @@ public class TaxonomyVocabularySerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

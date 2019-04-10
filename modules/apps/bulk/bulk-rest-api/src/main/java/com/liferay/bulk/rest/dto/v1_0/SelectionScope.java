@@ -150,17 +150,34 @@ public class SelectionScope {
 
 		sb.append("\"folderId\": ");
 
-		sb.append(folderId);
+		if (folderId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(folderId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"repositoryId\": ");
 
-		sb.append(repositoryId);
+		if (repositoryId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(repositoryId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"selectAll\": ");
 
-		sb.append(selectAll);
+		if (selectAll == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(selectAll);
+		}
 
 		sb.append("}");
 

@@ -368,32 +368,68 @@ public class DataRecordCollectionPermission {
 
 		sb.append("\"addDataRecord\": ");
 
-		sb.append(addDataRecord);
+		if (addDataRecord == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(addDataRecord);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"addDataRecordCollection\": ");
 
-		sb.append(addDataRecordCollection);
+		if (addDataRecordCollection == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(addDataRecordCollection);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"definePermissions\": ");
 
-		sb.append(definePermissions);
+		if (definePermissions == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(definePermissions);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"delete\": ");
 
-		sb.append(delete);
+		if (delete == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(delete);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"deleteDataRecord\": ");
 
-		sb.append(deleteDataRecord);
+		if (deleteDataRecord == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(deleteDataRecord);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"exportDataRecord\": ");
 
-		sb.append(exportDataRecord);
+		if (exportDataRecord == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(exportDataRecord);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"roleNames\": ");
@@ -421,22 +457,45 @@ public class DataRecordCollectionPermission {
 
 		sb.append("\"update\": ");
 
-		sb.append(update);
+		if (update == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(update);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"updateDataRecord\": ");
 
-		sb.append(updateDataRecord);
+		if (updateDataRecord == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(updateDataRecord);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"view\": ");
 
-		sb.append(view);
+		if (view == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(view);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewDataRecord\": ");
 
-		sb.append(viewDataRecord);
+		if (viewDataRecord == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(viewDataRecord);
+		}
 
 		sb.append("}");
 

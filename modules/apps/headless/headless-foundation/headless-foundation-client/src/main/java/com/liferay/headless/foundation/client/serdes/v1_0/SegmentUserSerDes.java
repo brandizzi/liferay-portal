@@ -54,21 +54,34 @@ public class SegmentUserSerDes {
 
 		sb.append("\"email\": ");
 
-		sb.append("\"");
-		sb.append(segmentUser.getEmail());
-		sb.append("\"");
+		if (segmentUser.getEmail() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(segmentUser.getEmail());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(segmentUser.getId());
+		if (segmentUser.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(segmentUser.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(segmentUser.getName());
-		sb.append("\"");
+		if (segmentUser.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(segmentUser.getName());
+		}
 
 		sb.append("}");
 
@@ -119,7 +132,8 @@ public class SegmentUserSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					segmentUser.setId((Long)jsonParserFieldValue);
+					segmentUser.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "name")) {

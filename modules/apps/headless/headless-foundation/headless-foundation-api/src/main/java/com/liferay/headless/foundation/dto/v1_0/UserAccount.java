@@ -726,103 +726,167 @@ public class UserAccount {
 
 		sb.append("\"additionalName\": ");
 
-		sb.append("\"");
-		sb.append(additionalName);
-		sb.append("\"");
+		if (additionalName == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(additionalName);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"alternateName\": ");
 
-		sb.append("\"");
-		sb.append(alternateName);
-		sb.append("\"");
+		if (alternateName == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(alternateName);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"birthDate\": ");
 
-		sb.append("\"");
-		sb.append(birthDate);
-		sb.append("\"");
+		if (birthDate == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(birthDate);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"contactInformation\": ");
 
-		sb.append(contactInformation);
+		if (contactInformation == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contactInformation);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dashboardURL\": ");
 
-		sb.append("\"");
-		sb.append(dashboardURL);
-		sb.append("\"");
+		if (dashboardURL == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dashboardURL);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"email\": ");
 
-		sb.append("\"");
-		sb.append(email);
-		sb.append("\"");
+		if (email == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(email);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"familyName\": ");
 
-		sb.append("\"");
-		sb.append(familyName);
-		sb.append("\"");
+		if (familyName == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(familyName);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"givenName\": ");
 
-		sb.append("\"");
-		sb.append(givenName);
-		sb.append("\"");
+		if (givenName == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(givenName);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"honorificPrefix\": ");
 
-		sb.append("\"");
-		sb.append(honorificPrefix);
-		sb.append("\"");
+		if (honorificPrefix == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(honorificPrefix);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"honorificSuffix\": ");
 
-		sb.append("\"");
-		sb.append(honorificSuffix);
-		sb.append("\"");
+		if (honorificSuffix == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(honorificSuffix);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"image\": ");
 
-		sb.append("\"");
-		sb.append(image);
-		sb.append("\"");
+		if (image == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(image);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"jobTitle\": ");
 
-		sb.append("\"");
-		sb.append(jobTitle);
-		sb.append("\"");
+		if (jobTitle == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(jobTitle);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywords\": ");
@@ -892,16 +956,24 @@ public class UserAccount {
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"profileURL\": ");
 
-		sb.append("\"");
-		sb.append(profileURL);
-		sb.append("\"");
+		if (profileURL == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(profileURL);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"roles\": ");

@@ -123,14 +123,23 @@ public class TaxonomyCategory {
 
 		sb.append("\"taxonomyCategoryId\": ");
 
-		sb.append(taxonomyCategoryId);
+		if (taxonomyCategoryId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taxonomyCategoryId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategoryName\": ");
 
-		sb.append("\"");
-		sb.append(taxonomyCategoryName);
-		sb.append("\"");
+		if (taxonomyCategoryName == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(taxonomyCategoryName);
+		}
 
 		sb.append("}");
 

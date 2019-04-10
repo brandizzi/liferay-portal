@@ -197,21 +197,34 @@ public class FormPage {
 
 		sb.append("\"headline\": ");
 
-		sb.append("\"");
-		sb.append(headline);
-		sb.append("\"");
+		if (headline == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(headline);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"text\": ");
 
-		sb.append("\"");
-		sb.append(text);
-		sb.append("\"");
+		if (text == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(text);
+		}
 
 		sb.append("}");
 

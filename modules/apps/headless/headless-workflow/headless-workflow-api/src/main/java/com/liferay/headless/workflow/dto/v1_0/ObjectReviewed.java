@@ -121,14 +121,23 @@ public class ObjectReviewed {
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"resourceType\": ");
 
-		sb.append("\"");
-		sb.append(resourceType);
-		sb.append("\"");
+		if (resourceType == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(resourceType);
+		}
 
 		sb.append("}");
 

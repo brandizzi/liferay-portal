@@ -148,17 +148,34 @@ public class Geo {
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"latitude\": ");
 
-		sb.append(latitude);
+		if (latitude == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(latitude);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"longitude\": ");
 
-		sb.append(longitude);
+		if (longitude == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(longitude);
+		}
 
 		sb.append("}");
 

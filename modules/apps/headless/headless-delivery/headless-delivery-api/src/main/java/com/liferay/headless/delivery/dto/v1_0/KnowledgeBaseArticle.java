@@ -647,59 +647,101 @@ public class KnowledgeBaseArticle {
 
 		sb.append("\"aggregateRating\": ");
 
-		sb.append(aggregateRating);
+		if (aggregateRating == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(aggregateRating);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"articleBody\": ");
 
-		sb.append("\"");
-		sb.append(articleBody);
-		sb.append("\"");
+		if (articleBody == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(articleBody);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"creator\": ");
 
-		sb.append(creator);
+		if (creator == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
+		if (description == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(description);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(encodingFormat);
-		sb.append("\"");
+		if (encodingFormat == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(encodingFormat);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"friendlyUrlPath\": ");
 
-		sb.append("\"");
-		sb.append(friendlyUrlPath);
-		sb.append("\"");
+		if (friendlyUrlPath == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(friendlyUrlPath);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywords\": ");
@@ -727,27 +769,57 @@ public class KnowledgeBaseArticle {
 
 		sb.append("\"numberOfAttachments\": ");
 
-		sb.append(numberOfAttachments);
+		if (numberOfAttachments == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(numberOfAttachments);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfKnowledgeBaseArticles\": ");
 
-		sb.append(numberOfKnowledgeBaseArticles);
+		if (numberOfKnowledgeBaseArticles == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(numberOfKnowledgeBaseArticles);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"parentKnowledgeBaseFolder\": ");
 
-		sb.append(parentKnowledgeBaseFolder);
+		if (parentKnowledgeBaseFolder == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentKnowledgeBaseFolder);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"parentKnowledgeBaseFolderId\": ");
 
-		sb.append(parentKnowledgeBaseFolderId);
+		if (parentKnowledgeBaseFolderId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentKnowledgeBaseFolderId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(siteId);
+		if (siteId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(siteId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategories\": ");
@@ -794,16 +866,25 @@ public class KnowledgeBaseArticle {
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(title);
-		sb.append("\"");
+		if (title == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(title);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(viewableBy);
-		sb.append("\"");
+		if (viewableBy == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(viewableBy);
+			sb.append("\"");
+		}
 
 		sb.append("}");
 

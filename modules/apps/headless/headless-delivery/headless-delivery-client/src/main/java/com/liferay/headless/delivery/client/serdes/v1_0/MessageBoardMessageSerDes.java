@@ -17,6 +17,10 @@ package com.liferay.headless.delivery.client.serdes.v1_0;
 import com.liferay.headless.delivery.client.dto.v1_0.MessageBoardMessage;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -55,57 +59,101 @@ public class MessageBoardMessageSerDes {
 
 		sb.append("\"aggregateRating\": ");
 
-		sb.append(messageBoardMessage.getAggregateRating());
+		if (messageBoardMessage.getAggregateRating() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getAggregateRating());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"anonymous\": ");
 
-		sb.append(messageBoardMessage.getAnonymous());
+		if (messageBoardMessage.getAnonymous() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getAnonymous());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"articleBody\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardMessage.getArticleBody());
-		sb.append("\"");
+		if (messageBoardMessage.getArticleBody() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getArticleBody());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"creator\": ");
 
-		sb.append(messageBoardMessage.getCreator());
+		if (messageBoardMessage.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardMessage.getDateCreated());
-		sb.append("\"");
+		if (messageBoardMessage.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardMessage.getDateModified());
-		sb.append("\"");
+		if (messageBoardMessage.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardMessage.getEncodingFormat());
-		sb.append("\"");
+		if (messageBoardMessage.getEncodingFormat() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getEncodingFormat());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"headline\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardMessage.getHeadline());
-		sb.append("\"");
+		if (messageBoardMessage.getHeadline() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getHeadline());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(messageBoardMessage.getId());
+		if (messageBoardMessage.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywords\": ");
@@ -133,29 +181,58 @@ public class MessageBoardMessageSerDes {
 
 		sb.append("\"numberOfMessageBoardAttachments\": ");
 
-		sb.append(messageBoardMessage.getNumberOfMessageBoardAttachments());
+		if (messageBoardMessage.getNumberOfMessageBoardAttachments() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getNumberOfMessageBoardAttachments());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfMessageBoardMessages\": ");
 
-		sb.append(messageBoardMessage.getNumberOfMessageBoardMessages());
+		if (messageBoardMessage.getNumberOfMessageBoardMessages() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getNumberOfMessageBoardMessages());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"showAsAnswer\": ");
 
-		sb.append(messageBoardMessage.getShowAsAnswer());
+		if (messageBoardMessage.getShowAsAnswer() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getShowAsAnswer());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(messageBoardMessage.getSiteId());
+		if (messageBoardMessage.getSiteId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(messageBoardMessage.getSiteId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(messageBoardMessage.getViewableBy());
-		sb.append("\"");
+		if (messageBoardMessage.getViewableBy() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(messageBoardMessage.getViewableBy());
+			sb.append("\"");
+		}
 
 		sb.append("}");
 
@@ -229,13 +306,13 @@ public class MessageBoardMessageSerDes {
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
 					messageBoardMessage.setDateCreated(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
 					messageBoardMessage.setDateModified(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "encodingFormat")) {
@@ -252,7 +329,8 @@ public class MessageBoardMessageSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					messageBoardMessage.setId((Long)jsonParserFieldValue);
+					messageBoardMessage.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "keywords")) {
@@ -286,7 +364,8 @@ public class MessageBoardMessageSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {
 				if (jsonParserFieldValue != null) {
-					messageBoardMessage.setSiteId((Long)jsonParserFieldValue);
+					messageBoardMessage.setSiteId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "viewableBy")) {
@@ -299,6 +378,18 @@ public class MessageBoardMessageSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

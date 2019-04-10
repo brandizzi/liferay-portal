@@ -150,21 +150,34 @@ public class Image {
 
 		sb.append("\"caption\": ");
 
-		sb.append("\"");
-		sb.append(caption);
-		sb.append("\"");
+		if (caption == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(caption);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"contentUrl\": ");
 
-		sb.append("\"");
-		sb.append(contentUrl);
-		sb.append("\"");
+		if (contentUrl == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentUrl);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"imageId\": ");
 
-		sb.append(imageId);
+		if (imageId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(imageId);
+		}
 
 		sb.append("}");
 

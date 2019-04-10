@@ -148,21 +148,34 @@ public class Location {
 
 		sb.append("\"addressCountry\": ");
 
-		sb.append("\"");
-		sb.append(addressCountry);
-		sb.append("\"");
+		if (addressCountry == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(addressCountry);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"addressRegion\": ");
 
-		sb.append("\"");
-		sb.append(addressRegion);
-		sb.append("\"");
+		if (addressRegion == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(addressRegion);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
 
 		sb.append("}");
 

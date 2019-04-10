@@ -75,14 +75,23 @@ public class ServiceSerDes {
 
 		sb.append("\"id\": ");
 
-		sb.append(service.getId());
+		if (service.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(service.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"serviceType\": ");
 
-		sb.append("\"");
-		sb.append(service.getServiceType());
-		sb.append("\"");
+		if (service.getServiceType() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(service.getServiceType());
+		}
 
 		sb.append("}");
 
@@ -139,7 +148,7 @@ public class ServiceSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					service.setId((Long)jsonParserFieldValue);
+					service.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "serviceType")) {

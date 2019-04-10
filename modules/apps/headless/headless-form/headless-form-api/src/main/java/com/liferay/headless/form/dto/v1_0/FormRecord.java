@@ -312,33 +312,57 @@ public class FormRecord {
 
 		sb.append("\"creator\": ");
 
-		sb.append(creator);
+		if (creator == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"datePublished\": ");
 
-		sb.append("\"");
-		sb.append(datePublished);
-		sb.append("\"");
+		if (datePublished == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(datePublished);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"draft\": ");
 
-		sb.append(draft);
+		if (draft == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(draft);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"fieldValues\": ");
@@ -364,17 +388,34 @@ public class FormRecord {
 
 		sb.append("\"form\": ");
 
-		sb.append(form);
+		if (form == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(form);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"formId\": ");
 
-		sb.append(formId);
+		if (formId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
 
 		sb.append("}");
 

@@ -357,21 +357,35 @@ public class ContactInformation {
 
 		sb.append("\"facebook\": ");
 
-		sb.append("\"");
-		sb.append(facebook);
-		sb.append("\"");
+		if (facebook == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(facebook);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"jabber\": ");
 
-		sb.append("\"");
-		sb.append(jabber);
-		sb.append("\"");
+		if (jabber == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(jabber);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"postalAddresses\": ");
@@ -397,16 +411,24 @@ public class ContactInformation {
 
 		sb.append("\"skype\": ");
 
-		sb.append("\"");
-		sb.append(skype);
-		sb.append("\"");
+		if (skype == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(skype);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"sms\": ");
 
-		sb.append("\"");
-		sb.append(sms);
-		sb.append("\"");
+		if (sms == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(sms);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"telephones\": ");
@@ -432,9 +454,13 @@ public class ContactInformation {
 
 		sb.append("\"twitter\": ");
 
-		sb.append("\"");
-		sb.append(twitter);
-		sb.append("\"");
+		if (twitter == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(twitter);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"webUrls\": ");

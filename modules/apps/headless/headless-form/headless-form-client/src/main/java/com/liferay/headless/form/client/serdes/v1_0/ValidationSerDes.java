@@ -52,21 +52,34 @@ public class ValidationSerDes {
 
 		sb.append("\"errorMessage\": ");
 
-		sb.append("\"");
-		sb.append(validation.getErrorMessage());
-		sb.append("\"");
+		if (validation.getErrorMessage() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(validation.getErrorMessage());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"expression\": ");
 
-		sb.append("\"");
-		sb.append(validation.getExpression());
-		sb.append("\"");
+		if (validation.getExpression() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(validation.getExpression());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(validation.getId());
+		if (validation.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(validation.getId());
+		}
 
 		sb.append("}");
 
@@ -122,7 +135,8 @@ public class ValidationSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					validation.setId((Long)jsonParserFieldValue);
+					validation.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else {

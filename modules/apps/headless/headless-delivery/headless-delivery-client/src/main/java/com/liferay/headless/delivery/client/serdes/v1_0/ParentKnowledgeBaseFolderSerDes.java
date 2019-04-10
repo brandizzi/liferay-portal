@@ -58,14 +58,23 @@ public class ParentKnowledgeBaseFolderSerDes {
 
 		sb.append("\"folderId\": ");
 
-		sb.append(parentKnowledgeBaseFolder.getFolderId());
+		if (parentKnowledgeBaseFolder.getFolderId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentKnowledgeBaseFolder.getFolderId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"folderName\": ");
 
-		sb.append("\"");
-		sb.append(parentKnowledgeBaseFolder.getFolderName());
-		sb.append("\"");
+		if (parentKnowledgeBaseFolder.getFolderName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(parentKnowledgeBaseFolder.getFolderName());
+		}
 
 		sb.append("}");
 
@@ -116,7 +125,7 @@ public class ParentKnowledgeBaseFolderSerDes {
 			if (Objects.equals(jsonParserFieldName, "folderId")) {
 				if (jsonParserFieldValue != null) {
 					parentKnowledgeBaseFolder.setFolderId(
-						(Long)jsonParserFieldValue);
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "folderName")) {

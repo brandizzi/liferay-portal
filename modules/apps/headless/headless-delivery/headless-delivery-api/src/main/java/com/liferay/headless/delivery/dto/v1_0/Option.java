@@ -123,16 +123,23 @@ public class Option {
 
 		sb.append("\"label\": ");
 
-		sb.append("\"");
-		sb.append(label);
-		sb.append("\"");
+		if (label == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(label);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"value\": ");
 
-		sb.append("\"");
-		sb.append(value);
-		sb.append("\"");
+		if (value == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(value);
+		}
 
 		sb.append("}");
 

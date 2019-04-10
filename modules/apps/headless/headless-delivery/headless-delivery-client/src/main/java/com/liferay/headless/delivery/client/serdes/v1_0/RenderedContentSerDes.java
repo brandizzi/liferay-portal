@@ -54,16 +54,23 @@ public class RenderedContentSerDes {
 
 		sb.append("\"renderedContentURL\": ");
 
-		sb.append("\"");
-		sb.append(renderedContent.getRenderedContentURL());
-		sb.append("\"");
+		if (renderedContent.getRenderedContentURL() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(renderedContent.getRenderedContentURL());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"templateName\": ");
 
-		sb.append("\"");
-		sb.append(renderedContent.getTemplateName());
-		sb.append("\"");
+		if (renderedContent.getTemplateName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(renderedContent.getTemplateName());
+		}
 
 		sb.append("}");
 

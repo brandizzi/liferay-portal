@@ -337,68 +337,111 @@ public class PostalAddress {
 
 		sb.append("\"addressCountry\": ");
 
-		sb.append("\"");
-		sb.append(addressCountry);
-		sb.append("\"");
+		if (addressCountry == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(addressCountry);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"addressLocality\": ");
 
-		sb.append("\"");
-		sb.append(addressLocality);
-		sb.append("\"");
+		if (addressLocality == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(addressLocality);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"addressRegion\": ");
 
-		sb.append("\"");
-		sb.append(addressRegion);
-		sb.append("\"");
+		if (addressRegion == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(addressRegion);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"addressType\": ");
 
-		sb.append("\"");
-		sb.append(addressType);
-		sb.append("\"");
+		if (addressType == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(addressType);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"postalCode\": ");
 
-		sb.append("\"");
-		sb.append(postalCode);
-		sb.append("\"");
+		if (postalCode == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(postalCode);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"primary\": ");
 
-		sb.append(primary);
+		if (primary == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(primary);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"streetAddressLine1\": ");
 
-		sb.append("\"");
-		sb.append(streetAddressLine1);
-		sb.append("\"");
+		if (streetAddressLine1 == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(streetAddressLine1);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"streetAddressLine2\": ");
 
-		sb.append("\"");
-		sb.append(streetAddressLine2);
-		sb.append("\"");
+		if (streetAddressLine2 == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(streetAddressLine2);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"streetAddressLine3\": ");
 
-		sb.append("\"");
-		sb.append(streetAddressLine3);
-		sb.append("\"");
+		if (streetAddressLine3 == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(streetAddressLine3);
+		}
 
 		sb.append("}");
 

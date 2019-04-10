@@ -125,16 +125,23 @@ public class WorkflowTaskAssignToMe {
 
 		sb.append("\"comment\": ");
 
-		sb.append("\"");
-		sb.append(comment);
-		sb.append("\"");
+		if (comment == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(comment);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dueDate\": ");
 
-		sb.append("\"");
-		sb.append(dueDate);
-		sb.append("\"");
+		if (dueDate == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dueDate);
+		}
 
 		sb.append("}");
 

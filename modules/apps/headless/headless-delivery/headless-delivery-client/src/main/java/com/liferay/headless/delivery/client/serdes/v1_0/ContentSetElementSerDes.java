@@ -54,26 +54,45 @@ public class ContentSetElementSerDes {
 
 		sb.append("\"content\": ");
 
-		sb.append(contentSetElement.getContent());
+		if (contentSetElement.getContent() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentSetElement.getContent());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"contentType\": ");
 
-		sb.append("\"");
-		sb.append(contentSetElement.getContentType());
-		sb.append("\"");
+		if (contentSetElement.getContentType() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentSetElement.getContentType());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(contentSetElement.getId());
+		if (contentSetElement.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentSetElement.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(contentSetElement.getTitle());
-		sb.append("\"");
+		if (contentSetElement.getTitle() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentSetElement.getTitle());
+		}
 
 		sb.append("}");
 
@@ -132,7 +151,8 @@ public class ContentSetElementSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					contentSetElement.setId((Long)jsonParserFieldValue);
+					contentSetElement.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "title")) {

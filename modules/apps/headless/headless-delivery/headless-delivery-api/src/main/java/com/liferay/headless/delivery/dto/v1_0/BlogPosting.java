@@ -632,85 +632,145 @@ public class BlogPosting {
 
 		sb.append("\"aggregateRating\": ");
 
-		sb.append(aggregateRating);
+		if (aggregateRating == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(aggregateRating);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"alternativeHeadline\": ");
 
-		sb.append("\"");
-		sb.append(alternativeHeadline);
-		sb.append("\"");
+		if (alternativeHeadline == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(alternativeHeadline);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"articleBody\": ");
 
-		sb.append("\"");
-		sb.append(articleBody);
-		sb.append("\"");
+		if (articleBody == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(articleBody);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"creator\": ");
 
-		sb.append(creator);
+		if (creator == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(creator);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"datePublished\": ");
 
-		sb.append("\"");
-		sb.append(datePublished);
-		sb.append("\"");
+		if (datePublished == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(datePublished);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
+		if (description == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(description);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(encodingFormat);
-		sb.append("\"");
+		if (encodingFormat == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(encodingFormat);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"friendlyUrlPath\": ");
 
-		sb.append("\"");
-		sb.append(friendlyUrlPath);
-		sb.append("\"");
+		if (friendlyUrlPath == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(friendlyUrlPath);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"headline\": ");
 
-		sb.append("\"");
-		sb.append(headline);
-		sb.append("\"");
+		if (headline == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(headline);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"image\": ");
 
-		sb.append(image);
+		if (image == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(image);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"keywords\": ");
@@ -738,12 +798,24 @@ public class BlogPosting {
 
 		sb.append("\"numberOfComments\": ");
 
-		sb.append(numberOfComments);
+		if (numberOfComments == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(numberOfComments);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(siteId);
+		if (siteId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(siteId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"taxonomyCategories\": ");
@@ -790,9 +862,14 @@ public class BlogPosting {
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(viewableBy);
-		sb.append("\"");
+		if (viewableBy == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(viewableBy);
+			sb.append("\"");
+		}
 
 		sb.append("}");
 

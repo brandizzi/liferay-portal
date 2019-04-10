@@ -18,6 +18,10 @@ import com.liferay.headless.delivery.client.dto.v1_0.ContentStructure;
 import com.liferay.headless.delivery.client.dto.v1_0.ContentStructureField;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -107,45 +111,78 @@ public class ContentStructureSerDes {
 
 		sb.append("\"creator\": ");
 
-		sb.append(contentStructure.getCreator());
+		if (contentStructure.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructure.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(contentStructure.getDateCreated());
-		sb.append("\"");
+		if (contentStructure.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructure.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(contentStructure.getDateModified());
-		sb.append("\"");
+		if (contentStructure.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructure.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(contentStructure.getDescription());
-		sb.append("\"");
+		if (contentStructure.getDescription() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructure.getDescription());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(contentStructure.getId());
+		if (contentStructure.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructure.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(contentStructure.getName());
-		sb.append("\"");
+		if (contentStructure.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructure.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(contentStructure.getSiteId());
+		if (contentStructure.getSiteId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(contentStructure.getSiteId());
+		}
 
 		sb.append("}");
 
@@ -220,13 +257,14 @@ public class ContentStructureSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
-					contentStructure.setDateCreated((Date)jsonParserFieldValue);
+					contentStructure.setDateCreated(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
 					contentStructure.setDateModified(
-						(Date)jsonParserFieldValue);
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "description")) {
@@ -237,7 +275,8 @@ public class ContentStructureSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					contentStructure.setId((Long)jsonParserFieldValue);
+					contentStructure.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "name")) {
@@ -247,12 +286,25 @@ public class ContentStructureSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {
 				if (jsonParserFieldValue != null) {
-					contentStructure.setSiteId((Long)jsonParserFieldValue);
+					contentStructure.setSiteId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

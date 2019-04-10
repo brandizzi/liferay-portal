@@ -17,6 +17,10 @@ package com.liferay.headless.delivery.client.serdes.v1_0;
 import com.liferay.headless.delivery.client.dto.v1_0.DocumentFolder;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -55,62 +59,113 @@ public class DocumentFolderSerDes {
 
 		sb.append("\"creator\": ");
 
-		sb.append(documentFolder.getCreator());
+		if (documentFolder.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(documentFolder.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(documentFolder.getDateCreated());
-		sb.append("\"");
+		if (documentFolder.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(documentFolder.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(documentFolder.getDateModified());
-		sb.append("\"");
+		if (documentFolder.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(documentFolder.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(documentFolder.getDescription());
-		sb.append("\"");
+		if (documentFolder.getDescription() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(documentFolder.getDescription());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(documentFolder.getId());
+		if (documentFolder.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(documentFolder.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(documentFolder.getName());
-		sb.append("\"");
+		if (documentFolder.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(documentFolder.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfDocumentFolders\": ");
 
-		sb.append(documentFolder.getNumberOfDocumentFolders());
+		if (documentFolder.getNumberOfDocumentFolders() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(documentFolder.getNumberOfDocumentFolders());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"numberOfDocuments\": ");
 
-		sb.append(documentFolder.getNumberOfDocuments());
+		if (documentFolder.getNumberOfDocuments() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(documentFolder.getNumberOfDocuments());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(documentFolder.getSiteId());
+		if (documentFolder.getSiteId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(documentFolder.getSiteId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"viewableBy\": ");
 
-		sb.append("\"");
-		sb.append(documentFolder.getViewableBy());
-		sb.append("\"");
+		if (documentFolder.getViewableBy() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append("\"");
+			sb.append(documentFolder.getViewableBy());
+			sb.append("\"");
+		}
 
 		sb.append("}");
 
@@ -162,12 +217,14 @@ public class DocumentFolderSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
-					documentFolder.setDateCreated((Date)jsonParserFieldValue);
+					documentFolder.setDateCreated(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
-					documentFolder.setDateModified((Date)jsonParserFieldValue);
+					documentFolder.setDateModified(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "description")) {
@@ -177,7 +234,8 @@ public class DocumentFolderSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					documentFolder.setId((Long)jsonParserFieldValue);
+					documentFolder.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "name")) {
@@ -201,7 +259,8 @@ public class DocumentFolderSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {
 				if (jsonParserFieldValue != null) {
-					documentFolder.setSiteId((Long)jsonParserFieldValue);
+					documentFolder.setSiteId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "viewableBy")) {
@@ -214,6 +273,18 @@ public class DocumentFolderSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

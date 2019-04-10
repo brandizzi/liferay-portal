@@ -386,16 +386,24 @@ public class DataDefinition {
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
+		if (dateCreated == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateCreated);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
+		if (dateModified == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dateModified);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
@@ -421,7 +429,13 @@ public class DataDefinition {
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
@@ -447,19 +461,34 @@ public class DataDefinition {
 
 		sb.append("\"siteId\": ");
 
-		sb.append(siteId);
+		if (siteId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(siteId);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"storageType\": ");
 
-		sb.append("\"");
-		sb.append(storageType);
-		sb.append("\"");
+		if (storageType == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(storageType);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"userId\": ");
 
-		sb.append(userId);
+		if (userId == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(userId);
+		}
 
 		sb.append("}");
 

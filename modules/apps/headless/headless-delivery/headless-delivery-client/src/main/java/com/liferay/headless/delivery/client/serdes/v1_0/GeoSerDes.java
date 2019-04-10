@@ -52,17 +52,34 @@ public class GeoSerDes {
 
 		sb.append("\"id\": ");
 
-		sb.append(geo.getId());
+		if (geo.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(geo.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"latitude\": ");
 
-		sb.append(geo.getLatitude());
+		if (geo.getLatitude() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(geo.getLatitude());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"longitude\": ");
 
-		sb.append(geo.getLongitude());
+		if (geo.getLongitude() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(geo.getLongitude());
+		}
 
 		sb.append("}");
 
@@ -106,7 +123,7 @@ public class GeoSerDes {
 
 			if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					geo.setId((Long)jsonParserFieldValue);
+					geo.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "latitude")) {

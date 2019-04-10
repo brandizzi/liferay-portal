@@ -396,40 +396,68 @@ public class ContentStructureField {
 
 		sb.append("\"dataType\": ");
 
-		sb.append("\"");
-		sb.append(dataType);
-		sb.append("\"");
+		if (dataType == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dataType);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"inputControl\": ");
 
-		sb.append("\"");
-		sb.append(inputControl);
-		sb.append("\"");
+		if (inputControl == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(inputControl);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"label\": ");
 
-		sb.append("\"");
-		sb.append(label);
-		sb.append("\"");
+		if (label == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(label);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"localizable\": ");
 
-		sb.append(localizable);
+		if (localizable == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(localizable);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"multiple\": ");
 
-		sb.append(multiple);
+		if (multiple == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(multiple);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
+		if (name == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(name);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"nestedContentStructureFields\": ");
@@ -476,24 +504,45 @@ public class ContentStructureField {
 
 		sb.append("\"predefinedValue\": ");
 
-		sb.append("\"");
-		sb.append(predefinedValue);
-		sb.append("\"");
+		if (predefinedValue == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(predefinedValue);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"repeatable\": ");
 
-		sb.append(repeatable);
+		if (repeatable == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(repeatable);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"required\": ");
 
-		sb.append(required);
+		if (required == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(required);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"showLabel\": ");
 
-		sb.append(showLabel);
+		if (showLabel == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(showLabel);
+		}
 
 		sb.append("}");
 

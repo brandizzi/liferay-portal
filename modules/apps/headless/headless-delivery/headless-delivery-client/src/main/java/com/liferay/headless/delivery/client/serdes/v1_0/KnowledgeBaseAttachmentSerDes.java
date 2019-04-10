@@ -56,40 +56,67 @@ public class KnowledgeBaseAttachmentSerDes {
 
 		sb.append("\"contentUrl\": ");
 
-		sb.append("\"");
-		sb.append(knowledgeBaseAttachment.getContentUrl());
-		sb.append("\"");
+		if (knowledgeBaseAttachment.getContentUrl() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseAttachment.getContentUrl());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"encodingFormat\": ");
 
-		sb.append("\"");
-		sb.append(knowledgeBaseAttachment.getEncodingFormat());
-		sb.append("\"");
+		if (knowledgeBaseAttachment.getEncodingFormat() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseAttachment.getEncodingFormat());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"fileExtension\": ");
 
-		sb.append("\"");
-		sb.append(knowledgeBaseAttachment.getFileExtension());
-		sb.append("\"");
+		if (knowledgeBaseAttachment.getFileExtension() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseAttachment.getFileExtension());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(knowledgeBaseAttachment.getId());
+		if (knowledgeBaseAttachment.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseAttachment.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"sizeInBytes\": ");
 
-		sb.append(knowledgeBaseAttachment.getSizeInBytes());
+		if (knowledgeBaseAttachment.getSizeInBytes() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseAttachment.getSizeInBytes());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"title\": ");
 
-		sb.append("\"");
-		sb.append(knowledgeBaseAttachment.getTitle());
-		sb.append("\"");
+		if (knowledgeBaseAttachment.getTitle() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(knowledgeBaseAttachment.getTitle());
+		}
 
 		sb.append("}");
 
@@ -157,7 +184,8 @@ public class KnowledgeBaseAttachmentSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					knowledgeBaseAttachment.setId((Long)jsonParserFieldValue);
+					knowledgeBaseAttachment.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "sizeInBytes")) {

@@ -17,6 +17,10 @@ package com.liferay.headless.foundation.client.serdes.v1_0;
 import com.liferay.headless.foundation.client.dto.v1_0.Segment;
 import com.liferay.headless.foundation.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -53,52 +57,89 @@ public class SegmentSerDes {
 
 		sb.append("\"active\": ");
 
-		sb.append(segment.getActive());
+		if (segment.getActive() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(segment.getActive());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"criteria\": ");
 
-		sb.append("\"");
-		sb.append(segment.getCriteria());
-		sb.append("\"");
+		if (segment.getCriteria() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(segment.getCriteria());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(segment.getDateCreated());
-		sb.append("\"");
+		if (segment.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(segment.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(segment.getDateModified());
-		sb.append("\"");
+		if (segment.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(segment.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(segment.getId());
+		if (segment.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(segment.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(segment.getName());
-		sb.append("\"");
+		if (segment.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(segment.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(segment.getSiteId());
+		if (segment.getSiteId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(segment.getSiteId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"source\": ");
 
-		sb.append("\"");
-		sb.append(segment.getSource());
-		sb.append("\"");
+		if (segment.getSource() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(segment.getSource());
+		}
 
 		sb.append("}");
 
@@ -153,17 +194,19 @@ public class SegmentSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
-					segment.setDateCreated((Date)jsonParserFieldValue);
+					segment.setDateCreated(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
-					segment.setDateModified((Date)jsonParserFieldValue);
+					segment.setDateModified(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					segment.setId((Long)jsonParserFieldValue);
+					segment.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "name")) {
@@ -173,7 +216,8 @@ public class SegmentSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {
 				if (jsonParserFieldValue != null) {
-					segment.setSiteId((Long)jsonParserFieldValue);
+					segment.setSiteId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "source")) {
@@ -184,6 +228,18 @@ public class SegmentSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

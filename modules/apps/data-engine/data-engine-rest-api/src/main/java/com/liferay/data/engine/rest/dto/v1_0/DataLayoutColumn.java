@@ -123,7 +123,13 @@ public class DataLayoutColumn {
 
 		sb.append("\"columnSize\": ");
 
-		sb.append(columnSize);
+		if (columnSize == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(columnSize);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"fieldNames\": ");

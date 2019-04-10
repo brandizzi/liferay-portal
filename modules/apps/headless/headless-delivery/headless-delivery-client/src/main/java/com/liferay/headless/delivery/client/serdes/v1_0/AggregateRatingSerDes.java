@@ -54,22 +54,45 @@ public class AggregateRatingSerDes {
 
 		sb.append("\"bestRating\": ");
 
-		sb.append(aggregateRating.getBestRating());
+		if (aggregateRating.getBestRating() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(aggregateRating.getBestRating());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"ratingCount\": ");
 
-		sb.append(aggregateRating.getRatingCount());
+		if (aggregateRating.getRatingCount() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(aggregateRating.getRatingCount());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"ratingValue\": ");
 
-		sb.append(aggregateRating.getRatingValue());
+		if (aggregateRating.getRatingValue() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(aggregateRating.getRatingValue());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"worstRating\": ");
 
-		sb.append(aggregateRating.getWorstRating());
+		if (aggregateRating.getWorstRating() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(aggregateRating.getWorstRating());
+		}
 
 		sb.append("}");
 

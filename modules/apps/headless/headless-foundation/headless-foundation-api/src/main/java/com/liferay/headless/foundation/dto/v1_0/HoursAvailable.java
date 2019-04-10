@@ -175,28 +175,45 @@ public class HoursAvailable {
 
 		sb.append("\"closes\": ");
 
-		sb.append("\"");
-		sb.append(closes);
-		sb.append("\"");
+		if (closes == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(closes);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dayOfWeek\": ");
 
-		sb.append("\"");
-		sb.append(dayOfWeek);
-		sb.append("\"");
+		if (dayOfWeek == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(dayOfWeek);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(id);
+		if (id == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(id);
+		}
+
 		sb.append(", ");
 
 		sb.append("\"opens\": ");
 
-		sb.append("\"");
-		sb.append(opens);
-		sb.append("\"");
+		if (opens == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(opens);
+		}
 
 		sb.append("}");
 

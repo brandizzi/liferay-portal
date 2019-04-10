@@ -17,6 +17,10 @@ package com.liferay.headless.delivery.client.serdes.v1_0;
 import com.liferay.headless.delivery.client.dto.v1_0.Rating;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -53,41 +57,78 @@ public class RatingSerDes {
 
 		sb.append("\"bestRating\": ");
 
-		sb.append(rating.getBestRating());
+		if (rating.getBestRating() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(rating.getBestRating());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"creator\": ");
 
-		sb.append(rating.getCreator());
+		if (rating.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(rating.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(rating.getDateCreated());
-		sb.append("\"");
+		if (rating.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(rating.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(rating.getDateModified());
-		sb.append("\"");
+		if (rating.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(rating.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(rating.getId());
+		if (rating.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(rating.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"ratingValue\": ");
 
-		sb.append(rating.getRatingValue());
+		if (rating.getRatingValue() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(rating.getRatingValue());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"worstRating\": ");
 
-		sb.append(rating.getWorstRating());
+		if (rating.getWorstRating() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(rating.getWorstRating());
+		}
 
 		sb.append("}");
 
@@ -143,17 +184,19 @@ public class RatingSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
-					rating.setDateCreated((Date)jsonParserFieldValue);
+					rating.setDateCreated(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
-					rating.setDateModified((Date)jsonParserFieldValue);
+					rating.setDateModified(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					rating.setId((Long)jsonParserFieldValue);
+					rating.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "ratingValue")) {
@@ -169,6 +212,18 @@ public class RatingSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

@@ -54,28 +54,45 @@ public class HoursAvailableSerDes {
 
 		sb.append("\"closes\": ");
 
-		sb.append("\"");
-		sb.append(hoursAvailable.getCloses());
-		sb.append("\"");
+		if (hoursAvailable.getCloses() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(hoursAvailable.getCloses());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dayOfWeek\": ");
 
-		sb.append("\"");
-		sb.append(hoursAvailable.getDayOfWeek());
-		sb.append("\"");
+		if (hoursAvailable.getDayOfWeek() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(hoursAvailable.getDayOfWeek());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(hoursAvailable.getId());
+		if (hoursAvailable.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(hoursAvailable.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"opens\": ");
 
-		sb.append("\"");
-		sb.append(hoursAvailable.getOpens());
-		sb.append("\"");
+		if (hoursAvailable.getOpens() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(hoursAvailable.getOpens());
+		}
 
 		sb.append("}");
 
@@ -131,7 +148,8 @@ public class HoursAvailableSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					hoursAvailable.setId((Long)jsonParserFieldValue);
+					hoursAvailable.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "opens")) {

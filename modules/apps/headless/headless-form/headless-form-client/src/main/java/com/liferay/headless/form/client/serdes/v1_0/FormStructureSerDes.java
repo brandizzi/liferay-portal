@@ -18,6 +18,10 @@ import com.liferay.headless.form.client.dto.v1_0.FormPage;
 import com.liferay.headless.form.client.dto.v1_0.FormStructure;
 import com.liferay.headless.form.client.json.BaseJSONParser;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Objects;
@@ -82,28 +86,46 @@ public class FormStructureSerDes {
 
 		sb.append("\"creator\": ");
 
-		sb.append(formStructure.getCreator());
+		if (formStructure.getCreator() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formStructure.getCreator());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateCreated\": ");
 
-		sb.append("\"");
-		sb.append(formStructure.getDateCreated());
-		sb.append("\"");
+		if (formStructure.getDateCreated() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formStructure.getDateCreated());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"dateModified\": ");
 
-		sb.append("\"");
-		sb.append(formStructure.getDateModified());
-		sb.append("\"");
+		if (formStructure.getDateModified() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formStructure.getDateModified());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"description\": ");
 
-		sb.append("\"");
-		sb.append(formStructure.getDescription());
-		sb.append("\"");
+		if (formStructure.getDescription() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formStructure.getDescription());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"formPages\": ");
@@ -129,24 +151,45 @@ public class FormStructureSerDes {
 
 		sb.append("\"id\": ");
 
-		sb.append(formStructure.getId());
+		if (formStructure.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formStructure.getId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"name\": ");
 
-		sb.append("\"");
-		sb.append(formStructure.getName());
-		sb.append("\"");
+		if (formStructure.getName() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formStructure.getName());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"siteId\": ");
 
-		sb.append(formStructure.getSiteId());
+		if (formStructure.getSiteId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formStructure.getSiteId());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"successPage\": ");
 
-		sb.append(formStructure.getSuccessPage());
+		if (formStructure.getSuccessPage() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(formStructure.getSuccessPage());
+		}
 
 		sb.append("}");
 
@@ -204,12 +247,14 @@ public class FormStructureSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateCreated")) {
 				if (jsonParserFieldValue != null) {
-					formStructure.setDateCreated((Date)jsonParserFieldValue);
+					formStructure.setDateCreated(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "dateModified")) {
 				if (jsonParserFieldValue != null) {
-					formStructure.setDateModified((Date)jsonParserFieldValue);
+					formStructure.setDateModified(
+						_toDate((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "description")) {
@@ -231,7 +276,8 @@ public class FormStructureSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					formStructure.setId((Long)jsonParserFieldValue);
+					formStructure.setId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "name")) {
@@ -241,7 +287,8 @@ public class FormStructureSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "siteId")) {
 				if (jsonParserFieldValue != null) {
-					formStructure.setSiteId((Long)jsonParserFieldValue);
+					formStructure.setSiteId(
+						Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "successPage")) {
@@ -253,6 +300,18 @@ public class FormStructureSerDes {
 			else {
 				throw new IllegalArgumentException(
 					"Unsupported field name " + jsonParserFieldName);
+			}
+		}
+
+		private Date _toDate(String string) {
+			try {
+				DateFormat dateFormat = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+				return dateFormat.parse(string);
+			}
+			catch (ParseException pe) {
+				throw new IllegalArgumentException("Unable to parse " + string);
 			}
 		}
 

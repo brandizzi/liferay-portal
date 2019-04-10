@@ -52,21 +52,34 @@ public class LocationSerDes {
 
 		sb.append("\"addressCountry\": ");
 
-		sb.append("\"");
-		sb.append(location.getAddressCountry());
-		sb.append("\"");
+		if (location.getAddressCountry() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(location.getAddressCountry());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"addressRegion\": ");
 
-		sb.append("\"");
-		sb.append(location.getAddressRegion());
-		sb.append("\"");
+		if (location.getAddressRegion() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(location.getAddressRegion());
+		}
+
 		sb.append(", ");
 
 		sb.append("\"id\": ");
 
-		sb.append(location.getId());
+		if (location.getId() == null) {
+			sb.append("null");
+		}
+		else {
+			sb.append(location.getId());
+		}
 
 		sb.append("}");
 
@@ -121,7 +134,7 @@ public class LocationSerDes {
 			}
 			else if (Objects.equals(jsonParserFieldName, "id")) {
 				if (jsonParserFieldValue != null) {
-					location.setId((Long)jsonParserFieldValue);
+					location.setId(Long.valueOf((String)jsonParserFieldValue));
 				}
 			}
 			else {
