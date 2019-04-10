@@ -265,7 +265,6 @@ public class UserAccountResourceImpl
 				familyName = user.getLastName();
 				givenName = user.getFirstName();
 				honorificPrefix = _getListTypeMessage(contact.getPrefixId());
-
 				honorificSuffix = _getListTypeMessage(contact.getSuffixId());
 				id = user.getUserId();
 				jobTitle = user.getJobTitle();
