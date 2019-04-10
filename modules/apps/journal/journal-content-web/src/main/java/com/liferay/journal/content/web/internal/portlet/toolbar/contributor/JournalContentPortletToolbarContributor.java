@@ -83,11 +83,11 @@ public class JournalContentPortletToolbarContributor
 			portletRequest, JournalPortletKeys.JOURNAL,
 			PortletRequest.RENDER_PHASE);
 
-		portletURL.setParameter("groupId", String.valueOf(scopeGroupId));
 		portletURL.setParameter("mvcPath", "/edit_article.jsp");
 		portletURL.setParameter("redirect", themeDisplay.getURLCurrent());
 		portletURL.setParameter("portletResource", portletDisplay.getId());
 		portletURL.setParameter("refererPlid", String.valueOf(plid));
+		portletURL.setParameter("groupId", String.valueOf(scopeGroupId));
 
 		List<DDMStructure> ddmStructures =
 			_journalFolderService.getDDMStructures(
