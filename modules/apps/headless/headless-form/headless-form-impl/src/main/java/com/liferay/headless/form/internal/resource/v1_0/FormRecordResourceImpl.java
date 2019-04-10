@@ -51,7 +51,9 @@ import org.osgi.service.component.annotations.ServiceScope;
 public class FormRecordResourceImpl extends BaseFormRecordResourceImpl {
 
 	@Override
-	public FormRecord getFormFormRecordByLatestDraft(Long formId) throws Exception {
+	public FormRecord getFormFormRecordByLatestDraft(Long formId)
+		throws Exception {
+
 		DDMFormInstance ddmFormInstance =
 			_ddmFormInstanceService.getFormInstance(formId);
 
