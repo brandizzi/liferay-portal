@@ -284,7 +284,7 @@ public class UserAccountResourceImpl
 					_groupService.getGroups(
 						contextCompany.getCompanyId(),
 						GroupConstants.DEFAULT_PARENT_GROUP_ID, true),
-					site -> _toSiteBrief(group), SiteBrief.class);
+					group -> _toSiteBrief(group), SiteBrief.class);
 
 				setDashboardURL(
 					() -> {
