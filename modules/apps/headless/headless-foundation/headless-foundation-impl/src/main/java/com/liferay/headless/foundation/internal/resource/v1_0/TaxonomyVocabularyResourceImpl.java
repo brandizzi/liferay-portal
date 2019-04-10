@@ -292,15 +292,14 @@ public class TaxonomyVocabularyResourceImpl
 						if (classNameId ==
 								AssetCategoryConstants.ALL_CLASS_NAME_ID) {
 
-							return AssetTypeType.ALL_ASSET_TYPES.toString();
+							return "AllAssetTypes";
 						}
 
-						AssetTypeType assetTypeType =
-							_classNameToAssetTypeTypes.get(
-								_portal.getClassName(classNameId));
+						String assetTypeType = _classNameToAssetTypeTypes.get(
+							_portal.getClassName(classNameId));
 
 						if (assetTypeType != null) {
-							return assetTypeType.toString();
+							return assetTypeType;
 						}
 
 						return _getModelResource(
@@ -348,25 +347,22 @@ public class TaxonomyVocabularyResourceImpl
 				assetRenderedFactory -> {
 					String className = assetRenderedFactory.getClassName();
 
-					if (_classNameToAssetTypeTypes.containsKey(className)) {
-						AssetTypeType assetTypeType =
-							_classNameToAssetTypeTypes.get(className);
+					String assetTypeType = _classNameToAssetTypeTypes.get(
+						className);
 
-						return assetTypeType.toString();
+					if (assetTypeType != null) {
+						return assetTypeType;
 					}
 
 					return _getModelResource(assetRenderedFactory);
 				}),
-			Collections.singletonList(
-				AssetTypeType.ALL_ASSET_TYPES.toString()));
+			Collections.singletonList("AllAssetTypes"));
 
 		return Arrays.toString(assetTypes.toArray());
 	}
 
-	private long _getClassNameId(String type) {
-		AssetTypeType assetTypeType = AssetTypeType.create(type);
-
-		if (Objects.equals(AssetTypeType.ALL_ASSET_TYPES, assetTypeType)) {
+	private long _getClassNameId(String assetTypeType) {
+		if (Objects.equals(assetTypeType, "AllAssetTypes")) {
 			return AssetCategoryConstants.ALL_CLASS_NAME_ID;
 		}
 
@@ -381,7 +377,7 @@ public class TaxonomyVocabularyResourceImpl
 
 		Optional<AssetRendererFactory<?>> assetRendererFactoryOptional =
 			stream.filter(
-				assetRendererFactory -> type.equals(
+				assetRendererFactory -> assetTypeType.equals(
 					_getModelResource(assetRendererFactory))
 			).findFirst();
 
@@ -394,7 +390,7 @@ public class TaxonomyVocabularyResourceImpl
 		if (className == null) {
 			throw new BadRequestException(
 				StringBundler.concat(
-					"Asset type ", type,
+					"Asset type ", assetTypeType,
 					" not available, the supported asset types are: ",
 					_getAvailableAssetTypes(
 						categorizableAssetRenderFactories)));
@@ -516,29 +512,27 @@ public class TaxonomyVocabularyResourceImpl
 		};
 	}
 
-	private static final Map<AssetTypeType, String> _assetTypeTypeToClassNames =
-		new HashMap<AssetTypeType, String>() {
+	private static final Map<String, String> _assetTypeTypeToClassNames =
+		new HashMap<String, String>() {
 			{
-				put(AssetTypeType.WEB_SITE, Group.class.getName());
-				put(AssetTypeType.WEB_PAGE, Layout.class.getName());
-				put(AssetTypeType.ORGANIZATION, Organization.class.getName());
-				put(AssetTypeType.USER_ACCOUNT, User.class.getName());
+				put("WebSite", Group.class.getName());
+				put("WebPage", Layout.class.getName());
+				put("Organization", Organization.class.getName());
+				put("UserAccount", User.class.getName());
+				put("BlogPosting", "com.liferay.blogs.model.BlogsEntry");
 				put(
-					AssetTypeType.BLOG_POSTING,
-					"com.liferay.blogs.model.BlogsEntry");
-				put(
-					AssetTypeType.DOCUMENT,
+					"Document",
 					"com.liferay.document.library.kernel.model.DLFileEntry");
 				put(
-					AssetTypeType.KNOWLEDGE_BASE_ARTICLE,
+					"KnowledgeBaseArticle",
 					"com.liferay.knowledge.base.model.KBArticle");
 				put(
-					AssetTypeType.STRUCTURED_CONTENT,
+					"StructuredContent",
 					"com.liferay.journal.model.JournalArticle");
-				put(AssetTypeType.WIKI_PAGE, "com.liferay.wiki.model.WikiPage");
+				put("WikiPage", "com.liferay.wiki.model.WikiPage");
 			}
 		};
-	private static final Map<String, AssetTypeType> _classNameToAssetTypeTypes =
+	private static final Map<String, String> _classNameToAssetTypeTypes =
 		MapUtils.invertMap(_assetTypeTypeToClassNames);
 	private static final EntityModel _entityModel = new VocabularyEntityModel();
 
@@ -553,39 +547,5 @@ public class TaxonomyVocabularyResourceImpl
 
 	@Reference
 	private UserLocalService _userLocalService;
-
-	private enum AssetTypeType {
-
-		ALL_ASSET_TYPES("AllAssetTypes"), BLOG_POSTING("BlogPosting"),
-		DOCUMENT("Document"), KNOWLEDGE_BASE_ARTICLE("KnowledgeBaseArticle"),
-		ORGANIZATION("Organization"), STRUCTURED_CONTENT("StructuredContent"),
-		USER_ACCOUNT("UserAccount"), WEB_PAGE("WebPage"), WEB_SITE("WebSite"),
-		WIKI_PAGE("WikiPage");
-
-		public static AssetTypeType create(String value) {
-			for (AssetTypeType assetTypeType : values()) {
-				if (Objects.equals(assetTypeType.getValue(), value)) {
-					return assetTypeType;
-				}
-			}
-
-			return null;
-		}
-
-		public String getValue() {
-			return _value;
-		}
-
-		public String toString() {
-			return _value;
-		}
-
-		private AssetTypeType(String value) {
-			_value = value;
-		}
-
-		private final String _value;
-
-	}
 
 }
