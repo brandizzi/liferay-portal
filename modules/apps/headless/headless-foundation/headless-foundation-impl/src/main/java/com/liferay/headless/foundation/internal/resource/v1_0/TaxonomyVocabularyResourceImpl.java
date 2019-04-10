@@ -342,7 +342,7 @@ public class TaxonomyVocabularyResourceImpl
 	private String _getAvailableAssetTypes(
 		List<AssetRendererFactory<?>> categorizableAssetRenderFactories) {
 
-		List assetTypes = ListUtils.union(
+		List<String> assetTypes = ListUtils.union(
 			transform(
 				categorizableAssetRenderFactories,
 				assetRenderedFactory -> {
