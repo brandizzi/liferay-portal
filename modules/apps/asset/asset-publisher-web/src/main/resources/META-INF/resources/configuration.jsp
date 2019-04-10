@@ -98,6 +98,9 @@ List<AssetRendererFactory<?>> classTypesAssetRendererFactories = new ArrayList<>
 				}
 			);
 		}
+		else {
+			submitForm(form);
+		}
 	}
 </script>
 
