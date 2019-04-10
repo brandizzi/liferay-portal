@@ -515,8 +515,8 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			Long siteId, DataDefinition dataDefinition)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteDataDefinition(
+			testGroup.getGroupId(), randomDataDefinition());
 	}
 
 	protected Long testGetSiteDataDefinitionsPage_getSiteId() throws Exception {
