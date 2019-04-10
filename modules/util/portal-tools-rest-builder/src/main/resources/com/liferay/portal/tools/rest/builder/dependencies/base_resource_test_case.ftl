@@ -147,8 +147,6 @@ public abstract class Base${schemaName}ResourceTestCase {
 					Assert.assertTrue(true);
 				}
 			<#else>
-				<#assign firstJavaMethodParameter = javaMethodSignature.javaMethodParameters[0] />
-
 				@Test
 				public void test${javaMethodSignature.methodName?cap_first}() throws Exception {
 					<#list javaMethodSignature.javaMethodParameters as javaMethodParameter>
@@ -656,16 +654,18 @@ public abstract class Base${schemaName}ResourceTestCase {
 				</#if>
 
 				protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}(
-						<#list javaMethodSignature.javaMethodParameters as javaMethodParameter>
-							<#if freeMarkerTool.isPathParameter(javaMethodParameter, javaMethodSignature.operation)>
-								${javaMethodParameter.parameterType} ${javaMethodParameter.parameterName},
-							</#if>
+						<#list javaMethodSignature.pathJavaMethodParameters as javaMethodParameter>
+							${javaMethodParameter.parameterType} ${javaMethodParameter.parameterName},
 						</#list>
 
 						${schemaName} ${schemaVarName}
 					) throws Exception {
 
-					throw new UnsupportedOperationException("This method needs to be implemented");
+					<#if freeMarkerTool.hasPostSiteJavaMethodSignature(javaMethodSignatures, schemaName) && (javaMethodSignature.pathJavaMethodParameters?size == 1) && stringUtil.equals(javaMethodSignature.pathJavaMethodParameters[0].parameterName, "siteId")>
+						return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
+					<#else>
+						throw new UnsupportedOperationException("This method needs to be implemented");
+					</#if>
 				}
 
 				<#list javaMethodSignature.javaMethodParameters as javaMethodParameter>
