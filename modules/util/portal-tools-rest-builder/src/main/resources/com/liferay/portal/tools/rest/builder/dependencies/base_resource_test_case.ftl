@@ -107,6 +107,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 	}
 
 	<#assign
+		generateToMultipartBodyMethod = false
 		javaMethodSignatures = freeMarkerTool.getResourceTestCaseJavaMethodSignatures(configYAML, openAPIYAML, schemaName)
 		properties = freeMarkerTool.getDTOProperties(configYAML, openAPIYAML, schema)
 	/>
@@ -137,7 +138,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 						<#assign postSiteJavaMethodSignature = freeMarkerTool.getPostSiteJavaMethodSignature(javaMethodSignatures, schemaName) />
 
 						<#if freeMarkerTool.hasRequestBodyMediaType(postSiteJavaMethodSignature, "multipart/form-data")>
-							throw new UnsupportedOperationException("This method needs to be implemented");
+							<#assign generateToMultipartBodyMethod = true />
+
+							return invokePostSite${schemaName}(testGroup.getGroupId(), toMultipartBody(random${schemaName}()));
 						<#else>
 							return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
 						</#if>
@@ -629,9 +632,11 @@ public abstract class Base${schemaName}ResourceTestCase {
 						<#assign postSiteJavaMethodSignature = freeMarkerTool.getPostSiteJavaMethodSignature(javaMethodSignatures, schemaName) />
 
 						<#if freeMarkerTool.hasRequestBodyMediaType(postSiteJavaMethodSignature, "multipart/form-data")>
-							throw new UnsupportedOperationException("This method needs to be implemented");
+							<#assign generateToMultipartBodyMethod = true />
+
+							return invokePostSite${schemaName}(siteId, toMultipartBody(random${schemaName}()));
 						<#else>
-							return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
+							return invokePostSite${schemaName}(siteId, random${schemaName}());
 						</#if>
 					<#else>
 						throw new UnsupportedOperationException("This method needs to be implemented");
@@ -695,7 +700,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 						<#assign postSiteJavaMethodSignature = freeMarkerTool.getPostSiteJavaMethodSignature(javaMethodSignatures, schemaName) />
 
 						<#if freeMarkerTool.hasRequestBodyMediaType(postSiteJavaMethodSignature, "multipart/form-data")>
-							throw new UnsupportedOperationException("This method needs to be implemented");
+							<#assign generateToMultipartBodyMethod = true />
+
+							return invokePostSite${schemaName}(testGroup.getGroupId(), toMultipartBody(random${schemaName}()));
 						<#else>
 							return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
 						</#if>
@@ -733,7 +740,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 						<#assign postSiteJavaMethodSignature = freeMarkerTool.getPostSiteJavaMethodSignature(javaMethodSignatures, schemaName) />
 
 						<#if freeMarkerTool.hasRequestBodyMediaType(postSiteJavaMethodSignature, "multipart/form-data")>
-							throw new UnsupportedOperationException("This method needs to be implemented");
+							<#assign generateToMultipartBodyMethod = true />
+
+							return invokePostSite${schemaName}(testGroup.getGroupId(), toMultipartBody(random${schemaName}()));
 						<#else>
 							return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
 						</#if>
@@ -762,7 +771,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 					<#assign postSiteJavaMethodSignature = freeMarkerTool.getPostSiteJavaMethodSignature(javaMethodSignatures, schemaName) />
 
 					<#if freeMarkerTool.hasRequestBodyMediaType(postSiteJavaMethodSignature, "multipart/form-data")>
-						throw new UnsupportedOperationException("This method needs to be implemented");
+						<#assign generateToMultipartBodyMethod = true />
+
+						return invokePostSite${schemaName}(testGroup.getGroupId(), toMultipartBody(random${schemaName}()));
 					<#else>
 						return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
 					</#if>
@@ -798,7 +809,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 						<#assign postSiteJavaMethodSignature = freeMarkerTool.getPostSiteJavaMethodSignature(javaMethodSignatures, schemaName) />
 
 						<#if freeMarkerTool.hasRequestBodyMediaType(postSiteJavaMethodSignature, "multipart/form-data")>
-							throw new UnsupportedOperationException("This method needs to be implemented");
+							<#assign generateToMultipartBodyMethod = true />
+
+							return invokePostSite${schemaName}(testGroup.getGroupId(), toMultipartBody(random${schemaName}()));
 						<#else>
 							return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
 						</#if>
@@ -1182,6 +1195,12 @@ public abstract class Base${schemaName}ResourceTestCase {
 	protected ${schemaName} randomPatch${schemaName}() {
 		return random${schemaName}();
 	}
+
+	<#if generateToMultipartBodyMethod>
+		protected MultipartBody toMultipartBody(${schemaName} ${schemaVarName}) {
+			throw new UnsupportedOperationException("This method needs to be implemented");
+		}
+	</#if>
 
 	protected static final ObjectMapper inputObjectMapper = new ObjectMapper() {
 		{
