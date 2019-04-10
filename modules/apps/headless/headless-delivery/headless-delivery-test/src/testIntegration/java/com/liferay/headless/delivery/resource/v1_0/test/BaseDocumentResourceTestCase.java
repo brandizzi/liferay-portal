@@ -468,8 +468,8 @@ public abstract class BaseDocumentResourceTestCase {
 			Document document)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteDocument(
+			testGroup.getGroupId(), toMultipartBody(randomDocument()));
 	}
 
 	protected Document invokePostDocumentFolderDocument(
@@ -546,8 +546,8 @@ public abstract class BaseDocumentResourceTestCase {
 	}
 
 	protected Document testDeleteDocument_addDocument() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteDocument(
+			testGroup.getGroupId(), toMultipartBody(randomDocument()));
 	}
 
 	protected void invokeDeleteDocument(Long documentId) throws Exception {
@@ -595,8 +595,8 @@ public abstract class BaseDocumentResourceTestCase {
 	}
 
 	protected Document testGetDocument_addDocument() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteDocument(
+			testGroup.getGroupId(), toMultipartBody(randomDocument()));
 	}
 
 	protected Document invokeGetDocument(Long documentId) throws Exception {
@@ -644,8 +644,8 @@ public abstract class BaseDocumentResourceTestCase {
 	}
 
 	protected Document testPatchDocument_addDocument() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteDocument(
+			testGroup.getGroupId(), toMultipartBody(randomDocument()));
 	}
 
 	protected Document invokePatchDocument(
@@ -712,8 +712,8 @@ public abstract class BaseDocumentResourceTestCase {
 	}
 
 	protected Document testPutDocument_addDocument() throws Exception {
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteDocument(
+			testGroup.getGroupId(), toMultipartBody(randomDocument()));
 	}
 
 	protected Document invokePutDocument(
@@ -788,8 +788,8 @@ public abstract class BaseDocumentResourceTestCase {
 	protected Document testDeleteDocumentMyRating_addDocument()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteDocument(
+			testGroup.getGroupId(), toMultipartBody(randomDocument()));
 	}
 
 	protected void invokeDeleteDocumentMyRating(Long documentId)
@@ -1224,8 +1224,8 @@ public abstract class BaseDocumentResourceTestCase {
 			Long siteId, Document document)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteDocument(
+			siteId, toMultipartBody(randomDocument()));
 	}
 
 	protected Long testGetSiteDocumentsPage_getSiteId() throws Exception {
@@ -1305,8 +1305,8 @@ public abstract class BaseDocumentResourceTestCase {
 	protected Document testPostSiteDocument_addDocument(Document document)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteDocument(
+			testGroup.getGroupId(), toMultipartBody(randomDocument()));
 	}
 
 	protected Document invokePostSiteDocument(
@@ -1975,6 +1975,11 @@ public abstract class BaseDocumentResourceTestCase {
 
 	protected Document randomPatchDocument() {
 		return randomDocument();
+	}
+
+	protected MultipartBody toMultipartBody(Document document) {
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected static final ObjectMapper inputObjectMapper = new ObjectMapper() {

@@ -1944,7 +1944,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteKnowledgeBaseArticle(
-			testGroup.getGroupId(), randomKnowledgeBaseArticle());
+			siteId, randomKnowledgeBaseArticle());
 	}
 
 	protected Long testGetSiteKnowledgeBaseArticlesPage_getSiteId()

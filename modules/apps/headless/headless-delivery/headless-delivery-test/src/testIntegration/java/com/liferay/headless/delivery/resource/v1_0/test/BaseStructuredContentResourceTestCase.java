@@ -774,7 +774,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), randomStructuredContent());
+			siteId, randomStructuredContent());
 	}
 
 	protected Long testGetSiteStructuredContentsPage_getSiteId()

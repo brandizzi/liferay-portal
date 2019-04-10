@@ -805,7 +805,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteKnowledgeBaseFolder(
-			testGroup.getGroupId(), randomKnowledgeBaseFolder());
+			siteId, randomKnowledgeBaseFolder());
 	}
 
 	protected Long testGetSiteKnowledgeBaseFoldersPage_getSiteId()

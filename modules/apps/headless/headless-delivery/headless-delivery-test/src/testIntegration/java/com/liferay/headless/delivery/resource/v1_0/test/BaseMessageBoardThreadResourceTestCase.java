@@ -1428,7 +1428,7 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteMessageBoardThread(
-			testGroup.getGroupId(), randomMessageBoardThread());
+			siteId, randomMessageBoardThread());
 	}
 
 	protected Long testGetSiteMessageBoardThreadsPage_getSiteId()

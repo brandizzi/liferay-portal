@@ -1197,7 +1197,7 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteMessageBoardSection(
-			testGroup.getGroupId(), randomMessageBoardSection());
+			siteId, randomMessageBoardSection());
 	}
 
 	protected Long testGetSiteMessageBoardSectionsPage_getSiteId()

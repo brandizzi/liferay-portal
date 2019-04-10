@@ -131,8 +131,8 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 	protected BlogPostingImage testDeleteBlogPostingImage_addBlogPostingImage()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteBlogPostingImage(
+			testGroup.getGroupId(), toMultipartBody(randomBlogPostingImage()));
 	}
 
 	protected void invokeDeleteBlogPostingImage(Long blogPostingImageId)
@@ -193,8 +193,8 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 	protected BlogPostingImage testGetBlogPostingImage_addBlogPostingImage()
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteBlogPostingImage(
+			testGroup.getGroupId(), toMultipartBody(randomBlogPostingImage()));
 	}
 
 	protected BlogPostingImage invokeGetBlogPostingImage(
@@ -522,8 +522,8 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 				Long siteId, BlogPostingImage blogPostingImage)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteBlogPostingImage(
+			siteId, toMultipartBody(randomBlogPostingImage()));
 	}
 
 	protected Long testGetSiteBlogPostingImagesPage_getSiteId()
@@ -608,8 +608,8 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 			BlogPostingImage blogPostingImage)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteBlogPostingImage(
+			testGroup.getGroupId(), toMultipartBody(randomBlogPostingImage()));
 	}
 
 	protected BlogPostingImage invokePostSiteBlogPostingImage(
@@ -1027,6 +1027,11 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 
 	protected BlogPostingImage randomPatchBlogPostingImage() {
 		return randomBlogPostingImage();
+	}
+
+	protected MultipartBody toMultipartBody(BlogPostingImage blogPostingImage) {
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected static final ObjectMapper inputObjectMapper = new ObjectMapper() {

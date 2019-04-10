@@ -396,7 +396,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteTaxonomyVocabulary(
-			testGroup.getGroupId(), randomTaxonomyVocabulary());
+			siteId, randomTaxonomyVocabulary());
 	}
 
 	protected Long testGetSiteTaxonomyVocabulariesPage_getSiteId()
