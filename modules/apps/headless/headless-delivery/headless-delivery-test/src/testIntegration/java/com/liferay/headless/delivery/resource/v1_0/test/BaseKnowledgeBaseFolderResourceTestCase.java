@@ -804,8 +804,8 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				Long siteId, KnowledgeBaseFolder knowledgeBaseFolder)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteKnowledgeBaseFolder(
+			testGroup.getGroupId(), randomKnowledgeBaseFolder());
 	}
 
 	protected Long testGetSiteKnowledgeBaseFoldersPage_getSiteId()

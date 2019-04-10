@@ -1943,8 +1943,8 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				Long siteId, KnowledgeBaseArticle knowledgeBaseArticle)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteKnowledgeBaseArticle(
+			testGroup.getGroupId(), randomKnowledgeBaseArticle());
 	}
 
 	protected Long testGetSiteKnowledgeBaseArticlesPage_getSiteId()

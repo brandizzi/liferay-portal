@@ -773,8 +773,8 @@ public abstract class BaseStructuredContentResourceTestCase {
 				Long siteId, StructuredContent structuredContent)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteStructuredContent(
+			testGroup.getGroupId(), randomStructuredContent());
 	}
 
 	protected Long testGetSiteStructuredContentsPage_getSiteId()

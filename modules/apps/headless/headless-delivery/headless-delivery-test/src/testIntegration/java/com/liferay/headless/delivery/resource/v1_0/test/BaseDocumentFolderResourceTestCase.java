@@ -1134,8 +1134,8 @@ public abstract class BaseDocumentFolderResourceTestCase {
 			Long siteId, DocumentFolder documentFolder)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteDocumentFolder(
+			testGroup.getGroupId(), randomDocumentFolder());
 	}
 
 	protected Long testGetSiteDocumentFoldersPage_getSiteId() throws Exception {

@@ -1427,8 +1427,8 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				Long siteId, MessageBoardThread messageBoardThread)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteMessageBoardThread(
+			testGroup.getGroupId(), randomMessageBoardThread());
 	}
 
 	protected Long testGetSiteMessageBoardThreadsPage_getSiteId()

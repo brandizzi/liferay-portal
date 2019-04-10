@@ -526,8 +526,7 @@ public abstract class BaseKeywordResourceTestCase {
 			Long siteId, Keyword keyword)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
 	}
 
 	protected Long testGetSiteKeywordsPage_getSiteId() throws Exception {

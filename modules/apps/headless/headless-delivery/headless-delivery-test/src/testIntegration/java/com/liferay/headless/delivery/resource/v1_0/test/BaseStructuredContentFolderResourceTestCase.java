@@ -415,8 +415,8 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 				Long siteId, StructuredContentFolder structuredContentFolder)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteStructuredContentFolder(
+			testGroup.getGroupId(), randomStructuredContentFolder());
 	}
 
 	protected Long testGetSiteStructuredContentFoldersPage_getSiteId()

@@ -395,8 +395,8 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				Long siteId, TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteTaxonomyVocabulary(
+			testGroup.getGroupId(), randomTaxonomyVocabulary());
 	}
 
 	protected Long testGetSiteTaxonomyVocabulariesPage_getSiteId()

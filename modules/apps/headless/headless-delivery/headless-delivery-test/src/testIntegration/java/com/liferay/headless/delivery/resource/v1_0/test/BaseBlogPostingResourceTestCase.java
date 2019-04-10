@@ -865,8 +865,8 @@ public abstract class BaseBlogPostingResourceTestCase {
 			Long siteId, BlogPosting blogPosting)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteBlogPosting(
+			testGroup.getGroupId(), randomBlogPosting());
 	}
 
 	protected Long testGetSiteBlogPostingsPage_getSiteId() throws Exception {

@@ -1196,8 +1196,8 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 				Long siteId, MessageBoardSection messageBoardSection)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteMessageBoardSection(
+			testGroup.getGroupId(), randomMessageBoardSection());
 	}
 
 	protected Long testGetSiteMessageBoardSectionsPage_getSiteId()
