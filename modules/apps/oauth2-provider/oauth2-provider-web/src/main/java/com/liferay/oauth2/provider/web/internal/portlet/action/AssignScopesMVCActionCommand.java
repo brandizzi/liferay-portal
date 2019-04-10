@@ -60,7 +60,7 @@ public class AssignScopesMVCActionCommand implements MVCActionCommand {
 		List<String> scopeAliasesList = Arrays.stream(
 			scopeAliases
 		).flatMap(
-			sa -> Arrays.stream(sa.split(StringPool.SPACE))
+			scopeAlias -> Arrays.stream(scopeAlias.split(StringPool.SPACE))
 		).filter(
 			Validator::isNotNull
 		).collect(
