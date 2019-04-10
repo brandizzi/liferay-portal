@@ -120,7 +120,7 @@ public class DocumentLibraryFieldType extends FieldType {
 					"fileEntryTitle", _getFileEntryTitle(fileEntry, html));
 				context.put(
 					"fileEntryURL",
-					_getFileEntryURL(httpServletRequest, fileEntry, html));
+					_getFileEntryURL(fileEntry, html, httpServletRequest));
 			}
 		}
 
@@ -192,7 +192,7 @@ public class DocumentLibraryFieldType extends FieldType {
 	}
 
 	private String _getFileEntryURL(
-		HttpServletRequest httpServletRequest, FileEntry fileEntry, Html html) {
+		FileEntry fileEntry, Html html, HttpServletRequest httpServletRequest) {
 
 		if (fileEntry == null) {
 			return StringPool.BLANK;
