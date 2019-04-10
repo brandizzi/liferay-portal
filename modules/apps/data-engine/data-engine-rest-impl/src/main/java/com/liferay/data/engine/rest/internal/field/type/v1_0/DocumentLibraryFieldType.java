@@ -112,7 +112,7 @@ public class DocumentLibraryFieldType extends FieldType {
 				CustomPropertyUtil.getString(
 					dataDefinitionField.getCustomProperties(), "value"));
 
-			if (valueJSONObject.length() > 0) {
+			if ((valueJSONObject != null) && (valueJSONObject.length() > 0)) {
 				FileEntry fileEntry = _getFileEntry(
 					dlAppService, valueJSONObject);
 
