@@ -38,7 +38,6 @@ import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -126,25 +125,6 @@ public class DocumentLibraryFieldType extends FieldType {
 					dataDefinitionField.getCustomProperties(), "value", "{}")));
 	}
 
-	private Map<String, String> _getStrings(
-		HttpServletRequest httpServletRequest, Portal portal) {
-
-		Map<String, String> values = new HashMap<>();
-
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)httpServletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		ResourceBundle resourceBundle = new AggregateResourceBundle(
-			ResourceBundleUtil.getBundle(
-				"content.Language", themeDisplay.getLocale(), getClass()),
-			portal.getResourceBundle(themeDisplay.getLocale()));
-
-		values.put("select", LanguageUtil.get(resourceBundle, "select"));
-
-		return values;
-	}
-
 	public JSONObject toJSONObject(DataDefinitionField dataDefinitionField)
 		throws Exception {
 
@@ -203,8 +183,9 @@ public class DocumentLibraryFieldType extends FieldType {
 
 		StringBundler sb = new StringBundler(9);
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
 
 		sb.append(themeDisplay.getPathContext());
 
@@ -224,8 +205,9 @@ public class DocumentLibraryFieldType extends FieldType {
 	private String _getItemSelectorAuthToken(
 		HttpServletRequest httpServletRequest, Portal portal) {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
 
 		if (themeDisplay == null) {
 			return StringPool.BLANK;
@@ -247,8 +229,9 @@ public class DocumentLibraryFieldType extends FieldType {
 	private String _getLexiconIconsPath(HttpServletRequest httpServletRequest) {
 		StringBundler sb = new StringBundler(3);
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
 
 		sb.append(themeDisplay.getPathThemeImages());
 
@@ -256,6 +239,25 @@ public class DocumentLibraryFieldType extends FieldType {
 		sb.append(StringPool.POUND);
 
 		return sb.toString();
+	}
+
+	private Map<String, String> _getStrings(
+		HttpServletRequest httpServletRequest, Portal portal) {
+
+		Map<String, String> values = new HashMap<>();
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		ResourceBundle resourceBundle = new AggregateResourceBundle(
+			ResourceBundleUtil.getBundle(
+				"content.Language", themeDisplay.getLocale(), getClass()),
+			portal.getResourceBundle(themeDisplay.getLocale()));
+
+		values.put("select", LanguageUtil.get(resourceBundle, "select"));
+
+		return values;
 	}
 
 	private JSONObject _toJSONObject(String string) {
