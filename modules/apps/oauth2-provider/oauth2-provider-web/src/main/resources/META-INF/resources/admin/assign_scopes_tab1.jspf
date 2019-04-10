@@ -83,6 +83,11 @@
 
 								<div class="autofit-col autofit-col-expand">
 									<h4 class="list-group-title text-truncate">
+
+										<%
+										AssignableScopes assignableScopes = applicationAssignableScopesRelationsEntry.getKey();
+										%>
+
 										<label for="<portlet:namespace /><%= id %>">
 											<%= assignScopesDisplayContext.getApplicationScopeDescription(applicationName, assignableScopes, "<br />+ ") %>
 										</label>
