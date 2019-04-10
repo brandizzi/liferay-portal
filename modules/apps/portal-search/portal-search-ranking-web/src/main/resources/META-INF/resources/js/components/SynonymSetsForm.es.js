@@ -1,8 +1,7 @@
-import ClayButton from './ClayButton.es';
+import ClayButton from 'components/shared/ClayButton.es';
+import ClayMultiselect from 'components/shared/ClayMultiselect.es';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import ReactSelectTags from './ReactSelectTags.es';
-import {getLang} from 'utils/language.es';
 
 class SynonymSetsForm extends Component {
 	static propTypes = {
@@ -41,22 +40,22 @@ class SynonymSetsForm extends Component {
 				<div className="container-fluid container-fluid-max-xl container-form-lg">
 					<div className="sheet sheet-lg">
 						<div className="sheet-title">
-							{getLang('create-synonym-set')}
+							{Liferay.Language.get('create-synonym-set')}
 						</div>
 
 						<div className="sheet-text">
-							{getLang('broaden-the-scope-of-search-by-treating-terms-equally-using-synonyms')}
+							{Liferay.Language.get('broaden-the-scope-of-search-by-treating-terms-equally-using-synonyms')}
 						</div>
 
-						<label>{getLang('synonyms')}</label>
-						<ReactSelectTags
+						<label>{Liferay.Language.get('synonyms')}</label>
+						<ClayMultiselect
 							onAction={this._handleUpdate}
 							value={synonyms}
 						/>
 
 						<div className="form-feedback-group">
 							<div className="form-text">
-								{getLang('add-an-alias-instruction')}
+								{Liferay.Language.get('add-an-alias-instruction')}
 							</div>
 						</div>
 
@@ -66,15 +65,15 @@ class SynonymSetsForm extends Component {
 									synonyms.length === 0
 								}
 								displayStyle="primary"
-								label={getLang('publish')}
+								label={Liferay.Language.get('publish')}
 								onClick={this._handleSubmit}
 							/>
 							<ClayButton
-								label={getLang('save-as-draft')}
+								label={Liferay.Language.get('save-as-draft')}
 								onClick={this._handleSaveAsDraft}
 							/>
 							<ClayButton
-								label={getLang('cancel')}
+								label={Liferay.Language.get('cancel')}
 								onClick={this._handleCancel}
 							/>
 						</div>

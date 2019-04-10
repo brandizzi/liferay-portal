@@ -14,10 +14,23 @@
  */
 --%>
 
-<%@ include file="/init.jsp" %>
+<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
+
+<%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
+taglib uri="http://liferay.com/tld/clay" prefix="clay" %><%@
+taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
+taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
+taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
+
+<%@ page import="com.liferay.portal.search.ranking.web.internal.constants.ResultsRankingPortletKeys" %><%@
+page import="com.liferay.portal.search.ranking.web.internal.display.context.SynonymSetsDisplayContext" %>
+
+<liferay-frontend:defineObjects />
+
+<liferay-theme:defineObjects />
 
 <%
-SynonymSetsDisplayContext synonymSetsDisplayContext = (SynonymSetsDisplayContext)request.getAttribute(SearchRankingPortletKeys.SYNONYM_SETS_DISPLAY_CONTEXT);
+SynonymSetsDisplayContext synonymSetsDisplayContext = (SynonymSetsDisplayContext)request.getAttribute(ResultsRankingPortletKeys.SYNONYM_SETS_DISPLAY_CONTEXT);
 %>
 
 <%-- FIXME: BEGIN MOCK CODE --%>
@@ -52,7 +65,7 @@ SynonymSetsDisplayContext synonymSetsDisplayContext = (SynonymSetsDisplayContext
 	sortingURL="<%= synonymSetsDisplayContext.getSortingURL() %>"
 />
 
-<aui:form cssClass="container-fluid-1280" method="post" name="SynonymSetsEntriesFm">
+<aui:form cssClass="container-fluid-1280" method="post" name="synonymSetsEntriesFm">
 	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 
 	<liferay-ui:search-container
@@ -94,6 +107,12 @@ SynonymSetsDisplayContext synonymSetsDisplayContext = (SynonymSetsDisplayContext
 						</c:otherwise>
 					</c:choose>
 				</span>
+			</liferay-ui:search-container-column-text>
+
+			<liferay-ui:search-container-column-text>
+				<clay:dropdown-actions
+					dropdownItems="<%= synonymSetsDisplayContext.getActionDropdownItems() %>"
+				/>
 			</liferay-ui:search-container-column-text>
 
 		</liferay-ui:search-container-row>
