@@ -153,6 +153,7 @@
 				"template_en": {
 					"mapping": {
 						"analyzer": "english",
+						"search_analyzer": "english_liferay",
 						"store": true,
 						"term_vector": "with_positions_offsets",
 						"type": "text"
@@ -475,6 +476,7 @@
 			},
 			"articleId": {
 				"analyzer": "keyword_lowercase",
+				"search_analyzer": "standard_liferay",
 				"store": true,
 				"type": "text"
 			},
@@ -495,11 +497,13 @@
 				"type": "keyword"
 			},
 			"assetTagNames": {
+				"analyzer": "standard",
 				"fields": {
 					"raw" : {
 						"type": "keyword"
 					}
 				},
+				"search_analyzer": "standard_liferay",
 				"store": true,
 				"term_vector": "with_positions_offsets",
 				"type": "text"
@@ -533,6 +537,8 @@
 				"type": "keyword"
 			},
 			"content": {
+				"analyzer": "standard",
+				"search_analyzer": "standard_liferay",
 				"store": true,
 				"term_vector": "with_positions_offsets",
 				"type": "text"
@@ -564,6 +570,8 @@
 				"type": "keyword"
 			},
 			"description": {
+				"analyzer": "standard",
+				"search_analyzer": "standard_liferay",
 				"store": true,
 				"term_vector": "with_positions_offsets",
 				"type": "text"
@@ -759,6 +767,8 @@
 				"type": "keyword"
 			},
 			"subtitle": {
+				"analyzer": "standard",
+				"search_analyzer": "standard_liferay",
 				"store": true,
 				"type": "text"
 			},
@@ -771,6 +781,8 @@
 				"type": "keyword"
 			},
 			"title": {
+				"analyzer": "standard",
+				"search_analyzer": "standard_liferay",
 				"store": true,
 				"term_vector": "with_positions_offsets",
 				"type": "text"
