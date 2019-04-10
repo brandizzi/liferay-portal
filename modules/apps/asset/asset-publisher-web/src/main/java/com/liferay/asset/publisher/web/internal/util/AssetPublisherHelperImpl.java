@@ -138,7 +138,9 @@ public class AssetPublisherHelperImpl implements AssetPublisherHelper {
 
 		if (_isSearchWithIndex(portletName, assetEntryQuery)) {
 			return _assetHelper.searchAssetEntries(
-				assetEntryQuery, getAssetCategoryIds(portletPreferences),
+				assetEntryQuery,
+				_filterAssetCategoryIds(
+					getAssetCategoryIds(portletPreferences)),
 				getAssetTagNames(portletPreferences), attributes, companyId,
 				assetEntryQuery.getKeywords(), layout, locale, scopeGroupId,
 				timeZone, userId, start, end);
