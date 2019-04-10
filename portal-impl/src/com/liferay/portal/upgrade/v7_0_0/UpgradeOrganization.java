@@ -30,6 +30,7 @@ public class UpgradeOrganization extends UpgradeProcess {
 	@Override
 	protected void doUpgrade() throws Exception {
 		alter(OrganizationTable.class, new AlterColumnType("statusId", "LONG"));
+
 		upgradeOrganizationLogoId();
 	}
 
