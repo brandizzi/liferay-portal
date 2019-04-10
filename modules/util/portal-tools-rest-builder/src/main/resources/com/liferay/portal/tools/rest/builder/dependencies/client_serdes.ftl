@@ -8,6 +8,10 @@ import ${configYAML.apiPackagePath}.client.json.BaseJSONParser;
 
 import java.math.BigDecimal;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -141,10 +145,14 @@ public class ${schemaName}SerDes {
 							propertyType = properties[propertyName]
 						/>
 
-						<#if stringUtil.equals(propertyType, "Date[]")>
+						<#if stringUtil.equals(propertyType, "Date")>
+							_toDate((String)jsonParserFieldValue)
+						<#elseif stringUtil.equals(propertyType, "Date[]")>
 							toDates((Object[])jsonParserFieldValue)
 						<#elseif stringUtil.equals(propertyType, "Integer[]")>
 							toIntegers((Object[])jsonParserFieldValue)
+						<#elseif stringUtil.equals(propertyType, "Long")>
+							Long.valueOf((String)jsonParserFieldValue)
 						<#elseif stringUtil.equals(propertyType, "Long[]")>
 							toLongs((Object[])jsonParserFieldValue)
 						<#elseif stringUtil.equals(propertyType, "String[]")>
@@ -174,6 +182,27 @@ public class ${schemaName}SerDes {
 				throw new IllegalArgumentException("Unsupported field name " + jsonParserFieldName);
 			}
 		}
+
+		<#list properties?keys as propertyName>
+			<#assign
+				propertyType = properties[propertyName]
+			/>
+
+			<#if stringUtil.equals(propertyType, "Date")>
+				private Date _toDate(String string) {
+					try {
+						DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+						return dateFormat.parse(string);
+					}
+					catch (ParseException pe) {
+						throw new IllegalArgumentException("Unable to parse " + string);
+					}
+				}
+
+				<#break>
+			</#if>
+		</#list>
 
 	}
 
