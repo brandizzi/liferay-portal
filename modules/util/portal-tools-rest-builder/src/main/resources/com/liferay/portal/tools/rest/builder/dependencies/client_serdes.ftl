@@ -60,11 +60,11 @@ public class ${schemaName}SerDes {
 
 			sb.append("\"${propertyName}\": ");
 
-			<#if properties[propertyName]?contains("[]")>
-				if (${schemaVarName}.get${propertyName?cap_first}() == null) {
-					sb.append("null");
-				}
-				else {
+			if (${schemaVarName}.get${propertyName?cap_first}() == null) {
+				sb.append("null");
+			}
+			else {
+				<#if properties[propertyName]?contains("[]")>
 					sb.append("[");
 
 					for (int i = 0; i < ${schemaVarName}.get${propertyName?cap_first}().length; i++) {
@@ -82,16 +82,16 @@ public class ${schemaName}SerDes {
 					}
 
 					sb.append("]");
-				}
-			<#else>
-				<#if properties[propertyName]?ends_with("Date") || properties[propertyName]?ends_with("String") || enumSchemas?keys?seq_contains(properties[propertyName])>
-					sb.append("\"");
-					sb.append(${schemaVarName}.get${propertyName?cap_first}());
-					sb.append("\"");
 				<#else>
-					sb.append(${schemaVarName}.get${propertyName?cap_first}());
+					<#if stringUtil.equals(properties[propertyName], "Date[]") || stringUtil.equals(properties[propertyName], "String[]") || enumSchemas?keys?seq_contains(properties[propertyName])>
+						sb.append("\"");
+						sb.append(${schemaVarName}.get${propertyName?cap_first}());
+						sb.append("\"");
+					<#else>
+						sb.append(${schemaVarName}.get${propertyName?cap_first}());
+					</#if>
 				</#if>
-			</#if>
+			}
 		</#list>
 
 		sb.append("}");
@@ -203,7 +203,6 @@ public class ${schemaName}SerDes {
 				<#break>
 			</#if>
 		</#list>
-
 	}
 
 }

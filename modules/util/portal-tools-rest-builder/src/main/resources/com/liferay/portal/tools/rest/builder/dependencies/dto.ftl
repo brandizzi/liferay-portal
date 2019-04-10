@@ -216,11 +216,11 @@ public class ${schemaName} <#if dtoParentClassName?has_content>extends ${dtoPare
 
 			sb.append("\"${propertyName}\": ");
 
-			<#if properties[propertyName]?contains("[]")>
-				if (${propertyName} == null) {
-					sb.append("null");
-				}
-				else {
+			if (${propertyName} == null) {
+				sb.append("null");
+			}
+			else {
+				<#if properties[propertyName]?contains("[]")>
 					sb.append("[");
 
 					for (int i = 0; i < ${propertyName}.length; i++) {
@@ -238,16 +238,16 @@ public class ${schemaName} <#if dtoParentClassName?has_content>extends ${dtoPare
 					}
 
 					sb.append("]");
-				}
-			<#else>
-				<#if properties[propertyName]?ends_with("Date") || properties[propertyName]?ends_with("String") || enumSchemas?keys?seq_contains(properties[propertyName])>
-					sb.append("\"");
-					sb.append(${propertyName});
-					sb.append("\"");
 				<#else>
-					sb.append(${propertyName});
+					<#if stringUtil.equals(properties[propertyName], "Date[]") || stringUtil.equals(properties[propertyName], "String[]") || enumSchemas?keys?seq_contains(properties[propertyName])>
+						sb.append("\"");
+						sb.append(${propertyName});
+						sb.append("\"");
+					<#else>
+						sb.append(${propertyName});
+					</#if>
 				</#if>
-			</#if>
+			}
 		</#list>
 
 		sb.append("}");
