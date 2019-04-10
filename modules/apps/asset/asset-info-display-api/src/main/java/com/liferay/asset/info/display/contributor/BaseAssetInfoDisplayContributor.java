@@ -109,18 +109,16 @@ public abstract class BaseAssetInfoDisplayContributor<T>
 			long groupId, String urlTitle)
 		throws PortalException {
 
-		String className = getClassName();
-
 		AssetRendererFactory assetRendererFactory =
 			AssetRendererFactoryRegistryUtil.
 				getAssetRendererFactoryByClassNameId(
-					PortalUtil.getClassNameId(className));
+					PortalUtil.getClassNameId(getClassName()));
 
 		AssetRenderer assetRenderer = assetRendererFactory.getAssetRenderer(
 			groupId, urlTitle);
 
 		AssetEntry assetEntry = assetRendererFactory.getAssetEntry(
-			className, assetRenderer.getClassPK());
+			getClassName(), assetRenderer.getClassPK());
 
 		return new AssetInfoDisplayObjectProvider(assetEntry);
 	}
