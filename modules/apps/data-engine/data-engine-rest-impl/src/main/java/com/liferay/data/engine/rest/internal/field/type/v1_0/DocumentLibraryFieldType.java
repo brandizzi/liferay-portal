@@ -118,6 +118,16 @@ public class DocumentLibraryFieldType extends FieldType {
 			_getItemSelectorAuthToken(httpServletRequest, portal));
 		context.put(
 			"lexiconIconsPath", _getLexiconIconsPath(httpServletRequest));
+		context.put("strings", _getStrings(httpServletRequest, portal));
+		context.put(
+			"value",
+			JSONFactoryUtil.looseDeserialize(
+				CustomPropertyUtil.getString(
+					dataDefinitionField.getCustomProperties(), "value", "{}")));
+	}
+
+	private Map<String, String> _getStrings(
+		HttpServletRequest httpServletRequest, Portal portal) {
 
 		Map<String, String> values = new HashMap<>();
 
@@ -126,13 +136,7 @@ public class DocumentLibraryFieldType extends FieldType {
 
 		values.put("select", LanguageUtil.get(resourceBundle, "select"));
 
-		context.put("strings", values);
-
-		context.put(
-			"value",
-			JSONFactoryUtil.looseDeserialize(
-				CustomPropertyUtil.getString(
-					dataDefinitionField.getCustomProperties(), "value", "{}")));
+		return values;
 	}
 
 	public JSONObject toJSONObject(DataDefinitionField dataDefinitionField)
