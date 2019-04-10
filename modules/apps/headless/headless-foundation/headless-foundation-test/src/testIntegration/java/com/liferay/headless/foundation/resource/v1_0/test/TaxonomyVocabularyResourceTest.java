@@ -70,25 +70,6 @@ public class TaxonomyVocabularyResourceTest
 		};
 	}
 
-	@Override
-	protected TaxonomyVocabulary
-			testGetSiteTaxonomyVocabulariesPage_addTaxonomyVocabulary(
-				Long siteId, TaxonomyVocabulary taxonomyVocabulary)
-		throws Exception {
-
-		return invokePostSiteTaxonomyVocabulary(siteId, taxonomyVocabulary);
-	}
-
-	@Override
-	protected TaxonomyVocabulary
-			testPostSiteTaxonomyVocabulary_addTaxonomyVocabulary(
-				TaxonomyVocabulary taxonomyVocabulary)
-		throws Exception {
-
-		return invokePostSiteTaxonomyVocabulary(
-			testGroup.getGroupId(), taxonomyVocabulary);
-	}
-
 	private boolean _equals(AssetType[] assetTypes1, AssetType[] assetTypes2) {
 		if (assetTypes1 == assetTypes2) {
 			return true;
