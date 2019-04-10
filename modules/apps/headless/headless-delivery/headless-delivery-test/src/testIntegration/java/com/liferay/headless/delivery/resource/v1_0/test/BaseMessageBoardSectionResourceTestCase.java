@@ -844,7 +844,7 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteMessageBoardSection(
-			testGroup.getGroupId(), randomMessageBoardSection());
+			testGroup.getGroupId(), messageBoardSection);
 	}
 
 	protected MessageBoardSection
@@ -1196,8 +1196,7 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 				Long siteId, MessageBoardSection messageBoardSection)
 		throws Exception {
 
-		return invokePostSiteMessageBoardSection(
-			siteId, randomMessageBoardSection());
+		return invokePostSiteMessageBoardSection(siteId, messageBoardSection);
 	}
 
 	protected Long testGetSiteMessageBoardSectionsPage_getSiteId()
@@ -1292,7 +1291,7 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteMessageBoardSection(
-			testGroup.getGroupId(), randomMessageBoardSection());
+			testGroup.getGroupId(), messageBoardSection);
 	}
 
 	protected MessageBoardSection invokePostSiteMessageBoardSection(

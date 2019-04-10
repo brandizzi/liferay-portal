@@ -515,7 +515,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			Long siteId, DataDefinition dataDefinition)
 		throws Exception {
 
-		return invokePostSiteDataDefinition(siteId, randomDataDefinition());
+		return invokePostSiteDataDefinition(siteId, dataDefinition);
 	}
 
 	protected Long testGetSiteDataDefinitionsPage_getSiteId() throws Exception {
@@ -593,7 +593,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteDataDefinition(
-			testGroup.getGroupId(), randomDataDefinition());
+			testGroup.getGroupId(), dataDefinition);
 	}
 
 	protected DataDefinition invokePostSiteDataDefinition(

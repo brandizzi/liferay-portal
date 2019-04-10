@@ -804,7 +804,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteDocumentFolder(
-			testGroup.getGroupId(), randomDocumentFolder());
+			testGroup.getGroupId(), documentFolder);
 	}
 
 	protected DocumentFolder invokePostDocumentFolderDocumentFolder(
@@ -1134,7 +1134,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 			Long siteId, DocumentFolder documentFolder)
 		throws Exception {
 
-		return invokePostSiteDocumentFolder(siteId, randomDocumentFolder());
+		return invokePostSiteDocumentFolder(siteId, documentFolder);
 	}
 
 	protected Long testGetSiteDocumentFoldersPage_getSiteId() throws Exception {
@@ -1222,7 +1222,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteDocumentFolder(
-			testGroup.getGroupId(), randomDocumentFolder());
+			testGroup.getGroupId(), documentFolder);
 	}
 
 	protected DocumentFolder invokePostSiteDocumentFolder(

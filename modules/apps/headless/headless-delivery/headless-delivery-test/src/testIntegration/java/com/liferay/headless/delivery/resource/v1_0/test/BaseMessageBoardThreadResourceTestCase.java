@@ -517,7 +517,7 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteMessageBoardThread(
-			testGroup.getGroupId(), randomMessageBoardThread());
+			testGroup.getGroupId(), messageBoardThread);
 	}
 
 	protected MessageBoardThread
@@ -1427,8 +1427,7 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				Long siteId, MessageBoardThread messageBoardThread)
 		throws Exception {
 
-		return invokePostSiteMessageBoardThread(
-			siteId, randomMessageBoardThread());
+		return invokePostSiteMessageBoardThread(siteId, messageBoardThread);
 	}
 
 	protected Long testGetSiteMessageBoardThreadsPage_getSiteId()
@@ -1523,7 +1522,7 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteMessageBoardThread(
-			testGroup.getGroupId(), randomMessageBoardThread());
+			testGroup.getGroupId(), messageBoardThread);
 	}
 
 	protected MessageBoardThread invokePostSiteMessageBoardThread(

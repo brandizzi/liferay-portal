@@ -1097,7 +1097,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteKnowledgeBaseArticle(
-			testGroup.getGroupId(), randomKnowledgeBaseArticle());
+			testGroup.getGroupId(), knowledgeBaseArticle);
 	}
 
 	protected KnowledgeBaseArticle
@@ -1580,7 +1580,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteKnowledgeBaseArticle(
-			testGroup.getGroupId(), randomKnowledgeBaseArticle());
+			testGroup.getGroupId(), knowledgeBaseArticle);
 	}
 
 	protected KnowledgeBaseArticle
@@ -1943,8 +1943,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				Long siteId, KnowledgeBaseArticle knowledgeBaseArticle)
 		throws Exception {
 
-		return invokePostSiteKnowledgeBaseArticle(
-			siteId, randomKnowledgeBaseArticle());
+		return invokePostSiteKnowledgeBaseArticle(siteId, knowledgeBaseArticle);
 	}
 
 	protected Long testGetSiteKnowledgeBaseArticlesPage_getSiteId()
@@ -2039,7 +2038,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteKnowledgeBaseArticle(
-			testGroup.getGroupId(), randomKnowledgeBaseArticle());
+			testGroup.getGroupId(), knowledgeBaseArticle);
 	}
 
 	protected KnowledgeBaseArticle invokePostSiteKnowledgeBaseArticle(

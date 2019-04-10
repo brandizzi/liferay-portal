@@ -469,7 +469,7 @@ public abstract class BaseDocumentResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteDocument(
-			testGroup.getGroupId(), toMultipartBody(randomDocument()));
+			testGroup.getGroupId(), toMultipartBody(document));
 	}
 
 	protected Document invokePostDocumentFolderDocument(
@@ -1224,8 +1224,7 @@ public abstract class BaseDocumentResourceTestCase {
 			Long siteId, Document document)
 		throws Exception {
 
-		return invokePostSiteDocument(
-			siteId, toMultipartBody(randomDocument()));
+		return invokePostSiteDocument(siteId, toMultipartBody(document));
 	}
 
 	protected Long testGetSiteDocumentsPage_getSiteId() throws Exception {
@@ -1306,7 +1305,7 @@ public abstract class BaseDocumentResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteDocument(
-			testGroup.getGroupId(), toMultipartBody(randomDocument()));
+			testGroup.getGroupId(), toMultipartBody(document));
 	}
 
 	protected Document invokePostSiteDocument(

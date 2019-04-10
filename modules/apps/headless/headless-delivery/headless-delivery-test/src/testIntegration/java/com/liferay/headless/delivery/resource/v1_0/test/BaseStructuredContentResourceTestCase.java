@@ -773,8 +773,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				Long siteId, StructuredContent structuredContent)
 		throws Exception {
 
-		return invokePostSiteStructuredContent(
-			siteId, randomStructuredContent());
+		return invokePostSiteStructuredContent(siteId, structuredContent);
 	}
 
 	protected Long testGetSiteStructuredContentsPage_getSiteId()
@@ -868,7 +867,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), randomStructuredContent());
+			testGroup.getGroupId(), structuredContent);
 	}
 
 	protected StructuredContent invokePostSiteStructuredContent(
@@ -1477,7 +1476,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), randomStructuredContent());
+			testGroup.getGroupId(), structuredContent);
 	}
 
 	protected StructuredContent

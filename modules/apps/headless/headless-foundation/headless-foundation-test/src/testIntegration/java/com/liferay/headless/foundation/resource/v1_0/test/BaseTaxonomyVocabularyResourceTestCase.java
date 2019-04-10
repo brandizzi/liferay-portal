@@ -395,8 +395,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				Long siteId, TaxonomyVocabulary taxonomyVocabulary)
 		throws Exception {
 
-		return invokePostSiteTaxonomyVocabulary(
-			siteId, randomTaxonomyVocabulary());
+		return invokePostSiteTaxonomyVocabulary(siteId, taxonomyVocabulary);
 	}
 
 	protected Long testGetSiteTaxonomyVocabulariesPage_getSiteId()
@@ -491,7 +490,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteTaxonomyVocabulary(
-			testGroup.getGroupId(), randomTaxonomyVocabulary());
+			testGroup.getGroupId(), taxonomyVocabulary);
 	}
 
 	protected TaxonomyVocabulary invokePostSiteTaxonomyVocabulary(

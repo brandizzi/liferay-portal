@@ -416,7 +416,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteStructuredContentFolder(
-			siteId, randomStructuredContentFolder());
+			siteId, structuredContentFolder);
 	}
 
 	protected Long testGetSiteStructuredContentFoldersPage_getSiteId()
@@ -513,7 +513,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteStructuredContentFolder(
-			testGroup.getGroupId(), randomStructuredContentFolder());
+			testGroup.getGroupId(), structuredContentFolder);
 	}
 
 	protected StructuredContentFolder invokePostSiteStructuredContentFolder(
@@ -1002,7 +1002,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteStructuredContentFolder(
-			testGroup.getGroupId(), randomStructuredContentFolder());
+			testGroup.getGroupId(), structuredContentFolder);
 	}
 
 	protected StructuredContentFolder

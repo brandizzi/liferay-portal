@@ -865,7 +865,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			Long siteId, BlogPosting blogPosting)
 		throws Exception {
 
-		return invokePostSiteBlogPosting(siteId, randomBlogPosting());
+		return invokePostSiteBlogPosting(siteId, blogPosting);
 	}
 
 	protected Long testGetSiteBlogPostingsPage_getSiteId() throws Exception {
@@ -952,8 +952,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			BlogPosting blogPosting)
 		throws Exception {
 
-		return invokePostSiteBlogPosting(
-			testGroup.getGroupId(), randomBlogPosting());
+		return invokePostSiteBlogPosting(testGroup.getGroupId(), blogPosting);
 	}
 
 	protected BlogPosting invokePostSiteBlogPosting(

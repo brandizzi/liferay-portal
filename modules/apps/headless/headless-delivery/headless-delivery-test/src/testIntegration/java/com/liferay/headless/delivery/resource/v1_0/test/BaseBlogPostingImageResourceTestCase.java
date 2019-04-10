@@ -523,7 +523,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteBlogPostingImage(
-			siteId, toMultipartBody(randomBlogPostingImage()));
+			siteId, toMultipartBody(blogPostingImage));
 	}
 
 	protected Long testGetSiteBlogPostingImagesPage_getSiteId()
@@ -609,7 +609,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteBlogPostingImage(
-			testGroup.getGroupId(), toMultipartBody(randomBlogPostingImage()));
+			testGroup.getGroupId(), toMultipartBody(blogPostingImage));
 	}
 
 	protected BlogPostingImage invokePostSiteBlogPostingImage(

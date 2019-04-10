@@ -526,7 +526,7 @@ public abstract class BaseKeywordResourceTestCase {
 			Long siteId, Keyword keyword)
 		throws Exception {
 
-		return invokePostSiteKeyword(siteId, randomKeyword());
+		return invokePostSiteKeyword(siteId, keyword);
 	}
 
 	protected Long testGetSiteKeywordsPage_getSiteId() throws Exception {
@@ -611,7 +611,7 @@ public abstract class BaseKeywordResourceTestCase {
 	protected Keyword testPostSiteKeyword_addKeyword(Keyword keyword)
 		throws Exception {
 
-		return invokePostSiteKeyword(testGroup.getGroupId(), randomKeyword());
+		return invokePostSiteKeyword(testGroup.getGroupId(), keyword);
 	}
 
 	protected Keyword invokePostSiteKeyword(Long siteId, Keyword keyword)

@@ -638,7 +638,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteKnowledgeBaseFolder(
-			testGroup.getGroupId(), randomKnowledgeBaseFolder());
+			testGroup.getGroupId(), knowledgeBaseFolder);
 	}
 
 	protected KnowledgeBaseFolder
@@ -804,8 +804,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				Long siteId, KnowledgeBaseFolder knowledgeBaseFolder)
 		throws Exception {
 
-		return invokePostSiteKnowledgeBaseFolder(
-			siteId, randomKnowledgeBaseFolder());
+		return invokePostSiteKnowledgeBaseFolder(siteId, knowledgeBaseFolder);
 	}
 
 	protected Long testGetSiteKnowledgeBaseFoldersPage_getSiteId()
@@ -890,7 +889,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteKnowledgeBaseFolder(
-			testGroup.getGroupId(), randomKnowledgeBaseFolder());
+			testGroup.getGroupId(), knowledgeBaseFolder);
 	}
 
 	protected KnowledgeBaseFolder invokePostSiteKnowledgeBaseFolder(
