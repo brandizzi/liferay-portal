@@ -41,16 +41,11 @@ public class SignificanceHeuristicsInstantiationTest {
 	@Test
 	public void testFactories() {
 		Assert.assertNotNull(_significanceHeuristics.chiSquare(false, false));
-
 		Assert.assertNotNull(_significanceHeuristics.gnd(false));
-
 		Assert.assertNotNull(_significanceHeuristics.jlhScore());
-
 		Assert.assertNotNull(
 			_significanceHeuristics.mutualInformation(false, false));
-
 		Assert.assertNotNull(_significanceHeuristics.percentageScore());
-
 		Assert.assertNotNull(
 			_significanceHeuristics.script(_scripts.script("script_id")));
 	}
