@@ -89,21 +89,6 @@ public class DocumentLibraryFieldType extends FieldType {
 			context, dataDefinitionField, httpServletRequest,
 			httpServletResponse, readOnly);
 
-		context.put(
-			"groupId",
-			CustomPropertyUtil.getLong(
-				dataDefinitionField.getCustomProperties(), "groupId"));
-		context.put(
-			"itemSelectorAuthToken",
-			_getItemSelectorAuthToken(httpServletRequest, portal));
-		context.put(
-			"lexiconIconsPath", _getLexiconIconsPath(httpServletRequest));
-		context.put(
-			"value",
-			JSONFactoryUtil.looseDeserialize(
-				CustomPropertyUtil.getString(
-					dataDefinitionField.getCustomProperties(), "value", "{}")));
-
 		if (!StringUtils.isEmpty(
 				CustomPropertyUtil.getString(
 					dataDefinitionField.getCustomProperties(), "value"))) {
@@ -123,6 +108,21 @@ public class DocumentLibraryFieldType extends FieldType {
 					_getFileEntryURL(fileEntry, html, httpServletRequest));
 			}
 		}
+
+		context.put(
+			"groupId",
+			CustomPropertyUtil.getLong(
+				dataDefinitionField.getCustomProperties(), "groupId"));
+		context.put(
+			"itemSelectorAuthToken",
+			_getItemSelectorAuthToken(httpServletRequest, portal));
+		context.put(
+			"lexiconIconsPath", _getLexiconIconsPath(httpServletRequest));
+		context.put(
+			"value",
+			JSONFactoryUtil.looseDeserialize(
+				CustomPropertyUtil.getString(
+					dataDefinitionField.getCustomProperties(), "value", "{}")));
 
 		Map<String, String> values = new HashMap<>();
 
