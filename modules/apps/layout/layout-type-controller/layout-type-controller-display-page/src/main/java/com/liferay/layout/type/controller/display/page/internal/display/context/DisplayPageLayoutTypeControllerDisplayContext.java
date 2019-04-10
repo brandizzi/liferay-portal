@@ -53,23 +53,23 @@ import javax.servlet.http.HttpServletRequest;
 public class DisplayPageLayoutTypeControllerDisplayContext {
 
 	public DisplayPageLayoutTypeControllerDisplayContext(
-		HttpServletRequest request) {
+		HttpServletRequest httpServletRequest) {
 
-		_request = request;
+		_httpServletRequest = httpServletRequest;
 
 		_infoDisplayObjectProvider =
-			(InfoDisplayObjectProvider)request.getAttribute(
+			(InfoDisplayObjectProvider)httpServletRequest.getAttribute(
 				AssetDisplayPageWebKeys.INFO_DISPLAY_OBJECT_PROVIDER);
 
 		InfoDisplayContributor infoDisplayContributor =
-			(InfoDisplayContributor)_request.getAttribute(
+			(InfoDisplayContributor)_httpServletRequest.getAttribute(
 				InfoDisplayWebKeys.INFO_DISPLAY_CONTRIBUTOR);
 
 		if ((infoDisplayContributor == null) &&
 			(_infoDisplayObjectProvider != null)) {
 
 			InfoDisplayContributorTracker infoDisplayContributorTracker =
-				(InfoDisplayContributorTracker)request.getAttribute(
+				(InfoDisplayContributorTracker)httpServletRequest.getAttribute(
 					ContentPageEditorWebKeys.ASSET_DISPLAY_CONTRIBUTOR_TRACKER);
 
 			infoDisplayContributor =
@@ -90,11 +90,11 @@ public class DisplayPageLayoutTypeControllerDisplayContext {
 	public Map<String, Object> getInfoDisplayFieldsValues()
 		throws PortalException {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		long versionClassPK = GetterUtil.getLong(
-			_request.getAttribute(InfoDisplayWebKeys.VERSION_CLASS_PK));
+			_httpServletRequest.getAttribute(InfoDisplayWebKeys.VERSION_CLASS_PK));
 
 		if (versionClassPK > 0) {
 			return _infoDisplayContributor.getVersionInfoDisplayFieldsValues(
@@ -148,7 +148,7 @@ public class DisplayPageLayoutTypeControllerDisplayContext {
 
 	public long[] getSegmentExperienceIds() {
 		return GetterUtil.getLongValues(
-			_request.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS),
+			_httpServletRequest.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS),
 			new long[] {SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT});
 	}
 
@@ -187,6 +187,6 @@ public class DisplayPageLayoutTypeControllerDisplayContext {
 
 	private final InfoDisplayContributor _infoDisplayContributor;
 	private final InfoDisplayObjectProvider _infoDisplayObjectProvider;
-	private final HttpServletRequest _request;
+	private final HttpServletRequest _httpServletRequest;
 
 }
