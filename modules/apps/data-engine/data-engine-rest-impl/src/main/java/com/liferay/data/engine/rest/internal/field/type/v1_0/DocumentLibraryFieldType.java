@@ -131,8 +131,14 @@ public class DocumentLibraryFieldType extends FieldType {
 
 		Map<String, String> values = new HashMap<>();
 
-		ResourceBundle resourceBundle = _getResourceBundle(
-			_getDisplayLocale(httpServletRequest), portal);
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		ResourceBundle resourceBundle = new AggregateResourceBundle(
+			ResourceBundleUtil.getBundle(
+				"content.Language", themeDisplay.getLocale(), getClass()),
+			portal.getResourceBundle(themeDisplay.getLocale()));
 
 		values.put("select", LanguageUtil.get(resourceBundle, "select"));
 
@@ -163,14 +169,6 @@ public class DocumentLibraryFieldType extends FieldType {
 				CustomPropertyUtil.getMap(
 					dataDefinitionField.getCustomProperties(), "strings"))
 		);
-	}
-
-	private Locale _getDisplayLocale(HttpServletRequest httpServletRequest) {
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)httpServletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		return themeDisplay.getLocale();
 	}
 
 	private FileEntry _getFileEntry(
@@ -258,13 +256,6 @@ public class DocumentLibraryFieldType extends FieldType {
 		sb.append(StringPool.POUND);
 
 		return sb.toString();
-	}
-
-	private ResourceBundle _getResourceBundle(Locale locale, Portal portal) {
-		return new AggregateResourceBundle(
-			ResourceBundleUtil.getBundle(
-				"content.Language", locale, getClass()),
-			portal.getResourceBundle(locale));
 	}
 
 	private JSONObject _toJSONObject(String string) {
