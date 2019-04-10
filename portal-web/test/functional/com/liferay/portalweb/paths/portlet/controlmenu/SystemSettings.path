@@ -54,6 +54,11 @@
 	<td>//div[contains(@data-fieldname,'dynamicExportLimit')]//input[@type='text']</td>
 	<td></td>
 </tr>
+<tr>
+	<td>ASSETS_MANUAL_EXPORT_CHECKBOX</td>
+	<td>//div[contains(@data-fieldname,'manualExportEnabled')]//input[@type='checkbox']</td>
+	<td></td>
+</tr>
 </tbody>
 </table>
 </body>
