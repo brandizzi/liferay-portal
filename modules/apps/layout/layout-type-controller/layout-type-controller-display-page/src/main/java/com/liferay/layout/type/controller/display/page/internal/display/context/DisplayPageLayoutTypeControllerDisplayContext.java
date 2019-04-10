@@ -90,11 +90,13 @@ public class DisplayPageLayoutTypeControllerDisplayContext {
 	public Map<String, Object> getInfoDisplayFieldsValues()
 		throws PortalException {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)_httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
 
 		long versionClassPK = GetterUtil.getLong(
-			_httpServletRequest.getAttribute(InfoDisplayWebKeys.VERSION_CLASS_PK));
+			_httpServletRequest.getAttribute(
+				InfoDisplayWebKeys.VERSION_CLASS_PK));
 
 		if (versionClassPK > 0) {
 			return _infoDisplayContributor.getVersionInfoDisplayFieldsValues(
@@ -148,7 +150,8 @@ public class DisplayPageLayoutTypeControllerDisplayContext {
 
 	public long[] getSegmentExperienceIds() {
 		return GetterUtil.getLongValues(
-			_httpServletRequest.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS),
+			_httpServletRequest.getAttribute(
+				SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS),
 			new long[] {SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT});
 	}
 
@@ -185,8 +188,8 @@ public class DisplayPageLayoutTypeControllerDisplayContext {
 		return dataJSONObject.getJSONArray("structure");
 	}
 
+	private final HttpServletRequest _httpServletRequest;
 	private final InfoDisplayContributor _infoDisplayContributor;
 	private final InfoDisplayObjectProvider _infoDisplayObjectProvider;
-	private final HttpServletRequest _httpServletRequest;
 
 }
