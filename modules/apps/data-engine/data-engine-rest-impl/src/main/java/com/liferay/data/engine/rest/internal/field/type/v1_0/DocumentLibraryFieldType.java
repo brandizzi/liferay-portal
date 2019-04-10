@@ -108,7 +108,7 @@ public class DocumentLibraryFieldType extends FieldType {
 				CustomPropertyUtil.getString(
 					dataDefinitionField.getCustomProperties(), "value"))) {
 
-			JSONObject valueJSONObject = _getValueJSONObject(
+			JSONObject valueJSONObject = _toJSONObject(
 				CustomPropertyUtil.getString(
 					dataDefinitionField.getCustomProperties(), "value"));
 
@@ -242,12 +242,13 @@ public class DocumentLibraryFieldType extends FieldType {
 	}
 
 	private String _getLexiconIconsPath(HttpServletRequest httpServletRequest) {
+		StringBundler sb = new StringBundler(3);
+
 		ThemeDisplay themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
-		StringBundler sb = new StringBundler(3);
-
 		sb.append(themeDisplay.getPathThemeImages());
+
 		sb.append("/lexicon/icons.svg");
 		sb.append(StringPool.POUND);
 
@@ -255,18 +256,15 @@ public class DocumentLibraryFieldType extends FieldType {
 	}
 
 	private ResourceBundle _getResourceBundle(Locale locale, Portal portal) {
-		ResourceBundle portalResourceBundle = portal.getResourceBundle(locale);
-
-		ResourceBundle moduleResourceBundle = ResourceBundleUtil.getBundle(
-			"content.Language", locale, getClass());
-
 		return new AggregateResourceBundle(
-			moduleResourceBundle, portalResourceBundle);
+			ResourceBundleUtil.getBundle(
+				"content.Language", locale, getClass()),
+			portal.getResourceBundle(locale));
 	}
 
-	private JSONObject _getValueJSONObject(String value) {
+	private JSONObject _toJSONObject(String string) {
 		try {
-			return JSONFactoryUtil.createJSONObject(value);
+			return JSONFactoryUtil.createJSONObject(string);
 		}
 		catch (JSONException jsone) {
 			if (_log.isDebugEnabled()) {
