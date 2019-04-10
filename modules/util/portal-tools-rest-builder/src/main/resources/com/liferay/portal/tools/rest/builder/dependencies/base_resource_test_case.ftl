@@ -634,9 +634,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 						<#if freeMarkerTool.hasRequestBodyMediaType(postSiteJavaMethodSignature, "multipart/form-data")>
 							<#assign generateToMultipartBodyMethod = true />
 
-							return invokePostSite${schemaName}(siteId, toMultipartBody(random${schemaName}()));
+							return invokePostSite${schemaName}(siteId, toMultipartBody(${schemaVarName}));
 						<#else>
-							return invokePostSite${schemaName}(siteId, random${schemaName}());
+							return invokePostSite${schemaName}(siteId, ${schemaVarName});
 						</#if>
 					<#else>
 						throw new UnsupportedOperationException("This method needs to be implemented");
@@ -773,9 +773,9 @@ public abstract class Base${schemaName}ResourceTestCase {
 					<#if freeMarkerTool.hasRequestBodyMediaType(postSiteJavaMethodSignature, "multipart/form-data")>
 						<#assign generateToMultipartBodyMethod = true />
 
-						return invokePostSite${schemaName}(testGroup.getGroupId(), toMultipartBody(random${schemaName}()));
+						return invokePostSite${schemaName}(testGroup.getGroupId(), toMultipartBody(${schemaVarName}));
 					<#else>
-						return invokePostSite${schemaName}(testGroup.getGroupId(), random${schemaName}());
+						return invokePostSite${schemaName}(testGroup.getGroupId(), ${schemaVarName});
 					</#if>
 				<#else>
 					throw new UnsupportedOperationException("This method needs to be implemented");
