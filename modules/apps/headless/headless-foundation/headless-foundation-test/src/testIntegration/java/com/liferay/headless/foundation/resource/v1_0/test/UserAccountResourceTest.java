@@ -65,6 +65,7 @@ public class UserAccountResourceTest extends BaseUserAccountResourceTestCase {
 
 		UserLocalServiceUtil.deleteGroupUser(
 			testGroup.getGroupId(), _testUser.getUserId());
+
 		Indexer<User> indexer = IndexerRegistryUtil.getIndexer(
 			_testUser.getModelClassName());
 
