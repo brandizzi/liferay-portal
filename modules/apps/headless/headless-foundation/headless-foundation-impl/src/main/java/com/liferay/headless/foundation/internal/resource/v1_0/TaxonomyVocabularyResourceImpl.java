@@ -515,10 +515,6 @@ public class TaxonomyVocabularyResourceImpl
 	private static final Map<String, String> _assetTypeTypeToClassNames =
 		new HashMap<String, String>() {
 			{
-				put("WebSite", Group.class.getName());
-				put("WebPage", Layout.class.getName());
-				put("Organization", Organization.class.getName());
-				put("UserAccount", User.class.getName());
 				put("BlogPosting", "com.liferay.blogs.model.BlogsEntry");
 				put(
 					"Document",
@@ -526,9 +522,13 @@ public class TaxonomyVocabularyResourceImpl
 				put(
 					"KnowledgeBaseArticle",
 					"com.liferay.knowledge.base.model.KBArticle");
+				put("Organization", Organization.class.getName());
 				put(
 					"StructuredContent",
 					"com.liferay.journal.model.JournalArticle");
+				put("UserAccount", User.class.getName());
+				put("WebPage", Layout.class.getName());
+				put("WebSite", Group.class.getName());
 				put("WikiPage", "com.liferay.wiki.model.WikiPage");
 			}
 		};
