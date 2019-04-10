@@ -463,24 +463,6 @@ paths:
                                 $ref: "#/components/schemas/Form"
                     description: ""
             tags: ["Form"]
-    "/forms/{formId}/form-records/by-latest-draft":
-        get:
-            operationId: getFormFormRecordByLatestDraft
-            parameters:
-                - in: path
-                  name: formId
-                  required: true
-                  schema:
-                      format: int64
-                      type: integer
-            responses:
-                200:
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/FormRecord"
-                    description: ""
-            tags: ["FormRecord"]
     "/forms/{formId}/form-records":
         get:
             operationId: getFormFormRecordsPage
@@ -527,6 +509,24 @@ paths:
                     application/json:
                         schema:
                             $ref: "#/components/schemas/FormRecordForm"
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/FormRecord"
+                    description: ""
+            tags: ["FormRecord"]
+    "/forms/{formId}/form-records/by-latest-draft":
+        get:
+            operationId: getFormFormRecordByLatestDraft
+            parameters:
+                - in: path
+                  name: formId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
             responses:
                 200:
                     content:
