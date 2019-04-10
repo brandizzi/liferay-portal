@@ -64,32 +64,12 @@ public class DocumentResourceTest extends BaseDocumentResourceTestCase {
 	}
 
 	@Override
-	protected Document testDeleteDocument_addDocument() throws Exception {
-		return invokePostSiteDocument(
-			testGroup.getGroupId(), _getMultipartBody(randomDocument()));
-	}
-
-	@Override
-	protected Document testDeleteDocumentMyRating_addDocument()
-		throws Exception {
-
-		return invokePostSiteDocument(
-			testGroup.getGroupId(), _getMultipartBody(randomDocument()));
-	}
-
-	@Override
-	protected Document testGetDocument_addDocument() throws Exception {
-		return invokePostSiteDocument(
-			testGroup.getGroupId(), _getMultipartBody(randomDocument()));
-	}
-
-	@Override
 	protected Document testGetDocumentFolderDocumentsPage_addDocument(
 			Long documentFolderId, Document document)
 		throws Exception {
 
 		return invokePostDocumentFolderDocument(
-			documentFolderId, _getMultipartBody(document));
+			documentFolderId, toMultipartBody(document));
 	}
 
 	@Override
@@ -105,44 +85,17 @@ public class DocumentResourceTest extends BaseDocumentResourceTestCase {
 	}
 
 	@Override
-	protected Document testGetSiteDocumentsPage_addDocument(
-			Long siteId, Document document)
-		throws Exception {
-
-		return invokePostSiteDocument(siteId, _getMultipartBody(document));
-	}
-
-	@Override
-	protected Document testPatchDocument_addDocument() throws Exception {
-		return invokePostSiteDocument(
-			testGroup.getGroupId(), _getMultipartBody(randomDocument()));
-	}
-
-	@Override
 	protected Document testPostDocumentFolderDocument_addDocument(
 			Document document)
 		throws Exception {
 
 		return invokePostDocumentFolderDocument(
 			testGetDocumentFolderDocumentsPage_getDocumentFolderId(),
-			_getMultipartBody(document));
+			toMultipartBody(document));
 	}
 
 	@Override
-	protected Document testPostSiteDocument_addDocument(Document document)
-		throws Exception {
-
-		return invokePostSiteDocument(
-			testGroup.getGroupId(), _getMultipartBody(document));
-	}
-
-	@Override
-	protected Document testPutDocument_addDocument() throws Exception {
-		return invokePostSiteDocument(
-			testGroup.getGroupId(), _getMultipartBody(randomDocument()));
-	}
-
-	private MultipartBody _getMultipartBody(Document document) {
+	protected MultipartBody toMultipartBody(Document document) {
 		testContentType = "multipart/form-data;boundary=PART";
 
 		Map<String, BinaryFile> binaryFileMap = new HashMap<>();

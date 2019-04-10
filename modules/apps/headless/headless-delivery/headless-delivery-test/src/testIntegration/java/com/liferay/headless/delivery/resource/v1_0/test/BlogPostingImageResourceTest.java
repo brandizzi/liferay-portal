@@ -56,43 +56,7 @@ public class BlogPostingImageResourceTest
 	}
 
 	@Override
-	protected BlogPostingImage testDeleteBlogPostingImage_addBlogPostingImage()
-		throws Exception {
-
-		return invokePostSiteBlogPostingImage(
-			testGroup.getGroupId(),
-			_getMultipartBody(randomBlogPostingImage()));
-	}
-
-	@Override
-	protected BlogPostingImage testGetBlogPostingImage_addBlogPostingImage()
-		throws Exception {
-
-		return invokePostSiteBlogPostingImage(
-			testGroup.getGroupId(),
-			_getMultipartBody(randomBlogPostingImage()));
-	}
-
-	@Override
-	protected BlogPostingImage
-			testGetSiteBlogPostingImagesPage_addBlogPostingImage(
-				Long siteId, BlogPostingImage blogPostingImage)
-		throws Exception {
-
-		return invokePostSiteBlogPostingImage(
-			siteId, _getMultipartBody(blogPostingImage));
-	}
-
-	@Override
-	protected BlogPostingImage testPostSiteBlogPostingImage_addBlogPostingImage(
-			BlogPostingImage blogPostingImage)
-		throws Exception {
-
-		return invokePostSiteBlogPostingImage(
-			testGroup.getGroupId(), _getMultipartBody(blogPostingImage));
-	}
-
-	private MultipartBody _getMultipartBody(BlogPostingImage blogPostingImage) {
+	protected MultipartBody toMultipartBody(BlogPostingImage blogPostingImage) {
 		testContentType = "multipart/form-data;boundary=PART";
 
 		Map<String, BinaryFile> binaryFileMap = new HashMap<>();
