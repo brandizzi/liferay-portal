@@ -67,16 +67,16 @@ public class RenderFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 			ThemeDisplay themeDisplay =
 				(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
-			DefaultFragmentRendererContext fragmentRendererContext =
+			DefaultFragmentRendererContext defaultFragmentRendererContext =
 				new DefaultFragmentRendererContext(fragmentEntryLink);
 
-			fragmentRendererContext.setLocale(themeDisplay.getLocale());
-			fragmentRendererContext.setMode(FragmentEntryLinkConstants.EDIT);
+			defaultFragmentRendererContext.setLocale(themeDisplay.getLocale());
+			defaultFragmentRendererContext.setMode(FragmentEntryLinkConstants.EDIT);
 
 			jsonObject.put(
 				"content",
 				_fragmentRendererController.render(
-					fragmentRendererContext,
+					defaultFragmentRendererContext,
 					_portal.getHttpServletRequest(actionRequest),
 					_portal.getHttpServletResponse(actionResponse)));
 		}
