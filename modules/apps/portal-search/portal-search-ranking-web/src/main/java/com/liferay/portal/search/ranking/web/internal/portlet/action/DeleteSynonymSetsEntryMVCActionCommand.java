@@ -14,19 +14,14 @@
 
 package com.liferay.portal.search.ranking.web.internal.portlet.action;
 
-import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
-import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.search.ranking.web.internal.constants.ResultsRankingPortletKeys;
 
-import javax.portlet.PortletException;
-import javax.portlet.PortletSession;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
-
-import javax.servlet.http.HttpServletRequest;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Filipe Oshiro
@@ -35,26 +30,18 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + ResultsRankingPortletKeys.RESULTS_RANKING,
-		"mvc.command.name=addSynonymSetsEntry"
+		"mvc.command.name=/synonym/delete_entry"
 	},
-	service = MVCRenderCommand.class
+	service = MVCActionCommand.class
 )
-public class AddSynonymSetsMVCRenderCommand implements MVCRenderCommand {
+public class DeleteSynonymSetsEntryMVCActionCommand
+	extends BaseMVCActionCommand {
 
 	@Override
-	public String render(
-			RenderRequest renderRequest, RenderResponse renderResponse)
-		throws PortletException {
-
-		PortletSession portletSession = renderRequest.getPortletSession();
-
-		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
-			renderRequest);
-
-		return "/add_synonym_sets.jsp";
+	protected void doProcessAction(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+		/* TODO: Delete synonym entries*/
 	}
-
-	@Reference
-	private Portal _portal;
 
 }

@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.util.List;
 import java.util.Objects;
 
+import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -59,8 +60,10 @@ public class SynonymSetsDisplayContext {
 			{
 				add(
 					dropdownItem -> {
-						dropdownItem.putData(
-							"action", "deleteSynonymSetsEntry");
+						dropdownItem.setHref(
+							_renderResponse.createActionURL(),
+							ActionRequest.ACTION_NAME, "/synonym/delete_entry",
+							"redirect", PortalUtil.getCurrentURL(_request));
 						dropdownItem.setIcon("times");
 						dropdownItem.setLabel(
 							LanguageUtil.get(_request, "delete"));
