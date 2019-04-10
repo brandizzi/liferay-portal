@@ -65,28 +65,9 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 		InfoDisplayContributor infoDisplayContributor =
 			_getInfoDisplayContributor(friendlyURL);
 
-		request.setAttribute(
-			InfoDisplayWebKeys.INFO_DISPLAY_CONTRIBUTOR,
-			infoDisplayContributor);
-
-		request.setAttribute(
-			InfoDisplayWebKeys.VERSION_CLASS_PK,
-			_getVersionClassPK(friendlyURL));
-
 		InfoDisplayObjectProvider infoDisplayObjectProvider =
 			_getInfoDisplayObjectProvider(
 				infoDisplayContributor, groupId, friendlyURL);
-
-		Locale locale = portal.getLocale(request);
-
-		portal.setPageDescription(
-			infoDisplayObjectProvider.getDescription(locale), request);
-
-		portal.setPageKeywords(
-			infoDisplayObjectProvider.getKeywords(locale), request);
-
-		portal.setPageTitle(
-			infoDisplayObjectProvider.getTitle(locale), request);
 
 		request.setAttribute(
 			AssetDisplayPageWebKeys.INFO_DISPLAY_OBJECT_PROVIDER,
@@ -102,6 +83,23 @@ public abstract class BaseAssetDisplayPageFriendlyURLResolver
 				AssetDisplayPageWebKeys.INFO_EDIT_URL_PROVIDER,
 				infoEditURLProvider);
 		}
+
+		request.setAttribute(
+			InfoDisplayWebKeys.INFO_DISPLAY_CONTRIBUTOR,
+			infoDisplayContributor);
+
+		request.setAttribute(
+			InfoDisplayWebKeys.VERSION_CLASS_PK,
+			_getVersionClassPK(friendlyURL));
+
+		Locale locale = portal.getLocale(request);
+
+		portal.setPageDescription(
+			infoDisplayObjectProvider.getDescription(locale), request);
+		portal.setPageKeywords(
+			infoDisplayObjectProvider.getKeywords(locale), request);
+		portal.setPageTitle(
+			infoDisplayObjectProvider.getTitle(locale), request);
 
 		request.setAttribute(
 			WebKeys.LAYOUT_ASSET_ENTRY,
