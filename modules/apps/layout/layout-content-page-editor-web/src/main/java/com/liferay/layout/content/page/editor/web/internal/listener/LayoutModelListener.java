@@ -50,29 +50,23 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 
 	@Override
 	public void onAfterCreate(Layout layout) throws ModelListenerException {
-		if (ExportImportThreadLocal.isImportInProcess() ||
-			ExportImportThreadLocal.isStagingInProcess() || !layout.isHead()) {
-
+		if (!layout.isHead() || !_isContentLayout(layout)) {
 			return;
 		}
 
-		if (!_isContentLayout(layout)) {
+		_reindexLayout(layout);
+
+		if (ExportImportThreadLocal.isImportInProcess() ||
+			ExportImportThreadLocal.isStagingInProcess()) {
+
 			return;
 		}
 
 		LayoutPageTemplateEntry layoutPageTemplateEntry =
 			_getLayoutPageTemplateEntry(layout);
 
-		if (layoutPageTemplateEntry == null) {
-			_reindexLayout(layout);
-
-			return;
-		}
-
 		TransactionCommitCallbackUtil.registerCallback(
 			() -> _copyStructure(layoutPageTemplateEntry, layout));
-
-		_reindexLayout(layout);
 	}
 
 	@Override
