@@ -134,9 +134,8 @@ public class JournalArticleInfoDisplayContributorTest {
 			Collectors.toList()
 		);
 
-		Assert.assertTrue(infoDisplayFieldKeys.contains("phone"));
-
 		Assert.assertTrue(infoDisplayFieldKeys.contains("ext"));
+		Assert.assertTrue(infoDisplayFieldKeys.contains("phone"));
 	}
 
 	private DDMForm _deserialize(String content) {
