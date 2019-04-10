@@ -192,7 +192,7 @@ public class DocumentLibraryFieldType extends FieldType {
 	}
 
 	private String _getFileEntryURL(
-		HttpServletRequest request, FileEntry fileEntry, Html html) {
+		HttpServletRequest httpServletRequest, FileEntry fileEntry, Html html) {
 
 		if (fileEntry == null) {
 			return StringPool.BLANK;
@@ -200,7 +200,7 @@ public class DocumentLibraryFieldType extends FieldType {
 
 		StringBundler sb = new StringBundler(9);
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		sb.append(themeDisplay.getPathContext());
@@ -219,9 +219,9 @@ public class DocumentLibraryFieldType extends FieldType {
 	}
 
 	private String _getItemSelectorAuthToken(
-		HttpServletRequest request, Portal portal) {
+		HttpServletRequest httpServletRequest, Portal portal) {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+		ThemeDisplay themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		if (themeDisplay == null) {
@@ -230,7 +230,7 @@ public class DocumentLibraryFieldType extends FieldType {
 
 		try {
 			return AuthTokenUtil.getToken(
-				request,
+				httpServletRequest,
 				portal.getControlPanelPlid(themeDisplay.getCompanyId()),
 				PortletKeys.ITEM_SELECTOR);
 		}
@@ -241,8 +241,8 @@ public class DocumentLibraryFieldType extends FieldType {
 		return StringPool.BLANK;
 	}
 
-	private String _getLexiconIconsPath(HttpServletRequest request) {
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+	private String _getLexiconIconsPath(HttpServletRequest httpServletRequest) {
+		ThemeDisplay themeDisplay = (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		StringBundler sb = new StringBundler(3);
