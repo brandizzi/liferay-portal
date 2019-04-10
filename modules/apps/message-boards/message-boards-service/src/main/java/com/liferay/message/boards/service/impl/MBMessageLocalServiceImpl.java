@@ -253,7 +253,7 @@ public class MBMessageLocalServiceImpl extends MBMessageLocalServiceBaseImpl {
 		MBMessage parentMBMessage = fetchMBMessage(parentMessageId);
 
 		if ((parentMBMessage != null) && !parentMBMessage.isApproved()) {
-			throw new PortalException("Cannot reply to an unapproved message");
+			throw new PortalException("Parent message is not approved");
 		}
 
 		// Message
