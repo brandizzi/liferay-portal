@@ -50,6 +50,7 @@ import org.junit.runner.RunWith;
 /**
  * @author Javier Gamarra
  */
+@Ignore
 @RunWith(Arquillian.class)
 public class UserAccountResourceTest extends BaseUserAccountResourceTestCase {
 
@@ -80,7 +81,7 @@ public class UserAccountResourceTest extends BaseUserAccountResourceTestCase {
 	public void testGetMyUserAccount() throws Exception {
 		User user = UserTestUtil.getAdminUser(PortalUtil.getDefaultCompanyId());
 
-		UserAccount myUserAccount = new UserAccount() {
+		UserAccount userAccount = new UserAccount() {
 			{
 				additionalName = user.getMiddleName();
 				alternateName = user.getScreenName();
@@ -95,7 +96,7 @@ public class UserAccountResourceTest extends BaseUserAccountResourceTestCase {
 
 		UserAccount getUserAccount = invokeGetMyUserAccount();
 
-		assertEquals(myUserAccount, getUserAccount);
+		assertEquals(userAccount, getUserAccount);
 		assertValid(getUserAccount);
 	}
 
@@ -241,8 +242,8 @@ public class UserAccountResourceTest extends BaseUserAccountResourceTestCase {
 				}
 			});
 
-		userAccount.setId(user.getUserId());
 		userAccount.setDateModified(user.getModifiedDate());
+		userAccount.setId(user.getUserId());
 
 		_users.add(UserLocalServiceUtil.getUser(user.getUserId()));
 
