@@ -167,67 +167,6 @@ public abstract class BaseFormRecordResourceTestCase {
 	}
 
 	@Test
-	public void testGetFormFetchLatestDraft() throws Exception {
-		FormRecord postFormRecord = testGetFormFetchLatestDraft_addFormRecord();
-
-		FormRecord getFormRecord = invokeGetFormFetchLatestDraft(
-			postFormRecord.getFormId());
-
-		assertEquals(postFormRecord, getFormRecord);
-		assertValid(getFormRecord);
-	}
-
-	protected FormRecord testGetFormFetchLatestDraft_addFormRecord()
-		throws Exception {
-
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
-	}
-
-	protected FormRecord invokeGetFormFetchLatestDraft(Long formId)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath("/forms/{formId}/fetch-latest-draft", formId);
-
-		options.setLocation(location);
-
-		String string = HttpUtil.URLtoString(options);
-
-		if (_log.isDebugEnabled()) {
-			_log.debug("HTTP response: " + string);
-		}
-
-		try {
-			return outputObjectMapper.readValue(string, FormRecord.class);
-		}
-		catch (Exception e) {
-			_log.error("Unable to process HTTP response: " + string, e);
-
-			throw e;
-		}
-	}
-
-	protected Http.Response invokeGetFormFetchLatestDraftResponse(Long formId)
-		throws Exception {
-
-		Http.Options options = _createHttpOptions();
-
-		String location =
-			_resourceURL +
-				_toPath("/forms/{formId}/fetch-latest-draft", formId);
-
-		options.setLocation(location);
-
-		HttpUtil.URLtoByteArray(options);
-
-		return options.getResponse();
-	}
-
-	@Test
 	public void testGetFormFormRecordsPage() throws Exception {
 		Long formId = testGetFormFormRecordsPage_getFormId();
 		Long irrelevantFormId =
@@ -433,6 +372,69 @@ public abstract class BaseFormRecordResourceTestCase {
 		options.setLocation(location);
 
 		options.setPost(true);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
+	@Test
+	public void testGetFormFormRecordByLatestDraft() throws Exception {
+		FormRecord postFormRecord =
+			testGetFormFormRecordByLatestDraft_addFormRecord();
+
+		FormRecord getFormRecord = invokeGetFormFormRecordByLatestDraft(
+			postFormRecord.getFormId());
+
+		assertEquals(postFormRecord, getFormRecord);
+		assertValid(getFormRecord);
+	}
+
+	protected FormRecord testGetFormFormRecordByLatestDraft_addFormRecord()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected FormRecord invokeGetFormFormRecordByLatestDraft(Long formId)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath("/forms/{formId}/form-records/by-latest-draft", formId);
+
+		options.setLocation(location);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		try {
+			return outputObjectMapper.readValue(string, FormRecord.class);
+		}
+		catch (Exception e) {
+			_log.error("Unable to process HTTP response: " + string, e);
+
+			throw e;
+		}
+	}
+
+	protected Http.Response invokeGetFormFormRecordByLatestDraftResponse(
+			Long formId)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath("/forms/{formId}/form-records/by-latest-draft", formId);
+
+		options.setLocation(location);
 
 		HttpUtil.URLtoByteArray(options);
 

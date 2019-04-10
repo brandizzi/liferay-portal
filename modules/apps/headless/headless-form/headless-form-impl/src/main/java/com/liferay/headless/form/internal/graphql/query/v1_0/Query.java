@@ -134,19 +134,6 @@ public class Query {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public FormRecord getFormFetchLatestDraft(
-			@GraphQLName("formId") Long formId)
-		throws Exception {
-
-		return _applyComponentServiceObjects(
-			_formRecordResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			formRecordResource -> formRecordResource.getFormFetchLatestDraft(
-				formId));
-	}
-
-	@GraphQLField
-	@GraphQLInvokeDetached
 	public Collection<FormRecord> getFormFormRecordsPage(
 			@GraphQLName("formId") Long formId,
 			@GraphQLName("pageSize") int pageSize,
@@ -162,6 +149,19 @@ public class Query {
 
 				return paginationPage.getItems();
 			});
+	}
+
+	@GraphQLField
+	@GraphQLInvokeDetached
+	public FormRecord getFormFormRecordByLatestDraft(
+			@GraphQLName("formId") Long formId)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_formRecordResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			formRecordResource ->
+				formRecordResource.getFormFormRecordByLatestDraft(formId));
 	}
 
 	@GraphQLField

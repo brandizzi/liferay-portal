@@ -69,18 +69,6 @@ public abstract class BaseFormRecordResourceImpl implements FormRecordResource {
 
 	@Override
 	@GET
-	@Path("/forms/{formId}/fetch-latest-draft")
-	@Produces("application/json")
-	@Tags(value = {@Tag(name = "FormRecord")})
-	public FormRecord getFormFetchLatestDraft(
-			@NotNull @PathParam("formId") Long formId)
-		throws Exception {
-
-		return new FormRecord();
-	}
-
-	@Override
-	@GET
 	@Parameters(
 		value = {
 			@Parameter(in = ParameterIn.QUERY, name = "page"),
@@ -107,6 +95,18 @@ public abstract class BaseFormRecordResourceImpl implements FormRecordResource {
 	public FormRecord postFormFormRecord(
 			@NotNull @PathParam("formId") Long formId,
 			FormRecordForm formRecordForm)
+		throws Exception {
+
+		return new FormRecord();
+	}
+
+	@Override
+	@GET
+	@Path("/forms/{formId}/form-records/by-latest-draft")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "FormRecord")})
+	public FormRecord getFormFormRecordByLatestDraft(
+			@NotNull @PathParam("formId") Long formId)
 		throws Exception {
 
 		return new FormRecord();
