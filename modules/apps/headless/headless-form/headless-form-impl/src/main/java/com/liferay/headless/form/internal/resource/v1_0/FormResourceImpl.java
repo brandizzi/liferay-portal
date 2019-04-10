@@ -20,7 +20,6 @@ import com.liferay.headless.form.dto.v1_0.Form;
 import com.liferay.headless.form.internal.dto.v1_0.util.CreatorUtil;
 import com.liferay.headless.form.internal.dto.v1_0.util.StructureUtil;
 import com.liferay.headless.form.resource.v1_0.FormResource;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -61,33 +60,29 @@ public class FormResourceImpl extends BaseFormResourceImpl {
 				contextCompany.getCompanyId(), siteId));
 	}
 
-	private Form _toForm(DDMFormInstance formInstance) throws PortalException {
-		if (formInstance == null) {
+	private Form _toForm(DDMFormInstance ddmFormInstance) throws Exception {
+		if (ddmFormInstance == null) {
 			return null;
 		}
 
 		return new Form() {
 			{
 				availableLanguages = LocaleUtil.toW3cLanguageIds(
-					formInstance.getAvailableLanguageIds());
-
+					ddmFormInstance.getAvailableLanguageIds());
 				creator = CreatorUtil.toCreator(
 					_portal,
-					_userLocalService.getUser(formInstance.getUserId()));
-
-				dateCreated = formInstance.getCreateDate();
-				dateModified = formInstance.getModifiedDate();
-				datePublished = formInstance.getLastPublishDate();
-				defaultLanguage = formInstance.getDefaultLanguageId();
-				description = formInstance.getDescription(
+					_userLocalService.getUser(ddmFormInstance.getUserId()));
+				dateCreated = ddmFormInstance.getCreateDate();
+				dateModified = ddmFormInstance.getModifiedDate();
+				datePublished = ddmFormInstance.getLastPublishDate();
+				defaultLanguage = ddmFormInstance.getDefaultLanguageId();
+				description = ddmFormInstance.getDescription(
 					contextAcceptLanguage.getPreferredLocale());
-
-				id = formInstance.getFormInstanceId();
-				name = formInstance.getName(
+				id = ddmFormInstance.getFormInstanceId();
+				name = ddmFormInstance.getName(
 					contextAcceptLanguage.getPreferredLocale());
-
 				structure = StructureUtil.toFormStructure(
-					formInstance.getStructure(),
+					ddmFormInstance.getStructure(),
 					contextAcceptLanguage.getPreferredLocale(), _portal,
 					_userLocalService);
 			}
