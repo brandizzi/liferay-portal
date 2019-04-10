@@ -21,8 +21,8 @@ import com.liferay.portal.search.legacy.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.ranking.web.internal.constants.ResultsRankingPortletKeys;
 import com.liferay.portal.search.ranking.web.internal.display.context.ResultsRankingPortletDisplayContext;
-import com.liferay.portal.search.searcher.Searcher;
 import com.liferay.portal.search.ranking.web.internal.display.context.SynonymSetsDisplayContext;
+import com.liferay.portal.search.searcher.Searcher;
 
 import java.io.IOException;
 
@@ -44,7 +44,6 @@ import org.osgi.service.component.annotations.Reference;
 	property = {
 		"com.liferay.portlet.css-class-wrapper=portlet-search-ranked",
 		"com.liferay.portlet.display-category=category.hidden",
-		"com.liferay.portlet.footer-portlet-javascript=/js/main.js",
 		"com.liferay.portlet.header-portlet-css=/css/main.css",
 		"com.liferay.portlet.icon=/icons/search.png",
 		"com.liferay.portlet.layout-cacheable=true",
@@ -88,7 +87,7 @@ public class ResultsRankingPortlet extends MVCPortlet {
 			resultsRankingPortletDisplayContext);
 
 		renderRequest.setAttribute(
-			SearchRankingPortletKeys.SYNONYM_SETS_DISPLAY_CONTEXT,
+			ResultsRankingPortletKeys.SYNONYM_SETS_DISPLAY_CONTEXT,
 			synonymSetsDisplayContext);
 
 		super.render(renderRequest, renderResponse);
