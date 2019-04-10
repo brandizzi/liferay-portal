@@ -463,9 +463,9 @@ paths:
                                 $ref: "#/components/schemas/Form"
                     description: ""
             tags: ["Form"]
-    "/forms/{formId}/fetch-latest-draft":
+    "/forms/{formId}/form-records/by-latest-draft":
         get:
-            operationId: getFormFetchLatestDraft
+            operationId: getFormFormRecordByLatestDraft
             parameters:
                 - in: path
                   name: formId
