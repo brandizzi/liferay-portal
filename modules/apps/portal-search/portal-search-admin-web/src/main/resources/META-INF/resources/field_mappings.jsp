@@ -17,7 +17,7 @@
 <%@ taglib uri="http://liferay.com/tld/soy" prefix="soy" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 
-<%@ page import="com.liferay.portal.kernel.util.WebKeys" %><%@
+<%@ page import="com.liferay.portal.search.admin.web.internal.constants.SearchAdminWebKeys" %><%@
 page import="com.liferay.portal.search.admin.web.internal.display.context.FieldMappingsDisplayContext" %>
 
 <%@ page import="java.util.HashMap" %><%@
@@ -26,7 +26,7 @@ page import="java.util.Map" %>
 <liferay-theme:defineObjects />
 
 <%
-FieldMappingsDisplayContext fieldMappingsDisplayContext = (FieldMappingsDisplayContext)request.getAttribute(WebKeys.PORTLET_DISPLAY_CONTEXT);
+FieldMappingsDisplayContext fieldMappingsDisplayContext = (FieldMappingsDisplayContext)request.getAttribute(SearchAdminWebKeys.FIELD_MAPPINGS_DISPLAY_CONTEXT);
 
 Map<String, Object> context = new HashMap<>();
 
