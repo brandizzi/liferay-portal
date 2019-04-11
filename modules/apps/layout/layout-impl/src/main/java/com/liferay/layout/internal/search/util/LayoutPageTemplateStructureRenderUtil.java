@@ -106,12 +106,10 @@ public class LayoutPageTemplateStructureRenderUtil {
 					fragmentRendererContext.setSegmentsExperienceIds(
 						segmentsExperienceIds);
 
-					String renderFragmentEntryLink =
+					sb.append(
 						fragmentRendererController.render(
 							fragmentRendererContext, httpServletRequest,
-							httpServletResponse);
-
-					sb.append(renderFragmentEntryLink);
+							httpServletResponse));
 				}
 			}
 		}
