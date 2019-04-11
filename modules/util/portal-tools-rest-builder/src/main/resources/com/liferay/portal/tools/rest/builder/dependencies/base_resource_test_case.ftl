@@ -1047,7 +1047,7 @@ public abstract class Base${schemaName}ResourceTestCase {
 					 <#continue>
 				</#if>
 
-				if (Objects.equals("${propertyName}", additionalAssertFieldName)) {
+				if (Objects.deepEquals("${propertyName}", additionalAssertFieldName)) {
 					if (${schemaVarName}.get${propertyName?cap_first}() == null) {
 						valid = false;
 					}
