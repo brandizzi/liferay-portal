@@ -152,12 +152,10 @@ public class ManageCollaboratorsViewMVCRenderCommand
 					Format expirationDateTooltipDateFormat =
 						DateFormatFactoryUtil.getDate(themeDisplay.getLocale());
 
-					ResourceBundle resourceBundle =
-						ResourceBundleUtil.getBundle(
-							themeDisplay.getLocale(), getClass());
-
 					expirationDateTooltip = LanguageUtil.format(
-						resourceBundle, "until-x",
+						ResourceBundleUtil.getBundle(
+							themeDisplay.getLocale(), getClass()),
+						"until-x",
 						expirationDateTooltipDateFormat.format(expirationDate));
 				}
 
