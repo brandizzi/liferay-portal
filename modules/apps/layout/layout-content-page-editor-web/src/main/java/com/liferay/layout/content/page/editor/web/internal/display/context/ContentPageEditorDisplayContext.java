@@ -1012,7 +1012,7 @@ public class ContentPageEditorDisplayContext {
 
 		return new String[] {
 			"primary", "success", "danger", "warning", "info", "dark",
-			"secondary", "light", "white"
+			"gray-dark", "secondary", "light", "lighter", "white"
 		};
 	}
 
