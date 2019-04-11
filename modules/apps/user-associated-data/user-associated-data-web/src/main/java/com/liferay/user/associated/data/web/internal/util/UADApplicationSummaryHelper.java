@@ -103,6 +103,16 @@ public class UADApplicationSummaryHelper {
 	public List<UADApplicationSummaryDisplay> getUADApplicationSummaryDisplays(
 		long userId, long[] groupIds) {
 
+		List<UADApplicationSummaryDisplay> uadApplicationSummaryDisplays =
+			new ArrayList<>();
+
+		UADApplicationSummaryDisplay
+			allApplicationsUADApplicationSummaryDisplay =
+				new UADApplicationSummaryDisplay();
+
+		allApplicationsUADApplicationSummaryDisplay.setApplicationKey(
+			UADConstants.ALL_APPLICATIONS);
+
 		List<UADApplicationSummaryDisplay>
 			generatedUADApplicationSummaryDisplays = new ArrayList<>();
 
@@ -139,6 +149,11 @@ public class UADApplicationSummaryHelper {
 			}
 		}
 
+		allApplicationsUADApplicationSummaryDisplay.setCount(count);
+
+		uadApplicationSummaryDisplays.add(
+			allApplicationsUADApplicationSummaryDisplay);
+
 		generatedUADApplicationSummaryDisplays.sort(
 			(uadApplicationSummaryDisplay, uadApplicationSummaryDisplay2) -> {
 				String applicationKey1 =
@@ -147,20 +162,6 @@ public class UADApplicationSummaryHelper {
 				return applicationKey1.compareTo(
 					uadApplicationSummaryDisplay2.getApplicationKey());
 			});
-
-		List<UADApplicationSummaryDisplay> uadApplicationSummaryDisplays =
-			new ArrayList<>();
-
-		UADApplicationSummaryDisplay
-			allApplicationsUADApplicationSummaryDisplay =
-				new UADApplicationSummaryDisplay();
-
-		allApplicationsUADApplicationSummaryDisplay.setApplicationKey(
-			UADConstants.ALL_APPLICATIONS);
-		allApplicationsUADApplicationSummaryDisplay.setCount(count);
-
-		uadApplicationSummaryDisplays.add(
-			allApplicationsUADApplicationSummaryDisplay);
 
 		uadApplicationSummaryDisplays.addAll(
 			generatedUADApplicationSummaryDisplays);
