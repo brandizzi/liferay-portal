@@ -1248,9 +1248,7 @@ public abstract class BaseUserAccountResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals(
-					"additionalName", additionalAssertFieldName)) {
-
+			if (Objects.equals("additionalName", additionalAssertFieldName)) {
 				if (userAccount.getAdditionalName() == null) {
 					valid = false;
 				}
@@ -1258,9 +1256,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"alternateName", additionalAssertFieldName)) {
-
+			if (Objects.equals("alternateName", additionalAssertFieldName)) {
 				if (userAccount.getAlternateName() == null) {
 					valid = false;
 				}
@@ -1268,7 +1264,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("birthDate", additionalAssertFieldName)) {
+			if (Objects.equals("birthDate", additionalAssertFieldName)) {
 				if (userAccount.getBirthDate() == null) {
 					valid = false;
 				}
@@ -1276,7 +1272,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"contactInformation", additionalAssertFieldName)) {
 
 				if (userAccount.getContactInformation() == null) {
@@ -1286,7 +1282,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("dashboardURL", additionalAssertFieldName)) {
+			if (Objects.equals("dashboardURL", additionalAssertFieldName)) {
 				if (userAccount.getDashboardURL() == null) {
 					valid = false;
 				}
@@ -1294,7 +1290,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("email", additionalAssertFieldName)) {
+			if (Objects.equals("email", additionalAssertFieldName)) {
 				if (userAccount.getEmail() == null) {
 					valid = false;
 				}
@@ -1302,7 +1298,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("familyName", additionalAssertFieldName)) {
+			if (Objects.equals("familyName", additionalAssertFieldName)) {
 				if (userAccount.getFamilyName() == null) {
 					valid = false;
 				}
@@ -1310,7 +1306,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("givenName", additionalAssertFieldName)) {
+			if (Objects.equals("givenName", additionalAssertFieldName)) {
 				if (userAccount.getGivenName() == null) {
 					valid = false;
 				}
@@ -1318,9 +1314,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"honorificPrefix", additionalAssertFieldName)) {
-
+			if (Objects.equals("honorificPrefix", additionalAssertFieldName)) {
 				if (userAccount.getHonorificPrefix() == null) {
 					valid = false;
 				}
@@ -1328,9 +1322,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"honorificSuffix", additionalAssertFieldName)) {
-
+			if (Objects.equals("honorificSuffix", additionalAssertFieldName)) {
 				if (userAccount.getHonorificSuffix() == null) {
 					valid = false;
 				}
@@ -1338,7 +1330,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("image", additionalAssertFieldName)) {
+			if (Objects.equals("image", additionalAssertFieldName)) {
 				if (userAccount.getImage() == null) {
 					valid = false;
 				}
@@ -1346,7 +1338,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("jobTitle", additionalAssertFieldName)) {
+			if (Objects.equals("jobTitle", additionalAssertFieldName)) {
 				if (userAccount.getJobTitle() == null) {
 					valid = false;
 				}
@@ -1354,7 +1346,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("keywords", additionalAssertFieldName)) {
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
 				if (userAccount.getKeywords() == null) {
 					valid = false;
 				}
@@ -1362,7 +1354,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("name", additionalAssertFieldName)) {
+			if (Objects.equals("name", additionalAssertFieldName)) {
 				if (userAccount.getName() == null) {
 					valid = false;
 				}
@@ -1370,7 +1362,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"organizationBriefs", additionalAssertFieldName)) {
 
 				if (userAccount.getOrganizationBriefs() == null) {
@@ -1380,7 +1372,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("profileURL", additionalAssertFieldName)) {
+			if (Objects.equals("profileURL", additionalAssertFieldName)) {
 				if (userAccount.getProfileURL() == null) {
 					valid = false;
 				}
@@ -1388,7 +1380,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("roleBriefs", additionalAssertFieldName)) {
+			if (Objects.equals("roleBriefs", additionalAssertFieldName)) {
 				if (userAccount.getRoleBriefs() == null) {
 					valid = false;
 				}
@@ -1396,7 +1388,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("siteBriefs", additionalAssertFieldName)) {
+			if (Objects.equals("siteBriefs", additionalAssertFieldName)) {
 				if (userAccount.getSiteBriefs() == null) {
 					valid = false;
 				}
@@ -1444,7 +1436,7 @@ public abstract class BaseUserAccountResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("additionalName", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getAdditionalName(),
 						userAccount2.getAdditionalName())) {
 
@@ -1455,7 +1447,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("alternateName", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getAlternateName(),
 						userAccount2.getAlternateName())) {
 
@@ -1466,7 +1458,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("birthDate", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getBirthDate(),
 						userAccount2.getBirthDate())) {
 
@@ -1479,7 +1471,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			if (Objects.equals(
 					"contactInformation", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getContactInformation(),
 						userAccount2.getContactInformation())) {
 
@@ -1490,7 +1482,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("dashboardURL", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getDashboardURL(),
 						userAccount2.getDashboardURL())) {
 
@@ -1501,7 +1493,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getDateCreated(),
 						userAccount2.getDateCreated())) {
 
@@ -1512,7 +1504,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getDateModified(),
 						userAccount2.getDateModified())) {
 
@@ -1523,7 +1515,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("email", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getEmail(), userAccount2.getEmail())) {
 
 					return false;
@@ -1533,7 +1525,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("familyName", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getFamilyName(),
 						userAccount2.getFamilyName())) {
 
@@ -1544,7 +1536,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("givenName", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getGivenName(),
 						userAccount2.getGivenName())) {
 
@@ -1555,7 +1547,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("honorificPrefix", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getHonorificPrefix(),
 						userAccount2.getHonorificPrefix())) {
 
@@ -1566,7 +1558,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("honorificSuffix", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getHonorificSuffix(),
 						userAccount2.getHonorificSuffix())) {
 
@@ -1577,7 +1569,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getId(), userAccount2.getId())) {
 
 					return false;
@@ -1587,7 +1579,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("image", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getImage(), userAccount2.getImage())) {
 
 					return false;
@@ -1597,7 +1589,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("jobTitle", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getJobTitle(),
 						userAccount2.getJobTitle())) {
 
@@ -1608,7 +1600,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("keywords", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getKeywords(),
 						userAccount2.getKeywords())) {
 
@@ -1619,7 +1611,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("name", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getName(), userAccount2.getName())) {
 
 					return false;
@@ -1631,7 +1623,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			if (Objects.equals(
 					"organizationBriefs", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getOrganizationBriefs(),
 						userAccount2.getOrganizationBriefs())) {
 
@@ -1642,7 +1634,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("profileURL", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getProfileURL(),
 						userAccount2.getProfileURL())) {
 
@@ -1653,7 +1645,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("roleBriefs", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getRoleBriefs(),
 						userAccount2.getRoleBriefs())) {
 
@@ -1664,7 +1656,7 @@ public abstract class BaseUserAccountResourceTestCase {
 			}
 
 			if (Objects.equals("siteBriefs", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						userAccount1.getSiteBriefs(),
 						userAccount2.getSiteBriefs())) {
 

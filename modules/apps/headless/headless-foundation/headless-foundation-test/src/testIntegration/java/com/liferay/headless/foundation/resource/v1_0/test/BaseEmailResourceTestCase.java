@@ -407,7 +407,7 @@ public abstract class BaseEmailResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals("email", additionalAssertFieldName)) {
+			if (Objects.equals("email", additionalAssertFieldName)) {
 				if (email.getEmail() == null) {
 					valid = false;
 				}
@@ -415,7 +415,7 @@ public abstract class BaseEmailResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("primary", additionalAssertFieldName)) {
+			if (Objects.equals("primary", additionalAssertFieldName)) {
 				if (email.getPrimary() == null) {
 					valid = false;
 				}
@@ -423,7 +423,7 @@ public abstract class BaseEmailResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("type", additionalAssertFieldName)) {
+			if (Objects.equals("type", additionalAssertFieldName)) {
 				if (email.getType() == null) {
 					valid = false;
 				}
@@ -469,7 +469,7 @@ public abstract class BaseEmailResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("email", additionalAssertFieldName)) {
-				if (!Objects.equals(email1.getEmail(), email2.getEmail())) {
+				if (!Objects.deepEquals(email1.getEmail(), email2.getEmail())) {
 					return false;
 				}
 
@@ -477,7 +477,7 @@ public abstract class BaseEmailResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(email1.getId(), email2.getId())) {
+				if (!Objects.deepEquals(email1.getId(), email2.getId())) {
 					return false;
 				}
 
@@ -485,7 +485,9 @@ public abstract class BaseEmailResourceTestCase {
 			}
 
 			if (Objects.equals("primary", additionalAssertFieldName)) {
-				if (!Objects.equals(email1.getPrimary(), email2.getPrimary())) {
+				if (!Objects.deepEquals(
+						email1.getPrimary(), email2.getPrimary())) {
+
 					return false;
 				}
 
@@ -493,7 +495,7 @@ public abstract class BaseEmailResourceTestCase {
 			}
 
 			if (Objects.equals("type", additionalAssertFieldName)) {
-				if (!Objects.equals(email1.getType(), email2.getType())) {
+				if (!Objects.deepEquals(email1.getType(), email2.getType())) {
 					return false;
 				}
 

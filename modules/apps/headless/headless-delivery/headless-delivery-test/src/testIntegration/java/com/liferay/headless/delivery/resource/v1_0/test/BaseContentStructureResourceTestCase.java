@@ -612,7 +612,7 @@ public abstract class BaseContentStructureResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"availableLanguages", additionalAssertFieldName)) {
 
 				if (contentStructure.getAvailableLanguages() == null) {
@@ -622,7 +622,7 @@ public abstract class BaseContentStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"contentStructureFields", additionalAssertFieldName)) {
 
 				if (contentStructure.getContentStructureFields() == null) {
@@ -632,7 +632,7 @@ public abstract class BaseContentStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
+			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (contentStructure.getCreator() == null) {
 					valid = false;
 				}
@@ -640,7 +640,7 @@ public abstract class BaseContentStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("description", additionalAssertFieldName)) {
+			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (contentStructure.getDescription() == null) {
 					valid = false;
 				}
@@ -648,7 +648,7 @@ public abstract class BaseContentStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("name", additionalAssertFieldName)) {
+			if (Objects.equals("name", additionalAssertFieldName)) {
 				if (contentStructure.getName() == null) {
 					valid = false;
 				}
@@ -705,7 +705,7 @@ public abstract class BaseContentStructureResourceTestCase {
 			if (Objects.equals(
 					"availableLanguages", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						contentStructure1.getAvailableLanguages(),
 						contentStructure2.getAvailableLanguages())) {
 
@@ -718,7 +718,7 @@ public abstract class BaseContentStructureResourceTestCase {
 			if (Objects.equals(
 					"contentStructureFields", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						contentStructure1.getContentStructureFields(),
 						contentStructure2.getContentStructureFields())) {
 
@@ -729,7 +729,7 @@ public abstract class BaseContentStructureResourceTestCase {
 			}
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						contentStructure1.getCreator(),
 						contentStructure2.getCreator())) {
 
@@ -740,7 +740,7 @@ public abstract class BaseContentStructureResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						contentStructure1.getDateCreated(),
 						contentStructure2.getDateCreated())) {
 
@@ -751,7 +751,7 @@ public abstract class BaseContentStructureResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						contentStructure1.getDateModified(),
 						contentStructure2.getDateModified())) {
 
@@ -762,7 +762,7 @@ public abstract class BaseContentStructureResourceTestCase {
 			}
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						contentStructure1.getDescription(),
 						contentStructure2.getDescription())) {
 
@@ -773,7 +773,7 @@ public abstract class BaseContentStructureResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						contentStructure1.getId(), contentStructure2.getId())) {
 
 					return false;
@@ -783,7 +783,7 @@ public abstract class BaseContentStructureResourceTestCase {
 			}
 
 			if (Objects.equals("name", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						contentStructure1.getName(),
 						contentStructure2.getName())) {
 

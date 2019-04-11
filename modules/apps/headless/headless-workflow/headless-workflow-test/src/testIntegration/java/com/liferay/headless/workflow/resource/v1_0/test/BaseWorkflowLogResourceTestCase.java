@@ -394,7 +394,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals("auditPerson", additionalAssertFieldName)) {
+			if (Objects.equals("auditPerson", additionalAssertFieldName)) {
 				if (workflowLog.getAuditPerson() == null) {
 					valid = false;
 				}
@@ -402,7 +402,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("commentLog", additionalAssertFieldName)) {
+			if (Objects.equals("commentLog", additionalAssertFieldName)) {
 				if (workflowLog.getCommentLog() == null) {
 					valid = false;
 				}
@@ -410,7 +410,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("person", additionalAssertFieldName)) {
+			if (Objects.equals("person", additionalAssertFieldName)) {
 				if (workflowLog.getPerson() == null) {
 					valid = false;
 				}
@@ -418,9 +418,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"previousPerson", additionalAssertFieldName)) {
-
+			if (Objects.equals("previousPerson", additionalAssertFieldName)) {
 				if (workflowLog.getPreviousPerson() == null) {
 					valid = false;
 				}
@@ -428,9 +426,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"previousState", additionalAssertFieldName)) {
-
+			if (Objects.equals("previousState", additionalAssertFieldName)) {
 				if (workflowLog.getPreviousState() == null) {
 					valid = false;
 				}
@@ -438,7 +434,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("state", additionalAssertFieldName)) {
+			if (Objects.equals("state", additionalAssertFieldName)) {
 				if (workflowLog.getState() == null) {
 					valid = false;
 				}
@@ -446,7 +442,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("taskId", additionalAssertFieldName)) {
+			if (Objects.equals("taskId", additionalAssertFieldName)) {
 				if (workflowLog.getTaskId() == null) {
 					valid = false;
 				}
@@ -454,7 +450,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("type", additionalAssertFieldName)) {
+			if (Objects.equals("type", additionalAssertFieldName)) {
 				if (workflowLog.getType() == null) {
 					valid = false;
 				}
@@ -502,7 +498,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("auditPerson", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						workflowLog1.getAuditPerson(),
 						workflowLog2.getAuditPerson())) {
 
@@ -513,7 +509,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 			}
 
 			if (Objects.equals("commentLog", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						workflowLog1.getCommentLog(),
 						workflowLog2.getCommentLog())) {
 
@@ -524,7 +520,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						workflowLog1.getDateCreated(),
 						workflowLog2.getDateCreated())) {
 
@@ -535,7 +531,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						workflowLog1.getId(), workflowLog2.getId())) {
 
 					return false;
@@ -545,7 +541,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 			}
 
 			if (Objects.equals("person", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						workflowLog1.getPerson(), workflowLog2.getPerson())) {
 
 					return false;
@@ -555,7 +551,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 			}
 
 			if (Objects.equals("previousPerson", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						workflowLog1.getPreviousPerson(),
 						workflowLog2.getPreviousPerson())) {
 
@@ -566,7 +562,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 			}
 
 			if (Objects.equals("previousState", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						workflowLog1.getPreviousState(),
 						workflowLog2.getPreviousState())) {
 
@@ -577,7 +573,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 			}
 
 			if (Objects.equals("state", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						workflowLog1.getState(), workflowLog2.getState())) {
 
 					return false;
@@ -587,7 +583,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 			}
 
 			if (Objects.equals("taskId", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						workflowLog1.getTaskId(), workflowLog2.getTaskId())) {
 
 					return false;
@@ -597,7 +593,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 			}
 
 			if (Objects.equals("type", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						workflowLog1.getType(), workflowLog2.getType())) {
 
 					return false;

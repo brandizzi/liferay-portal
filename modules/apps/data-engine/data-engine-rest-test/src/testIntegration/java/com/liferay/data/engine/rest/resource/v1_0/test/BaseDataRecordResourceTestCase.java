@@ -656,7 +656,7 @@ public abstract class BaseDataRecordResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"dataRecordCollectionId", additionalAssertFieldName)) {
 
 				if (dataRecord.getDataRecordCollectionId() == null) {
@@ -666,9 +666,7 @@ public abstract class BaseDataRecordResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"dataRecordValues", additionalAssertFieldName)) {
-
+			if (Objects.equals("dataRecordValues", additionalAssertFieldName)) {
 				if (dataRecord.getDataRecordValues() == null) {
 					valid = false;
 				}
@@ -716,7 +714,7 @@ public abstract class BaseDataRecordResourceTestCase {
 			if (Objects.equals(
 					"dataRecordCollectionId", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataRecord1.getDataRecordCollectionId(),
 						dataRecord2.getDataRecordCollectionId())) {
 
@@ -727,7 +725,7 @@ public abstract class BaseDataRecordResourceTestCase {
 			}
 
 			if (Objects.equals("dataRecordValues", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataRecord1.getDataRecordValues(),
 						dataRecord2.getDataRecordValues())) {
 
@@ -738,7 +736,9 @@ public abstract class BaseDataRecordResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(dataRecord1.getId(), dataRecord2.getId())) {
+				if (!Objects.deepEquals(
+						dataRecord1.getId(), dataRecord2.getId())) {
+
 					return false;
 				}
 

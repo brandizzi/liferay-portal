@@ -1034,7 +1034,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
+			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (knowledgeBaseFolder.getCreator() == null) {
 					valid = false;
 				}
@@ -1042,7 +1042,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("description", additionalAssertFieldName)) {
+			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (knowledgeBaseFolder.getDescription() == null) {
 					valid = false;
 				}
@@ -1050,7 +1050,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("name", additionalAssertFieldName)) {
+			if (Objects.equals("name", additionalAssertFieldName)) {
 				if (knowledgeBaseFolder.getName() == null) {
 					valid = false;
 				}
@@ -1058,7 +1058,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"numberOfKnowledgeBaseArticles",
 					additionalAssertFieldName)) {
 
@@ -1071,7 +1071,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"numberOfKnowledgeBaseFolders",
 					additionalAssertFieldName)) {
 
@@ -1084,7 +1084,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"parentKnowledgeBaseFolder", additionalAssertFieldName)) {
 
 				if (knowledgeBaseFolder.getParentKnowledgeBaseFolder() ==
@@ -1096,7 +1096,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"parentKnowledgeBaseFolderId", additionalAssertFieldName)) {
 
 				if (knowledgeBaseFolder.getParentKnowledgeBaseFolderId() ==
@@ -1108,7 +1108,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
 				if (knowledgeBaseFolder.getViewableBy() == null) {
 					valid = false;
 				}
@@ -1164,7 +1164,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseFolder1.getCreator(),
 						knowledgeBaseFolder2.getCreator())) {
 
@@ -1175,7 +1175,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseFolder1.getDateCreated(),
 						knowledgeBaseFolder2.getDateCreated())) {
 
@@ -1186,7 +1186,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseFolder1.getDateModified(),
 						knowledgeBaseFolder2.getDateModified())) {
 
@@ -1197,7 +1197,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 			}
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseFolder1.getDescription(),
 						knowledgeBaseFolder2.getDescription())) {
 
@@ -1208,7 +1208,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseFolder1.getId(),
 						knowledgeBaseFolder2.getId())) {
 
@@ -1219,7 +1219,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 			}
 
 			if (Objects.equals("name", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseFolder1.getName(),
 						knowledgeBaseFolder2.getName())) {
 
@@ -1233,7 +1233,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 					"numberOfKnowledgeBaseArticles",
 					additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseFolder1.getNumberOfKnowledgeBaseArticles(),
 						knowledgeBaseFolder2.
 							getNumberOfKnowledgeBaseArticles())) {
@@ -1248,7 +1248,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 					"numberOfKnowledgeBaseFolders",
 					additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseFolder1.getNumberOfKnowledgeBaseFolders(),
 						knowledgeBaseFolder2.
 							getNumberOfKnowledgeBaseFolders())) {
@@ -1262,7 +1262,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 			if (Objects.equals(
 					"parentKnowledgeBaseFolder", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseFolder1.getParentKnowledgeBaseFolder(),
 						knowledgeBaseFolder2.getParentKnowledgeBaseFolder())) {
 
@@ -1275,7 +1275,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 			if (Objects.equals(
 					"parentKnowledgeBaseFolderId", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseFolder1.getParentKnowledgeBaseFolderId(),
 						knowledgeBaseFolder2.
 							getParentKnowledgeBaseFolderId())) {
@@ -1287,7 +1287,7 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 			}
 
 			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseFolder1.getViewableBy(),
 						knowledgeBaseFolder2.getViewableBy())) {
 

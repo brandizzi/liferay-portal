@@ -306,7 +306,7 @@ public abstract class BaseKeywordResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals("name", additionalAssertFieldName)) {
+			if (Objects.equals("name", additionalAssertFieldName)) {
 				if (keyword.getName() == null) {
 					valid = false;
 				}
@@ -352,7 +352,9 @@ public abstract class BaseKeywordResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("name", additionalAssertFieldName)) {
-				if (!Objects.equals(keyword1.getName(), keyword2.getName())) {
+				if (!Objects.deepEquals(
+						keyword1.getName(), keyword2.getName())) {
+
 					return false;
 				}
 

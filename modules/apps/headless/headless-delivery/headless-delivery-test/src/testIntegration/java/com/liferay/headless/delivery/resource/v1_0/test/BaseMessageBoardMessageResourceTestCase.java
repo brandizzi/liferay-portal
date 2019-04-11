@@ -1708,9 +1708,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals(
-					"aggregateRating", additionalAssertFieldName)) {
-
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
 				if (messageBoardMessage.getAggregateRating() == null) {
 					valid = false;
 				}
@@ -1718,7 +1716,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("anonymous", additionalAssertFieldName)) {
+			if (Objects.equals("anonymous", additionalAssertFieldName)) {
 				if (messageBoardMessage.getAnonymous() == null) {
 					valid = false;
 				}
@@ -1726,7 +1724,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("articleBody", additionalAssertFieldName)) {
+			if (Objects.equals("articleBody", additionalAssertFieldName)) {
 				if (messageBoardMessage.getArticleBody() == null) {
 					valid = false;
 				}
@@ -1734,7 +1732,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
+			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (messageBoardMessage.getCreator() == null) {
 					valid = false;
 				}
@@ -1742,9 +1740,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"encodingFormat", additionalAssertFieldName)) {
-
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
 				if (messageBoardMessage.getEncodingFormat() == null) {
 					valid = false;
 				}
@@ -1752,7 +1748,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("headline", additionalAssertFieldName)) {
+			if (Objects.equals("headline", additionalAssertFieldName)) {
 				if (messageBoardMessage.getHeadline() == null) {
 					valid = false;
 				}
@@ -1760,7 +1756,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("keywords", additionalAssertFieldName)) {
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
 				if (messageBoardMessage.getKeywords() == null) {
 					valid = false;
 				}
@@ -1768,7 +1764,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"numberOfMessageBoardAttachments",
 					additionalAssertFieldName)) {
 
@@ -1781,7 +1777,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"numberOfMessageBoardMessages",
 					additionalAssertFieldName)) {
 
@@ -1794,7 +1790,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("showAsAnswer", additionalAssertFieldName)) {
+			if (Objects.equals("showAsAnswer", additionalAssertFieldName)) {
 				if (messageBoardMessage.getShowAsAnswer() == null) {
 					valid = false;
 				}
@@ -1802,7 +1798,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
 				if (messageBoardMessage.getViewableBy() == null) {
 					valid = false;
 				}
@@ -1858,7 +1854,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getAggregateRating(),
 						messageBoardMessage2.getAggregateRating())) {
 
@@ -1869,7 +1865,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			}
 
 			if (Objects.equals("anonymous", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getAnonymous(),
 						messageBoardMessage2.getAnonymous())) {
 
@@ -1880,7 +1876,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			}
 
 			if (Objects.equals("articleBody", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getArticleBody(),
 						messageBoardMessage2.getArticleBody())) {
 
@@ -1891,7 +1887,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			}
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getCreator(),
 						messageBoardMessage2.getCreator())) {
 
@@ -1902,7 +1898,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getDateCreated(),
 						messageBoardMessage2.getDateCreated())) {
 
@@ -1913,7 +1909,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getDateModified(),
 						messageBoardMessage2.getDateModified())) {
 
@@ -1924,7 +1920,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			}
 
 			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getEncodingFormat(),
 						messageBoardMessage2.getEncodingFormat())) {
 
@@ -1935,7 +1931,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			}
 
 			if (Objects.equals("headline", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getHeadline(),
 						messageBoardMessage2.getHeadline())) {
 
@@ -1946,7 +1942,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getId(),
 						messageBoardMessage2.getId())) {
 
@@ -1957,7 +1953,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			}
 
 			if (Objects.equals("keywords", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getKeywords(),
 						messageBoardMessage2.getKeywords())) {
 
@@ -1971,7 +1967,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 					"numberOfMessageBoardAttachments",
 					additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.
 							getNumberOfMessageBoardAttachments(),
 						messageBoardMessage2.
@@ -1987,7 +1983,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 					"numberOfMessageBoardMessages",
 					additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getNumberOfMessageBoardMessages(),
 						messageBoardMessage2.
 							getNumberOfMessageBoardMessages())) {
@@ -1999,7 +1995,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			}
 
 			if (Objects.equals("showAsAnswer", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getShowAsAnswer(),
 						messageBoardMessage2.getShowAsAnswer())) {
 
@@ -2010,7 +2006,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 			}
 
 			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						messageBoardMessage1.getViewableBy(),
 						messageBoardMessage2.getViewableBy())) {
 

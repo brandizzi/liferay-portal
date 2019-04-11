@@ -407,7 +407,7 @@ public abstract class BasePhoneResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals("extension", additionalAssertFieldName)) {
+			if (Objects.equals("extension", additionalAssertFieldName)) {
 				if (phone.getExtension() == null) {
 					valid = false;
 				}
@@ -415,7 +415,7 @@ public abstract class BasePhoneResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("phoneNumber", additionalAssertFieldName)) {
+			if (Objects.equals("phoneNumber", additionalAssertFieldName)) {
 				if (phone.getPhoneNumber() == null) {
 					valid = false;
 				}
@@ -423,7 +423,7 @@ public abstract class BasePhoneResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("phoneType", additionalAssertFieldName)) {
+			if (Objects.equals("phoneType", additionalAssertFieldName)) {
 				if (phone.getPhoneType() == null) {
 					valid = false;
 				}
@@ -431,7 +431,7 @@ public abstract class BasePhoneResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("primary", additionalAssertFieldName)) {
+			if (Objects.equals("primary", additionalAssertFieldName)) {
 				if (phone.getPrimary() == null) {
 					valid = false;
 				}
@@ -477,7 +477,7 @@ public abstract class BasePhoneResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("extension", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						phone1.getExtension(), phone2.getExtension())) {
 
 					return false;
@@ -487,7 +487,7 @@ public abstract class BasePhoneResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(phone1.getId(), phone2.getId())) {
+				if (!Objects.deepEquals(phone1.getId(), phone2.getId())) {
 					return false;
 				}
 
@@ -495,7 +495,7 @@ public abstract class BasePhoneResourceTestCase {
 			}
 
 			if (Objects.equals("phoneNumber", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						phone1.getPhoneNumber(), phone2.getPhoneNumber())) {
 
 					return false;
@@ -505,7 +505,7 @@ public abstract class BasePhoneResourceTestCase {
 			}
 
 			if (Objects.equals("phoneType", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						phone1.getPhoneType(), phone2.getPhoneType())) {
 
 					return false;
@@ -515,7 +515,9 @@ public abstract class BasePhoneResourceTestCase {
 			}
 
 			if (Objects.equals("primary", additionalAssertFieldName)) {
-				if (!Objects.equals(phone1.getPrimary(), phone2.getPrimary())) {
+				if (!Objects.deepEquals(
+						phone1.getPrimary(), phone2.getPrimary())) {
+
 					return false;
 				}
 

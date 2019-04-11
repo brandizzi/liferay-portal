@@ -727,7 +727,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"dataDefinitionFields", additionalAssertFieldName)) {
 
 				if (dataDefinition.getDataDefinitionFields() == null) {
@@ -737,7 +737,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"dataDefinitionRules", additionalAssertFieldName)) {
 
 				if (dataDefinition.getDataDefinitionRules() == null) {
@@ -747,7 +747,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("description", additionalAssertFieldName)) {
+			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (dataDefinition.getDescription() == null) {
 					valid = false;
 				}
@@ -755,7 +755,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("name", additionalAssertFieldName)) {
+			if (Objects.equals("name", additionalAssertFieldName)) {
 				if (dataDefinition.getName() == null) {
 					valid = false;
 				}
@@ -763,7 +763,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("storageType", additionalAssertFieldName)) {
+			if (Objects.equals("storageType", additionalAssertFieldName)) {
 				if (dataDefinition.getStorageType() == null) {
 					valid = false;
 				}
@@ -771,7 +771,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("userId", additionalAssertFieldName)) {
+			if (Objects.equals("userId", additionalAssertFieldName)) {
 				if (dataDefinition.getUserId() == null) {
 					valid = false;
 				}
@@ -827,7 +827,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			if (Objects.equals(
 					"dataDefinitionFields", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataDefinition1.getDataDefinitionFields(),
 						dataDefinition2.getDataDefinitionFields())) {
 
@@ -840,7 +840,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			if (Objects.equals(
 					"dataDefinitionRules", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataDefinition1.getDataDefinitionRules(),
 						dataDefinition2.getDataDefinitionRules())) {
 
@@ -851,7 +851,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataDefinition1.getDateCreated(),
 						dataDefinition2.getDateCreated())) {
 
@@ -862,7 +862,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataDefinition1.getDateModified(),
 						dataDefinition2.getDateModified())) {
 
@@ -873,7 +873,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			}
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataDefinition1.getDescription(),
 						dataDefinition2.getDescription())) {
 
@@ -884,7 +884,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataDefinition1.getId(), dataDefinition2.getId())) {
 
 					return false;
@@ -894,7 +894,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			}
 
 			if (Objects.equals("name", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataDefinition1.getName(), dataDefinition2.getName())) {
 
 					return false;
@@ -904,7 +904,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			}
 
 			if (Objects.equals("storageType", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataDefinition1.getStorageType(),
 						dataDefinition2.getStorageType())) {
 
@@ -915,7 +915,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 			}
 
 			if (Objects.equals("userId", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataDefinition1.getUserId(),
 						dataDefinition2.getUserId())) {
 

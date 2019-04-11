@@ -412,7 +412,7 @@ public abstract class BaseWebUrlResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals("url", additionalAssertFieldName)) {
+			if (Objects.equals("url", additionalAssertFieldName)) {
 				if (webUrl.getUrl() == null) {
 					valid = false;
 				}
@@ -420,7 +420,7 @@ public abstract class BaseWebUrlResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("urlType", additionalAssertFieldName)) {
+			if (Objects.equals("urlType", additionalAssertFieldName)) {
 				if (webUrl.getUrlType() == null) {
 					valid = false;
 				}
@@ -466,7 +466,7 @@ public abstract class BaseWebUrlResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(webUrl1.getId(), webUrl2.getId())) {
+				if (!Objects.deepEquals(webUrl1.getId(), webUrl2.getId())) {
 					return false;
 				}
 
@@ -474,7 +474,7 @@ public abstract class BaseWebUrlResourceTestCase {
 			}
 
 			if (Objects.equals("url", additionalAssertFieldName)) {
-				if (!Objects.equals(webUrl1.getUrl(), webUrl2.getUrl())) {
+				if (!Objects.deepEquals(webUrl1.getUrl(), webUrl2.getUrl())) {
 					return false;
 				}
 
@@ -482,7 +482,7 @@ public abstract class BaseWebUrlResourceTestCase {
 			}
 
 			if (Objects.equals("urlType", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						webUrl1.getUrlType(), webUrl2.getUrlType())) {
 
 					return false;

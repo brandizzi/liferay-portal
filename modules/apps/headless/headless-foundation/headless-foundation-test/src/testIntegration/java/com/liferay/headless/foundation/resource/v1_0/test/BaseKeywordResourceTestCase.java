@@ -737,7 +737,7 @@ public abstract class BaseKeywordResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
+			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (keyword.getCreator() == null) {
 					valid = false;
 				}
@@ -745,7 +745,7 @@ public abstract class BaseKeywordResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"keywordUsageCount", additionalAssertFieldName)) {
 
 				if (keyword.getKeywordUsageCount() == null) {
@@ -755,7 +755,7 @@ public abstract class BaseKeywordResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("name", additionalAssertFieldName)) {
+			if (Objects.equals("name", additionalAssertFieldName)) {
 				if (keyword.getName() == null) {
 					valid = false;
 				}
@@ -805,7 +805,7 @@ public abstract class BaseKeywordResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						keyword1.getCreator(), keyword2.getCreator())) {
 
 					return false;
@@ -815,7 +815,7 @@ public abstract class BaseKeywordResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						keyword1.getDateCreated(), keyword2.getDateCreated())) {
 
 					return false;
@@ -825,7 +825,7 @@ public abstract class BaseKeywordResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						keyword1.getDateModified(),
 						keyword2.getDateModified())) {
 
@@ -836,7 +836,7 @@ public abstract class BaseKeywordResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(keyword1.getId(), keyword2.getId())) {
+				if (!Objects.deepEquals(keyword1.getId(), keyword2.getId())) {
 					return false;
 				}
 
@@ -846,7 +846,7 @@ public abstract class BaseKeywordResourceTestCase {
 			if (Objects.equals(
 					"keywordUsageCount", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						keyword1.getKeywordUsageCount(),
 						keyword2.getKeywordUsageCount())) {
 
@@ -857,7 +857,9 @@ public abstract class BaseKeywordResourceTestCase {
 			}
 
 			if (Objects.equals("name", additionalAssertFieldName)) {
-				if (!Objects.equals(keyword1.getName(), keyword2.getName())) {
+				if (!Objects.deepEquals(
+						keyword1.getName(), keyword2.getName())) {
+
 					return false;
 				}
 

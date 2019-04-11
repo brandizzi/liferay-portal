@@ -1356,7 +1356,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
+			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (documentFolder.getCreator() == null) {
 					valid = false;
 				}
@@ -1364,7 +1364,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("description", additionalAssertFieldName)) {
+			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (documentFolder.getDescription() == null) {
 					valid = false;
 				}
@@ -1372,7 +1372,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("name", additionalAssertFieldName)) {
+			if (Objects.equals("name", additionalAssertFieldName)) {
 				if (documentFolder.getName() == null) {
 					valid = false;
 				}
@@ -1380,7 +1380,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"numberOfDocumentFolders", additionalAssertFieldName)) {
 
 				if (documentFolder.getNumberOfDocumentFolders() == null) {
@@ -1390,7 +1390,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"numberOfDocuments", additionalAssertFieldName)) {
 
 				if (documentFolder.getNumberOfDocuments() == null) {
@@ -1400,7 +1400,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
 				if (documentFolder.getViewableBy() == null) {
 					valid = false;
 				}
@@ -1454,7 +1454,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						documentFolder1.getCreator(),
 						documentFolder2.getCreator())) {
 
@@ -1465,7 +1465,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						documentFolder1.getDateCreated(),
 						documentFolder2.getDateCreated())) {
 
@@ -1476,7 +1476,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						documentFolder1.getDateModified(),
 						documentFolder2.getDateModified())) {
 
@@ -1487,7 +1487,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 			}
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						documentFolder1.getDescription(),
 						documentFolder2.getDescription())) {
 
@@ -1498,7 +1498,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						documentFolder1.getId(), documentFolder2.getId())) {
 
 					return false;
@@ -1508,7 +1508,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 			}
 
 			if (Objects.equals("name", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						documentFolder1.getName(), documentFolder2.getName())) {
 
 					return false;
@@ -1520,7 +1520,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 			if (Objects.equals(
 					"numberOfDocumentFolders", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						documentFolder1.getNumberOfDocumentFolders(),
 						documentFolder2.getNumberOfDocumentFolders())) {
 
@@ -1533,7 +1533,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 			if (Objects.equals(
 					"numberOfDocuments", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						documentFolder1.getNumberOfDocuments(),
 						documentFolder2.getNumberOfDocuments())) {
 
@@ -1544,7 +1544,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 			}
 
 			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						documentFolder1.getViewableBy(),
 						documentFolder2.getViewableBy())) {
 

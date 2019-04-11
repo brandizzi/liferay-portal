@@ -528,7 +528,7 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals("contentUrl", additionalAssertFieldName)) {
+			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
 				if (knowledgeBaseAttachment.getContentUrl() == null) {
 					valid = false;
 				}
@@ -536,9 +536,7 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"encodingFormat", additionalAssertFieldName)) {
-
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
 				if (knowledgeBaseAttachment.getEncodingFormat() == null) {
 					valid = false;
 				}
@@ -546,9 +544,7 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"fileExtension", additionalAssertFieldName)) {
-
+			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
 				if (knowledgeBaseAttachment.getFileExtension() == null) {
 					valid = false;
 				}
@@ -556,7 +552,7 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("sizeInBytes", additionalAssertFieldName)) {
+			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
 				if (knowledgeBaseAttachment.getSizeInBytes() == null) {
 					valid = false;
 				}
@@ -564,7 +560,7 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("title", additionalAssertFieldName)) {
+			if (Objects.equals("title", additionalAssertFieldName)) {
 				if (knowledgeBaseAttachment.getTitle() == null) {
 					valid = false;
 				}
@@ -614,7 +610,7 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseAttachment1.getContentUrl(),
 						knowledgeBaseAttachment2.getContentUrl())) {
 
@@ -625,7 +621,7 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 			}
 
 			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseAttachment1.getEncodingFormat(),
 						knowledgeBaseAttachment2.getEncodingFormat())) {
 
@@ -636,7 +632,7 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 			}
 
 			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseAttachment1.getFileExtension(),
 						knowledgeBaseAttachment2.getFileExtension())) {
 
@@ -647,7 +643,7 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseAttachment1.getId(),
 						knowledgeBaseAttachment2.getId())) {
 
@@ -658,7 +654,7 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 			}
 
 			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseAttachment1.getSizeInBytes(),
 						knowledgeBaseAttachment2.getSizeInBytes())) {
 
@@ -669,7 +665,7 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 			}
 
 			if (Objects.equals("title", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseAttachment1.getTitle(),
 						knowledgeBaseAttachment2.getTitle())) {
 

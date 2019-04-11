@@ -399,7 +399,7 @@ public abstract class BaseFormStructureResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"availableLanguages", additionalAssertFieldName)) {
 
 				if (formStructure.getAvailableLanguages() == null) {
@@ -409,7 +409,7 @@ public abstract class BaseFormStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
+			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (formStructure.getCreator() == null) {
 					valid = false;
 				}
@@ -417,7 +417,7 @@ public abstract class BaseFormStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("description", additionalAssertFieldName)) {
+			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (formStructure.getDescription() == null) {
 					valid = false;
 				}
@@ -425,7 +425,7 @@ public abstract class BaseFormStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("formPages", additionalAssertFieldName)) {
+			if (Objects.equals("formPages", additionalAssertFieldName)) {
 				if (formStructure.getFormPages() == null) {
 					valid = false;
 				}
@@ -433,7 +433,7 @@ public abstract class BaseFormStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("name", additionalAssertFieldName)) {
+			if (Objects.equals("name", additionalAssertFieldName)) {
 				if (formStructure.getName() == null) {
 					valid = false;
 				}
@@ -441,7 +441,7 @@ public abstract class BaseFormStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("successPage", additionalAssertFieldName)) {
+			if (Objects.equals("successPage", additionalAssertFieldName)) {
 				if (formStructure.getSuccessPage() == null) {
 					valid = false;
 				}
@@ -497,7 +497,7 @@ public abstract class BaseFormStructureResourceTestCase {
 			if (Objects.equals(
 					"availableLanguages", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						formStructure1.getAvailableLanguages(),
 						formStructure2.getAvailableLanguages())) {
 
@@ -508,7 +508,7 @@ public abstract class BaseFormStructureResourceTestCase {
 			}
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						formStructure1.getCreator(),
 						formStructure2.getCreator())) {
 
@@ -519,7 +519,7 @@ public abstract class BaseFormStructureResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						formStructure1.getDateCreated(),
 						formStructure2.getDateCreated())) {
 
@@ -530,7 +530,7 @@ public abstract class BaseFormStructureResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						formStructure1.getDateModified(),
 						formStructure2.getDateModified())) {
 
@@ -541,7 +541,7 @@ public abstract class BaseFormStructureResourceTestCase {
 			}
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						formStructure1.getDescription(),
 						formStructure2.getDescription())) {
 
@@ -552,7 +552,7 @@ public abstract class BaseFormStructureResourceTestCase {
 			}
 
 			if (Objects.equals("formPages", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						formStructure1.getFormPages(),
 						formStructure2.getFormPages())) {
 
@@ -563,7 +563,7 @@ public abstract class BaseFormStructureResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						formStructure1.getId(), formStructure2.getId())) {
 
 					return false;
@@ -573,7 +573,7 @@ public abstract class BaseFormStructureResourceTestCase {
 			}
 
 			if (Objects.equals("name", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						formStructure1.getName(), formStructure2.getName())) {
 
 					return false;
@@ -583,7 +583,7 @@ public abstract class BaseFormStructureResourceTestCase {
 			}
 
 			if (Objects.equals("successPage", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						formStructure1.getSuccessPage(),
 						formStructure2.getSuccessPage())) {
 

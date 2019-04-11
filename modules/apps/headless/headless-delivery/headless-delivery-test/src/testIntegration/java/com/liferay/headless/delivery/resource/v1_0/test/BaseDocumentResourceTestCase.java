@@ -1431,9 +1431,7 @@ public abstract class BaseDocumentResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals(
-					"adaptedImages", additionalAssertFieldName)) {
-
+			if (Objects.equals("adaptedImages", additionalAssertFieldName)) {
 				if (document.getAdaptedImages() == null) {
 					valid = false;
 				}
@@ -1441,9 +1439,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"aggregateRating", additionalAssertFieldName)) {
-
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
 				if (document.getAggregateRating() == null) {
 					valid = false;
 				}
@@ -1451,7 +1447,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("contentUrl", additionalAssertFieldName)) {
+			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
 				if (document.getContentUrl() == null) {
 					valid = false;
 				}
@@ -1459,7 +1455,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
+			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (document.getCreator() == null) {
 					valid = false;
 				}
@@ -1467,7 +1463,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("description", additionalAssertFieldName)) {
+			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (document.getDescription() == null) {
 					valid = false;
 				}
@@ -1475,9 +1471,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"documentFolderId", additionalAssertFieldName)) {
-
+			if (Objects.equals("documentFolderId", additionalAssertFieldName)) {
 				if (document.getDocumentFolderId() == null) {
 					valid = false;
 				}
@@ -1485,9 +1479,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"encodingFormat", additionalAssertFieldName)) {
-
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
 				if (document.getEncodingFormat() == null) {
 					valid = false;
 				}
@@ -1495,9 +1487,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"fileExtension", additionalAssertFieldName)) {
-
+			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
 				if (document.getFileExtension() == null) {
 					valid = false;
 				}
@@ -1505,7 +1495,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("keywords", additionalAssertFieldName)) {
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
 				if (document.getKeywords() == null) {
 					valid = false;
 				}
@@ -1513,9 +1503,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"numberOfComments", additionalAssertFieldName)) {
-
+			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
 				if (document.getNumberOfComments() == null) {
 					valid = false;
 				}
@@ -1523,7 +1511,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("sizeInBytes", additionalAssertFieldName)) {
+			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
 				if (document.getSizeInBytes() == null) {
 					valid = false;
 				}
@@ -1531,7 +1519,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"taxonomyCategories", additionalAssertFieldName)) {
 
 				if (document.getTaxonomyCategories() == null) {
@@ -1541,7 +1529,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"taxonomyCategoryIds", additionalAssertFieldName)) {
 
 				if (document.getTaxonomyCategoryIds() == null) {
@@ -1551,7 +1539,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("title", additionalAssertFieldName)) {
+			if (Objects.equals("title", additionalAssertFieldName)) {
 				if (document.getTitle() == null) {
 					valid = false;
 				}
@@ -1559,7 +1547,7 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
 				if (document.getViewableBy() == null) {
 					valid = false;
 				}
@@ -1605,7 +1593,7 @@ public abstract class BaseDocumentResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("adaptedImages", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getAdaptedImages(),
 						document2.getAdaptedImages())) {
 
@@ -1616,7 +1604,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getAggregateRating(),
 						document2.getAggregateRating())) {
 
@@ -1627,7 +1615,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getContentUrl(), document2.getContentUrl())) {
 
 					return false;
@@ -1637,7 +1625,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getCreator(), document2.getCreator())) {
 
 					return false;
@@ -1647,7 +1635,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getDateCreated(),
 						document2.getDateCreated())) {
 
@@ -1658,7 +1646,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getDateModified(),
 						document2.getDateModified())) {
 
@@ -1669,7 +1657,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getDescription(),
 						document2.getDescription())) {
 
@@ -1680,7 +1668,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("documentFolderId", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getDocumentFolderId(),
 						document2.getDocumentFolderId())) {
 
@@ -1691,7 +1679,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getEncodingFormat(),
 						document2.getEncodingFormat())) {
 
@@ -1702,7 +1690,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getFileExtension(),
 						document2.getFileExtension())) {
 
@@ -1713,7 +1701,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(document1.getId(), document2.getId())) {
+				if (!Objects.deepEquals(document1.getId(), document2.getId())) {
 					return false;
 				}
 
@@ -1721,7 +1709,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("keywords", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getKeywords(), document2.getKeywords())) {
 
 					return false;
@@ -1731,7 +1719,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getNumberOfComments(),
 						document2.getNumberOfComments())) {
 
@@ -1742,7 +1730,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getSizeInBytes(),
 						document2.getSizeInBytes())) {
 
@@ -1755,7 +1743,7 @@ public abstract class BaseDocumentResourceTestCase {
 			if (Objects.equals(
 					"taxonomyCategories", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getTaxonomyCategories(),
 						document2.getTaxonomyCategories())) {
 
@@ -1768,7 +1756,7 @@ public abstract class BaseDocumentResourceTestCase {
 			if (Objects.equals(
 					"taxonomyCategoryIds", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getTaxonomyCategoryIds(),
 						document2.getTaxonomyCategoryIds())) {
 
@@ -1779,7 +1767,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("title", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getTitle(), document2.getTitle())) {
 
 					return false;
@@ -1789,7 +1777,7 @@ public abstract class BaseDocumentResourceTestCase {
 			}
 
 			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						document1.getViewableBy(), document2.getViewableBy())) {
 
 					return false;

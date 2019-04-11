@@ -2185,9 +2185,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals(
-					"aggregateRating", additionalAssertFieldName)) {
-
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getAggregateRating() == null) {
 					valid = false;
 				}
@@ -2195,7 +2193,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("articleBody", additionalAssertFieldName)) {
+			if (Objects.equals("articleBody", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getArticleBody() == null) {
 					valid = false;
 				}
@@ -2203,7 +2201,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
+			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getCreator() == null) {
 					valid = false;
 				}
@@ -2211,7 +2209,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("description", additionalAssertFieldName)) {
+			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getDescription() == null) {
 					valid = false;
 				}
@@ -2219,9 +2217,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"encodingFormat", additionalAssertFieldName)) {
-
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getEncodingFormat() == null) {
 					valid = false;
 				}
@@ -2229,9 +2225,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"friendlyUrlPath", additionalAssertFieldName)) {
-
+			if (Objects.equals("friendlyUrlPath", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getFriendlyUrlPath() == null) {
 					valid = false;
 				}
@@ -2239,7 +2233,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("keywords", additionalAssertFieldName)) {
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getKeywords() == null) {
 					valid = false;
 				}
@@ -2247,7 +2241,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"numberOfAttachments", additionalAssertFieldName)) {
 
 				if (knowledgeBaseArticle.getNumberOfAttachments() == null) {
@@ -2257,7 +2251,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"numberOfKnowledgeBaseArticles",
 					additionalAssertFieldName)) {
 
@@ -2270,7 +2264,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"parentKnowledgeBaseFolder", additionalAssertFieldName)) {
 
 				if (knowledgeBaseArticle.getParentKnowledgeBaseFolder() ==
@@ -2282,7 +2276,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"parentKnowledgeBaseFolderId", additionalAssertFieldName)) {
 
 				if (knowledgeBaseArticle.getParentKnowledgeBaseFolderId() ==
@@ -2294,7 +2288,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"taxonomyCategories", additionalAssertFieldName)) {
 
 				if (knowledgeBaseArticle.getTaxonomyCategories() == null) {
@@ -2304,7 +2298,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"taxonomyCategoryIds", additionalAssertFieldName)) {
 
 				if (knowledgeBaseArticle.getTaxonomyCategoryIds() == null) {
@@ -2314,7 +2308,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("title", additionalAssertFieldName)) {
+			if (Objects.equals("title", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getTitle() == null) {
 					valid = false;
 				}
@@ -2322,7 +2316,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getViewableBy() == null) {
 					valid = false;
 				}
@@ -2379,7 +2373,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getAggregateRating(),
 						knowledgeBaseArticle2.getAggregateRating())) {
 
@@ -2390,7 +2384,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			}
 
 			if (Objects.equals("articleBody", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getArticleBody(),
 						knowledgeBaseArticle2.getArticleBody())) {
 
@@ -2401,7 +2395,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			}
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getCreator(),
 						knowledgeBaseArticle2.getCreator())) {
 
@@ -2412,7 +2406,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getDateCreated(),
 						knowledgeBaseArticle2.getDateCreated())) {
 
@@ -2423,7 +2417,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getDateModified(),
 						knowledgeBaseArticle2.getDateModified())) {
 
@@ -2434,7 +2428,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			}
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getDescription(),
 						knowledgeBaseArticle2.getDescription())) {
 
@@ -2445,7 +2439,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			}
 
 			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getEncodingFormat(),
 						knowledgeBaseArticle2.getEncodingFormat())) {
 
@@ -2456,7 +2450,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			}
 
 			if (Objects.equals("friendlyUrlPath", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getFriendlyUrlPath(),
 						knowledgeBaseArticle2.getFriendlyUrlPath())) {
 
@@ -2467,7 +2461,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getId(),
 						knowledgeBaseArticle2.getId())) {
 
@@ -2478,7 +2472,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			}
 
 			if (Objects.equals("keywords", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getKeywords(),
 						knowledgeBaseArticle2.getKeywords())) {
 
@@ -2491,7 +2485,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			if (Objects.equals(
 					"numberOfAttachments", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getNumberOfAttachments(),
 						knowledgeBaseArticle2.getNumberOfAttachments())) {
 
@@ -2505,7 +2499,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 					"numberOfKnowledgeBaseArticles",
 					additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.
 							getNumberOfKnowledgeBaseArticles(),
 						knowledgeBaseArticle2.
@@ -2520,7 +2514,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			if (Objects.equals(
 					"parentKnowledgeBaseFolder", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getParentKnowledgeBaseFolder(),
 						knowledgeBaseArticle2.getParentKnowledgeBaseFolder())) {
 
@@ -2533,7 +2527,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			if (Objects.equals(
 					"parentKnowledgeBaseFolderId", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getParentKnowledgeBaseFolderId(),
 						knowledgeBaseArticle2.
 							getParentKnowledgeBaseFolderId())) {
@@ -2547,7 +2541,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			if (Objects.equals(
 					"taxonomyCategories", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getTaxonomyCategories(),
 						knowledgeBaseArticle2.getTaxonomyCategories())) {
 
@@ -2560,7 +2554,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			if (Objects.equals(
 					"taxonomyCategoryIds", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getTaxonomyCategoryIds(),
 						knowledgeBaseArticle2.getTaxonomyCategoryIds())) {
 
@@ -2571,7 +2565,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			}
 
 			if (Objects.equals("title", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getTitle(),
 						knowledgeBaseArticle2.getTitle())) {
 
@@ -2582,7 +2576,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 			}
 
 			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						knowledgeBaseArticle1.getViewableBy(),
 						knowledgeBaseArticle2.getViewableBy())) {
 

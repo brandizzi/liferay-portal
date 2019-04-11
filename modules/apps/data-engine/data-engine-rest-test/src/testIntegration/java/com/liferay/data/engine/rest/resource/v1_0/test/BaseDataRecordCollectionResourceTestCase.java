@@ -958,9 +958,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals(
-					"dataDefinitionId", additionalAssertFieldName)) {
-
+			if (Objects.equals("dataDefinitionId", additionalAssertFieldName)) {
 				if (dataRecordCollection.getDataDefinitionId() == null) {
 					valid = false;
 				}
@@ -968,7 +966,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("description", additionalAssertFieldName)) {
+			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (dataRecordCollection.getDescription() == null) {
 					valid = false;
 				}
@@ -976,7 +974,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("name", additionalAssertFieldName)) {
+			if (Objects.equals("name", additionalAssertFieldName)) {
 				if (dataRecordCollection.getName() == null) {
 					valid = false;
 				}
@@ -1026,7 +1024,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("dataDefinitionId", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataRecordCollection1.getDataDefinitionId(),
 						dataRecordCollection2.getDataDefinitionId())) {
 
@@ -1037,7 +1035,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			}
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataRecordCollection1.getDescription(),
 						dataRecordCollection2.getDescription())) {
 
@@ -1048,7 +1046,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataRecordCollection1.getId(),
 						dataRecordCollection2.getId())) {
 
@@ -1059,7 +1057,7 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 			}
 
 			if (Objects.equals("name", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						dataRecordCollection1.getName(),
 						dataRecordCollection2.getName())) {
 

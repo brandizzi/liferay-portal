@@ -1081,9 +1081,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals(
-					"aggregateRating", additionalAssertFieldName)) {
-
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
 				if (blogPosting.getAggregateRating() == null) {
 					valid = false;
 				}
@@ -1091,7 +1089,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"alternativeHeadline", additionalAssertFieldName)) {
 
 				if (blogPosting.getAlternativeHeadline() == null) {
@@ -1101,7 +1099,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("articleBody", additionalAssertFieldName)) {
+			if (Objects.equals("articleBody", additionalAssertFieldName)) {
 				if (blogPosting.getArticleBody() == null) {
 					valid = false;
 				}
@@ -1109,7 +1107,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
+			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (blogPosting.getCreator() == null) {
 					valid = false;
 				}
@@ -1117,9 +1115,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"datePublished", additionalAssertFieldName)) {
-
+			if (Objects.equals("datePublished", additionalAssertFieldName)) {
 				if (blogPosting.getDatePublished() == null) {
 					valid = false;
 				}
@@ -1127,7 +1123,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("description", additionalAssertFieldName)) {
+			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (blogPosting.getDescription() == null) {
 					valid = false;
 				}
@@ -1135,9 +1131,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"encodingFormat", additionalAssertFieldName)) {
-
+			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
 				if (blogPosting.getEncodingFormat() == null) {
 					valid = false;
 				}
@@ -1145,9 +1139,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"friendlyUrlPath", additionalAssertFieldName)) {
-
+			if (Objects.equals("friendlyUrlPath", additionalAssertFieldName)) {
 				if (blogPosting.getFriendlyUrlPath() == null) {
 					valid = false;
 				}
@@ -1155,7 +1147,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("headline", additionalAssertFieldName)) {
+			if (Objects.equals("headline", additionalAssertFieldName)) {
 				if (blogPosting.getHeadline() == null) {
 					valid = false;
 				}
@@ -1163,7 +1155,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("image", additionalAssertFieldName)) {
+			if (Objects.equals("image", additionalAssertFieldName)) {
 				if (blogPosting.getImage() == null) {
 					valid = false;
 				}
@@ -1171,7 +1163,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("keywords", additionalAssertFieldName)) {
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
 				if (blogPosting.getKeywords() == null) {
 					valid = false;
 				}
@@ -1179,9 +1171,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"numberOfComments", additionalAssertFieldName)) {
-
+			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
 				if (blogPosting.getNumberOfComments() == null) {
 					valid = false;
 				}
@@ -1189,7 +1179,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"taxonomyCategories", additionalAssertFieldName)) {
 
 				if (blogPosting.getTaxonomyCategories() == null) {
@@ -1199,7 +1189,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"taxonomyCategoryIds", additionalAssertFieldName)) {
 
 				if (blogPosting.getTaxonomyCategoryIds() == null) {
@@ -1209,7 +1199,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
 				if (blogPosting.getViewableBy() == null) {
 					valid = false;
 				}
@@ -1263,7 +1253,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getAggregateRating(),
 						blogPosting2.getAggregateRating())) {
 
@@ -1276,7 +1266,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			if (Objects.equals(
 					"alternativeHeadline", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getAlternativeHeadline(),
 						blogPosting2.getAlternativeHeadline())) {
 
@@ -1287,7 +1277,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("articleBody", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getArticleBody(),
 						blogPosting2.getArticleBody())) {
 
@@ -1298,7 +1288,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getCreator(), blogPosting2.getCreator())) {
 
 					return false;
@@ -1308,7 +1298,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getDateCreated(),
 						blogPosting2.getDateCreated())) {
 
@@ -1319,7 +1309,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getDateModified(),
 						blogPosting2.getDateModified())) {
 
@@ -1330,7 +1320,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("datePublished", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getDatePublished(),
 						blogPosting2.getDatePublished())) {
 
@@ -1341,7 +1331,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getDescription(),
 						blogPosting2.getDescription())) {
 
@@ -1352,7 +1342,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getEncodingFormat(),
 						blogPosting2.getEncodingFormat())) {
 
@@ -1363,7 +1353,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("friendlyUrlPath", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getFriendlyUrlPath(),
 						blogPosting2.getFriendlyUrlPath())) {
 
@@ -1374,7 +1364,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("headline", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getHeadline(),
 						blogPosting2.getHeadline())) {
 
@@ -1385,7 +1375,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getId(), blogPosting2.getId())) {
 
 					return false;
@@ -1395,7 +1385,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("image", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getImage(), blogPosting2.getImage())) {
 
 					return false;
@@ -1405,7 +1395,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("keywords", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getKeywords(),
 						blogPosting2.getKeywords())) {
 
@@ -1416,7 +1406,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getNumberOfComments(),
 						blogPosting2.getNumberOfComments())) {
 
@@ -1429,7 +1419,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			if (Objects.equals(
 					"taxonomyCategories", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getTaxonomyCategories(),
 						blogPosting2.getTaxonomyCategories())) {
 
@@ -1442,7 +1432,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			if (Objects.equals(
 					"taxonomyCategoryIds", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getTaxonomyCategoryIds(),
 						blogPosting2.getTaxonomyCategoryIds())) {
 
@@ -1453,7 +1443,7 @@ public abstract class BaseBlogPostingResourceTestCase {
 			}
 
 			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						blogPosting1.getViewableBy(),
 						blogPosting2.getViewableBy())) {
 

@@ -1977,7 +1977,7 @@ public abstract class BaseCommentResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
+			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (comment.getCreator() == null) {
 					valid = false;
 				}
@@ -1985,9 +1985,7 @@ public abstract class BaseCommentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"numberOfComments", additionalAssertFieldName)) {
-
+			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
 				if (comment.getNumberOfComments() == null) {
 					valid = false;
 				}
@@ -1995,7 +1993,7 @@ public abstract class BaseCommentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("text", additionalAssertFieldName)) {
+			if (Objects.equals("text", additionalAssertFieldName)) {
 				if (comment.getText() == null) {
 					valid = false;
 				}
@@ -2041,7 +2039,7 @@ public abstract class BaseCommentResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						comment1.getCreator(), comment2.getCreator())) {
 
 					return false;
@@ -2051,7 +2049,7 @@ public abstract class BaseCommentResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						comment1.getDateCreated(), comment2.getDateCreated())) {
 
 					return false;
@@ -2061,7 +2059,7 @@ public abstract class BaseCommentResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						comment1.getDateModified(),
 						comment2.getDateModified())) {
 
@@ -2072,7 +2070,7 @@ public abstract class BaseCommentResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(comment1.getId(), comment2.getId())) {
+				if (!Objects.deepEquals(comment1.getId(), comment2.getId())) {
 					return false;
 				}
 
@@ -2080,7 +2078,7 @@ public abstract class BaseCommentResourceTestCase {
 			}
 
 			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						comment1.getNumberOfComments(),
 						comment2.getNumberOfComments())) {
 
@@ -2091,7 +2089,9 @@ public abstract class BaseCommentResourceTestCase {
 			}
 
 			if (Objects.equals("text", additionalAssertFieldName)) {
-				if (!Objects.equals(comment1.getText(), comment2.getText())) {
+				if (!Objects.deepEquals(
+						comment1.getText(), comment2.getText())) {
+
 					return false;
 				}
 

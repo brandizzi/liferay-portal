@@ -956,7 +956,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals("assetTypes", additionalAssertFieldName)) {
+			if (Objects.equals("assetTypes", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getAssetTypes() == null) {
 					valid = false;
 				}
@@ -964,7 +964,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"availableLanguages", additionalAssertFieldName)) {
 
 				if (taxonomyVocabulary.getAvailableLanguages() == null) {
@@ -974,7 +974,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
+			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getCreator() == null) {
 					valid = false;
 				}
@@ -982,7 +982,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("description", additionalAssertFieldName)) {
+			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getDescription() == null) {
 					valid = false;
 				}
@@ -990,7 +990,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("name", additionalAssertFieldName)) {
+			if (Objects.equals("name", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getName() == null) {
 					valid = false;
 				}
@@ -998,7 +998,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"numberOfTaxonomyCategories", additionalAssertFieldName)) {
 
 				if (taxonomyVocabulary.getNumberOfTaxonomyCategories() ==
@@ -1010,7 +1010,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getViewableBy() == null) {
 					valid = false;
 				}
@@ -1066,7 +1066,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("assetTypes", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						taxonomyVocabulary1.getAssetTypes(),
 						taxonomyVocabulary2.getAssetTypes())) {
 
@@ -1079,7 +1079,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			if (Objects.equals(
 					"availableLanguages", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						taxonomyVocabulary1.getAvailableLanguages(),
 						taxonomyVocabulary2.getAvailableLanguages())) {
 
@@ -1090,7 +1090,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			}
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						taxonomyVocabulary1.getCreator(),
 						taxonomyVocabulary2.getCreator())) {
 
@@ -1101,7 +1101,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						taxonomyVocabulary1.getDateCreated(),
 						taxonomyVocabulary2.getDateCreated())) {
 
@@ -1112,7 +1112,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						taxonomyVocabulary1.getDateModified(),
 						taxonomyVocabulary2.getDateModified())) {
 
@@ -1123,7 +1123,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			}
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						taxonomyVocabulary1.getDescription(),
 						taxonomyVocabulary2.getDescription())) {
 
@@ -1134,7 +1134,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						taxonomyVocabulary1.getId(),
 						taxonomyVocabulary2.getId())) {
 
@@ -1145,7 +1145,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			}
 
 			if (Objects.equals("name", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						taxonomyVocabulary1.getName(),
 						taxonomyVocabulary2.getName())) {
 
@@ -1158,7 +1158,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			if (Objects.equals(
 					"numberOfTaxonomyCategories", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						taxonomyVocabulary1.getNumberOfTaxonomyCategories(),
 						taxonomyVocabulary2.getNumberOfTaxonomyCategories())) {
 
@@ -1169,7 +1169,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 			}
 
 			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						taxonomyVocabulary1.getViewableBy(),
 						taxonomyVocabulary2.getViewableBy())) {
 

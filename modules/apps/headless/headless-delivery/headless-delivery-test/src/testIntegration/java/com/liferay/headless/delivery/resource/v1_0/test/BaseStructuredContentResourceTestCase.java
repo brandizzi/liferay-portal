@@ -2228,9 +2228,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.deepEquals(
-					"aggregateRating", additionalAssertFieldName)) {
-
+			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
 				if (structuredContent.getAggregateRating() == null) {
 					valid = false;
 				}
@@ -2238,7 +2236,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"availableLanguages", additionalAssertFieldName)) {
 
 				if (structuredContent.getAvailableLanguages() == null) {
@@ -2248,9 +2246,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"contentFields", additionalAssertFieldName)) {
-
+			if (Objects.equals("contentFields", additionalAssertFieldName)) {
 				if (structuredContent.getContentFields() == null) {
 					valid = false;
 				}
@@ -2258,7 +2254,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"contentStructureId", additionalAssertFieldName)) {
 
 				if (structuredContent.getContentStructureId() == null) {
@@ -2268,7 +2264,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
+			if (Objects.equals("creator", additionalAssertFieldName)) {
 				if (structuredContent.getCreator() == null) {
 					valid = false;
 				}
@@ -2276,9 +2272,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"datePublished", additionalAssertFieldName)) {
-
+			if (Objects.equals("datePublished", additionalAssertFieldName)) {
 				if (structuredContent.getDatePublished() == null) {
 					valid = false;
 				}
@@ -2286,7 +2280,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("description", additionalAssertFieldName)) {
+			if (Objects.equals("description", additionalAssertFieldName)) {
 				if (structuredContent.getDescription() == null) {
 					valid = false;
 				}
@@ -2294,9 +2288,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"friendlyUrlPath", additionalAssertFieldName)) {
-
+			if (Objects.equals("friendlyUrlPath", additionalAssertFieldName)) {
 				if (structuredContent.getFriendlyUrlPath() == null) {
 					valid = false;
 				}
@@ -2304,7 +2296,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("key", additionalAssertFieldName)) {
+			if (Objects.equals("key", additionalAssertFieldName)) {
 				if (structuredContent.getKey() == null) {
 					valid = false;
 				}
@@ -2312,7 +2304,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("keywords", additionalAssertFieldName)) {
+			if (Objects.equals("keywords", additionalAssertFieldName)) {
 				if (structuredContent.getKeywords() == null) {
 					valid = false;
 				}
@@ -2320,7 +2312,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("lastReviewed", additionalAssertFieldName)) {
+			if (Objects.equals("lastReviewed", additionalAssertFieldName)) {
 				if (structuredContent.getLastReviewed() == null) {
 					valid = false;
 				}
@@ -2328,9 +2320,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"numberOfComments", additionalAssertFieldName)) {
-
+			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
 				if (structuredContent.getNumberOfComments() == null) {
 					valid = false;
 				}
@@ -2338,9 +2328,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
-					"renderedContents", additionalAssertFieldName)) {
-
+			if (Objects.equals("renderedContents", additionalAssertFieldName)) {
 				if (structuredContent.getRenderedContents() == null) {
 					valid = false;
 				}
@@ -2348,7 +2336,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"taxonomyCategories", additionalAssertFieldName)) {
 
 				if (structuredContent.getTaxonomyCategories() == null) {
@@ -2358,7 +2346,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals(
+			if (Objects.equals(
 					"taxonomyCategoryIds", additionalAssertFieldName)) {
 
 				if (structuredContent.getTaxonomyCategoryIds() == null) {
@@ -2368,7 +2356,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("title", additionalAssertFieldName)) {
+			if (Objects.equals("title", additionalAssertFieldName)) {
 				if (structuredContent.getTitle() == null) {
 					valid = false;
 				}
@@ -2376,7 +2364,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("uuid", additionalAssertFieldName)) {
+			if (Objects.equals("uuid", additionalAssertFieldName)) {
 				if (structuredContent.getUuid() == null) {
 					valid = false;
 				}
@@ -2384,7 +2372,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
 				if (structuredContent.getViewableBy() == null) {
 					valid = false;
 				}
@@ -2440,7 +2428,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 				getAdditionalAssertFieldNames()) {
 
 			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getAggregateRating(),
 						structuredContent2.getAggregateRating())) {
 
@@ -2453,7 +2441,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			if (Objects.equals(
 					"availableLanguages", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getAvailableLanguages(),
 						structuredContent2.getAvailableLanguages())) {
 
@@ -2464,7 +2452,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("contentFields", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getContentFields(),
 						structuredContent2.getContentFields())) {
 
@@ -2477,7 +2465,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			if (Objects.equals(
 					"contentStructureId", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getContentStructureId(),
 						structuredContent2.getContentStructureId())) {
 
@@ -2488,7 +2476,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("creator", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getCreator(),
 						structuredContent2.getCreator())) {
 
@@ -2499,7 +2487,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("dateCreated", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getDateCreated(),
 						structuredContent2.getDateCreated())) {
 
@@ -2510,7 +2498,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("dateModified", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getDateModified(),
 						structuredContent2.getDateModified())) {
 
@@ -2521,7 +2509,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("datePublished", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getDatePublished(),
 						structuredContent2.getDatePublished())) {
 
@@ -2532,7 +2520,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("description", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getDescription(),
 						structuredContent2.getDescription())) {
 
@@ -2543,7 +2531,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("friendlyUrlPath", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getFriendlyUrlPath(),
 						structuredContent2.getFriendlyUrlPath())) {
 
@@ -2554,7 +2542,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("id", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getId(),
 						structuredContent2.getId())) {
 
@@ -2565,7 +2553,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("key", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getKey(),
 						structuredContent2.getKey())) {
 
@@ -2576,7 +2564,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("keywords", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getKeywords(),
 						structuredContent2.getKeywords())) {
 
@@ -2587,7 +2575,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("lastReviewed", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getLastReviewed(),
 						structuredContent2.getLastReviewed())) {
 
@@ -2598,7 +2586,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getNumberOfComments(),
 						structuredContent2.getNumberOfComments())) {
 
@@ -2609,7 +2597,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("renderedContents", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getRenderedContents(),
 						structuredContent2.getRenderedContents())) {
 
@@ -2622,7 +2610,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			if (Objects.equals(
 					"taxonomyCategories", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getTaxonomyCategories(),
 						structuredContent2.getTaxonomyCategories())) {
 
@@ -2635,7 +2623,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			if (Objects.equals(
 					"taxonomyCategoryIds", additionalAssertFieldName)) {
 
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getTaxonomyCategoryIds(),
 						structuredContent2.getTaxonomyCategoryIds())) {
 
@@ -2646,7 +2634,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("title", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getTitle(),
 						structuredContent2.getTitle())) {
 
@@ -2657,7 +2645,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("uuid", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getUuid(),
 						structuredContent2.getUuid())) {
 
@@ -2668,7 +2656,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 			}
 
 			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
-				if (!Objects.equals(
+				if (!Objects.deepEquals(
 						structuredContent1.getViewableBy(),
 						structuredContent2.getViewableBy())) {
 
