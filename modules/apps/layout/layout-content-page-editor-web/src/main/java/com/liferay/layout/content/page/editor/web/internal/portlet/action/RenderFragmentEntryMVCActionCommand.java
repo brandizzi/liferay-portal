@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -80,6 +81,12 @@ public class RenderFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 				_portal.getHttpServletResponse(actionResponse));
 
 			jsonObject.put("content", content);
+
+			if (SessionErrors.contains(
+					actionRequest, "fragmentEntryInvalidContent")) {
+
+				jsonObject.put("error", true);
+			}
 		}
 
 		JSONPortletResponseUtil.writeJSON(

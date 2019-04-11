@@ -26,6 +26,7 @@ import com.liferay.osgi.util.ServiceTrackerFactory;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -163,6 +164,8 @@ public class FragmentEntryRenderUtil {
 				defaultFragmentRendererContext, request, response);
 		}
 		catch (IOException ioe) {
+			SessionErrors.add(request, "fragmentEntryInvalidContent");
+
 			StringBundler sb = new StringBundler(3);
 
 			sb.append("<div class=\"alert alert-danger m-2\">");

@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -127,6 +128,13 @@ public class AddPortletMVCActionCommand extends BaseMVCActionCommand {
 
 			jsonObject.put(
 				"editableValues", fragmentEntryLink.getEditableValues());
+
+			if (SessionErrors.contains(
+					actionRequest, "fragmentEntryInvalidContent")) {
+
+				jsonObject.put("error", true);
+			}
+
 			jsonObject.put(
 				"fragmentEntryLinkId",
 				fragmentEntryLink.getFragmentEntryLinkId());

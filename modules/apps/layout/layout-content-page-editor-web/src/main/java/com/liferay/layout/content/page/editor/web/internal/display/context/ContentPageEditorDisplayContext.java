@@ -67,6 +67,7 @@ import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.HttpUtil;
@@ -965,10 +966,20 @@ public class ContentPageEditorDisplayContext {
 					JSONFactoryUtil.createJSONObject(
 						fragmentEntryLink.getEditableValues());
 
+				boolean error = false;
+
+				if (SessionErrors.contains(
+						request, "fragmentEntryInvalidContent")) {
+
+					error = true;
+				}
+
 				soyContext.putHTML(
 					"content", content
 				).put(
 					"editableValues", editableValuesJSONObject
+				).put(
+					"error", error
 				).put(
 					"fragmentEntryLinkId",
 					String.valueOf(fragmentEntryLink.getFragmentEntryLinkId())
