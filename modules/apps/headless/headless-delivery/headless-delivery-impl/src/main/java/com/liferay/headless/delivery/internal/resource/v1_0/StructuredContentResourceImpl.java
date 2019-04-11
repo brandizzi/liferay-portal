@@ -331,12 +331,13 @@ public class StructuredContentResourceImpl
 		}
 
 		DDMStructure ddmStructure = journalArticle.getDDMStructure();
-		LocalDateTime localDateTime = LocalDateTimeUtil.toLocalDateTime(
-			structuredContent.getDatePublished(),
-			journalArticle.getDisplayDate());
 
 		_validateContentFields(
 			structuredContent.getContentFields(), ddmStructure);
+
+		LocalDateTime localDateTime = LocalDateTimeUtil.toLocalDateTime(
+			structuredContent.getDatePublished(),
+			journalArticle.getDisplayDate());
 
 		return _toStructuredContent(
 			_journalArticleService.updateArticle(
@@ -416,12 +417,13 @@ public class StructuredContentResourceImpl
 			structuredContentId);
 
 		DDMStructure ddmStructure = journalArticle.getDDMStructure();
-		LocalDateTime localDateTime = LocalDateTimeUtil.toLocalDateTime(
-			structuredContent.getDatePublished(),
-			journalArticle.getDisplayDate());
 
 		_validateContentFields(
 			structuredContent.getContentFields(), ddmStructure);
+
+		LocalDateTime localDateTime = LocalDateTimeUtil.toLocalDateTime(
+			structuredContent.getDatePublished(),
+			journalArticle.getDisplayDate());
 
 		return _toStructuredContent(
 			_journalArticleService.updateArticle(
