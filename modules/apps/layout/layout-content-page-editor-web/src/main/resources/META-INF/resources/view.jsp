@@ -17,9 +17,9 @@
 <%@ include file="/init.jsp" %>
 
 <%
-ContentPageEditorDisplayContext contentPageEditorDisplayContext = (ContentPageEditorDisplayContext)request.getAttribute(ContentPageEditorWebKeys.LIFERAY_SHARED_CONTENT_PAGE_EDITOR_DISPLAY_CONTEXT);
+String portletNamespace = PortalUtil.getPortletNamespace(ContentPageEditorPortletKeys.CONTENT_PAGE_EDITOR_PORTLET);
 
-String namespace = PortalUtil.getPortletNamespace(ContentPageEditorPortletKeys.CONTENT_PAGE_EDITOR_PORTLET);
+ContentPageEditorDisplayContext contentPageEditorDisplayContext = (ContentPageEditorDisplayContext)request.getAttribute(ContentPageEditorWebKeys.LIFERAY_SHARED_CONTENT_PAGE_EDITOR_DISPLAY_CONTEXT);
 %>
 
 <liferay-editor:resources
@@ -31,7 +31,7 @@ String namespace = PortalUtil.getPortletNamespace(ContentPageEditorPortletKeys.C
 </liferay-util:html-top>
 
 <soy:component-renderer
-	componentId='<%= namespace + "fragmentsEditor" %>'
+	componentId='<%= portletNamespace + "fragmentsEditor" %>'
 	context="<%= contentPageEditorDisplayContext.getEditorSoyContext() %>"
 	module="js/FragmentsEditor.es"
 	templateNamespace="com.liferay.layout.content.page.editor.web.FragmentsEditor.render"
@@ -57,17 +57,17 @@ JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
 		<%= jsonSerializer.serializeDeep(contentPageEditorDisplayContext.getEditorSoyContext()) %>,
 		ReducersModule.reducers,
 		[
-			'<%= namespace + "disabledAreaMaskWrapper" %>',
-			'<%= namespace + "editModeWrapper" %>',
-			'<%= namespace + "fragmentsEditor" %>',
-			'<%= namespace + "sidebar" %>',
-			'<%= namespace + "toolbar" %>'
+			'<%= portletNamespace + "disabledAreaMaskWrapper" %>',
+			'<%= portletNamespace + "editModeWrapper" %>',
+			'<%= portletNamespace + "fragmentsEditor" %>',
+			'<%= portletNamespace + "sidebar" %>',
+			'<%= portletNamespace + "toolbar" %>'
 		]
 	);
 
 	var editModeComponents = {
-		'<%= namespace + "disabledAreaMaskWrapper" %>': DisabledAreaMaskModule.default,
-		'<%= namespace + "editModeWrapper" %>': EditModeWrapperModule.default
+		'<%= portletNamespace + "disabledAreaMaskWrapper" %>': DisabledAreaMaskModule.default,
+		'<%= portletNamespace + "editModeWrapper" %>': EditModeWrapperModule.default
 	};
 
 	Object.keys(editModeComponents).forEach(
