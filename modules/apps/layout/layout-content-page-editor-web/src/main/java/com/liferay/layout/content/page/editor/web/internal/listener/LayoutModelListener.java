@@ -57,14 +57,15 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 
 		_reindexLayout(layout);
 
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			_getLayoutPageTemplateEntry(layout);
+
 		if (ExportImportThreadLocal.isImportInProcess() ||
-			ExportImportThreadLocal.isStagingInProcess()) {
+			ExportImportThreadLocal.isStagingInProcess() ||
+			layoutPageTemplateEntry == null) {
 
 			return;
 		}
-
-		LayoutPageTemplateEntry layoutPageTemplateEntry =
-			_getLayoutPageTemplateEntry(layout);
 
 		TransactionCommitCallbackUtil.registerCallback(
 			() -> _copyStructure(layoutPageTemplateEntry, layout));
