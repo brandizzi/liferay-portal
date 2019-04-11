@@ -570,7 +570,9 @@ public class ContentPageEditorDisplayContext {
 
 		String portletId = _getPortletId(content);
 
-		if (Validator.isNull(portletId)) {
+		PortletConfig portletConfig = PortletConfigFactoryUtil.get(portletId);
+
+		if (portletConfig == null) {
 			return soyContext;
 		}
 
