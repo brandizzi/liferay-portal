@@ -50,7 +50,6 @@ import org.junit.runner.RunWith;
 /**
  * @author Javier Gamarra
  */
-@Ignore
 @RunWith(Arquillian.class)
 public class UserAccountResourceTest extends BaseUserAccountResourceTestCase {
 
@@ -105,10 +104,8 @@ public class UserAccountResourceTest extends BaseUserAccountResourceTestCase {
 	public void testGetUserAccountsPage() throws Exception {
 		UserAccount userAccount1 = testGetUserAccountsPage_addUserAccount(
 			randomUserAccount());
-
 		UserAccount userAccount2 = testGetUserAccountsPage_addUserAccount(
 			randomUserAccount());
-
 		UserAccount userAccount3 = invokeGetUserAccount(_testUser.getUserId());
 
 		Page<UserAccount> page = invokeGetUserAccountsPage(
