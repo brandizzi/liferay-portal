@@ -225,9 +225,9 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 					FragmentEntryLink newFragmentEntryLink =
 						(FragmentEntryLink)fragmentEntryLink.clone();
 
+					newFragmentEntryLink.setUuid(serviceContext.getUuid());
 					newFragmentEntryLink.setFragmentEntryLinkId(
 						_counterLocalService.increment());
-					newFragmentEntryLink.setUuid(serviceContext.getUuid());
 					newFragmentEntryLink.setUserId(targetLayout.getUserId());
 					newFragmentEntryLink.setUserName(
 						targetLayout.getUserName());
