@@ -20,7 +20,6 @@ import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributor;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
-import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
@@ -299,10 +298,6 @@ public class ContentPageEditorDisplayContext {
 		);
 
 		return soyContext;
-	}
-
-	public boolean hasErrors() {
-		return _errors;
 	}
 
 	protected String getFragmentEntryActionURL(String action) {
@@ -962,39 +957,9 @@ public class ContentPageEditorDisplayContext {
 				fragmentRendererContext.setSegmentsExperienceIds(
 					segmentsExperienceIds);
 
-				String content = StringPool.BLANK;
-
-				try {
-					content = _fragmentRendererController.render(
-						fragmentRendererContext, request,
-						PortalUtil.getHttpServletResponse(_renderResponse));
-				}
-				catch (IOException ioe) {
-					Element element = new Element("div");
-
-					element.attr("class", "alert alert-danger m-2");
-
-					Throwable cause = ioe.getCause();
-
-					String errorMessage = "an-unexpected-error-occurred";
-
-					if (cause instanceof FragmentEntryContentException) {
-						FragmentEntryContentException fece =
-							(FragmentEntryContentException)cause;
-
-						errorMessage = fece.getLocalizedMessage();
-					}
-
-					element.text(
-						LanguageUtil.get(
-							themeDisplay.getLocale(), errorMessage));
-
-					content = element.outerHtml();
-
-					soyContext.put("error", true);
-
-					_errors = true;
-				}
+				String content = _fragmentRendererController.render(
+					fragmentRendererContext, request,
+					PortalUtil.getHttpServletResponse(_renderResponse));
 
 				JSONObject editableValuesJSONObject =
 					JSONFactoryUtil.createJSONObject(
@@ -1015,6 +980,9 @@ public class ContentPageEditorDisplayContext {
 					String.valueOf(fragmentEntryLink.getFragmentEntryLinkId()),
 					soyContext);
 			}
+		}
+		catch (IOException ioe) {
+			throw new PortalException(ioe);
 		}
 		finally {
 			themeDisplay.setIsolated(isolated);
@@ -1132,7 +1100,6 @@ public class ContentPageEditorDisplayContext {
 
 	private List<SoyContext> _assetBrowserLinksSoyContexts;
 	private Map<String, Object> _defaultConfigurations;
-	private boolean _errors;
 	private final FragmentCollectionContributorTracker
 		_fragmentCollectionContributorTracker;
 	private final FragmentRendererController _fragmentRendererController;

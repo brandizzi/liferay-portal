@@ -25,6 +25,7 @@ import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.osgi.util.ServiceTrackerFactory;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -162,7 +163,26 @@ public class FragmentEntryRenderUtil {
 				defaultFragmentRendererContext, request, response);
 		}
 		catch (IOException ioe) {
-			throw new FragmentEntryContentException(ioe);
+			StringBundler sb = new StringBundler(3);
+
+			sb.append("<div class=\"alert alert-danger m-2\">");
+
+			String errorMessage = "an-unexpected-error-occurred";
+
+			Throwable cause = ioe.getCause();
+
+			if (cause instanceof FragmentEntryContentException) {
+				FragmentEntryContentException fece =
+					(FragmentEntryContentException)cause;
+
+				errorMessage = fece.getLocalizedMessage();
+			}
+
+			sb.append(LanguageUtil.get(locale, errorMessage));
+
+			sb.append("</div>");
+
+			return sb.toString();
 		}
 	}
 
