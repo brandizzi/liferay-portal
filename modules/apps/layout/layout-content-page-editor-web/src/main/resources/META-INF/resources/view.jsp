@@ -18,6 +18,8 @@
 
 <%
 ContentPageEditorDisplayContext contentPageEditorDisplayContext = (ContentPageEditorDisplayContext)request.getAttribute(ContentPageEditorWebKeys.LIFERAY_SHARED_CONTENT_PAGE_EDITOR_DISPLAY_CONTEXT);
+
+String namespace = PortalUtil.getPortletNamespace(ContentPageEditorPortletKeys.CONTENT_PAGE_EDITOR_PORTLET);
 %>
 
 <liferay-editor:resources
@@ -29,7 +31,7 @@ ContentPageEditorDisplayContext contentPageEditorDisplayContext = (ContentPageEd
 </liferay-util:html-top>
 
 <soy:component-renderer
-	componentId='<%= renderResponse.getNamespace() + "fragmentsEditor" %>'
+	componentId='<%= namespace + "fragmentsEditor" %>'
 	context="<%= contentPageEditorDisplayContext.getEditorSoyContext() %>"
 	module="js/FragmentsEditor.es"
 	templateNamespace="com.liferay.layout.content.page.editor.web.FragmentsEditor.render"
@@ -55,17 +57,17 @@ JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
 		<%= jsonSerializer.serializeDeep(contentPageEditorDisplayContext.getEditorSoyContext()) %>,
 		ReducersModule.reducers,
 		[
-			'<portlet:namespace />disabledAreaMaskWrapper',
-			'<portlet:namespace />editModeWrapper',
-			'<portlet:namespace />fragmentsEditor',
-			'<portlet:namespace />sidebar',
-			'<portlet:namespace />toolbar'
+			'<%= namespace + "disabledAreaMaskWrapper" %>',
+			'<%= namespace + "editModeWrapper" %>',
+			'<%= namespace + "fragmentsEditor" %>',
+			'<%= namespace + "sidebar" %>',
+			'<%= namespace + "toolbar" %>'
 		]
 	);
 
 	var editModeComponents = {
-		'<portlet:namespace />disabledAreaMaskWrapper': DisabledAreaMaskModule.default,
-		'<portlet:namespace />editModeWrapper': EditModeWrapperModule.default
+		'<%= namespace + "disabledAreaMaskWrapper" %>': DisabledAreaMaskModule.default,
+		'<%= namespace + "editModeWrapper" %>': EditModeWrapperModule.default
 	};
 
 	Object.keys(editModeComponents).forEach(
