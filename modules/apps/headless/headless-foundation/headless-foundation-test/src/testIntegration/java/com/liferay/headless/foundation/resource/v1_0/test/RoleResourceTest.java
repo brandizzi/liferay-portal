@@ -44,23 +44,8 @@ public class RoleResourceTest extends BaseRoleResourceTestCase {
 	}
 
 	@Override
-	protected void assertValid(Role role) {
-		boolean valid = false;
-
-		if ((role.getId() != null) && (role.getName() != null)) {
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(Role role1, Role role2) {
-		if (Objects.equals(role1.getName(), role2.getName())) {
-			return true;
-		}
-
-		return false;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"name"};
 	}
 
 	@Override

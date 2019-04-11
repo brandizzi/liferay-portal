@@ -40,19 +40,4 @@ public class KeywordResourceTest extends BaseKeywordResourceTestCase {
 		return keyword;
 	}
 
-	@Override
-	protected Keyword testGetSiteKeywordsPage_addKeyword(
-			Long siteId, Keyword keyword)
-		throws Exception {
-
-		return invokePostSiteKeyword(siteId, keyword);
-	}
-
-	@Override
-	protected Keyword testPostSiteKeyword_addKeyword(Keyword keyword)
-		throws Exception {
-
-		return invokePostSiteKeyword(testGroup.getGroupId(), keyword);
-	}
-
 }
