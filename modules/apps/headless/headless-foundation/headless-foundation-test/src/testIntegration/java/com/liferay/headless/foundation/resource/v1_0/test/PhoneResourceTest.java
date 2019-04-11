@@ -77,18 +77,14 @@ public class PhoneResourceTest extends BasePhoneResourceTestCase {
 	}
 
 	@Override
-	protected Long testGetOrganizationPhonesPage_getOrganizationId()
-		throws Exception {
-
+	protected Long testGetOrganizationPhonesPage_getOrganizationId() {
 		return _organization.getOrganizationId();
 	}
 
 	@Override
 	protected Phone testGetPhone_addPhone() throws Exception {
-		Phone phone = randomPhone();
-
 		return _addPhone(
-			phone, Contact.class.getName(), _user.getContactId(),
+			randomPhone(), Contact.class.getName(), _user.getContactId(),
 			ListTypeConstants.CONTACT_PHONE);
 	}
 
@@ -103,9 +99,7 @@ public class PhoneResourceTest extends BasePhoneResourceTestCase {
 	}
 
 	@Override
-	protected Long testGetUserAccountPhonesPage_getUserAccountId()
-		throws Exception {
-
+	protected Long testGetUserAccountPhonesPage_getUserAccountId() {
 		return _user.getUserId();
 	}
 

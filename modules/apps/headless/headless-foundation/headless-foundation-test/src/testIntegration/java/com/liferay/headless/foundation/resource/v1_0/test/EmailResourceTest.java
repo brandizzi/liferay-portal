@@ -67,10 +67,8 @@ public class EmailResourceTest extends BaseEmailResourceTestCase {
 
 	@Override
 	protected Email testGetEmail_addEmail() throws Exception {
-		Email email = randomEmail();
-
 		return _addEmailAddress(
-			email, Contact.class.getName(), _user.getContactId(),
+			randomEmail(), Contact.class.getName(), _user.getContactId(),
 			ListTypeConstants.CONTACT_EMAIL_ADDRESS);
 	}
 
@@ -86,9 +84,7 @@ public class EmailResourceTest extends BaseEmailResourceTestCase {
 	}
 
 	@Override
-	protected Long testGetOrganizationEmailsPage_getOrganizationId()
-		throws Exception {
-
+	protected Long testGetOrganizationEmailsPage_getOrganizationId() {
 		return _organization.getOrganizationId();
 	}
 
@@ -103,9 +99,7 @@ public class EmailResourceTest extends BaseEmailResourceTestCase {
 	}
 
 	@Override
-	protected Long testGetUserAccountEmailsPage_getUserAccountId()
-		throws Exception {
-
+	protected Long testGetUserAccountEmailsPage_getUserAccountId() {
 		return _user.getUserId();
 	}
 

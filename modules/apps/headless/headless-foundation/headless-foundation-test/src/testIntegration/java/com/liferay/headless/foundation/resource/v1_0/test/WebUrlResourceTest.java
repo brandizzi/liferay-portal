@@ -53,23 +53,8 @@ public class WebUrlResourceTest extends BaseWebUrlResourceTestCase {
 	}
 
 	@Override
-	protected void assertValid(WebUrl webUrl) {
-		boolean valid = false;
-
-		if ((webUrl.getId() != null) && (webUrl.getUrl() != null)) {
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
-	protected boolean equals(WebUrl webUrl1, WebUrl webUrl2) {
-		if (Objects.equals(webUrl1.getUrl(), webUrl2.getUrl())) {
-			return true;
-		}
-
-		return false;
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"url"};
 	}
 
 	@Override
@@ -93,9 +78,7 @@ public class WebUrlResourceTest extends BaseWebUrlResourceTestCase {
 	}
 
 	@Override
-	protected Long testGetOrganizationWebUrlsPage_getOrganizationId()
-		throws Exception {
-
+	protected Long testGetOrganizationWebUrlsPage_getOrganizationId() {
 		return _organization.getOrganizationId();
 	}
 
@@ -110,18 +93,14 @@ public class WebUrlResourceTest extends BaseWebUrlResourceTestCase {
 	}
 
 	@Override
-	protected Long testGetUserAccountWebUrlsPage_getUserAccountId()
-		throws Exception {
-
+	protected Long testGetUserAccountWebUrlsPage_getUserAccountId() {
 		return _user.getUserId();
 	}
 
 	@Override
 	protected WebUrl testGetWebUrl_addWebUrl() throws Exception {
-		WebUrl webUrl = randomWebUrl();
-
 		return _addWebUrl(
-			webUrl, Contact.class.getName(), _user.getContactId(),
+			randomWebUrl(), Contact.class.getName(), _user.getContactId(),
 			ListTypeConstants.CONTACT_WEBSITE);
 	}
 
