@@ -335,7 +335,7 @@ public class StructuredContentResourceImpl
 			structuredContent.getDatePublished(),
 			journalArticle.getDisplayDate());
 
-		_checkAllContentFieldsExist(
+		_validateContentFields(
 			structuredContent.getContentFields(), ddmStructure);
 
 		return _toStructuredContent(
@@ -420,7 +420,7 @@ public class StructuredContentResourceImpl
 			structuredContent.getDatePublished(),
 			journalArticle.getDisplayDate());
 
-		_checkAllContentFieldsExist(
+		_validateContentFields(
 			structuredContent.getContentFields(), ddmStructure);
 
 		return _toStructuredContent(
@@ -495,7 +495,7 @@ public class StructuredContentResourceImpl
 					"language " + w3cLanguageId);
 		}
 
-		_checkAllContentFieldsExist(
+		_validateContentFields(
 			structuredContent.getContentFields(), ddmStructure);
 
 		return _toStructuredContent(
@@ -535,7 +535,7 @@ public class StructuredContentResourceImpl
 					structuredContent.getViewableByAsString())));
 	}
 
-	private void _checkAllContentFieldsExist(
+	private void _validateContentFields(
 		ContentField[] contentFields, DDMStructure ddmStructure) {
 
 		if (ArrayUtil.isEmpty(contentFields)) {
@@ -554,7 +554,7 @@ public class StructuredContentResourceImpl
 						ddmStructure.getStructureId()));
 			}
 
-			_checkAllContentFieldsExist(
+			_validateContentFields(
 				contentField.getNestedFields(), ddmStructure);
 		}
 	}
