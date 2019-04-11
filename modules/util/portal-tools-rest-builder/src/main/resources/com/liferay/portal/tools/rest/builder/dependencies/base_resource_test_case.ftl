@@ -773,15 +773,15 @@ public abstract class Base${schemaName}ResourceTestCase {
 			}
 
 			protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${schemaName} ${schemaVarName}) throws Exception {
-				<#if freeMarkerTool.hasPostSchemaJavaMethodSignature(javaMethodSignatures, "siteId", schemaName)>
+				<#if freeMarkerTool.hasPostSchemaJavaMethodSignature(javaMethodSignatures, schemaName, schemaName)>
+					return invokePost${schemaName}${schemaName}(testGet${schemaName}${schemaNames}Page_getParent${schemaName}Id(), ${schemaVarName});
+				<#elseif freeMarkerTool.hasPostSchemaJavaMethodSignature(javaMethodSignatures, "siteId", schemaName)>
 					<#assign postSchemaJavaMethodSignature = freeMarkerTool.getPostSchemaJavaMethodSignature(javaMethodSignatures, "siteId", schemaName) />
 
 					<#if freeMarkerTool.hasRequestBodyMediaType(postSchemaJavaMethodSignature, "multipart/form-data")>
 						<#assign generateToMultipartBodyMethod = true />
 
 						return invokePostSite${schemaName}(testGroup.getGroupId(), toMultipartBody(${schemaVarName}));
-					<#elseif freeMarkerTool.hasPostSchemaJavaMethodSignature(javaMethodSignatures, schemaName, schemaName)>
-						return invokePost${schemaName}${schemaName}(testGet${schemaName}${schemaNames}Page_getParent${schemaName}Id(), ${schemaVarName});
 					<#else>
 						return invokePostSite${schemaName}(testGroup.getGroupId(), ${schemaVarName});
 					</#if>
