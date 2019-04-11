@@ -62,7 +62,7 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 
 		if (ExportImportThreadLocal.isImportInProcess() ||
 			ExportImportThreadLocal.isStagingInProcess() ||
-			layoutPageTemplateEntry == null) {
+			(layoutPageTemplateEntry == null)) {
 
 			return;
 		}
