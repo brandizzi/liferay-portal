@@ -1222,8 +1222,8 @@ public abstract class BaseDocumentFolderResourceTestCase {
 			DocumentFolder documentFolder)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteDocumentFolder(
+			testGroup.getGroupId(), documentFolder);
 	}
 
 	protected DocumentFolder invokePostSiteDocumentFolder(

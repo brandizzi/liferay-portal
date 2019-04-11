@@ -889,8 +889,8 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				KnowledgeBaseFolder knowledgeBaseFolder)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteKnowledgeBaseFolder(
+			testGroup.getGroupId(), knowledgeBaseFolder);
 	}
 
 	protected KnowledgeBaseFolder invokePostSiteKnowledgeBaseFolder(

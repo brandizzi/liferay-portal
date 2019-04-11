@@ -512,8 +512,8 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 				StructuredContentFolder structuredContentFolder)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteStructuredContentFolder(
+			testGroup.getGroupId(), structuredContentFolder);
 	}
 
 	protected StructuredContentFolder invokePostSiteStructuredContentFolder(

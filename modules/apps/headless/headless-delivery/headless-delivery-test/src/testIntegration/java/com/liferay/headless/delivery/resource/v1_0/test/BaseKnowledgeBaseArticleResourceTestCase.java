@@ -1580,8 +1580,8 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				KnowledgeBaseArticle knowledgeBaseArticle)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteKnowledgeBaseArticle(
+			testGroup.getGroupId(), knowledgeBaseArticle);
 	}
 
 	protected KnowledgeBaseArticle
@@ -2038,8 +2038,8 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				KnowledgeBaseArticle knowledgeBaseArticle)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostSiteKnowledgeBaseArticle(
+			testGroup.getGroupId(), knowledgeBaseArticle);
 	}
 
 	protected KnowledgeBaseArticle invokePostSiteKnowledgeBaseArticle(
