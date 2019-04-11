@@ -461,19 +461,19 @@ components:
                     type: array
                 name:
                     type: string
-                organizations:
+                organizationBriefs:
                     items:
                         $ref: "#/components/schemas/OrganizationBrief"
                     readOnly: true
                     type: array
                 profileURL:
                     type: string
-                roles:
+                roleBriefs:
                     items:
                         $ref: "#/components/schemas/RoleBrief"
                     readOnly: true
                     type: array
-                sites:
+                siteBriefs:
                     items:
                         $ref: "#/components/schemas/SiteBrief"
                     readOnly: true
