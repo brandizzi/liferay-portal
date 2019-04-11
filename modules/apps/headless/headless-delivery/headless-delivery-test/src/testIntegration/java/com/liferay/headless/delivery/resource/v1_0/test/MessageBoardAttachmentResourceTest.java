@@ -69,7 +69,7 @@ public class MessageBoardAttachmentResourceTest
 
 		return invokePostMessageBoardThreadMessageBoardAttachment(
 			_mbThread.getThreadId(),
-			_toMultipartBody(randomMessageBoardAttachment()));
+			toMultipartBody(randomMessageBoardAttachment()));
 	}
 
 	@Override
@@ -79,18 +79,7 @@ public class MessageBoardAttachmentResourceTest
 
 		return invokePostMessageBoardThreadMessageBoardAttachment(
 			_mbThread.getThreadId(),
-			_toMultipartBody(randomMessageBoardAttachment()));
-	}
-
-	@Override
-	protected MessageBoardAttachment
-			testGetMessageBoardMessageMessageBoardAttachmentsPage_addMessageBoardAttachment(
-				Long messageBoardMessageId,
-				MessageBoardAttachment messageBoardAttachment)
-		throws Exception {
-
-		return invokePostMessageBoardThreadMessageBoardAttachment(
-			_mbThread.getThreadId(), _toMultipartBody(messageBoardAttachment));
+			toMultipartBody(randomMessageBoardAttachment()));
 	}
 
 	@Override
@@ -98,17 +87,6 @@ public class MessageBoardAttachmentResourceTest
 		testGetMessageBoardMessageMessageBoardAttachmentsPage_getMessageBoardMessageId() {
 
 		return _mbThread.getRootMessageId();
-	}
-
-	@Override
-	protected MessageBoardAttachment
-			testGetMessageBoardThreadMessageBoardAttachmentsPage_addMessageBoardAttachment(
-				Long messageBoardThreadId,
-				MessageBoardAttachment messageBoardAttachment)
-		throws Exception {
-
-		return invokePostMessageBoardThreadMessageBoardAttachment(
-			_mbThread.getThreadId(), _toMultipartBody(messageBoardAttachment));
 	}
 
 	@Override
@@ -125,10 +103,11 @@ public class MessageBoardAttachmentResourceTest
 		throws Exception {
 
 		return invokePostMessageBoardThreadMessageBoardAttachment(
-			_mbThread.getThreadId(), _toMultipartBody(messageBoardAttachment));
+			_mbThread.getThreadId(), toMultipartBody(messageBoardAttachment));
 	}
 
-	private MultipartBody _toMultipartBody(
+	@Override
+	protected MultipartBody toMultipartBody(
 		MessageBoardAttachment messageBoardAttachment) {
 
 		testContentType = "multipart/form-data;boundary=PART";
