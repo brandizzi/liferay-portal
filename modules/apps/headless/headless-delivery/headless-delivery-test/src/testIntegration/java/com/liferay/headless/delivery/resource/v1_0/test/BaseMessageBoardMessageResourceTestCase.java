@@ -1082,8 +1082,9 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				MessageBoardMessage messageBoardMessage)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostMessageBoardMessageMessageBoardMessage(
+			testGetMessageBoardMessageMessageBoardMessagesPage_getParentMessageBoardMessageId(),
+			messageBoardMessage);
 	}
 
 	protected MessageBoardMessage
@@ -1554,8 +1555,9 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				MessageBoardMessage messageBoardMessage)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostMessageBoardMessageMessageBoardMessage(
+			testGetMessageBoardMessageMessageBoardMessagesPage_getParentMessageBoardMessageId(),
+			messageBoardMessage);
 	}
 
 	protected MessageBoardMessage
