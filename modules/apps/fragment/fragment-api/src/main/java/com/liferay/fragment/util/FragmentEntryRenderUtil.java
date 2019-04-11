@@ -15,7 +15,6 @@
 package com.liferay.fragment.util;
 
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
-import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
@@ -25,12 +24,8 @@ import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.osgi.util.ServiceTrackerFactory;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
-
-import java.io.IOException;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -159,34 +154,8 @@ public class FragmentEntryRenderUtil {
 		defaultFragmentRendererContext.setSegmentsExperienceIds(
 			segmentsExperienceIds);
 
-		try {
-			return fragmentRendererController.render(
-				defaultFragmentRendererContext, request, response);
-		}
-		catch (IOException ioe) {
-			SessionErrors.add(request, "fragmentEntryInvalidContent");
-
-			StringBundler sb = new StringBundler(3);
-
-			sb.append("<div class=\"alert alert-danger m-2\">");
-
-			String errorMessage = "an-unexpected-error-occurred";
-
-			Throwable cause = ioe.getCause();
-
-			if (cause instanceof FragmentEntryContentException) {
-				FragmentEntryContentException fece =
-					(FragmentEntryContentException)cause;
-
-				errorMessage = fece.getLocalizedMessage();
-			}
-
-			sb.append(LanguageUtil.get(locale, errorMessage));
-
-			sb.append("</div>");
-
-			return sb.toString();
-		}
+		return fragmentRendererController.render(
+			defaultFragmentRendererContext, request, response);
 	}
 
 	private static FragmentRendererController _getFragmentRendererController() {

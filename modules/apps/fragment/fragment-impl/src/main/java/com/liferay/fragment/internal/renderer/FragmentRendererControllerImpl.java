@@ -14,14 +14,20 @@
 
 package com.liferay.fragment.internal.renderer;
 
+import com.liferay.fragment.exception.FragmentEntryContentException;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.fragment.renderer.FragmentRendererController;
 import com.liferay.fragment.renderer.FragmentRendererTracker;
 import com.liferay.fragment.renderer.constants.FragmentRendererConstants;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.servlet.PipingServletResponse;
 
 import java.io.IOException;
@@ -41,19 +47,50 @@ public class FragmentRendererControllerImpl
 
 	@Override
 	public String render(
-			FragmentRendererContext fragmentRendererContext,
-			HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse)
-		throws IOException {
+		FragmentRendererContext fragmentRendererContext,
+		HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse) {
 
 		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
 
 		FragmentRenderer fragmentRenderer = _getFragmentRenderer(
 			fragmentRendererContext.getFragmentEntryLink());
 
-		fragmentRenderer.render(
-			fragmentRendererContext, httpServletRequest,
-			new PipingServletResponse(httpServletResponse, unsyncStringWriter));
+		try {
+			fragmentRenderer.render(
+				fragmentRendererContext, httpServletRequest,
+				new PipingServletResponse(
+					httpServletResponse, unsyncStringWriter));
+		}
+		catch (IOException ioe) {
+			SessionErrors.add(
+				httpServletRequest, "fragmentEntryInvalidContent");
+
+			StringBundler sb = new StringBundler(3);
+
+			sb.append("<div class=\"alert alert-danger m-2\">");
+
+			String errorMessage = "an-unexpected-error-occurred";
+
+			Throwable cause = ioe.getCause();
+
+			if (cause instanceof FragmentEntryContentException) {
+				FragmentEntryContentException fece =
+					(FragmentEntryContentException)cause;
+
+				errorMessage = fece.getLocalizedMessage();
+			}
+
+			ThemeDisplay themeDisplay =
+				(ThemeDisplay)httpServletRequest.getAttribute(
+					WebKeys.THEME_DISPLAY);
+
+			sb.append(LanguageUtil.get(themeDisplay.getLocale(), errorMessage));
+
+			sb.append("</div>");
+
+			return sb.toString();
+		}
 
 		return unsyncStringWriter.toString();
 	}

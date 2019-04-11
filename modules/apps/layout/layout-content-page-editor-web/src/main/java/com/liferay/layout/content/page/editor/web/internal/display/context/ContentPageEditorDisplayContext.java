@@ -992,9 +992,6 @@ public class ContentPageEditorDisplayContext {
 					soyContext);
 			}
 		}
-		catch (IOException ioe) {
-			throw new PortalException(ioe);
-		}
 		finally {
 			themeDisplay.setIsolated(isolated);
 		}
