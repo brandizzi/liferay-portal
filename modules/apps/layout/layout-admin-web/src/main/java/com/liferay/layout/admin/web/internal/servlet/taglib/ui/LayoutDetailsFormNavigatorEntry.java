@@ -61,7 +61,7 @@ public class LayoutDetailsFormNavigatorEntry
 			return false;
 		}
 
-		return super.isVisible(user, layout);
+		return true;
 	}
 
 	@Override
