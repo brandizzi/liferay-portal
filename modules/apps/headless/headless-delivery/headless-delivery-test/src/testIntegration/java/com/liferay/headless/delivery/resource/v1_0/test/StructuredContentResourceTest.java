@@ -149,24 +149,6 @@ public class StructuredContentResourceTest
 
 	@Override
 	protected StructuredContent
-			testDeleteStructuredContent_addStructuredContent()
-		throws Exception {
-
-		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), randomStructuredContent());
-	}
-
-	@Override
-	protected StructuredContent
-			testDeleteStructuredContentMyRating_addStructuredContent()
-		throws Exception {
-
-		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), randomStructuredContent());
-	}
-
-	@Override
-	protected StructuredContent
 			testGetContentStructureStructuredContentsPage_addStructuredContent(
 				Long contentStructureId, StructuredContent structuredContent)
 		throws Exception {
@@ -184,52 +166,6 @@ public class StructuredContentResourceTest
 	}
 
 	@Override
-	protected StructuredContent
-			testGetSiteStructuredContentByKey_addStructuredContent()
-		throws Exception {
-
-		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), randomStructuredContent());
-	}
-
-	@Override
-	protected StructuredContent
-			testGetSiteStructuredContentByUuid_addStructuredContent()
-		throws Exception {
-
-		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), randomStructuredContent());
-	}
-
-	@Override
-	protected StructuredContent
-			testGetSiteStructuredContentsPage_addStructuredContent(
-				Long siteId, StructuredContent structuredContent)
-		throws Exception {
-
-		return invokePostSiteStructuredContent(siteId, structuredContent);
-	}
-
-	@Override
-	protected StructuredContent testGetStructuredContent_addStructuredContent()
-		throws Exception {
-
-		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), randomStructuredContent());
-	}
-
-	@Override
-	protected StructuredContent
-			testGetStructuredContentFolderStructuredContentsPage_addStructuredContent(
-				Long structuredContentFolderId,
-				StructuredContent structuredContent)
-		throws Exception {
-
-		return invokePostStructuredContentFolderStructuredContent(
-			structuredContentFolderId, structuredContent);
-	}
-
-	@Override
 	protected Long
 		testGetStructuredContentFolderStructuredContentsPage_getIrrelevantStructuredContentFolderId() {
 
@@ -241,43 +177,6 @@ public class StructuredContentResourceTest
 		testGetStructuredContentFolderStructuredContentsPage_getStructuredContentFolderId() {
 
 		return _journalFolder.getFolderId();
-	}
-
-	@Override
-	protected StructuredContent
-			testPatchStructuredContent_addStructuredContent()
-		throws Exception {
-
-		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), randomStructuredContent());
-	}
-
-	@Override
-	protected StructuredContent
-			testPostSiteStructuredContent_addStructuredContent(
-				StructuredContent structuredContent)
-		throws Exception {
-
-		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), structuredContent);
-	}
-
-	@Override
-	protected StructuredContent
-			testPostStructuredContentFolderStructuredContent_addStructuredContent(
-				StructuredContent structuredContent)
-		throws Exception {
-
-		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), structuredContent);
-	}
-
-	@Override
-	protected StructuredContent testPutStructuredContent_addStructuredContent()
-		throws Exception {
-
-		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), randomStructuredContent());
 	}
 
 	private DDMStructure _addDDMStructure(Group group) throws Exception {

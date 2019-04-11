@@ -23,13 +23,11 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 
 /**
  * @author Javier Gamarra
  */
-@Ignore
 @RunWith(Arquillian.class)
 public class DocumentFolderResourceTest
 	extends BaseDocumentFolderResourceTestCase {
@@ -57,14 +55,6 @@ public class DocumentFolderResourceTest
 				siteId = testGroup.getGroupId();
 			}
 		};
-	}
-
-	@Override
-	protected DocumentFolder testDeleteDocumentFolder_addDocumentFolder()
-		throws Exception {
-
-		return invokePostSiteDocumentFolder(
-			testGroup.getGroupId(), randomDocumentFolder());
 	}
 
 	@Override
@@ -112,22 +102,6 @@ public class DocumentFolderResourceTest
 	}
 
 	@Override
-	protected DocumentFolder testGetSiteDocumentFoldersPage_addDocumentFolder(
-			Long siteId, DocumentFolder documentFolder)
-		throws Exception {
-
-		return invokePostSiteDocumentFolder(siteId, documentFolder);
-	}
-
-	@Override
-	protected DocumentFolder testPatchDocumentFolder_addDocumentFolder()
-		throws Exception {
-
-		return invokePostSiteDocumentFolder(
-			testGroup.getGroupId(), randomDocumentFolder());
-	}
-
-	@Override
 	protected DocumentFolder
 			testPostDocumentFolderDocumentFolder_addDocumentFolder(
 				DocumentFolder documentFolder)
@@ -151,14 +125,6 @@ public class DocumentFolderResourceTest
 		Assert.assertEquals(0, postDocumentFolder.getNumberOfDocuments());
 
 		return postDocumentFolder;
-	}
-
-	@Override
-	protected DocumentFolder testPutDocumentFolder_addDocumentFolder()
-		throws Exception {
-
-		return invokePostSiteDocumentFolder(
-			testGroup.getGroupId(), randomDocumentFolder());
 	}
 
 }

@@ -70,7 +70,7 @@ public class KnowledgeBaseAttachmentResourceTest
 
 		return invokePostKnowledgeBaseArticleKnowledgeBaseAttachment(
 			_kbArticle.getResourcePrimKey(),
-			_getMultipartBody(randomKnowledgeBaseAttachment()));
+			_toMultipartBody(randomKnowledgeBaseAttachment()));
 	}
 
 	@Override
@@ -81,13 +81,12 @@ public class KnowledgeBaseAttachmentResourceTest
 		throws Exception {
 
 		return invokePostKnowledgeBaseArticleKnowledgeBaseAttachment(
-			knowledgeBaseArticleId, _getMultipartBody(knowledgeBaseAttachment));
+			knowledgeBaseArticleId, _toMultipartBody(knowledgeBaseAttachment));
 	}
 
 	@Override
 	protected Long
-			testGetKnowledgeBaseArticleKnowledgeBaseAttachmentsPage_getKnowledgeBaseArticleId()
-		throws Exception {
+		testGetKnowledgeBaseArticleKnowledgeBaseAttachmentsPage_getKnowledgeBaseArticleId() {
 
 		return _kbArticle.getResourcePrimKey();
 	}
@@ -99,7 +98,7 @@ public class KnowledgeBaseAttachmentResourceTest
 
 		return invokePostKnowledgeBaseArticleKnowledgeBaseAttachment(
 			_kbArticle.getResourcePrimKey(),
-			_getMultipartBody(randomKnowledgeBaseAttachment()));
+			_toMultipartBody(randomKnowledgeBaseAttachment()));
 	}
 
 	@Override
@@ -110,10 +109,10 @@ public class KnowledgeBaseAttachmentResourceTest
 
 		return invokePostKnowledgeBaseArticleKnowledgeBaseAttachment(
 			_kbArticle.getResourcePrimKey(),
-			_getMultipartBody(knowledgeBaseAttachment));
+			_toMultipartBody(knowledgeBaseAttachment));
 	}
 
-	private MultipartBody _getMultipartBody(
+	private MultipartBody _toMultipartBody(
 		KnowledgeBaseAttachment knowledgeBaseAttachment) {
 
 		testContentType = "multipart/form-data;boundary=PART";

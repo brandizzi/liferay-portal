@@ -22,9 +22,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 
-import java.util.Objects;
-
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
@@ -91,7 +88,7 @@ public class TaxonomyCategoryResourceTest
 
 	@Override
 	protected Long
-			testGetTaxonomyVocabularyTaxonomyCategoriesPage_getTaxonomyVocabularyId() {
+		testGetTaxonomyVocabularyTaxonomyCategoriesPage_getTaxonomyVocabularyId() {
 
 		return _assetVocabulary.getVocabularyId();
 	}

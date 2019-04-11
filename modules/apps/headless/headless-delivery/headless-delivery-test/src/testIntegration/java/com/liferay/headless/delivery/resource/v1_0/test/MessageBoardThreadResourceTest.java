@@ -63,96 +63,10 @@ public class MessageBoardThreadResourceTest
 	}
 
 	@Override
-	protected MessageBoardThread
-			testDeleteMessageBoardThread_addMessageBoardThread()
-		throws Exception {
-
-		return invokePostSiteMessageBoardThread(
-			testGroup.getGroupId(), randomMessageBoardThread());
-	}
-
-	@Override
-	protected MessageBoardThread
-			testDeleteMessageBoardThreadMyRating_addMessageBoardThread()
-		throws Exception {
-
-		return invokePostSiteMessageBoardThread(
-			testGroup.getGroupId(), randomMessageBoardThread());
-	}
-
-	@Override
-	protected MessageBoardThread
-			testGetMessageBoardSectionMessageBoardThreadsPage_addMessageBoardThread(
-				Long messageBoardSectionId,
-				MessageBoardThread messageBoardThread)
-		throws Exception {
-
-		return invokePostMessageBoardSectionMessageBoardThread(
-			messageBoardSectionId, messageBoardThread);
-	}
-
-	@Override
 	protected Long
-			testGetMessageBoardSectionMessageBoardThreadsPage_getMessageBoardSectionId()
-		throws Exception {
+		testGetMessageBoardSectionMessageBoardThreadsPage_getMessageBoardSectionId() {
 
 		return _mbCategory.getCategoryId();
-	}
-
-	@Override
-	protected MessageBoardThread
-			testGetMessageBoardThread_addMessageBoardThread()
-		throws Exception {
-
-		return invokePostSiteMessageBoardThread(
-			testGroup.getGroupId(), randomMessageBoardThread());
-	}
-
-	@Override
-	protected MessageBoardThread
-			testGetSiteMessageBoardThreadsPage_addMessageBoardThread(
-				Long siteId, MessageBoardThread messageBoardThread)
-		throws Exception {
-
-		return invokePostSiteMessageBoardThread(siteId, messageBoardThread);
-	}
-
-	@Override
-	protected MessageBoardThread
-			testPatchMessageBoardThread_addMessageBoardThread()
-		throws Exception {
-
-		return invokePostSiteMessageBoardThread(
-			testGroup.getGroupId(), randomMessageBoardThread());
-	}
-
-	@Override
-	protected MessageBoardThread
-			testPostMessageBoardSectionMessageBoardThread_addMessageBoardThread(
-				MessageBoardThread messageBoardThread)
-		throws Exception {
-
-		return invokePostSiteMessageBoardThread(
-			testGroup.getGroupId(), messageBoardThread);
-	}
-
-	@Override
-	protected MessageBoardThread
-			testPostSiteMessageBoardThread_addMessageBoardThread(
-				MessageBoardThread messageBoardThread)
-		throws Exception {
-
-		return invokePostSiteMessageBoardThread(
-			testGroup.getGroupId(), messageBoardThread);
-	}
-
-	@Override
-	protected MessageBoardThread
-			testPutMessageBoardThread_addMessageBoardThread()
-		throws Exception {
-
-		return invokePostSiteMessageBoardThread(
-			testGroup.getGroupId(), randomMessageBoardThread());
 	}
 
 	private MBCategory _mbCategory;

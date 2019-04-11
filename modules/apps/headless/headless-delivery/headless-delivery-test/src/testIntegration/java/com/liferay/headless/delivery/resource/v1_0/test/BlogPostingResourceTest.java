@@ -15,7 +15,6 @@
 package com.liferay.headless.delivery.resource.v1_0.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.headless.delivery.dto.v1_0.BlogPosting;
 
 import org.junit.runner.RunWith;
 
@@ -28,58 +27,6 @@ public class BlogPostingResourceTest extends BaseBlogPostingResourceTestCase {
 	@Override
 	protected String[] getAdditionalAssertFieldNames() {
 		return new String[] {"description", "headline"};
-	}
-
-	@Override
-	protected BlogPosting testDeleteBlogPosting_addBlogPosting()
-		throws Exception {
-
-		return invokePostSiteBlogPosting(
-			testGroup.getGroupId(), randomBlogPosting());
-	}
-
-	@Override
-	protected BlogPosting testDeleteBlogPostingMyRating_addBlogPosting()
-		throws Exception {
-
-		return invokePostSiteBlogPosting(
-			testGroup.getGroupId(), randomBlogPosting());
-	}
-
-	@Override
-	protected BlogPosting testGetBlogPosting_addBlogPosting() throws Exception {
-		return invokePostSiteBlogPosting(
-			testGroup.getGroupId(), randomBlogPosting());
-	}
-
-	@Override
-	protected BlogPosting testGetSiteBlogPostingsPage_addBlogPosting(
-			Long siteId, BlogPosting blogPosting)
-		throws Exception {
-
-		return invokePostSiteBlogPosting(siteId, blogPosting);
-	}
-
-	@Override
-	protected BlogPosting testPatchBlogPosting_addBlogPosting()
-		throws Exception {
-
-		return invokePostSiteBlogPosting(
-			testGroup.getGroupId(), randomBlogPosting());
-	}
-
-	@Override
-	protected BlogPosting testPostSiteBlogPosting_addBlogPosting(
-			BlogPosting blogPosting)
-		throws Exception {
-
-		return invokePostSiteBlogPosting(testGroup.getGroupId(), blogPosting);
-	}
-
-	@Override
-	protected BlogPosting testPutBlogPosting_addBlogPosting() throws Exception {
-		return invokePostSiteBlogPosting(
-			testGroup.getGroupId(), randomBlogPosting());
 	}
 
 }

@@ -30,7 +30,6 @@ import com.liferay.portlet.documentlibrary.util.test.DLAppTestUtil;
 
 import java.util.Objects;
 
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 
 /**
@@ -40,26 +39,17 @@ import org.junit.runner.RunWith;
 public class CommentResourceTest extends BaseCommentResourceTestCase {
 
 	@Override
-	protected void assertValid(Comment comment) {
-		boolean valid = false;
-
-		if ((comment.getDateCreated() != null) &&
-			(comment.getDateModified() != null) && (comment.getId() != null) &&
-			(comment.getText() != null)) {
-
-			valid = true;
-		}
-
-		Assert.assertTrue(valid);
-	}
-
-	@Override
 	protected boolean equals(Comment comment1, Comment comment2) {
 		if (Objects.equals(_formatHTML(comment1), _formatHTML(comment2))) {
 			return true;
 		}
 
 		return false;
+	}
+
+	@Override
+	protected String[] getAdditionalAssertFieldNames() {
+		return new String[] {"text"};
 	}
 
 	@Override

@@ -39,24 +39,6 @@ public class KnowledgeBaseFolderResourceTest
 
 	@Override
 	protected KnowledgeBaseFolder
-			testDeleteKnowledgeBaseFolder_addKnowledgeBaseFolder()
-		throws Exception {
-
-		return invokePostSiteKnowledgeBaseFolder(
-			testGroup.getGroupId(), randomKnowledgeBaseFolder());
-	}
-
-	@Override
-	protected KnowledgeBaseFolder
-			testGetKnowledgeBaseFolder_addKnowledgeBaseFolder()
-		throws Exception {
-
-		return invokePostSiteKnowledgeBaseFolder(
-			testGroup.getGroupId(), randomKnowledgeBaseFolder());
-	}
-
-	@Override
-	protected KnowledgeBaseFolder
 			testGetKnowledgeBaseFolderKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
 				Long parentKnowledgeBaseFolderId,
 				KnowledgeBaseFolder knowledgeBaseFolder)
@@ -87,24 +69,6 @@ public class KnowledgeBaseFolderResourceTest
 
 	@Override
 	protected KnowledgeBaseFolder
-			testGetSiteKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
-				Long siteId, KnowledgeBaseFolder knowledgeBaseFolder)
-		throws Exception {
-
-		return invokePostSiteKnowledgeBaseFolder(siteId, knowledgeBaseFolder);
-	}
-
-	@Override
-	protected KnowledgeBaseFolder
-			testPatchKnowledgeBaseFolder_addKnowledgeBaseFolder()
-		throws Exception {
-
-		return invokePostSiteKnowledgeBaseFolder(
-			testGroup.getGroupId(), randomKnowledgeBaseFolder());
-	}
-
-	@Override
-	protected KnowledgeBaseFolder
 			testPostKnowledgeBaseFolderKnowledgeBaseFolder_addKnowledgeBaseFolder(
 				KnowledgeBaseFolder knowledgeBaseFolder)
 		throws Exception {
@@ -112,25 +76,6 @@ public class KnowledgeBaseFolderResourceTest
 		return invokePostKnowledgeBaseFolderKnowledgeBaseFolder(
 			testGetKnowledgeBaseFolderKnowledgeBaseFoldersPage_getParentKnowledgeBaseFolderId(),
 			knowledgeBaseFolder);
-	}
-
-	@Override
-	protected KnowledgeBaseFolder
-			testPostSiteKnowledgeBaseFolder_addKnowledgeBaseFolder(
-				KnowledgeBaseFolder knowledgeBaseFolder)
-		throws Exception {
-
-		return invokePostSiteKnowledgeBaseFolder(
-			testGroup.getGroupId(), knowledgeBaseFolder);
-	}
-
-	@Override
-	protected KnowledgeBaseFolder
-			testPutKnowledgeBaseFolder_addKnowledgeBaseFolder()
-		throws Exception {
-
-		return invokePostSiteKnowledgeBaseFolder(
-			testGroup.getGroupId(), randomKnowledgeBaseFolder());
 	}
 
 }

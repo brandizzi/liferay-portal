@@ -64,15 +64,6 @@ public class DocumentResourceTest extends BaseDocumentResourceTestCase {
 	}
 
 	@Override
-	protected Document testGetDocumentFolderDocumentsPage_addDocument(
-			Long documentFolderId, Document document)
-		throws Exception {
-
-		return invokePostDocumentFolderDocument(
-			documentFolderId, toMultipartBody(document));
-	}
-
-	@Override
 	protected Long testGetDocumentFolderDocumentsPage_getDocumentFolderId()
 		throws Exception {
 
@@ -82,16 +73,6 @@ public class DocumentResourceTest extends BaseDocumentResourceTestCase {
 			RandomTestUtil.randomString(), new ServiceContext());
 
 		return folder.getFolderId();
-	}
-
-	@Override
-	protected Document testPostDocumentFolderDocument_addDocument(
-			Document document)
-		throws Exception {
-
-		return invokePostDocumentFolderDocument(
-			testGetDocumentFolderDocumentsPage_getDocumentFolderId(),
-			toMultipartBody(document));
 	}
 
 	@Override

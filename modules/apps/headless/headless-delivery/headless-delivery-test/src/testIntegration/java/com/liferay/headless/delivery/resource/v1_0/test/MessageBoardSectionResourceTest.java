@@ -38,24 +38,6 @@ public class MessageBoardSectionResourceTest
 
 	@Override
 	protected MessageBoardSection
-			testDeleteMessageBoardSection_addMessageBoardSection()
-		throws Exception {
-
-		return invokePostSiteMessageBoardSection(
-			testGroup.getGroupId(), randomMessageBoardSection());
-	}
-
-	@Override
-	protected MessageBoardSection
-			testGetMessageBoardSection_addMessageBoardSection()
-		throws Exception {
-
-		return invokePostSiteMessageBoardSection(
-			testGroup.getGroupId(), randomMessageBoardSection());
-	}
-
-	@Override
-	protected MessageBoardSection
 			testGetMessageBoardSectionMessageBoardSectionsPage_addMessageBoardSection(
 				Long messageBoardSectionId,
 				MessageBoardSection messageBoardSection)
@@ -80,53 +62,6 @@ public class MessageBoardSectionResourceTest
 			RandomTestUtil.randomString(), serviceContext);
 
 		return mbCategory.getCategoryId();
-	}
-
-	@Override
-	protected MessageBoardSection
-			testGetSiteMessageBoardSectionsPage_addMessageBoardSection(
-				Long siteId, MessageBoardSection messageBoardSection)
-		throws Exception {
-
-		return invokePostSiteMessageBoardSection(siteId, messageBoardSection);
-	}
-
-	@Override
-	protected MessageBoardSection
-			testPatchMessageBoardSection_addMessageBoardSection()
-		throws Exception {
-
-		return invokePostSiteMessageBoardSection(
-			testGroup.getGroupId(), randomMessageBoardSection());
-	}
-
-	@Override
-	protected MessageBoardSection
-			testPostMessageBoardSectionMessageBoardSection_addMessageBoardSection(
-				MessageBoardSection messageBoardSection)
-		throws Exception {
-
-		return invokePostSiteMessageBoardSection(
-			testGroup.getGroupId(), messageBoardSection);
-	}
-
-	@Override
-	protected MessageBoardSection
-			testPostSiteMessageBoardSection_addMessageBoardSection(
-				MessageBoardSection messageBoardSection)
-		throws Exception {
-
-		return invokePostSiteMessageBoardSection(
-			testGroup.getGroupId(), messageBoardSection);
-	}
-
-	@Override
-	protected MessageBoardSection
-			testPutMessageBoardSection_addMessageBoardSection()
-		throws Exception {
-
-		return invokePostSiteMessageBoardSection(
-			testGroup.getGroupId(), randomMessageBoardSection());
 	}
 
 }

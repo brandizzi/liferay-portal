@@ -95,27 +95,14 @@ public class MessageBoardMessageResourceTest
 
 	@Override
 	protected Long
-			testGetMessageBoardMessageMessageBoardMessagesPage_getParentMessageBoardMessageId()
-		throws Exception {
+		testGetMessageBoardMessageMessageBoardMessagesPage_getParentMessageBoardMessageId() {
 
 		return _mbThread.getRootMessageId();
 	}
 
 	@Override
-	protected MessageBoardMessage
-			testGetMessageBoardThreadMessageBoardMessagesPage_addMessageBoardMessage(
-				Long messageBoardThreadId,
-				MessageBoardMessage messageBoardMessage)
-		throws Exception {
-
-		return invokePostMessageBoardThreadMessageBoardMessage(
-			messageBoardThreadId, messageBoardMessage);
-	}
-
-	@Override
 	protected Long
-			testGetMessageBoardThreadMessageBoardMessagesPage_getMessageBoardThreadId()
-		throws Exception {
+		testGetMessageBoardThreadMessageBoardMessagesPage_getMessageBoardThreadId() {
 
 		return _mbThread.getThreadId();
 	}
