@@ -17,7 +17,7 @@ package com.liferay.portal.search.admin.web.internal.display.context;
 /**
  * @author Adam Brandizzi
  */
-public class SearchAdminDisplayContext {
+public class IndexActionsDisplayContext {
 
 	public String getClientVersionString() {
 		return _clientVersionString;
