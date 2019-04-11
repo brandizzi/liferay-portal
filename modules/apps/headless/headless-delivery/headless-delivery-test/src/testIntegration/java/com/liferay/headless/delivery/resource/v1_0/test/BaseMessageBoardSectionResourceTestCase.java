@@ -737,8 +737,8 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 				MessageBoardSection messageBoardSection)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostMessageBoardSectionMessageBoardSection(
+			parentMessageBoardSectionId, messageBoardSection);
 	}
 
 	protected Long

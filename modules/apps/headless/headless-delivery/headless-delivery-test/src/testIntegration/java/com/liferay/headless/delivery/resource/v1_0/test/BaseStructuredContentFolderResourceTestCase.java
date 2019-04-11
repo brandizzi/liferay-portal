@@ -895,8 +895,8 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 				StructuredContentFolder structuredContentFolder)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostStructuredContentFolderStructuredContentFolder(
+			parentStructuredContentFolderId, structuredContentFolder);
 	}
 
 	protected Long

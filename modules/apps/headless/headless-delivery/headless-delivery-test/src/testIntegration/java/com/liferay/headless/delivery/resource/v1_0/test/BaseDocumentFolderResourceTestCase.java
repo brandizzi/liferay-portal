@@ -702,8 +702,8 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				Long parentDocumentFolderId, DocumentFolder documentFolder)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostDocumentFolderDocumentFolder(
+			parentDocumentFolderId, documentFolder);
 	}
 
 	protected Long

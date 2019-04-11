@@ -541,8 +541,8 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 				KnowledgeBaseFolder knowledgeBaseFolder)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostKnowledgeBaseFolderKnowledgeBaseFolder(
+			parentKnowledgeBaseFolderId, knowledgeBaseFolder);
 	}
 
 	protected Long
