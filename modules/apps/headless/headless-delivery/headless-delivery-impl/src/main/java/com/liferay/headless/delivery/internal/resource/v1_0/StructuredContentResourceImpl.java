@@ -556,7 +556,7 @@ public class StructuredContentResourceImpl
 			DDMFormValues ddmFormValues, DDMStructure ddmStructure)
 		throws Exception {
 
-		_validateFomFieldValues(ddmFormValues);
+		_validateDDMFormValues(ddmFormValues);
 
 		Locale originalSiteDefaultLocale =
 			LocaleThreadLocal.getSiteDefaultLocale();
@@ -766,7 +766,7 @@ public class StructuredContentResourceImpl
 		DDMFormValues ddmFormValues = _journalConverter.getDDMFormValues(
 			ddmStructure, fields);
 
-		_validateFomFieldValues(ddmFormValues);
+		_validateDDMFormValues(ddmFormValues);
 
 		return fields;
 	}
@@ -820,7 +820,7 @@ public class StructuredContentResourceImpl
 		}
 	}
 
-	private void _validateFomFieldValues(DDMFormValues ddmFormValues) {
+	private void _validateDDMFormValues(DDMFormValues ddmFormValues) {
 		try {
 			_ddmFormValuesValidator.validate(ddmFormValues);
 		}
