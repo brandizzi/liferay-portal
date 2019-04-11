@@ -44,7 +44,6 @@ import java.text.Format;
 
 import java.util.Date;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletException;
