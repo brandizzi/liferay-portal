@@ -508,7 +508,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "#/components/schemas/FormRecordForm"
+                            $ref: "#/components/schemas/FormRecord"
             responses:
                 200:
                     content:
