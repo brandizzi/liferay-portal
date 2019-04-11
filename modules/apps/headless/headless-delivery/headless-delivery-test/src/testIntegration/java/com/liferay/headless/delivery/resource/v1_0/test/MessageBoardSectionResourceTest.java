@@ -15,7 +15,6 @@
 package com.liferay.headless.delivery.resource.v1_0.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.headless.delivery.dto.v1_0.MessageBoardSection;
 import com.liferay.message.boards.model.MBCategory;
 import com.liferay.message.boards.service.MBCategoryLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -34,17 +33,6 @@ public class MessageBoardSectionResourceTest
 	@Override
 	protected String[] getAdditionalAssertFieldNames() {
 		return new String[] {"title"};
-	}
-
-	@Override
-	protected MessageBoardSection
-			testGetMessageBoardSectionMessageBoardSectionsPage_addMessageBoardSection(
-				Long messageBoardSectionId,
-				MessageBoardSection messageBoardSection)
-		throws Exception {
-
-		return invokePostMessageBoardSectionMessageBoardSection(
-			messageBoardSectionId, messageBoardSection);
 	}
 
 	@Override

@@ -15,7 +15,6 @@
 package com.liferay.headless.delivery.resource.v1_0.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.headless.delivery.dto.v1_0.KnowledgeBaseFolder;
 import com.liferay.knowledge.base.model.KBFolder;
 import com.liferay.knowledge.base.service.KBFolderLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -38,17 +37,6 @@ public class KnowledgeBaseFolderResourceTest
 	}
 
 	@Override
-	protected KnowledgeBaseFolder
-			testGetKnowledgeBaseFolderKnowledgeBaseFoldersPage_addKnowledgeBaseFolder(
-				Long parentKnowledgeBaseFolderId,
-				KnowledgeBaseFolder knowledgeBaseFolder)
-		throws Exception {
-
-		return invokePostKnowledgeBaseFolderKnowledgeBaseFolder(
-			parentKnowledgeBaseFolderId, knowledgeBaseFolder);
-	}
-
-	@Override
 	protected Long
 			testGetKnowledgeBaseFolderKnowledgeBaseFoldersPage_getParentKnowledgeBaseFolderId()
 		throws Exception {
@@ -65,17 +53,6 @@ public class KnowledgeBaseFolderResourceTest
 			serviceContext);
 
 		return kbFolder.getKbFolderId();
-	}
-
-	@Override
-	protected KnowledgeBaseFolder
-			testPostKnowledgeBaseFolderKnowledgeBaseFolder_addKnowledgeBaseFolder(
-				KnowledgeBaseFolder knowledgeBaseFolder)
-		throws Exception {
-
-		return invokePostKnowledgeBaseFolderKnowledgeBaseFolder(
-			testGetKnowledgeBaseFolderKnowledgeBaseFoldersPage_getParentKnowledgeBaseFolderId(),
-			knowledgeBaseFolder);
 	}
 
 }

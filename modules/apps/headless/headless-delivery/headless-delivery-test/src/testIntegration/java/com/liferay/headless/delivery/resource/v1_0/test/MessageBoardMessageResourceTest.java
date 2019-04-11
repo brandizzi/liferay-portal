@@ -83,17 +83,6 @@ public class MessageBoardMessageResourceTest
 	}
 
 	@Override
-	protected MessageBoardMessage
-			testGetMessageBoardMessageMessageBoardMessagesPage_addMessageBoardMessage(
-				Long messageBoardMessageId,
-				MessageBoardMessage messageBoardMessage)
-		throws Exception {
-
-		return invokePostMessageBoardMessageMessageBoardMessage(
-			messageBoardMessageId, messageBoardMessage);
-	}
-
-	@Override
 	protected Long
 		testGetMessageBoardMessageMessageBoardMessagesPage_getParentMessageBoardMessageId() {
 
@@ -114,26 +103,6 @@ public class MessageBoardMessageResourceTest
 
 		return invokePostMessageBoardThreadMessageBoardMessage(
 			_mbThread.getThreadId(), randomMessageBoardMessage());
-	}
-
-	@Override
-	protected MessageBoardMessage
-			testPostMessageBoardMessageMessageBoardMessage_addMessageBoardMessage(
-				MessageBoardMessage messageBoardMessage)
-		throws Exception {
-
-		return invokePostMessageBoardThreadMessageBoardMessage(
-			_mbThread.getThreadId(), messageBoardMessage);
-	}
-
-	@Override
-	protected MessageBoardMessage
-			testPostMessageBoardThreadMessageBoardMessage_addMessageBoardMessage(
-				MessageBoardMessage messageBoardMessage)
-		throws Exception {
-
-		return invokePostMessageBoardThreadMessageBoardMessage(
-			_mbThread.getThreadId(), messageBoardMessage);
 	}
 
 	@Override

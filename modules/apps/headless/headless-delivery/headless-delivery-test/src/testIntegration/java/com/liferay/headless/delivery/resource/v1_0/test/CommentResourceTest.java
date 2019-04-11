@@ -61,14 +61,6 @@ public class CommentResourceTest extends BaseCommentResourceTestCase {
 	}
 
 	@Override
-	protected Comment testGetBlogPostingCommentsPage_addComment(
-			Long blogPostingId, Comment comment)
-		throws Exception {
-
-		return invokePostBlogPostingComment(blogPostingId, comment);
-	}
-
-	@Override
 	protected Long testGetBlogPostingCommentsPage_getBlogPostingId()
 		throws Exception {
 
@@ -86,14 +78,6 @@ public class CommentResourceTest extends BaseCommentResourceTestCase {
 	}
 
 	@Override
-	protected Comment testGetCommentCommentsPage_addComment(
-			Long parentCommentId, Comment comment)
-		throws Exception {
-
-		return invokePostCommentComment(parentCommentId, comment);
-	}
-
-	@Override
 	protected Long testGetCommentCommentsPage_getParentCommentId()
 		throws Exception {
 
@@ -106,28 +90,12 @@ public class CommentResourceTest extends BaseCommentResourceTestCase {
 	}
 
 	@Override
-	protected Comment testGetDocumentCommentsPage_addComment(
-			Long documentId, Comment comment)
-		throws Exception {
-
-		return invokePostDocumentComment(documentId, comment);
-	}
-
-	@Override
 	protected Long testGetDocumentCommentsPage_getDocumentId()
 		throws Exception {
 
 		FileEntry fileEntry = _addFileEntry();
 
 		return fileEntry.getFileEntryId();
-	}
-
-	@Override
-	protected Comment testGetStructuredContentCommentsPage_addComment(
-			Long structuredContentId, Comment comment)
-		throws Exception {
-
-		return invokePostStructuredContentComment(structuredContentId, comment);
 	}
 
 	@Override

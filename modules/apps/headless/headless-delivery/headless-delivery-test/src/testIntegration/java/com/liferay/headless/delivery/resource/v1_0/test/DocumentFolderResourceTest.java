@@ -81,16 +81,6 @@ public class DocumentFolderResourceTest
 	}
 
 	@Override
-	protected DocumentFolder
-			testGetDocumentFolderDocumentFoldersPage_addDocumentFolder(
-				Long documentFolderId, DocumentFolder documentFolder)
-		throws Exception {
-
-		return invokePostDocumentFolderDocumentFolder(
-			documentFolderId, documentFolder);
-	}
-
-	@Override
 	protected Long
 			testGetDocumentFolderDocumentFoldersPage_getParentDocumentFolderId()
 		throws Exception {

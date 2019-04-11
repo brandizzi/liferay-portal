@@ -65,16 +65,6 @@ public class TaxonomyCategoryResourceTest
 	}
 
 	@Override
-	protected TaxonomyCategory
-			testGetTaxonomyCategoryTaxonomyCategoriesPage_addTaxonomyCategory(
-				Long taxonomyCategoryId, TaxonomyCategory taxonomyCategory)
-		throws Exception {
-
-		return invokePostTaxonomyCategoryTaxonomyCategory(
-			taxonomyCategoryId, taxonomyCategory);
-	}
-
-	@Override
 	protected Long
 			testGetTaxonomyCategoryTaxonomyCategoriesPage_getParentTaxonomyCategoryId()
 		throws Exception {
