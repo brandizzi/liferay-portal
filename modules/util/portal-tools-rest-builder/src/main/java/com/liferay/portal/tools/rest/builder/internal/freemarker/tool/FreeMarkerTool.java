@@ -180,13 +180,16 @@ public class FreeMarkerTool {
 
 			sb.append(getHTTPMethod(operation));
 
-			String prefix = StringUtil.upperCaseFirstLetter(parameterName);
-
-			if (prefix.endsWith("Id")) {
-				prefix = prefix.substring(0, prefix.length() - 2);
+			if (parameterName.startsWith("parent")) {
+				parameterName = parameterName.substring(6);
 			}
 
-			sb.append(prefix);
+			if (parameterName.endsWith("Id")) {
+				parameterName = parameterName.substring(
+					0, parameterName.length() - 2);
+			}
+
+			sb.append(StringUtil.upperCaseFirstLetter(parameterName));
 
 			sb.append(StringUtil.upperCaseFirstLetter(schemaName));
 
