@@ -36,6 +36,6 @@ public interface GeometryCollectionShapeBuilder {
 	public GeometryCollectionShapeBuilder coordinates(
 		List<Coordinate> coordinates);
 
-	public GeometryCollectionShapeBuilder shapes(Shape... shapeBuilders);
+	public GeometryCollectionShapeBuilder shapes(Shape... shapes);
 
 }
