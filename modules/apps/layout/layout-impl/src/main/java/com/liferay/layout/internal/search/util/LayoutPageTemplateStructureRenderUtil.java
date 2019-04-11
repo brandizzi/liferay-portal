@@ -27,8 +27,6 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
 
-import java.io.IOException;
-
 import java.util.Locale;
 import java.util.Map;
 
@@ -110,15 +108,9 @@ public class LayoutPageTemplateStructureRenderUtil {
 					fragmentRendererContext.setSegmentsExperienceIds(
 						segmentsExperienceIds);
 
-					try {
-						renderFragmentEntryLink =
-							fragmentRendererController.render(
-								fragmentRendererContext, httpServletRequest,
-								httpServletResponse);
-					}
-					catch (IOException ioe) {
-						throw new PortalException(ioe);
-					}
+					renderFragmentEntryLink = fragmentRendererController.render(
+						fragmentRendererContext, httpServletRequest,
+						httpServletResponse);
 
 					sb.append(renderFragmentEntryLink);
 				}
