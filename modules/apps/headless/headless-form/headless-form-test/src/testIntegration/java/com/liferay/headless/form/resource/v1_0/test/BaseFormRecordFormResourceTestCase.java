@@ -227,7 +227,7 @@ public abstract class BaseFormRecordFormResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("draft", additionalAssertFieldName)) {
+			if (Objects.deepEquals("draft", additionalAssertFieldName)) {
 				if (formRecordForm.getDraft() == null) {
 					valid = false;
 				}
@@ -235,7 +235,7 @@ public abstract class BaseFormRecordFormResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("fieldValues", additionalAssertFieldName)) {
+			if (Objects.deepEquals("fieldValues", additionalAssertFieldName)) {
 				if (formRecordForm.getFieldValues() == null) {
 					valid = false;
 				}

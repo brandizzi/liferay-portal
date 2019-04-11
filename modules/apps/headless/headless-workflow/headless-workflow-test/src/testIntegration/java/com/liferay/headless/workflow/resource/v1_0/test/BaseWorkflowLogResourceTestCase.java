@@ -394,7 +394,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("auditPerson", additionalAssertFieldName)) {
+			if (Objects.deepEquals("auditPerson", additionalAssertFieldName)) {
 				if (workflowLog.getAuditPerson() == null) {
 					valid = false;
 				}
@@ -402,7 +402,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("commentLog", additionalAssertFieldName)) {
+			if (Objects.deepEquals("commentLog", additionalAssertFieldName)) {
 				if (workflowLog.getCommentLog() == null) {
 					valid = false;
 				}
@@ -410,7 +410,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("person", additionalAssertFieldName)) {
+			if (Objects.deepEquals("person", additionalAssertFieldName)) {
 				if (workflowLog.getPerson() == null) {
 					valid = false;
 				}
@@ -418,7 +418,9 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("previousPerson", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"previousPerson", additionalAssertFieldName)) {
+
 				if (workflowLog.getPreviousPerson() == null) {
 					valid = false;
 				}
@@ -426,7 +428,9 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("previousState", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"previousState", additionalAssertFieldName)) {
+
 				if (workflowLog.getPreviousState() == null) {
 					valid = false;
 				}
@@ -434,7 +438,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("state", additionalAssertFieldName)) {
+			if (Objects.deepEquals("state", additionalAssertFieldName)) {
 				if (workflowLog.getState() == null) {
 					valid = false;
 				}
@@ -442,7 +446,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("taskId", additionalAssertFieldName)) {
+			if (Objects.deepEquals("taskId", additionalAssertFieldName)) {
 				if (workflowLog.getTaskId() == null) {
 					valid = false;
 				}
@@ -450,7 +454,7 @@ public abstract class BaseWorkflowLogResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("type", additionalAssertFieldName)) {
+			if (Objects.deepEquals("type", additionalAssertFieldName)) {
 				if (workflowLog.getType() == null) {
 					valid = false;
 				}

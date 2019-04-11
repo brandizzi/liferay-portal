@@ -792,7 +792,7 @@ public abstract class BaseWorkflowTaskResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("completed", additionalAssertFieldName)) {
+			if (Objects.deepEquals("completed", additionalAssertFieldName)) {
 				if (workflowTask.getCompleted() == null) {
 					valid = false;
 				}
@@ -800,7 +800,9 @@ public abstract class BaseWorkflowTaskResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("dateCompleted", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"dateCompleted", additionalAssertFieldName)) {
+
 				if (workflowTask.getDateCompleted() == null) {
 					valid = false;
 				}
@@ -808,7 +810,9 @@ public abstract class BaseWorkflowTaskResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("definitionName", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"definitionName", additionalAssertFieldName)) {
+
 				if (workflowTask.getDefinitionName() == null) {
 					valid = false;
 				}
@@ -816,7 +820,7 @@ public abstract class BaseWorkflowTaskResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("description", additionalAssertFieldName)) {
+			if (Objects.deepEquals("description", additionalAssertFieldName)) {
 				if (workflowTask.getDescription() == null) {
 					valid = false;
 				}
@@ -824,7 +828,7 @@ public abstract class BaseWorkflowTaskResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("dueDate", additionalAssertFieldName)) {
+			if (Objects.deepEquals("dueDate", additionalAssertFieldName)) {
 				if (workflowTask.getDueDate() == null) {
 					valid = false;
 				}
@@ -832,7 +836,7 @@ public abstract class BaseWorkflowTaskResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (workflowTask.getName() == null) {
 					valid = false;
 				}
@@ -840,7 +844,9 @@ public abstract class BaseWorkflowTaskResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("objectReviewed", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"objectReviewed", additionalAssertFieldName)) {
+
 				if (workflowTask.getObjectReviewed() == null) {
 					valid = false;
 				}
@@ -848,7 +854,7 @@ public abstract class BaseWorkflowTaskResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("transitions", additionalAssertFieldName)) {
+			if (Objects.deepEquals("transitions", additionalAssertFieldName)) {
 				if (workflowTask.getTransitions() == null) {
 					valid = false;
 				}

@@ -407,7 +407,7 @@ public abstract class BaseEmailResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("email", additionalAssertFieldName)) {
+			if (Objects.deepEquals("email", additionalAssertFieldName)) {
 				if (email.getEmail() == null) {
 					valid = false;
 				}
@@ -415,7 +415,7 @@ public abstract class BaseEmailResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("primary", additionalAssertFieldName)) {
+			if (Objects.deepEquals("primary", additionalAssertFieldName)) {
 				if (email.getPrimary() == null) {
 					valid = false;
 				}
@@ -423,7 +423,7 @@ public abstract class BaseEmailResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("type", additionalAssertFieldName)) {
+			if (Objects.deepEquals("type", additionalAssertFieldName)) {
 				if (email.getType() == null) {
 					valid = false;
 				}

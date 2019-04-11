@@ -1427,7 +1427,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"availableLanguages", additionalAssertFieldName)) {
 
 				if (taxonomyCategory.getAvailableLanguages() == null) {
@@ -1437,7 +1437,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("creator", additionalAssertFieldName)) {
+			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
 				if (taxonomyCategory.getCreator() == null) {
 					valid = false;
 				}
@@ -1445,7 +1445,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("description", additionalAssertFieldName)) {
+			if (Objects.deepEquals("description", additionalAssertFieldName)) {
 				if (taxonomyCategory.getDescription() == null) {
 					valid = false;
 				}
@@ -1453,7 +1453,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (taxonomyCategory.getName() == null) {
 					valid = false;
 				}
@@ -1461,7 +1461,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfTaxonomyCategories", additionalAssertFieldName)) {
 
 				if (taxonomyCategory.getNumberOfTaxonomyCategories() == null) {
@@ -1471,7 +1471,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"parentTaxonomyCategory", additionalAssertFieldName)) {
 
 				if (taxonomyCategory.getParentTaxonomyCategory() == null) {
@@ -1481,7 +1481,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"parentTaxonomyVocabulary", additionalAssertFieldName)) {
 
 				if (taxonomyCategory.getParentTaxonomyVocabulary() == null) {
@@ -1491,7 +1491,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"parentVocabularyId", additionalAssertFieldName)) {
 
 				if (taxonomyCategory.getParentVocabularyId() == null) {
@@ -1501,7 +1501,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
 				if (taxonomyCategory.getViewableBy() == null) {
 					valid = false;
 				}

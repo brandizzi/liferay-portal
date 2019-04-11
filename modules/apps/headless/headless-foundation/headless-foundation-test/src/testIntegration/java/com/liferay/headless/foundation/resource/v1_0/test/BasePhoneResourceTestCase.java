@@ -407,7 +407,7 @@ public abstract class BasePhoneResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("extension", additionalAssertFieldName)) {
+			if (Objects.deepEquals("extension", additionalAssertFieldName)) {
 				if (phone.getExtension() == null) {
 					valid = false;
 				}
@@ -415,7 +415,7 @@ public abstract class BasePhoneResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("phoneNumber", additionalAssertFieldName)) {
+			if (Objects.deepEquals("phoneNumber", additionalAssertFieldName)) {
 				if (phone.getPhoneNumber() == null) {
 					valid = false;
 				}
@@ -423,7 +423,7 @@ public abstract class BasePhoneResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("phoneType", additionalAssertFieldName)) {
+			if (Objects.deepEquals("phoneType", additionalAssertFieldName)) {
 				if (phone.getPhoneType() == null) {
 					valid = false;
 				}
@@ -431,7 +431,7 @@ public abstract class BasePhoneResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("primary", additionalAssertFieldName)) {
+			if (Objects.deepEquals("primary", additionalAssertFieldName)) {
 				if (phone.getPrimary() == null) {
 					valid = false;
 				}

@@ -412,7 +412,7 @@ public abstract class BaseWebUrlResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("url", additionalAssertFieldName)) {
+			if (Objects.deepEquals("url", additionalAssertFieldName)) {
 				if (webUrl.getUrl() == null) {
 					valid = false;
 				}
@@ -420,7 +420,7 @@ public abstract class BaseWebUrlResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("urlType", additionalAssertFieldName)) {
+			if (Objects.deepEquals("urlType", additionalAssertFieldName)) {
 				if (webUrl.getUrlType() == null) {
 					valid = false;
 				}

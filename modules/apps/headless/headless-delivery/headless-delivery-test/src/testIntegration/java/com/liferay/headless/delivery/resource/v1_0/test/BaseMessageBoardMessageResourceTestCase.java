@@ -1708,7 +1708,9 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"aggregateRating", additionalAssertFieldName)) {
+
 				if (messageBoardMessage.getAggregateRating() == null) {
 					valid = false;
 				}
@@ -1716,7 +1718,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("anonymous", additionalAssertFieldName)) {
+			if (Objects.deepEquals("anonymous", additionalAssertFieldName)) {
 				if (messageBoardMessage.getAnonymous() == null) {
 					valid = false;
 				}
@@ -1724,7 +1726,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("articleBody", additionalAssertFieldName)) {
+			if (Objects.deepEquals("articleBody", additionalAssertFieldName)) {
 				if (messageBoardMessage.getArticleBody() == null) {
 					valid = false;
 				}
@@ -1732,7 +1734,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("creator", additionalAssertFieldName)) {
+			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
 				if (messageBoardMessage.getCreator() == null) {
 					valid = false;
 				}
@@ -1740,7 +1742,9 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"encodingFormat", additionalAssertFieldName)) {
+
 				if (messageBoardMessage.getEncodingFormat() == null) {
 					valid = false;
 				}
@@ -1748,7 +1752,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("headline", additionalAssertFieldName)) {
+			if (Objects.deepEquals("headline", additionalAssertFieldName)) {
 				if (messageBoardMessage.getHeadline() == null) {
 					valid = false;
 				}
@@ -1756,7 +1760,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("keywords", additionalAssertFieldName)) {
+			if (Objects.deepEquals("keywords", additionalAssertFieldName)) {
 				if (messageBoardMessage.getKeywords() == null) {
 					valid = false;
 				}
@@ -1764,7 +1768,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfMessageBoardAttachments",
 					additionalAssertFieldName)) {
 
@@ -1777,7 +1781,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfMessageBoardMessages",
 					additionalAssertFieldName)) {
 
@@ -1790,7 +1794,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("showAsAnswer", additionalAssertFieldName)) {
+			if (Objects.deepEquals("showAsAnswer", additionalAssertFieldName)) {
 				if (messageBoardMessage.getShowAsAnswer() == null) {
 					valid = false;
 				}
@@ -1798,7 +1802,7 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
 				if (messageBoardMessage.getViewableBy() == null) {
 					valid = false;
 				}

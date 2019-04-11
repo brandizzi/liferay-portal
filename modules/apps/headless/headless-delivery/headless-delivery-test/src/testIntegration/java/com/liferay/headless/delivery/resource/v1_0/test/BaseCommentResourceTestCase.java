@@ -1977,7 +1977,7 @@ public abstract class BaseCommentResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("creator", additionalAssertFieldName)) {
+			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
 				if (comment.getCreator() == null) {
 					valid = false;
 				}
@@ -1985,7 +1985,9 @@ public abstract class BaseCommentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("numberOfComments", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"numberOfComments", additionalAssertFieldName)) {
+
 				if (comment.getNumberOfComments() == null) {
 					valid = false;
 				}
@@ -1993,7 +1995,7 @@ public abstract class BaseCommentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("text", additionalAssertFieldName)) {
+			if (Objects.deepEquals("text", additionalAssertFieldName)) {
 				if (comment.getText() == null) {
 					valid = false;
 				}

@@ -224,7 +224,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("multiValued", additionalAssertFieldName)) {
+			if (Objects.deepEquals("multiValued", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getMultiValued() == null) {
 					valid = false;
 				}
@@ -232,7 +232,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getName() == null) {
 					valid = false;
 				}
@@ -240,7 +240,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("required", additionalAssertFieldName)) {
+			if (Objects.deepEquals("required", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getRequired() == null) {
 					valid = false;
 				}
@@ -248,7 +248,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"taxonomyCategories", additionalAssertFieldName)) {
 
 				if (taxonomyVocabulary.getTaxonomyCategories() == null) {
@@ -258,7 +258,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"taxonomyVocabularyId", additionalAssertFieldName)) {
 
 				if (taxonomyVocabulary.getTaxonomyVocabularyId() == null) {

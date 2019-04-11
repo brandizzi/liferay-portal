@@ -2185,7 +2185,9 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"aggregateRating", additionalAssertFieldName)) {
+
 				if (knowledgeBaseArticle.getAggregateRating() == null) {
 					valid = false;
 				}
@@ -2193,7 +2195,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("articleBody", additionalAssertFieldName)) {
+			if (Objects.deepEquals("articleBody", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getArticleBody() == null) {
 					valid = false;
 				}
@@ -2201,7 +2203,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("creator", additionalAssertFieldName)) {
+			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getCreator() == null) {
 					valid = false;
 				}
@@ -2209,7 +2211,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("description", additionalAssertFieldName)) {
+			if (Objects.deepEquals("description", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getDescription() == null) {
 					valid = false;
 				}
@@ -2217,7 +2219,9 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"encodingFormat", additionalAssertFieldName)) {
+
 				if (knowledgeBaseArticle.getEncodingFormat() == null) {
 					valid = false;
 				}
@@ -2225,7 +2229,9 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("friendlyUrlPath", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"friendlyUrlPath", additionalAssertFieldName)) {
+
 				if (knowledgeBaseArticle.getFriendlyUrlPath() == null) {
 					valid = false;
 				}
@@ -2233,7 +2239,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("keywords", additionalAssertFieldName)) {
+			if (Objects.deepEquals("keywords", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getKeywords() == null) {
 					valid = false;
 				}
@@ -2241,7 +2247,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfAttachments", additionalAssertFieldName)) {
 
 				if (knowledgeBaseArticle.getNumberOfAttachments() == null) {
@@ -2251,7 +2257,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfKnowledgeBaseArticles",
 					additionalAssertFieldName)) {
 
@@ -2264,7 +2270,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"parentKnowledgeBaseFolder", additionalAssertFieldName)) {
 
 				if (knowledgeBaseArticle.getParentKnowledgeBaseFolder() ==
@@ -2276,7 +2282,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"parentKnowledgeBaseFolderId", additionalAssertFieldName)) {
 
 				if (knowledgeBaseArticle.getParentKnowledgeBaseFolderId() ==
@@ -2288,7 +2294,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"taxonomyCategories", additionalAssertFieldName)) {
 
 				if (knowledgeBaseArticle.getTaxonomyCategories() == null) {
@@ -2298,7 +2304,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"taxonomyCategoryIds", additionalAssertFieldName)) {
 
 				if (knowledgeBaseArticle.getTaxonomyCategoryIds() == null) {
@@ -2308,7 +2314,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("title", additionalAssertFieldName)) {
+			if (Objects.deepEquals("title", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getTitle() == null) {
 					valid = false;
 				}
@@ -2316,7 +2322,7 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
 				if (knowledgeBaseArticle.getViewableBy() == null) {
 					valid = false;
 				}

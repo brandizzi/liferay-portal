@@ -1436,7 +1436,7 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("creator", additionalAssertFieldName)) {
+			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
 				if (messageBoardSection.getCreator() == null) {
 					valid = false;
 				}
@@ -1444,7 +1444,7 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("description", additionalAssertFieldName)) {
+			if (Objects.deepEquals("description", additionalAssertFieldName)) {
 				if (messageBoardSection.getDescription() == null) {
 					valid = false;
 				}
@@ -1452,7 +1452,7 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfMessageBoardSections",
 					additionalAssertFieldName)) {
 
@@ -1465,7 +1465,7 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfMessageBoardThreads", additionalAssertFieldName)) {
 
 				if (messageBoardSection.getNumberOfMessageBoardThreads() ==
@@ -1477,7 +1477,7 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("title", additionalAssertFieldName)) {
+			if (Objects.deepEquals("title", additionalAssertFieldName)) {
 				if (messageBoardSection.getTitle() == null) {
 					valid = false;
 				}
@@ -1485,7 +1485,7 @@ public abstract class BaseMessageBoardSectionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
 				if (messageBoardSection.getViewableBy() == null) {
 					valid = false;
 				}

@@ -725,7 +725,7 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
+			if (Objects.deepEquals("contentUrl", additionalAssertFieldName)) {
 				if (messageBoardAttachment.getContentUrl() == null) {
 					valid = false;
 				}
@@ -733,7 +733,9 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"encodingFormat", additionalAssertFieldName)) {
+
 				if (messageBoardAttachment.getEncodingFormat() == null) {
 					valid = false;
 				}
@@ -741,7 +743,9 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"fileExtension", additionalAssertFieldName)) {
+
 				if (messageBoardAttachment.getFileExtension() == null) {
 					valid = false;
 				}
@@ -749,7 +753,7 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
+			if (Objects.deepEquals("sizeInBytes", additionalAssertFieldName)) {
 				if (messageBoardAttachment.getSizeInBytes() == null) {
 					valid = false;
 				}
@@ -757,7 +761,7 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("title", additionalAssertFieldName)) {
+			if (Objects.deepEquals("title", additionalAssertFieldName)) {
 				if (messageBoardAttachment.getTitle() == null) {
 					valid = false;
 				}

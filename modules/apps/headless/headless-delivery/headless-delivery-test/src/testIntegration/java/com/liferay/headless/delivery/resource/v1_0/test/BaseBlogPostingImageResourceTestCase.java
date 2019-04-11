@@ -737,7 +737,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("contentUrl", additionalAssertFieldName)) {
+			if (Objects.deepEquals("contentUrl", additionalAssertFieldName)) {
 				if (blogPostingImage.getContentUrl() == null) {
 					valid = false;
 				}
@@ -745,7 +745,9 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"encodingFormat", additionalAssertFieldName)) {
+
 				if (blogPostingImage.getEncodingFormat() == null) {
 					valid = false;
 				}
@@ -753,7 +755,9 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("fileExtension", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"fileExtension", additionalAssertFieldName)) {
+
 				if (blogPostingImage.getFileExtension() == null) {
 					valid = false;
 				}
@@ -761,7 +765,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("sizeInBytes", additionalAssertFieldName)) {
+			if (Objects.deepEquals("sizeInBytes", additionalAssertFieldName)) {
 				if (blogPostingImage.getSizeInBytes() == null) {
 					valid = false;
 				}
@@ -769,7 +773,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("title", additionalAssertFieldName)) {
+			if (Objects.deepEquals("title", additionalAssertFieldName)) {
 				if (blogPostingImage.getTitle() == null) {
 					valid = false;
 				}
@@ -777,7 +781,7 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
 				if (blogPostingImage.getViewableBy() == null) {
 					valid = false;
 				}

@@ -266,7 +266,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"taxonomyCategoryId", additionalAssertFieldName)) {
 
 				if (taxonomyCategory.getTaxonomyCategoryId() == null) {
@@ -276,7 +276,7 @@ public abstract class BaseTaxonomyCategoryResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"taxonomyCategoryName", additionalAssertFieldName)) {
 
 				if (taxonomyCategory.getTaxonomyCategoryName() == null) {

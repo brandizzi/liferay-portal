@@ -270,7 +270,7 @@ public abstract class BaseRoleResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"availableLanguages", additionalAssertFieldName)) {
 
 				if (role.getAvailableLanguages() == null) {
@@ -280,7 +280,7 @@ public abstract class BaseRoleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("creator", additionalAssertFieldName)) {
+			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
 				if (role.getCreator() == null) {
 					valid = false;
 				}
@@ -288,7 +288,7 @@ public abstract class BaseRoleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("description", additionalAssertFieldName)) {
+			if (Objects.deepEquals("description", additionalAssertFieldName)) {
 				if (role.getDescription() == null) {
 					valid = false;
 				}
@@ -296,7 +296,7 @@ public abstract class BaseRoleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (role.getName() == null) {
 					valid = false;
 				}
@@ -304,7 +304,7 @@ public abstract class BaseRoleResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("roleType", additionalAssertFieldName)) {
+			if (Objects.deepEquals("roleType", additionalAssertFieldName)) {
 				if (role.getRoleType() == null) {
 					valid = false;
 				}

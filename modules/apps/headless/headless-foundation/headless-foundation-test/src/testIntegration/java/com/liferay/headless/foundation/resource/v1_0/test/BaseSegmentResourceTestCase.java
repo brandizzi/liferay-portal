@@ -494,7 +494,7 @@ public abstract class BaseSegmentResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("active", additionalAssertFieldName)) {
+			if (Objects.deepEquals("active", additionalAssertFieldName)) {
 				if (segment.getActive() == null) {
 					valid = false;
 				}
@@ -502,7 +502,7 @@ public abstract class BaseSegmentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("criteria", additionalAssertFieldName)) {
+			if (Objects.deepEquals("criteria", additionalAssertFieldName)) {
 				if (segment.getCriteria() == null) {
 					valid = false;
 				}
@@ -510,7 +510,7 @@ public abstract class BaseSegmentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (segment.getName() == null) {
 					valid = false;
 				}
@@ -518,7 +518,7 @@ public abstract class BaseSegmentResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("source", additionalAssertFieldName)) {
+			if (Objects.deepEquals("source", additionalAssertFieldName)) {
 				if (segment.getSource() == null) {
 					valid = false;
 				}

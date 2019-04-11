@@ -737,7 +737,7 @@ public abstract class BaseKeywordResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("creator", additionalAssertFieldName)) {
+			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
 				if (keyword.getCreator() == null) {
 					valid = false;
 				}
@@ -745,7 +745,7 @@ public abstract class BaseKeywordResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"keywordUsageCount", additionalAssertFieldName)) {
 
 				if (keyword.getKeywordUsageCount() == null) {
@@ -755,7 +755,7 @@ public abstract class BaseKeywordResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (keyword.getName() == null) {
 					valid = false;
 				}

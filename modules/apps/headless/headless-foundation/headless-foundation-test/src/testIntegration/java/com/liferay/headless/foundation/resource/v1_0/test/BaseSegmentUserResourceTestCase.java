@@ -324,7 +324,7 @@ public abstract class BaseSegmentUserResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("email", additionalAssertFieldName)) {
+			if (Objects.deepEquals("email", additionalAssertFieldName)) {
 				if (segmentUser.getEmail() == null) {
 					valid = false;
 				}
@@ -332,7 +332,7 @@ public abstract class BaseSegmentUserResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (segmentUser.getName() == null) {
 					valid = false;
 				}

@@ -742,7 +742,7 @@ public abstract class BaseContentSetElementResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("content", additionalAssertFieldName)) {
+			if (Objects.deepEquals("content", additionalAssertFieldName)) {
 				if (contentSetElement.getContent() == null) {
 					valid = false;
 				}
@@ -750,7 +750,7 @@ public abstract class BaseContentSetElementResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("contentType", additionalAssertFieldName)) {
+			if (Objects.deepEquals("contentType", additionalAssertFieldName)) {
 				if (contentSetElement.getContentType() == null) {
 					valid = false;
 				}
@@ -758,7 +758,7 @@ public abstract class BaseContentSetElementResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("title", additionalAssertFieldName)) {
+			if (Objects.deepEquals("title", additionalAssertFieldName)) {
 				if (contentSetElement.getTitle() == null) {
 					valid = false;
 				}

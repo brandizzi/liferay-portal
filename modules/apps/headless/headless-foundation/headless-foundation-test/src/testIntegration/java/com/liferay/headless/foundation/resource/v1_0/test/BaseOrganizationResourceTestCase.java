@@ -982,7 +982,7 @@ public abstract class BaseOrganizationResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("comment", additionalAssertFieldName)) {
+			if (Objects.deepEquals("comment", additionalAssertFieldName)) {
 				if (organization.getComment() == null) {
 					valid = false;
 				}
@@ -990,7 +990,7 @@ public abstract class BaseOrganizationResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"contactInformation", additionalAssertFieldName)) {
 
 				if (organization.getContactInformation() == null) {
@@ -1000,7 +1000,7 @@ public abstract class BaseOrganizationResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("image", additionalAssertFieldName)) {
+			if (Objects.deepEquals("image", additionalAssertFieldName)) {
 				if (organization.getImage() == null) {
 					valid = false;
 				}
@@ -1008,7 +1008,7 @@ public abstract class BaseOrganizationResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("keywords", additionalAssertFieldName)) {
+			if (Objects.deepEquals("keywords", additionalAssertFieldName)) {
 				if (organization.getKeywords() == null) {
 					valid = false;
 				}
@@ -1016,7 +1016,7 @@ public abstract class BaseOrganizationResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("location", additionalAssertFieldName)) {
+			if (Objects.deepEquals("location", additionalAssertFieldName)) {
 				if (organization.getLocation() == null) {
 					valid = false;
 				}
@@ -1024,7 +1024,7 @@ public abstract class BaseOrganizationResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (organization.getName() == null) {
 					valid = false;
 				}
@@ -1032,7 +1032,7 @@ public abstract class BaseOrganizationResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfOrganizations", additionalAssertFieldName)) {
 
 				if (organization.getNumberOfOrganizations() == null) {
@@ -1042,7 +1042,7 @@ public abstract class BaseOrganizationResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"parentOrganization", additionalAssertFieldName)) {
 
 				if (organization.getParentOrganization() == null) {
@@ -1052,7 +1052,7 @@ public abstract class BaseOrganizationResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"parentOrganizationId", additionalAssertFieldName)) {
 
 				if (organization.getParentOrganizationId() == null) {
@@ -1062,7 +1062,7 @@ public abstract class BaseOrganizationResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("services", additionalAssertFieldName)) {
+			if (Objects.deepEquals("services", additionalAssertFieldName)) {
 				if (organization.getServices() == null) {
 					valid = false;
 				}

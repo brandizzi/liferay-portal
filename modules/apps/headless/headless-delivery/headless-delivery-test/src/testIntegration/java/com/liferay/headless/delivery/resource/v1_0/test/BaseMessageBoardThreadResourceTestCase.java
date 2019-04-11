@@ -1667,7 +1667,9 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("aggregateRating", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"aggregateRating", additionalAssertFieldName)) {
+
 				if (messageBoardThread.getAggregateRating() == null) {
 					valid = false;
 				}
@@ -1675,7 +1677,7 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("articleBody", additionalAssertFieldName)) {
+			if (Objects.deepEquals("articleBody", additionalAssertFieldName)) {
 				if (messageBoardThread.getArticleBody() == null) {
 					valid = false;
 				}
@@ -1683,7 +1685,7 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("creator", additionalAssertFieldName)) {
+			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
 				if (messageBoardThread.getCreator() == null) {
 					valid = false;
 				}
@@ -1691,7 +1693,9 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("encodingFormat", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"encodingFormat", additionalAssertFieldName)) {
+
 				if (messageBoardThread.getEncodingFormat() == null) {
 					valid = false;
 				}
@@ -1699,7 +1703,7 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("headline", additionalAssertFieldName)) {
+			if (Objects.deepEquals("headline", additionalAssertFieldName)) {
 				if (messageBoardThread.getHeadline() == null) {
 					valid = false;
 				}
@@ -1707,7 +1711,7 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("keywords", additionalAssertFieldName)) {
+			if (Objects.deepEquals("keywords", additionalAssertFieldName)) {
 				if (messageBoardThread.getKeywords() == null) {
 					valid = false;
 				}
@@ -1715,7 +1719,7 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfMessageBoardAttachments",
 					additionalAssertFieldName)) {
 
@@ -1728,7 +1732,7 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfMessageBoardMessages",
 					additionalAssertFieldName)) {
 
@@ -1741,7 +1745,9 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("showAsQuestion", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"showAsQuestion", additionalAssertFieldName)) {
+
 				if (messageBoardThread.getShowAsQuestion() == null) {
 					valid = false;
 				}
@@ -1749,7 +1755,7 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("threadType", additionalAssertFieldName)) {
+			if (Objects.deepEquals("threadType", additionalAssertFieldName)) {
 				if (messageBoardThread.getThreadType() == null) {
 					valid = false;
 				}
@@ -1757,7 +1763,7 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
 				if (messageBoardThread.getViewableBy() == null) {
 					valid = false;
 				}

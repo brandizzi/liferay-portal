@@ -1499,7 +1499,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("creator", additionalAssertFieldName)) {
+			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
 				if (structuredContentFolder.getCreator() == null) {
 					valid = false;
 				}
@@ -1507,7 +1507,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("description", additionalAssertFieldName)) {
+			if (Objects.deepEquals("description", additionalAssertFieldName)) {
 				if (structuredContentFolder.getDescription() == null) {
 					valid = false;
 				}
@@ -1515,7 +1515,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (structuredContentFolder.getName() == null) {
 					valid = false;
 				}
@@ -1523,7 +1523,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfStructuredContentFolders",
 					additionalAssertFieldName)) {
 
@@ -1536,7 +1536,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfStructuredContents", additionalAssertFieldName)) {
 
 				if (structuredContentFolder.getNumberOfStructuredContents() ==
@@ -1548,7 +1548,7 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
 				if (structuredContentFolder.getViewableBy() == null) {
 					valid = false;
 				}

@@ -956,7 +956,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("assetTypes", additionalAssertFieldName)) {
+			if (Objects.deepEquals("assetTypes", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getAssetTypes() == null) {
 					valid = false;
 				}
@@ -964,7 +964,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"availableLanguages", additionalAssertFieldName)) {
 
 				if (taxonomyVocabulary.getAvailableLanguages() == null) {
@@ -974,7 +974,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("creator", additionalAssertFieldName)) {
+			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getCreator() == null) {
 					valid = false;
 				}
@@ -982,7 +982,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("description", additionalAssertFieldName)) {
+			if (Objects.deepEquals("description", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getDescription() == null) {
 					valid = false;
 				}
@@ -990,7 +990,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getName() == null) {
 					valid = false;
 				}
@@ -998,7 +998,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"numberOfTaxonomyCategories", additionalAssertFieldName)) {
 
 				if (taxonomyVocabulary.getNumberOfTaxonomyCategories() ==
@@ -1010,7 +1010,7 @@ public abstract class BaseTaxonomyVocabularyResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("viewableBy", additionalAssertFieldName)) {
+			if (Objects.deepEquals("viewableBy", additionalAssertFieldName)) {
 				if (taxonomyVocabulary.getViewableBy() == null) {
 					valid = false;
 				}

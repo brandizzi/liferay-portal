@@ -612,7 +612,7 @@ public abstract class BaseContentStructureResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"availableLanguages", additionalAssertFieldName)) {
 
 				if (contentStructure.getAvailableLanguages() == null) {
@@ -622,7 +622,7 @@ public abstract class BaseContentStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"contentStructureFields", additionalAssertFieldName)) {
 
 				if (contentStructure.getContentStructureFields() == null) {
@@ -632,7 +632,7 @@ public abstract class BaseContentStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("creator", additionalAssertFieldName)) {
+			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
 				if (contentStructure.getCreator() == null) {
 					valid = false;
 				}
@@ -640,7 +640,7 @@ public abstract class BaseContentStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("description", additionalAssertFieldName)) {
+			if (Objects.deepEquals("description", additionalAssertFieldName)) {
 				if (contentStructure.getDescription() == null) {
 					valid = false;
 				}
@@ -648,7 +648,7 @@ public abstract class BaseContentStructureResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (contentStructure.getName() == null) {
 					valid = false;
 				}

@@ -727,7 +727,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"dataDefinitionFields", additionalAssertFieldName)) {
 
 				if (dataDefinition.getDataDefinitionFields() == null) {
@@ -737,7 +737,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"dataDefinitionRules", additionalAssertFieldName)) {
 
 				if (dataDefinition.getDataDefinitionRules() == null) {
@@ -747,7 +747,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("description", additionalAssertFieldName)) {
+			if (Objects.deepEquals("description", additionalAssertFieldName)) {
 				if (dataDefinition.getDescription() == null) {
 					valid = false;
 				}
@@ -755,7 +755,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (dataDefinition.getName() == null) {
 					valid = false;
 				}
@@ -763,7 +763,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("storageType", additionalAssertFieldName)) {
+			if (Objects.deepEquals("storageType", additionalAssertFieldName)) {
 				if (dataDefinition.getStorageType() == null) {
 					valid = false;
 				}
@@ -771,7 +771,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("userId", additionalAssertFieldName)) {
+			if (Objects.deepEquals("userId", additionalAssertFieldName)) {
 				if (dataDefinition.getUserId() == null) {
 					valid = false;
 				}

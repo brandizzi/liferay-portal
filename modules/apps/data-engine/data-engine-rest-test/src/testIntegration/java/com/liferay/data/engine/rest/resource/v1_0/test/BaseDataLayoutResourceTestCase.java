@@ -689,7 +689,9 @@ public abstract class BaseDataLayoutResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("dataDefinitionId", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"dataDefinitionId", additionalAssertFieldName)) {
+
 				if (dataLayout.getDataDefinitionId() == null) {
 					valid = false;
 				}
@@ -697,7 +699,9 @@ public abstract class BaseDataLayoutResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("dataLayoutPages", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"dataLayoutPages", additionalAssertFieldName)) {
+
 				if (dataLayout.getDataLayoutPages() == null) {
 					valid = false;
 				}
@@ -705,7 +709,7 @@ public abstract class BaseDataLayoutResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"defaultLanguageId", additionalAssertFieldName)) {
 
 				if (dataLayout.getDefaultLanguageId() == null) {
@@ -715,7 +719,7 @@ public abstract class BaseDataLayoutResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("description", additionalAssertFieldName)) {
+			if (Objects.deepEquals("description", additionalAssertFieldName)) {
 				if (dataLayout.getDescription() == null) {
 					valid = false;
 				}
@@ -723,7 +727,7 @@ public abstract class BaseDataLayoutResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("name", additionalAssertFieldName)) {
+			if (Objects.deepEquals("name", additionalAssertFieldName)) {
 				if (dataLayout.getName() == null) {
 					valid = false;
 				}
@@ -731,7 +735,9 @@ public abstract class BaseDataLayoutResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("paginationMode", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"paginationMode", additionalAssertFieldName)) {
+
 				if (dataLayout.getPaginationMode() == null) {
 					valid = false;
 				}
@@ -739,7 +745,7 @@ public abstract class BaseDataLayoutResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("userId", additionalAssertFieldName)) {
+			if (Objects.deepEquals("userId", additionalAssertFieldName)) {
 				if (dataLayout.getUserId() == null) {
 					valid = false;
 				}

@@ -656,7 +656,7 @@ public abstract class BaseDataRecordResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals(
+			if (Objects.deepEquals(
 					"dataRecordCollectionId", additionalAssertFieldName)) {
 
 				if (dataRecord.getDataRecordCollectionId() == null) {
@@ -666,7 +666,9 @@ public abstract class BaseDataRecordResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("dataRecordValues", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"dataRecordValues", additionalAssertFieldName)) {
+
 				if (dataRecord.getDataRecordValues() == null) {
 					valid = false;
 				}

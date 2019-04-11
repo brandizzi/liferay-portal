@@ -516,7 +516,7 @@ public abstract class BaseFormRecordResourceTestCase {
 		for (String additionalAssertFieldName :
 				getAdditionalAssertFieldNames()) {
 
-			if (Objects.equals("creator", additionalAssertFieldName)) {
+			if (Objects.deepEquals("creator", additionalAssertFieldName)) {
 				if (formRecord.getCreator() == null) {
 					valid = false;
 				}
@@ -524,7 +524,9 @@ public abstract class BaseFormRecordResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("datePublished", additionalAssertFieldName)) {
+			if (Objects.deepEquals(
+					"datePublished", additionalAssertFieldName)) {
+
 				if (formRecord.getDatePublished() == null) {
 					valid = false;
 				}
@@ -532,7 +534,7 @@ public abstract class BaseFormRecordResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("draft", additionalAssertFieldName)) {
+			if (Objects.deepEquals("draft", additionalAssertFieldName)) {
 				if (formRecord.getDraft() == null) {
 					valid = false;
 				}
@@ -540,7 +542,7 @@ public abstract class BaseFormRecordResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("fieldValues", additionalAssertFieldName)) {
+			if (Objects.deepEquals("fieldValues", additionalAssertFieldName)) {
 				if (formRecord.getFieldValues() == null) {
 					valid = false;
 				}
@@ -548,7 +550,7 @@ public abstract class BaseFormRecordResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("form", additionalAssertFieldName)) {
+			if (Objects.deepEquals("form", additionalAssertFieldName)) {
 				if (formRecord.getForm() == null) {
 					valid = false;
 				}
@@ -556,7 +558,7 @@ public abstract class BaseFormRecordResourceTestCase {
 				continue;
 			}
 
-			if (Objects.equals("formId", additionalAssertFieldName)) {
+			if (Objects.deepEquals("formId", additionalAssertFieldName)) {
 				if (formRecord.getFormId() == null) {
 					valid = false;
 				}
