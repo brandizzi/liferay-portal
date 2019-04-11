@@ -410,8 +410,8 @@ public abstract class BaseMessageBoardThreadResourceTestCase {
 				MessageBoardThread messageBoardThread)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostMessageBoardSectionMessageBoardThread(
+			messageBoardSectionId, messageBoardThread);
 	}
 
 	protected Long

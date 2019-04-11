@@ -203,8 +203,8 @@ public abstract class BaseDataRecordResourceTestCase {
 				Long dataRecordCollectionId, DataRecord dataRecord)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostDataRecordCollectionDataRecord(
+			dataRecordCollectionId, dataRecord);
 	}
 
 	protected Long

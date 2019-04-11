@@ -376,8 +376,8 @@ public abstract class BaseDocumentResourceTestCase {
 			Long documentFolderId, Document document)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostDocumentFolderDocument(
+			documentFolderId, toMultipartBody(document));
 	}
 
 	protected Long testGetDocumentFolderDocumentsPage_getDocumentFolderId()

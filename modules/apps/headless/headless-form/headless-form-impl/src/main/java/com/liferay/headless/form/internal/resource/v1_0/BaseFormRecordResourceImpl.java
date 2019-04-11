@@ -15,7 +15,6 @@
 package com.liferay.headless.form.internal.resource.v1_0;
 
 import com.liferay.headless.form.dto.v1_0.FormRecord;
-import com.liferay.headless.form.dto.v1_0.FormRecordForm;
 import com.liferay.headless.form.resource.v1_0.FormRecordResource;
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.model.Company;
@@ -93,8 +92,7 @@ public abstract class BaseFormRecordResourceImpl implements FormRecordResource {
 	@Produces("application/json")
 	@Tags(value = {@Tag(name = "FormRecord")})
 	public FormRecord postFormFormRecord(
-			@NotNull @PathParam("formId") Long formId,
-			FormRecordForm formRecordForm)
+			@NotNull @PathParam("formId") Long formId, FormRecord formRecord)
 		throws Exception {
 
 		return new FormRecord();

@@ -301,8 +301,8 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 				MessageBoardAttachment messageBoardAttachment)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostMessageBoardMessageMessageBoardAttachment(
+			messageBoardMessageId, toMultipartBody(messageBoardAttachment));
 	}
 
 	protected Long
@@ -503,8 +503,8 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 				MessageBoardAttachment messageBoardAttachment)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostMessageBoardThreadMessageBoardAttachment(
+			messageBoardThreadId, toMultipartBody(messageBoardAttachment));
 	}
 
 	protected Long
@@ -995,6 +995,13 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 
 	protected MessageBoardAttachment randomPatchMessageBoardAttachment() {
 		return randomMessageBoardAttachment();
+	}
+
+	protected MultipartBody toMultipartBody(
+		MessageBoardAttachment messageBoardAttachment) {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected static final ObjectMapper inputObjectMapper = new ObjectMapper() {

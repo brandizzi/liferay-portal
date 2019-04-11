@@ -1473,8 +1473,8 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				KnowledgeBaseArticle knowledgeBaseArticle)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostKnowledgeBaseFolderKnowledgeBaseArticle(
+			knowledgeBaseFolderId, knowledgeBaseArticle);
 	}
 
 	protected Long

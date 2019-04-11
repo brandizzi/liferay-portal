@@ -163,8 +163,8 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 				KnowledgeBaseAttachment knowledgeBaseAttachment)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostKnowledgeBaseArticleKnowledgeBaseAttachment(
+			knowledgeBaseArticleId, toMultipartBody(knowledgeBaseAttachment));
 	}
 
 	protected Long
@@ -802,6 +802,13 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 
 	protected KnowledgeBaseAttachment randomPatchKnowledgeBaseAttachment() {
 		return randomKnowledgeBaseAttachment();
+	}
+
+	protected MultipartBody toMultipartBody(
+		KnowledgeBaseAttachment knowledgeBaseAttachment) {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
 	}
 
 	protected static final ObjectMapper inputObjectMapper = new ObjectMapper() {

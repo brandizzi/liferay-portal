@@ -118,14 +118,14 @@ public class Mutation {
 	@GraphQLInvokeDetached
 	public FormRecord postFormFormRecord(
 			@GraphQLName("formId") Long formId,
-			@GraphQLName("formRecordForm") FormRecordForm formRecordForm)
+			@GraphQLName("formRecord") FormRecord formRecord)
 		throws Exception {
 
 		return _applyComponentServiceObjects(
 			_formRecordResourceComponentServiceObjects,
 			this::_populateResourceContext,
 			formRecordResource -> formRecordResource.postFormFormRecord(
-				formId, formRecordForm));
+				formId, formRecord));
 	}
 
 	@GraphQLInvokeDetached
