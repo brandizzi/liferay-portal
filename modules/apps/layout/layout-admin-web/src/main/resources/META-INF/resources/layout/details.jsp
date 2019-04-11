@@ -20,6 +20,8 @@
 Group group = layoutsAdminDisplayContext.getGroup();
 Layout selLayout = layoutsAdminDisplayContext.getSelLayout();
 
+boolean draft = selLayout.isSystem() && (selLayout.getClassPK() > 0) && (selLayout.getClassNameId() == PortalUtil.getClassNameId(Layout.class));
+
 LayoutType selLayoutType = selLayout.getLayoutType();
 
 Locale defaultLocale = LocaleUtil.getDefault();
@@ -37,7 +39,7 @@ String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
 StringBuilder friendlyURLBase = new StringBuilder();
 %>
 
-<c:if test="<%= !group.isLayoutPrototype() && selLayoutType.isURLFriendliable() %>">
+<c:if test="<%= !group.isLayoutPrototype() && selLayoutType.isURLFriendliable() && !draft %>">
 
 	<%
 	friendlyURLBase.append(themeDisplay.getPortalURL());
@@ -87,14 +89,18 @@ StringBuilder friendlyURLBase = new StringBuilder();
 
 <c:choose>
 	<c:when test="<%= !group.isLayoutPrototype() %>">
-		<aui:input name="name" />
+		<c:if test="<%= draft %>">
+			<aui:input name="name" />
+		</c:if>
 
-		<div class="form-group">
-			<aui:input helpMessage="hidden-from-navigation-menu-widget-help-message" label="hidden-from-navigation-menu-widget" name="hidden" type="toggle-switch" value="<%= selLayout.isHidden() %>" />
-		</div>
+		<c:if test="<%= !draft %>">
+			<div class="form-group">
+				<aui:input helpMessage="hidden-from-navigation-menu-widget-help-message" label="hidden-from-navigation-menu-widget" name="hidden" type="toggle-switch" value="<%= selLayout.isHidden() %>" />
+			</div>
+		</c:if>
 
 		<c:choose>
-			<c:when test="<%= selLayoutType.isURLFriendliable() %>">
+			<c:when test="<%= selLayoutType.isURLFriendliable() && !draft %>">
 				<div class="form-group friendly-url">
 					<label for="<portlet:namespace />friendlyURL"><liferay-ui:message key="friendly-url" /> <liferay-ui:icon-help message='<%= LanguageUtil.format(request, "for-example-x", "<em>/news</em>", false) %>' /></label>
 
