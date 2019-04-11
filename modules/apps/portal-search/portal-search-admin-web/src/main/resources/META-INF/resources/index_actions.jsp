@@ -32,7 +32,7 @@ page import="com.liferay.portal.kernel.search.Indexer" %><%@
 page import="com.liferay.portal.kernel.search.IndexerClassNameComparator" %><%@
 page import="com.liferay.portal.kernel.search.IndexerRegistryUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
-page import="com.liferay.portal.kernel.util.WebKeys" %><%@
+page import="com.liferay.portal.search.admin.web.internal.constants.SearchAdminWebKeys" %><%@
 page import="com.liferay.portal.search.admin.web.internal.display.context.IndexActionsDisplayContext" %>
 
 <%@ page import="java.io.Serializable" %>
@@ -48,7 +48,7 @@ page import="java.util.Map" %>
 <portlet:defineObjects />
 
 <%
-IndexActionsDisplayContext indexActionsDisplayContext = (IndexActionsDisplayContext)request.getAttribute(WebKeys.PORTLET_DISPLAY_CONTEXT);
+IndexActionsDisplayContext indexActionsDisplayContext = (IndexActionsDisplayContext)request.getAttribute(SearchAdminWebKeys.INDEX_ACTIONS_DISPLAY_CONTEXT);
 
 PortletURL portletURL = renderResponse.createRenderURL();
 

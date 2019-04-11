@@ -14,14 +14,18 @@
 
 package com.liferay.portal.search.admin.web.internal.portlet;
 
+import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.admin.web.internal.constants.SearchAdminPortletKeys;
+import com.liferay.portal.search.admin.web.internal.constants.SearchAdminWebKeys;
 import com.liferay.portal.search.admin.web.internal.display.context.FieldMappingsDisplayBuilder;
 import com.liferay.portal.search.admin.web.internal.display.context.IndexActionsDisplayBuilder;
+import com.liferay.portal.search.admin.web.internal.display.context.SearchAdminDisplayBuilder;
+import com.liferay.portal.search.admin.web.internal.display.context.SearchAdminDisplayContext;
 import com.liferay.portal.search.engine.SearchEngineInformation;
 import com.liferay.portal.search.index.IndexInformation;
 
@@ -72,10 +76,21 @@ public class SearchAdminPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
-		String tabs1 = ParamUtil.getString(
-			renderRequest, "tabs1", "index-actions");
+		SearchAdminDisplayBuilder searchAdminDisplayBuilder =
+			new SearchAdminDisplayBuilder(
+				_language, _portal, renderRequest, renderResponse);
 
-		if (tabs1.equals("index-actions")) {
+		searchAdminDisplayBuilder.setIndexInformation(indexInformation);
+
+		SearchAdminDisplayContext searchAdminDisplayContext =
+			searchAdminDisplayBuilder.build();
+
+		renderRequest.setAttribute(
+			WebKeys.PORTLET_DISPLAY_CONTEXT, searchAdminDisplayContext);
+
+		String tab = searchAdminDisplayContext.getSelectedTab();
+
+		if (tab.equals("index-actions")) {
 			IndexActionsDisplayBuilder indexActionsDisplayBuilder =
 				new IndexActionsDisplayBuilder();
 
@@ -83,7 +98,7 @@ public class SearchAdminPortlet extends MVCPortlet {
 				searchEngineInformation);
 
 			renderRequest.setAttribute(
-				WebKeys.PORTLET_DISPLAY_CONTEXT,
+				SearchAdminWebKeys.INDEX_ACTIONS_DISPLAY_CONTEXT,
 				indexActionsDisplayBuilder.build());
 		}
 		else {
@@ -104,7 +119,7 @@ public class SearchAdminPortlet extends MVCPortlet {
 			fieldMappingsDisplayBuilder.setSelectedIndexName(selectedIndexName);
 
 			renderRequest.setAttribute(
-				WebKeys.PORTLET_DISPLAY_CONTEXT,
+				SearchAdminWebKeys.FIELD_MAPPINGS_DISPLAY_CONTEXT,
 				fieldMappingsDisplayBuilder.build());
 		}
 
@@ -123,6 +138,9 @@ public class SearchAdminPortlet extends MVCPortlet {
 
 	@Reference
 	private Http _http;
+
+	@Reference
+	private Language _language;
 
 	@Reference
 	private Portal _portal;
