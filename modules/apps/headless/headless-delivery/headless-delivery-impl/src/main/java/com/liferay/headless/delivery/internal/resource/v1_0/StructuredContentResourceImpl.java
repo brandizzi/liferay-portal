@@ -535,30 +535,6 @@ public class StructuredContentResourceImpl
 					structuredContent.getViewableByAsString())));
 	}
 
-	private void _validateContentFields(
-		ContentField[] contentFields, DDMStructure ddmStructure) {
-
-		if (ArrayUtil.isEmpty(contentFields)) {
-			return;
-		}
-
-		for (ContentField contentField : contentFields) {
-			DDMFormField ddmFormField = _getDDMFormField(
-				ddmStructure, contentField.getName());
-
-			if (ddmFormField == null) {
-				throw new BadRequestException(
-					StringBundler.concat(
-						"Unable to get content field value for \"",
-						contentField.getName(), "\" for content structure ",
-						ddmStructure.getStructureId()));
-			}
-
-			_validateContentFields(
-				contentField.getNestedFields(), ddmStructure);
-		}
-	}
-
 	private DDMStructure _checkDDMStructurePermission(
 			StructuredContent structuredContent)
 		throws Exception {
@@ -818,6 +794,30 @@ public class StructuredContentResourceImpl
 			new DefaultDTOConverterContext(
 				contextAcceptLanguage.getPreferredLocale(),
 				journalArticle.getResourcePrimKey(), contextUriInfo));
+	}
+
+	private void _validateContentFields(
+		ContentField[] contentFields, DDMStructure ddmStructure) {
+
+		if (ArrayUtil.isEmpty(contentFields)) {
+			return;
+		}
+
+		for (ContentField contentField : contentFields) {
+			DDMFormField ddmFormField = _getDDMFormField(
+				ddmStructure, contentField.getName());
+
+			if (ddmFormField == null) {
+				throw new BadRequestException(
+					StringBundler.concat(
+						"Unable to get content field value for \"",
+						contentField.getName(), "\" for content structure ",
+						ddmStructure.getStructureId()));
+			}
+
+			_validateContentFields(
+				contentField.getNestedFields(), ddmStructure);
+		}
 	}
 
 	private void _validateFomFieldValues(DDMFormValues ddmFormValues) {
