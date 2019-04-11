@@ -126,8 +126,12 @@ public class SearchAdminPortlet extends MVCPortlet {
 		super.render(renderRequest, renderResponse);
 	}
 
-	@Reference
-	protected IndexInformation indexInformation;
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected volatile IndexInformation indexInformation;
 
 	@Reference(
 		cardinality = ReferenceCardinality.OPTIONAL,
