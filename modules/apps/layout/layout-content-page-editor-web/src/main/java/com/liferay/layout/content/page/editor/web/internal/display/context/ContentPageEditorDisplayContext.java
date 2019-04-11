@@ -89,8 +89,6 @@ import com.liferay.portal.util.PortletCategoryUtil;
 import com.liferay.portal.util.WebAppPool;
 import com.liferay.segments.constants.SegmentsConstants;
 
-import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -972,6 +970,8 @@ public class ContentPageEditorDisplayContext {
 						request, "fragmentEntryInvalidContent")) {
 
 					error = true;
+
+					SessionErrors.clear(request);
 				}
 
 				soyContext.putHTML(

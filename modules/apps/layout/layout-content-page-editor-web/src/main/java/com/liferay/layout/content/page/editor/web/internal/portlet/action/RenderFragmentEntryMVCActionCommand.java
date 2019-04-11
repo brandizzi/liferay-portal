@@ -34,6 +34,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -75,17 +77,21 @@ public class RenderFragmentEntryMVCActionCommand extends BaseMVCActionCommand {
 			defaultFragmentRendererContext.setMode(
 				FragmentEntryLinkConstants.EDIT);
 
+			HttpServletRequest httpServletRequest =
+				_portal.getHttpServletRequest(actionRequest);
+
 			String content = _fragmentRendererController.render(
-				defaultFragmentRendererContext,
-				_portal.getHttpServletRequest(actionRequest),
+				defaultFragmentRendererContext, httpServletRequest,
 				_portal.getHttpServletResponse(actionResponse));
 
 			jsonObject.put("content", content);
 
 			if (SessionErrors.contains(
-					actionRequest, "fragmentEntryInvalidContent")) {
+					httpServletRequest, "fragmentEntryInvalidContent")) {
 
 				jsonObject.put("error", true);
+
+				SessionErrors.clear(httpServletRequest);
 			}
 		}
 
