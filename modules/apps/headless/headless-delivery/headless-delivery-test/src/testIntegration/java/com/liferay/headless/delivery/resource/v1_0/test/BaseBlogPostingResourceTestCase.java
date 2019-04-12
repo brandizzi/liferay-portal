@@ -952,7 +952,8 @@ public abstract class BaseBlogPostingResourceTestCase {
 			BlogPosting blogPosting)
 		throws Exception {
 
-		return invokePostSiteBlogPosting(testGroup.getGroupId(), blogPosting);
+		return invokePostSiteBlogPosting(
+			testGetSiteBlogPostingsPage_getSiteId(), blogPosting);
 	}
 
 	protected BlogPosting invokePostSiteBlogPosting(

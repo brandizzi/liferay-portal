@@ -867,7 +867,7 @@ public abstract class BaseStructuredContentResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), structuredContent);
+			testGetSiteStructuredContentsPage_getSiteId(), structuredContent);
 	}
 
 	protected StructuredContent invokePostSiteStructuredContent(
@@ -1475,8 +1475,9 @@ public abstract class BaseStructuredContentResourceTestCase {
 				StructuredContent structuredContent)
 		throws Exception {
 
-		return invokePostSiteStructuredContent(
-			testGroup.getGroupId(), structuredContent);
+		return invokePostStructuredContentFolderStructuredContent(
+			testGetStructuredContentFolderStructuredContentsPage_getStructuredContentFolderId(),
+			structuredContent);
 	}
 
 	protected StructuredContent

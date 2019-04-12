@@ -1223,7 +1223,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteDocumentFolder(
-			testGroup.getGroupId(), documentFolder);
+			testGetSiteDocumentFoldersPage_getSiteId(), documentFolder);
 	}
 
 	protected DocumentFolder invokePostSiteDocumentFolder(

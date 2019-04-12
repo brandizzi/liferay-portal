@@ -468,8 +468,9 @@ public abstract class BaseDocumentResourceTestCase {
 			Document document)
 		throws Exception {
 
-		return invokePostSiteDocument(
-			testGroup.getGroupId(), toMultipartBody(document));
+		return invokePostDocumentFolderDocument(
+			testGetDocumentFolderDocumentsPage_getDocumentFolderId(),
+			toMultipartBody(document));
 	}
 
 	protected Document invokePostDocumentFolderDocument(
@@ -1305,7 +1306,7 @@ public abstract class BaseDocumentResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteDocument(
-			testGroup.getGroupId(), toMultipartBody(document));
+			testGetSiteDocumentsPage_getSiteId(), toMultipartBody(document));
 	}
 
 	protected Document invokePostSiteDocument(

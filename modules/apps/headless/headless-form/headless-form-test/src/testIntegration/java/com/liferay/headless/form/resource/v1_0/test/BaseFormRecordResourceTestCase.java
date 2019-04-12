@@ -327,8 +327,8 @@ public abstract class BaseFormRecordResourceTestCase {
 			FormRecord formRecord)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostFormFormRecord(
+			testGetFormFormRecordsPage_getFormId(), formRecord);
 	}
 
 	protected FormRecord invokePostFormFormRecord(

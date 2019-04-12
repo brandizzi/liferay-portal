@@ -379,8 +379,9 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 				MessageBoardAttachment messageBoardAttachment)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostMessageBoardMessageMessageBoardAttachment(
+			testGetMessageBoardMessageMessageBoardAttachmentsPage_getMessageBoardMessageId(),
+			toMultipartBody(messageBoardAttachment));
 	}
 
 	protected MessageBoardAttachment
@@ -581,8 +582,9 @@ public abstract class BaseMessageBoardAttachmentResourceTestCase {
 				MessageBoardAttachment messageBoardAttachment)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostMessageBoardThreadMessageBoardAttachment(
+			testGetMessageBoardThreadMessageBoardAttachmentsPage_getMessageBoardThreadId(),
+			toMultipartBody(messageBoardAttachment));
 	}
 
 	protected MessageBoardAttachment

@@ -1580,8 +1580,9 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 				KnowledgeBaseArticle knowledgeBaseArticle)
 		throws Exception {
 
-		return invokePostSiteKnowledgeBaseArticle(
-			testGroup.getGroupId(), knowledgeBaseArticle);
+		return invokePostKnowledgeBaseFolderKnowledgeBaseArticle(
+			testGetKnowledgeBaseFolderKnowledgeBaseArticlesPage_getKnowledgeBaseFolderId(),
+			knowledgeBaseArticle);
 	}
 
 	protected KnowledgeBaseArticle
@@ -2039,7 +2040,8 @@ public abstract class BaseKnowledgeBaseArticleResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteKnowledgeBaseArticle(
-			testGroup.getGroupId(), knowledgeBaseArticle);
+			testGetSiteKnowledgeBaseArticlesPage_getSiteId(),
+			knowledgeBaseArticle);
 	}
 
 	protected KnowledgeBaseArticle invokePostSiteKnowledgeBaseArticle(

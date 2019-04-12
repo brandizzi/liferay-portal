@@ -609,7 +609,8 @@ public abstract class BaseBlogPostingImageResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteBlogPostingImage(
-			testGroup.getGroupId(), toMultipartBody(blogPostingImage));
+			testGetSiteBlogPostingImagesPage_getSiteId(),
+			toMultipartBody(blogPostingImage));
 	}
 
 	protected BlogPostingImage invokePostSiteBlogPostingImage(

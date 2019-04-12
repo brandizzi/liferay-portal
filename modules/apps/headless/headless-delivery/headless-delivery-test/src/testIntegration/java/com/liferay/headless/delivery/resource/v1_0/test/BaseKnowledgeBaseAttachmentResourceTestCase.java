@@ -241,8 +241,9 @@ public abstract class BaseKnowledgeBaseAttachmentResourceTestCase {
 				KnowledgeBaseAttachment knowledgeBaseAttachment)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostKnowledgeBaseArticleKnowledgeBaseAttachment(
+			testGetKnowledgeBaseArticleKnowledgeBaseAttachmentsPage_getKnowledgeBaseArticleId(),
+			toMultipartBody(knowledgeBaseAttachment));
 	}
 
 	protected KnowledgeBaseAttachment

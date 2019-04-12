@@ -890,7 +890,8 @@ public abstract class BaseKnowledgeBaseFolderResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteKnowledgeBaseFolder(
-			testGroup.getGroupId(), knowledgeBaseFolder);
+			testGetSiteKnowledgeBaseFoldersPage_getSiteId(),
+			knowledgeBaseFolder);
 	}
 
 	protected KnowledgeBaseFolder invokePostSiteKnowledgeBaseFolder(

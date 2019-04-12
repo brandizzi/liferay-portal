@@ -513,7 +513,8 @@ public abstract class BaseStructuredContentFolderResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteStructuredContentFolder(
-			testGroup.getGroupId(), structuredContentFolder);
+			testGetSiteStructuredContentFoldersPage_getSiteId(),
+			structuredContentFolder);
 	}
 
 	protected StructuredContentFolder invokePostSiteStructuredContentFolder(

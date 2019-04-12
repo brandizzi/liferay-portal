@@ -1555,8 +1555,9 @@ public abstract class BaseMessageBoardMessageResourceTestCase {
 				MessageBoardMessage messageBoardMessage)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostMessageBoardThreadMessageBoardMessage(
+			testGetMessageBoardThreadMessageBoardMessagesPage_getMessageBoardThreadId(),
+			messageBoardMessage);
 	}
 
 	protected MessageBoardMessage
