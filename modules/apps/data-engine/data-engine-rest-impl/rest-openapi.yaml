@@ -363,6 +363,35 @@ paths:
                     description: ""
             tags: ["DataDefinition"]
     "/data-definitions/{dataDefinitionId}/data-layouts":
+        get:
+            operationId: getDataDefinitionDataLayoutsPage
+            parameters:
+                - in: path
+                  name: dataDefinitionId
+                  required: true
+                  schema:
+                      format: int64
+                      type: integer
+                - in: query
+                  name: page
+                  required: true
+                  schema:
+                      type: integer
+                - in: query
+                  name: pageSize
+                  required: true
+                  schema:
+                      type: integer
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                items:
+                                    $ref: "#/components/schemas/DataLayout"
+                                type: array
+                    description: ""
+            tags: ["DataLayout"]
         post:
             operationId: postDataDefinitionDataLayout
             parameters:
