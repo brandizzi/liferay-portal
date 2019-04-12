@@ -773,18 +773,23 @@ public abstract class Base${schemaName}ResourceTestCase {
 			}
 
 			protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${schemaName} ${schemaVarName}) throws Exception {
-				<#if freeMarkerTool.hasPostSchemaJavaMethodSignature(javaMethodSignatures, schemaName, schemaName) && stringUtil.equals(javaMethodSignature.methodName, "post" + schemaName + schemaName)>
-					return invokePost${schemaName}${schemaName}(testGet${schemaName}${schemaNames}Page_getParent${schemaName}Id(), ${schemaVarName});
-				<#elseif freeMarkerTool.hasPostSchemaJavaMethodSignature(javaMethodSignatures, "siteId", schemaName)>
-					<#assign postSchemaJavaMethodSignature = freeMarkerTool.getPostSchemaJavaMethodSignature(javaMethodSignatures, "siteId", schemaName) />
+				<#assign
+					firstPathJavaMethodParameter = javaMethodSignature.pathJavaMethodParameters[0]
+					modifiedPathJavaMethodParameterName = firstPathJavaMethodParameter.parameterName?remove_beginning("parent")?remove_ending("Id")?cap_first
+				/>
+
+				<#if freeMarkerTool.hasPostSchemaJavaMethodSignature(javaMethodSignatures, firstPathJavaMethodParameter.parameterName, schemaName) && stringUtil.equals(javaMethodSignature.methodName, "post" + modifiedPathJavaMethodParameterName + schemaName)>
+					return invokePost${modifiedPathJavaMethodParameterName}${schemaName}(testGet${modifiedPathJavaMethodParameterName}${schemaNames}Page_get<#if stringUtil.startsWith(firstPathJavaMethodParameter.parameterName, "parent")>Parent</#if>${modifiedPathJavaMethodParameterName}Id(),
 
 					<#if freeMarkerTool.hasRequestBodyMediaType(postSchemaJavaMethodSignature, "multipart/form-data")>
 						<#assign generateToMultipartBodyMethod = true />
 
-						return invokePostSite${schemaName}(testGroup.getGroupId(), toMultipartBody(${schemaVarName}));
+						toMultipartBody(${schemaVarName})
 					<#else>
-						return invokePostSite${schemaName}(testGroup.getGroupId(), ${schemaVarName});
+						${schemaVarName}
 					</#if>
+
+					);
 				<#else>
 					throw new UnsupportedOperationException("This method needs to be implemented");
 				</#if>
