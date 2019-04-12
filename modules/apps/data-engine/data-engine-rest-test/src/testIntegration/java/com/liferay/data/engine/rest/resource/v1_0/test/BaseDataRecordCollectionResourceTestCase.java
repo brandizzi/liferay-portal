@@ -312,8 +312,9 @@ public abstract class BaseDataRecordCollectionResourceTestCase {
 				DataRecordCollection dataRecordCollection)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostDataDefinitionDataRecordCollection(
+			testGetDataDefinitionDataRecordCollectionsPage_getDataDefinitionId(),
+			dataRecordCollection);
 	}
 
 	protected DataRecordCollection invokePostDataDefinitionDataRecordCollection(

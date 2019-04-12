@@ -111,6 +111,169 @@ public abstract class BaseDataLayoutResourceTestCase {
 	}
 
 	@Test
+	public void testGetDataDefinitionDataLayoutsPage() throws Exception {
+		Long dataDefinitionId =
+			testGetDataDefinitionDataLayoutsPage_getDataDefinitionId();
+		Long irrelevantDataDefinitionId =
+			testGetDataDefinitionDataLayoutsPage_getIrrelevantDataDefinitionId();
+
+		if ((irrelevantDataDefinitionId != null)) {
+			DataLayout irrelevantDataLayout =
+				testGetDataDefinitionDataLayoutsPage_addDataLayout(
+					irrelevantDataDefinitionId, randomIrrelevantDataLayout());
+
+			Page<DataLayout> page = invokeGetDataDefinitionDataLayoutsPage(
+				irrelevantDataDefinitionId, Pagination.of(1, 2));
+
+			Assert.assertEquals(1, page.getTotalCount());
+
+			assertEquals(
+				Arrays.asList(irrelevantDataLayout),
+				(List<DataLayout>)page.getItems());
+			assertValid(page);
+		}
+
+		DataLayout dataLayout1 =
+			testGetDataDefinitionDataLayoutsPage_addDataLayout(
+				dataDefinitionId, randomDataLayout());
+
+		DataLayout dataLayout2 =
+			testGetDataDefinitionDataLayoutsPage_addDataLayout(
+				dataDefinitionId, randomDataLayout());
+
+		Page<DataLayout> page = invokeGetDataDefinitionDataLayoutsPage(
+			dataDefinitionId, Pagination.of(1, 2));
+
+		Assert.assertEquals(2, page.getTotalCount());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(dataLayout1, dataLayout2),
+			(List<DataLayout>)page.getItems());
+		assertValid(page);
+	}
+
+	@Test
+	public void testGetDataDefinitionDataLayoutsPageWithPagination()
+		throws Exception {
+
+		Long dataDefinitionId =
+			testGetDataDefinitionDataLayoutsPage_getDataDefinitionId();
+
+		DataLayout dataLayout1 =
+			testGetDataDefinitionDataLayoutsPage_addDataLayout(
+				dataDefinitionId, randomDataLayout());
+
+		DataLayout dataLayout2 =
+			testGetDataDefinitionDataLayoutsPage_addDataLayout(
+				dataDefinitionId, randomDataLayout());
+
+		DataLayout dataLayout3 =
+			testGetDataDefinitionDataLayoutsPage_addDataLayout(
+				dataDefinitionId, randomDataLayout());
+
+		Page<DataLayout> page1 = invokeGetDataDefinitionDataLayoutsPage(
+			dataDefinitionId, Pagination.of(1, 2));
+
+		List<DataLayout> dataLayouts1 = (List<DataLayout>)page1.getItems();
+
+		Assert.assertEquals(dataLayouts1.toString(), 2, dataLayouts1.size());
+
+		Page<DataLayout> page2 = invokeGetDataDefinitionDataLayoutsPage(
+			dataDefinitionId, Pagination.of(2, 2));
+
+		Assert.assertEquals(3, page2.getTotalCount());
+
+		List<DataLayout> dataLayouts2 = (List<DataLayout>)page2.getItems();
+
+		Assert.assertEquals(dataLayouts2.toString(), 1, dataLayouts2.size());
+
+		assertEqualsIgnoringOrder(
+			Arrays.asList(dataLayout1, dataLayout2, dataLayout3),
+			new ArrayList<DataLayout>() {
+				{
+					addAll(dataLayouts1);
+					addAll(dataLayouts2);
+				}
+			});
+	}
+
+	protected DataLayout testGetDataDefinitionDataLayoutsPage_addDataLayout(
+			Long dataDefinitionId, DataLayout dataLayout)
+		throws Exception {
+
+		return invokePostDataDefinitionDataLayout(dataDefinitionId, dataLayout);
+	}
+
+	protected Long testGetDataDefinitionDataLayoutsPage_getDataDefinitionId()
+		throws Exception {
+
+		throw new UnsupportedOperationException(
+			"This method needs to be implemented");
+	}
+
+	protected Long
+			testGetDataDefinitionDataLayoutsPage_getIrrelevantDataDefinitionId()
+		throws Exception {
+
+		return null;
+	}
+
+	protected Page<DataLayout> invokeGetDataDefinitionDataLayoutsPage(
+			Long dataDefinitionId, Pagination pagination)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath(
+					"/data-definitions/{dataDefinitionId}/data-layouts",
+					dataDefinitionId);
+
+		location = HttpUtil.addParameter(
+			location, "page", pagination.getPage());
+		location = HttpUtil.addParameter(
+			location, "pageSize", pagination.getPageSize());
+
+		options.setLocation(location);
+
+		String string = HttpUtil.URLtoString(options);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("HTTP response: " + string);
+		}
+
+		return outputObjectMapper.readValue(
+			string,
+			new TypeReference<Page<DataLayout>>() {
+			});
+	}
+
+	protected Http.Response invokeGetDataDefinitionDataLayoutsPageResponse(
+			Long dataDefinitionId, Pagination pagination)
+		throws Exception {
+
+		Http.Options options = _createHttpOptions();
+
+		String location =
+			_resourceURL +
+				_toPath(
+					"/data-definitions/{dataDefinitionId}/data-layouts",
+					dataDefinitionId);
+
+		location = HttpUtil.addParameter(
+			location, "page", pagination.getPage());
+		location = HttpUtil.addParameter(
+			location, "pageSize", pagination.getPageSize());
+
+		options.setLocation(location);
+
+		HttpUtil.URLtoByteArray(options);
+
+		return options.getResponse();
+	}
+
+	@Test
 	public void testPostDataDefinitionDataLayout() throws Exception {
 		DataLayout randomDataLayout = randomDataLayout();
 
@@ -125,8 +288,9 @@ public abstract class BaseDataLayoutResourceTestCase {
 			DataLayout dataLayout)
 		throws Exception {
 
-		throw new UnsupportedOperationException(
-			"This method needs to be implemented");
+		return invokePostDataDefinitionDataLayout(
+			testGetDataDefinitionDataLayoutsPage_getDataDefinitionId(),
+			dataLayout);
 	}
 
 	protected DataLayout invokePostDataDefinitionDataLayout(

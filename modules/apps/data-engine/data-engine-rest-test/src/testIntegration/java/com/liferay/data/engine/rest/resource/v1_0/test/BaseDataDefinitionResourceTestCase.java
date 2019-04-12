@@ -593,7 +593,7 @@ public abstract class BaseDataDefinitionResourceTestCase {
 		throws Exception {
 
 		return invokePostSiteDataDefinition(
-			testGroup.getGroupId(), dataDefinition);
+			testGetSiteDataDefinitionsPage_getSiteId(), dataDefinition);
 	}
 
 	protected DataDefinition invokePostSiteDataDefinition(

@@ -59,6 +59,25 @@ import javax.ws.rs.core.UriInfo;
 public abstract class BaseDataLayoutResourceImpl implements DataLayoutResource {
 
 	@Override
+	@GET
+	@Parameters(
+		value = {
+			@Parameter(in = ParameterIn.QUERY, name = "page"),
+			@Parameter(in = ParameterIn.QUERY, name = "pageSize")
+		}
+	)
+	@Path("/data-definitions/{dataDefinitionId}/data-layouts")
+	@Produces("application/json")
+	@Tags(value = {@Tag(name = "DataLayout")})
+	public Page<DataLayout> getDataDefinitionDataLayoutsPage(
+			@NotNull @PathParam("dataDefinitionId") Long dataDefinitionId,
+			@Context Pagination pagination)
+		throws Exception {
+
+		return Page.of(Collections.emptyList());
+	}
+
+	@Override
 	@Consumes("application/json")
 	@POST
 	@Path("/data-definitions/{dataDefinitionId}/data-layouts")

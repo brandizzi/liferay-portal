@@ -114,6 +114,26 @@ public class Query {
 
 	@GraphQLField
 	@GraphQLInvokeDetached
+	public Collection<DataLayout> getDataDefinitionDataLayoutsPage(
+			@GraphQLName("dataDefinitionId") Long dataDefinitionId,
+			@GraphQLName("pageSize") int pageSize,
+			@GraphQLName("page") int page)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_dataLayoutResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			dataLayoutResource -> {
+				Page paginationPage =
+					dataLayoutResource.getDataDefinitionDataLayoutsPage(
+						dataDefinitionId, Pagination.of(pageSize, page));
+
+				return paginationPage.getItems();
+			});
+	}
+
+	@GraphQLField
+	@GraphQLInvokeDetached
 	public DataLayout getDataLayout(
 			@GraphQLName("dataLayoutId") Long dataLayoutId)
 		throws Exception {

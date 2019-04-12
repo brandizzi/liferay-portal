@@ -33,6 +33,10 @@ import javax.annotation.Generated;
 @Generated("")
 public interface DataLayoutResource {
 
+	public Page<DataLayout> getDataDefinitionDataLayoutsPage(
+			Long dataDefinitionId, Pagination pagination)
+		throws Exception;
+
 	public DataLayout postDataDefinitionDataLayout(
 			Long dataDefinitionId, DataLayout dataLayout)
 		throws Exception;
