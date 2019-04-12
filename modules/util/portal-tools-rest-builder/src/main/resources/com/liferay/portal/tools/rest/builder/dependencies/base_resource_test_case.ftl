@@ -773,23 +773,27 @@ public abstract class Base${schemaName}ResourceTestCase {
 			}
 
 			protected ${schemaName} test${javaMethodSignature.methodName?cap_first}_add${schemaName}(${schemaName} ${schemaVarName}) throws Exception {
-				<#assign
-					firstPathJavaMethodParameter = javaMethodSignature.pathJavaMethodParameters[0]
-					modifiedPathJavaMethodParameterName = firstPathJavaMethodParameter.parameterName?remove_beginning("parent")?remove_ending("Id")?cap_first
-				/>
+				<#if (javaMethodSignature.pathJavaMethodParameters?size == 1)>
+					<#assign
+						firstPathJavaMethodParameter = javaMethodSignature.pathJavaMethodParameters[0]
+						modifiedPathJavaMethodParameterName = firstPathJavaMethodParameter.parameterName?remove_beginning("parent")?remove_ending("Id")?cap_first
+					/>
 
-				<#if freeMarkerTool.hasPostSchemaJavaMethodSignature(javaMethodSignatures, firstPathJavaMethodParameter.parameterName, schemaName) && stringUtil.equals(javaMethodSignature.methodName, "post" + modifiedPathJavaMethodParameterName + schemaName)>
-					return invokePost${modifiedPathJavaMethodParameterName}${schemaName}(testGet${modifiedPathJavaMethodParameterName}${schemaNames}Page_get<#if stringUtil.startsWith(firstPathJavaMethodParameter.parameterName, "parent")>Parent</#if>${modifiedPathJavaMethodParameterName}Id(),
+					<#if freeMarkerTool.hasPostSchemaJavaMethodSignature(javaMethodSignatures, firstPathJavaMethodParameter.parameterName, schemaName) && stringUtil.equals(javaMethodSignature.methodName, "post" + modifiedPathJavaMethodParameterName + schemaName)>
+						return invokePost${modifiedPathJavaMethodParameterName}${schemaName}(testGet${modifiedPathJavaMethodParameterName}${schemaNames}Page_get<#if stringUtil.startsWith(firstPathJavaMethodParameter.parameterName, "parent")>Parent</#if>${modifiedPathJavaMethodParameterName}Id(),
 
-					<#if freeMarkerTool.hasRequestBodyMediaType(postSchemaJavaMethodSignature, "multipart/form-data")>
-						<#assign generateToMultipartBodyMethod = true />
+						<#if freeMarkerTool.hasRequestBodyMediaType(javaMethodSignature, "multipart/form-data")>
+							<#assign generateToMultipartBodyMethod = true />
 
-						toMultipartBody(${schemaVarName})
+							toMultipartBody(${schemaVarName})
+						<#else>
+							${schemaVarName}
+						</#if>
+
+						);
 					<#else>
-						${schemaVarName}
+						throw new UnsupportedOperationException("This method needs to be implemented");
 					</#if>
-
-					);
 				<#else>
 					throw new UnsupportedOperationException("This method needs to be implemented");
 				</#if>
