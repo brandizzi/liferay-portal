@@ -5,61 +5,73 @@
 				"_all" : {
 					"full_name" : "_all",
 					"mapping" : {
+
 					}
 				},
 				"_field_names" : {
 					"full_name" : "_field_names",
 					"mapping" : {
+
 					}
 				},
 				"_id" : {
 					"full_name" : "_id",
 					"mapping" : {
+
 					}
 				},
 				"_ignored" : {
 					"full_name" : "_ignored",
 					"mapping" : {
+
 					}
 				},
 				"_index" : {
 					"full_name" : "_index",
 					"mapping" : {
+
 					}
 				},
 				"_parent" : {
 					"full_name" : "_parent",
 					"mapping" : {
+
 					}
 				},
 				"_routing" : {
 					"full_name" : "_routing",
 					"mapping" : {
+
 					}
 				},
 				"_seq_no" : {
 					"full_name" : "_seq_no",
 					"mapping" : {
+
 					}
 				},
 				"_source" : {
 					"full_name" : "_source",
 					"mapping" : {
+
 					}
 				},
 				"_type" : {
 					"full_name" : "_type",
 					"mapping" : {
+
 					}
 				},
 				"_uid" : {
 					"full_name" : "_uid",
 					"mapping" : {
+
 					}
 				},
 				"_version" : {
 					"full_name" : "_version",
 					"mapping" : {
+
 					}
 				},
 				"ancestorOrganizationIds" : {
@@ -76,6 +88,7 @@
 					"mapping" : {
 						"articleId" : {
 							"analyzer" : "keyword_lowercase",
+							"search_analyzer" : "standard_liferay",
 							"store" : true,
 							"type" : "text"
 						}
@@ -121,11 +134,13 @@
 					"full_name" : "assetTagNames",
 					"mapping" : {
 						"assetTagNames" : {
+							"analyzer" : "standard",
 							"fields" : {
 								"raw" : {
 									"type" : "keyword"
 								}
 							},
+							"search_analyzer" : "standard_liferay",
 							"store" : true,
 							"term_vector" : "with_positions_offsets",
 							"type" : "text"
@@ -207,6 +222,8 @@
 					"full_name" : "content",
 					"mapping" : {
 						"content" : {
+							"analyzer" : "standard",
+							"search_analyzer" : "standard_liferay",
 							"store" : true,
 							"term_vector" : "with_positions_offsets",
 							"type" : "text"
@@ -273,6 +290,8 @@
 					"full_name" : "description",
 					"mapping" : {
 						"description" : {
+							"analyzer" : "standard",
+							"search_analyzer" : "standard_liferay",
 							"store" : true,
 							"term_vector" : "with_positions_offsets",
 							"type" : "text"
@@ -707,6 +726,8 @@
 					"full_name" : "subtitle",
 					"mapping" : {
 						"subtitle" : {
+							"analyzer" : "standard",
+							"search_analyzer" : "standard_liferay",
 							"store" : true,
 							"type" : "text"
 						}
@@ -734,6 +755,8 @@
 					"full_name" : "title",
 					"mapping" : {
 						"title" : {
+							"analyzer" : "standard",
+							"search_analyzer" : "standard_liferay",
 							"store" : true,
 							"term_vector" : "with_positions_offsets",
 							"type" : "text"
