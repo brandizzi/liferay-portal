@@ -53,27 +53,30 @@ class FieldMappings extends PortletBase {
 		);
 	}
 
-	_selectText() {
+	_selectText(event) {
 		const copyTextArea = document.querySelector('.ace_text-input');
 
 		copyTextArea.focus();
 		copyTextArea.select();
 
+		event.currentTarget.dataset.title = Liferay.Language.get('copied');
+
 		setTimeout(
 			function() {
 				document.execCommand('copy');
-
-				Liferay.Portal.ToolTip.show(
-					document.querySelector('.btn-copy'),
-					Liferay.Language.get('copied')
-				);
 			},
 			0
 		);
 	}
 
-	_switchTheme() {
+	_switchTheme(event) {
 		document.querySelector('#richEditor').classList.toggle('ace_dark');
+		if (Liferay.Language.get('dark-theme') == event.currentTarget.dataset.title) {
+			event.currentTarget.dataset.title = Liferay.Language.get('light-theme');
+		}
+		else {
+			event.currentTarget.dataset.title = Liferay.Language.get('dark-theme');
+		}
 	}
 }
 
