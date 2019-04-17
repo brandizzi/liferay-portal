@@ -159,6 +159,29 @@ public class UserSearchFixture {
 		return user;
 	}
 
+	public User addUser(
+			String screenName, String firstName, String lastName, Locale locale,
+			Group group, String... assetTagNames)
+		throws Exception {
+
+		ServiceContext serviceContext = getServiceContext(group);
+
+		serviceContext.setAssetTagNames(assetTagNames);
+
+		User user = _addUser(
+			screenName, firstName, lastName, new long[] {group.getGroupId()},
+			locale, serviceContext);
+
+		_users.add(user);
+
+		List<AssetTag> assetTags = AssetTagLocalServiceUtil.getTags(
+			user.getModelClassName(), user.getPrimaryKey());
+
+		_assetTags.addAll(assetTags);
+
+		return user;
+	}
+
 	public UserGroup addUserGroup() throws Exception {
 		UserGroup userGroup = UserGroupTestUtil.addUserGroup();
 
@@ -361,6 +384,16 @@ public class UserSearchFixture {
 			_companyId, TestPropsValues.getUserId(), screenName,
 			LocaleUtil.getDefault(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), groupIds, serviceContext);
+	}
+
+	private User _addUser(
+			String screenName, String firstName, String lastName,
+			long[] groupIds, Locale locale, ServiceContext serviceContext)
+		throws Exception {
+
+		return UserTestUtil.addUser(
+			_companyId, TestPropsValues.getUserId(), screenName, locale,
+			firstName, lastName, groupIds, serviceContext);
 	}
 
 	private final List<Address> _addresses = new ArrayList<>();
