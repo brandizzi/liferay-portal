@@ -20,12 +20,12 @@ import com.liferay.bookmarks.model.BookmarksFolderConstants;
 import com.liferay.bookmarks.service.BookmarksEntryLocalServiceUtil;
 import com.liferay.bookmarks.test.util.BookmarksTestUtil;
 import com.liferay.petra.string.CharPool;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -54,21 +54,34 @@ public class BookmarksFixture {
 		return createBookmarksEntry(bookmarksFolder.getFolderId());
 	}
 
-	public BookmarksEntry createBookmarksEntry(long folderId)
-		throws Exception, PortalException {
+	public BookmarksEntry createBookmarksEntry(long folderId) throws Exception {
+		return createBookmarksEntry(
+			folderId, RandomTestUtil.randomString(),
+			RandomTestUtil.randomString());
+	}
+
+	public BookmarksEntry createBookmarksEntry(
+			long folderId, String name, String description)
+		throws Exception {
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
 				_group.getGroupId(), _user.getUserId());
 
 		BookmarksEntry bookmarksEntry = BookmarksEntryLocalServiceUtil.addEntry(
-			_user.getUserId(), _group.getGroupId(), folderId,
-			RandomTestUtil.randomString(), "https://www.liferay.com",
-			RandomTestUtil.randomString(), serviceContext);
+			_user.getUserId(), _group.getGroupId(), folderId, name,
+			"https://www.liferay.com", description, serviceContext);
 
 		_bookmarksEntries.add(bookmarksEntry);
 
 		return bookmarksEntry;
+	}
+
+	public BookmarksEntry createBookmarksEntry(String name) throws Exception {
+		BookmarksFolder bookmarksFolder = createBookmarksFolder();
+
+		return createBookmarksEntry(
+			bookmarksFolder.getFolderId(), name, RandomTestUtil.randomString());
 	}
 
 	public BookmarksFolder createBookmarksFolder() throws Exception {
@@ -113,6 +126,13 @@ public class BookmarksFixture {
 			Arrays.asList(StringUtil.split(treePath, CharPool.SLASH)));
 
 		map.put(Field.TREE_PATH, value);
+	}
+
+	public void updateDisplaySettings(Locale locale) throws Exception {
+		Group group = GroupTestUtil.updateDisplaySettings(
+			_group.getGroupId(), null, locale);
+
+		_group.setModelAttributes(group.getModelAttributes());
 	}
 
 	private final List<BookmarksEntry> _bookmarksEntries = new ArrayList<>();
