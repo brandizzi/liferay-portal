@@ -85,13 +85,17 @@ public class BookmarksFixture {
 	}
 
 	public BookmarksFolder createBookmarksFolder() throws Exception {
+		return createBookmarksFolder(RandomTestUtil.randomString());
+	}
+
+	public BookmarksFolder createBookmarksFolder(String name) throws Exception {
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
 				_group.getGroupId(), _user.getUserId());
 
 		BookmarksFolder bookmarksFolder = BookmarksTestUtil.addFolder(
-			BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-			RandomTestUtil.randomString(), serviceContext);
+			BookmarksFolderConstants.DEFAULT_PARENT_FOLDER_ID, name,
+			serviceContext);
 
 		_bookmarksFolders.add(bookmarksFolder);
 
