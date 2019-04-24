@@ -80,14 +80,12 @@ public class MBMessageIndexerIndexedFieldsTest {
 	public void testIndexedFields() throws Exception {
 		Locale locale = LocaleUtil.JAPAN;
 
-		String title = "新規";
+		String searchTerm = "新規";
 
 		mbMessageFixture.updateDisplaySettings(locale);
 
 		MBMessage mbMessage = mbMessageFixture.createMBMessageWithCategory(
-			title, _user.getUserId());
-
-		String searchTerm = mbMessage.getSubject();
+			searchTerm);
 
 		Document document = mbMessageIndexerFixture.searchOnlyOne(
 			searchTerm, locale);

@@ -15,23 +15,31 @@
 package com.liferay.message.boards.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.message.boards.constants.MBCategoryConstants;
+import com.liferay.message.boards.model.MBCategory;
 import com.liferay.message.boards.model.MBMessage;
 import com.liferay.message.boards.model.MBThread;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
 import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -39,10 +47,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * @author Luan Maoski
+ * @author Vagner B.C
  */
 @RunWith(Arquillian.class)
-public class MBThreadIndexerReindexTest {
+public class MBThreadMultiLanguageSearchTest {
 
 	@ClassRule
 	@Rule
@@ -54,92 +62,64 @@ public class MBThreadIndexerReindexTest {
 
 	@Before
 	public void setUp() throws Exception {
-		setUpUserSearchFixture();
-		setUpMBFixture();
 		setUpMBThreadIndexerFixture();
+		_defaultLocale = LocaleThreadLocal.getDefaultLocale();
+	}
+
+	@After
+	public void tearDown() {
+		LocaleThreadLocal.setDefaultLocale(_defaultLocale);
 	}
 
 	@Test
-	public void testReindexMBThread() throws Exception {
-		MBMessage mbMessage = mbFixture.createMBMessageWithCategory(
-			RandomTestUtil.randomString());
-
-		MBThread thread = mbMessage.getThread();
-
-		String searchTerm = thread.getUserName();
-
-		mbThreadIndexerFixture.searchOnlyOne(searchTerm);
-
-		Document document = mbThreadIndexerFixture.searchOnlyOne(searchTerm);
-
-		mbThreadIndexerFixture.deleteDocument(document);
-
-		mbThreadIndexerFixture.searchNoOne(searchTerm);
-
-		mbThreadIndexerFixture.reindex(thread.getCompanyId());
-
-		mbThreadIndexerFixture.searchOnlyOne(searchTerm);
+	public void testChineseSubject() throws Exception {
+		_testLocaleKeywords(LocaleUtil.CHINA, "你好");
 	}
 
 	@Test
-	public void testReindexMBThreadWithDefaultCategory() throws Exception {
-		MBMessage mbMessage = mbFixture.createMBMessage(
-			MBCategoryConstants.DEFAULT_PARENT_CATEGORY_ID,
-			RandomTestUtil.randomString());
-
-		MBThread mbThread = mbMessage.getThread();
-
-		String searchTerm = mbThread.getUserName();
-
-		mbThreadIndexerFixture.searchOnlyOne(searchTerm);
-
-		Document document = mbThreadIndexerFixture.searchOnlyOne(searchTerm);
-
-		mbThreadIndexerFixture.deleteDocument(document);
-
-		mbThreadIndexerFixture.searchNoOne(searchTerm);
-
-		mbThreadIndexerFixture.reindex(mbMessage.getCompanyId());
-
-		mbThreadIndexerFixture.searchOnlyOne(searchTerm);
+	public void testEnglishSubject() throws Exception {
+		_testLocaleKeywords(LocaleUtil.US, "firstName");
 	}
 
 	@Test
-	public void testReindexMBThreadWithDiscussion() throws Exception {
-		MBMessage mbMessage = mbFixture.createMBMessage(
-			MBCategoryConstants.DISCUSSION_CATEGORY_ID,
-			RandomTestUtil.randomString());
+	public void testJapaneseSubject() throws Exception {
+		_testLocaleKeywords(LocaleUtil.JAPAN, "東京");
+	}
 
-		MBThread mbThread = mbMessage.getThread();
+	protected void assertFieldValues(
+		String prefix, Locale locale, Map<String, String> map,
+		String searchTerm) {
 
-		String searchTerm = mbThread.getUserName();
+		Document document = mbThreadIndexerFixture.searchOnlyOne(
+			_user.getUserId(), searchTerm, locale);
 
-		mbThreadIndexerFixture.searchOnlyOne(searchTerm);
+		FieldValuesAssert.assertFieldValues(map, prefix, document, searchTerm);
+	}
 
-		Document document = mbThreadIndexerFixture.searchOnlyOne(searchTerm);
+	protected void setTestLocale(Locale locale) throws Exception {
+		mbFixture.updateDisplaySettings(locale);
 
-		mbThreadIndexerFixture.deleteDocument(document);
-
-		mbThreadIndexerFixture.searchNoOne(searchTerm);
-
-		mbThreadIndexerFixture.reindex(mbMessage.getCompanyId());
-
-		mbThreadIndexerFixture.searchOnlyOne(searchTerm);
+		LocaleThreadLocal.setDefaultLocale(locale);
 	}
 
 	protected void setUpMBFixture() {
 		mbFixture = new MBFixture(_group, _user);
 
-		_mbMessages = mbFixture.getMbMessages();
-
 		_mbThreads = mbFixture.getMbThreads();
+
+		_mbCategories = mbFixture.getMbCategories();
+
+		_mbMessages = mbFixture.getMbMessages();
 	}
 
 	protected void setUpMBThreadIndexerFixture() {
 		mbThreadIndexerFixture = new IndexerFixture<>(MBThread.class);
 	}
 
-	protected void setUpUserSearchFixture() throws Exception {
+	protected void setUpUserSearchFixture(
+			String firstName, String lastName, Locale locale)
+		throws Exception {
+
 		userSearchFixture = new UserSearchFixture();
 
 		userSearchFixture.setUp();
@@ -149,7 +129,7 @@ public class MBThreadIndexerReindexTest {
 		_groups = userSearchFixture.getGroups();
 
 		_user = userSearchFixture.addUser(
-			RandomTestUtil.randomString(), _group);
+			RandomTestUtil.randomString(), firstName, lastName, locale, _group);
 
 		_users = userSearchFixture.getUsers();
 	}
@@ -158,10 +138,41 @@ public class MBThreadIndexerReindexTest {
 	protected IndexerFixture<MBThread> mbThreadIndexerFixture;
 	protected UserSearchFixture userSearchFixture;
 
+	private void _testLocaleKeywords(Locale locale, String keywords)
+		throws Exception {
+
+		setTestLocale(locale);
+
+		setUpUserSearchFixture(keywords, _LAST_NAME, locale);
+
+		setUpMBFixture();
+
+		MBMessage mbMessage = mbFixture.createMBMessageWithCategory(
+			RandomTestUtil.randomString());
+
+		MBThread mbThread = mbMessage.getThread();
+
+		Map<String, String> map = new HashMap<String, String>() {
+			{
+				put(
+					Field.ENTRY_CLASS_PK,
+					String.valueOf(mbThread.getThreadId()));
+			}
+		};
+
+		assertFieldValues(Field.ENTRY_CLASS_PK, locale, map, keywords);
+	}
+
+	private static final String _LAST_NAME = "lastName";
+
+	private Locale _defaultLocale;
 	private Group _group;
 
 	@DeleteAfterTestRun
 	private List<Group> _groups;
+
+	@DeleteAfterTestRun
+	private List<MBCategory> _mbCategories;
 
 	@DeleteAfterTestRun
 	private List<MBMessage> _mbMessages;
