@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.ranking.web.internal.portlet;
 
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.util.Portal;
@@ -21,8 +22,9 @@ import com.liferay.portal.search.legacy.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.ranking.web.internal.constants.ResultsRankingPortletKeys;
 import com.liferay.portal.search.ranking.web.internal.display.context.ResultsRankingPortletDisplayContext;
-import com.liferay.portal.search.ranking.web.internal.display.context.SynonymSetsDisplayContext;
+import com.liferay.portal.search.ranking.web.internal.display.context.SynonymSetsPortletDisplayContext;
 import com.liferay.portal.search.searcher.Searcher;
+import com.liferay.portal.search.synonym.SynonymIndexer;
 
 import java.io.IOException;
 
@@ -78,17 +80,23 @@ public class ResultsRankingPortlet extends MVCPortlet {
 					httpServletRequest, _language, _queries, renderRequest,
 					renderResponse, _searcher, _searchRequestBuilderFactory);
 
-		SynonymSetsDisplayContext synonymSetsDisplayContext =
-			new SynonymSetsDisplayContext(
-				httpServletRequest, renderRequest, renderResponse);
-
 		renderRequest.setAttribute(
 			ResultsRankingPortletKeys.RESULTS_RANKING_DISPLAY_CONTEXT,
 			resultsRankingPortletDisplayContext);
 
-		renderRequest.setAttribute(
-			ResultsRankingPortletKeys.SYNONYM_SETS_DISPLAY_CONTEXT,
-			synonymSetsDisplayContext);
+		try {
+			SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext =
+				new SynonymSetsPortletDisplayContext(
+					httpServletRequest, renderRequest, renderResponse,
+					_synonymIndexer);
+
+			renderRequest.setAttribute(
+				ResultsRankingPortletKeys.SYNONYM_SETS_DISPLAY_CONTEXT,
+				synonymSetsPortletDisplayContext);
+		}
+		catch (PortalException pe) {
+			throw new IOException(pe);
+		}
 
 		super.render(renderRequest, renderResponse);
 	}
@@ -107,5 +115,8 @@ public class ResultsRankingPortlet extends MVCPortlet {
 
 	@Reference
 	private SearchRequestBuilderFactory _searchRequestBuilderFactory;
+
+	@Reference
+	private SynonymIndexer _synonymIndexer;
 
 }
