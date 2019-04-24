@@ -27,7 +27,9 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.search.synonym.SynonymIndexer;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,11 +43,12 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Filipe Oshiro
  */
-public class SynonymSetsDisplayContext {
+public class SynonymSetsPortletDisplayContext {
 
-	public SynonymSetsDisplayContext(
-		HttpServletRequest request, RenderRequest renderRequest,
-		RenderResponse renderResponse) {
+	public SynonymSetsPortletDisplayContext(
+			HttpServletRequest request, RenderRequest renderRequest,
+			RenderResponse renderResponse, SynonymIndexer _synonymIndexer)
+		throws PortalException {
 
 		_request = request;
 		_renderRequest = renderRequest;
@@ -53,6 +56,21 @@ public class SynonymSetsDisplayContext {
 
 		_themeDisplay = (ThemeDisplay)_request.getAttribute(
 			WebKeys.THEME_DISPLAY);
+
+		List<SynonymSetsEntryDisplayContext>
+			synonymSetsEntryDisplayContextList = new ArrayList();
+
+		for (String synonymSet :
+				_synonymIndexer.getSynonymSets(INDEX_NAME_PREFIX + getCompanyId())) {
+
+			synonymSetsEntryDisplayContextList.add(
+				new SynonymSetsEntryDisplayContext(synonymSet));
+		}
+
+		_searchContainer = getSearchContainer();
+		_searchContainer.setSearch(true);
+		_searchContainer.setTotal(synonymSetsEntryDisplayContextList.size());
+		_searchContainer.setResults(synonymSetsEntryDisplayContextList);
 	}
 
 	public List<DropdownItem> getActionDropdownItems() {
@@ -290,6 +308,10 @@ public class SynonymSetsDisplayContext {
 		return false;
 	}
 
+	private String getCompanyId() {
+		return String.valueOf(_themeDisplay.getCompanyId());
+	}
+
 	private String _displayStyle;
 	private String _keywords;
 	private String _orderByCol;
@@ -297,7 +319,9 @@ public class SynonymSetsDisplayContext {
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
 	private final HttpServletRequest _request;
-	private SearchContainer _searchContainer;
+	private SearchContainer<SynonymSetsEntryDisplayContext> _searchContainer;
 	private final ThemeDisplay _themeDisplay;
+
+	private static final String INDEX_NAME_PREFIX = "liferay-";
 
 }
