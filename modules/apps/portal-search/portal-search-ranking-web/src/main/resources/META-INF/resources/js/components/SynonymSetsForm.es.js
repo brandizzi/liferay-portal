@@ -5,6 +5,8 @@ import React, {Component} from 'react';
 
 class SynonymSetsForm extends Component {
 	static propTypes = {
+		formName: PropTypes.string,
+		inputName: PropTypes.string,
 		onClickSubmit: PropTypes.func
 	};
 
@@ -22,8 +24,11 @@ class SynonymSetsForm extends Component {
 	};
 
 	_handleSubmit = () => {
+		const form = document.forms[this.props.formName];
+		const synonymSetsString = this.state.synonyms.map(s => s.value).toString();
 
-		/* TODO: Call backend to save synonym sets */
+		form.elements[this.props.inputName].value = synonymSetsString;
+		form.submit();
 	};
 
 	_handleUpdate = value => {
@@ -37,8 +42,8 @@ class SynonymSetsForm extends Component {
 
 		return (
 			<div className="synonym-sets-form">
-				<div className="container-fluid container-fluid-max-xl container-form-lg">
-					<div className="sheet sheet-lg">
+				<div className="container-fluid-max-xl">
+					<div className="sheet-lg">
 						<div className="sheet-title">
 							{Liferay.Language.get('create-synonym-set')}
 						</div>
