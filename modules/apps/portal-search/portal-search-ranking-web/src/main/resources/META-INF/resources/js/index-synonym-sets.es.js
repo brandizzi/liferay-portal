@@ -7,7 +7,7 @@ export default function(id, props, context) {
 	ReactDOM.render(
 		<ThemeContext.Provider value={context}>
 			<div className="synonym-sets-root">
-				<SynonymSetsForm />
+				<SynonymSetsForm {...props} />
 			</div>
 		</ThemeContext.Provider>,
 		document.getElementById(id)
