@@ -33,8 +33,14 @@ import com.liferay.portal.search.elasticsearch6.internal.sort.ElasticsearchSortF
 import com.liferay.portal.search.elasticsearch6.internal.sort.ElasticsearchSortFieldTranslatorFixture;
 import com.liferay.portal.search.elasticsearch6.internal.stats.DefaultStatsTranslator;
 import com.liferay.portal.search.elasticsearch6.internal.stats.StatsTranslator;
+import com.liferay.portal.search.elasticsearch6.internal.suggest.ElasticsearchSuggesterTranslatorFixture;
 import com.liferay.portal.search.engine.adapter.search.SearchRequestExecutor;
 import com.liferay.portal.search.internal.aggregation.AggregationResultsImpl;
+import com.liferay.portal.search.internal.document.DocumentBuilderFactoryImpl;
+import com.liferay.portal.search.internal.geolocation.GeoBuildersImpl;
+import com.liferay.portal.search.internal.highlight.HighlightFieldBuilderFactoryImpl;
+import com.liferay.portal.search.internal.hits.SearchHitBuilderFactoryImpl;
+import com.liferay.portal.search.internal.hits.SearchHitsBuilderFactoryImpl;
 import com.liferay.portal.search.internal.legacy.stats.StatsRequestBuilderFactoryImpl;
 import com.liferay.portal.search.internal.legacy.stats.StatsResultsTranslatorImpl;
 import com.liferay.portal.search.internal.stats.StatsResponseBuilderFactoryImpl;
@@ -138,10 +144,9 @@ public class SearchRequestExecutorFixture {
 	protected static CountSearchRequestExecutor
 		createCountSearchRequestExecutor(
 			ElasticsearchClientResolver elasticsearchClientResolver,
-			ElasticsearchQueryTranslator elasticsearchQueryTranslator,
 			CommonSearchRequestBuilderAssembler
 				commonSearchRequestBuilderAssembler,
-			FacetProcessor facetProcessor, StatsTranslator statsTranslator) {
+			StatsTranslator statsTranslator) {
 
 		return new CountSearchRequestExecutorImpl() {
 			{
@@ -207,8 +212,8 @@ public class SearchRequestExecutorFixture {
 		SearchSearchRequestAssembler searchSearchRequestAssembler =
 			createSearchSearchRequestAssembler(
 				elasticsearchQueryTranslator, elasticsearchSortFieldTranslator,
-				commonSearchRequestBuilderAssembler, facetProcessor,
-				statsRequestBuilderFactory, statsTranslator);
+				commonSearchRequestBuilderAssembler, statsRequestBuilderFactory,
+				statsTranslator);
 
 		SearchSearchResponseAssemblerImpl searchSearchResponseAssembler =
 			createSearchSearchResponseAssembler(
@@ -219,9 +224,7 @@ public class SearchRequestExecutorFixture {
 				setCountSearchRequestExecutor(
 					createCountSearchRequestExecutor(
 						elasticsearchClientResolver,
-						elasticsearchQueryTranslator,
-						commonSearchRequestBuilderAssembler, facetProcessor,
-						statsTranslator));
+						commonSearchRequestBuilderAssembler, statsTranslator));
 				setMultisearchSearchRequestExecutor(
 					createMultisearchSearchRequestExecutor(
 						elasticsearchClientResolver,
@@ -232,6 +235,9 @@ public class SearchRequestExecutorFixture {
 						elasticsearchClientResolver,
 						searchSearchRequestAssembler,
 						searchSearchResponseAssembler));
+				setSuggestSearchRequestExecutor(
+					createSuggestSearchRequestExecutor(
+						elasticsearchClientResolver));
 			}
 		};
 	}
@@ -242,7 +248,6 @@ public class SearchRequestExecutorFixture {
 			ElasticsearchSortFieldTranslator elasticsearchSortFieldTranslator,
 			CommonSearchRequestBuilderAssembler
 				commonSearchRequestBuilderAssembler,
-			FacetProcessor facetProcessor,
 			StatsRequestBuilderFactory statsRequestBuilderFactory,
 			StatsTranslator statsTranslator) {
 
@@ -290,6 +295,12 @@ public class SearchRequestExecutorFixture {
 							setStatsTranslator(statsTranslator);
 						}
 					});
+				setDocumentBuilderFactory(new DocumentBuilderFactoryImpl());
+				setGeoBuilders(new GeoBuildersImpl());
+				setHighlightFieldBuilderFactory(
+					new HighlightFieldBuilderFactoryImpl());
+				setSearchHitBuilderFactory(new SearchHitBuilderFactoryImpl());
+				setSearchHitsBuilderFactory(new SearchHitsBuilderFactoryImpl());
 				setSearchResponseTranslator(
 					new DefaultSearchResponseTranslator() {
 						{
@@ -302,6 +313,25 @@ public class SearchRequestExecutorFixture {
 							setStatsTranslator(statsTranslator);
 						}
 					});
+			}
+		};
+	}
+
+	protected static SuggestSearchRequestExecutor
+		createSuggestSearchRequestExecutor(
+			ElasticsearchClientResolver elasticsearchClientResolver) {
+
+		return new SuggestSearchRequestExecutorImpl() {
+			{
+				setElasticsearchClientResolver(elasticsearchClientResolver);
+
+				ElasticsearchSuggesterTranslatorFixture
+					elasticsearchSuggesterTranslatorFixture =
+						new ElasticsearchSuggesterTranslatorFixture();
+
+				setSuggesterTranslator(
+					elasticsearchSuggesterTranslatorFixture.
+						getElasticsearchSuggesterTranslator());
 			}
 		};
 	}

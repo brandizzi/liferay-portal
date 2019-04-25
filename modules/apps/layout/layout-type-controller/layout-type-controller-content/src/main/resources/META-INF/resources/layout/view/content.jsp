@@ -20,6 +20,8 @@
 String ppid = ParamUtil.getString(request, "p_p_id");
 %>
 
+<liferay-ui:success key="layoutPublished" message="the-page-was-published-succesfully" />
+
 <c:choose>
 	<c:when test="<%= (themeDisplay.isStatePopUp() || themeDisplay.isWidget() || layoutTypePortlet.hasStateMax()) && Validator.isNotNull(ppid) %>">
 
@@ -52,13 +54,15 @@ String ppid = ParamUtil.getString(request, "p_p_id");
 		<%
 		LayoutPageTemplateStructure layoutPageTemplateStructure = LayoutPageTemplateStructureLocalServiceUtil.fetchLayoutPageTemplateStructure(layout.getGroupId(), PortalUtil.getClassNameId(Layout.class.getName()), layout.getPlid(), true);
 
-		String data = layoutPageTemplateStructure.getData();
+		long[] segmentsExperienceIds = GetterUtil.getLongValues(request.getAttribute(SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS), new long[] {SegmentsConstants.SEGMENTS_EXPERIENCE_ID_DEFAULT});
+
+		String data = layoutPageTemplateStructure.getData(segmentsExperienceIds);
 		%>
 
 		<c:if test="<%= Validator.isNotNull(data) %>">
 
 			<%
-			JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(layoutPageTemplateStructure.getData());
+			JSONObject dataJSONObject = JSONFactoryUtil.createJSONObject(data);
 
 			JSONArray structureJSONArray = dataJSONObject.getJSONArray("structure");
 			%>
@@ -69,8 +73,6 @@ String ppid = ParamUtil.getString(request, "p_p_id");
 					<%
 					try {
 						request.setAttribute(WebKeys.PORTLET_DECORATE, Boolean.FALSE);
-
-						long[] segmentsIds = GetterUtil.getLongValues(request.getAttribute(SegmentsWebKeys.SEGMENTS_ENTRY_IDS), new long[0]);
 
 						for (int i = 0; i < structureJSONArray.length(); i++) {
 							JSONObject rowJSONObject = structureJSONArray.getJSONObject(i);
@@ -83,6 +85,7 @@ String ppid = ParamUtil.getString(request, "p_p_id");
 							String containerType = StringPool.BLANK;
 							long paddingHorizontal = 3L;
 							long paddingVertical = 3L;
+							String type = "fragments-editor-component-row";
 
 							if (rowConfigJSONObject != null) {
 								backgroundColorCssClass = rowConfigJSONObject.getString("backgroundColorCssClass");
@@ -91,12 +94,13 @@ String ppid = ParamUtil.getString(request, "p_p_id");
 								containerType = rowConfigJSONObject.getString("containerType");
 								paddingHorizontal = GetterUtil.getLong(rowConfigJSONObject.getString("paddingHorizontal"), paddingHorizontal);
 								paddingVertical = GetterUtil.getLong(rowConfigJSONObject.getString("paddingVertical"), paddingVertical);
+								type = GetterUtil.getString(rowJSONObject.getString("type"), type);
 							}
 					%>
 
-							<div class="container-fluid bg-palette-<%= backgroundColorCssClass %> px-<%= paddingHorizontal %> py-<%= paddingVertical %>" style="<%= Validator.isNotNull(backgroundImage) ? "background-image: url(" + backgroundImage + "); background-position: 50% 50%; background-repeat: no-repeat; background-size: cover;" : StringPool.BLANK %>">
+							<div class="container-fluid bg-<%= backgroundColorCssClass %> px-<%= paddingHorizontal %> py-<%= paddingVertical %>" style="<%= Validator.isNotNull(backgroundImage) ? "background-image: url(" + backgroundImage + "); background-position: 50% 50%; background-repeat: no-repeat; background-size: cover;" : StringPool.BLANK %>">
 								<div class="<%= Objects.equals(containerType, "fixed") ? "container" : "container-fluid" %> p-0">
-									<div class="row <%= columnSpacing ? StringPool.BLANK : "no-gutters" %>">
+									<div class="row <%= (!columnSpacing || Objects.equals(type, "fragments-editor-section-row")) ? "no-gutters" : StringPool.BLANK %>">
 
 										<%
 										JSONArray columnsJSONArray = rowJSONObject.getJSONArray("columns");
@@ -124,9 +128,17 @@ String ppid = ParamUtil.getString(request, "p_p_id");
 													if (fragmentEntryLink == null) {
 														continue;
 													}
+
+													FragmentRendererController fragmentRendererController = (FragmentRendererController)request.getAttribute(FragmentActionKeys.FRAGMENT_RENDERER_CONTROLLER);
+
+													DefaultFragmentRendererContext defaultFragmentRendererContext = new DefaultFragmentRendererContext(fragmentEntryLink);
+
+													defaultFragmentRendererContext.setLocale(locale);
+													defaultFragmentRendererContext.setMode(FragmentEntryLinkConstants.VIEW);
+													defaultFragmentRendererContext.setSegmentsExperienceIds(segmentsExperienceIds);
 												%>
 
-													<%= FragmentEntryRenderUtil.renderFragmentEntryLink(fragmentEntryLink, FragmentEntryLinkConstants.VIEW, Collections.emptyMap(), locale, segmentsIds, request, response) %>
+													<%= fragmentRendererController.render(defaultFragmentRendererContext, request, response) %>
 
 												<%
 												}

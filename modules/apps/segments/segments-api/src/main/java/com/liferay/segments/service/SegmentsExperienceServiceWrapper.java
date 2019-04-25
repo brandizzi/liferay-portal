@@ -39,13 +39,12 @@ public class SegmentsExperienceServiceWrapper
 	@Override
 	public com.liferay.segments.model.SegmentsExperience addSegmentsExperience(
 			long segmentsEntryId, long classNameId, long classPK,
-			java.util.Map<java.util.Locale, String> nameMap, int priority,
-			boolean active,
+			java.util.Map<java.util.Locale, String> nameMap, boolean active,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _segmentsExperienceService.addSegmentsExperience(
-			segmentsEntryId, classNameId, classPK, nameMap, priority, active,
+			segmentsEntryId, classNameId, classPK, nameMap, active,
 			serviceContext);
 	}
 
@@ -79,13 +78,21 @@ public class SegmentsExperienceServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.segments.model.SegmentsExperience>
-			getSegmentsExperiences(
-				long groupId, long classNameId, long classPK, boolean active,
-				int start, int end,
-				com.liferay.portal.kernel.util.OrderByComparator
-					<com.liferay.segments.model.SegmentsExperience>
-						orderByComparator)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		getSegmentsExperiences(
+			long groupId, long classNameId, long classPK, boolean active) {
+
+		return _segmentsExperienceService.getSegmentsExperiences(
+			groupId, classNameId, classPK, active);
+	}
+
+	@Override
+	public java.util.List<com.liferay.segments.model.SegmentsExperience>
+		getSegmentsExperiences(
+			long groupId, long classNameId, long classPK, boolean active,
+			int start, int end,
+			com.liferay.portal.kernel.util.OrderByComparator
+				<com.liferay.segments.model.SegmentsExperience>
+					orderByComparator) {
 
 		return _segmentsExperienceService.getSegmentsExperiences(
 			groupId, classNameId, classPK, active, start, end,
@@ -94,8 +101,7 @@ public class SegmentsExperienceServiceWrapper
 
 	@Override
 	public int getSegmentsExperiencesCount(
-			long groupId, long classNameId, long classPK, boolean active)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		long groupId, long classNameId, long classPK, boolean active) {
 
 		return _segmentsExperienceService.getSegmentsExperiencesCount(
 			groupId, classNameId, classPK, active);
@@ -105,12 +111,20 @@ public class SegmentsExperienceServiceWrapper
 	public com.liferay.segments.model.SegmentsExperience
 			updateSegmentsExperience(
 				long segmentsExperienceId, long segmentsEntryId,
-				java.util.Map<java.util.Locale, String> nameMap, int priority,
-				boolean active)
+				java.util.Map<java.util.Locale, String> nameMap, boolean active)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _segmentsExperienceService.updateSegmentsExperience(
-			segmentsExperienceId, segmentsEntryId, nameMap, priority, active);
+			segmentsExperienceId, segmentsEntryId, nameMap, active);
+	}
+
+	@Override
+	public void updateSegmentsExperiencePriority(
+			long segmentsExperienceId, int newPriority)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		_segmentsExperienceService.updateSegmentsExperiencePriority(
+			segmentsExperienceId, newPriority);
 	}
 
 	@Override

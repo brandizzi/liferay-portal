@@ -52,7 +52,11 @@ renderResponse.setTitle(editSegmentsEntryDisplayContext.getTitle(locale));
 	String segmentEditRootElementId = renderResponse.getNamespace() + "-segment-edit-root";
 	%>
 
-	<div id="<%= segmentEditRootElementId %>"></div>
+	<div id="<%= segmentEditRootElementId %>">
+		<div class="inline-item my-5 p-5 w-100">
+			<span aria-hidden="true" class="loading-animation"></span>
+		</div>
+	</div>
 
 	<portlet:renderURL var="previewMembersURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 		<portlet:param name="mvcRenderCommandName" value="previewSegmentsEntryUsers" />
@@ -70,13 +74,14 @@ renderResponse.setTitle(editSegmentsEntryDisplayContext.getTitle(locale));
 				formId: '<portlet:namespace />editSegmentFm',
 				initialMembersCount: <%= editSegmentsEntryDisplayContext.getSegmentsEntryClassPKsCount() %>,
 				initialSegmentActive: <%= (segmentsEntry == null) ? false : segmentsEntry.isActive() %>,
-				initialSegmentName: '<%= (segmentsEntry != null) ? segmentsEntry.getName(locale) : StringPool.BLANK %>',
+				initialSegmentName: '<%= (segmentsEntry != null) ? HtmlUtil.escapeJS(segmentsEntry.getName(locale)) : StringPool.BLANK %>',
 				locale: '<%= locale %>',
 				portletNamespace: '<portlet:namespace />',
 				previewMembersURL: '<%= previewMembersURL %>',
 				propertyGroups: <%= editSegmentsEntryDisplayContext.getPropertyGroupsJSONArray(locale) %>,
 				redirect: '<%= HtmlUtil.escape(redirect) %>',
 				requestMembersCountURL: '<%= getSegmentsEntryClassPKsCountURL %>',
+				showInEditMode: <%= editSegmentsEntryDisplayContext.isShowInEditMode() %>,
 				source: '<%= editSegmentsEntryDisplayContext.getSource() %>'
 			},
 			{

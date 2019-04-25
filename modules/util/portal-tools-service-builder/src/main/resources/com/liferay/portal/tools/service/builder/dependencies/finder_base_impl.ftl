@@ -42,25 +42,29 @@ public <#if dependencyInjectorDS>abstract </#if>class ${entity.name}FinderBaseIm
 	public ${entity.name}FinderBaseImpl() {
 		setModelClass(${entity.name}.class);
 
-		<#if serviceBuilder.isVersionLTE_7_1_0() && (entity.badEntityColumns?size != 0)>
-			try {
-				Field field = BasePersistenceImpl.class.getDeclaredField("_dbColumnNames");
+		<#if entity.badEntityColumns?size != 0>
+			Map<String, String> dbColumnNames = new HashMap<String, String>();
 
-				field.setAccessible(true);
+			<#list entity.badEntityColumns as badEntityColumn>
+				dbColumnNames.put("${badEntityColumn.name}", "${badEntityColumn.DBName}");
+			</#list>
 
-				Map<String, String> dbColumnNames = new HashMap<String, String>();
+			<#if serviceBuilder.isVersionLTE_7_1_0()>
+				try {
+					Field field = BasePersistenceImpl.class.getDeclaredField("_dbColumnNames");
 
-				<#list entity.badEntityColumns as badEntityColumn>
-					dbColumnNames.put("${badEntityColumn.name}", "${badEntityColumn.DBName}");
-				</#list>
+					field.setAccessible(true);
 
-				field.set(this, dbColumnNames);
-			}
-			catch (Exception e) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(e, e);
+					field.set(this, dbColumnNames);
 				}
-			}
+				catch (Exception e) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(e, e);
+					}
+				}
+			<#else>
+				setDBColumnNames(dbColumnNames);
+			</#if>
 		</#if>
 	}
 

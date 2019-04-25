@@ -35,10 +35,13 @@ import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.GroupThreadLocal;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.segments.constants.SegmentsConstants;
+import com.liferay.segments.exception.RequiredSegmentsEntryException;
 import com.liferay.segments.exception.SegmentsEntryKeyException;
 import com.liferay.segments.model.SegmentsEntry;
 import com.liferay.segments.service.base.SegmentsEntryLocalServiceBaseImpl;
@@ -62,9 +65,9 @@ public class SegmentsEntryLocalServiceImpl
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public SegmentsEntry addSegmentsEntry(
-			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
-			boolean active, String criteria, String key, String source,
-			String type, ServiceContext serviceContext)
+			String segmentsEntryKey, Map<Locale, String> nameMap,
+			Map<Locale, String> descriptionMap, boolean active, String criteria,
+			String source, String type, ServiceContext serviceContext)
 		throws PortalException {
 
 		// Segments entry
@@ -72,15 +75,21 @@ public class SegmentsEntryLocalServiceImpl
 		User user = userLocalService.getUser(serviceContext.getUserId());
 		long groupId = serviceContext.getScopeGroupId();
 
-		key = FriendlyURLNormalizerUtil.normalize(key);
+		if (Validator.isNull(segmentsEntryKey)) {
+			segmentsEntryKey = String.valueOf(counterLocalService.increment());
+		}
+		else {
+			segmentsEntryKey = StringUtil.toUpperCase(segmentsEntryKey.trim());
+		}
 
-		validate(0, groupId, key);
+		validate(0, groupId, segmentsEntryKey);
 
 		long segmentsEntryId = counterLocalService.increment();
 
 		SegmentsEntry segmentsEntry = segmentsEntryPersistence.create(
 			segmentsEntryId);
 
+		segmentsEntry.setUuid(serviceContext.getUuid());
 		segmentsEntry.setGroupId(groupId);
 		segmentsEntry.setCompanyId(user.getCompanyId());
 		segmentsEntry.setUserId(user.getUserId());
@@ -88,11 +97,11 @@ public class SegmentsEntryLocalServiceImpl
 		segmentsEntry.setCreateDate(serviceContext.getCreateDate(new Date()));
 		segmentsEntry.setModifiedDate(
 			serviceContext.getModifiedDate(new Date()));
+		segmentsEntry.setSegmentsEntryKey(segmentsEntryKey);
 		segmentsEntry.setNameMap(nameMap);
 		segmentsEntry.setDescriptionMap(descriptionMap);
 		segmentsEntry.setActive(active);
 		segmentsEntry.setCriteria(criteria);
-		segmentsEntry.setKey(key);
 
 		if (Validator.isNull(source)) {
 			segmentsEntry.setSource(SegmentsConstants.SOURCE_DEFAULT);
@@ -151,6 +160,16 @@ public class SegmentsEntryLocalServiceImpl
 
 		// Segments entry
 
+		if (!GroupThreadLocal.isDeleteInProcess()) {
+			if (segmentsExperiencePersistence.countBySegmentsEntryId(
+					segmentsEntry.getSegmentsEntryId()) > 0) {
+
+				throw new RequiredSegmentsEntryException.
+					MustNotDeleteSegmentsEntryReferencedBySegmentsExperiences(
+						segmentsEntry.getSegmentsEntryId());
+			}
+		}
+
 		segmentsEntryPersistence.remove(segmentsEntry);
 
 		// Resources
@@ -173,10 +192,11 @@ public class SegmentsEntryLocalServiceImpl
 
 	@Override
 	public SegmentsEntry fetchSegmentsEntry(
-		long groupId, String key, boolean includeAncestorSegmentsEntries) {
+		long groupId, String segmentsEntryKey,
+		boolean includeAncestorSegmentsEntries) {
 
-		SegmentsEntry segmentsEntry = segmentsEntryPersistence.fetchByG_K(
-			groupId, key);
+		SegmentsEntry segmentsEntry = segmentsEntryPersistence.fetchByG_S(
+			groupId, segmentsEntryKey);
 
 		if (segmentsEntry != null) {
 			return segmentsEntry;
@@ -185,8 +205,8 @@ public class SegmentsEntryLocalServiceImpl
 		for (long ancestorSiteGroupId :
 				PortalUtil.getAncestorSiteGroupIds(groupId)) {
 
-			segmentsEntry = segmentsEntryPersistence.fetchByG_K(
-				ancestorSiteGroupId, key);
+			segmentsEntry = segmentsEntryPersistence.fetchByG_S(
+				ancestorSiteGroupId, segmentsEntryKey);
 
 			if (segmentsEntry != null) {
 				return segmentsEntry;
@@ -194,15 +214,6 @@ public class SegmentsEntryLocalServiceImpl
 		}
 
 		return null;
-	}
-
-	@Override
-	public List<SegmentsEntry> getSegmentsEntries(
-		boolean active, String type, int start, int end,
-		OrderByComparator<SegmentsEntry> orderByComparator) {
-
-		return segmentsEntryPersistence.findByA_T(
-			active, type, start, end, orderByComparator);
 	}
 
 	@Override
@@ -219,6 +230,17 @@ public class SegmentsEntryLocalServiceImpl
 			ArrayUtil.append(
 				PortalUtil.getAncestorSiteGroupIds(groupId), groupId),
 			start, end, orderByComparator);
+	}
+
+	@Override
+	public List<SegmentsEntry> getSegmentsEntries(
+		long groupId, boolean active, String type, int start, int end,
+		OrderByComparator<SegmentsEntry> orderByComparator) {
+
+		return segmentsEntryPersistence.findByG_A_T(
+			ArrayUtil.append(
+				PortalUtil.getAncestorSiteGroupIds(groupId), groupId),
+			active, type, start, end, orderByComparator);
 	}
 
 	@Override
@@ -283,23 +305,25 @@ public class SegmentsEntryLocalServiceImpl
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public SegmentsEntry updateSegmentsEntry(
-			long segmentsEntryId, Map<Locale, String> nameMap,
-			Map<Locale, String> descriptionMap, boolean active, String criteria,
-			String key, ServiceContext serviceContext)
+			long segmentsEntryId, String segmentsEntryKey,
+			Map<Locale, String> nameMap, Map<Locale, String> descriptionMap,
+			boolean active, String criteria, ServiceContext serviceContext)
 		throws PortalException {
 
 		SegmentsEntry segmentsEntry = segmentsEntryPersistence.findByPrimaryKey(
 			segmentsEntryId);
 
-		key = FriendlyURLNormalizerUtil.normalize(key);
+		segmentsEntryKey = FriendlyURLNormalizerUtil.normalize(
+			segmentsEntryKey);
 
-		validate(segmentsEntryId, segmentsEntry.getGroupId(), key);
+		validate(segmentsEntryId, segmentsEntry.getGroupId(), segmentsEntryKey);
+
+		segmentsEntry.setSegmentsEntryKey(segmentsEntryKey);
 
 		segmentsEntry.setNameMap(nameMap);
 		segmentsEntry.setDescriptionMap(descriptionMap);
 		segmentsEntry.setActive(active);
 		segmentsEntry.setCriteria(criteria);
-		segmentsEntry.setKey(key);
 
 		return segmentsEntryPersistence.update(segmentsEntry);
 	}
@@ -384,10 +408,12 @@ public class SegmentsEntryLocalServiceImpl
 		return segmentsEntries;
 	}
 
-	protected void validate(long segmentsEntryId, long groupId, String key)
+	protected void validate(
+			long segmentsEntryId, long groupId, String segmentsEntryKey)
 		throws PortalException {
 
-		SegmentsEntry segmentsEntry = fetchSegmentsEntry(groupId, key, true);
+		SegmentsEntry segmentsEntry = fetchSegmentsEntry(
+			groupId, segmentsEntryKey, true);
 
 		if ((segmentsEntry != null) &&
 			(segmentsEntry.getSegmentsEntryId() != segmentsEntryId)) {

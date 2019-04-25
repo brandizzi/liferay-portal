@@ -133,6 +133,14 @@ public class AuthVerifierFilter extends BasePortalFilter {
 			return;
 		}
 
+		if (_isCORSPreflightRequest(request)) {
+			Class<?> clazz = getClass();
+
+			processFilter(clazz.getName(), request, response, filterChain);
+
+			return;
+		}
+
 		AccessControlUtil.initAccessControlContext(
 			request, response, _initParametersMap);
 
@@ -253,6 +261,16 @@ public class AuthVerifierFilter extends BasePortalFilter {
 		response.sendRedirect(sb.toString());
 
 		return true;
+	}
+
+	private boolean _isCORSPreflightRequest(HttpServletRequest request) {
+		if (StringUtil.equals(request.getMethod(), "OPTIONS") &&
+			Validator.isNotNull(request.getHeader("Origin"))) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

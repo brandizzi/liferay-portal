@@ -16,10 +16,8 @@ package com.liferay.message.boards.internal.verify;
 
 import com.liferay.message.boards.internal.verify.model.MBDiscussionVerifiableModel;
 import com.liferay.message.boards.internal.verify.model.MBThreadFlagVerifiableModel;
-import com.liferay.message.boards.internal.verify.model.MBThreadVerifiableModel;
 import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.util.LoggingTimer;
-import com.liferay.portal.verify.VerifyAuditedModel;
 import com.liferay.portal.verify.VerifyGroupedModel;
 import com.liferay.portal.verify.VerifyProcess;
 
@@ -29,17 +27,19 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Brian Wing Shun Chan
  * @author Zsolt Berentey
+ *
+ * @deprecated As of Mueller (7.2.x), with no direct replacement
  */
 @Component(
 	immediate = true,
 	property = "verify.process.name=com.liferay.message.boards.service",
 	service = VerifyProcess.class
 )
+@Deprecated
 public class MessageBoardsServiceVerifyProcess extends VerifyProcess {
 
 	@Override
 	protected void doVerify() throws Exception {
-		verifyAuditedModels();
 		verifyGroupedModels();
 	}
 
@@ -50,15 +50,6 @@ public class MessageBoardsServiceVerifyProcess extends VerifyProcess {
 	protected void setRelease(Release release) {
 	}
 
-	protected void verifyAuditedModels() throws Exception {
-		try (LoggingTimer loggingTimer = new LoggingTimer()) {
-			_verifyAuditedModel.verify(
-				new MBDiscussionVerifiableModel(),
-				new MBThreadVerifiableModel(),
-				new MBThreadFlagVerifiableModel());
-		}
-	}
-
 	protected void verifyGroupedModels() throws Exception {
 		try (LoggingTimer loggingTimer = new LoggingTimer()) {
 			_verifyGroupedModel.verify(
@@ -67,8 +58,6 @@ public class MessageBoardsServiceVerifyProcess extends VerifyProcess {
 		}
 	}
 
-	private final VerifyAuditedModel _verifyAuditedModel =
-		new VerifyAuditedModel();
 	private final VerifyGroupedModel _verifyGroupedModel =
 		new VerifyGroupedModel();
 

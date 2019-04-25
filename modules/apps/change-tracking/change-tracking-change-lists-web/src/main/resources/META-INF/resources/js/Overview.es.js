@@ -1,3 +1,5 @@
+import 'clay-icon';
+
 import Soy from 'metal-soy';
 import PortletBase from 'frontend-js-web/liferay/PortletBase.es';
 import {Config} from 'metal-state';
@@ -28,7 +30,7 @@ class Overview extends PortletBase {
 			method: 'GET'
 		};
 
-		let url = this.urlCollectionsBase + '?type=production&companyId=' + Liferay.ThemeDisplay.getCompanyId();
+		let url = this.urlCollectionsBase + '?companyId=' + Liferay.ThemeDisplay.getCompanyId() + '&type=production';
 
 		fetch(url, init)
 			.then(r => r.json())
@@ -94,6 +96,38 @@ class Overview extends PortletBase {
 			);
 	}
 
+	_fetchCollisions(url, type) {
+		this.collisionsLoading = true;
+
+		let headers = new Headers();
+		headers.append('Content-Type', 'application/json');
+
+		let init = {
+			credentials: 'include',
+			headers,
+			method: type
+		};
+
+		fetch(url, init)
+			.then(r => r.json())
+			.then(response => this._populateCollidingChangeEntries(response))
+			.catch(
+				error => {
+					const message = typeof error === 'string' ?
+						error :
+						Liferay.Util.sub(Liferay.Language.get('an-error-occured-while-getting-data-from-x'), url);
+
+					openToast(
+						{
+							message,
+							title: Liferay.Language.get('error'),
+							type: 'danger'
+						}
+					);
+				}
+			);
+	}
+
 	_fetchRecentCollections(url, type) {
 		let headers = new Headers();
 		headers.append('Content-Type', 'application/json');
@@ -138,6 +172,8 @@ class Overview extends PortletBase {
 	}
 
 	_handleClickRecentCollections(event) {
+		event.preventDefault();
+
 		let headers = new Headers();
 		headers.append('Content-Type', 'application/json');
 
@@ -149,13 +185,20 @@ class Overview extends PortletBase {
 
 		let collectionId = event.target.getAttribute('data-collection-id');
 
+		let production = event.target.getAttribute('data-production');
+
 		let url = this.urlCollectionsBase + '/' + collectionId + '/checkout?userId=' + Liferay.ThemeDisplay.getUserId();
 
 		fetch(url, body)
 			.then(
 				response => {
 					if (response.status === 202) {
-						this._render();
+						if (production) {
+							Liferay.Util.navigate(this.urlSelectProduction);
+						}
+						else {
+							this._render();
+						}
 					}
 					else if (response.status === 400) {
 						response.json()
@@ -193,6 +236,12 @@ class Overview extends PortletBase {
 	_populateChangeEntries(changeEntriesResult) {
 		this.changeEntries = [];
 
+		if (!changeEntriesResult.items) {
+			this.headerButtonDisabled = true;
+
+			return;
+		}
+
 		changeEntriesResult.items.forEach(
 			changeEntry => {
 				let changeTypeStr = Liferay.Language.get('added');
@@ -204,11 +253,16 @@ class Overview extends PortletBase {
 					changeTypeStr = Liferay.Language.get('modified');
 				}
 
+				let entityNameTranslation = this.entityNameTranslations.find(
+					entityNameTranslation =>
+						entityNameTranslation.key == changeEntry.contentType
+				);
+
 				this.changeEntries.push(
 					{
 						changeType: changeTypeStr,
 						conflict: false,
-						contentType: changeEntry.contentType,
+						contentType: entityNameTranslation.translation,
 						lastEdited: new Intl.DateTimeFormat(
 							Liferay.ThemeDisplay.getBCP47LanguageId(),
 							{
@@ -247,6 +301,16 @@ class Overview extends PortletBase {
 		);
 	}
 
+	_populateCollidingChangeEntries(collisionsResult) {
+		if (collisionsResult.items) {
+			this.collisionsCount = collisionsResult.items.length;
+		}
+
+		this.collisionsTooltip = Liferay.Util.sub(Liferay.Language.get('collision-detected-for-x-change-lists'), this.collisionsCount);
+
+		this.collisionsLoading = false;
+	}
+
 	_populateFields(requestResult) {
 		let activeCollection = requestResult[0];
 		let productionInformation = requestResult[1];
@@ -258,6 +322,7 @@ class Overview extends PortletBase {
 		);
 
 		if (foundEntriesLink) {
+			this._fetchCollisions(foundEntriesLink.href + '?collision=true', foundEntriesLink.type);
 			this._fetchChangeEntries(foundEntriesLink.href, foundEntriesLink.type);
 		}
 
@@ -281,7 +346,7 @@ class Overview extends PortletBase {
 
 		// Change Lists dropdown Menu
 
-		let urlRecentCollections = this.urlCollectionsBase + '?companyId=' + Liferay.ThemeDisplay.getCompanyId() + '&limit=5&sort=modifiedDate:desc';
+		let urlRecentCollections = this.urlCollectionsBase + '?companyId=' + Liferay.ThemeDisplay.getCompanyId() + '&limit=5&type=recent&sort=modifiedDate:desc';
 
 		this._fetchRecentCollections(urlRecentCollections, 'GET');
 
@@ -293,7 +358,7 @@ class Overview extends PortletBase {
 
 		this.initialFetch = true;
 
-		if ((productionInformation !== undefined) && (productionInformation.ctcollection !== undefined) && (productionInformation.ctcollection.name !== null)) {
+		if ((productionInformation !== undefined) && (productionInformation.ctcollection !== undefined) && (productionInformation.ctcollection.name !== undefined)) {
 
 			// Production Information Description
 
@@ -426,6 +491,23 @@ Overview.STATE = {
 	descriptionProductionInformation: Config.string(),
 
 	/**
+	 * Contains a json array of translation properties
+	 * @default
+	 * @instance
+	 * @memberOf Overview
+	 * @review
+	 * @type {object}
+	 */
+	entityNameTranslations: Config.arrayOf(
+		Config.shapeOf(
+			{
+				key: Config.string(),
+				translation: Config.string()
+			}
+		)
+	),
+
+	/**
 	 * Contains the change entries for the currently selected CT Collection.
 	 * @default undefined
 	 * @instance
@@ -466,6 +548,28 @@ Overview.STATE = {
 			}
 		)
 	),
+
+	/**
+	 * Stores if fetching collission is in progress.
+	 * @default true
+	 * @instance
+	 * @memberOf Overview
+	 * @review
+	 * @type {boolean}
+	 */
+	collisionsLoading: Config.bool().value(true),
+
+	/**
+	 * Stores the number of collisions.
+	 * @default true
+	 * @instance
+	 * @memberOf Overview
+	 * @review
+	 * @type {boolean}
+	 */
+	collisionsCount: Config.number().value(0),
+
+	collisionsTooltip: Config.string(),
 
 	/**
 	 * Stores if the head button is disabled or not.
@@ -579,6 +683,17 @@ Overview.STATE = {
 	 */
 
 	urlProductionView: Config.string().required(),
+
+	/**
+	 * Property that contains the url for the list view with
+	 * production checked out
+	 * @default undefined
+	 * @instance
+	 * @memberOf Overview
+	 * @review
+	 * @type {string}
+	 */
+	urlSelectProduction: Config.string(),
 
 	/**
 	 * Path of the available icons.

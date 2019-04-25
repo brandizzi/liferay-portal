@@ -1,5 +1,5 @@
-import React from 'react';
 import propTypes from 'prop-types';
+import React from 'react';
 
 class DecimalInput extends React.Component {
 	static propTypes = {
@@ -15,11 +15,11 @@ class DecimalInput extends React.Component {
 	_handleDecimalBlur = event => {
 		const value = Number.parseFloat(event.target.value).toFixed(2);
 
-		this.props.onChange(value);
+		this.props.onChange({value});
 	}
 
 	_handleDecimalChange = event => {
-		this.props.onChange(event.target.value);
+		this.props.onChange({value: event.target.value});
 	}
 
 	render() {

@@ -14,8 +14,11 @@
 
 package com.liferay.gradle.plugins.defaults.internal;
 
+import com.liferay.gradle.plugins.LiferayBasePlugin;
 import com.liferay.gradle.plugins.cache.CachePlugin;
+import com.liferay.gradle.plugins.defaults.internal.util.CIUtil;
 import com.liferay.gradle.plugins.defaults.internal.util.GradleUtil;
+import com.liferay.gradle.plugins.node.NodePlugin;
 import com.liferay.gradle.plugins.node.tasks.DownloadNodeTask;
 import com.liferay.gradle.plugins.node.tasks.ExecuteNodeTask;
 import com.liferay.gradle.plugins.node.tasks.ExecuteNpmTask;
@@ -24,31 +27,26 @@ import com.liferay.gradle.plugins.test.integration.TestIntegrationBasePlugin;
 import com.liferay.gradle.plugins.test.integration.TestIntegrationPlugin;
 import com.liferay.gradle.util.Validator;
 
-import groovy.json.JsonSlurper;
-
 import java.io.File;
-import java.io.IOException;
-
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+import java.util.Objects;
 
 import org.gradle.api.Action;
 import org.gradle.api.GradleException;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
-import org.gradle.api.UncheckedIOException;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.artifacts.ProjectDependency;
+import org.gradle.api.logging.Logger;
+import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.SourceSet;
 import org.gradle.api.tasks.TaskContainer;
-import org.gradle.util.GUtil;
+import org.gradle.api.tasks.TaskOutputs;
 
 /**
  * @author Andrea Di Giorgi
@@ -57,11 +55,21 @@ public class LiferayCIPlugin implements Plugin<Project> {
 
 	public static final Plugin<Project> INSTANCE = new LiferayCIPlugin();
 
+	public static final String RESTORE_HOTFIX_VERSION_TASK_NAME =
+		"restoreHotfixVersion";
+
+	public static final String UPDATE_HOTFIX_VERSION_TASK_NAME =
+		"updateHotfixVersion";
+
 	@Override
 	public void apply(final Project project) {
+		Task restoreHotfixVersionTask = _addTaskRestoreHotfixVersion(project);
+		Task updateHotfixVersionTask = _addTaskUpdateHotfixVersion(project);
+
 		_configureTasksDownloadNode(project);
 		_configureTasksExecuteNode(project);
-		_configureTasksExecuteNpm(project);
+		_configureTasksExecuteNpm(
+			project, restoreHotfixVersionTask, updateHotfixVersionTask);
 		_configureTasksNpmInstall(project);
 
 		GradleUtil.withPlugin(
@@ -89,6 +97,52 @@ public class LiferayCIPlugin implements Plugin<Project> {
 	}
 
 	private LiferayCIPlugin() {
+	}
+
+	private Task _addTaskRestoreHotfixVersion(final Project project) {
+		Task task = project.task(RESTORE_HOTFIX_VERSION_TASK_NAME);
+
+		task.setDescription("Restores the project hotfix version.");
+
+		task.doLast(
+			new Action<Task>() {
+
+				@Override
+				public void execute(Task task) {
+					CIUtil.restoreHotfixVersion(
+						project, _BND_HOTFIX_VERSION_FILE_NAME);
+
+					for (String fileName : _JSON_HOTFIX_VERSION_FILE_NAMES) {
+						CIUtil.restoreHotfixVersion(project, fileName);
+					}
+				}
+
+			});
+
+		return task;
+	}
+
+	private Task _addTaskUpdateHotfixVersion(final Project project) {
+		Task task = project.task(UPDATE_HOTFIX_VERSION_TASK_NAME);
+
+		task.setDescription("Updates the project hotfix version.");
+
+		task.doLast(
+			new Action<Task>() {
+
+				@Override
+				public void execute(Task task) {
+					CIUtil.updateHotfixVersion(
+						project, _BND_HOTFIX_VERSION_FILE_NAME);
+
+					for (String fileName : _JSON_HOTFIX_VERSION_FILE_NAMES) {
+						CIUtil.updateHotfixVersion(project, fileName);
+					}
+				}
+
+			});
+
+		return task;
 	}
 
 	private void _configureTaskDownloadNode(DownloadNodeTask downloadNodeTask) {
@@ -145,165 +199,30 @@ public class LiferayCIPlugin implements Plugin<Project> {
 	}
 
 	private void _configureTaskExecuteNpm(
-		ExecuteNpmTask executeNpmTask, String registry) {
+		ExecuteNpmTask executeNpmTask, String registry,
+		Task restoreHotfixVersionTask, Task updateHotfixVersionTask) {
 
 		if (Validator.isNotNull(registry)) {
 			executeNpmTask.setRegistry(registry);
 		}
 
-		executeNpmTask.doFirst(
-			new Action<Task>() {
+		Project project = executeNpmTask.getProject();
 
-				@Override
-				public void execute(Task task) {
-					Project project = task.getProject();
+		TaskContainer taskContainer = project.getTasks();
 
-					String[] fileNames = {
-						"bnd.bnd", "package.json", "package-lock.json"
-					};
+		Task deployTask = taskContainer.findByName(
+			LiferayBasePlugin.DEPLOY_TASK_NAME);
 
-					for (String fileName : fileNames) {
-						File file = project.file(fileName);
+		if (deployTask != null) {
+			String hotfixVersion = CIUtil.getBNDHotfixVersion(
+				deployTask.getProject(), _BND_HOTFIX_VERSION_FILE_NAME);
 
-						if (!file.exists()) {
-							continue;
-						}
+			if (hotfixVersion != null) {
+				executeNpmTask.dependsOn(updateHotfixVersionTask);
 
-						String version = null;
-
-						if (fileName.endsWith(".bnd")) {
-							Properties properties = GUtil.loadProperties(file);
-
-							version = properties.getProperty("Bundle-Version");
-						}
-						else if (fileName.endsWith(".json")) {
-							JsonSlurper jsonSlurper = new JsonSlurper();
-
-							Map<String, Object> map =
-								(Map<String, Object>)jsonSlurper.parse(file);
-
-							version = (String)map.get("version");
-						}
-
-						if (version == null) {
-							continue;
-						}
-
-						String newVersion = _fixHotfixVersion(version);
-
-						if (version.equals(newVersion)) {
-							continue;
-						}
-
-						try {
-							String content = new String(
-								Files.readAllBytes(file.toPath()),
-								StandardCharsets.UTF_8);
-
-							String newContent = content.replace(
-								version, newVersion);
-
-							Files.write(
-								file.toPath(),
-								newContent.getBytes(StandardCharsets.UTF_8));
-						}
-						catch (IOException ioe) {
-							throw new UncheckedIOException(ioe);
-						}
-					}
-				}
-
-				private String _fixHotfixVersion(String version) {
-					int index = version.indexOf(".hotfix");
-
-					if (index == -1) {
-						return version;
-					}
-
-					String prefix = version.substring(0, index);
-					String suffix = version.substring(index + 7);
-
-					return prefix + "-hotfix" + suffix.replace('-', '.');
-				}
-
-			});
-
-		executeNpmTask.doLast(
-			new Action<Task>() {
-
-				@Override
-				public void execute(Task task) {
-					Project project = task.getProject();
-
-					String[] fileNames = {
-						"bnd.bnd", "package.json", "package-lock.json"
-					};
-
-					for (String fileName : fileNames) {
-						File file = project.file(fileName);
-
-						if (!file.exists()) {
-							continue;
-						}
-
-						String version = null;
-
-						if (fileName.endsWith(".bnd")) {
-							Properties properties = GUtil.loadProperties(file);
-
-							version = properties.getProperty("Bundle-Version");
-						}
-						else if (fileName.endsWith(".json")) {
-							JsonSlurper jsonSlurper = new JsonSlurper();
-
-							Map<String, Object> map =
-								(Map<String, Object>)jsonSlurper.parse(file);
-
-							version = (String)map.get("version");
-						}
-
-						if (version == null) {
-							continue;
-						}
-
-						String newVersion = _fixHotfixVersion(version);
-
-						if (version.equals(newVersion)) {
-							continue;
-						}
-
-						try {
-							String content = new String(
-								Files.readAllBytes(file.toPath()),
-								StandardCharsets.UTF_8);
-
-							String newContent = content.replace(
-								version, newVersion);
-
-							Files.write(
-								file.toPath(),
-								newContent.getBytes(StandardCharsets.UTF_8));
-						}
-						catch (IOException ioe) {
-							throw new UncheckedIOException(ioe);
-						}
-					}
-				}
-
-				private String _fixHotfixVersion(String version) {
-					int index = version.indexOf("-hotfix");
-
-					if (index == -1) {
-						return version;
-					}
-
-					String prefix = version.substring(0, index);
-					String suffix = version.substring(index + 7);
-
-					return prefix + ".hotfix" + suffix.replace('.', '-');
-				}
-
-			});
+				deployTask.finalizedBy(restoreHotfixVersionTask);
+			}
+		}
 	}
 
 	private void _configureTaskNpmInstall(NpmInstallTask npmInstallTask) {
@@ -313,6 +232,24 @@ public class LiferayCIPlugin implements Plugin<Project> {
 
 		npmInstallTask.setRemoveShrinkwrappedUrls(Boolean.TRUE);
 		npmInstallTask.setUseNpmCI(Boolean.FALSE);
+	}
+
+	private void _configureTaskNpmRunBuild(ExecuteNpmTask executeNpmTask) {
+		if (Validator.isNull(System.getenv("FIX_PACKS_RELEASE_ENVIRONMENT"))) {
+			return;
+		}
+
+		TaskOutputs taskOutputs = executeNpmTask.getOutputs();
+
+		taskOutputs.upToDateWhen(
+			new Spec<Task>() {
+
+				@Override
+				public boolean isSatisfiedBy(Task task) {
+					return false;
+				}
+
+			});
 	}
 
 	private void _configureTasksDownloadNode(Project project) {
@@ -345,7 +282,10 @@ public class LiferayCIPlugin implements Plugin<Project> {
 			});
 	}
 
-	private void _configureTasksExecuteNpm(Project project) {
+	private void _configureTasksExecuteNpm(
+		Project project, final Task restoreHotfixVersionTask,
+		final Task updateHotfixVersionTask) {
+
 		final String ciRegistry = GradleUtil.getProperty(
 			project, "nodejs.npm.ci.registry", (String)null);
 
@@ -357,7 +297,17 @@ public class LiferayCIPlugin implements Plugin<Project> {
 
 				@Override
 				public void execute(ExecuteNpmTask executeNpmTask) {
-					_configureTaskExecuteNpm(executeNpmTask, ciRegistry);
+					_configureTaskExecuteNpm(
+						executeNpmTask, ciRegistry, restoreHotfixVersionTask,
+						updateHotfixVersionTask);
+
+					String taskName = executeNpmTask.getName();
+
+					if (Objects.equals(
+							taskName, NodePlugin.NPM_RUN_BUILD_TASK_NAME)) {
+
+						_configureTaskNpmRunBuild(executeNpmTask);
+					}
 				}
 
 			});
@@ -413,6 +363,8 @@ public class LiferayCIPlugin implements Plugin<Project> {
 			public void execute(Task task) {
 				Project project = task.getProject();
 
+				Logger logger = project.getLogger();
+
 				SourceSet sourceSet = GradleUtil.getSourceSet(
 					project,
 					TestIntegrationBasePlugin.TEST_INTEGRATION_SOURCE_SET_NAME);
@@ -427,6 +379,18 @@ public class LiferayCIPlugin implements Plugin<Project> {
 
 					Project dependencyProject =
 						projectDependency.getDependencyProject();
+
+					if (CIUtil.isExcludedDependencyProject(
+							project, dependencyProject)) {
+
+						if (logger.isLifecycleEnabled()) {
+							logger.lifecycle(
+								"Excluded project dependency {} for {}",
+								dependencyProject.getPath(), project.getPath());
+						}
+
+						continue;
+					}
 
 					File lfrBuildCIFile = dependencyProject.file(
 						".lfrbuild-ci");
@@ -458,6 +422,12 @@ public class LiferayCIPlugin implements Plugin<Project> {
 
 		testIntegrationTask.doFirst(action);
 	}
+
+	private static final String _BND_HOTFIX_VERSION_FILE_NAME = "bnd.bnd";
+
+	private static final String[] _JSON_HOTFIX_VERSION_FILE_NAMES = {
+		"package-lock.json", "package.json"
+	};
 
 	private static final File _NODE_MODULES_CACHE_DIR = new File(
 		System.getProperty("user.home"), ".liferay/node-modules-cache");

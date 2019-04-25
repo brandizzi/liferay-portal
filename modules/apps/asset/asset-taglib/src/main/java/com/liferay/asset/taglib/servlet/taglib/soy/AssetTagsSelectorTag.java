@@ -77,9 +77,12 @@ public class AssetTagsSelectorTag extends ComponentRendererTag {
 
 			putValue("selectedItems", selectedItems);
 
-			putValue(
-				"spritemap",
-				themeDisplay.getPathThemeImages().concat("/clay/icons.svg"));
+			putValue("showSelectButton", _showSelectButton);
+
+			String pathThemeImages = themeDisplay.getPathThemeImages();
+
+			putValue("spritemap", pathThemeImages.concat("/clay/icons.svg"));
+
 			putValue("tagNames", _getTagNames());
 		}
 		catch (Exception e) {
@@ -139,6 +142,10 @@ public class AssetTagsSelectorTag extends ComponentRendererTag {
 		putValue("removeCallback", _getNamespace() + removeCallback);
 	}
 
+	public void setShowSelectButton(boolean showSelectButton) {
+		_showSelectButton = showSelectButton;
+	}
+
 	public void setTagNames(String tagNames) {
 		_tagNames = tagNames;
 	}
@@ -155,6 +162,7 @@ public class AssetTagsSelectorTag extends ComponentRendererTag {
 			_id = null;
 			_ignoreRequestValue = false;
 			_namespace = null;
+			_showSelectButton = false;
 			_tagNames = null;
 		}
 	}
@@ -283,6 +291,7 @@ public class AssetTagsSelectorTag extends ComponentRendererTag {
 	private String _id;
 	private boolean _ignoreRequestValue;
 	private String _namespace;
+	private Boolean _showSelectButton = false;
 	private String _tagNames;
 
 }

@@ -15,11 +15,13 @@
 package com.liferay.portal.search.solr7.internal;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.search.solr7.configuration.SolrConfiguration;
 import com.liferay.portal.search.solr7.internal.connection.SolrClientManager;
 import com.liferay.portal.search.solr7.internal.document.SolrDocumentFactory;
 import com.liferay.portal.search.solr7.internal.document.SolrUpdateDocumentCommand;
@@ -29,25 +31,30 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrInputDocument;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Michael C. Han
  */
-@Component(immediate = true, service = SolrUpdateDocumentCommand.class)
+@Component(
+	configurationPid = "com.liferay.portal.search.solr7.configuration.SolrConfiguration",
+	immediate = true, service = SolrUpdateDocumentCommand.class
+)
 public class SolrUpdateDocumentCommandImpl
 	implements SolrUpdateDocumentCommand {
 
 	@Override
 	public String updateDocument(
-			SearchContext searchContext, Document document, boolean deleteFirst)
-		throws SearchException {
+		SearchContext searchContext, Document document, boolean deleteFirst) {
 
 		doUpdateDocuments(searchContext, Arrays.asList(document), deleteFirst);
 
@@ -58,9 +65,8 @@ public class SolrUpdateDocumentCommandImpl
 
 	@Override
 	public void updateDocuments(
-			SearchContext searchContext, Collection<Document> documents,
-			boolean deleteFirst)
-		throws SearchException {
+		SearchContext searchContext, Collection<Document> documents,
+		boolean deleteFirst) {
 
 		if (documents.isEmpty()) {
 			return;
@@ -69,10 +75,18 @@ public class SolrUpdateDocumentCommandImpl
 		doUpdateDocuments(searchContext, documents, deleteFirst);
 	}
 
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		_solrConfiguration = ConfigurableUtil.createConfigurable(
+			SolrConfiguration.class, properties);
+
+		_defaultCollection = _solrConfiguration.defaultCollection();
+	}
+
 	protected UpdateResponse doUpdateDocuments(
-			SearchContext searchContext, Collection<Document> documents,
-			boolean deleteFirst)
-		throws SearchException {
+		SearchContext searchContext, Collection<Document> documents,
+		boolean deleteFirst) {
 
 		SolrClient solrClient = _solrClientManager.getSolrClient();
 
@@ -92,15 +106,17 @@ public class SolrUpdateDocumentCommandImpl
 			}
 
 			if (deleteFirst) {
-				UpdateResponse updateResponse = solrClient.deleteById(uids);
+				UpdateResponse updateResponse = solrClient.deleteById(
+					_defaultCollection, uids);
 
 				LogUtil.logSolrResponseBase(_log, updateResponse);
 			}
 
-			UpdateResponse updateResponse = solrClient.add(solrInputDocuments);
+			UpdateResponse updateResponse = solrClient.add(
+				_defaultCollection, solrInputDocuments);
 
 			if (searchContext.isCommitImmediately()) {
-				solrClient.commit();
+				solrClient.commit(_defaultCollection);
 			}
 
 			LogUtil.logSolrResponseBase(_log, updateResponse);
@@ -108,9 +124,7 @@ public class SolrUpdateDocumentCommandImpl
 			return updateResponse;
 		}
 		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new SearchException(e);
+			throw new SystemException(e);
 		}
 	}
 
@@ -129,7 +143,9 @@ public class SolrUpdateDocumentCommandImpl
 	private static final Log _log = LogFactoryUtil.getLog(
 		SolrUpdateDocumentCommandImpl.class);
 
+	private String _defaultCollection;
 	private SolrClientManager _solrClientManager;
+	private volatile SolrConfiguration _solrConfiguration;
 	private SolrDocumentFactory _solrDocumentFactory;
 
 }

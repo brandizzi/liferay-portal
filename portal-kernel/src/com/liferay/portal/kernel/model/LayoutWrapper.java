@@ -46,6 +46,7 @@ public class LayoutWrapper
 
 		attributes.put("mvccVersion", getMvccVersion());
 		attributes.put("uuid", getUuid());
+		attributes.put("headId", getHeadId());
 		attributes.put("plid", getPlid());
 		attributes.put("groupId", getGroupId());
 		attributes.put("companyId", getCompanyId());
@@ -54,11 +55,11 @@ public class LayoutWrapper
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("parentPlid", getParentPlid());
-		attributes.put("leftPlid", getLeftPlid());
-		attributes.put("rightPlid", getRightPlid());
 		attributes.put("privateLayout", isPrivateLayout());
 		attributes.put("layoutId", getLayoutId());
 		attributes.put("parentLayoutId", getParentLayoutId());
+		attributes.put("classNameId", getClassNameId());
+		attributes.put("classPK", getClassPK());
 		attributes.put("name", getName());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
@@ -79,6 +80,7 @@ public class LayoutWrapper
 			"layoutPrototypeLinkEnabled", isLayoutPrototypeLinkEnabled());
 		attributes.put(
 			"sourcePrototypeLayoutUuid", getSourcePrototypeLayoutUuid());
+		attributes.put("publishDate", getPublishDate());
 		attributes.put("lastPublishDate", getLastPublishDate());
 
 		return attributes;
@@ -96,6 +98,12 @@ public class LayoutWrapper
 
 		if (uuid != null) {
 			setUuid(uuid);
+		}
+
+		Long headId = (Long)attributes.get("headId");
+
+		if (headId != null) {
+			setHeadId(headId);
 		}
 
 		Long plid = (Long)attributes.get("plid");
@@ -146,18 +154,6 @@ public class LayoutWrapper
 			setParentPlid(parentPlid);
 		}
 
-		Long leftPlid = (Long)attributes.get("leftPlid");
-
-		if (leftPlid != null) {
-			setLeftPlid(leftPlid);
-		}
-
-		Long rightPlid = (Long)attributes.get("rightPlid");
-
-		if (rightPlid != null) {
-			setRightPlid(rightPlid);
-		}
-
 		Boolean privateLayout = (Boolean)attributes.get("privateLayout");
 
 		if (privateLayout != null) {
@@ -174,6 +170,18 @@ public class LayoutWrapper
 
 		if (parentLayoutId != null) {
 			setParentLayoutId(parentLayoutId);
+		}
+
+		Long classNameId = (Long)attributes.get("classNameId");
+
+		if (classNameId != null) {
+			setClassNameId(classNameId);
+		}
+
+		Long classPK = (Long)attributes.get("classPK");
+
+		if (classPK != null) {
+			setClassPK(classPK);
 		}
 
 		String name = (String)attributes.get("name");
@@ -287,6 +295,12 @@ public class LayoutWrapper
 			setSourcePrototypeLayoutUuid(sourcePrototypeLayoutUuid);
 		}
 
+		Date publishDate = (Date)attributes.get("publishDate");
+
+		if (publishDate != null) {
+			setPublishDate(publishDate);
+		}
+
 		Date lastPublishDate = (Date)attributes.get("lastPublishDate");
 
 		if (lastPublishDate != null) {
@@ -377,6 +391,36 @@ public class LayoutWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return model.getChildren(permissionChecker);
+	}
+
+	/**
+	 * Returns the fully qualified class name of this layout.
+	 *
+	 * @return the fully qualified class name of this layout
+	 */
+	@Override
+	public String getClassName() {
+		return model.getClassName();
+	}
+
+	/**
+	 * Returns the class name ID of this layout.
+	 *
+	 * @return the class name ID of this layout
+	 */
+	@Override
+	public long getClassNameId() {
+		return model.getClassNameId();
+	}
+
+	/**
+	 * Returns the class pk of this layout.
+	 *
+	 * @return the class pk of this layout
+	 */
+	@Override
+	public long getClassPK() {
+		return model.getClassPK();
 	}
 
 	/**
@@ -613,6 +657,16 @@ public class LayoutWrapper
 	}
 
 	/**
+	 * Returns the head ID of this layout.
+	 *
+	 * @return the head ID of this layout
+	 */
+	@Override
+	public long getHeadId() {
+		return model.getHeadId();
+	}
+
+	/**
 	 * Returns the hidden of this layout.
 	 *
 	 * @return the hidden of this layout
@@ -809,16 +863,6 @@ public class LayoutWrapper
 	}
 
 	/**
-	 * Returns the left plid of this layout.
-	 *
-	 * @return the left plid of this layout
-	 */
-	@Override
-	public long getLeftPlid() {
-		return model.getLeftPlid();
-	}
-
-	/**
 	 * Returns the current layout's linked layout.
 	 *
 	 * @return the current layout's linked layout, or <code>null</code> if no
@@ -985,6 +1029,16 @@ public class LayoutWrapper
 		return model.getPrivateLayout();
 	}
 
+	/**
+	 * Returns the publish date of this layout.
+	 *
+	 * @return the publish date of this layout
+	 */
+	@Override
+	public Date getPublishDate() {
+		return model.getPublishDate();
+	}
+
 	@Override
 	public String getRegularURL(javax.servlet.http.HttpServletRequest request)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -1006,16 +1060,6 @@ public class LayoutWrapper
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return model.getResetMaxStateURL(request);
-	}
-
-	/**
-	 * Returns the right plid of this layout.
-	 *
-	 * @return the right plid of this layout
-	 */
-	@Override
-	public long getRightPlid() {
-		return model.getRightPlid();
 	}
 
 	/**
@@ -1540,15 +1584,6 @@ public class LayoutWrapper
 		return model.isSystem();
 	}
 
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), with no direct replacement
-	 */
-	@Deprecated
-	@Override
-	public boolean isTypeArticle() {
-		return model.isTypeArticle();
-	}
-
 	@Override
 	public boolean isTypeControlPanel() {
 		return model.isTypeControlPanel();
@@ -1613,6 +1648,31 @@ public class LayoutWrapper
 		throws com.liferay.portal.kernel.exception.LocaleException {
 
 		model.prepareLocalizedFieldsForImport(defaultImportLocale);
+	}
+
+	@Override
+	public void setClassName(String className) {
+		model.setClassName(className);
+	}
+
+	/**
+	 * Sets the class name ID of this layout.
+	 *
+	 * @param classNameId the class name ID of this layout
+	 */
+	@Override
+	public void setClassNameId(long classNameId) {
+		model.setClassNameId(classNameId);
+	}
+
+	/**
+	 * Sets the class pk of this layout.
+	 *
+	 * @param classPK the class pk of this layout
+	 */
+	@Override
+	public void setClassPK(long classPK) {
+		model.setClassPK(classPK);
 	}
 
 	/**
@@ -1740,6 +1800,16 @@ public class LayoutWrapper
 	@Override
 	public void setGroupId(long groupId) {
 		model.setGroupId(groupId);
+	}
+
+	/**
+	 * Sets the head ID of this layout.
+	 *
+	 * @param headId the head ID of this layout
+	 */
+	@Override
+	public void setHeadId(long headId) {
+		model.setHeadId(headId);
 	}
 
 	/**
@@ -1872,16 +1942,6 @@ public class LayoutWrapper
 	@Override
 	public void setLayoutSet(LayoutSet layoutSet) {
 		model.setLayoutSet(layoutSet);
-	}
-
-	/**
-	 * Sets the left plid of this layout.
-	 *
-	 * @param leftPlid the left plid of this layout
-	 */
-	@Override
-	public void setLeftPlid(long leftPlid) {
-		model.setLeftPlid(leftPlid);
 	}
 
 	/**
@@ -2028,13 +2088,13 @@ public class LayoutWrapper
 	}
 
 	/**
-	 * Sets the right plid of this layout.
+	 * Sets the publish date of this layout.
 	 *
-	 * @param rightPlid the right plid of this layout
+	 * @param publishDate the publish date of this layout
 	 */
 	@Override
-	public void setRightPlid(long rightPlid) {
-		model.setRightPlid(rightPlid);
+	public void setPublishDate(Date publishDate) {
+		model.setPublishDate(publishDate);
 	}
 
 	/**
@@ -2265,33 +2325,18 @@ public class LayoutWrapper
 	}
 
 	@Override
-	public long getNestedSetsTreeNodeLeft() {
-		return model.getNestedSetsTreeNodeLeft();
-	}
-
-	@Override
-	public long getNestedSetsTreeNodeRight() {
-		return model.getNestedSetsTreeNodeRight();
-	}
-
-	@Override
-	public long getNestedSetsTreeNodeScopeId() {
-		return model.getNestedSetsTreeNodeScopeId();
-	}
-
-	@Override
-	public void setNestedSetsTreeNodeLeft(long nestedSetsTreeNodeLeft) {
-		model.setNestedSetsTreeNodeLeft(nestedSetsTreeNodeLeft);
-	}
-
-	@Override
-	public void setNestedSetsTreeNodeRight(long nestedSetsTreeNodeRight) {
-		model.setNestedSetsTreeNodeRight(nestedSetsTreeNodeRight);
-	}
-
-	@Override
 	public StagedModelType getStagedModelType() {
 		return model.getStagedModelType();
+	}
+
+	@Override
+	public boolean isHead() {
+		return model.isHead();
+	}
+
+	@Override
+	public void populateVersionModel(LayoutVersion layoutVersion) {
+		model.populateVersionModel(layoutVersion);
 	}
 
 	@Override

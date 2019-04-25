@@ -114,6 +114,10 @@ public class CTConfigurationBuilderImpl
 		public void setVersionEntityIdFromVersionEntityFunction(
 			Function<U, Serializable> versionEntityIdFromVersionEntityFunction);
 
+		public void setVersionEntityRelatedEntityFunctions(
+			List<Function<U, ? extends BaseModel>>
+				versionEntityRelatedEntityFunctions);
+
 		public void setVersionEntitySiteNameFunction(
 			Function<U, String> versionEntitySiteNameFunction);
 
@@ -254,10 +258,14 @@ public class CTConfigurationBuilderImpl
 
 		@Override
 		public EntityIdsFromVersionEntityStep<U> setVersionEntityDetails(
+			List<Function<U, ? extends BaseModel>>
+				versionEntityRelatedEntityFunctions,
 			Function<U, String> versionEntitySiteNameFunction,
 			Function<U, String> versionEntityTitleFunction,
 			Function<U, Serializable> versionEntityVersionFunction) {
 
+			_ctConfiguration.setVersionEntityRelatedEntityFunctions(
+				versionEntityRelatedEntityFunctions);
 			_ctConfiguration.setVersionEntitySiteNameFunction(
 				versionEntitySiteNameFunction);
 			_ctConfiguration.setVersionEntityTitleFunction(

@@ -71,13 +71,6 @@ public interface Http {
 
 	public String decodeURL(String url);
 
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 *             #decodeURL(String)}
-	 */
-	@Deprecated
-	public String decodeURL(String url, boolean unescapeSpaces);
-
 	public String encodeParameters(String url);
 
 	public String encodePath(String path);
@@ -335,7 +328,7 @@ public interface Http {
 
 	public enum Method {
 
-		DELETE, GET, HEAD, POST, PUT
+		DELETE, GET, HEAD, PATCH, POST, PUT
 
 	}
 
@@ -450,6 +443,14 @@ public interface Http {
 			return false;
 		}
 
+		public boolean isPatch() {
+			if (_method == Method.PATCH) {
+				return true;
+			}
+
+			return false;
+		}
+
 		public boolean isPost() {
 			if (_method == Method.POST) {
 				return true;
@@ -535,6 +536,15 @@ public interface Http {
 
 		public void setParts(Map<String, String> parts) {
 			_parts = parts;
+		}
+
+		public void setPatch(boolean patch) {
+			if (patch) {
+				_method = Method.PATCH;
+			}
+			else {
+				_method = Method.GET;
+			}
 		}
 
 		public void setPost(boolean post) {

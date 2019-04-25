@@ -14,6 +14,7 @@
 
 package com.liferay.headless.form.dto.v1_0;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,6 +23,10 @@ import com.liferay.petra.string.StringBundler;
 
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.Objects;
 
 import javax.annotation.Generated;
 
@@ -33,20 +38,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Generated("")
 @GraphQLName("Validation")
-//@JsonFilter("Liferay.Vulcan")
+@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "Validation")
 public class Validation {
 
+	@Schema
 	public String getErrorMessage() {
 		return errorMessage;
-	}
-
-	public String getExpression() {
-		return expression;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public void setErrorMessage(String errorMessage) {
@@ -60,9 +58,21 @@ public class Validation {
 		try {
 			errorMessage = errorMessageUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String errorMessage;
+
+	@Schema
+	public String getExpression() {
+		return expression;
 	}
 
 	public void setExpression(String expression) {
@@ -76,9 +86,21 @@ public class Validation {
 		try {
 			expression = expressionUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String expression;
+
+	@Schema
+	public Long getId() {
+		return id;
 	}
 
 	public void setId(Long id) {
@@ -90,49 +112,92 @@ public class Validation {
 		try {
 			id = idUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long id;
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+
+		if (!(object instanceof Validation)) {
+			return false;
+		}
+
+		Validation validation = (Validation)object;
+
+		return Objects.equals(toString(), validation.toString());
+	}
+
+	@Override
+	public int hashCode() {
+		String string = toString();
+
+		return string.hashCode();
+	}
+
 	public String toString() {
-		StringBundler sb = new StringBundler(14);
+		StringBundler sb = new StringBundler();
 
 		sb.append("{");
 
-		sb.append("\"errorMessage\": ");
+		if (errorMessage != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"");
-		sb.append(errorMessage);
-		sb.append("\"");
-		sb.append(", ");
+			sb.append("\"errorMessage\": ");
 
-		sb.append("\"expression\": ");
+			sb.append("\"");
 
-		sb.append("\"");
-		sb.append(expression);
-		sb.append("\"");
-		sb.append(", ");
+			sb.append(_escape(errorMessage));
 
-		sb.append("\"id\": ");
+			sb.append("\"");
+		}
 
-		sb.append(id);
+		if (expression != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"expression\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(expression));
+
+			sb.append("\"");
+		}
+
+		if (id != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"id\": ");
+
+			sb.append(id);
+		}
 
 		sb.append("}");
 
 		return sb.toString();
 	}
 
-	@GraphQLField
-	@JsonProperty
-	protected String errorMessage;
+	private static String _escape(Object object) {
+		String string = String.valueOf(object);
 
-	@GraphQLField
-	@JsonProperty
-	protected String expression;
-
-	@GraphQLField
-	@JsonProperty
-	protected Long id;
+		return string.replaceAll("\"", "\\\\\"");
+	}
 
 }

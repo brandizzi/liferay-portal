@@ -9,10 +9,9 @@
 		active: bool,
 		checked: bool,
 		description: string,
+		draft: bool,
 		dropdownItems: list<?>,
 		hasChild: bool,
-		homePage: bool,
-		homePageTitle: string,
 		parentable: bool,
 		plid: string,
 		title: string,
@@ -31,8 +30,6 @@
 		checked: bool,
 		description: string,
 		hasChild: bool,
-		homePage: bool,
-		homePageTitle: string,
 		plid: string,
 		title: string,
 		url: string
@@ -111,10 +108,9 @@
 		active: bool,
 		checked: bool,
 		description: string,
+		draft: bool,
 		dropdownItems: list<?>,
 		hasChild: bool,
-		homePage: bool,
-		homePageTitle: string,
 		parentable: bool,
 		plid: string,
 		title: string,
@@ -221,10 +217,10 @@
 					<h6 class="layout-column-item-subtitle list-group-subtitle text-truncate">
 						{$layoutColumnItem.description}
 
-						{if $layoutColumnItem.homePage}
+						{if $layoutColumnItem.draft}
 							&nbsp;
-							<span class="label label-info">
-								<span class="label-item label-item-expand">{msg desc=""}home{/msg}</span>
+							<span class="label label-secondary">
+								<span class="label-item label-item-expand">{msg desc=""}draft{/msg}</span>
 							</span>
 						{/if}
 					</h6>

@@ -76,6 +76,12 @@ public class FriendlyURLEntryStagedModelDataHandler
 		friendlyURLEntryElement.addAttribute(
 			"resource-class-name", friendlyURLEntry.getClassName());
 
+		String modelPath = ExportImportPathUtil.getModelPath(
+			friendlyURLEntry, friendlyURLEntry.getUuid());
+
+		portletDataContext.addZipEntry(
+			modelPath, friendlyURLEntry.getUrlTitleMapAsXML());
+
 		if (friendlyURLEntry.isMain()) {
 			friendlyURLEntryElement.addAttribute(
 				"mainEntry", Boolean.TRUE.toString());
@@ -128,6 +134,9 @@ public class FriendlyURLEntryStagedModelDataHandler
 
 			importedFriendlyURLEntry.setClassPK(classPK);
 
+			importedFriendlyURLEntry.setDefaultLanguageId(
+				friendlyURLEntry.getDefaultLanguageId());
+
 			_stagedModelRepository.addStagedModel(
 				portletDataContext, importedFriendlyURLEntry);
 		}
@@ -152,16 +161,10 @@ public class FriendlyURLEntryStagedModelDataHandler
 		return _stagedModelRepository;
 	}
 
-	@Reference(unbind = "-")
-	protected void setFriendlyURLEntryLocalService(
-		FriendlyURLEntryLocalService friendlyURLEntryLocalService) {
-
-		_friendlyURLEntryLocalService = friendlyURLEntryLocalService;
-	}
-
 	@Reference
 	private ClassNameLocalService _classNameLocalService;
 
+	@Reference
 	private FriendlyURLEntryLocalService _friendlyURLEntryLocalService;
 
 	@Reference(

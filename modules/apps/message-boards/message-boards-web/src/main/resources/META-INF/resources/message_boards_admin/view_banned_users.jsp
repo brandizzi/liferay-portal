@@ -89,11 +89,11 @@ int totalBannedUsers = MBBanLocalServiceUtil.getBansCount(scopeGroupId);
 					String modifiedDateDescription = LanguageUtil.getTimeDescription(request, System.currentTimeMillis() - createDate.getTime(), true);
 					%>
 
-					<h5 class="text-default">
+					<span class="text-default">
 						<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(PortalUtil.getUserName(ban.getUserId(), StringPool.BLANK)), modifiedDateDescription} %>" key="banned-by-x-x-ago" />
-					</h5>
+					</span>
 
-					<h4>
+					<h2 class="h5">
 
 						<%
 						User bannedUser = UserLocalServiceUtil.fetchUser(ban.getBanUserId());
@@ -109,13 +109,13 @@ int totalBannedUsers = MBBanLocalServiceUtil.getBansCount(scopeGroupId);
 								<%= HtmlUtil.escape(PortalUtil.getUserName(ban.getBanUserId(), StringPool.BLANK)) %>
 							</c:otherwise>
 						</c:choose>
-					</h4>
+					</h2>
 
-					<h5 class="text-default">
+					<span class="text-default">
 						<liferay-ui:message key="unban-date" />
 
 						<%= dateFormatDateTime.format(com.liferay.message.boards.util.MBUtil.getUnbanDate(ban, PropsValues.MESSAGE_BOARDS_EXPIRE_BAN_INTERVAL)) %>
-					</h5>
+					</span>
 				</liferay-ui:search-container-column-text>
 
 				<liferay-ui:search-container-column-jsp
@@ -137,14 +137,17 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, TextForm
 PortalUtil.setPageSubtitle(LanguageUtil.get(request, "banned-users"), request);
 %>
 
-<aui:script sandbox="<%= true %>">
+<aui:script>
 	var unbanUser = function() {
-		var form = AUI.$(document.<portlet:namespace />fm);
-
-		form.attr('method', 'post');
-		form.fm('<%= Constants.CMD %>').val('unban');
-
-		submitForm(form, '<portlet:actionURL name="/message_boards/ban_user" />');
+		Liferay.Util.postForm(
+			document.<portlet:namespace />fm,
+			{
+				data: {
+					'<%= Constants.CMD %>': 'unban'
+				},
+				url: '<portlet:actionURL name="/message_boards/ban_user" />'
+			}
+		);
 	};
 
 	var ACTIONS = {

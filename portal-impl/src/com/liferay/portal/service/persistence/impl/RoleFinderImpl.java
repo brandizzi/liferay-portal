@@ -1141,7 +1141,7 @@ public class RoleFinderImpl extends RoleFinderBaseImpl implements RoleFinder {
 
 		sb.append(" AND (");
 
-		for (int i = 0; i < excludedNames.size() - 1; i++) {
+		for (int i = 0; i < (excludedNames.size() - 1); i++) {
 			sb.append("Role_.name != ? AND ");
 		}
 
@@ -1214,7 +1214,7 @@ public class RoleFinderImpl extends RoleFinderBaseImpl implements RoleFinder {
 
 		sb.append(" AND (");
 
-		for (int i = 0; i < size - 1; i++) {
+		for (int i = 0; i < (size - 1); i++) {
 			sb.append("Role_.type_ = ? OR ");
 		}
 
@@ -1252,11 +1252,9 @@ public class RoleFinderImpl extends RoleFinderBaseImpl implements RoleFinder {
 			int pos = join.indexOf("WHERE");
 
 			if (pos != -1) {
-				join = join.substring(
-					pos + 5
-				).concat(
-					" AND "
-				);
+				join = join.substring(pos + 5);
+
+				join = join.concat(" AND ");
 			}
 			else {
 				join = StringPool.BLANK;

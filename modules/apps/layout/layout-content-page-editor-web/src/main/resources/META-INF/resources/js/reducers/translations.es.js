@@ -1,10 +1,6 @@
-import {
-	ADD_FRAGMENT_ENTRY_LINK,
-	CHANGE_LANGUAGE_ID,
-	REMOVE_FRAGMENT_ENTRY_LINK,
-	UPDATE_TRANSLATION_STATUS
-} from '../actions/actions.es';
+import {ADD_FRAGMENT_ENTRY_LINK, CHANGE_LANGUAGE_ID, CREATE_SEGMENTS_EXPERIENCE, REMOVE_FRAGMENT_ENTRY_LINK, SELECT_SEGMENTS_EXPERIENCE, UPDATE_TRANSLATION_STATUS} from '../actions/actions.es';
 import {setIn} from '../utils/FragmentsEditorUpdateUtils.es';
+import {prefixSegmentsExperienceId} from '../utils/prefixSegmentsExperienceId.es';
 
 const EDITABLE_VALUES_KEY = 'com.liferay.fragment.entry.processor.editable.EditableFragmentEntryProcessor';
 
@@ -39,14 +35,16 @@ function translationStatusReducer(state, actionType) {
 	if (
 		actionType === ADD_FRAGMENT_ENTRY_LINK ||
 		actionType === UPDATE_TRANSLATION_STATUS ||
-		actionType === REMOVE_FRAGMENT_ENTRY_LINK
+		actionType === REMOVE_FRAGMENT_ENTRY_LINK ||
+		actionType === SELECT_SEGMENTS_EXPERIENCE ||
+		actionType === CREATE_SEGMENTS_EXPERIENCE
 	) {
-		const segmentId = nextState.segmentId || nextState.defaultSegmentId;
+		const segmentsExperienceId = nextState.segmentsExperienceId || nextState.defaultSegmentsExperienceId;
 
 		const nextTranslationStatus = _getTranslationStatus(
 			_getLanguageKeys(nextState.availableLanguages),
 			_getEditableValues(nextState.fragmentEntryLinks),
-			segmentId
+			prefixSegmentsExperienceId(segmentsExperienceId)
 		);
 
 		nextState = setIn(nextState, ['translationStatus'], nextTranslationStatus);
@@ -104,7 +102,7 @@ function _getLanguageKeys(availableLanguages) {
  * @return {object} A translation status object
  * @review
  */
-function _getTranslationStatus(languageIds, editableValues, segmentId) {
+function _getTranslationStatus(languageIds, editableValues, segmentsExperienceId) {
 	const translationKeys = editableValues.map(
 		editableValue => Object.keys(editableValue).map(
 			editableValueId => editableValue[editableValueId].defaultValue
@@ -119,10 +117,21 @@ function _getTranslationStatus(languageIds, editableValues, segmentId) {
 			const values = editableValues.map(
 				editableValue => Object.keys(editableValue).map(
 					editableValueId => {
-						return editableValue &&
-							editableValue[editableValueId] &&
-							editableValue[editableValueId][segmentId] &&
-							editableValue[editableValueId][segmentId][languageId];
+						let result;
+
+						if (!segmentsExperienceId) {
+							result = editableValue &&
+								editableValue[editableValueId] &&
+								editableValue[editableValueId][languageId];
+						}
+						else {
+							result = editableValue &&
+								editableValue[editableValueId] &&
+								editableValue[editableValueId][segmentsExperienceId] &&
+								editableValue[editableValueId][segmentsExperienceId][languageId];
+						}
+
+						return result;
 					}
 				)
 			)

@@ -34,7 +34,7 @@ import com.liferay.portal.search.test.util.IndexedFieldsFixture;
 import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.test.rule.PermissionCheckerTestRule;
+import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
 import java.util.HashMap;
@@ -61,7 +61,7 @@ public class LayoutIndexerIndexedFieldsTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			PermissionCheckerTestRule.INSTANCE,
+			PermissionCheckerMethodTestRule.INSTANCE,
 			SynchronousDestinationTestRule.INSTANCE);
 
 	@Before
@@ -152,6 +152,8 @@ public class LayoutIndexerIndexedFieldsTest {
 
 		Map<String, String> map = new HashMap<>();
 
+		map.put(Field.CLASS_NAME_ID, String.valueOf(layout.getClassNameId()));
+		map.put(Field.CLASS_PK, String.valueOf(layout.getClassPK()));
 		map.put(Field.COMPANY_ID, String.valueOf(layout.getCompanyId()));
 		map.put(Field.DEFAULT_LANGUAGE_ID, layout.getDefaultLanguageId());
 		map.put(Field.ENTRY_CLASS_NAME, Layout.class.getName());
@@ -162,11 +164,8 @@ public class LayoutIndexerIndexedFieldsTest {
 		map.put(Field.TYPE, layout.getType());
 		map.put(Field.USER_ID, String.valueOf(layout.getUserId()));
 		map.put(Field.USER_NAME, StringUtil.toLowerCase(layout.getUserName()));
-		map.put("leftPlid", String.valueOf(layout.getLeftPlid()));
-		map.put(
-			"leftPlid_Number_sortable", String.valueOf(layout.getLeftPlid()));
 		map.put("privateLayout", "false");
-		map.put("title_ja_JP", layout.getName(Locale.JAPAN));
+		map.put("title_ja_JP", layout.getName(LocaleUtil.JAPAN));
 
 		indexedFieldsFixture.populateUID(
 			Layout.class.getName(), layout.getPrimaryKey(), map);

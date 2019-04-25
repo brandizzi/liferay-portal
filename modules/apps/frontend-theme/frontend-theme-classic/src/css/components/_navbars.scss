@@ -1,6 +1,12 @@
 .navbar-top {
 	padding-bottom: 0.907rem;
 	padding-top: 0.907rem;
+
+	.portlet {
+		&:hover, &.open {
+			z-index: 1035;
+		}
+	}
 }
 
 .navbar-blank {
@@ -16,7 +22,7 @@
 
 	.navbar-blank {
 		@include media-query(null, $screen-xs-max) {
-			margin-top: 2rem;
+			margin-top: 1rem;
 		}
 	}
 
@@ -36,6 +42,10 @@
 	.portlet-search-bar {
 		@include media-breakpoint-down(sm) {
 			width: 100%;
+		}
+
+		.input-group-item {
+			margin-left: 0;
 		}
 	}
 

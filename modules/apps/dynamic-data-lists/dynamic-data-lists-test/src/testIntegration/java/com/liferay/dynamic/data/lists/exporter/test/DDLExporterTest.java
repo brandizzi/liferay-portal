@@ -107,8 +107,9 @@ public class DDLExporterTest {
 
 	@Before
 	public void setUp() throws Exception {
-		_availableLocales = DDMFormTestUtil.createAvailableLocales(Locale.US);
-		_defaultLocale = Locale.US;
+		_availableLocales = DDMFormTestUtil.createAvailableLocales(
+			LocaleUtil.US);
+		_defaultLocale = LocaleUtil.US;
 		_group = GroupTestUtil.addGroup();
 
 		_originalPermissionChecker =
@@ -223,8 +224,8 @@ public class DDLExporterTest {
 
 	@Test
 	public void testExportRecordsWithDistinctFields() throws Exception {
-		com.liferay.dynamic.data.mapping.kernel.DDMForm ddmForm =
-			DDMFormTestUtil.createDDMForm(_availableLocales, _defaultLocale);
+		DDMForm ddmForm = DDMFormTestUtil.createDDMForm(
+			_availableLocales, _defaultLocale);
 
 		ddmForm.addDDMFormField(
 			DDMFormTestUtil.createTextDDMFormField(

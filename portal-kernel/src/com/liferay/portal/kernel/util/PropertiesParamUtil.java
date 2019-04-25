@@ -14,12 +14,15 @@
 
 package com.liferay.portal.kernel.util;
 
+import com.liferay.petra.string.StringPool;
+import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 
 import java.io.Serializable;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.portlet.PortletRequest;
@@ -458,9 +461,16 @@ public class PropertiesParamUtil {
 
 				String[] values = portletRequest.getParameterValues(param);
 
-				String value = StringUtil.merge(values);
+				// Portlets that opt-in to Portlet 3.0 functionality might have
+				// null values in the array. Make the array compatible with the
+				// call to StringUtil.merge(String[]) below by replacing each
+				// null value with the empty string.
 
-				properties.setProperty(key, value);
+				properties.setProperty(
+					key,
+					StringUtil.merge(
+						values, s -> Objects.toString(s, StringPool.BLANK),
+						StringPool.COMMA));
 			}
 		}
 

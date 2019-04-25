@@ -28,6 +28,10 @@ import java.util.Locale;
  */
 public interface FragmentEntryProcessor {
 
+	public default void deleteFragmentEntryLinkData(
+		FragmentEntryLink fragmentEntryLink) {
+	}
+
 	public default JSONArray getAvailableTagsJSONArray() {
 		return null;
 	}
@@ -38,7 +42,7 @@ public interface FragmentEntryProcessor {
 
 	public default String processFragmentEntryLinkCSS(
 			FragmentEntryLink fragmentEntryLink, String css, String mode,
-			Locale locale)
+			Locale locale, long[] segmentsExperienceIds)
 		throws PortalException {
 
 		return css;
@@ -71,7 +75,7 @@ public interface FragmentEntryProcessor {
 
 	public String processFragmentEntryLinkHTML(
 			FragmentEntryLink fragmentEntryLink, String html, String mode,
-			Locale locale, long[] segmentsIds)
+			Locale locale, long[] segmentsExperienceIds)
 		throws PortalException;
 
 	public void validateFragmentEntryHTML(String html) throws PortalException;

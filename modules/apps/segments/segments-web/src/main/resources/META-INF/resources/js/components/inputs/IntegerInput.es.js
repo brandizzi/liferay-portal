@@ -1,5 +1,5 @@
-import React from 'react';
 import propTypes from 'prop-types';
+import React from 'react';
 
 class IntegerInput extends React.Component {
 	static propTypes = {
@@ -16,7 +16,7 @@ class IntegerInput extends React.Component {
 		const value = parseInt(event.target.value, 10);
 
 		if (!isNaN(value)) {
-			this.props.onChange(value.toString());
+			this.props.onChange({value: value.toString()});
 		}
 	}
 

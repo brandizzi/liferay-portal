@@ -2,7 +2,7 @@ import Component from 'metal-component';
 import Soy from 'metal-soy';
 
 import './TranslationStatus.es';
-import './SegmentSelector.es';
+import './SegmentsExperienceSelector.es';
 import getConnectedComponent from '../../store/ConnectedComponent.es';
 import templates from './FragmentsEditorToolbar.soy';
 import {TOGGLE_SIDEBAR, UPDATE_TRANSLATION_STATUS} from '../../actions/actions.es';
@@ -28,6 +28,17 @@ class FragmentsEditorToolbar extends Component {
 	}
 
 	/**
+	 * Handles discard draft form submit action.
+	 * @private
+	 * @review
+	 */
+	_handleDiscardDraft(event) {
+		if (!confirm(Liferay.Language.get('are-you-sure-you-want-to-discard-current-draft-and-apply-latest-published-changes'))) {
+			event.preventDefault();
+		}
+	}
+
+	/**
 	 * @private
 	 * @review
 	 */
@@ -41,14 +52,15 @@ const ConnectedFragmentsEditorToolbar = getConnectedComponent(
 	FragmentsEditorToolbar,
 	[
 		'classPK',
-		'fragmentsEditorSidebarVisible',
+		'discardDraftRedirectURL',
+		'discardDraftURL',
 		'lastSaveDate',
 		'portletNamespace',
-		'publishLayoutPageTemplateEntryURL',
+		'publishURL',
 		'redirectURL',
 		'savingChanges',
-		'spritemap',
-		'status'
+		'selectedSidebarPanelId',
+		'spritemap'
 	]
 );
 

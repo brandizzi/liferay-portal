@@ -1,22 +1,35 @@
 @import "./variables";
 
 .fragments-editor-toolbar {
-	background-color: #6B6C7E;
-	color: #FFF;
+	background-color: #FFF;
+	border-bottom: 1px solid rgba(220, 220, 220, 0.5);
+	color: #6B6C7E;
 	height: $managementBarHeight;
 	left: 0;
 	max-height: $managementBarHeight;
 	min-height: $managementBarHeight;
 	position: fixed;
 	top: $controlMenuHeight;
-	transition: left ease $productMenuTransitionDuration, width ease $productMenuTransitionDuration;
+	transition: left ease $productMenuTransitionDuration, right ease $productMenuTransitionDuration, width ease $productMenuTransitionDuration;
 	width: 100%;
-	will-change: left, width;
+	will-change: left, right, width;
 	z-index: $managementBarZIndex;
 
 	body.open & {
 		left: $sidebarWidth;
 		width: calc(100% - #{$sidebarWidth});
+	}
+
+	button {
+		color: #6B6C7E;
+	}
+
+	button.btn-primary {
+		color: #FFF;
+	}
+
+	button.btn-secondary {
+		color: #6B6C7E;
 	}
 
 	& > .container-fluid {

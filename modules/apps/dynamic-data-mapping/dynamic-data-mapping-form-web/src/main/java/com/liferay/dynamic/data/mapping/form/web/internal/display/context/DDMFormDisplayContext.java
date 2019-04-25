@@ -53,6 +53,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.WorkflowDefinitionLinkLocalService;
@@ -83,7 +84,6 @@ import java.util.stream.Stream;
 import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.ResourceURL;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -445,11 +445,13 @@ public class DDMFormDisplayContext {
 	}
 
 	protected String createCaptchaResourceURL() {
-		ResourceURL resourceURL = _renderResponse.createResourceURL();
+		LiferayPortletURL liferayPortletURL =
+			(LiferayPortletURL)_renderResponse.createResourceURL();
 
-		resourceURL.setResourceID("captcha");
+		liferayPortletURL.setCopyCurrentRenderParameters(false);
+		liferayPortletURL.setResourceID("captcha");
 
-		return resourceURL.toString();
+		return liferayPortletURL.toString();
 	}
 
 	protected DDMFormRenderingContext createDDMFormRenderingContext(

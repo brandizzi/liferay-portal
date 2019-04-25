@@ -44,6 +44,9 @@ import com.liferay.asset.publisher.web.internal.util.AssetPublisherWebUtil;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.asset.util.AssetPublisherAddItemHolder;
 import com.liferay.document.library.kernel.document.conversion.DocumentConversionUtil;
+import com.liferay.info.provider.DefaultInfoListProviderContext;
+import com.liferay.info.provider.InfoListProvider;
+import com.liferay.info.provider.InfoListProviderTracker;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -76,6 +79,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.rss.util.RSSUtil;
+import com.liferay.segments.constants.SegmentsWebKeys;
 
 import java.io.Serializable;
 
@@ -120,6 +124,7 @@ public class AssetPublisherDisplayContext {
 			AssetPublisherHelper assetPublisherHelper,
 			AssetPublisherWebConfiguration assetPublisherWebConfiguration,
 			AssetPublisherWebUtil assetPublisherWebUtil,
+			InfoListProviderTracker infoListProviderTracker,
 			PortletRequest portletRequest, PortletResponse portletResponse,
 			PortletPreferences portletPreferences)
 		throws ConfigurationException {
@@ -130,6 +135,7 @@ public class AssetPublisherDisplayContext {
 		_assetPublisherHelper = assetPublisherHelper;
 		_assetPublisherWebConfiguration = assetPublisherWebConfiguration;
 		_assetPublisherWebUtil = assetPublisherWebUtil;
+		_infoListProviderTracker = infoListProviderTracker;
 		_portletRequest = portletRequest;
 		_portletResponse = portletResponse;
 		_portletPreferences = portletPreferences;
@@ -253,7 +259,37 @@ public class AssetPublisherDisplayContext {
 				isEnablePermissions());
 		}
 		else if (isSelectionStyleAssetList() && (assetListEntry != null)) {
-			return assetListEntry.getAssetEntries();
+			return assetListEntry.getAssetEntries(_getSegmentsEntryIds());
+		}
+		else if (isSelectionStyleAssetListProvider()) {
+			String infoListProviderClassName = GetterUtil.getString(
+				_portletPreferences.getValue(
+					"infoListProviderClassName", null));
+
+			if (Validator.isNull(infoListProviderClassName)) {
+				return Collections.emptyList();
+			}
+
+			InfoListProvider infoListProvider =
+				_infoListProviderTracker.getInfoListProvider(
+					infoListProviderClassName);
+
+			if (infoListProvider == null) {
+				return Collections.emptyList();
+			}
+
+			DefaultInfoListProviderContext defaultInfoListProviderContext =
+				new DefaultInfoListProviderContext(
+					_themeDisplay.getScopeGroup(), _themeDisplay.getUser());
+
+			AssetEntry assetEntry = (AssetEntry)_portletRequest.getAttribute(
+				WebKeys.LAYOUT_ASSET_ENTRY);
+
+			defaultInfoListProviderContext.setAssetEntry(assetEntry);
+
+			defaultInfoListProviderContext.setLayout(_themeDisplay.getLayout());
+
+			return infoListProvider.getInfoList(defaultInfoListProviderContext);
 		}
 
 		return Collections.emptyList();
@@ -261,6 +297,10 @@ public class AssetPublisherDisplayContext {
 
 	public List<AssetEntryAction> getAssetEntryActions(String className) {
 		return _assetEntryActionRegistry.getAssetEntryActions(className);
+	}
+
+	public List<InfoListProvider> getAssetEntryInfoListProviders() {
+		return _infoListProviderTracker.getInfoListProviders(AssetEntry.class);
 	}
 
 	public AssetEntryQuery getAssetEntryQuery() throws Exception {
@@ -271,7 +311,8 @@ public class AssetPublisherDisplayContext {
 		AssetListEntry assetListEntry = fetchAssetListEntry();
 
 		if (isSelectionStyleAssetList() && (assetListEntry != null)) {
-			_assetEntryQuery = assetListEntry.getAssetEntryQuery();
+			_assetEntryQuery = assetListEntry.getAssetEntryQuery(
+				_getSegmentsEntryIds());
 		}
 		else {
 			_assetEntryQuery = _assetPublisherHelper.getAssetEntryQuery(
@@ -467,10 +508,14 @@ public class AssetPublisherDisplayContext {
 				queryValues = _assetPublisherWebUtil.filterAssetTagNames(
 					_themeDisplay.getScopeGroupId(), queryValues);
 
-				List<Map<String, String>> selectedItems = new ArrayList<>();
-
 				String[] tagNames = StringUtil.split(
 					queryValues, StringPool.COMMA);
+
+				if (ArrayUtil.isEmpty(tagNames)) {
+					continue;
+				}
+
+				List<Map<String, String>> selectedItems = new ArrayList<>();
 
 				for (String tagName : tagNames) {
 					Map<String, String> item = new HashMap<>();
@@ -488,22 +533,26 @@ public class AssetPublisherDisplayContext {
 					_request, "queryCategoryIds" + queryLogicIndex,
 					queryValues);
 
-				JSONArray categoryIdsTitles = JSONFactoryUtil.createJSONArray();
-
 				List<AssetCategory> categories = _filterAssetCategories(
 					GetterUtil.getLongValues(queryValues.split(",")));
 
-				for (AssetCategory category : categories) {
-					categoryIdsTitles.put(
-						category.getTitle(_themeDisplay.getLocale()));
+				if (ListUtil.isEmpty(categories)) {
+					continue;
 				}
 
-				List<Long> categoryIds = ListUtil.toList(
-					categories, AssetCategory.CATEGORY_ID_ACCESSOR);
+				List<HashMap<String, Object>> selectedItems = new ArrayList<>();
 
-				queryValues = StringUtil.merge(categoryIds, ",");
+				for (AssetCategory category : categories) {
+					HashMap<String, Object> selectedCategory = new HashMap<>();
 
-				ruleJSONObject.put("categoryIdsTitles", categoryIdsTitles);
+					selectedCategory.put(
+						"label", category.getTitle(_themeDisplay.getLocale()));
+					selectedCategory.put("value", category.getCategoryId());
+
+					selectedItems.add(selectedCategory);
+				}
+
+				ruleJSONObject.put("selectedItems", selectedItems);
 			}
 
 			if (Validator.isNull(queryValues)) {
@@ -738,8 +787,15 @@ public class AssetPublisherDisplayContext {
 			return _metadataFields;
 		}
 
-		_metadataFields = StringUtil.split(
-			_portletPreferences.getValue("metadataFields", StringPool.BLANK));
+		String metadataFields = _portletPreferences.getValue(
+			"metadataFields", null);
+
+		if (metadataFields == null) {
+			_metadataFields = new String[] {"author", "modified-date"};
+		}
+		else {
+			_metadataFields = StringUtil.split(metadataFields);
+		}
 
 		return _metadataFields;
 	}
@@ -1019,11 +1075,11 @@ public class AssetPublisherDisplayContext {
 		return null;
 	}
 
-	public String getVocabularyIds() {
+	public List<Long> getVocabularyIds() {
 		List<AssetVocabulary> vocabularies =
 			AssetVocabularyServiceUtil.getGroupsVocabularies(getGroupIds());
 
-		return ListUtil.toString(
+		return ListUtil.toList(
 			vocabularies, AssetVocabulary.VOCABULARY_ID_ACCESSOR);
 	}
 
@@ -1163,7 +1219,7 @@ public class AssetPublisherDisplayContext {
 		}
 
 		_enableRelatedAssets = GetterUtil.getBoolean(
-			_portletPreferences.getValue("enableRelatedAssets", null), true);
+			_portletPreferences.getValue("enableRelatedAssets", null));
 
 		return _enableRelatedAssets;
 	}
@@ -1188,6 +1244,17 @@ public class AssetPublisherDisplayContext {
 		}
 
 		return false;
+	}
+
+	public boolean isEnableSubscriptions() {
+		if (_enableSubscriptions != null) {
+			return _enableSubscriptions;
+		}
+
+		_enableSubscriptions = GetterUtil.getBoolean(
+			_portletPreferences.getValue("enableSubscriptions", null));
+
+		return _enableSubscriptions;
 	}
 
 	public boolean isEnableTagBasedNavigation() {
@@ -1263,24 +1330,27 @@ public class AssetPublisherDisplayContext {
 	}
 
 	public boolean isSelectionStyleAssetList() {
-		String selectionStyle = getSelectionStyle();
-
-		return selectionStyle.equals("asset-list");
-	}
-
-	public boolean isSelectionStyleDynamic() throws PortalException {
-		AssetListEntry assetListEntry = fetchAssetListEntry();
-
-		if (isSelectionStyleAssetList() && (assetListEntry != null) &&
-			(assetListEntry.getType() ==
-				AssetListEntryTypeConstants.TYPE_DYNAMIC)) {
-
+		if (Objects.equals(getSelectionStyle(), "asset-list")) {
 			return true;
 		}
 
-		String selectionStyle = getSelectionStyle();
+		return false;
+	}
 
-		return selectionStyle.equals("dynamic");
+	public boolean isSelectionStyleAssetListProvider() {
+		if (Objects.equals(getSelectionStyle(), "asset-list-provider")) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean isSelectionStyleDynamic() {
+		if (Objects.equals(getSelectionStyle(), "dynamic")) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public boolean isSelectionStyleManual() throws PortalException {
@@ -1293,9 +1363,11 @@ public class AssetPublisherDisplayContext {
 			return true;
 		}
 
-		String selectionStyle = getSelectionStyle();
+		if (Objects.equals(getSelectionStyle(), "manual")) {
+			return true;
+		}
 
-		return selectionStyle.equals("manual");
+		return false;
 	}
 
 	public boolean isShowAddContentButton() {
@@ -1760,6 +1832,11 @@ public class AssetPublisherDisplayContext {
 		return filteredCategories;
 	}
 
+	private long[] _getSegmentsEntryIds() {
+		return GetterUtil.getLongValues(
+			_portletRequest.getAttribute(SegmentsWebKeys.SEGMENTS_ENTRY_IDS));
+	}
+
 	private Integer _abstractLength;
 	private long[] _allAssetCategoryIds;
 	private String[] _allAssetTagNames;
@@ -1799,11 +1876,13 @@ public class AssetPublisherDisplayContext {
 	private Boolean _enableRatings;
 	private Boolean _enableRelatedAssets;
 	private Boolean _enableRSS;
+	private Boolean _enableSubscriptions;
 	private Boolean _enableTagBasedNavigation;
 	private Boolean _enableViewCountIncrement;
 	private Boolean _excludeZeroViewCount;
 	private String[] _extensions;
 	private long[] _groupIds;
+	private final InfoListProviderTracker _infoListProviderTracker;
 	private Boolean _mergeURLTags;
 	private String[] _metadataFields;
 	private String _orderByColumn1;

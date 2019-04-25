@@ -75,7 +75,7 @@ public abstract class BaseUserDemoDataCreator implements UserDemoDataCreator {
 		Date birthDate = new Date();
 		byte[] portraitBytes = null;
 
-		try (InputStream is = (new URL(_RANDOM_USER_API)).openStream()) {
+		try (InputStream is = new URL(_RANDOM_USER_API).openStream()) {
 			String json = StringUtil.read(is);
 
 			JSONObject rootJSONObject = JSONFactoryUtil.createJSONObject(json);
@@ -102,7 +102,9 @@ public abstract class BaseUserDemoDataCreator implements UserDemoDataCreator {
 			}
 
 			if (Validator.isNull(emailAddress)) {
-				emailAddress = StringUtil.randomString().concat("@liferay.com");
+				String randomString = StringUtil.randomString();
+
+				emailAddress = randomString.concat("@liferay.com");
 			}
 		}
 

@@ -16,7 +16,10 @@ package com.liferay.portal.verify;
 
 /**
  * @author Alexander Chow
+ *
+ * @deprecated As of Mueller (7.2.x), with no direct replacement
  */
+@Deprecated
 public class VerifyProcessSuite extends VerifyProcess {
 
 	@Override
@@ -25,7 +28,6 @@ public class VerifyProcessSuite extends VerifyProcess {
 
 		verify(new VerifyPermission());
 		verify(new VerifyGroup());
-		verify(new VerifyRole());
 
 		verify(new VerifyAuditedModel());
 		verify(new VerifyResourceActions());

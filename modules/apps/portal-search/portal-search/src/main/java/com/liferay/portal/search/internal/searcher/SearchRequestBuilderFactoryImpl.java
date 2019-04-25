@@ -14,20 +14,22 @@
 
 package com.liferay.portal.search.internal.searcher;
 
-import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.search.internal.legacy.searcher.SearchRequestBuilderImpl;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
 import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author André de Oliveira
  */
+@Component(immediate = true, service = SearchRequestBuilderFactory.class)
 public class SearchRequestBuilderFactoryImpl
 	implements SearchRequestBuilderFactory {
 
 	@Override
-	public SearchRequestBuilder getSearchRequestBuilder() {
-		return new SearchRequestBuilderImpl(new SearchContext());
+	public SearchRequestBuilder builder() {
+		return new SearchRequestBuilderImpl(this);
 	}
 
 }

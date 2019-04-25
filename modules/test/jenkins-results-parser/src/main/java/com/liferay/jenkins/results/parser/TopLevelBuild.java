@@ -21,6 +21,7 @@ import com.liferay.jenkins.results.parser.failure.message.generator.FailureMessa
 import com.liferay.jenkins.results.parser.failure.message.generator.GenericFailureMessageGenerator;
 import com.liferay.jenkins.results.parser.failure.message.generator.GitLPushFailureMessageGenerator;
 import com.liferay.jenkins.results.parser.failure.message.generator.GradleTaskFailureMessageGenerator;
+import com.liferay.jenkins.results.parser.failure.message.generator.JenkinsRegenFailureMessageGenerator;
 import com.liferay.jenkins.results.parser.failure.message.generator.PoshiTestFailureMessageGenerator;
 import com.liferay.jenkins.results.parser.failure.message.generator.PoshiValidationFailureMessageGenerator;
 import com.liferay.jenkins.results.parser.failure.message.generator.RebaseFailureMessageGenerator;
@@ -298,7 +299,7 @@ public class TopLevelBuild extends BaseBuild {
 	public String getStatusSummary() {
 		long currentTimeMillis = System.currentTimeMillis();
 
-		if ((currentTimeMillis - _DOWNSTREAM_BUILDS_LISTING_INTERVAL) >=
+		if ((currentTimeMillis - _MILLIS_DOWNSTREAM_BUILDS_LISTING_INTERVAL) >=
 				_lastDownstreamBuildsListingTimestamp) {
 
 			StringBuilder sb = new StringBuilder(super.getStatusSummary());
@@ -649,9 +650,17 @@ public class TopLevelBuild extends BaseBuild {
 					"h4", null, "This pull contains no unique failures."));
 		}
 		else {
+			String failureTitle = "Failures unique to this pull:";
+
+			if (!UpstreamFailureUtil.isUpstreamComparisonAvailable() &&
+				isCompareToUpstream()) {
+
+				failureTitle =
+					"Failures (upstream comparison is not available):";
+			}
+
 			buildFailureElements.add(
-				Dom4JUtil.getNewElement(
-					"h4", null, "Failures unique to this pull:"));
+				Dom4JUtil.getNewElement("h4", null, failureTitle));
 
 			buildFailureElements.add(
 				Dom4JUtil.getOrderedListElement(
@@ -869,7 +878,7 @@ public class TopLevelBuild extends BaseBuild {
 			topLevelBuild.getJenkinsMaster();
 
 		return JenkinsResultsParserUtil.combine(
-			TEMP_MAP_BASE_URL, topLevelBuildJenkinsMaster.getName(), "/",
+			URL_BASE_TEMP_MAP, topLevelBuildJenkinsMaster.getName(), "/",
 			topLevelBuild.getJobName(), "/",
 			String.valueOf(topLevelBuild.getBuildNumber()), "/",
 			topLevelBuild.getJobName(), "/git.", gitRepositoryType,
@@ -984,21 +993,13 @@ public class TopLevelBuild extends BaseBuild {
 	protected Element getJenkinsReportHeadElement() {
 		Element headElement = Dom4JUtil.getNewElement("head");
 
-		String resourceFileContent = null;
+		getResourceFileContentAsElement(
+			"style", headElement, "dependencies/jenkins_report.css");
 
-		try {
-			resourceFileContent =
-				JenkinsResultsParserUtil.getResourceFileContent(
-					"dependencies/jenkins_report.css");
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(
-				"Unable to load resource jenkins_report.css", ioe);
-		}
+		Element scriptElement = getResourceFileContentAsElement(
+			"script", headElement, "dependencies/jenkins_report.js");
 
-		Dom4JUtil.addToElement(
-			headElement,
-			Dom4JUtil.getNewElement("style", null, resourceFileContent));
+		scriptElement.addAttribute("language", "javascript");
 
 		return headElement;
 	}
@@ -1153,6 +1154,13 @@ public class TopLevelBuild extends BaseBuild {
 			topLevelTableElement, getJenkinsReportTableColumnHeadersElement(),
 			getJenkinsReportTableRowElement());
 
+		List<Element> jenkinsReportStopWatchRecordElements =
+			getJenkinsReportStopWatchRecordElements();
+
+		Dom4JUtil.addToElement(
+			topLevelTableElement,
+			jenkinsReportStopWatchRecordElements.toArray());
+
 		return topLevelTableElement;
 	}
 
@@ -1208,6 +1216,24 @@ public class TopLevelBuild extends BaseBuild {
 		return moreDetailsElement;
 	}
 
+	protected Element getResourceFileContentAsElement(
+		String tagName, Element parentElement, String resourceName) {
+
+		String resourceFileContent = null;
+
+		try {
+			resourceFileContent =
+				JenkinsResultsParserUtil.getResourceFileContent(resourceName);
+		}
+		catch (IOException ioe) {
+			throw new RuntimeException(
+				"Unable to load resource " + resourceName, ioe);
+		}
+
+		return Dom4JUtil.getNewElement(
+			tagName, parentElement, resourceFileContent);
+	}
+
 	protected Element getResultElement() {
 		StringBuilder sb = new StringBuilder();
 
@@ -1245,7 +1271,7 @@ public class TopLevelBuild extends BaseBuild {
 		JenkinsMaster jenkinsMaster = getJenkinsMaster();
 
 		return JenkinsResultsParserUtil.combine(
-			TEMP_MAP_BASE_URL, jenkinsMaster.getName(), "/", getJobName(), "/",
+			URL_BASE_TEMP_MAP, jenkinsMaster.getName(), "/", getJobName(), "/",
 			String.valueOf(getBuildNumber()), "/", getJobName(), "/",
 			"start.properties");
 	}
@@ -1259,7 +1285,7 @@ public class TopLevelBuild extends BaseBuild {
 		JenkinsMaster jenkinsMaster = getJenkinsMaster();
 
 		return JenkinsResultsParserUtil.combine(
-			TEMP_MAP_BASE_URL, jenkinsMaster.getName(), "/", getJobName(), "/",
+			URL_BASE_TEMP_MAP, jenkinsMaster.getName(), "/", getJobName(), "/",
 			String.valueOf(getBuildNumber()), "/", getJobName(), "/",
 			"stop.properties");
 	}
@@ -1500,27 +1526,24 @@ public class TopLevelBuild extends BaseBuild {
 		return slaveUsages;
 	}
 
-	private static final long _DOWNSTREAM_BUILDS_LISTING_INTERVAL =
-		1000 * 60 * 5;
-
-	// Skip JavaParser
-
 	private static final FailureMessageGenerator[] _FAILURE_MESSAGE_GENERATORS =
 		{
 			new CompileFailureMessageGenerator(),
 			new PoshiValidationFailureMessageGenerator(),
-
 			new PoshiTestFailureMessageGenerator(),
-
 			new GitLPushFailureMessageGenerator(),
 			new GradleTaskFailureMessageGenerator(),
+			new JenkinsRegenFailureMessageGenerator(),
 			new RebaseFailureMessageGenerator(),
-
 			new CIFailureMessageGenerator(),
 			new DownstreamFailureMessageGenerator(),
-
 			new GenericFailureMessageGenerator()
 		};
+
+	// Skip JavaParser
+
+	private static final long _MILLIS_DOWNSTREAM_BUILDS_LISTING_INTERVAL =
+		1000 * 60 * 5;
 
 	private static final String _URL_CHART_JS =
 		"https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js";

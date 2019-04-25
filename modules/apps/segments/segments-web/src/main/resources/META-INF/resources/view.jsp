@@ -32,6 +32,7 @@ SegmentsDisplayContext segmentsDisplayContext = (SegmentsDisplayContext)request.
 	searchContainerId="segmentsEntries"
 	searchFormName="searchFm"
 	selectable="<%= true %>"
+	showCreationMenu="<%= segmentsDisplayContext.isShowCreationMenu() %>"
 	sortingOrder="<%= segmentsDisplayContext.getOrderByType() %>"
 	sortingURL="<%= segmentsDisplayContext.getSortingURL() %>"
 />
@@ -43,6 +44,8 @@ SegmentsDisplayContext segmentsDisplayContext = (SegmentsDisplayContext)request.
 <aui:form action="<%= deleteSegmentsEntryURL %>" cssClass="container-fluid-1280" method="post" name="fmSegmentsEntries">
 	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 
+	<liferay-ui:error exception="<%= RequiredSegmentsEntryException.MustNotDeleteSegmentsEntryReferencedBySegmentsExperiences.class %>" message="the-segment-cannot-be-deleted-because-it-is-required-by-one-or-more-experiences" />
+
 	<liferay-ui:search-container
 		id="segmentsEntries"
 		searchContainer="<%= segmentsDisplayContext.getSearchContainer() %>"
@@ -52,10 +55,20 @@ SegmentsDisplayContext segmentsDisplayContext = (SegmentsDisplayContext)request.
 			keyProperty="segmentsEntryId"
 			modelVar="segmentsEntry"
 		>
+
+			<%
+			Map<String, Object> rowData = new HashMap<>();
+
+			rowData.put("actions", segmentsDisplayContext.getAvailableActions(segmentsEntry));
+
+			row.setData(rowData);
+			%>
+
 			<portlet:renderURL var="rowURL">
 				<portlet:param name="mvcRenderCommandName" value="editSegmentsEntry" />
 				<portlet:param name="redirect" value="<%= currentURL %>" />
 				<portlet:param name="segmentsEntryId" value="<%= String.valueOf(segmentsEntry.getSegmentsEntryId()) %>" />
+				<portlet:param name="showInEditMode" value="<%= Boolean.FALSE.toString() %>" />
 			</portlet:renderURL>
 
 			<liferay-ui:search-container-column-text

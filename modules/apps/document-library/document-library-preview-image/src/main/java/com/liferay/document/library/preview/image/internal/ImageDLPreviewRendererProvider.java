@@ -25,33 +25,37 @@ import com.liferay.document.library.preview.exception.DLPreviewSizeException;
 import com.liferay.document.library.service.DLFileVersionPreviewLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.repository.model.FileVersion;
-import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.WebKeys;
 
-import java.util.Dictionary;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Alejandro Tardín
  */
-@Component(immediate = true, service = ImageDLPreviewRendererProvider.class)
 public class ImageDLPreviewRendererProvider
 	implements DLPreviewRendererProvider {
+
+	public ImageDLPreviewRendererProvider(
+		DLFileVersionPreviewLocalService dlFileVersionPreviewLocalService,
+		ServletContext servletContext) {
+
+		_dlFileVersionPreviewLocalService = dlFileVersionPreviewLocalService;
+		_servletContext = servletContext;
+	}
 
 	@Override
 	public Optional<DLPreviewRenderer> getPreviewDLPreviewRendererOptional(
 		FileVersion fileVersion) {
+
+		if (!DLProcessorRegistryUtil.isPreviewableSize(fileVersion)) {
+			return Optional.of(
+				(httpServletRequest, httpServletResponse) -> {
+					throw new DLPreviewSizeException();
+				});
+		}
 
 		if (!ImageProcessorUtil.isImageSupported(fileVersion)) {
 			return Optional.empty();
@@ -78,19 +82,6 @@ public class ImageDLPreviewRendererProvider
 		return Optional.empty();
 	}
 
-	@Activate
-	protected void activate(BundleContext bundleContext) {
-		Dictionary<String, Object[]> properties = new HashMapDictionary<>();
-
-		Set<String> imageMimeTypes = ImageProcessorUtil.getImageMimeTypes();
-
-		properties.put("content.type", imageMimeTypes.toArray());
-
-		_dlPreviewRendererProviderServiceRegistration =
-			bundleContext.registerService(
-				DLPreviewRendererProvider.class, this, properties);
-	}
-
 	protected void checkForPreviewGenerationExceptions(FileVersion fileVersion)
 		throws PortalException {
 
@@ -102,28 +93,12 @@ public class ImageDLPreviewRendererProvider
 		}
 
 		if (!ImageProcessorUtil.hasImages(fileVersion)) {
-			if (!DLProcessorRegistryUtil.isPreviewableSize(fileVersion)) {
-				throw new DLPreviewSizeException();
-			}
-
 			throw new DLPreviewGenerationInProcessException();
 		}
 	}
 
-	@Deactivate
-	protected void deactivate() {
-		_dlPreviewRendererProviderServiceRegistration.unregister();
-	}
-
-	@Reference
-	private DLFileVersionPreviewLocalService _dlFileVersionPreviewLocalService;
-
-	private ServiceRegistration<DLPreviewRendererProvider>
-		_dlPreviewRendererProviderServiceRegistration;
-
-	@Reference(
-		target = "(osgi.web.symbolicname=com.liferay.document.library.preview.image)"
-	)
-	private ServletContext _servletContext;
+	private final DLFileVersionPreviewLocalService
+		_dlFileVersionPreviewLocalService;
+	private final ServletContext _servletContext;
 
 }

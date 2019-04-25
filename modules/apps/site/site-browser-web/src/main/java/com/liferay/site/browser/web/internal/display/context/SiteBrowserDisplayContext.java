@@ -16,7 +16,6 @@ package com.liferay.site.browser.web.internal.display.context;
 
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
-import com.liferay.frontend.taglib.clay.servlet.taglib.util.SafeConsumer;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -47,6 +46,7 @@ import com.liferay.portlet.usersadmin.search.GroupSearchTerms;
 import com.liferay.sites.kernel.util.SitesUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -238,14 +238,13 @@ public class SiteBrowserDisplayContext {
 				{
 					for (String curType : types) {
 						add(
-							SafeConsumer.ignore(
-								navigationItem -> {
-									navigationItem.setActive(
-										curType.equals(getType()));
-									navigationItem.setHref(
-										getPortletURL(), "type", curType);
-									navigationItem.setLabel(curType);
-								}));
+							navigationItem -> {
+								navigationItem.setActive(
+									curType.equals(getType()));
+								navigationItem.setHref(
+									getPortletURL(), "type", curType);
+								navigationItem.setLabel(curType);
+							});
 					}
 				}
 			};
@@ -490,11 +489,7 @@ public class SiteBrowserDisplayContext {
 		if (type.equals("child-sites")) {
 			Group parentGroup = GroupLocalServiceUtil.getGroup(groupId);
 
-			List<Group> parentGroups = new ArrayList<>();
-
-			parentGroups.add(parentGroup);
-
-			_groupParams.put("groupsTree", parentGroups);
+			_groupParams.put("groupsTree", Arrays.asList(parentGroup));
 		}
 		else if (filterManageableGroups) {
 			User user = themeDisplay.getUser();

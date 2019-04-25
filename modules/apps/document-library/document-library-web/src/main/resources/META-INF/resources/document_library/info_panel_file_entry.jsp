@@ -19,6 +19,7 @@
 <%
 FileEntry fileEntry = (FileEntry)request.getAttribute("info_panel.jsp-fileEntry");
 FileVersion fileVersion = (FileVersion)request.getAttribute("info_panel.jsp-fileVersion");
+boolean hideActions = GetterUtil.getBoolean(request.getAttribute("info_panel_file_entry.jsp-hideActions"));
 
 DLViewFileVersionDisplayContext dlViewFileVersionDisplayContext = dlDisplayContextProvider.getDLViewFileVersionDisplayContext(request, response, fileVersion);
 
@@ -33,11 +34,13 @@ else {
 %>
 
 <div class="sidebar-header">
-	<ul class="sidebar-header-actions">
-		<li>
-			<liferay-util:include page="/document_library/file_entry_action.jsp" servletContext="<%= application %>" />
-		</li>
-	</ul>
+	<c:if test="<%= !hideActions %>">
+		<ul class="sidebar-header-actions">
+			<li>
+				<liferay-util:include page="/document_library/file_entry_action.jsp" servletContext="<%= application %>" />
+			</li>
+		</ul>
+	</c:if>
 
 	<h4><%= HtmlUtil.escape(fileEntry.getTitle()) %></h4>
 
@@ -53,6 +56,8 @@ else {
 	<aui:workflow-status model="<%= DLFileEntry.class %>" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= fileVersion.getStatus() %>" />
 </div>
 
+<div class="sidebar-body">
+
 <%
 String tabsNames = "details";
 
@@ -65,10 +70,8 @@ if (dlViewFileVersionDisplayContext.isVersionInfoVisible()) {
 	cssClass="navbar-no-collapse"
 	names="<%= tabsNames %>"
 	refresh="<%= false %>"
-	type="dropdown"
 >
 	<liferay-ui:section>
-		<div class="sidebar-body">
 
 			<%
 			String thumbnailSrc = DLURLHelperUtil.getThumbnailSrc(fileEntry, fileVersion, themeDisplay);
@@ -88,16 +91,9 @@ if (dlViewFileVersionDisplayContext.isVersionInfoVisible()) {
 
 						<%
 						User owner = UserLocalServiceUtil.fetchUser(fileEntry.getUserId());
-
-						String ownerURL = StringPool.BLANK;
-
-						if ((owner != null) && !owner.isDefaultUser()) {
-							ownerURL = owner.getDisplayURL(themeDisplay);
-						}
 						%>
 
 						<liferay-ui:user-portrait
-							cssClass="sticker-lg"
 							user="<%= owner %>"
 						/>
 					</div>
@@ -106,7 +102,9 @@ if (dlViewFileVersionDisplayContext.isVersionInfoVisible()) {
 						<div class="autofit-row">
 							<div class="autofit-col autofit-col-expand">
 								<div class="component-title h4 username">
-									<a href="<%= ownerURL %>"><%= owner.getFullName() %></a>
+									<c:if test="<%= owner != null %>">
+										<a href="<%= owner.isDefaultUser() ? StringPool.BLANK : owner.getDisplayURL(themeDisplay) %>"><%= owner.getFullName() %></a>
+									</c:if>
 								</div>
 
 								<small class="text-muted">
@@ -125,7 +123,7 @@ if (dlViewFileVersionDisplayContext.isVersionInfoVisible()) {
 							<clay:link
 								buttonStyle="primary"
 								elementClasses='<%= "btn-sm" %>'
-								href="<%= DLURLHelperUtil.getDownloadURL(fileEntry, fileVersion, themeDisplay, StringPool.BLANK) %>"
+								href="<%= DLURLHelperUtil.getDownloadURL(fileEntry, fileVersion, themeDisplay, StringPool.BLANK, false, true) %>"
 								label='<%= LanguageUtil.get(resourceBundle, "download") %>'
 								title='<%= LanguageUtil.get(resourceBundle, "download") + " (" + TextFormatter.formatStorageSize(fileVersion.getSize(), locale) + ")" %>'
 							/>
@@ -353,6 +351,7 @@ if (dlViewFileVersionDisplayContext.isVersionInfoVisible()) {
 										classPK="<%= ddmStructure.getPrimaryKey() %>"
 										ddmFormValues="<%= ddmFormValues %>"
 										fieldsNamespace="<%= String.valueOf(ddmStructure.getPrimaryKey()) %>"
+										groupId="<%= fileVersion.getGroupId() %>"
 										readOnly="<%= true %>"
 										requestedLocale="<%= locale %>"
 										showEmptyFieldLabel="<%= false %>"
@@ -425,6 +424,7 @@ if (dlViewFileVersionDisplayContext.isVersionInfoVisible()) {
 									classPK="<%= ddmStructure.getPrimaryKey() %>"
 									ddmFormValues="<%= ddmFormValues %>"
 									fieldsNamespace="<%= String.valueOf(ddmStructure.getPrimaryKey()) %>"
+									groupId="<%= fileVersion.getGroupId() %>"
 									readOnly="<%= true %>"
 									requestedLocale="<%= ddmFormValues.getDefaultLocale() %>"
 									showEmptyFieldLabel="<%= false %>"
@@ -440,19 +440,17 @@ if (dlViewFileVersionDisplayContext.isVersionInfoVisible()) {
 				%>
 
 			</liferay-ui:panel-container>
-		</div>
 	</liferay-ui:section>
 
 	<c:if test="<%= dlViewFileVersionDisplayContext.isVersionInfoVisible() %>">
 		<liferay-ui:section>
-			<div class="sidebar-body">
 
 				<%
 				request.setAttribute("info_panel.jsp-fileEntry", fileEntry);
 				%>
 
 				<liferay-util:include page="/document_library/file_entry_history.jsp" servletContext="<%= application %>" />
-			</div>
 		</liferay-ui:section>
 	</c:if>
+	</div>
 </liferay-ui:tabs>

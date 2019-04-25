@@ -18,6 +18,7 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.LocaleException;
+import com.liferay.portal.kernel.model.version.VersionedModel;
 
 import java.util.Date;
 import java.util.Locale;
@@ -36,8 +37,8 @@ import java.util.Map;
  */
 @ProviderType
 public interface LayoutModel
-	extends BaseModel<Layout>, LocalizedModel, MVCCModel, ShardedModel,
-			StagedGroupedModel {
+	extends AttachedModel, BaseModel<Layout>, LocalizedModel, MVCCModel,
+			ShardedModel, StagedGroupedModel, VersionedModel<LayoutVersion> {
 
 	/*
 	 * NOTE FOR DEVELOPERS:
@@ -50,6 +51,7 @@ public interface LayoutModel
 	 *
 	 * @return the primary key of this layout
 	 */
+	@Override
 	public long getPrimaryKey();
 
 	/**
@@ -57,6 +59,7 @@ public interface LayoutModel
 	 *
 	 * @param primaryKey the primary key of this layout
 	 */
+	@Override
 	public void setPrimaryKey(long primaryKey);
 
 	/**
@@ -91,6 +94,22 @@ public interface LayoutModel
 	 */
 	@Override
 	public void setUuid(String uuid);
+
+	/**
+	 * Returns the head ID of this layout.
+	 *
+	 * @return the head ID of this layout
+	 */
+	@Override
+	public long getHeadId();
+
+	/**
+	 * Sets the head ID of this layout.
+	 *
+	 * @param headId the head ID of this layout
+	 */
+	@Override
+	public void setHeadId(long headId);
 
 	/**
 	 * Returns the plid of this layout.
@@ -234,34 +253,6 @@ public interface LayoutModel
 	public void setParentPlid(long parentPlid);
 
 	/**
-	 * Returns the left plid of this layout.
-	 *
-	 * @return the left plid of this layout
-	 */
-	public long getLeftPlid();
-
-	/**
-	 * Sets the left plid of this layout.
-	 *
-	 * @param leftPlid the left plid of this layout
-	 */
-	public void setLeftPlid(long leftPlid);
-
-	/**
-	 * Returns the right plid of this layout.
-	 *
-	 * @return the right plid of this layout
-	 */
-	public long getRightPlid();
-
-	/**
-	 * Sets the right plid of this layout.
-	 *
-	 * @param rightPlid the right plid of this layout
-	 */
-	public void setRightPlid(long rightPlid);
-
-	/**
 	 * Returns the private layout of this layout.
 	 *
 	 * @return the private layout of this layout
@@ -309,6 +300,48 @@ public interface LayoutModel
 	 * @param parentLayoutId the parent layout ID of this layout
 	 */
 	public void setParentLayoutId(long parentLayoutId);
+
+	/**
+	 * Returns the fully qualified class name of this layout.
+	 *
+	 * @return the fully qualified class name of this layout
+	 */
+	@Override
+	public String getClassName();
+
+	public void setClassName(String className);
+
+	/**
+	 * Returns the class name ID of this layout.
+	 *
+	 * @return the class name ID of this layout
+	 */
+	@Override
+	public long getClassNameId();
+
+	/**
+	 * Sets the class name ID of this layout.
+	 *
+	 * @param classNameId the class name ID of this layout
+	 */
+	@Override
+	public void setClassNameId(long classNameId);
+
+	/**
+	 * Returns the class pk of this layout.
+	 *
+	 * @return the class pk of this layout
+	 */
+	@Override
+	public long getClassPK();
+
+	/**
+	 * Sets the class pk of this layout.
+	 *
+	 * @param classPK the class pk of this layout
+	 */
+	@Override
+	public void setClassPK(long classPK);
 
 	/**
 	 * Returns the name of this layout.
@@ -1021,6 +1054,20 @@ public interface LayoutModel
 	 * @param sourcePrototypeLayoutUuid the source prototype layout uuid of this layout
 	 */
 	public void setSourcePrototypeLayoutUuid(String sourcePrototypeLayoutUuid);
+
+	/**
+	 * Returns the publish date of this layout.
+	 *
+	 * @return the publish date of this layout
+	 */
+	public Date getPublishDate();
+
+	/**
+	 * Sets the publish date of this layout.
+	 *
+	 * @param publishDate the publish date of this layout
+	 */
+	public void setPublishDate(Date publishDate);
 
 	/**
 	 * Returns the last publish date of this layout.

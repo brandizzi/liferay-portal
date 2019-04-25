@@ -18,6 +18,7 @@
 
 <%
 long[] groupIds = (long[])request.getAttribute(UADWebKeys.GROUP_IDS);
+List<ScopeDisplay> scopeDisplays = (List<ScopeDisplay>)request.getAttribute(UADWebKeys.SCOPE_DISPLAYS);
 int totalReviewableUADEntitiesCount = (int)request.getAttribute(UADWebKeys.TOTAL_UAD_ENTITIES_COUNT);
 List<UADApplicationSummaryDisplay> uadApplicationSummaryDisplays = (List<UADApplicationSummaryDisplay>)request.getAttribute(UADWebKeys.UAD_APPLICATION_SUMMARY_DISPLAY_LIST);
 List<UADDisplay> uadDisplays = (List<UADDisplay>)request.getAttribute(UADWebKeys.APPLICATION_UAD_DISPLAYS);
@@ -27,12 +28,9 @@ String scope = ParamUtil.getString(request, "scope", UADConstants.SCOPE_PERSONAL
 
 portletDisplay.setShowBackIcon(true);
 
-PortletURL backURL = renderResponse.createRenderURL();
+LiferayPortletURL usersAdminURL = liferayPortletResponse.createLiferayPortletURL(UsersAdminPortletKeys.USERS_ADMIN, PortletRequest.RENDER_PHASE);
 
-backURL.setParameter("mvcRenderCommandName", "/view_uad_summary");
-backURL.setParameter("p_u_i_d", String.valueOf(selectedUser.getUserId()));
-
-portletDisplay.setURLBack(backURL.toString());
+portletDisplay.setURLBack(usersAdminURL.toString());
 
 renderResponse.setTitle(StringBundler.concat(selectedUser.getFullName(), " - ", LanguageUtil.get(request, "personal-data-erasure")));
 %>
@@ -55,26 +53,23 @@ renderResponse.setTitle(StringBundler.concat(selectedUser.getFullName(), " - ", 
 
 				<div class="collapse panel-collapse show" id="<portlet:namespace />scopePanelBody">
 					<div class="panel-body">
-						<clay:radio
-							checked="<%= scope.equals(UADConstants.SCOPE_PERSONAL_SITE) %>"
-							label="<%= LanguageUtil.get(request, UADConstants.SCOPE_PERSONAL_SITE) %>"
-							name="scope"
-							value="personal-site"
-						/>
 
-						<clay:radio
-							checked="<%= scope.equals(UADConstants.SCOPE_REGULAR_SITES) %>"
-							label="<%= LanguageUtil.get(request, UADConstants.SCOPE_REGULAR_SITES) %>"
-							name="scope"
-							value="regular-sites"
-						/>
+						<%
+						for (ScopeDisplay scopeDisplay : scopeDisplays) {
+						%>
 
-						<clay:radio
-							checked="<%= scope.equals(UADConstants.SCOPE_INSTANCE) %>"
-							label="<%= LanguageUtil.get(request, UADConstants.SCOPE_INSTANCE) %>"
-							name="scope"
-							value="instance"
-						/>
+							<clay:radio
+								checked="<%= scopeDisplay.isActive() %>"
+								disabled="<%= !scopeDisplay.hasItems() %>"
+								label="<%= LanguageUtil.get(request, scopeDisplay.getScopeName()) %>"
+								name="scope"
+								value="<%= scopeDisplay.getScopeName() %>"
+							/>
+
+						<%
+						}
+						%>
+
 					</div>
 				</div>
 			</div>
@@ -86,14 +81,10 @@ renderResponse.setTitle(StringBundler.concat(selectedUser.getFullName(), " - ", 
 						<%
 						String applicationPanelTitle = StringUtil.toUpperCase(LanguageUtil.get(request, "applications"), locale);
 
-						int totalApplicationItemCount = 0;
-
-						for (UADApplicationSummaryDisplay uadApplicationSummaryDisplay : uadApplicationSummaryDisplays) {
-							totalApplicationItemCount += uadApplicationSummaryDisplay.getCount();
-						}
+						UADApplicationSummaryDisplay firstUADApplicationSummaryDisplay = uadApplicationSummaryDisplays.get(0);
 						%>
 
-						<%= StringUtil.appendParentheticalSuffix(applicationPanelTitle, totalApplicationItemCount) %>
+						<%= StringUtil.appendParentheticalSuffix(applicationPanelTitle, firstUADApplicationSummaryDisplay.getCount()) %>
 					</span>
 
 					<aui:icon cssClass="collapse-icon-closed" image="angle-right" markupView="lexicon" />
@@ -111,6 +102,7 @@ renderResponse.setTitle(StringBundler.concat(selectedUser.getFullName(), " - ", 
 
 							<clay:radio
 								checked="<%= Objects.equals(uadApplicationSummaryDisplay.getApplicationKey(), viewUADEntitiesDisplay.getApplicationKey()) %>"
+								disabled="<%= !uadApplicationSummaryDisplay.hasItems() %>"
 								label="<%= StringUtil.appendParentheticalSuffix(applicationName, uadApplicationSummaryDisplay.getCount()) %>"
 								name="applicationKey"
 								value="<%= uadApplicationSummaryDisplay.getApplicationKey() %>"
@@ -124,49 +116,70 @@ renderResponse.setTitle(StringBundler.concat(selectedUser.getFullName(), " - ", 
 				</div>
 			</div>
 
-			<div class="panel-group">
-				<div class="panel panel-secondary">
-					<div class="collapse-icon collapse-icon-middle panel-header" data-target="#<portlet:namespace />entitiesTypePanelBody" data-toggle="collapse">
-						<span class="panel-title">
+			<c:if test="<%= !Objects.equals(viewUADEntitiesDisplay.getApplicationKey(), UADConstants.ALL_APPLICATIONS) %>">
+				<div class="panel-group">
+					<div class="panel panel-secondary">
+						<div class="collapse-icon collapse-icon-middle panel-header" data-target="#<portlet:namespace />entitiesTypePanelBody" data-toggle="collapse">
+							<span class="panel-title">
 
-							<%
-							String applicationName = UADLanguageUtil.getApplicationName(viewUADEntitiesDisplay.getApplicationKey(), locale);
-							%>
+								<%
+								String applicationName = UADLanguageUtil.getApplicationName(viewUADEntitiesDisplay.getApplicationKey(), locale);
+								%>
 
-							<%= StringUtil.toUpperCase(applicationName, locale) %>
-						</span>
+								<%= StringUtil.toUpperCase(applicationName, locale) %>
+							</span>
 
-						<aui:icon cssClass="collapse-icon-closed" image="angle-right" markupView="lexicon" />
+							<aui:icon cssClass="collapse-icon-closed" image="angle-right" markupView="lexicon" />
 
-						<aui:icon cssClass="collapse-icon-open" image="angle-down" markupView="lexicon" />
-					</div>
+							<aui:icon cssClass="collapse-icon-open" image="angle-down" markupView="lexicon" />
+						</div>
 
-					<div class="collapse panel-collapse show" id="<portlet:namespace />entitiesTypePanelBody">
-						<div class="panel-body">
+						<div class="collapse panel-collapse show" id="<portlet:namespace />entitiesTypePanelBody">
+							<div class="panel-body">
+								<c:choose>
+									<c:when test="<%= viewUADEntitiesDisplay.isHierarchy() %>">
 
-							<%
-							for (UADDisplay uadDisplay : uadDisplays) {
-							%>
+										<%
+										UADHierarchyDisplay uadHierarchyDisplay = (UADHierarchyDisplay)request.getAttribute(UADWebKeys.UAD_HIERARCHY_DISPLAY);
+										%>
 
-								<clay:radio
-									checked="<%= Objects.equals(uadDisplay.getTypeName(locale), viewUADEntitiesDisplay.getTypeName()) %>"
-									label="<%= StringUtil.appendParentheticalSuffix(uadDisplay.getTypeName(locale), (int)uadDisplay.searchCount(selectedUser.getUserId(), groupIds, null)) %>"
-									name="uadRegistryKey"
-									value="<%= uadDisplay.getTypeClass().getName() %>"
-								/>
+										<clay:radio
+											checked="<%= true %>"
+											label="<%= StringUtil.appendParentheticalSuffix(uadHierarchyDisplay.getEntitiesTypeLabel(locale), (int)uadHierarchyDisplay.searchCount(selectedUser.getUserId(), groupIds, null)) %>"
+											name="uadRegistryKey"
+											value="<%= viewUADEntitiesDisplay.getApplicationKey() %>"
+										/>
+									</c:when>
+									<c:otherwise>
 
-							<%
-							}
-							%>
+										<%
+										for (UADDisplay uadDisplay : uadDisplays) {
+											long count = uadDisplay.searchCount(selectedUser.getUserId(), groupIds, null);
+										%>
 
+											<clay:radio
+												checked="<%= Objects.equals(uadDisplay.getTypeName(locale), viewUADEntitiesDisplay.getTypeName()) %>"
+												disabled="<%= count == 0 %>"
+												label="<%= StringUtil.appendParentheticalSuffix(uadDisplay.getTypeName(locale), (int)count) %>"
+												name="uadRegistryKey"
+												value="<%= uadDisplay.getTypeClass().getName() %>"
+											/>
+
+										<%
+										}
+										%>
+
+									</c:otherwise>
+								</c:choose>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			</c:if>
 		</div>
 
-		<div class="col-lg-8">
-			<div class="sheet sheet-lg">
+		<div class="col-lg-9">
+			<div class="sheet">
 				<div class="sheet-header">
 					<h2 class="sheet-title"><liferay-ui:message key="review-data" /></h2>
 				</div>
@@ -180,9 +193,18 @@ renderResponse.setTitle(StringBundler.concat(selectedUser.getFullName(), " - ", 
 				</div>
 
 				<div class="sheet-section">
-					<h3 class="sheet-subtitle"><liferay-ui:message key="view-data" /></h3>
+					<c:choose>
+						<c:when test="<%= totalReviewableUADEntitiesCount == 0 %>">
+							<liferay-ui:empty-result-message
+								message="all-data-that-requires-review-has-been-anonymized"
+							/>
+						</c:when>
+						<c:otherwise>
+							<h3 class="sheet-subtitle"><liferay-ui:message key="view-data" /></h3>
 
-					<liferay-util:include page="/view_uad_entities.jsp" servletContext="<%= application %>" />
+							<liferay-util:include page="/view_uad_entities.jsp" servletContext="<%= application %>" />
+						</c:otherwise>
+					</c:choose>
 				</div>
 			</div>
 		</div>
@@ -218,16 +240,18 @@ renderResponse.setTitle(StringBundler.concat(selectedUser.getFullName(), " - ", 
 		}
 	);
 
-	registerClickHandler(
-		<portlet:namespace />entitiesTypePanelBody,
-		function(event) {
-			const url = new Uri(baseURL);
+	<c:if test="<%= !Objects.equals(viewUADEntitiesDisplay.getApplicationKey(), UADConstants.ALL_APPLICATIONS) %>">
+		registerClickHandler(
+			<portlet:namespace />entitiesTypePanelBody,
+			function(event) {
+				const url = new Uri(baseURL);
 
-			url.setParameterValue('<portlet:namespace />uadRegistryKey', event.target.value);
+				url.setParameterValue('<portlet:namespace />uadRegistryKey', event.target.value);
 
-			Liferay.Util.navigate(url.toString());
-		}
-	);
+				Liferay.Util.navigate(url.toString());
+			}
+		);
+	</c:if>
 
 	registerClickHandler(
 		<portlet:namespace />scopePanelBody,

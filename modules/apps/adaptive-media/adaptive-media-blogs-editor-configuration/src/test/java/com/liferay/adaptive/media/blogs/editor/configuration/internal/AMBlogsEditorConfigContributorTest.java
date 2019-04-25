@@ -29,12 +29,12 @@ import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactory;
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +116,8 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 		AMBlogsEditorConfigContributor amBlogsEditorConfigContributor =
 			new AMBlogsEditorConfigContributor();
 
-		amBlogsEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amBlogsEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amBlogsEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -170,7 +171,8 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 		AMBlogsEditorConfigContributor amBlogsEditorConfigContributor =
 			new AMBlogsEditorConfigContributor();
 
-		amBlogsEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amBlogsEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amBlogsEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -225,7 +227,8 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 		AMBlogsEditorConfigContributor amBlogsEditorConfigContributor =
 			new AMBlogsEditorConfigContributor();
 
-		amBlogsEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amBlogsEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amBlogsEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -247,8 +250,7 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 			new BlogsItemSelectorCriterion();
 
 		blogsItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			Collections.<ItemSelectorReturnType>singletonList(
-				new FileEntryItemSelectorReturnType()));
+			new FileEntryItemSelectorReturnType());
 
 		amBlogsEditorConfigContributor.
 			addAMImageFileEntryItemSelectorReturnType(
@@ -313,7 +315,8 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 		AMBlogsEditorConfigContributor amBlogsEditorConfigContributor =
 			new AMBlogsEditorConfigContributor();
 
-		amBlogsEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amBlogsEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amBlogsEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -449,7 +452,8 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 		AMBlogsEditorConfigContributor amBlogsEditorConfigContributor =
 			new AMBlogsEditorConfigContributor();
 
-		amBlogsEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amBlogsEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amBlogsEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -492,7 +496,8 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 		AMBlogsEditorConfigContributor amBlogsEditorConfigContributor =
 			new AMBlogsEditorConfigContributor();
 
-		amBlogsEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amBlogsEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amBlogsEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -557,7 +562,8 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 		AMBlogsEditorConfigContributor amBlogsEditorConfigContributor =
 			new AMBlogsEditorConfigContributor();
 
-		amBlogsEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amBlogsEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amBlogsEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -616,7 +622,8 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 		AMBlogsEditorConfigContributor amBlogsEditorConfigContributor =
 			new AMBlogsEditorConfigContributor();
 
-		amBlogsEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amBlogsEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amBlogsEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -639,8 +646,7 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 			new AudioItemSelectorCriterion();
 
 		audioItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			Collections.<ItemSelectorReturnType>singletonList(
-				new FileEntryItemSelectorReturnType()));
+			new FileEntryItemSelectorReturnType());
 
 		itemSelectorCriteria.add(audioItemSelectorCriterion);
 
@@ -656,8 +662,7 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 			new BlogsItemSelectorCriterion();
 
 		blogsItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			Collections.<ItemSelectorReturnType>singletonList(
-				new FileEntryItemSelectorReturnType()));
+			new FileEntryItemSelectorReturnType());
 
 		itemSelectorCriteria.add(blogsItemSelectorCriterion);
 
@@ -673,8 +678,7 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 			new FileItemSelectorCriterion();
 
 		fileItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			Collections.<ItemSelectorReturnType>singletonList(
-				new FileEntryItemSelectorReturnType()));
+			new FileEntryItemSelectorReturnType());
 
 		itemSelectorCriteria.add(fileItemSelectorCriterion);
 
@@ -685,7 +689,7 @@ public class AMBlogsEditorConfigContributorTest extends PowerMockito {
 		ItemSelectorCriterion itemSelectorCriterion) {
 
 		itemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			Collections.emptyList());
+			new ArrayList<ItemSelectorReturnType>());
 
 		return itemSelectorCriterion;
 	}

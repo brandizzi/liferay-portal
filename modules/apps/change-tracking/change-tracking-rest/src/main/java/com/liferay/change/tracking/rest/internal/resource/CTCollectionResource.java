@@ -15,6 +15,7 @@
 package com.liferay.change.tracking.rest.internal.resource;
 
 import com.liferay.change.tracking.CTEngineManager;
+import com.liferay.change.tracking.CTManager;
 import com.liferay.change.tracking.constants.CTConstants;
 import com.liferay.change.tracking.model.CTCollection;
 import com.liferay.change.tracking.model.CTEntry;
@@ -31,6 +32,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.OrderByComparatorFactoryUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,7 +66,7 @@ import org.osgi.service.component.annotations.ServiceScope;
  */
 @Component(
 	property = {
-		"osgi.jaxrs.application.select=(osgi.jaxrs.name=change-tracking-application)",
+		"osgi.jaxrs.application.select=(osgi.jaxrs.name=Liferay.Change.Tracking.REST)",
 		"osgi.jaxrs.resource=true"
 	},
 	scope = ServiceScope.PROTOTYPE, service = CTCollectionResource.class
@@ -177,7 +179,7 @@ public class CTCollectionResource {
 			CTJaxRsUtil.getUser(userId);
 
 			Optional<CTCollection> activeCTCollectionOptional =
-				_ctEngineManager.getActiveCTCollectionOptional(userId);
+				_ctManager.getActiveCTCollectionOptional(userId);
 
 			activeCTCollectionOptional.ifPresent(ctCollections::add);
 		}
@@ -198,8 +200,19 @@ public class CTCollectionResource {
 		else if (_TYPE_ALL.equals(type)) {
 			CTJaxRsUtil.checkCompany(companyId);
 
-			ctCollections = _ctEngineManager.getCTCollections(
+			ctCollections = _ctEngineManager.getNonproductionCTCollections(
 				companyId, _getQueryDefinition(limit, sort));
+		}
+		else if (_TYPE_RECENT.equals(type)) {
+			CTJaxRsUtil.checkCompany(companyId);
+
+			QueryDefinition<CTCollection> queryDefinition = _getQueryDefinition(
+				limit, sort);
+
+			queryDefinition.setStatus(WorkflowConstants.STATUS_DRAFT);
+
+			ctCollections = _ctEngineManager.getNonproductionCTCollections(
+				companyId, queryDefinition);
 		}
 		else {
 			throw new IllegalArgumentException(
@@ -207,9 +220,9 @@ public class CTCollectionResource {
 					". The valid options are: all, active and production.");
 		}
 
-		Stream<CTCollection> ctCollectionStream = ctCollections.stream();
+		Stream<CTCollection> ctCollectionsStream = ctCollections.stream();
 
-		return ctCollectionStream.map(
+		return ctCollectionsStream.map(
 			this::_getCTCollectionModel
 		).collect(
 			Collectors.toList()
@@ -220,12 +233,14 @@ public class CTCollectionResource {
 	@POST
 	public Response publishCTCollection(
 			@PathParam("ctCollectionId") long ctCollectionId,
-			@QueryParam("userId") long userId)
+			@QueryParam("userId") long userId,
+			@QueryParam("ignoreCollision") boolean ignoreCollision)
 		throws CTJaxRsException {
 
 		User user = CTJaxRsUtil.getUser(userId);
 
-		_ctEngineManager.publishCTCollection(user.getUserId(), ctCollectionId);
+		_ctEngineManager.publishCTCollection(
+			user.getUserId(), ctCollectionId, ignoreCollision);
 
 		return _accepted();
 	}
@@ -244,9 +259,9 @@ public class CTCollectionResource {
 		List<CTEntry> ctEntries = _ctEngineManager.getCTEntries(
 			ctCollection.getCtCollectionId());
 
-		Stream<CTEntry> ctEntryStream = ctEntries.stream();
+		Stream<CTEntry> ctEntriesStream = ctEntries.stream();
 
-		Map<Integer, Long> ctEntriesChangeTypes = ctEntryStream.collect(
+		Map<Integer, Long> ctEntriesChangeTypes = ctEntriesStream.collect(
 			Collectors.groupingBy(
 				CTEntry::getChangeType, Collectors.counting()));
 
@@ -302,10 +317,15 @@ public class CTCollectionResource {
 
 	private static final String _TYPE_PRODUCTION = "production";
 
+	private static final String _TYPE_RECENT = "recent";
+
 	private static final Set<String> _orderByColumnNames = new HashSet<>(
 		Arrays.asList("createDate", "modifiedDate", "name", "statusDate"));
 
 	@Reference
 	private CTEngineManager _ctEngineManager;
+
+	@Reference
+	private CTManager _ctManager;
 
 }

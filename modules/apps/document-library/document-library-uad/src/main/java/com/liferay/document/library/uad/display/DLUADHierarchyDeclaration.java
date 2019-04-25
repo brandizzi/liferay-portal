@@ -14,8 +14,12 @@
 
 package com.liferay.document.library.uad.display;
 
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.user.associated.data.display.UADDisplay;
 import com.liferay.user.associated.data.display.UADHierarchyDeclaration;
+
+import java.util.Locale;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -32,8 +36,16 @@ public class DLUADHierarchyDeclaration implements UADHierarchyDeclaration {
 	}
 
 	@Override
+	public String getEntitiesTypeLabel(Locale locale) {
+		return LanguageUtil.get(
+			ResourceBundleUtil.getBundle(
+				locale, DLUADHierarchyDeclaration.class),
+			"folders-and-files");
+	}
+
+	@Override
 	public String[] getExtraColumnNames() {
-		return new String[] {"type"};
+		return new String[] {"description"};
 	}
 
 	@Override

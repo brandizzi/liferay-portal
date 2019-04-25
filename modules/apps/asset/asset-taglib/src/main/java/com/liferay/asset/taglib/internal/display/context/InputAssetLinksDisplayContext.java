@@ -225,7 +225,7 @@ public class InputAssetLinksDisplayContext {
 				Map<String, Object> selectorEntry = new HashMap<>();
 
 				selectorEntry.put(
-					"data", _geSelectorEntryData(assetRendererFactory));
+					"data", _getSelectorEntryData(assetRendererFactory));
 				selectorEntry.put(
 					"iconCssClass",
 					_getSelectorEntryIconCssClass(assetRendererFactory));
@@ -298,34 +298,6 @@ public class InputAssetLinksDisplayContext {
 		return assetLinks;
 	}
 
-	private Map<String, Object> _geSelectorEntryData(
-			AssetRendererFactory<?> assetRendererFactory)
-		throws Exception {
-
-		Map<String, Object> selectorEntryData = new HashMap<>();
-
-		PortletURL assetBrowserPortletURL = _getAssetBrowserPortletURL(
-			assetRendererFactory);
-
-		if (assetBrowserPortletURL != null) {
-			selectorEntryData.put("href", assetBrowserPortletURL.toString());
-		}
-
-		ResourceBundle resourceBundle = TagResourceBundleUtil.getResourceBundle(
-			_pageContext);
-
-		String typeName = assetRendererFactory.getTypeName(
-			_themeDisplay.getLocale());
-
-		selectorEntryData.put(
-			"title",
-			LanguageUtil.format(resourceBundle, "select-x", typeName, false));
-
-		selectorEntryData.put("type", assetRendererFactory.getClassName());
-
-		return selectorEntryData;
-	}
-
 	private long _getAssetBrowserGroupId(
 		AssetRendererFactory<?> assetRendererFactory) {
 
@@ -354,15 +326,13 @@ public class InputAssetLinksDisplayContext {
 			PortletProvider.Action.BROWSE);
 
 		if (portletURL == null) {
-			return portletURL;
+			return null;
 		}
 
 		long groupId = _getAssetBrowserGroupId(assetRendererFactory);
 
 		portletURL.setParameter("groupId", String.valueOf(groupId));
 
-		portletURL.setParameter(
-			"multipleSelection", String.valueOf(Boolean.TRUE));
 		portletURL.setParameter("selectedGroupId", String.valueOf(groupId));
 
 		if (_assetEntryId > 0) {
@@ -373,6 +343,8 @@ public class InputAssetLinksDisplayContext {
 		portletURL.setParameter(
 			"typeSelection", assetRendererFactory.getClassName());
 		portletURL.setParameter("eventName", getEventName());
+		portletURL.setParameter(
+			"multipleSelection", String.valueOf(Boolean.TRUE));
 		portletURL.setPortletMode(PortletMode.VIEW);
 		portletURL.setWindowState(LiferayWindowState.POP_UP);
 
@@ -414,6 +386,34 @@ public class InputAssetLinksDisplayContext {
 		}
 
 		return selectorEntries;
+	}
+
+	private Map<String, Object> _getSelectorEntryData(
+			AssetRendererFactory<?> assetRendererFactory)
+		throws Exception {
+
+		Map<String, Object> selectorEntryData = new HashMap<>();
+
+		PortletURL assetBrowserPortletURL = _getAssetBrowserPortletURL(
+			assetRendererFactory);
+
+		if (assetBrowserPortletURL != null) {
+			selectorEntryData.put("href", assetBrowserPortletURL.toString());
+		}
+
+		ResourceBundle resourceBundle = TagResourceBundleUtil.getResourceBundle(
+			_pageContext);
+
+		String typeName = assetRendererFactory.getTypeName(
+			_themeDisplay.getLocale());
+
+		selectorEntryData.put(
+			"title",
+			LanguageUtil.format(resourceBundle, "select-x", typeName, false));
+
+		selectorEntryData.put("type", assetRendererFactory.getClassName());
+
+		return selectorEntryData;
 	}
 
 	private Map<String, Object> _getSelectorEntryData(

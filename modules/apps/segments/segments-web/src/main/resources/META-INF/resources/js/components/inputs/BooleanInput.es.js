@@ -1,6 +1,6 @@
-import React from 'react';
-import propTypes from 'prop-types';
 import ClaySelect from 'components/shared/ClaySelect.es';
+import propTypes from 'prop-types';
+import React from 'react';
 import {BOOLEAN_OPTIONS} from 'utils/constants.es';
 
 class BooleanInput extends React.Component {
@@ -10,7 +10,7 @@ class BooleanInput extends React.Component {
 	};
 
 	_handleChange = event => {
-		this.props.onChange(event.target.value);
+		this.props.onChange({value: event.target.value});
 	}
 
 	render() {

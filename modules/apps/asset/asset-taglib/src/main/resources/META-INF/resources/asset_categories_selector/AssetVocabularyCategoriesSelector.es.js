@@ -6,28 +6,36 @@ import Soy from 'metal-soy';
 import templates from './AssetVocabularyCategoriesSelector.soy';
 
 /**
- * AssetVocabularyCategoriesSelector is a component wrapping the existing Clay's MultiSelect
- * component that offers the user a categories selection input
+ * Wraps Clay's existing <code>MultiSelect</code> component that offers the user
+ * a categories selection input.
  */
 class AssetVocabularyCategoriesSelector extends Component {
 
 	/**
 	 * @inheritDoc
 	 */
-
 	attached(...args) {
 		super.attached(...args);
 
 		this._dataSource = this._handleQuery.bind(this);
 	}
 
-	/**
-	 * Opens the dialog tag selection
-	 * @param {!Event} event
-	 * @private
-	 * @review
-	 */
+	syncCategoryIds(event) {
+		this.emit(
+			'categoryIdsChange',
+			{
+				categoryIds: this.categoryIds,
+				vocabularyId: this.vocabularyIds
+			}
+		);
+	}
 
+	/**
+	 * Opens the tag selection dialog.
+	 *
+	 * @param {!Event} event The event.
+	 * @private
+	 */
 	_handleButtonClicked(event) {
 		AUI().use(
 			'liferay-item-selector-dialog',
@@ -39,7 +47,7 @@ class AssetVocabularyCategoriesSelector extends Component {
 							item => item.value
 						).join(),
 						singleSelect: this.singleSelect,
-						vocabularyIds: this.vocabularyId
+						vocabularyIds: this.vocabularyIds.concat()
 					}
 				);
 
@@ -73,70 +81,114 @@ class AssetVocabularyCategoriesSelector extends Component {
 		);
 	}
 
+	_handleInputFocus(event) {
+		this.emit('inputFocus', event);
+	}
+
 	/**
 	 * Converts the list of selected categories into a comma-separated serialized
-	 * version to be used as a fallback for old services and implementations
+	 * version to be used as a fallback for old services and implementations.
+	 *
 	 * @private
-	 * @return {string} The serialized, comma-separated version of the selected items
-	 * @review
+	 * @return {string} The serialized, comma-separated version of the selected items.
 	 */
 	_getCategoryIds() {
 		return this.selectedItems.map(selectedItem => selectedItem.value).join();
 	}
 
 	/**
-	 * Updates tags fallback and notifies that a new tag has been added
-	 * @param {!Event} event
+	 * Shows the category error.
+	 *
 	 * @private
-	 * @review
 	 */
-
-	_handleItemAdded(event) {
-		const multiSelect = this.refs.multiSelect;
-
-		const match = multiSelect.filteredItems.find(
-			item => {
-				return (event.data.item.label === item.data.label);
-			}
-		);
-
-		if (match) {
-			const selectedItems = multiSelect.selectedItems;
-
-			selectedItems[selectedItems.length - 1].value = match.data.value;
+	_handleErrorAddinglabelItem(event) {
+		if (event.data.itemDoesNotExists) {
+			this._typedCategory = event.target.inputValue;
+			this._unexistingCategoryError = true;
 		}
-
-		this.categoryIds = this._getCategoryIds();
 	}
 
 	/**
-	 * Updates tags fallback and notifies that a new tag has been removed
-	 * @param {!Event} event
+	 * Prevents auto cleaning.
+	 *
+	 * @private
+	 */
+	_handleInputOnBlur(event) {
+		event.preventDefault();
+
+		const filteredItems = event.target.filteredItems;
+		const inputValue = event.target.inputValue;
+
+		if (filteredItems && filteredItems.length > 0 && filteredItems[0].data.label === inputValue) {
+			const existingCategory = this.selectedItems.find(category => category.label === inputValue);
+
+			if (!existingCategory) {
+				const item = {
+					label: filteredItems[0].data.label,
+					value: filteredItems[0].data.value
+				};
+
+				this.selectedItems = this.selectedItems.concat(item);
+				event.target.inputValue = '';
+			}
+		}
+		else if (inputValue) {
+			this._typedCategory = inputValue;
+			this._unexistingCategoryError = true;
+		}
+	}
+
+	/**
+	 * Updates tags fallback and notifies that a new tag has been added.
+	 *
+	 * @param {!Event} event The event.
+	 * @private
+	 */
+	_handleItemAdded(event) {
+		this.selectedItems = event.data.selectedItems;
+	}
+
+	/**
+	 * Updates tags fallback and notifies that a new tag has been removed.
+	 *
+	 * @param {!Event} event The event.
+	 * @private
+	 */
+	_handleItemRemoved(event) {
+		this.selectedItems = event.data.selectedItems;
+	}
+
+	/**
+	 * Sync the _intpuvalue and hide the category error
+	 *
 	 * @private
 	 * @review
 	 */
+	_handleSyncInputValue(val) {
+		this._inputValue = val.newVal;
+		this._unexistingCategoryError = false;
+	}
 
-	_handleItemRemoved(event) {
+	syncSelectedItems() {
 		this.categoryIds = this._getCategoryIds();
 	}
 
 	/**
 	 * Responds to user input to retrieve the list of available tags from the
-	 * tags search service
+	 * tags search service.
+	 *
 	 * @param {!string} query
 	 * @private
-	 * @review
 	 */
-
 	_handleQuery(query) {
 		return new Promise(
 			(resolve, reject) => {
 				const serviceOptions = {
 					end: 20,
-					groupId: themeDisplay.getScopeGroupId(),
-					keywords: query,
+					groupIds: this.groupIds,
+					name: `%${query}%`,
 					start: 0,
-					vocabularyId: this.vocabularyId
+					vocabularyIds: this.vocabularyIds
 				};
 
 				serviceOptions['-obc'] = null;
@@ -160,55 +212,92 @@ class AssetVocabularyCategoriesSelector extends Component {
 	}
 }
 
+/**
+ * State definition.
+ *
+ * @static
+ * @type {!Object}
+ */
 AssetVocabularyCategoriesSelector.STATE = {
 
 	/**
-	 * A comma separated version of the list of selected items
+	 * <code>MultiSelect</code> component's input value.
+	 *
 	 * @default undefined
 	 * @instance
 	 * @memberof AssetVocabularyCategoriesSelector
-	 * @review
-	 * @type {?string}
+	 * @private
+	 * @type {?(string|undefined)}
 	 */
-
-	categoryIds: Config.string().value(''),
+	_inputValue: Config.string().internal(),
 
 	/**
-	 * Event name which fires when user selects a display page using item selector
+	 * @default false
+	 * @instance
+	 * @memberof AssetVocabularyCategoriesSelector
+	 * @private
+	 * @type {?bool}
+	 */
+	_unexistingCategoryError: Config.bool().value(false),
+
+	/**
+	 * Flag to indicate whether input can create an item.
+	 *
+	 * @default false
+	 * @instance
+	 * @memberof AssetVocabularyCategoriesSelector
+	 * @type {?bool}
+	 */
+	allowInputCreateItem: Config.bool().value(false),
+
+	/**
+	 * A comma separated list of selected items.
+	 *
 	 * @default undefined
 	 * @instance
 	 * @memberof AssetVocabularyCategoriesSelector
-	 * @review
 	 * @type {?string}
 	 */
+	categoryIds: Config.string().value(''),
 
+	groupIds: Config.array().value([]),
+
+	/**
+	 * Event name which fires when the user selects a display page using the
+	 * item selector.
+	 *
+	 * @default undefined
+	 * @instance
+	 * @memberof AssetVocabularyCategoriesSelector
+	 * @type {?string}
+	 */
 	eventName: Config.string(),
 
 	/**
-	 * The URL of a portlet to display the tags
+	 * URL of a portlet to display the tags.
+	 *
 	 * @default undefined
 	 * @instance
 	 * @memberof AssetVocabularyCategoriesSelector
-	 * @review
 	 * @type {?string}
 	 */
 
 	portletURL: Config.string(),
 
 	/**
-	 * A function to call when a tag is removed
+	 * List of selected items.
+	 *
 	 * @default undefined
 	 * @instance
 	 * @memberof AssetVocabularyCategoriesSelector
-	 * @review
-	 * @type {?string}
+	 * @type {?Array}
 	 */
 
 	selectedItems: Config.array().value([]),
 
-	singleSelect: Config.bool(),
+	singleSelect: Config.bool().value(false),
 
-	vocabularyId: Config.string()
+	vocabularyIds: Config.array().value([])
 };
 
 Soy.register(AssetVocabularyCategoriesSelector, templates);

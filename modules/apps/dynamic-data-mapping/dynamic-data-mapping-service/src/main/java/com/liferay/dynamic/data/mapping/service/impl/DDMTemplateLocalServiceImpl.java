@@ -1580,7 +1580,7 @@ public class DDMTemplateLocalServiceImpl
 
 		File smallImageFile = getSmallImageFile(template);
 
-		return addTemplate(
+		return ddmTemplateLocalService.addTemplate(
 			userId, template.getGroupId(), template.getClassNameId(), classPK,
 			template.getResourceClassNameId(), null, nameMap, descriptionMap,
 			template.getType(), template.getMode(), template.getLanguage(),

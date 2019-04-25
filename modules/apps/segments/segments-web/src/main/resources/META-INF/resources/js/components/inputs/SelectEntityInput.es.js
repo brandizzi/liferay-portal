@@ -1,6 +1,6 @@
-import React from 'react';
-import propTypes from 'prop-types';
 import ClayButton from '../shared/ClayButton.es';
+import propTypes from 'prop-types';
+import React from 'react';
 
 class SelectEntityInput extends React.Component {
 	static propTypes = {
@@ -27,6 +27,11 @@ class SelectEntityInput extends React.Component {
 		)
 	};
 
+	/**
+	 * Opens a modal for selecting entities. Uses different methods for
+	 * selecting multiple entities versus single because of the way the event
+	 * and data is submitted.
+	 */
 	_handleSelectEntity = () => {
 		const {
 			onChange,
@@ -82,11 +87,16 @@ class SelectEntityInput extends React.Component {
 					uri
 				},
 				event => {
-					onChange(event.entityid);
+					onChange(
+						{
+							displayValue: event.entityname,
+							value: event.entityid
+						}
+					);
 				}
 			);
 		}
-	}
+	};
 
 	render() {
 		const {displayValue, value} = this.props;

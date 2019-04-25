@@ -5,14 +5,14 @@ import {Config} from 'metal-state';
 import {Drag, DragDrop} from 'metal-drag-drop';
 
 import '../floating_toolbar/FloatingToolbar.es';
-import './FragmentEntryLinkListSection.es';
+import './FragmentEntryLinkListRow.es';
+import {CLEAR_DROP_TARGET, MOVE_FRAGMENT_ENTRY_LINK, MOVE_ROW, UPDATE_DROP_TARGET} from '../../actions/actions.es';
+import {FRAGMENT_ENTRY_LINK_TYPES, FRAGMENTS_EDITOR_DRAGGING_CLASS, FRAGMENTS_EDITOR_ITEM_BORDERS, FRAGMENTS_EDITOR_ITEM_TYPES} from '../../utils/constants';
+import {initializeDragDrop} from '../../utils/FragmentsEditorDragDrop.es';
+import {moveItem, setDraggingItemPosition, setIn} from '../../utils/FragmentsEditorUpdateUtils.es';
+import {shouldUpdatePureComponent} from '../../utils/FragmentsEditorComponentUtils.es';
 import getConnectedComponent from '../../store/ConnectedComponent.es';
 import templates from './FragmentEntryLinkList.soy';
-import {CLEAR_DROP_TARGET, CLEAR_HOVERED_ITEM, MOVE_FRAGMENT_ENTRY_LINK, MOVE_SECTION, UPDATE_ACTIVE_ITEM, UPDATE_DROP_TARGET} from '../../actions/actions.es';
-import {moveItem, setIn} from '../../utils/FragmentsEditorUpdateUtils.es';
-import {FRAGMENTS_EDITOR_ITEM_BORDERS, FRAGMENTS_EDITOR_ITEM_TYPES} from '../../utils/constants';
-import {getFragmentColumn, getTargetBorder} from '../../utils/FragmentsEditorGetUtils.es';
-import {shouldUpdatePureComponent} from '../../utils/FragmentsEditorComponentUtils.es';
 
 /**
  * FragmentEntryLinkList
@@ -48,17 +48,27 @@ class FragmentEntryLinkList extends Component {
 
 		let dropValid = false;
 
-		if (sourceItemData.itemType === FRAGMENTS_EDITOR_ITEM_TYPES.section) {
+		if (sourceItemData.itemType === FRAGMENTS_EDITOR_ITEM_TYPES.row) {
 			dropValid = (
-				(targetItemData.itemType === FRAGMENTS_EDITOR_ITEM_TYPES.section) &&
+				(targetItemData.itemType === FRAGMENTS_EDITOR_ITEM_TYPES.row) &&
 				(sourceItemData.itemId !== targetItemData.itemId)
 			);
 		}
 		else if (sourceItemData.itemType === FRAGMENTS_EDITOR_ITEM_TYPES.fragment) {
-			dropValid = (
-				(targetItemData.itemType) &&
-				(sourceItemData.itemId !== targetItemData.itemId)
-			);
+			if (sourceItemData.fragmentEntryLinkType === FRAGMENT_ENTRY_LINK_TYPES.section) {
+				dropValid = (
+					(targetItemData.itemType) &&
+					(sourceItemData.itemId !== targetItemData.itemId) &&
+					(targetItemData.itemType !== FRAGMENTS_EDITOR_ITEM_TYPES.column) &&
+					(targetItemData.itemType !== FRAGMENTS_EDITOR_ITEM_TYPES.fragment)
+				);
+			}
+			else {
+				dropValid = (
+					(targetItemData.itemType) &&
+					(sourceItemData.itemId !== targetItemData.itemId)
+				);
+			}
 		}
 
 		return dropValid;
@@ -72,42 +82,48 @@ class FragmentEntryLinkList extends Component {
 	 * @static
 	 */
 	static _getItemData(itemDataset) {
-		let itemId = null;
-		let itemType = null;
+		let itemData = {};
 
 		if (itemDataset) {
 			if ('columnId' in itemDataset) {
-				itemId = itemDataset.columnId;
-				itemType = FRAGMENTS_EDITOR_ITEM_TYPES.column;
+				itemData = {
+					itemId: itemDataset.columnId,
+					itemType: FRAGMENTS_EDITOR_ITEM_TYPES.column
+				};
 			}
 			else if ('fragmentEntryLinkId' in itemDataset) {
-				itemId = itemDataset.fragmentEntryLinkId;
-				itemType = FRAGMENTS_EDITOR_ITEM_TYPES.fragment;
+				itemData = {
+					fragmentEntryLinkType: itemDataset.fragmentEntryLinkType,
+					itemId: itemDataset.fragmentEntryLinkId,
+					itemType: FRAGMENTS_EDITOR_ITEM_TYPES.fragment
+				};
 			}
-			else if ('layoutSectionId' in itemDataset) {
-				itemId = itemDataset.layoutSectionId;
-				itemType = FRAGMENTS_EDITOR_ITEM_TYPES.section;
+			else if ('layoutRowId' in itemDataset) {
+				itemData = {
+					itemId: itemDataset.layoutRowId,
+					itemType: FRAGMENTS_EDITOR_ITEM_TYPES.row
+				};
+
 			}
 			else if ('fragmentEmptyList' in itemDataset) {
-				itemType = FRAGMENTS_EDITOR_ITEM_TYPES.fragmentList;
+				itemData = {
+					itemType: FRAGMENTS_EDITOR_ITEM_TYPES.fragmentList
+				};
 			}
 		}
 
-		return {
-			itemId,
-			itemType
-		};
+		return itemData;
 	}
 
 	/**
-	 * Checks wether a section is empty or not, sets empty parameter
+	 * Checks wether a row is empty or not, sets empty parameter
 	 * and returns a new state
 	 * @param {Object} _state
 	 * @private
 	 * @return {Object}
 	 * @static
 	 */
-	static _setEmptySections(_state) {
+	static _setEmptyRows(_state) {
 		return setIn(
 			_state,
 			[
@@ -115,10 +131,10 @@ class FragmentEntryLinkList extends Component {
 				'structure'
 			],
 			_state.layoutData.structure.map(
-				section => setIn(
-					section,
+				row => setIn(
+					row,
 					['empty'],
-					section.columns.every(
+					row.columns.every(
 						column => column.fragmentEntryLinkIds.length === 0
 					)
 				)
@@ -153,7 +169,7 @@ class FragmentEntryLinkList extends Component {
 	prepareStateForRender(nextState) {
 		let _state = FragmentEntryLinkList._addDropTargetItemTypesToState(nextState);
 
-		_state = FragmentEntryLinkList._setEmptySections(_state);
+		_state = FragmentEntryLinkList._setEmptyRows(_state);
 
 		return _state;
 	}
@@ -182,6 +198,15 @@ class FragmentEntryLinkList extends Component {
 	}
 
 	/**
+	 * Handle layoutData changed
+	 * @inheritDoc
+	 * @review
+	 */
+	syncLayoutData() {
+		this._initializeDragAndDrop();
+	}
+
+	/**
 	 * Callback that is executed when an item is being dragged.
 	 * @param {Object} eventData
 	 * @param {MouseEvent} eventData.originalEvent
@@ -189,6 +214,8 @@ class FragmentEntryLinkList extends Component {
 	 * @review
 	 */
 	_handleDrag(eventData) {
+		setDraggingItemPosition(eventData.originalEvent);
+
 		if (FragmentEntryLinkList._dropValid(eventData)) {
 			const mouseY = eventData.originalEvent.clientY;
 			const targetItem = eventData.target;
@@ -253,10 +280,10 @@ class FragmentEntryLinkList extends Component {
 			let moveItemAction = null;
 			let moveItemPayload = null;
 
-			if (itemData.itemType === FRAGMENTS_EDITOR_ITEM_TYPES.section) {
-				moveItemAction = MOVE_SECTION;
+			if (itemData.itemType === FRAGMENTS_EDITOR_ITEM_TYPES.row) {
+				moveItemAction = MOVE_ROW;
 				moveItemPayload = {
-					sectionId: itemData.itemId,
+					rowId: itemData.itemId,
 					targetBorder: this.dropTargetBorder,
 					targetItemId: this.dropTargetItemId
 				};
@@ -265,6 +292,7 @@ class FragmentEntryLinkList extends Component {
 				moveItemAction = MOVE_FRAGMENT_ENTRY_LINK;
 				moveItemPayload = {
 					fragmentEntryLinkId: itemData.itemId,
+					fragmentEntryLinkType: itemData.fragmentEntryLinkType,
 					targetBorder: this.dropTargetBorder,
 					targetItemId: this.dropTargetItemId,
 					targetItemType: this.dropTargetItemType
@@ -272,55 +300,6 @@ class FragmentEntryLinkList extends Component {
 			}
 
 			moveItem(this.store, moveItemAction, moveItemPayload);
-		}
-	}
-
-	/**
-	 * Callback executed when the fragment list ends being hovered.
-	 * @private
-	 */
-	_handleFragmentEntryLinkListHoverEnd() {
-		if (this.store) {
-			this.store.dispatchAction(CLEAR_HOVERED_ITEM);
-		}
-	}
-
-	/**
-	 * @param {Event} event
-	 * @private
-	 * @review
-	 */
-	_handleFragmentMove(event) {
-		const {fragmentEntryLinkId} = event;
-
-		const column = getFragmentColumn(
-			this.layoutData.structure,
-			fragmentEntryLinkId
-		);
-		const fragmentIndex = column.fragmentEntryLinkIds.indexOf(
-			fragmentEntryLinkId
-		);
-		const targetFragmentEntryLinkId = column.fragmentEntryLinkIds[
-			fragmentIndex + event.direction
-		];
-
-		if (event.direction && targetFragmentEntryLinkId) {
-			const moveItemPayload = {
-				fragmentEntryLinkId,
-				targetBorder: getTargetBorder(event.direction),
-				targetItemId: targetFragmentEntryLinkId,
-				targetItemType: FRAGMENTS_EDITOR_ITEM_TYPES.fragment
-			};
-
-			this.store.dispatchAction(
-				UPDATE_ACTIVE_ITEM,
-				{
-					activeItemId: fragmentEntryLinkId,
-					activeItemType: FRAGMENTS_EDITOR_ITEM_TYPES.fragment
-				}
-			);
-
-			moveItem(this.store, MOVE_FRAGMENT_ENTRY_LINK, moveItemPayload);
 		}
 	}
 
@@ -333,9 +312,10 @@ class FragmentEntryLinkList extends Component {
 			this._dragDrop.dispose();
 		}
 
-		this._dragDrop = new DragDrop(
+		this._dragDrop = initializeDragDrop(
 			{
 				autoScroll: true,
+				draggingClass: FRAGMENTS_EDITOR_DRAGGING_CLASS,
 				dragPlaceholder: Drag.Placeholder.CLONE,
 				handles: '.fragments-editor__drag-handler',
 				sources: '.fragments-editor__drag-source--fragment, .fragments-editor__drag-source--layout',

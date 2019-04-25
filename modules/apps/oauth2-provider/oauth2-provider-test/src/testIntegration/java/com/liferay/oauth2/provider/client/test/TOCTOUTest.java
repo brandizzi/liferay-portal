@@ -16,7 +16,6 @@ package com.liferay.oauth2.provider.client.test;
 
 import com.liferay.oauth2.provider.constants.GrantType;
 import com.liferay.oauth2.provider.model.OAuth2Application;
-import com.liferay.oauth2.provider.model.OAuth2ApplicationScopeAliases;
 import com.liferay.oauth2.provider.service.OAuth2ApplicationLocalService;
 import com.liferay.oauth2.provider.service.OAuth2ApplicationScopeAliasesLocalService;
 import com.liferay.oauth2.provider.test.internal.TestRunnablePostHandlingApplication;
@@ -34,6 +33,7 @@ import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Response;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -100,7 +100,9 @@ public class TOCTOUTest extends BaseClientTestCase {
 					"end-user TOCTOU protection");
 		}
 		catch (ClientErrorException cee) {
-			Assert.assertEquals(403, cee.getResponse().getStatus());
+			Response response = cee.getResponse();
+
+			Assert.assertEquals(403, response.getStatus());
 		}
 
 		// Try again with a fresh narrowed down token for "everything.read".
@@ -121,7 +123,9 @@ public class TOCTOUTest extends BaseClientTestCase {
 					"TOCTOU protection");
 		}
 		catch (ClientErrorException cee) {
-			Assert.assertEquals(403, cee.getResponse().getStatus());
+			Response response = cee.getResponse();
+
+			Assert.assertEquals(403, response.getStatus());
 		}
 
 		// Resave the OAuth2 app scope assignment
@@ -138,7 +142,9 @@ public class TOCTOUTest extends BaseClientTestCase {
 					"TOCTOU protection");
 		}
 		catch (ClientErrorException cee) {
-			Assert.assertEquals(403, cee.getResponse().getStatus());
+			Response response = cee.getResponse();
+
+			Assert.assertEquals(403, response.getStatus());
 		}
 
 		// Try again with a fresh token (implicitly for "everything.read"). It
@@ -182,18 +188,15 @@ public class TOCTOUTest extends BaseClientTestCase {
 						oAuth2AScopeAliasesLocalServiceServiceReference);
 
 			try {
-				OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases =
-					oAuth2ApplicationScopeAliasesLocalService.
-						getOAuth2ApplicationScopeAliases(
-							oAuth2Application.
-								getOAuth2ApplicationScopeAliasesId());
-
 				oAuth2Application =
 					oAuth2ApplicationLocalService.updateScopeAliases(
 						oAuth2Application.getUserId(),
 						oAuth2Application.getUserName(),
 						oAuth2Application.getOAuth2ApplicationId(),
-						oAuth2ApplicationScopeAliases.getScopeAliasesList());
+						oAuth2ApplicationScopeAliasesLocalService.
+							getScopeAliasesList(
+								oAuth2Application.
+									getOAuth2ApplicationScopeAliasesId()));
 
 				return oAuth2Application;
 			}

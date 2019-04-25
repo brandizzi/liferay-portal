@@ -29,7 +29,10 @@ import com.liferay.user.associated.data.display.UADDisplay;
 
 import java.io.Serializable;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
@@ -66,6 +69,32 @@ public class MBCategoryUADDisplay extends BaseMBCategoryUADDisplay {
 	}
 
 	@Override
+	public Map<String, Object> getFieldValues(
+		MBCategory mbCategory, String[] fieldNames, Locale locale) {
+
+		Map<String, Object> fieldValues = super.getFieldValues(
+			mbCategory, fieldNames, locale);
+
+		List<String> fieldNamesList = Arrays.asList(fieldNames);
+
+		if (fieldNamesList.contains("content")) {
+			fieldValues.put("content", mbCategory.getDescription());
+		}
+
+		return fieldValues;
+	}
+
+	@Override
+	public String getName(MBCategory mbCategory, Locale locale) {
+		return mbCategory.getName();
+	}
+
+	@Override
+	public Class<?> getParentContainerClass() {
+		return MBCategory.class;
+	}
+
+	@Override
 	public Serializable getParentContainerId(MBCategory mbCategory) {
 		return mbCategory.getParentCategoryId();
 	}
@@ -85,10 +114,22 @@ public class MBCategoryUADDisplay extends BaseMBCategoryUADDisplay {
 			if (childObject instanceof MBMessage) {
 				MBMessage mbMessage = (MBMessage)childObject;
 
+				if (mbMessage.getCategoryId() ==
+						MBCategoryConstants.DISCUSSION_CATEGORY_ID) {
+
+					return null;
+				}
+
 				childCategory = mbMessage.getCategory();
 			}
 			else if (childObject instanceof MBThread) {
 				MBThread mbThread = (MBThread)childObject;
+
+				if (mbThread.getCategoryId() ==
+						MBCategoryConstants.DISCUSSION_CATEGORY_ID) {
+
+					return null;
+				}
 
 				childCategory = mbThread.getCategory();
 			}
@@ -134,6 +175,15 @@ public class MBCategoryUADDisplay extends BaseMBCategoryUADDisplay {
 		}
 
 		return null;
+	}
+
+	@Override
+	public boolean isUserOwned(MBCategory mbCategory, long userId) {
+		if (mbCategory.getUserId() == userId) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Reference

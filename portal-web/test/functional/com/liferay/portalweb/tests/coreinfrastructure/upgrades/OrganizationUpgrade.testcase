@@ -16,12 +16,9 @@ definition {
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Search"
-		);
+			portlet = "Search");
 
-		SearchAdministration.executeSearchActions(
-			actionsDescription = "Reindex all search indexes."
-		);
+		SearchAdministration.executeSearchActions(actionsDescription = "Reindex all search indexes.");
 	}
 
 	@priority = "5"
@@ -115,6 +112,15 @@ definition {
 		property data.archive.type = "data-archive-admin-org-with-user";
 		property database.types = "mariadb,mysql,postgresql";
 		property portal.version = "7.0.4";
+
+		Upgrade.addUserAndSuborganization();
+	}
+
+	@priority = "5"
+	test AddUserandSuborganizationAfterUpgrade7110 {
+		property data.archive.type = "data-archive-admin-org-with-user";
+		property database.types = "db2,mariadb,mysql,oracle,postgresql,sybase";
+		property portal.version = "7.1.10";
 
 		Upgrade.addUserAndSuborganization();
 	}

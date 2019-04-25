@@ -21,15 +21,20 @@
 
 	<aui:input checked="<%= assetPublisherDisplayContext.isSelectionStyleManual() %>" id="selectionStyleManual" label="manual" name="preferences--selectionStyle--" onChange='<%= renderResponse.getNamespace() + "chooseSelectionStyle();" %>' type="radio" value="manual" />
 
-	<aui:input checked="<%= assetPublisherDisplayContext.isSelectionStyleAssetList() %>" id="selectionStyleAssetList" label="asset-list" name="preferences--selectionStyle--" onChange='<%= renderResponse.getNamespace() + "chooseSelectionStyle();" %>' type="radio" value="asset-list" />
+	<aui:input checked="<%= assetPublisherDisplayContext.isSelectionStyleAssetList() %>" id="selectionStyleAssetList" label="content-set" name="preferences--selectionStyle--" onChange='<%= renderResponse.getNamespace() + "chooseSelectionStyle();" %>' type="radio" value="asset-list" />
+
+	<aui:input checked="<%= assetPublisherDisplayContext.isSelectionStyleAssetListProvider() %>" id="selectionStyleInfoListProvider" label="content-set-provider" name="preferences--selectionStyle--" onChange='<%= renderResponse.getNamespace() + "chooseSelectionStyle();" %>' type="radio" value="asset-list-provider" />
 </aui:fieldset>
 
-<aui:script>
+<script>
 	function <portlet:namespace />chooseSelectionStyle() {
-		var form = AUI.$(document.<portlet:namespace />fm);
-
-		form.fm('<%= Constants.CMD %>').val('selection-style');
-
-		submitForm(form);
+		Liferay.Util.postForm(
+			document.<portlet:namespace />fm,
+			{
+				data: {
+					cmd: 'selection-style'
+				}
+			}
+		);
 	}
-</aui:script>
+</script>

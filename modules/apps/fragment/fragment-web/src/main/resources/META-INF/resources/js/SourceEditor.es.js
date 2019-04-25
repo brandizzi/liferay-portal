@@ -8,17 +8,15 @@ import templates from './SourceEditor.soy';
 import './SourceEditorToolbar.es';
 
 /**
- * Component that creates an instance of Ace editor
- * to allow code editing.
- * @review
+ * Creates a Source Editor component to use for source code editing.
  */
 class SourceEditor extends Component {
 
 	/**
-	 * Callback executed when the internal Ace editor has been
-	 * modified. It simply propagates the event.
+	 * Callback that propagates the <code>contentChanged</code> event when the
+	 * internal Ace Editor is modified.
+	 *
 	 * @param {!Event} event
-	 * @review
 	 */
 	_handleContentChanged(event) {
 		this.emit(
@@ -33,18 +31,18 @@ class SourceEditor extends Component {
 
 /**
  * State definition.
- * @review
+ *
  * @static
  * @type {!Object}
  */
 SourceEditor.STATE = {
 
 	/**
-	 * List of tags to support custom autocomplete in the HTML editor
+	 * List of tags for custom autocompletion in the HTML editor.
+	 *
 	 * @default []
 	 * @instance
 	 * @memberOf SourceEditor
-	 * @review
 	 * @type Array
 	 */
 	autocompleteTags: Config.arrayOf(
@@ -57,33 +55,32 @@ SourceEditor.STATE = {
 	),
 
 	/**
-	 * Initial content sent to the editor
+	 * Initial content sent to the editor.
+	 *
 	 * @default undefined
 	 * @instance
 	 * @memberOf SourceEditor
-	 * @review
 	 * @type {!string}
 	 */
 	initialContent: Config.string().required(),
 
 	/**
-	 * Path to images.
+	 * Path of the available icons.
+	 *
 	 * @default undefined
 	 * @instance
 	 * @memberOf SourceEditor
-	 * @review
 	 * @type {!string}
 	 */
 	spritemap: Config.string().required(),
 
 	/**
-	 * Syntax used for the editor.
-	 * It will be used for Ace and rendered on the interface.
+	 * Syntax used for the Ace Editor that is rendered on the interface.
+	 *
 	 * @default undefined
 	 * @instance
 	 * @memberOf SourceEditor
-	 * @review
-	 * @see AceEditor.SYNTAX
+	 * @see {@link AceEditor.SYNTAX|SYNTAX}
 	 * @type {!string}
 	 */
 	syntax: Config.oneOf(Object.values(AceEditor.SYNTAX)).required()

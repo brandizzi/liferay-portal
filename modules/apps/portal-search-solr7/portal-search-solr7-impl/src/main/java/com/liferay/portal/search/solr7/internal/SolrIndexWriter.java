@@ -16,6 +16,8 @@ package com.liferay.portal.search.solr7.internal;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseIndexWriter;
@@ -23,9 +25,9 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriter;
 import com.liferay.portal.kernel.search.SearchContext;
-import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.suggest.SpellCheckIndexWriter;
 import com.liferay.portal.kernel.util.PortalRunMode;
+import com.liferay.portal.search.solr7.configuration.SolrConfiguration;
 import com.liferay.portal.search.solr7.internal.connection.SolrClientManager;
 import com.liferay.portal.search.solr7.internal.document.SolrUpdateDocumentCommand;
 import com.liferay.portal.search.solr7.internal.util.LogUtil;
@@ -34,11 +36,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.response.UpdateResponse;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -46,80 +51,117 @@ import org.osgi.service.component.annotations.Reference;
  * @author Michael C. Han
  */
 @Component(
+	configurationPid = "com.liferay.portal.search.solr7.configuration.SolrConfiguration",
 	immediate = true, property = "search.engine.impl=Solr",
 	service = IndexWriter.class
 )
 public class SolrIndexWriter extends BaseIndexWriter {
 
 	@Override
-	public void addDocument(SearchContext searchContext, Document document)
-		throws SearchException {
+	public void addDocument(SearchContext searchContext, Document document) {
+		try {
+			_solrUpdateDocumentCommand.updateDocument(
+				searchContext, document, false);
+		}
+		catch (Exception e) {
+			if (_logExceptionsOnly) {
+				_log.error(e, e);
+			}
+			else {
+				if (e instanceof RuntimeException) {
+					throw (RuntimeException)e;
+				}
 
-		_solrUpdateDocumentCommand.updateDocument(
-			searchContext, document, false);
+				throw new SystemException(e.getMessage(), e);
+			}
+		}
 	}
 
 	@Override
 	public void addDocuments(
-			SearchContext searchContext, Collection<Document> documents)
-		throws SearchException {
+		SearchContext searchContext, Collection<Document> documents) {
 
-		_solrUpdateDocumentCommand.updateDocuments(
-			searchContext, documents, false);
+		try {
+			_solrUpdateDocumentCommand.updateDocuments(
+				searchContext, documents, false);
+		}
+		catch (Exception e) {
+			if (_logExceptionsOnly) {
+				_log.error(e, e);
+			}
+			else {
+				if (e instanceof RuntimeException) {
+					throw (RuntimeException)e;
+				}
+
+				throw new SystemException(e.getMessage(), e);
+			}
+		}
 	}
 
 	@Override
-	public void commit(SearchContext searchContext) throws SearchException {
+	public void commit(SearchContext searchContext) {
 		SolrClient solrClient = _solrClientManager.getSolrClient();
 
 		try {
-			solrClient.commit();
+			solrClient.commit(_defaultCollection);
 		}
 		catch (Exception e) {
-			_log.error(e, e);
+			if (_logExceptionsOnly) {
+				_log.error(e, e);
+			}
+			else {
+				if (e instanceof RuntimeException) {
+					throw (RuntimeException)e;
+				}
 
-			throw new SearchException(e.getMessage());
+				throw new SystemException(e.getMessage(), e);
+			}
 		}
 	}
 
 	@Override
-	public void deleteDocument(SearchContext searchContext, String uid)
-		throws SearchException {
-
+	public void deleteDocument(SearchContext searchContext, String uid) {
 		deleteDocuments(searchContext, Arrays.asList(uid));
 	}
 
 	@Override
 	public void deleteDocuments(
-			SearchContext searchContext, Collection<String> uids)
-		throws SearchException {
+		SearchContext searchContext, Collection<String> uids) {
 
 		SolrClient solrClient = _solrClientManager.getSolrClient();
 
 		List<String> uidsList = new ArrayList<>(uids);
 
 		try {
-			UpdateResponse updateResponse = solrClient.deleteById(uidsList);
+			UpdateResponse updateResponse = solrClient.deleteById(
+				_defaultCollection, uidsList);
 
 			if (PortalRunMode.isTestMode() ||
 				searchContext.isCommitImmediately()) {
 
-				solrClient.commit();
+				solrClient.commit(_defaultCollection);
 			}
 
 			LogUtil.logSolrResponseBase(_log, updateResponse);
 		}
 		catch (Exception e) {
-			_log.error(e, e);
+			if (_logExceptionsOnly) {
+				_log.error(e, e);
+			}
+			else {
+				if (e instanceof RuntimeException) {
+					throw (RuntimeException)e;
+				}
 
-			throw new SearchException(e.getMessage());
+				throw new SystemException(e.getMessage(), e);
+			}
 		}
 	}
 
 	@Override
 	public void deleteEntityDocuments(
-			SearchContext searchContext, String className)
-		throws SearchException {
+		SearchContext searchContext, String className) {
 
 		SolrClient solrClient = _solrClientManager.getSolrClient();
 
@@ -148,39 +190,72 @@ public class SolrIndexWriter extends BaseIndexWriter {
 			sb.append(className);
 
 			UpdateResponse updateResponse = solrClient.deleteByQuery(
-				sb.toString());
+				_defaultCollection, sb.toString());
 
 			if (PortalRunMode.isTestMode() ||
 				searchContext.isCommitImmediately()) {
 
-				solrClient.commit();
+				solrClient.commit(_defaultCollection);
 			}
 
 			LogUtil.logSolrResponseBase(_log, updateResponse);
 		}
 		catch (Exception e) {
-			_log.error(e, e);
+			if (_logExceptionsOnly) {
+				_log.error(e, e);
+			}
+			else {
+				if (e instanceof RuntimeException) {
+					throw (RuntimeException)e;
+				}
 
-			throw new SearchException(e.getMessage());
+				throw new SystemException(e.getMessage(), e);
+			}
 		}
 	}
 
 	@Override
 	public void partiallyUpdateDocument(
-			SearchContext searchContext, Document document)
-		throws SearchException {
+		SearchContext searchContext, Document document) {
 
-		_solrUpdateDocumentCommand.updateDocument(
-			searchContext, document, false);
+		try {
+			_solrUpdateDocumentCommand.updateDocument(
+				searchContext, document, false);
+		}
+		catch (Exception e) {
+			if (_logExceptionsOnly) {
+				_log.error(e, e);
+			}
+			else {
+				if (e instanceof RuntimeException) {
+					throw (RuntimeException)e;
+				}
+
+				throw new SystemException(e.getMessage(), e);
+			}
+		}
 	}
 
 	@Override
 	public void partiallyUpdateDocuments(
-			SearchContext searchContext, Collection<Document> documents)
-		throws SearchException {
+		SearchContext searchContext, Collection<Document> documents) {
 
-		_solrUpdateDocumentCommand.updateDocuments(
-			searchContext, documents, false);
+		try {
+			_solrUpdateDocumentCommand.updateDocuments(
+				searchContext, documents, false);
+		}
+		catch (Exception e) {
+			if (_logExceptionsOnly) {
+				_log.error(e, e);
+			}
+			else {
+				if (e instanceof RuntimeException) {
+					throw (RuntimeException)e;
+				}
+
+				throw new SystemException(e.getMessage(), e);
+			}
+		}
 	}
 
 	@Override
@@ -192,20 +267,55 @@ public class SolrIndexWriter extends BaseIndexWriter {
 	}
 
 	@Override
-	public void updateDocument(SearchContext searchContext, Document document)
-		throws SearchException {
+	public void updateDocument(SearchContext searchContext, Document document) {
+		try {
+			_solrUpdateDocumentCommand.updateDocument(
+				searchContext, document, true);
+		}
+		catch (Exception e) {
+			if (_logExceptionsOnly) {
+				_log.error(e, e);
+			}
+			else {
+				if (e instanceof RuntimeException) {
+					throw (RuntimeException)e;
+				}
 
-		_solrUpdateDocumentCommand.updateDocument(
-			searchContext, document, true);
+				throw new SystemException(e.getMessage(), e);
+			}
+		}
 	}
 
 	@Override
 	public void updateDocuments(
-			SearchContext searchContext, Collection<Document> documents)
-		throws SearchException {
+		SearchContext searchContext, Collection<Document> documents) {
 
-		_solrUpdateDocumentCommand.updateDocuments(
-			searchContext, documents, true);
+		try {
+			_solrUpdateDocumentCommand.updateDocuments(
+				searchContext, documents, true);
+		}
+		catch (Exception e) {
+			if (_logExceptionsOnly) {
+				_log.error(e, e);
+			}
+			else {
+				if (e instanceof RuntimeException) {
+					throw (RuntimeException)e;
+				}
+
+				throw new SystemException(e.getMessage(), e);
+			}
+		}
+	}
+
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		_solrConfiguration = ConfigurableUtil.createConfigurable(
+			SolrConfiguration.class, properties);
+
+		_defaultCollection = _solrConfiguration.defaultCollection();
+		_logExceptionsOnly = _solrConfiguration.logExceptionsOnly();
 	}
 
 	@Reference(unbind = "-")
@@ -223,7 +333,10 @@ public class SolrIndexWriter extends BaseIndexWriter {
 	private static final Log _log = LogFactoryUtil.getLog(
 		SolrIndexWriter.class);
 
+	private String _defaultCollection;
+	private boolean _logExceptionsOnly;
 	private SolrClientManager _solrClientManager;
+	private volatile SolrConfiguration _solrConfiguration;
 	private SolrUpdateDocumentCommand _solrUpdateDocumentCommand;
 
 }

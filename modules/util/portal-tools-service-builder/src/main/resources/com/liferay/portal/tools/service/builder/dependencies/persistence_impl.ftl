@@ -219,25 +219,31 @@ public class ${entity.name}PersistenceImpl extends BasePersistenceImpl<${entity.
 			<#if !dependencyInjectorDS>
 				setEntityCacheEnabled(${entityCacheEnabled});
 			</#if>
-		<#elseif entity.badEntityColumns?size != 0>
-			try {
-				Field field = BasePersistenceImpl.class.getDeclaredField("_dbColumnNames");
+		</#if>
 
-				field.setAccessible(true);
+		<#if entity.badEntityColumns?size != 0>
+			Map<String, String> dbColumnNames = new HashMap<String, String>();
 
-				Map<String, String> dbColumnNames = new HashMap<String, String>();
+			<#list entity.badEntityColumns as badEntityColumn>
+				dbColumnNames.put("${badEntityColumn.name}", "${badEntityColumn.DBName}");
+			</#list>
 
-				<#list entity.badEntityColumns as badEntityColumn>
-					dbColumnNames.put("${badEntityColumn.name}", "${badEntityColumn.DBName}");
-				</#list>
+			<#if serviceBuilder.isVersionLTE_7_1_0()>
+				try {
+					Field field = BasePersistenceImpl.class.getDeclaredField("_dbColumnNames");
 
-				field.set(this, dbColumnNames);
-			}
-			catch (Exception e) {
-				if (_log.isDebugEnabled()) {
-					_log.debug(e, e);
+					field.setAccessible(true);
+
+					field.set(this, dbColumnNames);
 				}
-			}
+				catch (Exception e) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(e, e);
+					}
+				}
+			<#else>
+				setDBColumnNames(dbColumnNames);
+			</#if>
 		</#if>
 	}
 

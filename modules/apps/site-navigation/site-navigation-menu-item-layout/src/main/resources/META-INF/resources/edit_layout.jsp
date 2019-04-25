@@ -18,19 +18,17 @@
 
 <%
 Layout selLayout = (Layout)request.getAttribute(WebKeys.SEL_LAYOUT);
+boolean setCustomName = GetterUtil.getBoolean(request.getAttribute(SiteNavigationMenuItemTypeLayoutWebKeys.SET_CUSTOM_NAME));
+SiteNavigationMenuItem siteNavigationMenuItem = (SiteNavigationMenuItem)request.getAttribute(SiteNavigationWebKeys.SITE_NAVIGATION_MENU_ITEM);
 
-String title = GetterUtil.getString(request.getAttribute(WebKeys.TITLE));
-
-boolean useLayoutName = GetterUtil.getBoolean(request.getAttribute(SiteNavigationMenuItemTypeLayoutWebKeys.USE_LAYOUT_NAME));
-
-String taglibOnChange = "Liferay.Util.toggleDisabled('#" + renderResponse.getNamespace() + "name, [for=" + renderResponse.getNamespace() + "name]', event.target.checked)";
+String taglibOnChange = "Liferay.Util.toggleDisabled('#" + renderResponse.getNamespace() + "nameBoundingBox input, [for=" + renderResponse.getNamespace() + "name]', !event.target.checked)";
 %>
 
 <aui:fieldset>
-	<aui:input checked="<%= useLayoutName %>" helpMessage="use-layout-name-help" label="use-layout-name" name="TypeSettingsProperties--useLayoutName--" onChange="<%= taglibOnChange %>" type="checkbox" />
+	<aui:input checked="<%= setCustomName %>" helpMessage="set-custom-name-help" label="set-custom-name" name="TypeSettingsProperties--setCustomName--" onChange="<%= taglibOnChange %>" type="checkbox" />
 </aui:fieldset>
 
-<aui:input disabled="<%= useLayoutName %>" label="title" maxlength='<%= ModelHintsUtil.getMaxLength(SiteNavigationMenuItem.class.getName(), "name") %>' name="TypeSettingsProperties--name--" type="text" value="<%= title %>">
+<aui:input autoFocus="<%= true %>" disabled="<%= !setCustomName %>" label="name" localized="<%= true %>" maxlength='<%= ModelHintsUtil.getMaxLength(SiteNavigationMenuItem.class.getName(), "name") %>' name="name" placeholder="name" type="text" value='<%= SiteNavigationMenuItemUtil.getSiteNavigationMenuItemXML(siteNavigationMenuItem, "name") %>'>
 	<aui:validator name="required" />
 </aui:input>
 
@@ -44,7 +42,7 @@ String taglibOnChange = "Liferay.Util.toggleDisabled('#" + renderResponse.getNam
 
 <div class="form-group input-text-wrapper text-default">
 	<div class="d-inline-block" id="<portlet:namespace />layoutItemRemove" role="button">
-		<aui:icon cssClass="icon-monospaced" image="times" markupView="lexicon" />
+		<aui:icon cssClass="icon-monospaced" image="times-circle" markupView="lexicon" />
 	</div>
 
 	<div class="d-inline-block">
@@ -72,15 +70,11 @@ String eventName = renderResponse.getNamespace() + "selectLayout";
 
 ItemSelector itemSelector = (ItemSelector)request.getAttribute(SiteNavigationMenuItemTypeLayoutWebKeys.ITEM_SELECTOR);
 
-LayoutItemSelectorCriterion layoutItemSelectorCriterion = new LayoutItemSelectorCriterion();
+ItemSelectorCriterion itemSelectorCriterion = new LayoutItemSelectorCriterion();
 
-List<ItemSelectorReturnType> desiredItemSelectorReturnTypes = new ArrayList<ItemSelectorReturnType>();
+itemSelectorCriterion.setDesiredItemSelectorReturnTypes(new UUIDItemSelectorReturnType());
 
-desiredItemSelectorReturnTypes.add(new UUIDItemSelectorReturnType());
-
-layoutItemSelectorCriterion.setDesiredItemSelectorReturnTypes(desiredItemSelectorReturnTypes);
-
-PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(RequestBackedPortletURLFactoryUtil.create(renderRequest), eventName, layoutItemSelectorCriterion);
+PortletURL itemSelectorURL = itemSelector.getItemSelectorURL(RequestBackedPortletURLFactoryUtil.create(renderRequest), eventName, itemSelectorCriterion);
 
 if (selLayout != null) {
 	itemSelectorURL.setParameter("layoutUuid", selLayout.getUuid());

@@ -74,14 +74,13 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 			</h5>
 		</div>
 
-		<liferay-ui:tabs
-			cssClass="navbar-no-collapse"
-			names="details"
-			refresh="<%= false %>"
-			type="dropdown"
-		>
-			<liferay-ui:section>
-				<div class="sidebar-body">
+		<div class="sidebar-body">
+			<liferay-ui:tabs
+				cssClass="navbar-no-collapse"
+				names="details"
+				refresh="<%= false %>"
+			>
+				<liferay-ui:section>
 					<dl class="sidebar-block">
 						<dt class="sidebar-dt">
 							<liferay-ui:message key="num-of-items" />
@@ -108,9 +107,9 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 							</dd>
 						</c:if>
 					</dl>
-				</div>
-			</liferay-ui:section>
-		</liferay-ui:tabs>
+				</liferay-ui:section>
+			</liferay-ui:tabs>
+		</div>
 	</c:when>
 	<c:when test="<%= ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileShortcuts) && ListUtil.isNotEmpty(fileEntries) && (fileEntries.size() == 1) %>">
 
@@ -154,14 +153,13 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 			</h5>
 		</div>
 
-		<liferay-ui:tabs
-			cssClass="navbar-no-collapse"
-			names="details"
-			refresh="<%= false %>"
-			type="dropdown"
-		>
-			<liferay-ui:section>
-				<div class="sidebar-body">
+		<div class="sidebar-body">
+			<liferay-ui:tabs
+				cssClass="navbar-no-collapse"
+				names="details"
+				refresh="<%= false %>"
+			>
+				<liferay-ui:section>
 
 					<%
 					FileEntry fileEntry = DLAppServiceUtil.getFileEntry(fileShortcut.getToFileEntryId());
@@ -249,28 +247,27 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(fileEntries) && ListUtil.isEmp
 							<%= HtmlUtil.escape(fileEntry.getMimeType()) %>
 						</dd>
 					</dl>
-				</div>
-			</liferay-ui:section>
-		</liferay-ui:tabs>
+				</liferay-ui:section>
+			</liferay-ui:tabs>
+		</div>
 	</c:when>
 	<c:otherwise>
 		<div class="sidebar-header">
 			<h4 class="sidebar-title"><liferay-ui:message arguments="<%= folders.size() + fileEntries.size() + fileShortcuts.size() %>" key="x-items-are-selected" /></h4>
 		</div>
 
-		<liferay-ui:tabs
-			cssClass="navbar-no-collapse"
-			names="details"
-			refresh="<%= false %>"
-			type="dropdown"
-		>
-			<liferay-ui:section>
-				<div class="sidebar-body">
+		<div class="sidebar-body">
+			<liferay-ui:tabs
+				cssClass="navbar-no-collapse"
+				names="details"
+				refresh="<%= false %>"
+			>
+				<liferay-ui:section>
 					<h5>
 						<liferay-ui:message arguments="<%= folders.size() + fileEntries.size() + fileShortcuts.size() %>" key="x-items-are-selected" />
 					</h5>
-				</div>
-			</liferay-ui:section>
-		</liferay-ui:tabs>
+				</liferay-ui:section>
+			</liferay-ui:tabs>
+		</div>
 	</c:otherwise>
 </c:choose>

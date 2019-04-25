@@ -1,7 +1,0 @@
-<definition default="setWindowSize">
-	<command name="setWindowSize">
-		<execute function="WaitForSPARefresh" />
-
-		<execute function="Poshi.SetWindowSize#setWindowSize" />
-	</command>
-</definition>

@@ -7,6 +7,9 @@ let components = {};
 let componentsCache = {};
 let componentsFn = {};
 
+const DEFAULT_CACHE_VALIDATION_PARAMS = ['p_p_id', 'p_p_lifecycle'];
+const DEFAULT_CACHE_VALIDATION_PORTLET_PARAMS = ['ddmStructureKey', 'fileEntryTypeId', 'folderId', 'navigation', 'status'];
+
 const LIFERAY_COMPONENT = 'liferay.component';
 
 const _createPromiseWrapper = function(value) {
@@ -51,7 +54,7 @@ const _restoreTask = function(state, params, node) {
 
 	componentIds.forEach(
 		componentId => {
-			const container = node.getElementById(componentId);
+			const container = node.querySelector(`#${componentId}`);
 
 			if (container) {
 				container.innerHTML = cache[componentId].html;
@@ -76,11 +79,16 @@ const _restoreTask = function(state, params, node) {
  */
 
 const _onStartNavigate = function(event) {
+	const currentUri = new Uri(window.location.href);
 	const uri = new Uri(event.path);
 
-	const actionUri = uri.getParameterValue('p_p_lifecycle') === '1';
+	const cacheableUri = DEFAULT_CACHE_VALIDATION_PARAMS.every(
+		param => {
+			return uri.getParameterValue(param) === currentUri.getParameterValue(param);
+		}
+	);
 
-	if (!actionUri) {
+	if (cacheableUri) {
 		var componentIds = Object.keys(components);
 
 		componentIds = componentIds.filter(
@@ -88,7 +96,25 @@ const _onStartNavigate = function(event) {
 				const component = components[componentId];
 				const componentConfig = componentConfigs[componentId];
 
-				return componentConfig &&
+				const cacheablePortletUri = DEFAULT_CACHE_VALIDATION_PORTLET_PARAMS.every(
+					param => {
+						let cacheable = false;
+
+						if (componentConfig) {
+							const namespacedParam = `_${componentConfig.portletId}_${param}`;
+
+							cacheable = uri.getParameterValue(namespacedParam) === currentUri.getParameterValue(namespacedParam);
+						}
+
+						return cacheable;
+					}
+				);
+
+				const cacheableComponent = isFunction(component.isCacheable) ? component.isCacheable(uri) : false;
+
+				return cacheableComponent &&
+					cacheablePortletUri &&
+					componentConfig &&
 					componentConfig.cacheState &&
 					component.element &&
 					component.getState;

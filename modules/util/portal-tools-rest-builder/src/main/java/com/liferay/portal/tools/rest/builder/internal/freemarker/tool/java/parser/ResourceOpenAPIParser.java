@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java.JavaMethodParameter;
 import com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java.JavaMethodSignature;
 import com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java.parser.util.OpenAPIParserUtil;
+import com.liferay.portal.tools.rest.builder.internal.freemarker.util.OpenAPIUtil;
 import com.liferay.portal.vulcan.multipart.MultipartBody;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
@@ -40,14 +41,14 @@ import com.liferay.portal.vulcan.yaml.openapi.Schema;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Peter Shin
@@ -84,15 +85,25 @@ public class ResourceOpenAPIParser {
 						return;
 					}
 
-					List<JavaMethodParameter> javaMethodParameters =
-						_getJavaMethodParameters(javaDataTypeMap, operation);
-					String methodName = _getMethodName(
-						operation, path, returnType, schemaName);
+					RequestBody requestBody = operation.getRequestBody();
 
-					javaMethodSignatures.add(
-						new JavaMethodSignature(
-							path, pathItem, operation, schemaName,
-							javaMethodParameters, methodName, returnType));
+					_visitRequestBodyMediaTypes(
+						requestBody,
+						requestBodyMediaTypes -> {
+							List<JavaMethodParameter> javaMethodParameters =
+								_getJavaMethodParameters(
+									javaDataTypeMap, operation,
+									requestBodyMediaTypes);
+							String methodName = _getMethodName(
+								operation, path, returnType, schemaName);
+
+							javaMethodSignatures.add(
+								new JavaMethodSignature(
+									path, pathItem, operation,
+									requestBodyMediaTypes, schemaName,
+									javaMethodParameters, methodName,
+									returnType));
+						});
 				});
 		}
 
@@ -107,13 +118,57 @@ public class ResourceOpenAPIParser {
 
 		Set<String> methodAnnotations = new TreeSet<>();
 
+		if (operation.getDescription() != null) {
+			methodAnnotations.add(
+				"@Operation(description=\"" + operation.getDescription() +
+					"\")");
+		}
+
+		if (operation.getTags() != null) {
+			StringBuilder sb = new StringBuilder("");
+
+			for (String tag : operation.getTags()) {
+				sb.append("@Tag(name=\"");
+				sb.append(tag);
+				sb.append("\"),");
+			}
+
+			methodAnnotations.add("@Tags(value={" + sb.toString() + "})");
+		}
+
+		List<JavaMethodParameter> javaMethodParameters =
+			javaMethodSignature.getJavaMethodParameters();
+
+		StringBuilder sb = new StringBuilder("");
+
+		for (JavaMethodParameter javaMethodParameter : javaMethodParameters) {
+			String parameterName = javaMethodParameter.getParameterName();
+
+			if (parameterName.equals("pagination")) {
+				sb.append(_addParameter(_findParameter(operation, "page")));
+				sb.append(_addParameter(_findParameter(operation, "pageSize")));
+			}
+			else if (parameterName.equals("sorts")) {
+				sb.append(_addParameter(_findParameter(operation, "sort")));
+			}
+			else {
+				sb.append(
+					_addParameter(_findParameter(operation, parameterName)));
+			}
+		}
+
+		if (sb.length() > 0) {
+			methodAnnotations.add("@Parameters(value={" + sb + "})");
+		}
+
 		methodAnnotations.add("@Path(\"" + path + "\")");
 
 		String httpMethod = OpenAPIParserUtil.getHTTPMethod(operation);
 
 		methodAnnotations.add("@" + StringUtil.toUpperCase(httpMethod));
 
-		String methodAnnotation = _getMethodAnnotationConsumes(operation);
+		String methodAnnotation = _getMethodAnnotationConsumes(
+			javaMethodSignature.getRequestBodyMediaTypes());
 
 		if (Validator.isNotNull(methodAnnotation)) {
 			methodAnnotations.add(methodAnnotation);
@@ -157,8 +212,44 @@ public class ResourceOpenAPIParser {
 		return sb.toString();
 	}
 
+	private static String _addParameter(Parameter parameter) {
+		if (parameter == null) {
+			return "";
+		}
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(
+			String.format(
+				"@Parameter(in = ParameterIn.%s, name = \"%s\"",
+				StringUtil.toUpperCase(parameter.getIn()),
+				parameter.getName()));
+
+		if (parameter.getExample() != null) {
+			sb.append(
+				String.format(", example = \"%s\"", parameter.getExample()));
+		}
+
+		sb.append("),");
+
+		return sb.toString();
+	}
+
+	private static Parameter _findParameter(
+		Operation operation, String parameterName) {
+
+		for (Parameter parameter : operation.getParameters()) {
+			if (parameterName.equals(parameter.getName())) {
+				return parameter;
+			}
+		}
+
+		return null;
+	}
+
 	private static List<JavaMethodParameter> _getJavaMethodParameters(
-		Map<String, String> javaDataTypeMap, Operation operation) {
+		Map<String, String> javaDataTypeMap, Operation operation,
+		Set<String> requestBodyMediaTypes) {
 
 		if ((operation == null) || (operation.getParameters() == null)) {
 			return Collections.emptyList();
@@ -224,84 +315,76 @@ public class ResourceOpenAPIParser {
 			javaMethodParameters.add(javaMethodParameter);
 		}
 
-		RequestBody requestBody = operation.getRequestBody();
+		if (!requestBodyMediaTypes.isEmpty()) {
+			if (!requestBodyMediaTypes.contains("multipart/form-data")) {
+				RequestBody requestBody = operation.getRequestBody();
 
-		if (requestBody != null) {
-			JavaMethodParameter multipartBodyJavaMethodParameter = null;
+				Map<String, Content> contents = requestBody.getContent();
 
-			Map<String, Content> contents = requestBody.getContent();
+				Iterator<String> iterator = requestBodyMediaTypes.iterator();
 
-			for (Map.Entry<String, Content> entry : contents.entrySet()) {
-				if (Objects.equals(entry.getKey(), "multipart/form-data")) {
-					multipartBodyJavaMethodParameter = new JavaMethodParameter(
-						"multipartBody", MultipartBody.class.getName());
+				Content content = contents.get(iterator.next());
+
+				String parameterType = OpenAPIParserUtil.getJavaDataType(
+					javaDataTypeMap, content.getSchema());
+
+				if (Long.class.isInstance(parameterType)) {
+					javaMethodParameters.add(
+						new JavaMethodParameter("referenceId", parameterType));
 				}
-			}
+				else if (parameterType != null) {
+					String simpleClassName = parameterType.substring(
+						parameterType.lastIndexOf(".") + 1);
 
-			if (multipartBodyJavaMethodParameter == null) {
-				for (Content content : contents.values()) {
-					String parameterType = OpenAPIParserUtil.getJavaDataType(
-						javaDataTypeMap, content.getSchema());
+					String parameterName = TextFormatter.format(
+						simpleClassName, TextFormatter.I);
 
-					if (Long.class.isInstance(parameterType)) {
-						javaMethodParameters.add(
-							new JavaMethodParameter(
-								"referenceId", parameterType));
+					if (parameterType.startsWith("[")) {
+						String elementClassName =
+							OpenAPIParserUtil.getElementClassName(
+								parameterType);
+
+						simpleClassName = elementClassName.substring(
+							elementClassName.lastIndexOf(".") + 1);
+
+						parameterName = TextFormatter.formatPlural(
+							TextFormatter.format(
+								simpleClassName, TextFormatter.I));
 					}
-					else {
-						String simpleClassName = parameterType.substring(
-							parameterType.lastIndexOf(".") + 1);
 
-						String parameterName = StringUtil.lowerCaseFirstLetter(
-							simpleClassName);
-
-						javaMethodParameters.add(
-							new JavaMethodParameter(
-								parameterName,
-								javaDataTypeMap.get(simpleClassName)));
-					}
+					javaMethodParameters.add(
+						new JavaMethodParameter(parameterName, parameterType));
 				}
 			}
 			else {
-				javaMethodParameters.add(multipartBodyJavaMethodParameter);
+				javaMethodParameters.add(
+					new JavaMethodParameter(
+						"multipartBody", MultipartBody.class.getName()));
 			}
 		}
 
 		return javaMethodParameters;
 	}
 
-	private static String _getMethodAnnotationConsumes(Operation operation) {
-		RequestBody requestBody = operation.getRequestBody();
+	private static String _getMethodAnnotationConsumes(
+		Set<String> requestBodyMediaTypes) {
 
-		if (requestBody == null) {
+		if (requestBodyMediaTypes.isEmpty()) {
 			return null;
 		}
-
-		Map<String, Content> contents = requestBody.getContent();
-
-		if ((contents == null) || contents.isEmpty()) {
-			return null;
-		}
-
-		List<String> mediaTypes = new ArrayList<>(contents.keySet());
-
-		if (mediaTypes.isEmpty()) {
-			return null;
-		}
-
-		Collections.sort(mediaTypes);
 
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < mediaTypes.size(); i++) {
-			sb.append(StringUtil.quote(mediaTypes.get(i), "\""));
-
-			if (i < (mediaTypes.size() - 1)) {
-				sb.append(", ");
-			}
+		for (String requestBodyMediaType : requestBodyMediaTypes) {
+			sb.append(StringUtil.quote(requestBodyMediaType, "\""));
+			sb.append(',');
 		}
 
-		if (mediaTypes.size() > 1) {
+		if (sb.length() > 0) {
+			sb.setLength(sb.length() - 1);
+		}
+
+		if (requestBodyMediaTypes.size() > 1) {
 			return "@Consumes({" + sb.toString() + "})";
 		}
 
@@ -309,13 +392,13 @@ public class ResourceOpenAPIParser {
 	}
 
 	private static String _getMethodAnnotationProduces(Operation operation) {
-		Map<String, Response> responses = operation.getResponses();
+		Map<Integer, Response> responses = operation.getResponses();
 
-		if (responses.isEmpty()) {
+		if ((responses == null) || responses.isEmpty()) {
 			return null;
 		}
 
-		List<String> mediaTypes = new ArrayList<>();
+		Set<String> mediaTypes = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
 		for (Response response : responses.values()) {
 			Map<String, Content> contents = response.getContent();
@@ -331,17 +414,15 @@ public class ResourceOpenAPIParser {
 			return null;
 		}
 
-		Collections.sort(mediaTypes);
-
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < mediaTypes.size(); i++) {
-			sb.append(StringUtil.quote(mediaTypes.get(i), "\""));
+		for (String mediaType : mediaTypes) {
+			sb.append(StringUtil.quote(mediaType, "\""));
 
-			if (i < (mediaTypes.size() - 1)) {
-				sb.append(", ");
-			}
+			sb.append(", ");
 		}
+
+		sb.setLength(sb.length() - 2);
 
 		if (mediaTypes.size() > 1) {
 			return "@Produces({" + sb.toString() + "})";
@@ -354,84 +435,84 @@ public class ResourceOpenAPIParser {
 		Operation operation, String path, String returnType,
 		String schemaName) {
 
+		if (operation.getOperationId() != null) {
+			return operation.getOperationId();
+		}
+
 		List<String> methodNameSegments = new ArrayList<>();
 
 		String httpMethod = OpenAPIParserUtil.getHTTPMethod(operation);
 
 		methodNameSegments.add(httpMethod);
 
-		List<Parameter> parameters = Collections.emptyList();
+		String[] pathSegments = path.split("/");
+		String pluralSchemaName = TextFormatter.formatPlural(schemaName);
 
-		if (operation.getParameters() != null) {
-			parameters = operation.getParameters();
-		}
+		for (int i = 0; i < pathSegments.length; i++) {
+			String pathSegment = pathSegments[i];
 
-		Stream<Parameter> stream = parameters.stream();
+			if (pathSegment.isEmpty()) {
+				continue;
+			}
 
-		parameters = stream.filter(
-			parameter -> {
-				if (StringUtil.equals(parameter.getIn(), "path")) {
-					return true;
+			String pathName = CamelCaseUtil.toCamelCase(
+				pathSegment.replaceAll("\\{|-id|}|Id}", ""));
+
+			if (StringUtil.equalsIgnoreCase(pathName, schemaName)) {
+				pathName = schemaName;
+			}
+			else if (StringUtil.equalsIgnoreCase(pathName, pluralSchemaName)) {
+				pathName = pluralSchemaName;
+			}
+			else {
+				pathName = StringUtil.upperCaseFirstLetter(pathName);
+			}
+
+			if (pathSegment.contains("{")) {
+				String previousMethodNameSegment = methodNameSegments.get(
+					methodNameSegments.size() - 1);
+
+				if (!previousMethodNameSegment.endsWith(pathName) &&
+					!previousMethodNameSegment.endsWith(schemaName)) {
+
+					methodNameSegments.add(pathName);
+				}
+			}
+			else if ((i == (pathSegments.length - 1)) &&
+					 StringUtil.startsWith(
+						 returnType, Page.class.getName() + "<")) {
+
+				String previousMethodNameSegment = methodNameSegments.get(
+					methodNameSegments.size() - 1);
+
+				String pageClassName = Page.class.getName();
+
+				String elementClassName = returnType.substring(
+					pageClassName.length() + 1, returnType.length() - 1);
+
+				String elementSimpleClassName = elementClassName.substring(
+					elementClassName.lastIndexOf(".") + 1);
+
+				if (Objects.equals(elementSimpleClassName, schemaName) &&
+					!pathName.endsWith(pluralSchemaName) &&
+					previousMethodNameSegment.endsWith(schemaName)) {
+
+					String string = StringUtil.replaceLast(
+						previousMethodNameSegment, schemaName,
+						pluralSchemaName);
+
+					methodNameSegments.set(
+						methodNameSegments.size() - 1, string);
 				}
 
-				return false;
+				methodNameSegments.add(pathName + "Page");
 			}
-		).collect(
-			Collectors.toList()
-		);
-
-		for (Parameter parameter : parameters) {
-			String text = parameter.getName();
-
-			text = CamelCaseUtil.toCamelCase(text.replace("-id", ""));
-
-			methodNameSegments.add(StringUtil.upperCaseFirstLetter(text));
-		}
-
-		if (httpMethod.equals("get") &&
-			returnType.startsWith(Page.class.getName() + "<")) {
-
-			String className = returnType.substring(5, returnType.length() - 1);
-
-			String simpleClassName = className.substring(
-				className.lastIndexOf(".") + 1);
-
-			if (Objects.equals(simpleClassName, schemaName)) {
-				methodNameSegments.add(TextFormatter.formatPlural(schemaName));
+			else if (Objects.equals(pathName, schemaName)) {
+				methodNameSegments.add(pathName);
 			}
-		}
-
-		String[] pathSegments = path.split("/");
-
-		if (httpMethod.equals("post") &&
-			(pathSegments.length >
-				(methodNameSegments.size() + parameters.size()))) {
-
-			String pathSegment =
-				pathSegments[methodNameSegments.size() + parameters.size()];
-
-			String text = CamelCaseUtil.toCamelCase(pathSegment);
-
-			text = StringUtil.upperCaseFirstLetter(text);
-
-			if (text.equals(TextFormatter.formatPlural(schemaName))) {
-				methodNameSegments.add(schemaName);
+			else {
+				methodNameSegments.add(OpenAPIUtil.formatSingular(pathName));
 			}
-		}
-
-		if (pathSegments.length >
-				(methodNameSegments.size() + parameters.size())) {
-
-			String pathSegment =
-				pathSegments[methodNameSegments.size() + parameters.size()];
-
-			String text = CamelCaseUtil.toCamelCase(pathSegment);
-
-			methodNameSegments.add(StringUtil.upperCaseFirstLetter(text));
-		}
-
-		if (StringUtil.startsWith(returnType, Page.class.getName() + "<")) {
-			methodNameSegments.add("Page");
 		}
 
 		return String.join("", methodNameSegments);
@@ -484,6 +565,11 @@ public class ResourceOpenAPIParser {
 			if (schema.getType() != null) {
 				StringBuilder sb = new StringBuilder();
 
+				if (parameter.isRequired()) {
+					sb.append("@NotNull ");
+				}
+
+				sb.append("@Parameter(hidden=true)");
 				sb.append("@");
 				sb.append(StringUtil.upperCaseFirstLetter(parameter.getIn()));
 				sb.append("Param(\"");
@@ -500,24 +586,48 @@ public class ResourceOpenAPIParser {
 	private static String _getReturnType(
 		Map<String, String> javaDataTypeMap, Operation operation) {
 
-		Map<String, Response> responses = operation.getResponses();
+		Map<Integer, Response> responses = operation.getResponses();
 
-		if (responses.isEmpty()) {
-			return boolean.class.getName();
+		if ((responses == null) || responses.isEmpty()) {
+			return void.class.getName();
 		}
 
-		for (Response response : responses.values()) {
-			Map<String, Content> contents = response.getContent();
+		Integer httpStatusCode = null;
+		Response response = null;
 
-			if ((contents == null) || (contents.values() == null)) {
+		for (Map.Entry<Integer, Response> entry : responses.entrySet()) {
+			Integer curHttpStatusCode = entry.getKey();
+
+			javax.ws.rs.core.Response.Status.Family family =
+				javax.ws.rs.core.Response.Status.Family.familyOf(
+					curHttpStatusCode);
+
+			if (family != _FAMILY_SUCCESSFUL) {
 				continue;
 			}
 
-			for (Content content : contents.values()) {
+			if ((httpStatusCode == null) ||
+				(httpStatusCode > curHttpStatusCode)) {
+
+				httpStatusCode = curHttpStatusCode;
+				response = entry.getValue();
+			}
+		}
+
+		if ((response != null) && (response.getContent() != null)) {
+			Map<String, Content> sortedContents = new TreeMap<>();
+
+			sortedContents.putAll(response.getContent());
+
+			if (sortedContents.isEmpty()) {
+				return void.class.getName();
+			}
+
+			for (Content content : sortedContents.values()) {
 				Schema schema = content.getSchema();
 
 				if (schema == null) {
-					continue;
+					return void.class.getName();
 				}
 
 				String returnType = OpenAPIParserUtil.getJavaDataType(
@@ -552,7 +662,7 @@ public class ResourceOpenAPIParser {
 			return String.class.getName();
 		}
 
-		return boolean.class.getName();
+		return javax.ws.rs.core.Response.class.getName();
 	}
 
 	private static boolean _isSchemaMethod(
@@ -618,5 +728,41 @@ public class ResourceOpenAPIParser {
 			consumer.accept(pathItem.getPut());
 		}
 	}
+
+	private static void _visitRequestBodyMediaTypes(
+		RequestBody requestBody, Consumer<Set<String>> consumer) {
+
+		if (requestBody != null) {
+			boolean multipartFormData = false;
+			Set<String> requestBodyMediaTypes = new TreeSet<>();
+
+			Map<String, Content> contents = requestBody.getContent();
+
+			for (String requestBodyMediaType : contents.keySet()) {
+				if (Objects.equals(
+						requestBodyMediaType, "multipart/form-data")) {
+
+					multipartFormData = true;
+				}
+				else {
+					requestBodyMediaTypes.add(requestBodyMediaType);
+				}
+			}
+
+			if (!requestBodyMediaTypes.isEmpty()) {
+				consumer.accept(requestBodyMediaTypes);
+			}
+
+			if (multipartFormData) {
+				consumer.accept(Collections.singleton("multipart/form-data"));
+			}
+		}
+		else {
+			consumer.accept(Collections.emptySet());
+		}
+	}
+
+	private static final javax.ws.rs.core.Response.Status.Family
+		_FAMILY_SUCCESSFUL = javax.ws.rs.core.Response.Status.Family.SUCCESSFUL;
 
 }

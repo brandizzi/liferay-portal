@@ -15,6 +15,7 @@
 package com.liferay.dynamic.data.mapping.internal.search.util;
 
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.model.DDMStructureLayout;
 import com.liferay.dynamic.data.mapping.model.DDMTemplate;
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -47,6 +48,31 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(immediate = true, service = DDMSearchHelper.class)
 public class DDMSearchHelper {
+
+	public SearchContext buildStructureLayoutSearchContext(
+		long companyId, long[] groupIds, long classNameId, String name,
+		String description, String storageType, Integer type, int status,
+		int start, int end,
+		OrderByComparator<DDMStructureLayout> orderByComparator) {
+
+		SearchContext searchContext = new SearchContext();
+
+		searchContext.setAttribute(Field.CLASS_NAME_ID, classNameId);
+		searchContext.setAttribute(Field.CLASS_PK, null);
+		searchContext.setAttribute(Field.DESCRIPTION, description);
+		searchContext.setAttribute(Field.NAME, name);
+		searchContext.setCompanyId(companyId);
+		searchContext.setEnd(end);
+		searchContext.setGroupIds(groupIds);
+
+		if (orderByComparator != null) {
+			searchContext.setSorts(getSortsFromComparator(orderByComparator));
+		}
+
+		searchContext.setStart(start);
+
+		return searchContext;
+	}
 
 	public SearchContext buildStructureSearchContext(
 		long companyId, long[] groupIds, long userId, long classNameId,
@@ -218,11 +244,11 @@ public class DDMSearchHelper {
 			orderByComparator.getOrderByFields());
 
 		return stream.map(
-			orderByCol -> {
-				String fieldName = _fieldNameOrderByColMap.getOrDefault(
-					orderByCol, orderByCol);
+			orderByFieldName -> {
+				String fieldName = _fieldNameOrderByCols.getOrDefault(
+					orderByFieldName, orderByFieldName);
 
-				int sortType = _fieldNameSortTypeMap.getOrDefault(
+				int sortType = _fieldNameSortTypes.getOrDefault(
 					fieldName, Sort.STRING_TYPE);
 
 				return new Sort(
@@ -236,7 +262,7 @@ public class DDMSearchHelper {
 	private static final Log _log = LogFactoryUtil.getLog(
 		DDMSearchHelper.class);
 
-	private static final Map<String, String> _fieldNameOrderByColMap =
+	private static final Map<String, String> _fieldNameOrderByCols =
 		new HashMap<String, String>() {
 			{
 				put("createDate", Field.CREATE_DATE);
@@ -245,7 +271,7 @@ public class DDMSearchHelper {
 				put("templateId", Field.ENTRY_CLASS_PK);
 			}
 		};
-	private static final Map<String, Integer> _fieldNameSortTypeMap =
+	private static final Map<String, Integer> _fieldNameSortTypes =
 		new HashMap<String, Integer>() {
 			{
 				put(Field.CREATE_DATE, Sort.LONG_TYPE);

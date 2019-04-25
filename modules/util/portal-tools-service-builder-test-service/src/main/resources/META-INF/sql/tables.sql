@@ -1,34 +1,52 @@
+create table BigDecimalEntries_LVEntries (
+	companyId LONG not null,
+	bigDecimalEntryId LONG not null,
+	lvEntryId LONG not null,
+	primary key (bigDecimalEntryId, lvEntryId)
+);
+
 create table BigDecimalEntry (
 	bigDecimalEntryId LONG not null primary key,
+	companyId LONG,
 	bigDecimalValue DECIMAL(30, 16) null
+);
+
+create table LVEntries_BigDecimalEntries (
+	companyId LONG not null,
+	bigDecimalEntryId LONG not null,
+	lvEntryId LONG not null,
+	primary key (bigDecimalEntryId, lvEntryId)
 );
 
 create table LVEntry (
 	mvccVersion LONG default 0 not null,
 	uuid_ VARCHAR(75) null,
 	headId LONG,
+	head BOOLEAN,
 	defaultLanguageId VARCHAR(75) null,
 	lvEntryId LONG not null primary key,
+	companyId LONG,
 	groupId LONG,
-	uniqueGroupKey VARCHAR(75) null,
-	head BOOLEAN
+	uniqueGroupKey VARCHAR(75) null
 );
 
 create table LVEntryLocalization (
 	mvccVersion LONG default 0 not null,
 	headId LONG,
+	head BOOLEAN,
 	lvEntryLocalizationId LONG not null primary key,
+	companyId LONG,
 	lvEntryId LONG,
 	languageId VARCHAR(75) null,
 	title VARCHAR(75) null,
-	content VARCHAR(75) null,
-	head BOOLEAN
+	content VARCHAR(75) null
 );
 
 create table LVEntryLocalizationVersion (
 	lvEntryLocalizationVersionId LONG not null primary key,
 	version INTEGER,
 	lvEntryLocalizationId LONG,
+	companyId LONG,
 	lvEntryId LONG,
 	languageId VARCHAR(75) null,
 	title VARCHAR(75) null,
@@ -41,6 +59,7 @@ create table LVEntryVersion (
 	uuid_ VARCHAR(75) null,
 	defaultLanguageId VARCHAR(75) null,
 	lvEntryId LONG,
+	companyId LONG,
 	groupId LONG,
 	uniqueGroupKey VARCHAR(75) null
 );
@@ -59,6 +78,14 @@ create table LocalizedEntryLocalization (
 	content VARCHAR(75) null
 );
 
+create table NestedSetsTreeEntry (
+	nestedSetsTreeEntryId LONG not null primary key,
+	groupId LONG,
+	parentNestedSetsTreeEntryId LONG,
+	leftNestedSetsTreeEntryId LONG,
+	rightNestedSetsTreeEntryId LONG
+);
+
 create table UADPartialEntry (
 	uadPartialEntryId LONG not null primary key,
 	userId LONG,
@@ -69,9 +96,9 @@ create table UADPartialEntry (
 create table VersionedEntry (
 	mvccVersion LONG default 0 not null,
 	headId LONG,
+	head BOOLEAN,
 	versionedEntryId LONG not null primary key,
-	groupId LONG,
-	head BOOLEAN
+	groupId LONG
 );
 
 create table VersionedEntryVersion (

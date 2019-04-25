@@ -14,6 +14,7 @@
 
 package com.liferay.exportimport.internal.content.processor;
 
+import com.liferay.exportimport.configuration.ExportImportServiceConfiguration;
 import com.liferay.exportimport.content.processor.ExportImportContentProcessor;
 import com.liferay.exportimport.kernel.exception.ExportImportContentProcessorException;
 import com.liferay.exportimport.kernel.exception.ExportImportContentValidationException;
@@ -26,6 +27,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.StagedModel;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -77,7 +80,25 @@ public class LinksToLayoutsExportImportContentProcessor
 	public void validateContentReferences(long groupId, String content)
 		throws PortalException {
 
-		validateLinksToLayoutsReferences(content);
+		if (isValidateLinksToLayoutsReferences()) {
+			validateLinksToLayoutsReferences(content);
+		}
+	}
+
+	protected boolean isValidateLinksToLayoutsReferences() {
+		try {
+			ExportImportServiceConfiguration configuration =
+				_configurationProvider.getCompanyConfiguration(
+					ExportImportServiceConfiguration.class,
+					CompanyThreadLocal.getCompanyId());
+
+			return configuration.validateLayoutReferences();
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
+
+		return true;
 	}
 
 	protected String replaceExportLinksToLayouts(
@@ -173,6 +194,38 @@ public class LinksToLayoutsExportImportContentProcessor
 
 			Long newPlid = MapUtil.getLong(layoutPlids, oldPlid);
 
+			if (newPlid == 0) {
+				Element missingReferencesElement =
+					portletDataContext.getMissingReferencesElement();
+
+				List<Element> elements = missingReferencesElement.elements();
+
+				Layout existingLayout = null;
+
+				for (Element element : elements) {
+					String className = element.attributeValue("class-name");
+
+					if (!className.equals(Layout.class.getName())) {
+						continue;
+					}
+
+					String uuid = element.attributeValue("uuid");
+					String privateLayout = element.attributeValue(
+						"private-layout");
+
+					existingLayout =
+						_layoutLocalService.fetchLayoutByUuidAndGroupId(
+							uuid, portletDataContext.getScopeGroupId(),
+							Boolean.valueOf(privateLayout));
+
+					if (existingLayout != null) {
+						newPlid = existingLayout.getPlid();
+
+						break;
+					}
+				}
+			}
+
 			long oldGroupId = GetterUtil.getLong(matcher.group(6));
 
 			long newGroupId = oldGroupId;
@@ -226,6 +279,13 @@ public class LinksToLayoutsExportImportContentProcessor
 		return content;
 	}
 
+	@Reference(unbind = "-")
+	protected void setConfigurationProvider(
+		ConfigurationProvider configurationProvider) {
+
+		_configurationProvider = configurationProvider;
+	}
+
 	protected void validateLinksToLayoutsReferences(String content)
 		throws PortalException {
 
@@ -275,6 +335,8 @@ public class LinksToLayoutsExportImportContentProcessor
 		"\\[([\\d]+)@(private(-group|-user)?|public)(@([\\d]+))?\\]");
 	private static final Pattern _importLinksToLayoutPattern = Pattern.compile(
 		"\\[([\\d]+)@(private(-group|-user)?|public)@([\\d]+)(@([\\d]+))?\\]");
+
+	private ConfigurationProvider _configurationProvider;
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;

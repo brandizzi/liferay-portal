@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.osgi.service.component.annotations.Activate;
@@ -45,7 +46,7 @@ public class JournalCTConfigurationRegistrar {
 			_builder.setContentType(
 				"Web Content"
 			).setContentTypeLanguageKey(
-				"journal"
+				"journal-article"
 			).setEntityClasses(
 				JournalArticleResource.class, JournalArticle.class
 			).setResourceEntitiesByCompanyIdFunction(
@@ -62,6 +63,9 @@ public class JournalCTConfigurationRegistrar {
 			).setVersionEntityByVersionEntityIdFunction(
 				_journalArticleLocalService::fetchJournalArticle
 			).setVersionEntityDetails(
+				Arrays.asList(
+					JournalArticle::getDDMStructure,
+					JournalArticle::getDDMTemplate),
 				CTFunctions.getFetchSiteNameFunction(),
 				JournalArticle::getTitle, JournalArticle::getVersion
 			).setEntityIdsFromVersionEntityFunctions(

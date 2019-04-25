@@ -1,7 +1,9 @@
 import {ADD_PORTLET} from '../actions/actions.es';
 import {addFragment, getFragmentEntryLinkContent} from './fragments.es';
 import {getWidgetPath} from '../utils/FragmentsEditorGetUtils.es';
-import {setIn, updateLayoutData} from '../utils/FragmentsEditorUpdateUtils.es';
+import {prefixSegmentsExperienceId} from '../utils/prefixSegmentsExperienceId.es';
+import {setIn} from '../utils/FragmentsEditorUpdateUtils.es';
+import {updatePageEditorLayoutData} from '../utils/FragmentsEditorFetchUtils.es';
 import editableValuesMigrator from '../utils/fragmentMigrator.es';
 
 /**
@@ -28,7 +30,7 @@ function addPortletReducer(state, actionType, payload) {
 					nextState.classNameId,
 					nextState.classPK,
 					nextState.portletNamespace,
-					nextState.defaultSegmentId
+					nextState.defaultSegmentsExperienceId
 				)
 					.then(
 						response => {
@@ -42,12 +44,9 @@ function addPortletReducer(state, actionType, payload) {
 								nextState.layoutData
 							);
 
-							return updateLayoutData(
-								nextState.updateLayoutPageTemplateDataURL,
-								nextState.portletNamespace,
-								nextState.classNameId,
-								nextState.classPK,
-								nextData
+							return updatePageEditorLayoutData(
+								nextData,
+								nextState.segmentsExperienceId
 							);
 						}
 					)
@@ -114,7 +113,7 @@ function addPortletReducer(state, actionType, payload) {
  * @param {string} classNameId
  * @param {string} classPK
  * @param {string} portletNamespace
- * @param {string} defaultSegmentId
+ * @param {string} defaultSegmentsExperienceId
  * @return {object}
  * @review
  */
@@ -124,7 +123,7 @@ function _addPortlet(
 	classNameId,
 	classPK,
 	portletNamespace,
-	defaultSegmentId
+	defaultSegmentsExperienceId
 ) {
 	const formData = new FormData();
 
@@ -152,7 +151,10 @@ function _addPortlet(
 				return {
 					config: {},
 					content: response.content,
-					editableValues: editableValuesMigrator(response.editableValues, defaultSegmentId),
+					editableValues: editableValuesMigrator(
+						response.editableValues,
+						prefixSegmentsExperienceId(defaultSegmentsExperienceId)
+					),
 					fragmentEntryLinkId: response.fragmentEntryLinkId,
 					name: response.name
 				};

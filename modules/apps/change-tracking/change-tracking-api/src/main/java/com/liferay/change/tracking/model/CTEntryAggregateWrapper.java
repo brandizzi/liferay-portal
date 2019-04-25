@@ -51,8 +51,8 @@ public class CTEntryAggregateWrapper
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("ctCollectionId", getCtCollectionId());
 		attributes.put("ownerCTEntryId", getOwnerCTEntryId());
+		attributes.put("status", getStatus());
 
 		return attributes;
 	}
@@ -95,16 +95,16 @@ public class CTEntryAggregateWrapper
 			setModifiedDate(modifiedDate);
 		}
 
-		Long ctCollectionId = (Long)attributes.get("ctCollectionId");
-
-		if (ctCollectionId != null) {
-			setCtCollectionId(ctCollectionId);
-		}
-
 		Long ownerCTEntryId = (Long)attributes.get("ownerCTEntryId");
 
 		if (ownerCTEntryId != null) {
 			setOwnerCTEntryId(ownerCTEntryId);
+		}
+
+		Integer status = (Integer)attributes.get("status");
+
+		if (status != null) {
+			setStatus(status);
 		}
 	}
 
@@ -126,16 +126,6 @@ public class CTEntryAggregateWrapper
 	@Override
 	public Date getCreateDate() {
 		return model.getCreateDate();
-	}
-
-	/**
-	 * Returns the ct collection ID of this ct entry aggregate.
-	 *
-	 * @return the ct collection ID of this ct entry aggregate
-	 */
-	@Override
-	public long getCtCollectionId() {
-		return model.getCtCollectionId();
 	}
 
 	/**
@@ -181,6 +171,16 @@ public class CTEntryAggregateWrapper
 	@Override
 	public java.util.List<CTEntry> getRelatedCTEntries() {
 		return model.getRelatedCTEntries();
+	}
+
+	/**
+	 * Returns the status of this ct entry aggregate.
+	 *
+	 * @return the status of this ct entry aggregate
+	 */
+	@Override
+	public int getStatus() {
+		return model.getStatus();
 	}
 
 	/**
@@ -239,16 +239,6 @@ public class CTEntryAggregateWrapper
 	}
 
 	/**
-	 * Sets the ct collection ID of this ct entry aggregate.
-	 *
-	 * @param ctCollectionId the ct collection ID of this ct entry aggregate
-	 */
-	@Override
-	public void setCtCollectionId(long ctCollectionId) {
-		model.setCtCollectionId(ctCollectionId);
-	}
-
-	/**
 	 * Sets the ct entry aggregate ID of this ct entry aggregate.
 	 *
 	 * @param ctEntryAggregateId the ct entry aggregate ID of this ct entry aggregate
@@ -286,6 +276,16 @@ public class CTEntryAggregateWrapper
 	@Override
 	public void setPrimaryKey(long primaryKey) {
 		model.setPrimaryKey(primaryKey);
+	}
+
+	/**
+	 * Sets the status of this ct entry aggregate.
+	 *
+	 * @param status the status of this ct entry aggregate
+	 */
+	@Override
+	public void setStatus(int status) {
+		model.setStatus(status);
 	}
 
 	/**

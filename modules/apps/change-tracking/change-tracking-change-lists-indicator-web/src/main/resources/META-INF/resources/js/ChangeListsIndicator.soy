@@ -1,0 +1,40 @@
+{namespace com.liferay.change.tracking.change.lists.indicator.web.ChangeListsIndicator}
+
+/**
+ * This renders the Change lists indicator element.
+ */
+{template .render}
+	{@param activeChangeListName: ?}
+	{@param urlChangeListsOverview: string}
+	{@param spritemap: string}
+
+	{let $productionCollectionName: 'productionCTCollectionName' /}
+
+	{let $tooltipElementClass: 'change-lists-control-menu-state-tooltip ' /}
+
+	{let $tooltipElementClassBackground: $activeChangeListName != $productionCollectionName ? 'tooltip-background-blue' : 'tooltip-background-green' /}
+
+	{let $tooltipContentText kind="text"}
+		{if $activeChangeListName != $productionCollectionName}
+			{msg desc=""}active-change-list{/msg}:{sp}{$activeChangeListName}
+		{else}
+			{msg desc=""}production{/msg}
+		{/if}
+	{/let}
+
+	<li class="control-menu-nav-item">
+		<a class="control-menu-icon" data-title="{$tooltipContentText}" href="{$urlChangeListsOverview}">
+			<span class="icon-monospaced" id="">
+				{call ClayIcon.render}
+					{param spritemap: $spritemap /}
+					{param symbol: 'restore' /}
+				{/call}
+			</span>
+		</a>
+
+		{call ClayTooltip.render}
+			{param elementClasses:  $tooltipElementClass + $tooltipElementClassBackground /}
+		{/call}
+	</li>
+
+{/template}

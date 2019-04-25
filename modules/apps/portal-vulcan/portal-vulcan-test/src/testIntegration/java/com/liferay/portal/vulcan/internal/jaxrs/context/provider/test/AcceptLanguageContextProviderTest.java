@@ -78,8 +78,9 @@ public class AcceptLanguageContextProviderTest {
 		CompanyTestUtil.resetCompanyLocales(
 			_company.getCompanyId(),
 			Arrays.asList(
-				LocaleUtil.BRAZIL, Locale.GERMAN, Locale.JAPAN, Locale.TAIWAN),
-			Locale.TAIWAN);
+				LocaleUtil.BRAZIL, LocaleUtil.GERMAN, LocaleUtil.JAPAN,
+				LocaleUtil.TAIWAN),
+			LocaleUtil.TAIWAN);
 
 		_company = CompanyLocalServiceUtil.getCompany(_company.getCompanyId());
 
@@ -130,18 +131,28 @@ public class AcceptLanguageContextProviderTest {
 
 		AcceptLanguage acceptLanguage = _contextProvider.createContext(
 			new MockMessage(
-				new AcceptLanguageMockHttpServletRequest(user, Locale.JAPAN)));
+				new AcceptLanguageMockHttpServletRequest(
+					user, LocaleUtil.JAPAN)));
 
-		Assert.assertEquals(Locale.JAPAN, acceptLanguage.getPreferredLocale());
+		// One partial locale
+
+		acceptLanguage = _contextProvider.createContext(
+			new MockMessage(
+				new AcceptLanguageMockHttpServletRequest(
+					user, new Locale("pt", ""))));
+
+		Assert.assertEquals(
+			LocaleUtil.BRAZIL, acceptLanguage.getPreferredLocale());
 
 		// Three locales
 
 		acceptLanguage = _contextProvider.createContext(
 			new MockMessage(
 				new AcceptLanguageMockHttpServletRequest(
-					user, Locale.GERMAN, Locale.JAPAN, Locale.US)));
+					user, LocaleUtil.GERMAN, LocaleUtil.JAPAN, LocaleUtil.US)));
 
-		Assert.assertEquals(Locale.GERMAN, acceptLanguage.getPreferredLocale());
+		Assert.assertEquals(
+			LocaleUtil.GERMAN, acceptLanguage.getPreferredLocale());
 
 		// No locales
 
@@ -168,7 +179,8 @@ public class AcceptLanguageContextProviderTest {
 		catch (Exception e) {
 			Assert.assertEquals(ClientErrorException.class, e.getClass());
 			Assert.assertEquals(
-				"The preferred locale: es_ES is not available", e.getMessage());
+				"No available locale matches the accepted languages: es-ES",
+				e.getMessage());
 		}
 	}
 

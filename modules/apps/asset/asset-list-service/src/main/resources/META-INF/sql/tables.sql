@@ -7,9 +7,9 @@ create table AssetListEntry (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
+	assetListEntryKey VARCHAR(75) null,
 	title VARCHAR(75) null,
 	type_ INTEGER,
-	typeSettings TEXT null,
 	lastPublishDate DATE null
 );
 
@@ -24,7 +24,23 @@ create table AssetListEntryAssetEntryRel (
 	modifiedDate DATE null,
 	assetListEntryId LONG,
 	assetEntryId LONG,
+	segmentsEntryId LONG,
 	position INTEGER,
+	lastPublishDate DATE null
+);
+
+create table AssetListEntrySegmentsEntryRel (
+	uuid_ VARCHAR(75) null,
+	alEntrySegmentsEntryRelId LONG not null primary key,
+	groupId LONG,
+	companyId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
+	createDate DATE null,
+	modifiedDate DATE null,
+	assetListEntryId LONG,
+	segmentsEntryId LONG,
+	typeSettings TEXT null,
 	lastPublishDate DATE null
 );
 

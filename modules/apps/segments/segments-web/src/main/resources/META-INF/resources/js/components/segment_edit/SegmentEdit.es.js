@@ -1,10 +1,13 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import ClayButton from '../shared/ClayButton.es';
 import ClaySpinner from '../shared/ClaySpinner.es';
-import debounce from 'lodash.debounce';
+import ClayToggle from '../shared/ClayToggle.es';
+import ContributorBuilder from '../criteria_builder/ContributorBuilder.es';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import ThemeContext from '../../ThemeContext.es';
 import TitleEditor from '../title_editor/TitleEditor.es';
+import {debounce} from 'metal-debounce';
+import {FieldArray, withFormik} from 'formik';
 import {getPluralMessage, sub} from '../../utils/utils.es';
 import {
 	SOURCES,
@@ -12,8 +15,6 @@ import {
 	SUPPORTED_OPERATORS,
 	SUPPORTED_PROPERTY_TYPES
 } from '../../utils/constants.es';
-import {FieldArray, withFormik} from 'formik';
-import ContributorBuilder from '../criteria_builder/ContributorBuilder.es';
 
 const DEFAULT_SEGMENT_NAME = Liferay.Language.get('unnamed-segment');
 
@@ -43,9 +44,10 @@ class SegmentEdit extends Component {
 		portletNamespace: PropTypes.string,
 		previewMembersURL: PropTypes.string,
 		propertyGroups: PropTypes.array,
-		redirect: PropTypes.string,
+		redirect: PropTypes.string.isRequired,
 		requestMembersCountURL: PropTypes.string,
 		setValues: PropTypes.func,
+		showInEditMode: PropTypes.bool,
 		source: PropTypes.string,
 		validateForm: PropTypes.func,
 		values: PropTypes.object
@@ -59,6 +61,8 @@ class SegmentEdit extends Component {
 	};
 
 	state = {
+		changesUnsaved: false,
+		editing: this.props.showInEditMode,
 		membersCount: this.props.initialMembersCount,
 		membersCountLoading: false
 	};
@@ -110,10 +114,23 @@ class SegmentEdit extends Component {
 	};
 
 	_handleQueryChange = () => {
-		this.setState({membersCountLoading: true});
+		this.setState(
+			{
+				changesUnsaved: true,
+				membersCountLoading: true
+			},
+			this._debouncedFetchMembersCount
+		);
 
-		this._debouncedFetchMembersCount();
 	};
+
+	_handleCriteriaEdit = () => {
+		this.setState(
+			{
+				editing: !this.state.editing
+			}
+		);
+	}
 
 	_handleSegmentNameBlur = event => {
 		const {
@@ -146,9 +163,15 @@ class SegmentEdit extends Component {
 	_renderContributors = () => {
 		const {contributors, propertyGroups} = this.props;
 
+		const {editing} = this.state;
+
+		const emptyContributors = this._isQueryEmpty();
+
 		return (
 			(propertyGroups && contributors) ?
 				<ContributorBuilder
+					editing={editing}
+					emptyContributors={emptyContributors}
 					initialContributors={contributors}
 					onQueryChange={this._handleQueryChange}
 					propertyGroups={propertyGroups}
@@ -164,11 +187,11 @@ class SegmentEdit extends Component {
 		Liferay.Util.openWindow(
 			{
 				dialog: {
-					bodyContent: `<iframe frameborder="0" width="100%" height="100%" src="${url}"></iframe>`,
 					destroyOnHide: true
 				},
 				id: 'segment-members-dialog',
-				title: sub(Liferay.Language.get('x-members'), [this.props.values.name])
+				title: sub(Liferay.Language.get('x-members'), [this.props.values.name]),
+				uri: url
 			}
 		);
 	}
@@ -223,9 +246,13 @@ class SegmentEdit extends Component {
 			values
 		} = this.props;
 
-		const {membersCount, membersCountLoading} = this.state;
+		const {changesUnsaved, editing, membersCount, membersCountLoading} = this.state;
 
 		const {assetsPath} = this.context;
+
+		const disabledCancel = !editing;
+		const disabledSave = !editing || this._isQueryEmpty();
+		const editingToggleDisabled = changesUnsaved;
 
 		return (
 			<div className="segment-edit-page-root">
@@ -276,7 +303,7 @@ class SegmentEdit extends Component {
 						</div>
 
 						<div className="form-header-section-right">
-							<div className="btn-group mr-3">
+							<div className="btn-group">
 								<div className="btn-group-item">
 									<ClaySpinner
 										className="mr-4"
@@ -285,7 +312,6 @@ class SegmentEdit extends Component {
 									/>
 
 									<ClayButton
-										className="members-count-button"
 										label={getPluralMessage(
 											Liferay.Language.get('x-member'),
 											Liferay.Language.get('x-members'),
@@ -296,11 +322,22 @@ class SegmentEdit extends Component {
 										type="button"
 									/>
 								</div>
+								<div className="btn-group-item mr-2">
+									<ClayToggle
+										checked={editing}
+										className="toggle-editing"
+										disabled={editingToggleDisabled}
+										iconOff="view"
+										iconOn="pencil"
+										onChange={this._handleCriteriaEdit}
+									/>
+								</div>
 							</div>
 
 							<div className="btn-group">
 								<div className="btn-group-item">
 									<ClayButton
+										disabled={disabledCancel}
 										href={redirect}
 										label={Liferay.Language.get('cancel')}
 										size="sm"
@@ -309,7 +346,7 @@ class SegmentEdit extends Component {
 
 								<div className="btn-group-item">
 									<ClayButton
-										disabled={this._isQueryEmpty()}
+										disabled={disabledSave}
 										label={Liferay.Language.get('save')}
 										onClick={this._handleValidate}
 										size="sm"

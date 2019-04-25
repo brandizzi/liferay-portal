@@ -18,6 +18,7 @@ import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Address;
+import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.Country;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.ListType;
@@ -71,7 +72,10 @@ public class UserSearchFixture {
 		long listTypeId = listType.getListTypeId();
 
 		long contactId = user.getContactId();
-		String modelClassName = user.getContact().getModelClassName();
+
+		Contact contact = user.getContact();
+
+		String modelClassName = contact.getModelClassName();
 
 		Country country = CountryServiceUtil.getCountryByName("united-states");
 
@@ -142,12 +146,24 @@ public class UserSearchFixture {
 	public User addUser(String screenName, Group group, String... assetTagNames)
 		throws Exception {
 
+		return addUser(
+			screenName, RandomTestUtil.randomString(),
+			RandomTestUtil.randomString(), LocaleUtil.getDefault(), group,
+			assetTagNames);
+	}
+
+	public User addUser(
+			String screenName, String firstName, String lastName, Locale locale,
+			Group group, String... assetTagNames)
+		throws Exception {
+
 		ServiceContext serviceContext = getServiceContext(group);
 
 		serviceContext.setAssetTagNames(assetTagNames);
 
 		User user = _addUser(
-			screenName, new long[] {group.getGroupId()}, serviceContext);
+			screenName, firstName, lastName, new long[] {group.getGroupId()},
+			locale, serviceContext);
 
 		_users.add(user);
 
@@ -377,13 +393,13 @@ public class UserSearchFixture {
 	}
 
 	private User _addUser(
-			String screenName, long[] groupIds, ServiceContext serviceContext)
+			String screenName, String firstName, String lastName,
+			long[] groupIds, Locale locale, ServiceContext serviceContext)
 		throws Exception {
 
 		return UserTestUtil.addUser(
-			_companyId, TestPropsValues.getUserId(), screenName,
-			LocaleUtil.getDefault(), RandomTestUtil.randomString(),
-			RandomTestUtil.randomString(), groupIds, serviceContext);
+			_companyId, TestPropsValues.getUserId(), screenName, locale,
+			firstName, lastName, groupIds, serviceContext);
 	}
 
 	private User _addUser(

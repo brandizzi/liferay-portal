@@ -1,6 +1,6 @@
+import getCN from 'classnames';
 import React, {Component} from 'react';
 import {PropTypes} from 'prop-types';
-import getCN from 'classnames';
 
 class ClaySpinner extends Component {
 	static propTypes = {

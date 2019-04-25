@@ -20,42 +20,41 @@
 List<Tuple> assetLinkEntries = (List<Tuple>)request.getAttribute("liferay-asset:asset-links:assetLinkEntries");
 %>
 
-<div class="taglib-asset-links">
-	<ul class="asset-links-list list-group">
-		<li class="list-group-header">
-			<h3 class="list-group-header-title">
-				<liferay-ui:message key="related-assets" />
-			</h3>
-		</li>
+<h2 class="mb-3 sheet-tertiary-title">
+	<liferay-ui:message key="related-assets" />
+</h2>
 
-		<%
-		for (Tuple tuple : assetLinkEntries) {
-			AssetEntry assetLinkEntry = (AssetEntry)tuple.getObject(0);
+<ul class="list-group sidebar-list-group">
 
-			AssetRenderer assetRenderer = assetLinkEntry.getAssetRenderer();
-		%>
+	<%
+	for (Tuple tuple : assetLinkEntries) {
+		AssetEntry assetLinkEntry = (AssetEntry)tuple.getObject(0);
 
-			<li class="list-group-item list-group-item-flex">
-				<div class="autofit-col">
-					<div class="sticker sticker-secondary">
-						<span class="inline-item">
-							<aui:icon image="<%= assetRenderer.getIconCssClass() %>" markupView="lexicon" />
-						</span>
-					</div>
+		AssetRenderer assetRenderer = assetLinkEntry.getAssetRenderer();
+	%>
+
+		<li class="list-group-item list-group-item-flex">
+			<div class="autofit-col">
+				<div class="sticker sticker-secondary">
+					<span class="inline-item">
+						<aui:icon image="<%= assetRenderer.getIconCssClass() %>" markupView="lexicon" />
+					</span>
 				</div>
+			</div>
 
-				<div class="autofit-col autofit-col-expand">
-					<h4 class="list-group-title text-truncate">
-						<aui:a href="<%= (String)tuple.getObject(1) %>" target='<%= themeDisplay.isStatePopUp() ? "_blank" : "_self" %>'>
+			<div class="autofit-col autofit-col-expand">
+				<section class="autofit-section">
+					<div class="list-group-title text-truncate-inline">
+						<aui:a cssClass="text-truncate" href="<%= (String)tuple.getObject(1) %>" target='<%= themeDisplay.isStatePopUp() ? "_blank" : "_self" %>'>
 							<%= HtmlUtil.escape(assetLinkEntry.getTitle(locale)) %>
 						</aui:a>
-					</h4>
-				</div>
-			</li>
+					</div>
+				</section>
+			</div>
+		</li>
 
-		<%
-		}
-		%>
+	<%
+	}
+	%>
 
-	</ul>
-</div>
+</ul>

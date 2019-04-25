@@ -1,4 +1,4 @@
-import { CancellablePromise } from 'metal-promise';
+import {CancellablePromise} from 'metal-promise';
 
 /**
  * Image Editor History Entry
@@ -9,13 +9,16 @@ import { CancellablePromise } from 'metal-promise';
  * @review
  */
 class ImageEditorHistoryEntry {
+
 	/**
 	 * Constructor
 	 * @review
 	 */
 	constructor(image) {
 		this.dataPromise_ = new CancellablePromise((resolve, reject) => {
+
 			// Preemtively fetch the imageData when all we have is the image url
+
 			if (image.url && !image.data) {
 				this.loadData_(image.url)
 					.then((imageData) => resolve(imageData));

@@ -14,10 +14,13 @@
 
 package com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java;
 
+import com.liferay.portal.tools.rest.builder.internal.freemarker.tool.FreeMarkerTool;
 import com.liferay.portal.vulcan.yaml.openapi.Operation;
 import com.liferay.portal.vulcan.yaml.openapi.PathItem;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author Peter Shin
@@ -25,17 +28,29 @@ import java.util.List;
 public class JavaMethodSignature {
 
 	public JavaMethodSignature(
-		String path, PathItem pathItem, Operation operation, String schemaName,
+		String path, PathItem pathItem, Operation operation,
+		Set<String> requestBodyMediaTypes, String schemaName,
 		List<JavaMethodParameter> javaMethodParameters, String methodName,
 		String returnType) {
 
 		_path = path;
 		_pathItem = pathItem;
 		_operation = operation;
+		_requestBodyMediaTypes = requestBodyMediaTypes;
 		_schemaName = schemaName;
 		_javaMethodParameters = javaMethodParameters;
 		_methodName = methodName;
 		_returnType = returnType;
+
+		for (JavaMethodParameter javaMethodParameter : _javaMethodParameters) {
+			FreeMarkerTool freeMarkerTool = FreeMarkerTool.getInstance();
+
+			if (freeMarkerTool.isPathParameter(
+					javaMethodParameter, _operation)) {
+
+				_pathJavaMethodParameters.add(javaMethodParameter);
+			}
+		}
 	}
 
 	public List<JavaMethodParameter> getJavaMethodParameters() {
@@ -58,6 +73,14 @@ public class JavaMethodSignature {
 		return _pathItem;
 	}
 
+	public List<JavaMethodParameter> getPathJavaMethodParameters() {
+		return _pathJavaMethodParameters;
+	}
+
+	public Set<String> getRequestBodyMediaTypes() {
+		return _requestBodyMediaTypes;
+	}
+
 	public String getReturnType() {
 		return _returnType;
 	}
@@ -71,6 +94,9 @@ public class JavaMethodSignature {
 	private final Operation _operation;
 	private final String _path;
 	private final PathItem _pathItem;
+	private List<JavaMethodParameter> _pathJavaMethodParameters =
+		new ArrayList<>();
+	private final Set<String> _requestBodyMediaTypes;
 	private final String _returnType;
 	private final String _schemaName;
 

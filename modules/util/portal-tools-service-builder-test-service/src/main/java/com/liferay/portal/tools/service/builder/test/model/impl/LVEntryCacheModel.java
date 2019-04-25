@@ -77,7 +77,7 @@ public class LVEntryCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(17);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -89,6 +89,8 @@ public class LVEntryCacheModel
 		sb.append(defaultLanguageId);
 		sb.append(", lvEntryId=");
 		sb.append(lvEntryId);
+		sb.append(", companyId=");
+		sb.append(companyId);
 		sb.append(", groupId=");
 		sb.append(groupId);
 		sb.append(", uniqueGroupKey=");
@@ -112,6 +114,7 @@ public class LVEntryCacheModel
 		}
 
 		lvEntryImpl.setHeadId(headId);
+		lvEntryImpl.setHead(head);
 
 		if (defaultLanguageId == null) {
 			lvEntryImpl.setDefaultLanguageId("");
@@ -121,6 +124,7 @@ public class LVEntryCacheModel
 		}
 
 		lvEntryImpl.setLvEntryId(lvEntryId);
+		lvEntryImpl.setCompanyId(companyId);
 		lvEntryImpl.setGroupId(groupId);
 
 		if (uniqueGroupKey == null) {
@@ -129,8 +133,6 @@ public class LVEntryCacheModel
 		else {
 			lvEntryImpl.setUniqueGroupKey(uniqueGroupKey);
 		}
-
-		lvEntryImpl.setHead(head);
 
 		lvEntryImpl.resetOriginalValues();
 
@@ -143,14 +145,16 @@ public class LVEntryCacheModel
 		uuid = objectInput.readUTF();
 
 		headId = objectInput.readLong();
+
+		head = objectInput.readBoolean();
 		defaultLanguageId = objectInput.readUTF();
 
 		lvEntryId = objectInput.readLong();
 
+		companyId = objectInput.readLong();
+
 		groupId = objectInput.readLong();
 		uniqueGroupKey = objectInput.readUTF();
-
-		head = objectInput.readBoolean();
 	}
 
 	@Override
@@ -166,6 +170,8 @@ public class LVEntryCacheModel
 
 		objectOutput.writeLong(headId);
 
+		objectOutput.writeBoolean(head);
+
 		if (defaultLanguageId == null) {
 			objectOutput.writeUTF("");
 		}
@@ -175,6 +181,8 @@ public class LVEntryCacheModel
 
 		objectOutput.writeLong(lvEntryId);
 
+		objectOutput.writeLong(companyId);
+
 		objectOutput.writeLong(groupId);
 
 		if (uniqueGroupKey == null) {
@@ -183,17 +191,16 @@ public class LVEntryCacheModel
 		else {
 			objectOutput.writeUTF(uniqueGroupKey);
 		}
-
-		objectOutput.writeBoolean(head);
 	}
 
 	public long mvccVersion;
 	public String uuid;
 	public long headId;
+	public boolean head;
 	public String defaultLanguageId;
 	public long lvEntryId;
+	public long companyId;
 	public long groupId;
 	public String uniqueGroupKey;
-	public boolean head;
 
 }

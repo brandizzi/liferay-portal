@@ -17,7 +17,6 @@ package com.liferay.asset.kernel.service;
 import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.portal.kernel.bean.PortalBeanLocatorUtil;
-import com.liferay.portal.kernel.util.ReferenceRegistry;
 
 /**
  * Provides the local service utility for AssetEntry. This utility wraps
@@ -531,6 +530,16 @@ public class AssetEntryLocalServiceUtil {
 	}
 
 	public static int getEntriesCount(
+		long[] groupIds, long[] classNameIds, long[] classTypeIds,
+		String keywords, String userName, String title, String description,
+		Boolean listable, boolean advancedSearch, boolean andOperator) {
+
+		return getService().getEntriesCount(
+			groupIds, classNameIds, classTypeIds, keywords, userName, title,
+			description, listable, advancedSearch, andOperator);
+	}
+
+	public static int getEntriesCount(
 		long[] groupIds, long[] classNameIds, String keywords, String userName,
 		String title, String description, Boolean listable,
 		boolean advancedSearch, boolean andOperator) {
@@ -679,6 +688,17 @@ public class AssetEntryLocalServiceUtil {
 	}
 
 	public static com.liferay.portal.kernel.search.Hits search(
+		long companyId, long[] groupIds, long userId, long[] classNameIds,
+		long classTypeId, String keywords, boolean showNonindexable,
+		int[] statuses, int start, int end,
+		com.liferay.portal.kernel.search.Sort sort) {
+
+		return getService().search(
+			companyId, groupIds, userId, classNameIds, classTypeId, keywords,
+			showNonindexable, statuses, start, end, sort);
+	}
+
+	public static com.liferay.portal.kernel.search.Hits search(
 		long companyId, long[] groupIds, long userId, String className,
 		long classTypeId, String keywords, boolean showNonindexable, int status,
 		int start, int end) {
@@ -773,6 +793,16 @@ public class AssetEntryLocalServiceUtil {
 			companyId, groupIds, userId, className, userName, title,
 			description, assetCategoryIds, assetTagNames, status, andSearch,
 			start, end);
+	}
+
+	public static long searchCount(
+		long companyId, long[] groupIds, long userId, long[] classNameIds,
+		long classTypeId, String keywords, boolean showNonindexable,
+		int[] statuses) {
+
+		return getService().searchCount(
+			companyId, groupIds, userId, classNameIds, classTypeId, keywords,
+			showNonindexable, statuses);
 	}
 
 	public static long searchCount(
@@ -1008,9 +1038,6 @@ public class AssetEntryLocalServiceUtil {
 		if (_service == null) {
 			_service = (AssetEntryLocalService)PortalBeanLocatorUtil.locate(
 				AssetEntryLocalService.class.getName());
-
-			ReferenceRegistry.registerReference(
-				AssetEntryLocalServiceUtil.class, "_service");
 		}
 
 		return _service;

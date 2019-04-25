@@ -169,8 +169,12 @@ public class ManageCollaboratorsMVCActionCommand extends BaseMVCActionCommand {
 
 			long sharingEntryId = Long.valueOf(parts[0]);
 
-			Date expirationDate = GetterUtil.getDate(
-				parts[1], _getDateFormat(resourceBundle.getLocale()), null);
+			Date expirationDate = null;
+
+			if (parts.length > 1) {
+				expirationDate = GetterUtil.getDate(
+					parts[1], _getDateFormat(resourceBundle.getLocale()), null);
+			}
 
 			expirationDates.put(sharingEntryId, expirationDate);
 		}
@@ -189,6 +193,30 @@ public class ManageCollaboratorsMVCActionCommand extends BaseMVCActionCommand {
 		}
 
 		return sharingEntryIdsToDelete;
+	}
+
+	private Map<Long, Boolean> _getSharingEntryShareables(
+		ActionRequest actionRequest) {
+
+		Map<Long, Boolean> shareables = new HashMap<>();
+
+		String[] sharingEntryIdShareablePairs = ParamUtil.getParameterValues(
+			actionRequest, "sharingEntryIdShareablePairs", new String[0],
+			false);
+
+		for (String sharingEntryIdShareablePair :
+				sharingEntryIdShareablePairs) {
+
+			String[] parts = StringUtil.split(sharingEntryIdShareablePair);
+
+			long sharingEntryId = Long.valueOf(parts[0]);
+
+			boolean shareable = GetterUtil.getBoolean(parts[1]);
+
+			shareables.put(sharingEntryId, shareable);
+		}
+
+		return shareables;
 	}
 
 	private void _manageCollaborators(
@@ -210,6 +238,11 @@ public class ManageCollaboratorsMVCActionCommand extends BaseMVCActionCommand {
 
 		toEditSharingEntryIds.addAll(sharingEntryExpirationDates.keySet());
 
+		Map<Long, Boolean> sharingEntryShareables = _getSharingEntryShareables(
+			actionRequest);
+
+		toEditSharingEntryIds.addAll(sharingEntryShareables.keySet());
+
 		Set<Long> sharingEntryIdsToDelete = _getSharingEntryIdsToDelete(
 			actionRequest);
 
@@ -225,7 +258,8 @@ public class ManageCollaboratorsMVCActionCommand extends BaseMVCActionCommand {
 					sharingEntryId,
 					SharingEntryAction.getSharingEntryActions(
 						sharingEntry.getActionIds())),
-				sharingEntry.isShareable(),
+				sharingEntryShareables.getOrDefault(
+					sharingEntryId, sharingEntry.isShareable()),
 				sharingEntryExpirationDates.getOrDefault(
 					sharingEntryId, sharingEntry.getExpirationDate()),
 				serviceContext);

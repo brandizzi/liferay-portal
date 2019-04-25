@@ -4,13 +4,15 @@
  * AssetCategoriesSelector
  */
 {template .render}
+	{@param groupIds: list<string>}
 	{@param id: string}
 	{@param inputName: string}
 	{@param portletURL: string}
 	{@param spritemap: string}
 	{@param vocabularies: list<?>}
+	{@param? _handleInputFocus: any}
 
-	<div>
+	<div id="{$id}">
 		{foreach $vocabulary in $vocabularies}
 			<div class="field-content">
 				<label id="namespace_assetCategoriesLabel_{$vocabulary.id}">
@@ -22,7 +24,11 @@
 
 					{if $vocabulary.required}
 						{sp}
-						<span class="icon-asterisk text-warning">
+						<span class="reference-mark">
+							{call ClayIcon.render}
+								{param spritemap: $spritemap /}
+								{param symbol: 'asterisk' /}
+							{/call}
 							<span class="hide-accessible">{msg desc=""}required{/msg}</span>
 						</span>
 					{/if}
@@ -31,13 +37,15 @@
 				<div class="lfr-tags-selector-content" id="namespace_assetCategoriesSelector_{$vocabulary.id}">
 					{call com.liferay.asset.taglib.AssetVocabularyCategoriesSelector.render data="all"}
 						{param categoryIds: $vocabulary.selectedCategoryIds /}
+						{param events: [ 'inputFocus': $_handleInputFocus ] /}
+						{param groupdIds: $groupIds /}
 						{param id: $id /}
 						{param inputName: $inputName + $vocabulary.id /}
 						{param portletURL: $portletURL /}
 						{param selectedItems: $vocabulary.selectedItems /}
 						{param singleSelect: $vocabulary.singleSelect /}
 						{param spritemap: $spritemap /}
-						{param vocabularyId: $vocabulary.id /}
+						{param vocabularyIds: [$vocabulary.id] /}
 					{/call}
 				</div>
 			</div>

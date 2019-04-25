@@ -89,7 +89,7 @@ public class MentionsPortlet extends MVCPortlet {
 			HttpServletRequest request = _portal.getHttpServletRequest(
 				resourceRequest);
 
-			JSONArray jsonArray = getJSONArray(request);
+			JSONArray jsonArray = _getJSONArray(request);
 
 			HttpServletResponse response = _portal.getHttpServletResponse(
 				resourceResponse);
@@ -103,7 +103,7 @@ public class MentionsPortlet extends MVCPortlet {
 		}
 	}
 
-	protected JSONArray getJSONArray(HttpServletRequest request)
+	private JSONArray _getJSONArray(HttpServletRequest request)
 		throws PortalException {
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
@@ -146,7 +146,9 @@ public class MentionsPortlet extends MVCPortlet {
 			jsonObject.put("mention", mention);
 
 			jsonObject.put(
-				"portraitHTML", _getUserPortraitHTML(user, themeDisplay));
+				"portraitHTML",
+				UserPortraitTag.getUserPortraitHTML(
+					StringPool.BLANK, user, themeDisplay));
 			jsonObject.put("screenName", user.getScreenName());
 
 			jsonArray.put(jsonObject);
@@ -155,33 +157,10 @@ public class MentionsPortlet extends MVCPortlet {
 		return jsonArray;
 	}
 
-	@Reference(unbind = "-")
-	protected void setMentionsUserFinder(
-		MentionsUserFinder mentionsUserFinder) {
-
-		_mentionsUserFinder = mentionsUserFinder;
-	}
-
-	private String _getUserPortraitHTML(User user, ThemeDisplay themeDisplay)
-		throws PortalException {
-
-		return UserPortraitTag.getUserPortraitHTML(
-			StringPool.BLANK,
-			() -> {
-				try {
-					return user.getPortraitURL(themeDisplay);
-				}
-				catch (PortalException pe) {
-					_log.error(pe, pe);
-				}
-
-				return StringPool.BLANK;
-			});
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		MentionsPortlet.class);
 
+	@Reference
 	private MentionsUserFinder _mentionsUserFinder;
 
 	@Reference

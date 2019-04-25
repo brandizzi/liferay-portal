@@ -16,6 +16,8 @@ package com.liferay.portal.workflow.kaleo.definition;
 
 import com.liferay.portal.kernel.util.StringUtil;
 
+import java.util.Arrays;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -46,7 +48,9 @@ public class DurationScaleTest {
 
 	@Test
 	public void testScaleNum() throws Exception {
-		Assert.assertEquals(8, DurationScale.values().length);
+		DurationScale[] values = DurationScale.values();
+
+		Assert.assertEquals(Arrays.toString(values), 8, values.length);
 	}
 
 }

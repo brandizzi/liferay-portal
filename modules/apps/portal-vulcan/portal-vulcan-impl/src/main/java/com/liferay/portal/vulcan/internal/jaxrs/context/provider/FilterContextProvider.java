@@ -29,7 +29,6 @@ import com.liferay.portal.odata.filter.InvalidFilterException;
 import com.liferay.portal.odata.filter.expression.ExpressionVisitException;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
 import com.liferay.portal.vulcan.internal.accept.language.AcceptLanguageImpl;
-import com.liferay.portal.vulcan.internal.resource.EntityModelResourceRegistry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,12 +46,10 @@ import org.apache.cxf.message.Message;
 public class FilterContextProvider implements ContextProvider<Filter> {
 
 	public FilterContextProvider(
-		EntityModelResourceRegistry entityModelResourceRegistry,
 		ExpressionConvert<Filter> expressionConvert,
 		FilterParserProvider filterParserProvider, Language language,
 		Portal portal) {
 
-		_entityModelResourceRegistry = entityModelResourceRegistry;
 		_expressionConvert = expressionConvert;
 		_filterParserProvider = filterParserProvider;
 		_language = language;
@@ -89,8 +86,7 @@ public class FilterContextProvider implements ContextProvider<Filter> {
 			return null;
 		}
 
-		EntityModel entityModel = _entityModelResourceRegistry.getEntityModel(
-			message);
+		EntityModel entityModel = ContextProviderUtil.getEntityModel(message);
 
 		if (entityModel == null) {
 			return null;
@@ -135,7 +131,6 @@ public class FilterContextProvider implements ContextProvider<Filter> {
 	private static final Log _log = LogFactoryUtil.getLog(
 		FilterContextProvider.class);
 
-	private final EntityModelResourceRegistry _entityModelResourceRegistry;
 	private final ExpressionConvert<Filter> _expressionConvert;
 	private final FilterParserProvider _filterParserProvider;
 	private final Language _language;

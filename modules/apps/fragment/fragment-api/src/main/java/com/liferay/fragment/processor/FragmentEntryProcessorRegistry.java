@@ -28,6 +28,9 @@ import java.util.Locale;
  */
 public interface FragmentEntryProcessorRegistry {
 
+	public void deleteFragmentEntryLinkData(
+		FragmentEntryLink fragmentEntryLink);
+
 	public default JSONArray getAvailableTagsJSONArray() {
 		return null;
 	}
@@ -35,7 +38,8 @@ public interface FragmentEntryProcessorRegistry {
 	public JSONObject getDefaultEditableValuesJSONObject(String html);
 
 	public default String processFragmentEntryLinkCSS(
-			FragmentEntryLink fragmentEntryLink, String mode, Locale locale)
+			FragmentEntryLink fragmentEntryLink, String mode, Locale locale,
+			long[] segmentsExperienceIds)
 		throws PortalException {
 
 		return fragmentEntryLink.getCss();
@@ -67,7 +71,7 @@ public interface FragmentEntryProcessorRegistry {
 
 	public String processFragmentEntryLinkHTML(
 			FragmentEntryLink fragmentEntryLink, String mode, Locale locale,
-			long[] segmentsIds)
+			long[] segmentsExperienceIds)
 		throws PortalException;
 
 	public void validateFragmentEntryHTML(String html) throws PortalException;

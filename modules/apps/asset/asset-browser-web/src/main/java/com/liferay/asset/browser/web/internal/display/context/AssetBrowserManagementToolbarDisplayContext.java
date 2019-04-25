@@ -21,7 +21,6 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.SearchCon
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
-import com.liferay.frontend.taglib.clay.servlet.taglib.util.SafeConsumer;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -80,6 +79,10 @@ public class AssetBrowserManagementToolbarDisplayContext
 
 	@Override
 	public CreationMenu getCreationMenu() {
+		if (!_assetBrowserDisplayContext.isShowAddButton()) {
+			return null;
+		}
+
 		String addButtonURL = _getAddButtonURL();
 
 		if (Validator.isNull(addButtonURL)) {
@@ -122,18 +125,17 @@ public class AssetBrowserManagementToolbarDisplayContext
 					}
 
 					add(
-						SafeConsumer.ignore(
-							dropdownItem -> {
-								dropdownItem.setActive(
-									_assetBrowserDisplayContext.getGroupId() ==
-										groupId);
-								dropdownItem.setHref(
-									getPortletURL(), "groupId", groupId);
-								dropdownItem.setLabel(
-									HtmlUtil.escape(
-										group.getDescriptiveName(
-											_themeDisplay.getLocale())));
-							}));
+						dropdownItem -> {
+							dropdownItem.setActive(
+								_assetBrowserDisplayContext.getGroupId() ==
+									groupId);
+							dropdownItem.setHref(
+								getPortletURL(), "groupId", groupId);
+							dropdownItem.setLabel(
+								HtmlUtil.escape(
+									group.getDescriptiveName(
+										_themeDisplay.getLocale())));
+						});
 				}
 			}
 		};
@@ -149,6 +151,11 @@ public class AssetBrowserManagementToolbarDisplayContext
 	@Override
 	public String getSearchContainerId() {
 		return "selectAssetEntries";
+	}
+
+	@Override
+	public Boolean isDisabled() {
+		return false;
 	}
 
 	@Override

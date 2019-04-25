@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.HashMap;
@@ -54,7 +55,7 @@ public class AssetEntryVerticalCard implements VerticalCard {
 
 	@Override
 	public Map<String, String> getData() {
-		if (!_assetBrowserDisplayContext.isMultipleSelection()) {
+		if (_assetBrowserDisplayContext.isMultipleSelection()) {
 			return null;
 		}
 
@@ -98,7 +99,8 @@ public class AssetEntryVerticalCard implements VerticalCard {
 		if (_assetEntry.getEntryId() !=
 				_assetBrowserDisplayContext.getRefererAssetEntryId()) {
 
-			return "selector-button";
+			return "card-interactive card-interactive-secondary " +
+				"selector-button";
 		}
 
 		return StringPool.BLANK;
@@ -122,6 +124,13 @@ public class AssetEntryVerticalCard implements VerticalCard {
 
 	@Override
 	public String getSubtitle() {
+		if (Validator.isNull(_assetBrowserDisplayContext.getTypeSelection())) {
+			return HtmlUtil.escape(
+				_assetRendererFactory.getTypeName(
+					_themeDisplay.getLocale(),
+					_assetBrowserDisplayContext.getSubtypeSelectionId()));
+		}
+
 		Group group = GroupLocalServiceUtil.fetchGroup(
 			_assetEntry.getGroupId());
 

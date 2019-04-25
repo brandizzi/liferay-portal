@@ -27,10 +27,10 @@ import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactory;
+import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +111,8 @@ public class AMJournalEditorConfigContributorTest extends PowerMockito {
 		AMJournalEditorConfigContributor amBlogsEditorConfigContributor =
 			new AMJournalEditorConfigContributor();
 
-		amBlogsEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amBlogsEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amBlogsEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -165,7 +166,8 @@ public class AMJournalEditorConfigContributorTest extends PowerMockito {
 		AMJournalEditorConfigContributor amJournalEditorConfigContributor =
 			new AMJournalEditorConfigContributor();
 
-		amJournalEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amJournalEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amJournalEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -220,7 +222,8 @@ public class AMJournalEditorConfigContributorTest extends PowerMockito {
 		AMJournalEditorConfigContributor amJournalEditorConfigContributor =
 			new AMJournalEditorConfigContributor();
 
-		amJournalEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amJournalEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amJournalEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -242,8 +245,7 @@ public class AMJournalEditorConfigContributorTest extends PowerMockito {
 			new JournalItemSelectorCriterion();
 
 		journalItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			Collections.<ItemSelectorReturnType>singletonList(
-				new FileEntryItemSelectorReturnType()));
+			new FileEntryItemSelectorReturnType());
 
 		amJournalEditorConfigContributor.
 			addAMImageFileEntryItemSelectorReturnType(
@@ -356,7 +358,8 @@ public class AMJournalEditorConfigContributorTest extends PowerMockito {
 		AMJournalEditorConfigContributor amJournalEditorConfigContributor =
 			new AMJournalEditorConfigContributor();
 
-		amJournalEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amJournalEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amJournalEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -399,7 +402,8 @@ public class AMJournalEditorConfigContributorTest extends PowerMockito {
 		AMJournalEditorConfigContributor amJournalEditorConfigContributor =
 			new AMJournalEditorConfigContributor();
 
-		amJournalEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amJournalEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amJournalEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -464,7 +468,8 @@ public class AMJournalEditorConfigContributorTest extends PowerMockito {
 		AMJournalEditorConfigContributor amJournalEditorConfigContributor =
 			new AMJournalEditorConfigContributor();
 
-		amJournalEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amJournalEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amJournalEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -523,7 +528,8 @@ public class AMJournalEditorConfigContributorTest extends PowerMockito {
 		AMJournalEditorConfigContributor amJournalEditorConfigContributor =
 			new AMJournalEditorConfigContributor();
 
-		amJournalEditorConfigContributor.setItemSelector(_itemSelector);
+		ReflectionTestUtil.setFieldValue(
+			amJournalEditorConfigContributor, "_itemSelector", _itemSelector);
 
 		amJournalEditorConfigContributor.populateConfigJSONObject(
 			jsonObject, _inputEditorTaglibAttributes, _themeDisplay,
@@ -544,14 +550,9 @@ public class AMJournalEditorConfigContributorTest extends PowerMockito {
 			new AudioItemSelectorCriterion();
 
 		audioItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			Collections.<ItemSelectorReturnType>singletonList(
-				new FileEntryItemSelectorReturnType()));
+			new FileEntryItemSelectorReturnType());
 
-		List<ItemSelectorCriterion> itemSelectorCriteria = new ArrayList<>();
-
-		itemSelectorCriteria.add(audioItemSelectorCriterion);
-
-		return itemSelectorCriteria;
+		return Arrays.asList(audioItemSelectorCriterion);
 	}
 
 	private List<ItemSelectorCriterion>
@@ -561,14 +562,9 @@ public class AMJournalEditorConfigContributorTest extends PowerMockito {
 			new JournalItemSelectorCriterion();
 
 		journalItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			Collections.<ItemSelectorReturnType>singletonList(
-				new FileEntryItemSelectorReturnType()));
+			new FileEntryItemSelectorReturnType());
 
-		List<ItemSelectorCriterion> itemSelectorCriteria = new ArrayList<>();
-
-		itemSelectorCriteria.add(journalItemSelectorCriterion);
-
-		return itemSelectorCriteria;
+		return Arrays.asList(journalItemSelectorCriterion);
 	}
 
 	private List<ItemSelectorCriterion>
@@ -578,14 +574,9 @@ public class AMJournalEditorConfigContributorTest extends PowerMockito {
 			new FileItemSelectorCriterion();
 
 		fileItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
-			Collections.<ItemSelectorReturnType>singletonList(
-				new FileEntryItemSelectorReturnType()));
+			new FileEntryItemSelectorReturnType());
 
-		List<ItemSelectorCriterion> itemSelectorCriteria = new ArrayList<>();
-
-		itemSelectorCriteria.add(fileItemSelectorCriterion);
-
-		return itemSelectorCriteria;
+		return Arrays.asList(fileItemSelectorCriterion);
 	}
 
 	private final Map<String, Object> _inputEditorTaglibAttributes =

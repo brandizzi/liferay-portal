@@ -32,16 +32,13 @@ import javax.annotation.Generated;
 @Generated("")
 public interface FormRecordResource {
 
+	public FormRecord getFormRecord(Long formRecordId) throws Exception;
+
 	public Page<FormRecord> getFormFormRecordsPage(
 			Long formId, Pagination pagination)
 		throws Exception;
 
-	public FormRecord getFormRecord(Long formRecordId) throws Exception;
-
-	public FormRecord postFormFormRecord(Long formId, FormRecord formRecord)
-		throws Exception;
-
-	public FormRecord putFormRecord(Long formRecordId, FormRecord formRecord)
+	public FormRecord getFormFormRecordByLatestDraft(Long formId)
 		throws Exception;
 
 	public void setContextCompany(Company contextCompany);

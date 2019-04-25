@@ -99,9 +99,9 @@ public class VersionedEntryCacheModel
 
 		versionedEntryImpl.setMvccVersion(mvccVersion);
 		versionedEntryImpl.setHeadId(headId);
+		versionedEntryImpl.setHead(head);
 		versionedEntryImpl.setVersionedEntryId(versionedEntryId);
 		versionedEntryImpl.setGroupId(groupId);
-		versionedEntryImpl.setHead(head);
 
 		versionedEntryImpl.resetOriginalValues();
 
@@ -114,11 +114,11 @@ public class VersionedEntryCacheModel
 
 		headId = objectInput.readLong();
 
+		head = objectInput.readBoolean();
+
 		versionedEntryId = objectInput.readLong();
 
 		groupId = objectInput.readLong();
-
-		head = objectInput.readBoolean();
 	}
 
 	@Override
@@ -127,17 +127,17 @@ public class VersionedEntryCacheModel
 
 		objectOutput.writeLong(headId);
 
+		objectOutput.writeBoolean(head);
+
 		objectOutput.writeLong(versionedEntryId);
 
 		objectOutput.writeLong(groupId);
-
-		objectOutput.writeBoolean(head);
 	}
 
 	public long mvccVersion;
 	public long headId;
+	public boolean head;
 	public long versionedEntryId;
 	public long groupId;
-	public boolean head;
 
 }

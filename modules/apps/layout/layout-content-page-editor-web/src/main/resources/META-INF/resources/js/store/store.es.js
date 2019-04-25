@@ -2,6 +2,20 @@ import State, {Config} from 'metal-state';
 import {DEFAULT_INITIAL_STATE} from './state.es';
 
 /**
+ * ID of the development devTool that may be connected to store.
+ * We are relying on redux-devtools, so we can continue using
+ * them when we move to a proper state-management library.
+ *
+ * They provide a global hook that is available when the browser
+ * has redux-devtools-extension installed:
+ *
+ * http://extension.remotedev.io/#usage
+ *
+ * @review
+ */
+const STORE_DEVTOOLS_ID = '__REDUX_DEVTOOLS_EXTENSION__';
+
+/**
  * Connects a given component to a given store, syncing it's properties with it.
  * @param {Component} component
  * @param {Store} store
@@ -97,6 +111,21 @@ class Store extends State {
 
 		this._setInitialState(initialState);
 		this.registerReducers(reducers);
+
+		if ((process.env.NODE_ENV === 'development') && (STORE_DEVTOOLS_ID in window)) {
+			this._devTools = window[STORE_DEVTOOLS_ID].connect();
+
+			this._devTools.init(this._state);
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	disposed() {
+		if ((process.env.NODE_ENV === 'development') && this._devTools) {
+			this._devTools.disconnect();
+		}
 	}
 
 	/**
@@ -117,17 +146,50 @@ class Store extends State {
 					)
 				),
 				Promise.resolve(this._state)
-			)
-				.then(
-					nextState => {
+			).then(
+				nextState => {
+					if (this._state !== nextState) {
 						this._state = this._getFrozenState(nextState);
 
 						this.emit('change', this._state);
 
-						return this;
+						if ((process.env.NODE_ENV === 'development') && this._devTools) {
+							this._devTools.send(
+								{
+									payload,
+									type: actionType
+								},
+								this._state
+							);
+						}
 					}
-				)
+
+					return new Promise(
+						resolve => {
+							requestAnimationFrame(
+								() => {
+									resolve(this);
+								}
+							);
+						}
+					);
+				}
+			)
 		);
+
+		return this;
+	}
+
+	done(callback) {
+		this._dispatchPromise = this._dispatchPromise
+			.then(() => callback(this));
+
+		return this;
+	}
+
+	failed(callback) {
+		this._dispatchPromise = this._dispatchPromise
+			.catch(error => callback(error));
 
 		return this;
 	}
@@ -228,6 +290,19 @@ class Store extends State {
  * @type {!Object}
  */
 Store.STATE = {
+
+	/**
+	 * Redux devtools
+	 * @instance
+	 * @memberOf Store
+	 * @private
+	 * @review
+	 * @type {any|null}
+	 */
+	_devTools: Config
+		.any()
+		.internal()
+		.value(null),
 
 	/**
 	 * @default Promise.resolve()

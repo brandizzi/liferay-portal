@@ -47,12 +47,11 @@ public class AMImageDemo extends BasePortalInstanceLifecycleListener {
 	public void portalInstanceRegistered(Company company) throws Exception {
 		User user = _omniAdminUserDemoDataCreator.create(
 			company.getCompanyId(), "alejandro.hernandez@liferay.com");
-
-		Group guestGroup = _groupLocalService.getGroup(
+		Group group = _groupLocalService.getGroup(
 			company.getCompanyId(), "Guest");
 
 		Folder nonAMFolder = _rootFolderDemoDataCreator.create(
-			user.getUserId(), guestGroup.getGroupId(), "Non Adaptive Media");
+			user.getUserId(), group.getGroupId(), "Non Adaptive Media");
 
 		for (int i = 0; i < 5; i++) {
 			FileEntry fileEntry = _fileEntryDemoDataCreator.create(
@@ -68,7 +67,7 @@ public class AMImageDemo extends BasePortalInstanceLifecycleListener {
 		_amImageConfigurationDemoDataCreator.create(company.getCompanyId());
 
 		Folder amFolder = _rootFolderDemoDataCreator.create(
-			user.getUserId(), guestGroup.getGroupId(), "Adaptive Media");
+			user.getUserId(), group.getGroupId(), "Adaptive Media");
 
 		for (int i = 0; i < 5; i++) {
 			FileEntry fileEntry = _fileEntryDemoDataCreator.create(
@@ -90,11 +89,6 @@ public class AMImageDemo extends BasePortalInstanceLifecycleListener {
 		_omniAdminUserDemoDataCreator.delete();
 	}
 
-	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
-	protected void setModuleServiceLifecycle(
-		ModuleServiceLifecycle moduleServiceLifecycle) {
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(AMImageDemo.class);
 
 	@Reference
@@ -106,6 +100,9 @@ public class AMImageDemo extends BasePortalInstanceLifecycleListener {
 
 	@Reference
 	private GroupLocalService _groupLocalService;
+
+	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED)
+	private ModuleServiceLifecycle _moduleServiceLifecycle;
 
 	@Reference
 	private OmniAdminUserDemoDataCreator _omniAdminUserDemoDataCreator;

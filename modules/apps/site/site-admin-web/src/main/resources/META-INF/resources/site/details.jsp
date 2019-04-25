@@ -141,7 +141,7 @@ else {
 		var="removeGroupIcon"
 	>
 		<liferay-ui:icon
-			icon="times"
+			icon="times-circle"
 			markupView="lexicon"
 			message="remove"
 		/>
@@ -203,16 +203,6 @@ else {
 		%>
 
 		<aui:input label="limit-membership-to-members-of-the-parent-site" name="membershipRestriction" type="toggle-switch" value="<%= membershipRestriction %>" />
-
-		<%
-		boolean breadcrumbShowParentGroups = true;
-
-		if (typeSettingsProperties != null) {
-			breadcrumbShowParentGroups = PropertiesParamUtil.getBoolean(typeSettingsProperties, request, "breadcrumbShowParentGroups", breadcrumbShowParentGroups);
-		}
-		%>
-
-		<aui:input label="show-parent-sites-in-the-breadcrumb" name="TypeSettingsProperties--breadcrumbShowParentGroups--" type="toggle-switch" value="<%= breadcrumbShowParentGroups %>" />
 	</div>
 
 	<aui:script use="liferay-search-container">

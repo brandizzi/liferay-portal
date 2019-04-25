@@ -14,6 +14,7 @@
 
 package com.liferay.headless.form.dto.v1_0;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -23,7 +24,13 @@ import com.liferay.petra.string.StringBundler;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import java.util.Date;
+import java.util.Objects;
 
 import javax.annotation.Generated;
 
@@ -35,48 +42,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Generated("")
 @GraphQLName("FormStructure")
-//@JsonFilter("Liferay.Vulcan")
+@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "FormStructure")
 public class FormStructure {
 
+	@Schema
 	public String[] getAvailableLanguages() {
 		return availableLanguages;
-	}
-
-	public Long getContentSpace() {
-		return contentSpace;
-	}
-
-	public Creator getCreator() {
-		return creator;
-	}
-
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-
-	public Date getDateModified() {
-		return dateModified;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public FormPages[] getFormPages() {
-		return formPages;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public SuccessPage getSuccessPage() {
-		return successPage;
 	}
 
 	public void setAvailableLanguages(String[] availableLanguages) {
@@ -90,25 +62,21 @@ public class FormStructure {
 		try {
 			availableLanguages = availableLanguagesUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void setContentSpace(Long contentSpace) {
-		this.contentSpace = contentSpace;
-	}
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String[] availableLanguages;
 
-	@JsonIgnore
-	public void setContentSpace(
-		UnsafeSupplier<Long, Exception> contentSpaceUnsafeSupplier) {
-
-		try {
-			contentSpace = contentSpaceUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+	@Schema
+	public Creator getCreator() {
+		return creator;
 	}
 
 	public void setCreator(Creator creator) {
@@ -122,9 +90,21 @@ public class FormStructure {
 		try {
 			creator = creatorUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Creator creator;
+
+	@Schema
+	public Date getDateCreated() {
+		return dateCreated;
 	}
 
 	public void setDateCreated(Date dateCreated) {
@@ -138,9 +118,21 @@ public class FormStructure {
 		try {
 			dateCreated = dateCreatedUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Date dateCreated;
+
+	@Schema
+	public Date getDateModified() {
+		return dateModified;
 	}
 
 	public void setDateModified(Date dateModified) {
@@ -154,9 +146,21 @@ public class FormStructure {
 		try {
 			dateModified = dateModifiedUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Date dateModified;
+
+	@Schema
+	public String getDescription() {
+		return description;
 	}
 
 	public void setDescription(String description) {
@@ -170,25 +174,49 @@ public class FormStructure {
 		try {
 			description = descriptionUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void setFormPages(FormPages[] formPages) {
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String description;
+
+	@Schema(description = "https://www.schema.org/FormLayoutPage")
+	public FormPage[] getFormPages() {
+		return formPages;
+	}
+
+	public void setFormPages(FormPage[] formPages) {
 		this.formPages = formPages;
 	}
 
 	@JsonIgnore
 	public void setFormPages(
-		UnsafeSupplier<FormPages[], Exception> formPagesUnsafeSupplier) {
+		UnsafeSupplier<FormPage[], Exception> formPagesUnsafeSupplier) {
 
 		try {
 			formPages = formPagesUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected FormPage[] formPages;
+
+	@Schema
+	public Long getId() {
+		return id;
 	}
 
 	public void setId(Long id) {
@@ -200,9 +228,21 @@ public class FormStructure {
 		try {
 			id = idUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long id;
+
+	@Schema
+	public String getName() {
+		return name;
 	}
 
 	public void setName(String name) {
@@ -214,9 +254,49 @@ public class FormStructure {
 		try {
 			name = nameUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String name;
+
+	@Schema
+	public Long getSiteId() {
+		return siteId;
+	}
+
+	public void setSiteId(Long siteId) {
+		this.siteId = siteId;
+	}
+
+	@JsonIgnore
+	public void setSiteId(
+		UnsafeSupplier<Long, Exception> siteIdUnsafeSupplier) {
+
+		try {
+			siteId = siteIdUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long siteId;
+
+	@Schema(description = "https://www.schema.org/FormSuccessPageSettings")
+	public SuccessPage getSuccessPage() {
+		return successPage;
 	}
 
 	public void setSuccessPage(SuccessPage successPage) {
@@ -230,9 +310,38 @@ public class FormStructure {
 		try {
 			successPage = successPageUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected SuccessPage successPage;
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+
+		if (!(object instanceof FormStructure)) {
+			return false;
+		}
+
+		FormStructure formStructure = (FormStructure)object;
+
+		return Objects.equals(toString(), formStructure.toString());
+	}
+
+	@Override
+	public int hashCode() {
+		String string = toString();
+
+		return string.hashCode();
 	}
 
 	public String toString() {
@@ -240,17 +349,23 @@ public class FormStructure {
 
 		sb.append("{");
 
-		sb.append("\"availableLanguages\": ");
+		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-		if (availableLanguages == null) {
-			sb.append("null");
-		}
-		else {
+		if (availableLanguages != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"availableLanguages\": ");
+
 			sb.append("[");
 
 			for (int i = 0; i < availableLanguages.length; i++) {
 				sb.append("\"");
-				sb.append(availableLanguages[i]);
+
+				sb.append(_escape(availableLanguages[i]));
+
 				sb.append("\"");
 
 				if ((i + 1) < availableLanguages.length) {
@@ -261,49 +376,69 @@ public class FormStructure {
 			sb.append("]");
 		}
 
-		sb.append(", ");
+		if (creator != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"contentSpace\": ");
+			sb.append("\"creator\": ");
 
-		sb.append(contentSpace);
-		sb.append(", ");
-
-		sb.append("\"creator\": ");
-
-		sb.append(creator);
-		sb.append(", ");
-
-		sb.append("\"dateCreated\": ");
-
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
-		sb.append(", ");
-
-		sb.append("\"dateModified\": ");
-
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
-		sb.append(", ");
-
-		sb.append("\"description\": ");
-
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
-		sb.append(", ");
-
-		sb.append("\"formPages\": ");
-
-		if (formPages == null) {
-			sb.append("null");
+			sb.append(String.valueOf(creator));
 		}
-		else {
+
+		if (dateCreated != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"dateCreated\": ");
+
+			sb.append("\"");
+
+			sb.append(liferayToJSONDateFormat.format(dateCreated));
+
+			sb.append("\"");
+		}
+
+		if (dateModified != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"dateModified\": ");
+
+			sb.append("\"");
+
+			sb.append(liferayToJSONDateFormat.format(dateModified));
+
+			sb.append("\"");
+		}
+
+		if (description != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"description\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(description));
+
+			sb.append("\"");
+		}
+
+		if (formPages != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"formPages\": ");
+
 			sb.append("[");
 
 			for (int i = 0; i < formPages.length; i++) {
-				sb.append(formPages[i]);
+				sb.append(String.valueOf(formPages[i]));
 
 				if ((i + 1) < formPages.length) {
 					sb.append(", ");
@@ -313,67 +448,59 @@ public class FormStructure {
 			sb.append("]");
 		}
 
-		sb.append(", ");
+		if (id != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"id\": ");
+			sb.append("\"id\": ");
 
-		sb.append(id);
-		sb.append(", ");
+			sb.append(id);
+		}
 
-		sb.append("\"name\": ");
+		if (name != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
-		sb.append(", ");
+			sb.append("\"name\": ");
 
-		sb.append("\"successPage\": ");
+			sb.append("\"");
 
-		sb.append(successPage);
+			sb.append(_escape(name));
+
+			sb.append("\"");
+		}
+
+		if (siteId != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"siteId\": ");
+
+			sb.append(siteId);
+		}
+
+		if (successPage != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"successPage\": ");
+
+			sb.append(String.valueOf(successPage));
+		}
 
 		sb.append("}");
 
 		return sb.toString();
 	}
 
-	@GraphQLField
-	@JsonProperty
-	protected String[] availableLanguages;
+	private static String _escape(Object object) {
+		String string = String.valueOf(object);
 
-	@GraphQLField
-	@JsonProperty
-	protected Long contentSpace;
-
-	@GraphQLField
-	@JsonProperty
-	protected Creator creator;
-
-	@GraphQLField
-	@JsonProperty
-	protected Date dateCreated;
-
-	@GraphQLField
-	@JsonProperty
-	protected Date dateModified;
-
-	@GraphQLField
-	@JsonProperty
-	protected String description;
-
-	@GraphQLField
-	@JsonProperty
-	protected FormPages[] formPages;
-
-	@GraphQLField
-	@JsonProperty
-	protected Long id;
-
-	@GraphQLField
-	@JsonProperty
-	protected String name;
-
-	@GraphQLField
-	@JsonProperty
-	protected SuccessPage successPage;
+		return string.replaceAll("\"", "\\\\\"");
+	}
 
 }

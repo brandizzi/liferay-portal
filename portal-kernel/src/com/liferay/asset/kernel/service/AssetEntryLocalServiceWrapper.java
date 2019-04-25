@@ -582,6 +582,17 @@ public class AssetEntryLocalServiceWrapper
 
 	@Override
 	public int getEntriesCount(
+		long[] groupIds, long[] classNameIds, long[] classTypeIds,
+		String keywords, String userName, String title, String description,
+		Boolean listable, boolean advancedSearch, boolean andOperator) {
+
+		return _assetEntryLocalService.getEntriesCount(
+			groupIds, classNameIds, classTypeIds, keywords, userName, title,
+			description, listable, advancedSearch, andOperator);
+	}
+
+	@Override
+	public int getEntriesCount(
 		long[] groupIds, long[] classNameIds, String keywords, String userName,
 		String title, String description, Boolean listable,
 		boolean advancedSearch, boolean andOperator) {
@@ -752,6 +763,18 @@ public class AssetEntryLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.search.Hits search(
+		long companyId, long[] groupIds, long userId, long[] classNameIds,
+		long classTypeId, String keywords, boolean showNonindexable,
+		int[] statuses, int start, int end,
+		com.liferay.portal.kernel.search.Sort sort) {
+
+		return _assetEntryLocalService.search(
+			companyId, groupIds, userId, classNameIds, classTypeId, keywords,
+			showNonindexable, statuses, start, end, sort);
+	}
+
+	@Override
+	public com.liferay.portal.kernel.search.Hits search(
 		long companyId, long[] groupIds, long userId, String className,
 		long classTypeId, String keywords, boolean showNonindexable, int status,
 		int start, int end) {
@@ -854,6 +877,17 @@ public class AssetEntryLocalServiceWrapper
 			companyId, groupIds, userId, className, userName, title,
 			description, assetCategoryIds, assetTagNames, status, andSearch,
 			start, end);
+	}
+
+	@Override
+	public long searchCount(
+		long companyId, long[] groupIds, long userId, long[] classNameIds,
+		long classTypeId, String keywords, boolean showNonindexable,
+		int[] statuses) {
+
+		return _assetEntryLocalService.searchCount(
+			companyId, groupIds, userId, classNameIds, classTypeId, keywords,
+			showNonindexable, statuses);
 	}
 
 	@Override

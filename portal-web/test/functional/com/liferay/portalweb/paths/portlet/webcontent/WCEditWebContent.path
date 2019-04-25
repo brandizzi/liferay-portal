@@ -10,17 +10,52 @@
 <tbody>
 <tr>
 	<td>ARTICLE_ID</td>
-	<td>//span[@class='workflow-id']/span[@class='workflow-value']</td>
+	<td>//table[contains(@data-searchcontainerid,'articleVersions')]//td[contains(@class,'lfr-id-column')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>WEB_CONTENT_ID</td>
-	<td>//input[contains(@id,'JournalPortlet_newArticleId')]</td>
+	<td>AUDIO_BUTTON</td>
+	<td>//a[contains(@title,'Audio')]</td>
 	<td></td>
 </tr>
 <tr>
-	<td>VERSION</td>
-	<td>//div[contains(@class,'article-version')]/b</td>
+	<td>AUTOGENERATEID</td>
+	<td>//input[contains(@id,'autoArticleId')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SIDEBAR</td>
+	<td>//div[contains(@class,'contextual-sidebar-visible')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>EDIT_TEMPLATE</td>
+	<td>//a[contains(@id,'editDDMTemplate')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>PREVIEW_TEMPLATE</td>
+	<td>//button[contains(@id,'previewWithTemplate')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>FEATURED_IMAGE_URL_INPUT</td>
+	<td>//div[contains(@class,'input-String-wrapper')]/input[contains(@id,'URL')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SELECT_FEATURED_IMAGE_TYPE</td>
+	<td>//div[contains(@class,'input-select-wrapper')]/select[contains(@id,'smallImageSource')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SELECT_STRUCTURE</td>
+	<td>//button[contains(.,'Select')]/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SELECT_TEMPLATE</td>
+	<td>//button[contains(@id,'selectDDMTemplate')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -30,42 +65,12 @@
 </tr>
 <tr>
 	<td>SELECTED_STRUCTURE</td>
-	<td>//div[contains(@class,'article-structure')]//a</td>
-	<td></td>
-</tr>
-<tr>
-	<td>SELECT_STRUCTURE</td>
-	<td>//button[contains(.,'Select')]/span</td>
+	<td>//p[@class='article-structure']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>SELECTED_TEMPLATE</td>
-	<td>//span[contains(@id,'templateNameLabel')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>EDIT_TEMPLATE</td>
-	<td>//a[contains(@id,'editDDMTemplate')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>SELECT_TEMPLATE</td>
-	<td>//button[contains(@id,'selectDDMTemplate')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>USE_SMALL_IMAGE_CHECKBOX</td>
-	<td>//input[@type='checkbox' and contains(@id,'useSmallImage')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>SMALL_IMAGE_URL</td>
-	<td>//input[@type='radio'and contains(@id,'smallImageType_1')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>SMALL_IMAGE_URL_INPUT</td>
-	<td>//div[contains(@class,'input-String-wrapper')]/input[contains(@id,'URL')]</td>
+	<td>//input[contains(@id,'TemplateName')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -74,8 +79,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>AUDIO_BUTTON</td>
-	<td>//a[contains(@title,'Audio')]</td>
+	<td>VERSION</td>
+	<td>//p[contains(@class,'article-version')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -84,8 +89,13 @@
 	<td></td>
 </tr>
 <tr>
+	<td>WEB_CONTENT_ID</td>
+	<td>//input[contains(@id,'JournalPortlet_newArticleId')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>WORKFLOW_STATUS</td>
-	<td>//div[contains(@class,'status')]/span[contains(.,'${key_status}')]</td>
+	<td>//*[contains(@class,'status')]/span[contains(.,'${key_status}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -116,8 +126,39 @@
 </tr>
 <!--DISPLAY_PAGE-->
 <tr>
-	<td>DISPLAY_PAGE_SELECTION</td>
-	<td>//span[contains(@id,'displayPageNameInput')]</td>
+	<td>DISPLAY_PAGE_SELECT</td>
+	<td>//select[contains(@id,'displayPageType')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>DISPLAY_PAGE_DEFAULT_SELECTION</td>
+	<td>//input[contains(@id,'defaultDisplayPageNameInput')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>DISPLAY_PAGE_SPECIFIC_SELECTION</td>
+	<td>//input[contains(@id,'specificDisplayPageNameInput')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>DISPLAY_PAGE_CHOOSE_BUTTON</td>
+	<td>//button[contains(@id,'chooseSpecificDisplayPage')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>DISPLAY_PAGE_SELECT_PAGE_IFRAME</td>
+	<td>//iframe[contains(@id,'selectDisplayPage')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--IMAGE_FIELD-->
+<tr>
+	<td>IMAGE_FIELD_SELECT</td>
+	<td>//div[@class='button-holder']//span[contains(.,'Select')]</td>
 	<td></td>
 </tr>
 </tbody>

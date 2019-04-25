@@ -25,37 +25,6 @@ import com.liferay.portal.kernel.util.StringUtil;
  */
 public class UserEmailAddressException extends PortalException {
 
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by the inner classes
-	 */
-	@Deprecated
-	public UserEmailAddressException() {
-	}
-
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by the inner classes
-	 */
-	@Deprecated
-	public UserEmailAddressException(String msg) {
-		super(msg);
-	}
-
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by the inner classes
-	 */
-	@Deprecated
-	public UserEmailAddressException(String msg, Throwable cause) {
-		super(msg, cause);
-	}
-
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by the inner classes
-	 */
-	@Deprecated
-	public UserEmailAddressException(Throwable cause) {
-		super(cause);
-	}
-
 	public static class MustBeEqual extends UserEmailAddressException {
 
 		public MustBeEqual(
@@ -80,17 +49,33 @@ public class UserEmailAddressException extends PortalException {
 
 	public static class MustNotBeDuplicate extends UserEmailAddressException {
 
-		public MustNotBeDuplicate(long userId, String emailAddress) {
+		public MustNotBeDuplicate(
+			long companyId, long userId, String emailAddress) {
+
 			super(
 				String.format(
-					"Email address %s must not be duplicate but is already " +
-						"used by user %s",
-					emailAddress, userId));
+					"User %s cannot be created because a user with company " +
+						"%s and email address %s is already in use",
+					userId, emailAddress, companyId));
 
+			this.companyId = companyId;
 			this.userId = userId;
 			this.emailAddress = emailAddress;
 		}
 
+		public MustNotBeDuplicate(long companyId, String emailAddress) {
+			super(
+				String.format(
+					"A user with company %s and email address %s is already " +
+						"in use",
+					companyId, emailAddress));
+
+			this.companyId = companyId;
+			this.emailAddress = emailAddress;
+			userId = 0;
+		}
+
+		public final long companyId;
 		public String emailAddress;
 		public final long userId;
 
@@ -179,6 +164,10 @@ public class UserEmailAddressException extends PortalException {
 		public String emailAddress;
 		public final EmailAddressValidator emailAddressValidator;
 
+	}
+
+	private UserEmailAddressException(String msg) {
+		super(msg);
 	}
 
 }

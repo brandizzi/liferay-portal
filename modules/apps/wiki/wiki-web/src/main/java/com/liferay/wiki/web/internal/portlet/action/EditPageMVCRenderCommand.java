@@ -17,10 +17,14 @@ package com.liferay.wiki.web.internal.portlet.action;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.wiki.configuration.WikiGroupServiceConfiguration;
 import com.liferay.wiki.constants.WikiPortletKeys;
 import com.liferay.wiki.constants.WikiWebKeys;
@@ -87,6 +91,10 @@ public class EditPageMVCRenderCommand implements MVCRenderCommand {
 				e instanceof PrincipalException) {
 
 				SessionErrors.add(renderRequest, e.getClass());
+
+				if (e instanceof PrincipalException) {
+					return "/wiki/error.jsp";
+				}
 			}
 			else if (e instanceof NoSuchPageException) {
 
@@ -165,6 +173,12 @@ public class EditPageMVCRenderCommand implements MVCRenderCommand {
 			page.setRedirectTitle(StringPool.BLANK);
 		}
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		_wikiPageModelResourcePermission.check(
+			themeDisplay.getPermissionChecker(), page, ActionKeys.UPDATE);
+
 		renderRequest.setAttribute(WikiWebKeys.WIKI_PAGE, page);
 	}
 
@@ -188,6 +202,15 @@ public class EditPageMVCRenderCommand implements MVCRenderCommand {
 	}
 
 	private WikiEngineRenderer _wikiEngineRenderer;
+
+	@Reference(target = "(model.class.name=com.liferay.wiki.model.WikiNode)")
+	private volatile ModelResourcePermission<WikiNode>
+		_wikiNodeModelResourcePermission;
+
+	@Reference(target = "(model.class.name=com.liferay.wiki.model.WikiPage)")
+	private volatile ModelResourcePermission<WikiPage>
+		_wikiPageModelResourcePermission;
+
 	private WikiPageService _wikiPageService;
 	private WikiPageTitleValidator _wikiPageTitleValidator;
 

@@ -34,7 +34,7 @@ import com.liferay.portal.search.test.util.IndexedFieldsFixture;
 import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.test.rule.PermissionCheckerTestRule;
+import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
 import java.util.HashMap;
@@ -59,7 +59,7 @@ public class BookmarksEntryIndexerIndexedFieldsTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			PermissionCheckerTestRule.INSTANCE,
+			PermissionCheckerMethodTestRule.INSTANCE,
 			SynchronousDestinationTestRule.INSTANCE);
 
 	@Before
@@ -170,6 +170,8 @@ public class BookmarksEntryIndexerIndexedFieldsTest {
 		indexedFieldsFixture.populatePriority("0.0", map);
 		indexedFieldsFixture.populateUID(
 			BookmarksEntry.class.getName(), bookmarksEntry.getEntryId(), map);
+		indexedFieldsFixture.populateViewCount(
+			BookmarksEntry.class, bookmarksEntry.getEntryId(), map);
 
 		_populateDates(bookmarksEntry, map);
 		_populateRoles(bookmarksEntry, map);

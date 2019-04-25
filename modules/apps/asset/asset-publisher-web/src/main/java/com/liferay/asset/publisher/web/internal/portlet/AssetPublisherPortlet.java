@@ -30,6 +30,7 @@ import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.storage.Field;
 import com.liferay.dynamic.data.mapping.storage.Fields;
 import com.liferay.dynamic.data.mapping.util.DDMUtil;
+import com.liferay.info.provider.InfoListProviderTracker;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.NoSuchGroupException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -239,7 +240,7 @@ public class AssetPublisherPortlet extends MVCPortlet {
 					assetEntryActionRegistry, assetHelper,
 					assetPublisherCustomizer, assetPublisherHelper,
 					assetPublisherWebConfiguration, assetPublisherWebUtil,
-					resourceRequest, resourceResponse,
+					infoListProviderTracker, resourceRequest, resourceResponse,
 					resourceRequest.getPreferences());
 
 			resourceRequest.setAttribute(
@@ -338,7 +339,7 @@ public class AssetPublisherPortlet extends MVCPortlet {
 					assetEntryActionRegistry, assetHelper,
 					assetPublisherCustomizer, assetPublisherHelper,
 					assetPublisherWebConfiguration, assetPublisherWebUtil,
-					renderRequest, renderResponse,
+					infoListProviderTracker, renderRequest, renderResponse,
 					renderRequest.getPreferences());
 
 			renderRequest.setAttribute(
@@ -379,13 +380,6 @@ public class AssetPublisherPortlet extends MVCPortlet {
 		return false;
 	}
 
-	@Reference(
-		target = "(&(release.bundle.symbolic.name=com.liferay.asset.publisher.web)(&(release.schema.version>=1.0.0)(!(release.schema.version>=1.1.0))))",
-		unbind = "-"
-	)
-	protected void setRelease(Release release) {
-	}
-
 	@Reference
 	protected AssetEntryActionRegistry assetEntryActionRegistry;
 
@@ -407,7 +401,15 @@ public class AssetPublisherPortlet extends MVCPortlet {
 	protected AssetRSSUtil assetRSSUtil;
 
 	@Reference
+	protected InfoListProviderTracker infoListProviderTracker;
+
+	@Reference
 	protected Portal portal;
+
+	@Reference(
+		target = "(&(release.bundle.symbolic.name=com.liferay.asset.publisher.web)(&(release.schema.version>=1.0.0)(!(release.schema.version>=1.1.0))))"
+	)
+	protected Release release;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		AssetPublisherPortlet.class);

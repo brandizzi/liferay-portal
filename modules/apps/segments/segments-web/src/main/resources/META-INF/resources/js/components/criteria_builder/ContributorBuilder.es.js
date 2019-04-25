@@ -1,14 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {DragDropContext as dragDropContext} from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
 import Conjunction from './Conjunction.es';
+import ContributorInputs from './ContributorInputs.es';
 import CriteriaBuilder from './CriteriaBuilder.es';
 import CriteriaSidebar from '../criteria_sidebar/CriteriaSidebar.es';
+import EmptyPlaceholder from './EmptyPlaceholder.es';
 import getCN from 'classnames';
+import HTML5Backend from 'react-dnd-html5-backend';
+import PropTypes from 'prop-types';
+import React from 'react';
 import {buildQueryString, translateQueryToCriteria} from '../../utils/odata.es';
 import {CONJUNCTIONS} from '../../utils/constants.es';
-import {sub} from '../../utils/utils.es';
+import {DragDropContext as dragDropContext} from 'react-dnd';
 
 const conjunctionShape = PropTypes.shape(
 	{
@@ -64,6 +65,8 @@ const propertyTypeShape = PropTypes.shape(
 
 class ContributorBuilder extends React.Component {
 	static propTypes = {
+		editing: PropTypes.bool.isRequired,
+		emptyContributors: PropTypes.bool.isRequired,
 		initialContributors: PropTypes.arrayOf(initialContributorShape),
 		onQueryChange: PropTypes.func,
 		propertyGroups: PropTypes.arrayOf(propertyGroupShape),
@@ -104,11 +107,13 @@ class ContributorBuilder extends React.Component {
 			}
 		);
 
+		const firstPropertyKey = propertyGroups.length && propertyGroups[0].propertyKey;
+
 		this.state = {
 			conjunctionName: CONJUNCTIONS.AND,
 			contributors,
-			editingId: undefined,
-			newPropertyKey: propertyGroups.length && propertyGroups[0].propertyKey
+			editingId: firstPropertyKey,
+			newPropertyKey: firstPropertyKey
 		};
 	}
 
@@ -121,10 +126,10 @@ class ContributorBuilder extends React.Component {
 
 				diffState = {
 					contributors: prevState.contributors.map(
-						(contributor, i) => {
-							const {conjunctionId, properties} = contributor;
+						contributor => {
+							const {conjunctionId, properties, propertyKey} = contributor;
 
-							return index === i ?
+							return index === propertyKey ?
 								{
 									...contributor,
 									criteriaMap: criteriaChange,
@@ -198,6 +203,8 @@ class ContributorBuilder extends React.Component {
 
 	render() {
 		const {
+			editing,
+			emptyContributors,
 			propertyGroups,
 			supportedConjunctions,
 			supportedOperators,
@@ -206,17 +213,10 @@ class ContributorBuilder extends React.Component {
 
 		const {contributors, editingId} = this.state;
 
-		const selectedContributor = contributors[editingId];
-
-		const selectedProperty = selectedContributor &&
-			propertyGroups.find(
-				propertyGroup => selectedContributor.propertyKey === propertyGroup.propertyKey
-			);
-
 		const rootClasses = getCN(
 			'contributor-builder-root',
 			{
-				editing: typeof editingId !== 'undefined'
+				editing
 			}
 		);
 
@@ -224,12 +224,9 @@ class ContributorBuilder extends React.Component {
 			<div className={rootClasses}>
 				<div className="criteria-builder-section-sidebar">
 					<CriteriaSidebar
-						propertyKey={selectedProperty && selectedProperty.propertyKey}
-						supportedProperties={selectedProperty && selectedProperty.properties}
-						title={sub(
-							Liferay.Language.get('x-properties'),
-							[selectedProperty && selectedProperty.name]
-						)}
+						onTitleClicked={this._handleCriteriaEdit}
+						propertyGroups={propertyGroups}
+						propertyKey={editingId}
 					/>
 				</div>
 
@@ -237,55 +234,59 @@ class ContributorBuilder extends React.Component {
 					<div className="contributor-container">
 						<div className="container-fluid container-fluid-max-xl">
 							<div className="content-wrapper">
-								{contributors.map(
-									(criteria, i) => (
-										<React.Fragment key={i}>
-											{(i !== 0) &&
-												<React.Fragment>
-													<Conjunction
-														className="ml-0"
-														conjunctionName={criteria.conjunctionId}
-														editing
-														onClick={this._handleRootConjunctionClick}
-														supportedConjunctions={supportedConjunctions}
-													/>
+								<div className="sheet">
+									<h2 className="sheet-title">{Liferay.Language.get('conditions')}</h2>
+									<ContributorInputs contributors={contributors} />
 
-													<input
-														id={criteria.conjunctionInputId}
-														readOnly
-														type="hidden"
-														value={criteria.conjunctionId}
+									{emptyContributors && (editingId == undefined || !editing) &&
+										<EmptyPlaceholder />
+									}
+
+									{contributors.filter(
+										criteria => {
+											const editingCriteria = (editingId === criteria.propertyKey) && editing;
+											const emptyCriteriaQuery = criteria.query == '';
+
+											return editingCriteria || !emptyCriteriaQuery;
+										}
+									).map(
+										(criteria, i) => {
+											const editingCriteria = editing && editingId === criteria.propertyKey;
+											return (
+												<React.Fragment key={i}>
+													{(i !== 0) &&
+													<React.Fragment>
+														<Conjunction
+															className="ml-0"
+															conjunctionName={criteria.conjunctionId}
+															editing={editing}
+															onClick={this._handleRootConjunctionClick}
+															supportedConjunctions={supportedConjunctions}
+														/>
+													</React.Fragment>
+													}
+
+													<CriteriaBuilder
+														criteria={criteria.criteriaMap}
+														editing={editing}
+														editingCriteria={editingCriteria}
+														editingId={editingId}
+														emptyContributors={emptyContributors}
+														entityName={criteria.entityName}
+														id={criteria.propertyKey}
+														modelLabel={criteria.modelLabel}
+														onChange={this._handleCriteriaChange}
+														propertyKey={criteria.propertyKey}
+														supportedConjunctions={supportedConjunctions}
+														supportedOperators={supportedOperators}
+														supportedProperties={criteria.properties}
+														supportedPropertyTypes={supportedPropertyTypes}
 													/>
 												</React.Fragment>
-											}
-
-											<CriteriaBuilder
-												criteria={criteria.criteriaMap}
-												editing={editingId === i}
-												entityName={criteria.entityName}
-												id={i}
-												modelLabel={criteria.modelLabel}
-												onChange={this._handleCriteriaChange}
-												onEditToggle={this._handleCriteriaEdit}
-												propertyKey={criteria.propertyKey}
-												supportedConjunctions={supportedConjunctions}
-												supportedOperators={supportedOperators}
-												supportedProperties={criteria.properties}
-												supportedPropertyTypes={supportedPropertyTypes}
-											/>
-
-											<input
-												className="field form-control"
-												data-testid={criteria.inputId}
-												id={criteria.inputId}
-												name={criteria.inputId}
-												readOnly
-												type="hidden"
-												value={criteria.query}
-											/>
-										</React.Fragment>
-									)
-								)}
+											);
+										}
+									)}
+								</div>
 							</div>
 						</div>
 					</div>

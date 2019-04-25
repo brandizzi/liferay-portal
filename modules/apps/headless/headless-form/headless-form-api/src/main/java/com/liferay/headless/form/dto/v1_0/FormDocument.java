@@ -14,6 +14,7 @@
 
 package com.liferay.headless.form.dto.v1_0;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,6 +23,10 @@ import com.liferay.petra.string.StringBundler;
 
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.Objects;
 
 import javax.annotation.Generated;
 
@@ -33,32 +38,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Generated("")
 @GraphQLName("FormDocument")
-//@JsonFilter("Liferay.Vulcan")
+@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "FormDocument")
 public class FormDocument {
 
+	@Schema
 	public String getContentUrl() {
 		return contentUrl;
-	}
-
-	public String getEncodingFormat() {
-		return encodingFormat;
-	}
-
-	public String getFileExtension() {
-		return fileExtension;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public Number getSizeInBytes() {
-		return sizeInBytes;
-	}
-
-	public String getTitle() {
-		return title;
 	}
 
 	public void setContentUrl(String contentUrl) {
@@ -72,9 +58,21 @@ public class FormDocument {
 		try {
 			contentUrl = contentUrlUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String contentUrl;
+
+	@Schema
+	public String getEncodingFormat() {
+		return encodingFormat;
 	}
 
 	public void setEncodingFormat(String encodingFormat) {
@@ -88,9 +86,21 @@ public class FormDocument {
 		try {
 			encodingFormat = encodingFormatUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String encodingFormat;
+
+	@Schema
+	public String getFileExtension() {
+		return fileExtension;
 	}
 
 	public void setFileExtension(String fileExtension) {
@@ -104,9 +114,21 @@ public class FormDocument {
 		try {
 			fileExtension = fileExtensionUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String fileExtension;
+
+	@Schema
+	public Long getId() {
+		return id;
 	}
 
 	public void setId(Long id) {
@@ -118,25 +140,49 @@ public class FormDocument {
 		try {
 			id = idUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void setSizeInBytes(Number sizeInBytes) {
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long id;
+
+	@Schema
+	public Long getSizeInBytes() {
+		return sizeInBytes;
+	}
+
+	public void setSizeInBytes(Long sizeInBytes) {
 		this.sizeInBytes = sizeInBytes;
 	}
 
 	@JsonIgnore
 	public void setSizeInBytes(
-		UnsafeSupplier<Number, Exception> sizeInBytesUnsafeSupplier) {
+		UnsafeSupplier<Long, Exception> sizeInBytesUnsafeSupplier) {
 
 		try {
 			sizeInBytes = sizeInBytesUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long sizeInBytes;
+
+	@Schema
+	public String getTitle() {
+		return title;
 	}
 
 	public void setTitle(String title) {
@@ -150,80 +196,130 @@ public class FormDocument {
 		try {
 			title = titleUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String title;
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+
+		if (!(object instanceof FormDocument)) {
+			return false;
+		}
+
+		FormDocument formDocument = (FormDocument)object;
+
+		return Objects.equals(toString(), formDocument.toString());
+	}
+
+	@Override
+	public int hashCode() {
+		String string = toString();
+
+		return string.hashCode();
+	}
+
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler();
 
 		sb.append("{");
 
-		sb.append("\"contentUrl\": ");
+		if (contentUrl != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"");
-		sb.append(contentUrl);
-		sb.append("\"");
-		sb.append(", ");
+			sb.append("\"contentUrl\": ");
 
-		sb.append("\"encodingFormat\": ");
+			sb.append("\"");
 
-		sb.append("\"");
-		sb.append(encodingFormat);
-		sb.append("\"");
-		sb.append(", ");
+			sb.append(_escape(contentUrl));
 
-		sb.append("\"fileExtension\": ");
+			sb.append("\"");
+		}
 
-		sb.append("\"");
-		sb.append(fileExtension);
-		sb.append("\"");
-		sb.append(", ");
+		if (encodingFormat != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"id\": ");
+			sb.append("\"encodingFormat\": ");
 
-		sb.append(id);
-		sb.append(", ");
+			sb.append("\"");
 
-		sb.append("\"sizeInBytes\": ");
+			sb.append(_escape(encodingFormat));
 
-		sb.append(sizeInBytes);
-		sb.append(", ");
+			sb.append("\"");
+		}
 
-		sb.append("\"title\": ");
+		if (fileExtension != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"");
-		sb.append(title);
-		sb.append("\"");
+			sb.append("\"fileExtension\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(fileExtension));
+
+			sb.append("\"");
+		}
+
+		if (id != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"id\": ");
+
+			sb.append(id);
+		}
+
+		if (sizeInBytes != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"sizeInBytes\": ");
+
+			sb.append(sizeInBytes);
+		}
+
+		if (title != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"title\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(title));
+
+			sb.append("\"");
+		}
 
 		sb.append("}");
 
 		return sb.toString();
 	}
 
-	@GraphQLField
-	@JsonProperty
-	protected String contentUrl;
+	private static String _escape(Object object) {
+		String string = String.valueOf(object);
 
-	@GraphQLField
-	@JsonProperty
-	protected String encodingFormat;
-
-	@GraphQLField
-	@JsonProperty
-	protected String fileExtension;
-
-	@GraphQLField
-	@JsonProperty
-	protected Long id;
-
-	@GraphQLField
-	@JsonProperty
-	protected Number sizeInBytes;
-
-	@GraphQLField
-	@JsonProperty
-	protected String title;
+		return string.replaceAll("\"", "\\\\\"");
+	}
 
 }

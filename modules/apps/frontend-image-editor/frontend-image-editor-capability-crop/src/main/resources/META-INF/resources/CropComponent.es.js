@@ -1,23 +1,22 @@
 import Component from 'metal-component';
 import Soy from 'metal-soy';
-import { CancellablePromise } from 'metal-promise';
-import { core } from 'metal';
+import {CancellablePromise} from 'metal-promise';
+import {core} from 'metal';
 
 import componentTemplates from './CropComponent.soy';
 import controlsTemplates from './CropControls.soy';
 
 /**
- * Crop Component
- * @review
+ * Creates a Crop component.
  */
 class CropComponent extends Component {
+
 	/**
-	 * Applies the brighntess filter to generate a final
-	 * version of the image.
-	 * @param  {Object} imageData An object with several image representations.
-	 * @return {CancellablePromise} A promise that will resolve when the webworker
+	 * Applies the brightness filter to generate a final version of the image.
+	 *
+	 * @param  {Object} imageData The image representations.
+	 * @return {CancellablePromise} A promise that resolves when the webworker
 	 * finishes processing the image for preview.
-	 * @review
 	 */
 	process(imageData) {
 		let imageCanvas = this.getImageEditorCanvas();
@@ -59,14 +58,15 @@ class CropComponent extends Component {
 
 /**
  * State definition.
- * @review
+ *
  * @static
  * @type {!Object}
  */
 CropComponent.STATE = {
+
 	/**
-	 * Injected helper to get the editor canvas
-	 * @review
+	 * Injected helper that retrieves the editor canvas.
+	 *
 	 * @type {Function}
 	 */
 	getImageEditorCanvas: {

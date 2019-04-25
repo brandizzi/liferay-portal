@@ -36,13 +36,21 @@ public class YMLSourceUtil {
 		StringBundler sb = new StringBundler();
 
 		for (String line : lines) {
-			if (Validator.isNull(line) || !line.startsWith(indent)) {
+			if (Validator.isNull(line)) {
+				sb.append("\n");
+
+				continue;
+			}
+
+			if (!line.startsWith(indent)) {
 				continue;
 			}
 
 			String s = line.substring(indent.length(), indent.length() + 1);
 
 			if (!s.equals(StringPool.SPACE) && (sb.length() != 0)) {
+				sb.setIndex(sb.index() - 1);
+
 				definitions.add(sb.toString());
 
 				sb.setIndex(0);
@@ -71,7 +79,7 @@ public class YMLSourceUtil {
 		for (int i = 1; i < lines.length; i++) {
 			String line = lines[i];
 
-			String indent = line.replaceAll("^(\\s+).+", "$1");
+			String indent = line.replaceFirst("^( +).+", "$1");
 
 			if (!indent.equals(line)) {
 				return indent;

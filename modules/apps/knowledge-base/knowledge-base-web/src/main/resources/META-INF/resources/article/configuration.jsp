@@ -36,7 +36,6 @@ kbArticlePortletInstanceConfiguration = ParameterMapUtil.setParameterMap(KBArtic
 		<liferay-ui:tabs
 			names="<%= tabsNames %>"
 			refresh="<%= false %>"
-			type="tabs nav-tabs-default"
 		>
 			<liferay-ui:section>
 				<liferay-frontend:fieldset-group>
@@ -136,7 +135,7 @@ kbArticlePortletInstanceConfiguration = ParameterMapUtil.setParameterMap(KBArtic
 						var kbArticleData = {
 							idString: 'resourcePrimKey',
 							idValue: event.resourceprimkey,
-							nameString: 'configurationKBArticle',
+							nameString: 'configurationKBObject',
 							nameValue: event.title
 						};
 

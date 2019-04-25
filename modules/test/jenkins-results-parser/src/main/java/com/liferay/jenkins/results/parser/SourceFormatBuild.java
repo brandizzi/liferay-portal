@@ -63,7 +63,9 @@ public class SourceFormatBuild extends TopLevelBuild {
 			Dom4JUtil.getNewElement("h4", null, "Sender Branch:"),
 			getSenderBranchDetailsElement());
 
-		if (_pullRequest.getUpstreamBranchName().contains("-private")) {
+		String upstreamBranchName = _pullRequest.getUpstreamBranchName();
+
+		if (upstreamBranchName.contains("-private")) {
 			Dom4JUtil.addToElement(
 				detailsElement,
 				Dom4JUtil.getNewElement("h4", null, "Companion Branch:"),
@@ -152,10 +154,10 @@ public class SourceFormatBuild extends TopLevelBuild {
 
 	@Override
 	protected String getTestSuiteName() {
-		return _TEST_SUITE_NAME;
+		return _NAME_TEST_SUITE;
 	}
 
-	private static final String _TEST_SUITE_NAME = "ci:test:sf";
+	private static final String _NAME_TEST_SUITE = "ci:test:sf";
 
 	private PullRequest _pullRequest;
 

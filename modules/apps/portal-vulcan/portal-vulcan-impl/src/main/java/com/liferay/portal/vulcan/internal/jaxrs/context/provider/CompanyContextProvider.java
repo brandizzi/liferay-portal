@@ -25,13 +25,8 @@ import org.apache.cxf.jaxrs.ext.ContextProvider;
 import org.apache.cxf.message.Message;
 
 /**
- * Allows JAX-RS resources to provide {@link Company} objects in method
- * parameters, fields or setters by annotating them with {@code
- * javax.ws.rs.core.Context}.
- *
  * @author Alejandro Hernández
  * @author Cristina González
- * @review
  */
 @Provider
 public class CompanyContextProvider implements ContextProvider<Company> {

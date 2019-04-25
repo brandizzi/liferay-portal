@@ -211,7 +211,7 @@ WikiPagesManagementToolbarDisplayContext wikiPagesManagementToolbarDisplayContex
 								String modifiedDateDescription = LanguageUtil.getTimeDescription(request, System.currentTimeMillis() - modifiedDate.getTime(), true);
 								%>
 
-								<h5 class="text-default">
+								<span class="text-default">
 									<c:choose>
 										<c:when test="<%= Validator.isNotNull(curPage.getUserName()) %>">
 											<liferay-ui:message arguments="<%= new String[] {HtmlUtil.escape(curPage.getUserName()), modifiedDateDescription} %>" key="x-modified-x-ago" />
@@ -220,17 +220,17 @@ WikiPagesManagementToolbarDisplayContext wikiPagesManagementToolbarDisplayContex
 											<liferay-ui:message arguments="<%= new String[] {modifiedDateDescription} %>" key="modified-x-ago" />
 										</c:otherwise>
 									</c:choose>
-								</h5>
+								</span>
 
-								<h4>
+								<h2 class="h5">
 									<aui:a href="<%= rowURL.toString() %>">
 										<%= curPage.getTitle() %>
 									</aui:a>
-								</h4>
+								</h2>
 
-								<h5 class="text-default">
+								<span class="text-default">
 									<aui:workflow-status markupView="lexicon" showIcon="<%= false %>" showLabel="<%= false %>" status="<%= curPage.getStatus() %>" />
-								</h5>
+								</span>
 							</liferay-ui:search-container-column-text>
 
 							<liferay-ui:search-container-column-jsp
@@ -293,15 +293,20 @@ WikiPagesManagementToolbarDisplayContext wikiPagesManagementToolbarDisplayContex
 	</div>
 </div>
 
-<aui:script>
+<script>
 	var deletePages = function() {
 		if (<%= trashHelper.isTrashEnabled(scopeGroupId) %> || confirm(' <%= UnicodeLanguageUtil.get(request, "are-you-sure-you-want-to-delete-the-selected-entries") %>')) {
-			var form = AUI.$(document.<portlet:namespace />fm);
+			var form = document.<portlet:namespace />fm;
 
-			form.attr('method', 'post');
-			form.fm('<%= Constants.CMD %>').val('<%= trashHelper.isTrashEnabled(scopeGroupId) ? Constants.MOVE_TO_TRASH : Constants.DELETE %>');
-
-			submitForm(form, '<portlet:actionURL name="/wiki/edit_page" />');
+			Liferay.Util.postForm(
+				form,
+				{
+					data: {
+						'<%= Constants.CMD %>': '<%= trashHelper.isTrashEnabled(scopeGroupId) ? Constants.MOVE_TO_TRASH : Constants.DELETE %>'
+					},
+					url: '<portlet:actionURL name="/wiki/edit_page" />'
+				}
+			);
 		}
 	};
 
@@ -323,4 +328,4 @@ WikiPagesManagementToolbarDisplayContext wikiPagesManagementToolbarDisplayContex
 			);
 		}
 	);
-</aui:script>
+</script>

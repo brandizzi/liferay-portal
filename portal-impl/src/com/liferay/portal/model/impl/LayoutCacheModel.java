@@ -79,12 +79,14 @@ public class LayoutCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(69);
+		StringBundler sb = new StringBundler(73);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
 		sb.append(", uuid=");
 		sb.append(uuid);
+		sb.append(", headId=");
+		sb.append(headId);
 		sb.append(", plid=");
 		sb.append(plid);
 		sb.append(", groupId=");
@@ -101,16 +103,16 @@ public class LayoutCacheModel
 		sb.append(modifiedDate);
 		sb.append(", parentPlid=");
 		sb.append(parentPlid);
-		sb.append(", leftPlid=");
-		sb.append(leftPlid);
-		sb.append(", rightPlid=");
-		sb.append(rightPlid);
 		sb.append(", privateLayout=");
 		sb.append(privateLayout);
 		sb.append(", layoutId=");
 		sb.append(layoutId);
 		sb.append(", parentLayoutId=");
 		sb.append(parentLayoutId);
+		sb.append(", classNameId=");
+		sb.append(classNameId);
+		sb.append(", classPK=");
+		sb.append(classPK);
 		sb.append(", name=");
 		sb.append(name);
 		sb.append(", title=");
@@ -147,6 +149,8 @@ public class LayoutCacheModel
 		sb.append(layoutPrototypeLinkEnabled);
 		sb.append(", sourcePrototypeLayoutUuid=");
 		sb.append(sourcePrototypeLayoutUuid);
+		sb.append(", publishDate=");
+		sb.append(publishDate);
 		sb.append(", lastPublishDate=");
 		sb.append(lastPublishDate);
 		sb.append("}");
@@ -167,6 +171,8 @@ public class LayoutCacheModel
 			layoutImpl.setUuid(uuid);
 		}
 
+		layoutImpl.setHeadId(headId);
+		layoutImpl.setHead(head);
 		layoutImpl.setPlid(plid);
 		layoutImpl.setGroupId(groupId);
 		layoutImpl.setCompanyId(companyId);
@@ -194,11 +200,11 @@ public class LayoutCacheModel
 		}
 
 		layoutImpl.setParentPlid(parentPlid);
-		layoutImpl.setLeftPlid(leftPlid);
-		layoutImpl.setRightPlid(rightPlid);
 		layoutImpl.setPrivateLayout(privateLayout);
 		layoutImpl.setLayoutId(layoutId);
 		layoutImpl.setParentLayoutId(parentLayoutId);
+		layoutImpl.setClassNameId(classNameId);
+		layoutImpl.setClassPK(classPK);
 
 		if (name == null) {
 			layoutImpl.setName("");
@@ -300,6 +306,13 @@ public class LayoutCacheModel
 			layoutImpl.setSourcePrototypeLayoutUuid(sourcePrototypeLayoutUuid);
 		}
 
+		if (publishDate == Long.MIN_VALUE) {
+			layoutImpl.setPublishDate(null);
+		}
+		else {
+			layoutImpl.setPublishDate(new Date(publishDate));
+		}
+
 		if (lastPublishDate == Long.MIN_VALUE) {
 			layoutImpl.setLastPublishDate(null);
 		}
@@ -317,6 +330,10 @@ public class LayoutCacheModel
 		mvccVersion = objectInput.readLong();
 		uuid = objectInput.readUTF();
 
+		headId = objectInput.readLong();
+
+		head = objectInput.readBoolean();
+
 		plid = objectInput.readLong();
 
 		groupId = objectInput.readLong();
@@ -330,15 +347,15 @@ public class LayoutCacheModel
 
 		parentPlid = objectInput.readLong();
 
-		leftPlid = objectInput.readLong();
-
-		rightPlid = objectInput.readLong();
-
 		privateLayout = objectInput.readBoolean();
 
 		layoutId = objectInput.readLong();
 
 		parentLayoutId = objectInput.readLong();
+
+		classNameId = objectInput.readLong();
+
+		classPK = objectInput.readLong();
 		name = objectInput.readUTF();
 		title = objectInput.readUTF();
 		description = objectInput.readUTF();
@@ -362,6 +379,7 @@ public class LayoutCacheModel
 
 		layoutPrototypeLinkEnabled = objectInput.readBoolean();
 		sourcePrototypeLayoutUuid = objectInput.readUTF();
+		publishDate = objectInput.readLong();
 		lastPublishDate = objectInput.readLong();
 	}
 
@@ -375,6 +393,10 @@ public class LayoutCacheModel
 		else {
 			objectOutput.writeUTF(uuid);
 		}
+
+		objectOutput.writeLong(headId);
+
+		objectOutput.writeBoolean(head);
 
 		objectOutput.writeLong(plid);
 
@@ -396,15 +418,15 @@ public class LayoutCacheModel
 
 		objectOutput.writeLong(parentPlid);
 
-		objectOutput.writeLong(leftPlid);
-
-		objectOutput.writeLong(rightPlid);
-
 		objectOutput.writeBoolean(privateLayout);
 
 		objectOutput.writeLong(layoutId);
 
 		objectOutput.writeLong(parentLayoutId);
+
+		objectOutput.writeLong(classNameId);
+
+		objectOutput.writeLong(classPK);
 
 		if (name == null) {
 			objectOutput.writeUTF("");
@@ -507,11 +529,14 @@ public class LayoutCacheModel
 			objectOutput.writeUTF(sourcePrototypeLayoutUuid);
 		}
 
+		objectOutput.writeLong(publishDate);
 		objectOutput.writeLong(lastPublishDate);
 	}
 
 	public long mvccVersion;
 	public String uuid;
+	public long headId;
+	public boolean head;
 	public long plid;
 	public long groupId;
 	public long companyId;
@@ -520,11 +545,11 @@ public class LayoutCacheModel
 	public long createDate;
 	public long modifiedDate;
 	public long parentPlid;
-	public long leftPlid;
-	public long rightPlid;
 	public boolean privateLayout;
 	public long layoutId;
 	public long parentLayoutId;
+	public long classNameId;
+	public long classPK;
 	public String name;
 	public String title;
 	public String description;
@@ -543,6 +568,7 @@ public class LayoutCacheModel
 	public String layoutPrototypeUuid;
 	public boolean layoutPrototypeLinkEnabled;
 	public String sourcePrototypeLayoutUuid;
+	public long publishDate;
 	public long lastPublishDate;
 
 }

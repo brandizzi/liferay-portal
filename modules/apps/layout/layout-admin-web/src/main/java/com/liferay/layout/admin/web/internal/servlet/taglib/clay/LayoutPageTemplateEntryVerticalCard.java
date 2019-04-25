@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutPrototypeServiceUtil;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 
@@ -106,17 +107,28 @@ public class LayoutPageTemplateEntryVerticalCard extends BaseVerticalCard {
 
 				Group layoutPrototypeGroup = layoutPrototype.getGroup();
 
-				return layoutPrototypeGroup.getDisplayURL(themeDisplay, true);
+				String layoutFullURL = layoutPrototypeGroup.getDisplayURL(
+					themeDisplay, true);
+
+				return HttpUtil.setParameter(
+					layoutFullURL, "p_l_back_url",
+					themeDisplay.getURLCurrent());
 			}
 
 			Layout layout = LayoutLocalServiceUtil.getLayout(
 				_layoutPageTemplateEntry.getPlid());
 
+			Layout draftLayout = LayoutLocalServiceUtil.fetchLayout(
+				PortalUtil.getClassNameId(Layout.class), layout.getPlid());
+
 			String layoutFullURL = PortalUtil.getLayoutFullURL(
-				layout, themeDisplay);
+				draftLayout, themeDisplay);
+
+			layoutFullURL = HttpUtil.setParameter(
+				layoutFullURL, "p_l_mode", Constants.EDIT);
 
 			return HttpUtil.setParameter(
-				layoutFullURL, "p_l_mode", Constants.EDIT);
+				layoutFullURL, "p_l_back_url", themeDisplay.getURLCurrent());
 		}
 		catch (Exception e) {
 		}
@@ -150,12 +162,12 @@ public class LayoutPageTemplateEntryVerticalCard extends BaseVerticalCard {
 			return LanguageUtil.get(_request, "widget-page-template");
 		}
 
-		return LanguageUtil.get(_request, "standard-page-template");
+		return LanguageUtil.get(_request, "content-page-template");
 	}
 
 	@Override
 	public String getTitle() {
-		return _layoutPageTemplateEntry.getName();
+		return HtmlUtil.escape(_layoutPageTemplateEntry.getName());
 	}
 
 	private final LayoutPageTemplateEntry _layoutPageTemplateEntry;

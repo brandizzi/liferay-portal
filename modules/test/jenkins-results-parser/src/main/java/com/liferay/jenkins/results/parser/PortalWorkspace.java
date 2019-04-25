@@ -21,6 +21,8 @@ public interface PortalWorkspace extends Workspace {
 
 	public WorkspaceGitRepository getCompanionPortalWorkspaceGitRepository();
 
+	public LegacyWorkspaceGitRepository getLegacyWorkspaceGitRepository();
+
 	public WorkspaceGitRepository getOtherPortalWorkspaceGitRepository();
 
 	public WorkspaceGitRepository getPluginsWorkspaceGitRepository();

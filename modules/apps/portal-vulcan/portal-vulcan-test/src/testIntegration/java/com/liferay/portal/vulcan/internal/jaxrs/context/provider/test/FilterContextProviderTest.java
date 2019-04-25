@@ -97,7 +97,8 @@ public class FilterContextProviderTest {
 		Filter filter = _contextProvider.createContext(
 			new MockMessage(
 				mockHttpServletRequest,
-				clazz.getMethod(MockResource.METHOD_NAME, String.class)));
+				clazz.getMethod(MockResource.METHOD_NAME, String.class),
+				_mockResource));
 
 		Assert.assertTrue(filter instanceof TermFilter);
 

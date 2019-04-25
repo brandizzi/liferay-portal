@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.UserModel;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.PortalPreferencesLocalService;
@@ -29,6 +30,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortletKeys;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.segments.constants.SegmentsConstants;
 import com.liferay.segments.internal.asah.client.AsahFaroBackendClient;
@@ -44,12 +46,13 @@ import com.liferay.segments.service.SegmentsEntryRelLocalService;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import javax.portlet.PortletPreferences;
 
@@ -96,17 +99,16 @@ public class AsahFaroBackendIndividualSegmentsCheckerUtil {
 		try {
 			if (segmentsEntry == null) {
 				_segmentsEntryLocalService.addSegmentsEntry(
-					nameMap, Collections.emptyMap(), true, null,
-					individualSegment.getId(),
-					SegmentsConstants.SOURCE_ASAH_FARO_BACKEND,
+					individualSegment.getId(), nameMap, Collections.emptyMap(),
+					true, null, SegmentsConstants.SOURCE_ASAH_FARO_BACKEND,
 					User.class.getName(), serviceContext);
 
 				return;
 			}
 
 			_segmentsEntryLocalService.updateSegmentsEntry(
-				segmentsEntry.getSegmentsEntryId(), nameMap, null, true, null,
-				individualSegment.getId(), serviceContext);
+				segmentsEntry.getSegmentsEntryId(), individualSegment.getId(),
+				nameMap, null, true, null, serviceContext);
 		}
 		catch (PortalException pe) {
 			_log.error(
@@ -156,7 +158,7 @@ public class AsahFaroBackendIndividualSegmentsCheckerUtil {
 
 		try {
 			individualResults = _asahFaroBackendClient.getIndividualResults(
-				segmentsEntry.getKey(), 1, _DELTA,
+				segmentsEntry.getSegmentsEntryKey(), 1, _DELTA,
 				Collections.singletonList(OrderByField.desc("dateModified")));
 
 			int totalElements = individualResults.getTotal();
@@ -165,7 +167,7 @@ public class AsahFaroBackendIndividualSegmentsCheckerUtil {
 				_log.debug(
 					totalElements +
 						" individuals found for individual segment " +
-							segmentsEntry.getKey());
+							segmentsEntry.getSegmentsEntryKey());
 			}
 
 			if (totalElements == 0) {
@@ -192,7 +194,7 @@ public class AsahFaroBackendIndividualSegmentsCheckerUtil {
 				}
 
 				individualResults = _asahFaroBackendClient.getIndividualResults(
-					segmentsEntry.getKey(), curPage, _DELTA,
+					segmentsEntry.getSegmentsEntryKey(), curPage, _DELTA,
 					Collections.singletonList(
 						OrderByField.desc("dateModified")));
 			}
@@ -200,7 +202,7 @@ public class AsahFaroBackendIndividualSegmentsCheckerUtil {
 		catch (RuntimeException re) {
 			_log.error(
 				"Unable to retrieve individuals for individual segment " +
-					segmentsEntry.getKey(),
+					segmentsEntry.getSegmentsEntryKey(),
 				re);
 		}
 	}
@@ -305,25 +307,24 @@ public class AsahFaroBackendIndividualSegmentsCheckerUtil {
 		Map<String, Set<String>> dataSourceIndividualPKs =
 			individual.getDataSourceIndividualPKs();
 
-		Set<String> individualPKs = dataSourceIndividualPKs.get(
+		Set<String> individualUuids = dataSourceIndividualPKs.get(
 			_asahFaroBackendClient.getDataSourceId());
 
-		if ((individualPKs == null) || individualPKs.isEmpty()) {
+		if (SetUtil.isEmpty(individualUuids)) {
 			return Optional.empty();
 		}
 
-		Iterator<String> iterator = individualPKs.iterator();
+		Stream<String> stream = individualUuids.stream();
 
-		String userUuid = iterator.next();
-
-		User user = _userLocalService.fetchUserByUuidAndCompanyId(
-			userUuid, _portal.getDefaultCompanyId());
-
-		if (user == null) {
-			return Optional.empty();
-		}
-
-		return Optional.of(user.getUserId());
+		return stream.map(
+			individualUuid -> _userLocalService.fetchUserByUuidAndCompanyId(
+				individualUuid, _portal.getDefaultCompanyId())
+		).filter(
+			Objects::nonNull
+		).findFirst(
+		).map(
+			UserModel::getUserId
+		);
 	}
 
 	private static final int _DELTA = 100;

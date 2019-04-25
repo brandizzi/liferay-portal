@@ -25,7 +25,6 @@ import com.liferay.portal.search.aggregation.metrics.TopHitsAggregationResult;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.hits.SearchHit;
 import com.liferay.portal.search.hits.SearchHits;
-import com.liferay.portal.search.sort.FieldSort;
 import com.liferay.portal.search.sort.SortOrder;
 import com.liferay.portal.search.test.util.indexing.BaseIndexingTestCase;
 
@@ -79,12 +78,8 @@ public abstract class BaseTopHitsAggregationTestCase
 
 		TopHitsAggregation topHitsAggregation = aggregations.topHits("topHits");
 
-		FieldSort fieldSort = new FieldSort(Field.PRIORITY);
-
-		fieldSort.setSortOrder(SortOrder.DESC);
-
-		topHitsAggregation.addSortFields(fieldSort);
-
+		topHitsAggregation.addSortFields(
+			sorts.field(Field.PRIORITY, SortOrder.DESC));
 		topHitsAggregation.setSize(1);
 
 		termsAggregation.addChildAggregation(topHitsAggregation);
@@ -104,16 +99,16 @@ public abstract class BaseTopHitsAggregationTestCase
 					String userName = bucket.getKey();
 
 					if (Objects.equals(userName, "Jonh")) {
-						assertBucket(bucket, 3, "3");
+						assertBucket(bucket, 3, 3);
 					}
 					else if (Objects.equals(userName, "Bob")) {
-						assertBucket(bucket, 2, "5");
+						assertBucket(bucket, 2, 5);
 					}
 				}
 			});
 	}
 
-	protected void assertBucket(Bucket bucket, long count, String priority) {
+	protected void assertBucket(Bucket bucket, long count, Integer priority) {
 		Assert.assertEquals(count, bucket.getDocCount());
 
 		Map<String, AggregationResult> childrenAggregationResults =
@@ -131,12 +126,13 @@ public abstract class BaseTopHitsAggregationTestCase
 		Document document = searchHit.getDocument();
 
 		if (MapUtil.isNotEmpty(document.getFields())) {
-			Assert.assertEquals(priority, document.getField(Field.PRIORITY));
+			Assert.assertEquals(priority, document.getInteger(Field.PRIORITY));
 		}
 		else {
-			Map<String, Object> sourceMap = searchHit.getSourceMap();
+			Map<String, Object> sourceMap = searchHit.getSourcesMap();
 
-			Assert.assertEquals(priority, sourceMap.get(Field.PRIORITY));
+			Assert.assertEquals(
+				priority.toString(), sourceMap.get(Field.PRIORITY));
 		}
 	}
 

@@ -424,7 +424,7 @@
 		<reference entity="Resource" package-path="com.liferay.portal" />
 		<reference entity="User" package-path="com.liferay.portal" />
 	</entity>
-	<entity local-service="true" name="DDMStructureLayout" remote-service="false" uuid="true">
+	<entity local-service="true" name="DDMStructureLayout" remote-service="true" uuid="true">
 
 		<!-- PK fields -->
 
@@ -451,6 +451,9 @@
 
 		<!-- Finder methods -->
 
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
 		<finder name="StructureVersionId" return-type="DDMStructureLayout">
 			<finder-column name="structureVersionId" />
 		</finder>

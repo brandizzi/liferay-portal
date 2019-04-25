@@ -15,20 +15,27 @@
 package com.liferay.portal.vulcan.internal.jaxrs.feature;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import com.fasterxml.jackson.jaxrs.xml.JacksonXMLProvider;
 
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.search.filter.Filter;
+import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.odata.filter.ExpressionConvert;
 import com.liferay.portal.odata.filter.FilterParserProvider;
 import com.liferay.portal.odata.sort.SortParserProvider;
+import com.liferay.portal.vulcan.internal.jaxrs.container.request.filter.ServiceEventsContainerRequestFilter;
+import com.liferay.portal.vulcan.internal.jaxrs.container.request.filter.SiteValidatorContainerRequestFilter;
+import com.liferay.portal.vulcan.internal.jaxrs.container.request.filter.TransactionContainerRequestFilter;
 import com.liferay.portal.vulcan.internal.jaxrs.context.provider.AcceptLanguageContextProvider;
 import com.liferay.portal.vulcan.internal.jaxrs.context.provider.CompanyContextProvider;
 import com.liferay.portal.vulcan.internal.jaxrs.context.provider.FieldsQueryParamContextProvider;
 import com.liferay.portal.vulcan.internal.jaxrs.context.provider.FilterContextProvider;
 import com.liferay.portal.vulcan.internal.jaxrs.context.provider.PaginationContextProvider;
 import com.liferay.portal.vulcan.internal.jaxrs.context.provider.SortContextProvider;
+import com.liferay.portal.vulcan.internal.jaxrs.context.provider.UserContextProvider;
 import com.liferay.portal.vulcan.internal.jaxrs.context.resolver.ObjectMapperContextResolver;
+import com.liferay.portal.vulcan.internal.jaxrs.context.resolver.XmlMapperContextResolver;
 import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.ExceptionMapper;
 import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.InvalidFormatExceptionMapper;
 import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.JsonMappingExceptionMapper;
@@ -37,9 +44,14 @@ import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.NoSuchModelExce
 import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.PortalExceptionMapper;
 import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.PrincipalExceptionMapper;
 import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.UnrecognizedPropertyExceptionMapper;
+import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.ValidationExceptionMapper;
 import com.liferay.portal.vulcan.internal.jaxrs.exception.mapper.WebApplicationExceptionMapper;
+import com.liferay.portal.vulcan.internal.jaxrs.message.body.JSONMessageBodyReader;
+import com.liferay.portal.vulcan.internal.jaxrs.message.body.JSONMessageBodyWriter;
 import com.liferay.portal.vulcan.internal.jaxrs.message.body.MultipartBodyMessageBodyReader;
-import com.liferay.portal.vulcan.internal.resource.EntityModelResourceRegistry;
+import com.liferay.portal.vulcan.internal.jaxrs.message.body.XMLMessageBodyReader;
+import com.liferay.portal.vulcan.internal.jaxrs.message.body.XMLMessageBodyWriter;
+import com.liferay.portal.vulcan.internal.jaxrs.validation.BeanValidationInterceptor;
 
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.FeatureContext;
@@ -70,11 +82,14 @@ public class VulcanFeature implements Feature {
 
 	@Override
 	public boolean configure(FeatureContext featureContext) {
+		featureContext.register(BeanValidationInterceptor.class);
 		featureContext.register(ExceptionMapper.class);
 		featureContext.register(FieldsQueryParamContextProvider.class);
 		featureContext.register(JacksonJsonProvider.class);
+		featureContext.register(JacksonXMLProvider.class);
 		featureContext.register(JsonMappingExceptionMapper.class);
-		//featureContext.register(JSONMessageBodyWriter.class);
+		featureContext.register(JSONMessageBodyReader.class);
+		featureContext.register(JSONMessageBodyWriter.class);
 		featureContext.register(JsonParseExceptionMapper.class);
 		featureContext.register(InvalidFormatExceptionMapper.class);
 		featureContext.register(MultipartBodyMessageBodyReader.class);
@@ -83,20 +98,27 @@ public class VulcanFeature implements Feature {
 		featureContext.register(PaginationContextProvider.class);
 		featureContext.register(PortalExceptionMapper.class);
 		featureContext.register(PrincipalExceptionMapper.class);
+		featureContext.register(ServiceEventsContainerRequestFilter.class);
+		featureContext.register(TransactionContainerRequestFilter.class);
 		featureContext.register(UnrecognizedPropertyExceptionMapper.class);
+		featureContext.register(ValidationExceptionMapper.class);
 		featureContext.register(WebApplicationExceptionMapper.class);
+		featureContext.register(XmlMapperContextResolver.class);
+		featureContext.register(XMLMessageBodyReader.class);
+		featureContext.register(XMLMessageBodyWriter.class);
 
 		featureContext.register(
 			new AcceptLanguageContextProvider(_language, _portal));
 		featureContext.register(new CompanyContextProvider(_portal));
 		featureContext.register(
 			new FilterContextProvider(
-				_entityModelResourceRegistry, _expressionConvert,
-				_filterParserProvider, _language, _portal));
+				_expressionConvert, _filterParserProvider, _language, _portal));
 		featureContext.register(
-			new SortContextProvider(
-				_entityModelResourceRegistry, _language, _portal,
-				_sortParserProvider));
+			new SiteValidatorContainerRequestFilter(_groupLocalService));
+
+		featureContext.register(
+			new SortContextProvider(_language, _portal, _sortParserProvider));
+		featureContext.register(new UserContextProvider(_portal));
 
 		return false;
 	}
@@ -108,9 +130,6 @@ public class VulcanFeature implements Feature {
 
 	private BundleContext _bundleContext;
 
-	@Reference
-	private EntityModelResourceRegistry _entityModelResourceRegistry;
-
 	@Reference(
 		target = "(result.class.name=com.liferay.portal.kernel.search.filter.Filter)"
 	)
@@ -118,6 +137,9 @@ public class VulcanFeature implements Feature {
 
 	@Reference
 	private FilterParserProvider _filterParserProvider;
+
+	@Reference
+	private GroupLocalService _groupLocalService;
 
 	@Reference
 	private Language _language;

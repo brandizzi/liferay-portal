@@ -85,19 +85,28 @@ public class KaleoTaskInstanceTokenModelDocumentContributor
 			KaleoTaskInstanceTokenField.ASSIGNEE_GROUP_IDS,
 			assigneeGroupIds.toArray(new Long[assigneeGroupIds.size()]));
 		document.addKeyword(
-			KaleoTaskInstanceTokenField.COMPLETED,
-			kaleoTaskInstanceToken.isCompleted());
-		document.addKeyword(
 			KaleoTaskInstanceTokenField.CLASS_NAME,
 			kaleoTaskInstanceToken.getClassName());
 		document.addKeyword(
 			Field.CLASS_PK, kaleoTaskInstanceToken.getClassPK());
+		document.addKeyword(
+			KaleoTaskInstanceTokenField.COMPLETED,
+			kaleoTaskInstanceToken.isCompleted());
+		document.addDate(
+			KaleoTaskInstanceTokenField.COMPLETION_DATE,
+			kaleoTaskInstanceToken.getCompletionDate());
 		document.addDate(
 			KaleoTaskInstanceTokenField.DUE_DATE,
 			kaleoTaskInstanceToken.getDueDate());
 		document.addKeyword(
 			KaleoTaskInstanceTokenField.KALEO_INSTANCE_ID,
 			kaleoTaskInstanceToken.getKaleoInstanceId());
+		document.addKeyword(
+			KaleoTaskInstanceTokenField.KALEO_TASK_ID,
+			kaleoTaskInstanceToken.getKaleoTaskId());
+		document.addKeyword(
+			KaleoTaskInstanceTokenField.KALEO_TASK_INSTANCE_TOKEN_ID,
+			kaleoTaskInstanceToken.getKaleoTaskInstanceTokenId());
 		document.addKeyword(
 			KaleoTaskInstanceTokenField.TASK_NAME,
 			kaleoTaskInstanceToken.getKaleoTaskName());

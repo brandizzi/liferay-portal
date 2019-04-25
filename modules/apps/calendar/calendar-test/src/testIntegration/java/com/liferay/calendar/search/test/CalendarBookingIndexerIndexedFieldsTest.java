@@ -35,7 +35,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.test.rule.PermissionCheckerTestRule;
+import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -63,7 +63,7 @@ public class CalendarBookingIndexerIndexedFieldsTest
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			PermissionCheckerTestRule.INSTANCE,
+			PermissionCheckerMethodTestRule.INSTANCE,
 			SynchronousDestinationTestRule.INSTANCE);
 
 	@Before
@@ -177,7 +177,8 @@ public class CalendarBookingIndexerIndexedFieldsTest
 	}
 
 	protected void populateCalendarBooking(
-		CalendarBooking calendarBooking, Map<String, String> map) {
+			CalendarBooking calendarBooking, Map<String, String> map)
+		throws Exception {
 
 		map.put(
 			Field.CLASS_PK, String.valueOf(calendarBooking.getCalendarId()));
@@ -195,6 +196,9 @@ public class CalendarBookingIndexerIndexedFieldsTest
 		map.put(
 			"startTime_sortable",
 			String.valueOf(calendarBooking.getStartTime()));
+
+		indexedFieldsFixture.populateViewCount(
+			CalendarBooking.class, calendarBooking.getCalendarBookingId(), map);
 
 		populateDates(calendarBooking, map);
 	}

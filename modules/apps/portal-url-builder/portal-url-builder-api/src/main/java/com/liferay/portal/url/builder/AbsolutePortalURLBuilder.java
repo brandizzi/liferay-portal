@@ -29,7 +29,7 @@ public interface AbsolutePortalURLBuilder {
 
 	/**
 	 * Returns URLs for portal images. Image resources live in {@link
-	 * com.liferay.portal.kernel.util.Portal#getPathImage()}.
+	 * com.liferay.portal.kernel.util.Portal#PATH_IMAGE}.
 	 *
 	 * @param  relativeURL the image's relative URL
 	 * @return a builder that returns image URLs
@@ -38,7 +38,7 @@ public interface AbsolutePortalURLBuilder {
 
 	/**
 	 * Returns URLs for portal's main resources. Main resources live in {@link
-	 * com.liferay.portal.kernel.util.Portal#getPathMain()}.
+	 * com.liferay.portal.kernel.util.Portal#PATH_MAIN}.
 	 *
 	 * @param  relativeURL the resource's relative URL
 	 * @return a builder that returns main resource URLs
@@ -47,7 +47,8 @@ public interface AbsolutePortalURLBuilder {
 
 	/**
 	 * Returns URLs for module resources. Module resources live in {@link
-	 * com.liferay.portal.kernel.util.Portal#getPathModule()}.
+	 * com.liferay.portal.kernel.util.Portal#PATH_MODULE} + bundle's web
+	 * context path.
 	 *
 	 * @param bundle the bundle that contains the resource
 	 * @param  relativeURL the resource's relative URL
@@ -80,10 +81,25 @@ public interface AbsolutePortalURLBuilder {
 	 *
 	 * @param  relativeURL the resource's relative URL
 	 * @return a builder that returns arbitrary resource URLs
-	 * @see Portal#getPathContext()
+	 * @see PortalContextLoaderListener.getPortalServletContextPath()
 	 * @review
 	 */
 	public ResourceAbsolutePortalURLBuilder forResource(String relativeURL);
+
+	/**
+	 * Returns URLs for OSGi whiteboard servlet instances. The servlet class
+	 * must be annotated with the OSGi @Component annotation for this method to
+	 * work.
+	 *
+	 * OSGi whiteboard servlets live in
+	 * {@link com.liferay.portal.kernel.util.Portal#PATH_MODULE}.
+	 *
+	 * @param servletPattern the value of the osgi.http.whiteboard.servlet.pattern property
+	 * @return a builder that returns servlet URLs
+	 * @review
+	 */
+	public WhiteboardAbsolutePortalURLBuilder forWhiteboard(
+		String servletPattern);
 
 	/**
 	 * Returns absolute URLs without the CDN part.

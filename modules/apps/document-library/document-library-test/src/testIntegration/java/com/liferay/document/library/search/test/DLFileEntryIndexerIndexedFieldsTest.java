@@ -34,7 +34,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.test.rule.PermissionCheckerTestRule;
+import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,7 +64,7 @@ public class DLFileEntryIndexerIndexedFieldsTest extends BaseDLIndexerTestCase {
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			PermissionCheckerTestRule.INSTANCE,
+			PermissionCheckerMethodTestRule.INSTANCE,
 			SynchronousDestinationTestRule.INSTANCE);
 
 	public FileEntry addFileEntry(String fileName) throws IOException {
@@ -218,6 +218,7 @@ public class DLFileEntryIndexerIndexedFieldsTest extends BaseDLIndexerTestCase {
 		populateDates(fileEntry, map);
 		populateHttpHeaders(fileEntry, map);
 		populateLocalizedTitles(fileEntry, map);
+		populateViewCount(fileEntry, map);
 
 		indexedFieldsFixture.populatePriority("0.0", map);
 		indexedFieldsFixture.populateRoleIdFields(
@@ -271,6 +272,13 @@ public class DLFileEntryIndexerIndexedFieldsTest extends BaseDLIndexerTestCase {
 			map.put(key, title);
 			map.put(key.concat("_sortable"), title);
 		}
+	}
+
+	protected void populateViewCount(
+		FileEntry fileEntry, Map<String, String> map) {
+
+		map.put("viewCount", String.valueOf(fileEntry.getReadCount()));
+		map.put("viewCount_sortable", String.valueOf(fileEntry.getReadCount()));
 	}
 
 	protected FileEntrySearchFixture fileEntrySearchFixture;

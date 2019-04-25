@@ -2,8 +2,8 @@ import '../css/main.scss';
 import 'clay-css/lib/css/atlas.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ThemeContext from './ThemeContext.es';
 import SegmentEdit from './components/segment_edit/SegmentEdit.es';
+import ThemeContext from './ThemeContext.es';
 
 const altProps = {
 	contributors: [
@@ -22,6 +22,7 @@ const altProps = {
 			propertyKey: 'user-organization'
 		}
 	],
+	editing: false,
 	initialMembersCount: 0,
 	initialSegmentActive: false,
 	initialSegmentName: '',
@@ -220,11 +221,6 @@ const altProps = {
 						uri: 'http://localhost:8080/group/guest/~/control_panel/manage?p_p_id=com_liferay_segments_web_internal_portlet_SegmentsPortlet&p_p_lifecycle=0&p_p_state=pop_up&p_p_mode=view&_com_liferay_segments_web_internal_portlet_SegmentsPortlet_mvcRenderCommandName=selectSegmentsEntryOrganizations&_com_liferay_segments_web_internal_portlet_SegmentsPortlet_segmentsEntryId=37008&p_p_auth=SsX9DxLY'
 					},
 					type: 'id'
-				},
-				{
-					label: 'Tree Path',
-					name: 'treePath',
-					type: 'string'
 				},
 				{
 					label: 'Type',

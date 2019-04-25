@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.LongStream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -110,7 +111,20 @@ public class AssetCategoriesNavigationDisplayContext {
 				_assetCategoriesNavigationPortletInstanceConfiguration.
 					assetVocabularyIds());
 
-			_assetVocabularyIds = StringUtil.split(assetVocabularyIds, 0L);
+			long[] configuredAssetVocabularyIds = StringUtil.split(
+				assetVocabularyIds, 0L);
+
+			LongStream longStream = Arrays.stream(configuredAssetVocabularyIds);
+
+			_assetVocabularyIds = longStream.filter(
+				assetVocabularyId -> {
+					AssetVocabulary assetVocabulary =
+						AssetVocabularyLocalServiceUtil.fetchAssetVocabulary(
+							assetVocabularyId);
+
+					return assetVocabulary != null;
+				}
+			).toArray();
 		}
 
 		return _assetVocabularyIds;

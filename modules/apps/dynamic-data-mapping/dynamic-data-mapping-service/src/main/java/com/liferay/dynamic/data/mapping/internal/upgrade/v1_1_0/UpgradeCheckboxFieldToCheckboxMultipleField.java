@@ -131,9 +131,7 @@ public class UpgradeCheckboxFieldToCheckboxMultipleField
 					ps2.addBatch();
 
 					ps3.setString(1, newDefinition);
-
 					ps3.setLong(2, structureId);
-
 					ps3.setString(3, version);
 
 					ps3.addBatch();
@@ -165,7 +163,7 @@ public class UpgradeCheckboxFieldToCheckboxMultipleField
 		return optionsJSONArray;
 	}
 
-	protected JSONObject getPredefinedValue(
+	protected JSONObject getPredefinedValueJSONObject(
 		JSONObject checkboxFieldJSONObject) {
 
 		JSONObject oldPredefinedValueJSONObject =
@@ -214,7 +212,8 @@ public class UpgradeCheckboxFieldToCheckboxMultipleField
 		checkboxFieldJSONObject.put(
 			"options", getOptionsJSONArray(checkboxFieldJSONObject));
 		checkboxFieldJSONObject.put(
-			"predefinedValue", getPredefinedValue(checkboxFieldJSONObject));
+			"predefinedValue",
+			getPredefinedValueJSONObject(checkboxFieldJSONObject));
 		checkboxFieldJSONObject.put("type", "checkbox_multiple");
 	}
 

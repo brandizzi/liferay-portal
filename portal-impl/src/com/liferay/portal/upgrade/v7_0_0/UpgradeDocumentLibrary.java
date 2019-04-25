@@ -96,6 +96,8 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 
 		// DLFileEntry
 
+		_populateEmptyTitles("DLFileEntry");
+
 		updateFileEntryFileNames();
 
 		// DLFileEntryType
@@ -105,6 +107,8 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 		updateFileEntryTypeDDMStructureLinks();
 
 		// DLFileVersion
+
+		_populateEmptyTitles("DLFileVersion");
 
 		updateFileVersionFileNames();
 
@@ -552,6 +556,16 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 		}
 	}
 
+	private void _populateEmptyTitles(String tableName) throws Exception {
+		try (LoggingTimer loggingTimer = new LoggingTimer()) {
+			runSQL(
+				StringBundler.concat(
+					"update ", tableName, " set title = ",
+					"CONCAT('unknown-title-', CAST_TEXT(fileEntryId)) where " +
+						"title = '' or title is null"));
+		}
+	}
+
 	private void _updateLongFileNames(String tableName) throws Exception {
 		try (PreparedStatement ps1 = connection.prepareStatement(
 				"select fileEntryId, title, extension from " + tableName +
@@ -564,8 +578,9 @@ public class UpgradeDocumentLibrary extends UpgradeProcess {
 
 			while (rs.next()) {
 				long fileEntryId = rs.getLong("fileEntryId");
-				String extension = rs.getString("extension");
-				String title = rs.getString("title");
+				String extension = GetterUtil.getString(
+					rs.getString("extension"));
+				String title = GetterUtil.getString(rs.getString("title"));
 
 				int availableLength = 254 - extension.length();
 

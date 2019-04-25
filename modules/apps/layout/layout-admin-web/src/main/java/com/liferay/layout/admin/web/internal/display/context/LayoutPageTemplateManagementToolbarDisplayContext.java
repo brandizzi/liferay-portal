@@ -24,6 +24,7 @@ import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -116,22 +117,25 @@ public class LayoutPageTemplateManagementToolbarDisplayContext
 						dropdownItem.putData(
 							"addPageTemplateURL",
 							_getAddLayoutPageTemplateEntryURL());
-						dropdownItem.setHref("#");
 						dropdownItem.setLabel(
-							LanguageUtil.get(
-								request, "standard-page-template"));
+							LanguageUtil.get(request, "content-page-template"));
 					});
 
-				addPrimaryDropdownItem(
-					dropdownItem -> {
-						dropdownItem.putData(
-							"action", "addLayoutPageTemplateEntry");
-						dropdownItem.putData(
-							"addPageTemplateURL", _getAddLayoutPrototypeURL());
-						dropdownItem.setHref("#");
-						dropdownItem.setLabel(
-							LanguageUtil.get(request, "widget-page-template"));
-					});
+				Group scopeGroup = _themeDisplay.getScopeGroup();
+
+				if (!scopeGroup.isLayoutSetPrototype()) {
+					addPrimaryDropdownItem(
+						dropdownItem -> {
+							dropdownItem.putData(
+								"action", "addLayoutPageTemplateEntry");
+							dropdownItem.putData(
+								"addPageTemplateURL",
+								_getAddLayoutPrototypeURL());
+							dropdownItem.setLabel(
+								LanguageUtil.get(
+									request, "widget-page-template"));
+						});
+				}
 			}
 		};
 	}
@@ -179,6 +183,7 @@ public class LayoutPageTemplateManagementToolbarDisplayContext
 		actionURL.setParameter(
 			"mvcRenderCommandName", "/layout/edit_layout_page_template_entry");
 		actionURL.setParameter("redirect", _themeDisplay.getURLCurrent());
+		actionURL.setParameter("backURL", _themeDisplay.getURLCurrent());
 		actionURL.setParameter(
 			"layoutPageTemplateCollectionId",
 			String.valueOf(
@@ -194,6 +199,7 @@ public class LayoutPageTemplateManagementToolbarDisplayContext
 		actionURL.setParameter(
 			ActionRequest.ACTION_NAME,
 			"/layout_prototype/add_layout_prototype");
+		actionURL.setParameter("backURL", _themeDisplay.getURLCurrent());
 		actionURL.setParameter(
 			"layoutPageTemplateCollectionId",
 			String.valueOf(

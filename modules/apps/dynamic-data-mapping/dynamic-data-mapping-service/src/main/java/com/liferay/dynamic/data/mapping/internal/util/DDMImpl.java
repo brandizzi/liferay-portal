@@ -345,7 +345,7 @@ public class DDMImpl implements DDM {
 			FileEntry fileEntry =
 				_dlAppLocalService.getFileEntryByUuidAndGroupId(uuid, groupId);
 
-			fieldValue = _dlurlHelper.getPreviewURL(
+			fieldValue = _dlURLHelper.getPreviewURL(
 				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK,
 				false, true);
 		}
@@ -817,6 +817,7 @@ public class DDMImpl implements DDM {
 			jsonObject.put("localizable", ddmFormField.isLocalizable());
 			jsonObject.put("multiple", ddmFormField.isMultiple());
 			jsonObject.put("name", ddmFormField.getName());
+			jsonObject.put("readOnly", ddmFormField.isReadOnly());
 			jsonObject.put("repeatable", ddmFormField.isRepeatable());
 			jsonObject.put("required", ddmFormField.isRequired());
 			jsonObject.put("showLabel", ddmFormField.isShowLabel());
@@ -1366,7 +1367,7 @@ public class DDMImpl implements DDM {
 	private DLAppLocalService _dlAppLocalService;
 
 	@Reference
-	private DLURLHelper _dlurlHelper;
+	private DLURLHelper _dlURLHelper;
 
 	private FieldsToDDMFormValuesConverter _fieldsToDDMFormValuesConverter;
 

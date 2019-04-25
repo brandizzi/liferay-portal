@@ -1,19 +1,18 @@
 import Component from 'metal-component';
 import Soy from 'metal-soy';
-import { CancellablePromise } from 'metal-promise';
-import { core } from 'metal';
+import {CancellablePromise} from 'metal-promise';
+import {core} from 'metal';
 
 import componentTemplates from './RotateComponent.soy';
 import controlsTemplates from './RotateControls.soy';
 
 /**
- * Rotate Component
- * @review
+ * Creates a Rotate component.
  */
 class RotateComponent extends Component {
+
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
 	attached() {
 		this.cache_ = {};
@@ -22,7 +21,6 @@ class RotateComponent extends Component {
 
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
 	detached() {
 		this.cache_ = {};
@@ -30,9 +28,10 @@ class RotateComponent extends Component {
 
 	/**
 	 * Rotates the image to the current selected rotation angle.
-	 * @param  {ImageData} imageData ImageData representation of the image.
-	 * @return {CancellablePromise} A promise that will resolve when the processing is complete.
-	 * @review
+	 *
+	 * @param  {ImageData} imageData The image data representation of the image.
+	 * @return {CancellablePromise} A promise that resolves when processing is
+	 * complete.
 	 */
 	preview(imageData) {
 		return this.process(imageData);
@@ -40,9 +39,10 @@ class RotateComponent extends Component {
 
 	/**
 	 * Rotates the image to the current selected rotation angle.
-	 * @param  {ImageData} imageData ImageData representation of the image.
-	 * @return {CancellablePromise} A promise that will resolve when the processing is complete.
-	 * @review
+	 *
+	 * @param  {ImageData} imageData The image data representation of the image.
+	 * @return {CancellablePromise} A promise that resolves when processing is
+	 * complete.
 	 */
 	process(imageData) {
 		let promise = this.cache_[this.rotationAngle_];
@@ -57,19 +57,21 @@ class RotateComponent extends Component {
 	}
 
 	/**
-	 * Rotates the passed ImageData to the current rotation angle.
-	 * @param  {ImageData} imageData The ImageData to rotate
-	 * @param  {number} rotationAngle Normalized rotation angle in degrees in the range [0-360)
+	 * Rotates the passed image data to the current rotation angle.
+	 *
+	 * @param  {ImageData} imageData The image data to rotate.
+	 * @param  {number} rotationAngle The normalized rotation angle (in degrees)
+	 * in the range [0-360).
 	 * @protected
-	 * @return {CancellablePromise} A promise to be fullfilled when the image has been rotated.
-	 * @review
+	 * @return {CancellablePromise} A promise that resolves when the image is
+	 * rotated.
 	 */
 	rotate_(imageData, rotationAngle) {
-		let cancellablePromise = new CancellablePromise((resolve, reject) => {
+		let cancellablePromise = new CancellablePromise((resolve, reject) => {
 			let imageWidth = imageData.width;
 			let imageHeight = imageData.height;
 
-			let swapDimensions  = (rotationAngle / 90) % 2;
+			let swapDimensions = (rotationAngle / 90) % 2;
 
 			let imageCanvas = document.createElement('canvas');
 			imageCanvas.width = imageWidth;
@@ -95,7 +97,6 @@ class RotateComponent extends Component {
 
 	/**
 	 * Rotates the image 90º counter-clockwise.
-	 * @review
 	 */
 	rotateLeft() {
 		this.rotationAngle_ = (this.rotationAngle_ - 90) % 360;
@@ -104,7 +105,6 @@ class RotateComponent extends Component {
 
 	/**
 	 * Rotates the image 90º clockwise.
-	 * @review
 	 */
 	rotateRight() {
 		this.rotationAngle_ = (this.rotationAngle_ + 90) % 360;
@@ -114,14 +114,15 @@ class RotateComponent extends Component {
 
 /**
  * State definition.
- * @review
+ *
  * @static
  * @type {!Object}
  */
 RotateComponent.STATE = {
+
 	/**
-	 * Path of this module
-	 * @review
+	 * Path of this module.
+	 *
 	 * @type {Function}
 	 */
 	modulePath: {
@@ -129,9 +130,9 @@ RotateComponent.STATE = {
 	},
 
 	/**
-	 * Injected method to notify the editor this component
-	 * wants to generate a preview version of the image.
-	 * @review
+	 * Injected method that notifies the editor that this component wants to
+	 * generate a preview version of the image.
+	 *
 	 * @type {Function}
 	 */
 	requestImageEditorPreview: {

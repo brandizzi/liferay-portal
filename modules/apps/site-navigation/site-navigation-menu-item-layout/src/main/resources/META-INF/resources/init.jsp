@@ -27,7 +27,7 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.frontend.taglib.clay.servlet.taglib.util.JSPNavigationItemList" %><%@
 page import="com.liferay.item.selector.ItemSelector" %><%@
-page import="com.liferay.item.selector.ItemSelectorReturnType" %><%@
+page import="com.liferay.item.selector.ItemSelectorCriterion" %><%@
 page import="com.liferay.item.selector.criteria.UUIDItemSelectorReturnType" %><%@
 page import="com.liferay.layout.item.selector.criterion.LayoutItemSelectorCriterion" %><%@
 page import="com.liferay.petra.string.StringPool" %><%@
@@ -39,11 +39,10 @@ page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.portal.kernel.util.WebKeys" %><%@
+page import="com.liferay.site.navigation.constants.SiteNavigationWebKeys" %><%@
 page import="com.liferay.site.navigation.menu.item.layout.internal.constants.SiteNavigationMenuItemTypeLayoutWebKeys" %><%@
+page import="com.liferay.site.navigation.menu.item.util.SiteNavigationMenuItemUtil" %><%@
 page import="com.liferay.site.navigation.model.SiteNavigationMenuItem" %>
-
-<%@ page import="java.util.ArrayList" %><%@
-page import="java.util.List" %>
 
 <%@ page import="javax.portlet.PortletURL" %>
 

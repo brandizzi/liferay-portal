@@ -21,6 +21,7 @@ import com.liferay.blogs.service.BlogsEntryLocalServiceUtil;
 import com.liferay.blogs.service.BlogsEntryServiceUtil;
 import com.liferay.blogs.web.internal.security.permission.resource.BlogsEntryPermission;
 import com.liferay.blogs.web.internal.util.BlogsUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.dao.search.SearchContainerResults;
@@ -174,6 +175,14 @@ public class BlogEntriesDisplayContext {
 		return entriesSearchContainer;
 	}
 
+	private long _getEntryId(Document document) {
+		if (!Objects.equals(StringPool.BLANK, document.get(Field.CLASS_PK))) {
+			return GetterUtil.getLong(document.get(Field.CLASS_PK));
+		}
+
+		return GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK));
+	}
+
 	private int _getStatus() {
 		if (_status != null) {
 			return _status;
@@ -267,6 +276,7 @@ public class BlogEntriesDisplayContext {
 
 			searchContext.setAttribute(Field.STATUS, _getStatus());
 			searchContext.setEnd(searchContainer.getEnd());
+			searchContext.setIncludeDiscussions(true);
 			searchContext.setKeywords(keywords);
 			searchContext.setStart(searchContainer.getStart());
 
@@ -310,8 +320,7 @@ public class BlogEntriesDisplayContext {
 			for (int i = 0; i < docs.length; i++) {
 				Document doc = hits.doc(i);
 
-				long entryId = GetterUtil.getLong(
-					doc.get(Field.ENTRY_CLASS_PK));
+				long entryId = _getEntryId(doc);
 
 				BlogsEntry entry = null;
 

@@ -14,15 +14,13 @@
 
 package com.liferay.segments.internal.model.listener;
 
-import com.liferay.layout.constants.LayoutConstants;
 import com.liferay.portal.kernel.exception.ModelListenerException;
 import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.ModelListener;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
-
-import java.util.Objects;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -35,33 +33,22 @@ public class LayoutModelListener extends BaseModelListener<Layout> {
 
 	@Override
 	public void onAfterRemove(Layout layout) throws ModelListenerException {
-		if (!_isContentLayout(layout)) {
-			return;
-		}
-
 		try {
 			_segmentsExperienceLocalService.deleteSegmentsExperiences(
 				layout.getGroupId(),
 				_classNameLocalService.getClassNameId(Layout.class),
-				layout.getPrimaryKey());
+				layout.getPlid());
 		}
 		catch (Exception e) {
 			throw new ModelListenerException(e);
 		}
 	}
 
-	private boolean _isContentLayout(Layout layout) {
-		if (Objects.equals(
-				layout.getType(), LayoutConstants.LAYOUT_TYPE_CONTENT)) {
-
-			return true;
-		}
-
-		return false;
-	}
-
 	@Reference
 	private ClassNameLocalService _classNameLocalService;
+
+	@Reference
+	private LayoutLocalService _layoutLocalService;
 
 	@Reference
 	private SegmentsExperienceLocalService _segmentsExperienceLocalService;

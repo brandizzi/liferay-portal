@@ -1,13 +1,12 @@
 package ${configYAML.apiPackagePath}.internal.graphql.query.${escapedVersion};
 
-<#compress>
-	<#list openAPIYAML.components.schemas?keys as schemaName>
-		import ${configYAML.apiPackagePath}.dto.${escapedVersion}.${schemaName};
-		import ${configYAML.apiPackagePath}.internal.resource.${escapedVersion}.${schemaName}ResourceImpl;
-		import ${configYAML.apiPackagePath}.resource.${escapedVersion}.${schemaName}Resource;
-	</#list>
-</#compress>
+<#list openAPIYAML.components.schemas?keys as schemaName>
+	import ${configYAML.apiPackagePath}.dto.${escapedVersion}.${schemaName};
+	import ${configYAML.apiPackagePath}.resource.${escapedVersion}.${schemaName}Resource;
+</#list>
 
+import com.liferay.petra.function.UnsafeConsumer;
+import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
@@ -27,6 +26,8 @@ import javax.annotation.Generated;
 
 import javax.ws.rs.core.Response;
 
+import org.osgi.service.component.ComponentServiceObjects;
+
 /**
  * @author ${configYAML.author}
  * @generated
@@ -34,43 +35,59 @@ import javax.ws.rs.core.Response;
 @Generated("")
 public class Query {
 
-	<#assign javaMethodSignatures = freeMarkerTool.getGraphQLJavaMethodSignatures(configYAML, "query", openAPIYAML) />
+	<#assign
+		javaMethodSignatures = freeMarkerTool.getGraphQLJavaMethodSignatures(configYAML, "query", openAPIYAML)
+
+		schemaNames = freeMarkerTool.getGraphQLSchemaNames(javaMethodSignatures)
+	/>
+
+	<#list schemaNames as schemaName>
+		public static void set${schemaName}ResourceComponentServiceObjects(ComponentServiceObjects<${schemaName}Resource> ${freeMarkerTool.getSchemaVarName(schemaName)}ResourceComponentServiceObjects) {
+			_${freeMarkerTool.getSchemaVarName(schemaName)}ResourceComponentServiceObjects = ${freeMarkerTool.getSchemaVarName(schemaName)}ResourceComponentServiceObjects;
+		}
+	</#list>
 
 	<#list javaMethodSignatures as javaMethodSignature>
 		${freeMarkerTool.getGraphQLMethodAnnotations(javaMethodSignature)}
 		public ${javaMethodSignature.returnType} ${javaMethodSignature.methodName}(${freeMarkerTool.getGraphQLParameters(javaMethodSignature.javaMethodParameters, javaMethodSignature.operation, true)}) throws Exception {
-			<#assign schemaName = javaMethodSignature.schemaName />
+			<#if javaMethodSignature.returnType?contains("Collection<")>
+				return _applyComponentServiceObjects(
+					_${freeMarkerTool.getSchemaVarName(javaMethodSignature.schemaName)}ResourceComponentServiceObjects,
+					this::_populateResourceContext,
+					${freeMarkerTool.getSchemaVarName(javaMethodSignature.schemaName)}Resource -> {
+						<#assign arguments = freeMarkerTool.getGraphQLArguments(javaMethodSignature.javaMethodParameters) />
 
-			<#if stringUtil.equals(javaMethodSignature.returnType, "Response")>
-				Response.ResponseBuilder responseBuilder = Response.ok();
+						Page paginationPage = ${freeMarkerTool.getSchemaVarName(javaMethodSignature.schemaName)}Resource.${javaMethodSignature.methodName}(${arguments?replace("pageSize,page", "Pagination.of(pageSize, page)")});
 
-				return responseBuilder.build();
-			<#elseif javaMethodSignature.returnType?contains("Collection<")>
-				${schemaName}Resource ${schemaName?uncap_first}Resource = _create${schemaName}Resource();
-
-				${schemaName?uncap_first}Resource.setContextCompany(CompanyLocalServiceUtil.getCompany(CompanyThreadLocal.getCompanyId()));
-
-				<#assign arguments = freeMarkerTool.getGraphQLArguments(javaMethodSignature.javaMethodParameters) />
-
-				Page paginationPage = ${schemaName?uncap_first}Resource.${javaMethodSignature.methodName}(${arguments?replace("pageSize,page", "Pagination.of(pageSize, page)")});
-
-				return paginationPage.getItems();
+						return paginationPage.getItems();
+					});
 			<#else>
-				${schemaName}Resource ${schemaName?uncap_first}Resource = _create${schemaName}Resource();
-
-				${schemaName?uncap_first}Resource.setContextCompany(CompanyLocalServiceUtil.getCompany(CompanyThreadLocal.getCompanyId()));
-
-				return ${schemaName?uncap_first}Resource.${javaMethodSignature.methodName}(${freeMarkerTool.getGraphQLArguments(javaMethodSignature.javaMethodParameters)});
+				return _applyComponentServiceObjects(_${freeMarkerTool.getSchemaVarName(javaMethodSignature.schemaName)}ResourceComponentServiceObjects, this::_populateResourceContext, ${freeMarkerTool.getSchemaVarName(javaMethodSignature.schemaName)}Resource -> ${freeMarkerTool.getSchemaVarName(javaMethodSignature.schemaName)}Resource.${javaMethodSignature.methodName}(${freeMarkerTool.getGraphQLArguments(javaMethodSignature.javaMethodParameters)}));
 			</#if>
 		}
 	</#list>
 
-	<#assign schemaNames = freeMarkerTool.getGraphQLSchemaNames(javaMethodSignatures) />
+	private <T, R, E1 extends Throwable, E2 extends Throwable> R _applyComponentServiceObjects(ComponentServiceObjects<T> componentServiceObjects, UnsafeConsumer<T, E1> unsafeConsumer, UnsafeFunction<T, R, E2> unsafeFunction) throws E1, E2 {
+		T resource = componentServiceObjects.getService();
+
+		try {
+			unsafeConsumer.accept(resource);
+
+			return unsafeFunction.apply(resource);
+		}
+		finally {
+			componentServiceObjects.ungetService(resource);
+		}
+	}
 
 	<#list schemaNames as schemaName>
-		private static ${schemaName}Resource _create${schemaName}Resource() {
-			return new ${schemaName}ResourceImpl();
+		private void _populateResourceContext(${schemaName}Resource ${freeMarkerTool.getSchemaVarName(schemaName)}Resource) throws Exception {
+			${freeMarkerTool.getSchemaVarName(schemaName)}Resource.setContextCompany(CompanyLocalServiceUtil.getCompany(CompanyThreadLocal.getCompanyId()));
 		}
+	</#list>
+
+	<#list schemaNames as schemaName>
+		private static ComponentServiceObjects<${schemaName}Resource> _${freeMarkerTool.getSchemaVarName(schemaName)}ResourceComponentServiceObjects;
 	</#list>
 
 }

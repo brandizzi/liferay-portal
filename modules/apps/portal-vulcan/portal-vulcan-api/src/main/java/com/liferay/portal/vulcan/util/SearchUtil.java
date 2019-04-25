@@ -47,7 +47,8 @@ public class SearchUtil {
 
 	public static <T> Page<T> search(
 			UnsafeConsumer<BooleanQuery, Exception> booleanQueryUnsafeConsumer,
-			Filter filter, Class<?> indexerClass, Pagination pagination,
+			Filter filter, Class<?> indexerClass, String keywords,
+			Pagination pagination,
 			UnsafeConsumer<QueryConfig, Exception> queryConfigUnsafeConsumer,
 			UnsafeConsumer<SearchContext, Exception>
 				searchContextUnsafeConsumer,
@@ -66,8 +67,8 @@ public class SearchUtil {
 		Indexer<?> indexer = IndexerRegistryUtil.getIndexer(indexerClass);
 
 		SearchContext searchContext = _createSearchContext(
-			_getBooleanClause(booleanQueryUnsafeConsumer, filter), pagination,
-			queryConfigUnsafeConsumer, sorts);
+			_getBooleanClause(booleanQueryUnsafeConsumer, filter), keywords,
+			pagination, queryConfigUnsafeConsumer, sorts);
 
 		searchContextUnsafeConsumer.accept(searchContext);
 
@@ -85,7 +86,8 @@ public class SearchUtil {
 	}
 
 	private static SearchContext _createSearchContext(
-			BooleanClause<?> booleanClause, Pagination pagination,
+			BooleanClause<?> booleanClause, String keywords,
+			Pagination pagination,
 			UnsafeConsumer<QueryConfig, Exception> queryConfigUnsafeConsumer,
 			Sort[] sorts)
 		throws Exception {
@@ -94,6 +96,7 @@ public class SearchUtil {
 
 		searchContext.setBooleanClauses(new BooleanClause[] {booleanClause});
 		searchContext.setEnd(pagination.getEndPosition());
+		searchContext.setKeywords(keywords);
 		searchContext.setSorts(sorts);
 		searchContext.setStart(pagination.getStartPosition());
 

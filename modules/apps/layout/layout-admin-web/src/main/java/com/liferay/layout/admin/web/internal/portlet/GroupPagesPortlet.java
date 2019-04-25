@@ -16,8 +16,9 @@ package com.liferay.layout.admin.web.internal.portlet;
 
 import com.liferay.application.list.GroupProvider;
 import com.liferay.application.list.constants.ApplicationListWebKeys;
-import com.liferay.asset.display.contributor.AssetDisplayContributorTracker;
 import com.liferay.asset.kernel.exception.AssetCategoryException;
+import com.liferay.info.constants.InfoDisplayWebKeys;
+import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.configuration.LayoutAdminWebConfiguration;
@@ -27,6 +28,7 @@ import com.liferay.layout.page.template.exception.LayoutPageTemplateCollectionNa
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateCollectionService;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
+import com.liferay.layout.util.LayoutCopyHelper;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.GroupInheritContentException;
@@ -185,12 +187,14 @@ public class GroupPagesPortlet extends MVCPortlet {
 				LayoutAdminWebConfiguration.class.getName(),
 				_layoutAdminWebConfiguration);
 			renderRequest.setAttribute(
-				LayoutAdminWebKeys.ASSET_DISPLAY_CONTRIBUTOR_TRACKER,
-				_assetDisplayContributorTracker);
-			renderRequest.setAttribute(
 				ApplicationListWebKeys.GROUP_PROVIDER, _groupProvider);
 			renderRequest.setAttribute(
+				InfoDisplayWebKeys.INFO_DISPLAY_CONTRIBUTOR_TRACKER,
+				_infoDisplayContributorTracker);
+			renderRequest.setAttribute(
 				LayoutAdminWebKeys.ITEM_SELECTOR, _itemSelector);
+			renderRequest.setAttribute(
+				LayoutAdminWebKeys.LAYOUT_COPY_HELPER, _layoutCopyHelper);
 
 			super.doDispatch(renderRequest, renderResponse);
 		}
@@ -233,15 +237,18 @@ public class GroupPagesPortlet extends MVCPortlet {
 		GroupPagesPortlet.class);
 
 	@Reference
-	private AssetDisplayContributorTracker _assetDisplayContributorTracker;
+	private GroupProvider _groupProvider;
 
 	@Reference
-	private GroupProvider _groupProvider;
+	private InfoDisplayContributorTracker _infoDisplayContributorTracker;
 
 	@Reference
 	private ItemSelector _itemSelector;
 
 	private volatile LayoutAdminWebConfiguration _layoutAdminWebConfiguration;
+
+	@Reference
+	private LayoutCopyHelper _layoutCopyHelper;
 
 	@Reference
 	private LayoutPageTemplateCollectionService

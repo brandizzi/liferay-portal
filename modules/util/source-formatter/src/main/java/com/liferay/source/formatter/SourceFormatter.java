@@ -92,6 +92,8 @@ public class SourceFormatter {
 			new ExcludeSyntaxPattern(ExcludeSyntax.GLOB, "**/test-results/**"),
 			new ExcludeSyntaxPattern(ExcludeSyntax.GLOB, "**/tmp/**"),
 			new ExcludeSyntaxPattern(
+				ExcludeSyntax.GLOB, "**/node_modules_cache/**"),
+			new ExcludeSyntaxPattern(
 				ExcludeSyntax.REGEX,
 				"^((?!/frontend-js-node-shims/src/).)*/node_modules/.*"),
 			new ExcludeSyntaxPattern(
@@ -146,17 +148,20 @@ public class SourceFormatter {
 				sourceFormatterArgs.setGitWorkingBranchName(
 					gitWorkingBranchName);
 
-				sourceFormatterArgs.setRecentChangesFileNames(
+				sourceFormatterArgs.addRecentChangesFileNames(
 					GitUtil.getCurrentBranchFileNames(
-						baseDirName, gitWorkingBranchName, false));
+						baseDirName, gitWorkingBranchName, false),
+					baseDirName);
 			}
 			else if (formatLatestAuthor) {
-				sourceFormatterArgs.setRecentChangesFileNames(
-					GitUtil.getLatestAuthorFileNames(baseDirName, false));
+				sourceFormatterArgs.addRecentChangesFileNames(
+					GitUtil.getLatestAuthorFileNames(baseDirName, false),
+					baseDirName);
 			}
 			else if (formatLocalChanges) {
-				sourceFormatterArgs.setRecentChangesFileNames(
-					GitUtil.getLocalChangesFileNames(baseDirName, false));
+				sourceFormatterArgs.addRecentChangesFileNames(
+					GitUtil.getLocalChangesFileNames(baseDirName, false),
+					baseDirName);
 			}
 
 			String fileNamesString = ArgumentsUtil.getString(
@@ -189,11 +194,15 @@ public class SourceFormatter {
 				arguments, "include.subrepositories",
 				SourceFormatterArgs.INCLUDE_SUBREPOSITORIES);
 
-			List<String> recentChangesFileNames =
+			Set<String> recentChangesFileNames =
 				sourceFormatterArgs.getRecentChangesFileNames();
 
-			if (recentChangesFileNames != null) {
-				includeSubrepositories = true;
+			for (String recentChangesFileName : recentChangesFileNames) {
+				if (recentChangesFileName.endsWith("ci-merge")) {
+					includeSubrepositories = true;
+
+					break;
+				}
 			}
 
 			sourceFormatterArgs.setIncludeSubrepositories(
@@ -466,7 +475,7 @@ public class SourceFormatter {
 	}
 
 	private void _addDependentFileNames() {
-		List<String> recentChangesFileNames =
+		Set<String> recentChangesFileNames =
 			_sourceFormatterArgs.getRecentChangesFileNames();
 
 		if (recentChangesFileNames == null) {
@@ -476,51 +485,72 @@ public class SourceFormatter {
 		Set<String> dependentFileNames = new HashSet<>();
 
 		boolean buildPropertiesAdded = false;
+		boolean tagJavaFilesAdded = false;
 
 		for (String recentChangesFileName : recentChangesFileNames) {
 			if (!buildPropertiesAdded &&
-				recentChangesFileName.startsWith("module/")) {
+				recentChangesFileName.contains("/module/")) {
 
 				File file = new File(
 					_sourceFormatterArgs.getBaseDirName() + "build.properties");
 
 				if (file.exists()) {
-					dependentFileNames.add("build.properties");
+					dependentFileNames.add(
+						_sourceFormatterArgs.getBaseDirName() +
+							"build.properties");
 				}
 
 				buildPropertiesAdded = true;
 			}
 
-			if (!recentChangesFileName.endsWith("ServiceImpl.java")) {
-				continue;
+			if (recentChangesFileName.endsWith("ServiceImpl.java")) {
+				dependentFileNames = _addServiceXMLFileName(
+					dependentFileNames, recentChangesFileName);
 			}
+			else if (!tagJavaFilesAdded &&
+					 recentChangesFileName.endsWith(".tld")) {
 
-			String dirName = recentChangesFileName.substring(
-				0, recentChangesFileName.lastIndexOf(CharPool.SLASH));
+				dependentFileNames.addAll(
+					SourceFormatterUtil.filterFileNames(
+						_allFileNames, new String[0],
+						new String[] {"**/*Tag.java"}, _sourceFormatterExcludes,
+						false));
 
-			while (true) {
-				String serviceFileName = dirName + "/service.xml";
-
-				File file = new File(
-					_sourceFormatterArgs.getBaseDirName() + serviceFileName);
-
-				if (file.exists()) {
-					dependentFileNames.add(serviceFileName);
-
-					break;
-				}
-
-				int pos = dirName.lastIndexOf(CharPool.SLASH);
-
-				if (pos == -1) {
-					break;
-				}
-
-				dirName = dirName.substring(0, pos);
+				tagJavaFilesAdded = true;
 			}
 		}
 
-		_sourceFormatterArgs.addRecentChangesFileNames(dependentFileNames);
+		_sourceFormatterArgs.addRecentChangesFileNames(
+			dependentFileNames, null);
+	}
+
+	private Set<String> _addServiceXMLFileName(
+		Set<String> dependentFileNames, String serviceImplFileName) {
+
+		String dirName = serviceImplFileName.substring(
+			0, serviceImplFileName.lastIndexOf(CharPool.SLASH));
+
+		while (true) {
+			String serviceFileName = dirName + "/service.xml";
+
+			File file = new File(
+				_sourceFormatterArgs.getBaseDirName() + serviceFileName);
+
+			if (file.exists()) {
+				dependentFileNames.add(
+					_sourceFormatterArgs.getBaseDirName() + serviceFileName);
+
+				return dependentFileNames;
+			}
+
+			int pos = dirName.lastIndexOf(CharPool.SLASH);
+
+			if (pos == -1) {
+				return dependentFileNames;
+			}
+
+			dirName = dirName.substring(0, pos);
+		}
 	}
 
 	private void _excludeWorkingDirCheckoutPrivateApps(File portalDir)

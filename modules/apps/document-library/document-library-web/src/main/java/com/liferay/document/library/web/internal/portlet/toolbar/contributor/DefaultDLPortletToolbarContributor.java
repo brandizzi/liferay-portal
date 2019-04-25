@@ -84,18 +84,19 @@ public class DefaultDLPortletToolbarContributor
 
 		List<MenuItem> menuItems = new ArrayList<>();
 
-		menuItems.add(
+		_add(
+			menuItems,
 			_menuItemProvider.getAddFileMenuItem(
 				folder, themeDisplay, portletRequest));
 
 		_add(
 			menuItems,
-			_menuItemProvider.getAddFolderMenuItem(
+			_menuItemProvider.getAddMultipleFilesMenuItem(
 				folder, themeDisplay, portletRequest));
 
 		_add(
 			menuItems,
-			_menuItemProvider.getAddMultipleFilesMenuItem(
+			_menuItemProvider.getAddFolderMenuItem(
 				folder, themeDisplay, portletRequest));
 
 		_add(
@@ -108,7 +109,11 @@ public class DefaultDLPortletToolbarContributor
 			_menuItemProvider.getAddShortcutMenuItem(
 				folder, themeDisplay, portletRequest));
 
-		MenuItem lastStaticMenuItem = menuItems.get(menuItems.size() - 1);
+		MenuItem lastStaticMenuItem = null;
+
+		if (!menuItems.isEmpty()) {
+			lastStaticMenuItem = menuItems.get(menuItems.size() - 1);
+		}
 
 		for (DLPortletToolbarContributorContext
 				dlPortletToolbarContributorContext :
@@ -119,12 +124,26 @@ public class DefaultDLPortletToolbarContributor
 				portletResponse);
 		}
 
+		MenuItem lastExtensionMenuItem = null;
+
+		if (!menuItems.isEmpty()) {
+			lastExtensionMenuItem = menuItems.get(menuItems.size() - 1);
+		}
+
 		menuItems.addAll(
 			_menuItemProvider.getAddDocumentTypesMenuItems(
 				folder, themeDisplay, portletRequest));
 
-		if (lastStaticMenuItem != menuItems.get(menuItems.size() - 1)) {
+		if ((lastStaticMenuItem != null) &&
+			(lastStaticMenuItem != menuItems.get(menuItems.size() - 1))) {
+
 			lastStaticMenuItem.setSeparator(true);
+		}
+
+		if ((lastExtensionMenuItem != null) &&
+			(lastExtensionMenuItem != menuItems.get(menuItems.size() - 1))) {
+
+			lastExtensionMenuItem.setSeparator(true);
 		}
 
 		return menuItems;

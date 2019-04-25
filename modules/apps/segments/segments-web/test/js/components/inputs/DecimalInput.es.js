@@ -1,5 +1,5 @@
-import React from 'react';
 import DecimalInput from 'components/inputs/DecimalInput.es';
+import React from 'react';
 import {cleanup, fireEvent, render} from 'react-testing-library';
 import {testControlledInput} from 'test/utils';
 
@@ -60,7 +60,9 @@ describe(
 
 				fireEvent.blur(element);
 
-				expect(mockOnChange.mock.calls[1][0]).toBe('1.01');
+				expect(mockOnChange.mock.calls[1][0]).toMatchObject(
+					{value: '1.01'}
+				);
 			}
 		);
 	}

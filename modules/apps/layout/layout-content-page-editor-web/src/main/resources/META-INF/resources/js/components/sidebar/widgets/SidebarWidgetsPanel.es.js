@@ -4,12 +4,13 @@ import Soy from 'metal-soy';
 import {Config} from 'metal-state';
 import {Drag, DragDrop} from 'metal-drag-drop';
 
-import templates from './SidebarWidgetsPanel.soy';
 import {ADD_PORTLET, CLEAR_DROP_TARGET, UPDATE_DROP_TARGET, UPDATE_LAST_SAVE_DATE, UPDATE_SAVING_CHANGES_STATUS} from '../../../actions/actions.es';
-import {FRAGMENTS_EDITOR_ITEM_BORDERS, FRAGMENTS_EDITOR_ITEM_TYPES} from '../../../utils/constants';
+import {FRAGMENTS_EDITOR_DRAGGING_CLASS, FRAGMENTS_EDITOR_ITEM_BORDERS, FRAGMENTS_EDITOR_ITEM_TYPES} from '../../../utils/constants';
 import {getConnectedComponent} from '../../../store/ConnectedComponent.es';
-import {setIn} from '../../../utils/FragmentsEditorUpdateUtils.es';
+import {initializeDragDrop} from '../../../utils/FragmentsEditorDragDrop.es';
+import {setDraggingItemPosition, setIn} from '../../../utils/FragmentsEditorUpdateUtils.es';
 import {shouldUpdateOnChangeProperties} from '../../../utils/FragmentsEditorComponentUtils.es';
+import templates from './SidebarWidgetsPanel.soy';
 
 /**
  * KeyBoardEvent enter key
@@ -174,9 +175,11 @@ class SidebarWidgetsPanel extends Component {
 		const data = targetItem ? targetItem.dataset : null;
 		const targetIsColumn = targetItem && ('columnId' in data);
 		const targetIsFragment = targetItem && ('fragmentEntryLinkId' in data);
-		const targetIsSection = targetItem && ('layoutSectionId' in data);
+		const targetIsRow = targetItem && ('layoutRowId' in data);
 
-		if (targetIsColumn || targetIsFragment || targetIsSection) {
+		setDraggingItemPosition(eventData.originalEvent);
+
+		if (targetIsColumn || targetIsFragment || targetIsRow) {
 			const mouseY = eventData.originalEvent.clientY;
 			const targetItemRegion = position.getRegion(targetItem);
 
@@ -200,9 +203,9 @@ class SidebarWidgetsPanel extends Component {
 				dropTargetItemId = data.fragmentEntryLinkId;
 				dropTargetItemType = FRAGMENTS_EDITOR_ITEM_TYPES.fragment;
 			}
-			else if (targetIsSection) {
-				dropTargetItemId = data.layoutSectionId;
-				dropTargetItemType = FRAGMENTS_EDITOR_ITEM_TYPES.section;
+			else if (targetIsRow) {
+				dropTargetItemId = data.layoutRowId;
+				dropTargetItemType = FRAGMENTS_EDITOR_ITEM_TYPES.row;
 			}
 
 			this.store.dispatchAction(
@@ -303,9 +306,10 @@ class SidebarWidgetsPanel extends Component {
 			this._dragDrop.dispose();
 		}
 
-		this._dragDrop = new DragDrop(
+		this._dragDrop = initializeDragDrop(
 			{
 				autoScroll: true,
+				draggingClass: FRAGMENTS_EDITOR_DRAGGING_CLASS,
 				dragPlaceholder: Drag.Placeholder.CLONE,
 				handles: '.fragments-editor__drag-handler',
 				sources: '.fragments-editor__drag-source--sidebar-widget',

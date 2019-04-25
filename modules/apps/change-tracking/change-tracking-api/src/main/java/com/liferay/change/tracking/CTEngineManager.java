@@ -18,6 +18,7 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.change.tracking.model.CTCollection;
 import com.liferay.change.tracking.model.CTEntry;
+import com.liferay.change.tracking.model.CTEntryAggregate;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.model.BaseModel;
 
@@ -41,6 +42,18 @@ public interface CTEngineManager {
 	 * @param ctCollectionId the primary key of the selected change collection
 	 */
 	public void checkoutCTCollection(long userId, long ctCollectionId);
+
+	/**
+	 * Returns the number of the change tracking collections associated with the
+	 * given company and keywords.
+	 *
+	 * @param  companyId the primary key of the company
+	 * @param  queryDefinition the object contains settings regarding
+	 *         pagination, order and filter (keywords)
+	 * @return the number of change tracking collections
+	 */
+	public long countByKeywords(
+		long companyId, QueryDefinition<CTCollection> queryDefinition);
 
 	/**
 	 * Creates a new change tracking collection.
@@ -77,38 +90,6 @@ public interface CTEngineManager {
 	public void enableChangeTracking(long companyId, long userId);
 
 	/**
-	 * Returns the active change tracking collection associated with the given
-	 * user in the scope of the given company.
-	 *
-	 * @param  userId the primary key of the user
-	 * @return the selected change tracking collection
-	 */
-	public Optional<CTCollection> getActiveCTCollectionOptional(long userId);
-
-	/**
-	 * Returns all the change entries associated with the given change
-	 * collection what collide with any of the production change collection
-	 * entries.
-	 *
-	 * @param  ctCollectionId the primary key of the change collection
-	 * @return the list of the colliding change entries
-	 */
-	public List<CTEntry> getCollidingCTEntries(long ctCollectionId);
-
-	/**
-	 * Returns all the change entries associated with the source change
-	 * collection what collide with any of the target change collection entries.
-	 *
-	 * @param  sourceCTCollectionId the primary key of the source change
-	 *         collection
-	 * @param  targetCTCollectionId the primary key of the target change
-	 *         collection
-	 * @return the list of the colliding change entries
-	 */
-	public List<CTEntry> getCollidingCTEntries(
-		long sourceCTCollectionId, long targetCTCollectionId);
-
-	/**
 	 * Returns the change tracking collection identified by the primary key.
 	 *
 	 * @param  ctCollectionId the primary key of the change collection
@@ -126,16 +107,25 @@ public interface CTEngineManager {
 	public List<CTCollection> getCTCollections(long companyId);
 
 	/**
-	 * Returns all the change tracking collection associated with the given
-	 * company.
+	 * Returns the filtered list of change entries associated with the given
+	 * change collection.
 	 *
-	 * @param  companyId the primary key of the company
+	 * @param  ctCollection the primary key of the change collection
+	 * @param  groupIds the array of the group primary keys
+	 * @param  userIds the array of the user primary keys
+	 * @param  classNameIds the array of the class name primary keys
+	 * @param  changeTypes the array of the change types
+	 * @param  collision whether or not the change entries collide with the
+	 *         production change collection
 	 * @param  queryDefinition the object contains settings regarding
-	 *         pagination, order and filter
-	 * @return the list of change tracking collections
+	 *         pagination, order and status filtering
+	 * @return the filtered list of change entries associated with the given
+	 *         change collection.
 	 */
-	public List<CTCollection> getCTCollections(
-		long companyId, QueryDefinition<CTCollection> queryDefinition);
+	public List<CTEntry> getCTEntries(
+		CTCollection ctCollection, long[] groupIds, long[] userIds,
+		long[] classNameIds, int[] changeTypes, Boolean collision,
+		QueryDefinition<CTEntry> queryDefinition);
 
 	/**
 	 * Returns all the change entries associated with the given change
@@ -152,20 +142,53 @@ public interface CTEngineManager {
 	 *
 	 * @param  ctCollectionId the primary key of the change collection
 	 * @param  queryDefinition the object contains settings regarding
-	 *         pagination, order and filter
+	 *         pagination, order and status filtering
 	 * @return the list of change entries
 	 */
 	public List<CTEntry> getCTEntries(
 		long ctCollectionId, QueryDefinition<CTEntry> queryDefinition);
 
 	/**
-	 * Returns the number of all the change entries associated with the given
-	 * change collection.
+	 * Returns the number of the filtered change entries associated with the
+	 * given change collection.
+	 *
+	 * @param  ctCollection the primary key of the change collection
+	 * @param  groupIds the array of the group primary keys
+	 * @param  userIds the array of the user primary keys
+	 * @param  classNameIds the array of the class name primary keys
+	 * @param  changeTypes the array of the change types
+	 * @param  collision whether or not the change entries collide with the
+	 *         production change collection
+	 * @param  queryDefinition the object contains settings regarding the status
+	 *         filtering
+	 * @return the number of filtered change tracking entries associated with
+	 *         the given change collection.
+	 */
+	public int getCTEntriesCount(
+		CTCollection ctCollection, long[] groupIds, long[] userIds,
+		long[] classNameIds, int[] changeTypes, Boolean collision,
+		QueryDefinition<CTEntry> queryDefinition);
+
+	/**
+	 * Returns all the change entry aggregates associated with the given change
+	 * collection.
 	 *
 	 * @param  ctCollectionId the primary key of the change collection
-	 * @return the list of change entries
+	 * @return the list of change entry aggregates
 	 */
-	public int getCTEntriesCount(long ctCollectionId);
+	public List<CTEntryAggregate> getCTEntryAggregates(long ctCollectionId);
+
+	/**
+	 * Returns all the non production change tracking collection associated with
+	 * the given company.
+	 *
+	 * @param  companyId the primary key of the company
+	 * @param  queryDefinition the object contains settings regarding
+	 *         pagination, order and filter
+	 * @return the list of change tracking collections
+	 */
+	public List<CTCollection> getNonproductionCTCollections(
+		long companyId, QueryDefinition<CTCollection> queryDefinition);
 
 	/**
 	 * Returns the special change tracking collection which is called production
@@ -176,6 +199,14 @@ public interface CTEngineManager {
 	 */
 	public Optional<CTCollection> getProductionCTCollectionOptional(
 		long companyId);
+
+	/**
+	 * Returns the recent change tracking collection ID for a specific user.
+	 *
+	 * @param  userId the user ID of the user
+	 * @return the recent change tracking collection ID
+	 */
+	public long getRecentCTCollectionId(long userId);
 
 	/**
 	 * Returns <code>true</code> if the change tracking is enabled in the scope
@@ -204,11 +235,12 @@ public interface CTEngineManager {
 	 * tracking or <code>false</code> if not.
 	 *
 	 * @param  companyId the primary key of the company
-	 * @param  classNameId the class name ID of the model class
+	 * @param  modelClassNameId the class name ID of the model class
 	 * @return <code>true</code> if the given base model supports change
 	 *         tracking; <code>false</code> otherwise.
 	 */
-	public boolean isChangeTrackingSupported(long companyId, long classNameId);
+	public boolean isChangeTrackingSupported(
+		long companyId, long modelClassNameId);
 
 	/**
 	 * Publishes all the change entries from the given change tracking
@@ -216,8 +248,10 @@ public interface CTEngineManager {
 	 *
 	 * @param userId the primary key of the user
 	 * @param ctCollectionId the primary key of the change collection
+	 * @param ignoreCollision publishing process will start anyway if true
 	 */
-	public void publishCTCollection(long userId, long ctCollectionId);
+	public void publishCTCollection(
+		long userId, long ctCollectionId, boolean ignoreCollision);
 
 	/**
 	 * Returns all the change tracking collection associated with the given

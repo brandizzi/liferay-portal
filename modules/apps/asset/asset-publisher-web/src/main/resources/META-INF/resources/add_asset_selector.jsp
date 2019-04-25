@@ -16,6 +16,10 @@
 
 <%@ include file="/init.jsp" %>
 
+<%
+String redirect = PortalUtil.getLayoutFullURL(layout, themeDisplay);
+%>
+
 <div class="container-fluid-1280">
 	<aui:fieldset-group markupView="lexicon">
 		<aui:fieldset>
@@ -51,7 +55,11 @@
 
 						<%
 						for (AssetPublisherAddItemHolder assetPublisherAddItemHolder : assetPublisherAddItemHolders) {
+							Map<String, Object> data = new HashMap<String, Object>();
+
 							String message = assetPublisherAddItemHolder.getModelResource();
+
+							data.put("title", LanguageUtil.format((HttpServletRequest)pageContext.getRequest(), "new-x", HtmlUtil.escape(message), false));
 
 							long curGroupId = groupId;
 
@@ -61,10 +69,11 @@
 								curGroupId = group.getLiveGroupId();
 							}
 
-							Map<String, Object> data = new HashMap<String, Object>();
+							PortletURL portletURL = assetPublisherAddItemHolder.getPortletURL();
 
-							data.put("title", LanguageUtil.format((HttpServletRequest)pageContext.getRequest(), "new-x", HtmlUtil.escape(message), false));
-							data.put("url", assetHelper.getAddURLPopUp(curGroupId, plid, assetPublisherAddItemHolder.getPortletURL(), false, null));
+							portletURL.setParameter("redirect", redirect);
+
+							data.put("url", assetHelper.getAddURLPopUp(curGroupId, plid, portletURL, false, null));
 						%>
 
 							<aui:option data="<%= data %>" label="<%= HtmlUtil.escape(message) %>" />
@@ -89,6 +98,8 @@
 
 	<aui:button-row>
 		<aui:button onClick='<%= renderResponse.getNamespace() + "addAssetEntry();" %>' primary="<%= true %>" value="add" />
+
+		<aui:button href="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 </div>
 
@@ -104,12 +115,8 @@
 
 		var selectedOption = assetEntryTypeSelector.get('options').item(index);
 
-		var title = selectedOption.attr('data-title');
 		var url = selectedOption.attr('data-url');
 
-		var dialog = Liferay.Util.getWindow();
-
-		dialog.iframe.set('uri', url);
-		dialog.titleNode.html(title);
+		Liferay.Util.navigate(url);
 	}
 </aui:script>

@@ -93,13 +93,14 @@ function trackCustomAssetScroll(analytics, customAssetElements) {
  * @param {object} analytics The Analytics client instance
  */
 function trackCustomAssetSubmitted(analytics) {
-	const onSubmit = ({target}) => {
+	const onSubmit = event => {
+		const {target} = event;
 		const customAssetElement = getClosestAssetElement(target, 'custom');
 
 		if (
 			!isTrackableCustomAsset(customAssetElement) ||
 			(isTrackableCustomAsset(customAssetElement) &&
-				target.tagName !== 'FORM')
+				(target.tagName !== 'FORM' || event.defaultPrevented))
 		) {
 			return;
 		}
@@ -111,9 +112,9 @@ function trackCustomAssetSubmitted(analytics) {
 		);
 	};
 
-	document.addEventListener('submit', onSubmit, true);
+	document.addEventListener('submit', onSubmit);
 
-	return () => document.removeEventListener('submit', onSubmit, true);
+	return () => document.removeEventListener('submit', onSubmit);
 }
 
 /**
@@ -131,7 +132,12 @@ function trackCustomAssetViewed(analytics) {
 			)
 			.filter(element => isTrackableCustomAsset(element))
 			.forEach(element => {
-				const payload = getCustomAssetPayload(element);
+				const formEnabled =
+					element.getElementsByTagName('form').length > 0;
+				const payload = {
+					...getCustomAssetPayload(element),
+					formEnabled,
+				};
 
 				customAssetElements.push(element);
 
@@ -172,7 +178,8 @@ function trackCustomAssetClick(analytics) {
 		if (tagName === 'a') {
 			payload.href = target.href;
 			payload.text = target.innerText;
-		} else if (tagName === 'img') {
+		}
+		else if (tagName === 'img') {
 			payload.src = target.src;
 		}
 

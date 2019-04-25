@@ -19,7 +19,10 @@ export function testControlledInput(
 	);
 
 	expect(mockFunc.mock.calls.length).toBe(1);
-	expect(mockFunc.mock.calls[0][0]).toBe(newValueExpected || newValue);
+
+	expect(mockFunc.mock.calls[0][0]).toMatchObject(
+		newValueExpected ? {value: newValueExpected} : {value: newValue}
+	);
 
 	expect(element.value).toBe(value);
 }

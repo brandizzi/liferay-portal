@@ -1,7 +1,7 @@
 import '../../__fixtures__/MockField.es';
-import {dom as MetalTestUtil} from 'metal-dom';
 import mockPages from 'mock/mockPages.es';
 import PageRenderer from 'source/components/Page/PageRenderer.es';
+import {dom as MetalTestUtil} from 'metal-dom';
 
 const spritemap = 'icons.svg';
 let component;
@@ -26,20 +26,6 @@ describe(
 				};
 
 				jest.useFakeTimers();
-			}
-		);
-
-		it(
-			'should resize a specific column on the drag and drop layout',
-			() => {
-				component = new PageRenderer(
-					{
-						...componentProps
-					}
-				);
-
-				component._handleOnClickResize();
-				expect(component).toMatchSnapshot();
 			}
 		);
 

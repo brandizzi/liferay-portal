@@ -18,8 +18,13 @@ import com.liferay.change.tracking.constants.CTConstants;
 import com.liferay.change.tracking.exception.CTCollectionNameException;
 import com.liferay.change.tracking.model.CTCollection;
 import com.liferay.change.tracking.model.CTEntry;
+import com.liferay.change.tracking.model.CTEntryAggregate;
 import com.liferay.change.tracking.model.CTProcess;
+import com.liferay.change.tracking.service.CTEntryAggregateLocalService;
+import com.liferay.change.tracking.service.CTEntryLocalService;
+import com.liferay.change.tracking.service.CTProcessLocalService;
 import com.liferay.change.tracking.service.base.CTCollectionLocalServiceBaseImpl;
+import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
@@ -34,10 +39,17 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import java.util.Date;
 import java.util.List;
 
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
 /**
  * @author Brian Wing Shun Chan
  * @author Daniel Kocsis
  */
+@Component(
+	property = "model.class.name=com.liferay.change.tracking.model.CTCollection",
+	service = AopService.class
+)
 public class CTCollectionLocalServiceImpl
 	extends CTCollectionLocalServiceBaseImpl {
 
@@ -67,7 +79,7 @@ public class CTCollectionLocalServiceImpl
 
 		ctCollection.setName(name);
 		ctCollection.setDescription(description);
-		ctCollection.setStatus(WorkflowConstants.STATUS_APPROVED);
+		ctCollection.setStatus(WorkflowConstants.STATUS_DRAFT);
 
 		return ctCollectionPersistence.update(ctCollection);
 	}
@@ -88,30 +100,50 @@ public class CTCollectionLocalServiceImpl
 	public CTCollection deleteCTCollection(CTCollection ctCollection)
 		throws PortalException {
 
-		List<CTEntry> ctEntries = ctCollectionPersistence.getCTEntries(
+		List<CTEntry> ctEntries = ctEntryPersistence.getCTCollectionCTEntries(
 			ctCollection.getCtCollectionId());
 
 		for (CTEntry ctEntry : ctEntries) {
 			int ctCollectionsSize = ctEntryPersistence.getCTCollectionsSize(
-				ctCollection.getCtCollectionId());
+				ctEntry.getCtEntryId());
 
 			if (ctCollectionsSize > 1) {
 				continue;
 			}
 
-			ctEntryLocalService.deleteCTEntry(ctEntry);
+			_ctEntryLocalService.deleteCTEntry(ctEntry);
 		}
 
-		List<CTProcess> ctProcesses = ctProcessLocalService.getCTProcesses(
+		List<CTEntryAggregate> ctEntryAggregates =
+			ctEntryAggregatePersistence.getCTCollectionCTEntryAggregates(
+				ctCollection.getCtCollectionId());
+
+		for (CTEntryAggregate ctEntryAggregate : ctEntryAggregates) {
+			int ctCollectionsSize =
+				ctEntryAggregatePersistence.getCTCollectionsSize(
+					ctEntryAggregate.getCtEntryAggregateId());
+
+			if (ctCollectionsSize > 1) {
+				continue;
+			}
+
+			_ctEntryAggregateLocalService.deleteCTEntryAggregate(
+				ctEntryAggregate);
+		}
+
+		List<CTProcess> ctProcesses = ctProcessPersistence.findByCollectionId(
 			ctCollection.getCtCollectionId());
 
 		for (CTProcess ctProcess : ctProcesses) {
-			ctProcessLocalService.deleteCTProcess(ctProcess);
+			_ctProcessLocalService.deleteCTProcess(ctProcess);
 		}
 
 		ctCollectionPersistence.remove(ctCollection);
 
 		ctCollectionPersistence.clearCTEntries(
+			ctCollection.getCtCollectionId());
+
+		ctCollectionPersistence.clearCTEntryAggregates(
 			ctCollection.getCtCollectionId());
 
 		return ctCollection;
@@ -195,5 +227,14 @@ public class CTCollectionLocalServiceImpl
 			throw new CTCollectionNameException("Name is too long");
 		}
 	}
+
+	@Reference
+	private CTEntryAggregateLocalService _ctEntryAggregateLocalService;
+
+	@Reference
+	private CTEntryLocalService _ctEntryLocalService;
+
+	@Reference
+	private CTProcessLocalService _ctProcessLocalService;
 
 }

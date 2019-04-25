@@ -45,6 +45,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.junit.After;
@@ -124,6 +125,8 @@ public class SegmentsExperiencePersistenceTest {
 
 		SegmentsExperience newSegmentsExperience = _persistence.create(pk);
 
+		newSegmentsExperience.setUuid(RandomTestUtil.randomString());
+
 		newSegmentsExperience.setGroupId(RandomTestUtil.nextLong());
 
 		newSegmentsExperience.setCompanyId(RandomTestUtil.nextLong());
@@ -148,12 +151,17 @@ public class SegmentsExperiencePersistenceTest {
 
 		newSegmentsExperience.setActive(RandomTestUtil.randomBoolean());
 
+		newSegmentsExperience.setLastPublishDate(RandomTestUtil.nextDate());
+
 		_segmentsExperiences.add(_persistence.update(newSegmentsExperience));
 
 		SegmentsExperience existingSegmentsExperience =
 			_persistence.findByPrimaryKey(
 				newSegmentsExperience.getPrimaryKey());
 
+		Assert.assertEquals(
+			existingSegmentsExperience.getUuid(),
+			newSegmentsExperience.getUuid());
 		Assert.assertEquals(
 			existingSegmentsExperience.getSegmentsExperienceId(),
 			newSegmentsExperience.getSegmentsExperienceId());
@@ -194,6 +202,37 @@ public class SegmentsExperiencePersistenceTest {
 		Assert.assertEquals(
 			existingSegmentsExperience.isActive(),
 			newSegmentsExperience.isActive());
+		Assert.assertEquals(
+			Time.getShortTimestamp(
+				existingSegmentsExperience.getLastPublishDate()),
+			Time.getShortTimestamp(newSegmentsExperience.getLastPublishDate()));
+	}
+
+	@Test
+	public void testCountByUuid() throws Exception {
+		_persistence.countByUuid("");
+
+		_persistence.countByUuid("null");
+
+		_persistence.countByUuid((String)null);
+	}
+
+	@Test
+	public void testCountByUUID_G() throws Exception {
+		_persistence.countByUUID_G("", RandomTestUtil.nextLong());
+
+		_persistence.countByUUID_G("null", 0L);
+
+		_persistence.countByUUID_G((String)null, 0L);
+	}
+
+	@Test
+	public void testCountByUuid_C() throws Exception {
+		_persistence.countByUuid_C("", RandomTestUtil.nextLong());
+
+		_persistence.countByUuid_C("null", 0L);
+
+		_persistence.countByUuid_C((String)null, 0L);
 	}
 
 	@Test
@@ -226,6 +265,24 @@ public class SegmentsExperiencePersistenceTest {
 			RandomTestUtil.nextLong(), RandomTestUtil.nextLong());
 
 		_persistence.countByG_S_C_C(0L, 0L, 0L, 0L);
+	}
+
+	@Test
+	public void testCountByG_C_C_P() throws Exception {
+		_persistence.countByG_C_C_P(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong(),
+			RandomTestUtil.nextLong(), RandomTestUtil.nextInt());
+
+		_persistence.countByG_C_C_P(0L, 0L, 0L, 0);
+	}
+
+	@Test
+	public void testCountByG_C_C_GtP() throws Exception {
+		_persistence.countByG_C_C_GtP(
+			RandomTestUtil.nextLong(), RandomTestUtil.nextLong(),
+			RandomTestUtil.nextLong(), RandomTestUtil.nextInt());
+
+		_persistence.countByG_C_C_GtP(0L, 0L, 0L, 0);
 	}
 
 	@Test
@@ -289,11 +346,11 @@ public class SegmentsExperiencePersistenceTest {
 
 	protected OrderByComparator<SegmentsExperience> getOrderByComparator() {
 		return OrderByComparatorFactoryUtil.create(
-			"SegmentsExperience", "segmentsExperienceId", true, "groupId", true,
-			"companyId", true, "userId", true, "userName", true, "createDate",
-			true, "modifiedDate", true, "segmentsEntryId", true, "classNameId",
-			true, "classPK", true, "name", true, "priority", true, "active",
-			true);
+			"SegmentsExperience", "uuid", true, "segmentsExperienceId", true,
+			"groupId", true, "companyId", true, "userId", true, "userName",
+			true, "createDate", true, "modifiedDate", true, "segmentsEntryId",
+			true, "classNameId", true, "classPK", true, "name", true,
+			"priority", true, "active", true, "lastPublishDate", true);
 	}
 
 	@Test
@@ -529,15 +586,22 @@ public class SegmentsExperiencePersistenceTest {
 			_persistence.findByPrimaryKey(
 				newSegmentsExperience.getPrimaryKey());
 
+		Assert.assertTrue(
+			Objects.equals(
+				existingSegmentsExperience.getUuid(),
+				ReflectionTestUtil.invoke(
+					existingSegmentsExperience, "getOriginalUuid",
+					new Class<?>[0])));
 		Assert.assertEquals(
 			Long.valueOf(existingSegmentsExperience.getGroupId()),
 			ReflectionTestUtil.<Long>invoke(
 				existingSegmentsExperience, "getOriginalGroupId",
 				new Class<?>[0]));
+
 		Assert.assertEquals(
-			Long.valueOf(existingSegmentsExperience.getSegmentsEntryId()),
+			Long.valueOf(existingSegmentsExperience.getGroupId()),
 			ReflectionTestUtil.<Long>invoke(
-				existingSegmentsExperience, "getOriginalSegmentsEntryId",
+				existingSegmentsExperience, "getOriginalGroupId",
 				new Class<?>[0]));
 		Assert.assertEquals(
 			Long.valueOf(existingSegmentsExperience.getClassNameId()),
@@ -549,12 +613,19 @@ public class SegmentsExperiencePersistenceTest {
 			ReflectionTestUtil.<Long>invoke(
 				existingSegmentsExperience, "getOriginalClassPK",
 				new Class<?>[0]));
+		Assert.assertEquals(
+			Integer.valueOf(existingSegmentsExperience.getPriority()),
+			ReflectionTestUtil.<Integer>invoke(
+				existingSegmentsExperience, "getOriginalPriority",
+				new Class<?>[0]));
 	}
 
 	protected SegmentsExperience addSegmentsExperience() throws Exception {
 		long pk = RandomTestUtil.nextLong();
 
 		SegmentsExperience segmentsExperience = _persistence.create(pk);
+
+		segmentsExperience.setUuid(RandomTestUtil.randomString());
 
 		segmentsExperience.setGroupId(RandomTestUtil.nextLong());
 
@@ -579,6 +650,8 @@ public class SegmentsExperiencePersistenceTest {
 		segmentsExperience.setPriority(RandomTestUtil.nextInt());
 
 		segmentsExperience.setActive(RandomTestUtil.randomBoolean());
+
+		segmentsExperience.setLastPublishDate(RandomTestUtil.nextDate());
 
 		_segmentsExperiences.add(_persistence.update(segmentsExperience));
 

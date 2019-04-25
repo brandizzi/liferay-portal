@@ -19,6 +19,7 @@ import com.liferay.document.library.kernel.model.DLFileEntry;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
 import com.liferay.document.library.util.DLURLHelper;
+import com.liferay.exportimport.configuration.ExportImportServiceConfiguration;
 import com.liferay.exportimport.content.processor.ExportImportContentProcessor;
 import com.liferay.exportimport.kernel.exception.ExportImportContentProcessorException;
 import com.liferay.exportimport.kernel.exception.ExportImportContentValidationException;
@@ -35,7 +36,9 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.StagedModel;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
@@ -98,7 +101,9 @@ public class DLReferencesExportImportContentProcessor
 	public void validateContentReferences(long groupId, String content)
 		throws PortalException {
 
-		validateDLReferences(groupId, content);
+		if (isValidateDLReferences()) {
+			validateDLReferences(groupId, content);
+		}
 	}
 
 	protected void deleteTimestampParameters(StringBuilder sb, int beginPos) {
@@ -270,6 +275,22 @@ public class DLReferencesExportImportContentProcessor
 		}
 
 		return fileEntry;
+	}
+
+	protected boolean isValidateDLReferences() {
+		try {
+			ExportImportServiceConfiguration configuration =
+				_configurationProvider.getCompanyConfiguration(
+					ExportImportServiceConfiguration.class,
+					CompanyThreadLocal.getCompanyId());
+
+			return configuration.validateFileEntryReferences();
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
+
+		return true;
 	}
 
 	protected String replaceExportDLReferences(
@@ -509,7 +530,7 @@ public class DLReferencesExportImportContentProcessor
 					continue;
 				}
 
-				String url = _dlurlHelper.getPreviewURL(
+				String url = _dlURLHelper.getPreviewURL(
 					importedFileEntry, importedFileEntry.getFileVersion(), null,
 					StringPool.BLANK, false, false);
 
@@ -530,6 +551,13 @@ public class DLReferencesExportImportContentProcessor
 		}
 
 		return content;
+	}
+
+	@Reference(unbind = "-")
+	protected void setConfigurationProvider(
+		ConfigurationProvider configurationProvider) {
+
+		_configurationProvider = configurationProvider;
 	}
 
 	protected void validateDLReferences(long groupId, String content)
@@ -687,6 +715,8 @@ public class DLReferencesExportImportContentProcessor
 	@Reference
 	private CompanyLocalService _companyLocalService;
 
+	private ConfigurationProvider _configurationProvider;
+
 	@Reference
 	private DLAppLocalService _dlAppLocalService;
 
@@ -694,7 +724,7 @@ public class DLReferencesExportImportContentProcessor
 	private DLFileEntryLocalService _dlFileEntryLocalService;
 
 	@Reference
-	private DLURLHelper _dlurlHelper;
+	private DLURLHelper _dlURLHelper;
 
 	@Reference
 	private GroupLocalService _groupLocalService;

@@ -24,7 +24,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
+import java.nio.file.Path;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.gradle.api.file.FileCollection;
@@ -61,14 +64,14 @@ public class InitBundleTask extends JavaExec {
 		return GradleUtil.toFile(getProject(), _configsDir);
 	}
 
+	@OutputDirectory
+	public File getDestinationDir() {
+		return GradleUtil.toFile(getProject(), _destinationDir);
+	}
+
 	@InputFile
 	public File getFile() {
 		return GradleUtil.toFile(getProject(), _file);
-	}
-
-	@OutputDirectory
-	public File getHomeDir() {
-		return GradleUtil.toFile(getProject(), _homeDir);
 	}
 
 	@Input
@@ -91,12 +94,12 @@ public class InitBundleTask extends JavaExec {
 		_configsDir = configsDir;
 	}
 
-	public void setFile(Object file) {
-		_file = file;
+	public void setDestinationDir(Object destinationDir) {
+		_destinationDir = destinationDir;
 	}
 
-	public void setHomeDir(Object homeDir) {
-		_homeDir = homeDir;
+	public void setFile(Object file) {
+		_file = file;
 	}
 
 	public void setProvidedModules(FileCollection providedModules) {
@@ -123,12 +126,34 @@ public class InitBundleTask extends JavaExec {
 		args.add(getConfigEnvironment());
 
 		args.add("--liferay");
-		args.add(FileUtil.getAbsolutePath(getHomeDir()));
+		args.add(FileUtil.getAbsolutePath(getDestinationDir()));
 
 		FileCollection providedModules = getProvidedModules();
 
-		args.add("--provided-modules");
-		args.add(providedModules.getAsPath());
+		if (!providedModules.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+
+			Iterator<File> iterator = providedModules.iterator();
+
+			while (iterator.hasNext()) {
+				File file = iterator.next();
+
+				Path path = file.toPath();
+
+				path = path.toAbsolutePath();
+
+				path = path.normalize();
+
+				sb.append(path.toString());
+
+				if (iterator.hasNext()) {
+					sb.append(',');
+				}
+			}
+
+			args.add("--provided-modules");
+			args.add(sb.toString());
+		}
 
 		args.add("--strip-components");
 		args.add(String.valueOf(getStripComponents()));
@@ -155,8 +180,8 @@ public class InitBundleTask extends JavaExec {
 	private Object _configEnvironment =
 		BundleSupportConstants.DEFAULT_ENVIRONMENT;
 	private Object _configsDir;
+	private Object _destinationDir;
 	private Object _file;
-	private Object _homeDir;
 	private FileCollection _providedModules;
 	private Object _stripComponents =
 		BundleSupportConstants.DEFAULT_STRIP_COMPONENTS;

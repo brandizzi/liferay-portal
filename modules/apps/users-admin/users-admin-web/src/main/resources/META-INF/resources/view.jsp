@@ -36,8 +36,6 @@ if (Validator.isNotNull(viewUsersRedirect)) {
 	portletURL.setParameter("viewUsersRedirect", viewUsersRedirect);
 }
 
-String portletURLString = portletURL.toString();
-
 request.setAttribute("view.jsp-portletURL", portletURL);
 
 request.setAttribute("view.jsp-usersListView", usersListView);
@@ -60,7 +58,7 @@ else {
 
 <liferay-ui:error exception="<%= CompanyMaxUsersException.class %>" message="unable-to-activate-user-because-that-would-exceed-the-maximum-number-of-users-allowed" />
 
-<c:if test="<%= !usersListView.equals(UserConstants.LIST_VIEW_TREE) %>">
+<c:if test="<%= !portletName.equals(UsersAdminPortletKeys.MY_ORGANIZATIONS) && !usersListView.equals(UserConstants.LIST_VIEW_TREE) %>">
 	<clay:navigation-bar
 		inverted="<%= true %>"
 		navigationItems="<%= userDisplayContext.getViewNavigationItems(portletName) %>"
@@ -118,9 +116,9 @@ else {
 				form,
 				{
 					data: {
-						'<%= Constants.CMD %>': cmd,
-						'redirect': Liferay.Util.getFormElement(form, 'usersRedirect').value,
-						'deleteUserIds': Liferay.Util.listCheckedExcept(form, '<portlet:namespace />allRowIds', '<portlet:namespace />rowIdsUser')
+						deleteUserIds: Liferay.Util.listCheckedExcept(form, '<portlet:namespace />allRowIds', '<portlet:namespace />rowIdsUser'),
+						redirect: '<%= currentURL %>',
+						'<%= Constants.CMD %>': cmd
 					},
 					url: '<portlet:actionURL name="/users_admin/edit_user" />'
 				}
@@ -178,40 +176,54 @@ else {
 	}
 
 	function <portlet:namespace />doDeleteOrganizations(organizationIds, organizationsRedirect) {
-		var form = AUI.$(document.<portlet:namespace />fm);
-
-		form.attr('method', 'post');
-		form.fm('<%= Constants.CMD %>').val('<%= Constants.DELETE %>');
-		form.fm('deleteOrganizationIds').val(organizationIds);
+		var form = document.<portlet:namespace />fm;
 
 		if (organizationsRedirect) {
-			form.fm('redirect').val(organizationsRedirect);
+			Liferay.Util.setFormValues(
+				form,
+				{
+					redirect: organizationsRedirect
+				}
+			);
 		}
 
-		submitForm(form, '<portlet:actionURL name="/users_admin/edit_organization" />');
-	}
-
-	function <portlet:namespace />getUsersCount(className, ids, status, callback) {
-		AUI.$.ajax(
-			'<liferay-portlet:resourceURL id="/users_admin/get_users_count" />',
+		Liferay.Util.postForm(
+			form,
 			{
 				data: {
-					className: className,
-					ids: ids,
-					status: status
+					deleteOrganizationIds: organizationIds,
+					'<%= Constants.CMD %>': '<%= Constants.DELETE %>'
 				},
-				success: callback
+				url: '<portlet:actionURL name="/users_admin/edit_organization" />'
 			}
 		);
 	}
 
-	function <portlet:namespace />search() {
-		var form = AUI.$(document.<portlet:namespace />fm);
+	function <portlet:namespace />getUsersCount(className, ids, status, callback) {
+		var formData = new FormData();
 
-		form.attr('method', 'post');
-		form.fm('<%= Constants.CMD %>').val('');
+		formData.append('className', className);
+		formData.append('ids', ids);
+		formData.append('status', status);
 
-		submitForm(form, '<%= portletURLString %>');
+		fetch(
+			'<liferay-portlet:resourceURL id="/users_admin/get_users_count" />',
+			{
+				body: formData,
+				credentials: 'include',
+				method: 'POST'
+			}
+		)
+		.then(
+			function(response) {
+				return response.text();
+			}
+		)
+		.then(
+			function(response) {
+				callback(response);
+			}
+		);
 	}
 
 	function <portlet:namespace />showUsers(status) {
@@ -243,8 +255,6 @@ else {
 		function(organizationId) {
 			var A = AUI();
 
-			var form = AUI.$(document.<portlet:namespace />fm);
-
 			<portlet:renderURL var="selectUsersURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 				<portlet:param name="mvcPath" value="/select_organization_users.jsp" />
 			</portlet:renderURL>
@@ -272,7 +282,7 @@ else {
 
 								editAssignmentURL.setParameter('assignmentsRedirect', assignmentsRedirectURL.toString());
 
-								submitForm(form, editAssignmentURL.toString());
+								submitForm(document.<portlet:namespace />fm, editAssignmentURL.toString());
 							}
 						}
 					},

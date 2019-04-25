@@ -181,6 +181,20 @@ public class JobFactory {
 			return _jobs.get(jobName);
 		}
 
+		if (jobName.startsWith("test-portal-testsuite-upstream(")) {
+			_jobs.put(
+				jobName,
+				new PortalTestSuiteUpstreamJob(jobName, testSuiteName));
+
+			return _jobs.get(jobName);
+		}
+
+		if (jobName.startsWith("test-portal-testsuite-upstream-controller(")) {
+			_jobs.put(jobName, new SimpleJob(jobName));
+
+			return _jobs.get(jobName);
+		}
+
 		if (jobName.startsWith("test-portal-upstream(")) {
 			_jobs.put(jobName, new PortalUpstreamJob(jobName));
 

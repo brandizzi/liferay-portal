@@ -88,7 +88,11 @@ public class DDMStructureModelDocumentContributor
 		}
 
 		document.addLocalizedKeyword(
-			"localized_name", ddmStructure.getNameMap(), true, true);
+			"localized_name",
+			LocalizationUtil.populateLocalizationMap(
+				ddmStructure.getNameMap(), ddmStructure.getDefaultLanguageId(),
+				ddmStructure.getGroupId()),
+			true, true);
 	}
 
 	protected String[] getLanguageIds(

@@ -214,7 +214,7 @@ public class CTDDMStructureLocalServiceWrapper
 	protected void setDDMStructureLocalService(
 		DDMStructureLocalService ddmStructureLocalService) {
 
-		// This is needed because of synchronization
+		// Needed for synchronization
 
 	}
 
@@ -262,7 +262,7 @@ public class CTDDMStructureLocalServiceWrapper
 
 		Optional<DDMStructureVersion> ddmStructureVersionOptional =
 			ctEntryOptional.map(
-				CTEntry::getClassPK
+				CTEntry::getModelClassPK
 			).map(
 				_ddmStructureVersionLocalService::fetchDDMStructureVersion
 			);

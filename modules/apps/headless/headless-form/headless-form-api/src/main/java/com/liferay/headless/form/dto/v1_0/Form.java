@@ -14,6 +14,7 @@
 
 package com.liferay.headless.form.dto.v1_0;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -23,7 +24,13 @@ import com.liferay.petra.string.StringBundler;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import java.util.Date;
+import java.util.Objects;
 
 import javax.annotation.Generated;
 
@@ -35,64 +42,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Generated("")
 @GraphQLName("Form")
-//@JsonFilter("Liferay.Vulcan")
+@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "Form")
 public class Form {
 
+	@Schema
 	public String[] getAvailableLanguages() {
 		return availableLanguages;
-	}
-
-	public Long getContentSpace() {
-		return contentSpace;
-	}
-
-	public Creator getCreator() {
-		return creator;
-	}
-
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-
-	public Date getDateModified() {
-		return dateModified;
-	}
-
-	public Date getDatePublished() {
-		return datePublished;
-	}
-
-	public String getDefaultLanguage() {
-		return defaultLanguage;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public FormRecord[] getFormRecords() {
-		return formRecords;
-	}
-
-	public Long[] getFormRecordsIds() {
-		return formRecordsIds;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public FormStructure getStructure() {
-		return structure;
-	}
-
-	public Long getStructureId() {
-		return structureId;
 	}
 
 	public void setAvailableLanguages(String[] availableLanguages) {
@@ -106,25 +62,21 @@ public class Form {
 		try {
 			availableLanguages = availableLanguagesUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void setContentSpace(Long contentSpace) {
-		this.contentSpace = contentSpace;
-	}
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String[] availableLanguages;
 
-	@JsonIgnore
-	public void setContentSpace(
-		UnsafeSupplier<Long, Exception> contentSpaceUnsafeSupplier) {
-
-		try {
-			contentSpace = contentSpaceUnsafeSupplier.get();
-		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+	@Schema
+	public Creator getCreator() {
+		return creator;
 	}
 
 	public void setCreator(Creator creator) {
@@ -138,9 +90,21 @@ public class Form {
 		try {
 			creator = creatorUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Creator creator;
+
+	@Schema
+	public Date getDateCreated() {
+		return dateCreated;
 	}
 
 	public void setDateCreated(Date dateCreated) {
@@ -154,9 +118,21 @@ public class Form {
 		try {
 			dateCreated = dateCreatedUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Date dateCreated;
+
+	@Schema
+	public Date getDateModified() {
+		return dateModified;
 	}
 
 	public void setDateModified(Date dateModified) {
@@ -170,9 +146,21 @@ public class Form {
 		try {
 			dateModified = dateModifiedUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Date dateModified;
+
+	@Schema
+	public Date getDatePublished() {
+		return datePublished;
 	}
 
 	public void setDatePublished(Date datePublished) {
@@ -186,9 +174,21 @@ public class Form {
 		try {
 			datePublished = datePublishedUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Date datePublished;
+
+	@Schema
+	public String getDefaultLanguage() {
+		return defaultLanguage;
 	}
 
 	public void setDefaultLanguage(String defaultLanguage) {
@@ -202,9 +202,21 @@ public class Form {
 		try {
 			defaultLanguage = defaultLanguageUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String defaultLanguage;
+
+	@Schema
+	public String getDescription() {
+		return description;
 	}
 
 	public void setDescription(String description) {
@@ -218,9 +230,21 @@ public class Form {
 		try {
 			description = descriptionUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String description;
+
+	@Schema
+	public FormRecord[] getFormRecords() {
+		return formRecords;
 	}
 
 	public void setFormRecords(FormRecord[] formRecords) {
@@ -234,9 +258,21 @@ public class Form {
 		try {
 			formRecords = formRecordsUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	protected FormRecord[] formRecords;
+
+	@Schema
+	public Long[] getFormRecordsIds() {
+		return formRecordsIds;
 	}
 
 	public void setFormRecordsIds(Long[] formRecordsIds) {
@@ -250,9 +286,21 @@ public class Form {
 		try {
 			formRecordsIds = formRecordsIdsUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	protected Long[] formRecordsIds;
+
+	@Schema
+	public Long getId() {
+		return id;
 	}
 
 	public void setId(Long id) {
@@ -264,9 +312,21 @@ public class Form {
 		try {
 			id = idUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long id;
+
+	@Schema
+	public String getName() {
+		return name;
 	}
 
 	public void setName(String name) {
@@ -278,9 +338,49 @@ public class Form {
 		try {
 			name = nameUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String name;
+
+	@Schema
+	public Long getSiteId() {
+		return siteId;
+	}
+
+	public void setSiteId(Long siteId) {
+		this.siteId = siteId;
+	}
+
+	@JsonIgnore
+	public void setSiteId(
+		UnsafeSupplier<Long, Exception> siteIdUnsafeSupplier) {
+
+		try {
+			siteId = siteIdUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long siteId;
+
+	@Schema
+	public FormStructure getStructure() {
+		return structure;
 	}
 
 	public void setStructure(FormStructure structure) {
@@ -294,9 +394,21 @@ public class Form {
 		try {
 			structure = structureUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	protected FormStructure structure;
+
+	@Schema
+	public Long getStructureId() {
+		return structureId;
 	}
 
 	public void setStructureId(Long structureId) {
@@ -310,9 +422,38 @@ public class Form {
 		try {
 			structureId = structureIdUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	protected Long structureId;
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+
+		if (!(object instanceof Form)) {
+			return false;
+		}
+
+		Form form = (Form)object;
+
+		return Objects.equals(toString(), form.toString());
+	}
+
+	@Override
+	public int hashCode() {
+		String string = toString();
+
+		return string.hashCode();
 	}
 
 	public String toString() {
@@ -320,17 +461,23 @@ public class Form {
 
 		sb.append("{");
 
-		sb.append("\"availableLanguages\": ");
+		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-		if (availableLanguages == null) {
-			sb.append("null");
-		}
-		else {
+		if (availableLanguages != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"availableLanguages\": ");
+
 			sb.append("[");
 
 			for (int i = 0; i < availableLanguages.length; i++) {
 				sb.append("\"");
-				sb.append(availableLanguages[i]);
+
+				sb.append(_escape(availableLanguages[i]));
+
 				sb.append("\"");
 
 				if ((i + 1) < availableLanguages.length) {
@@ -341,63 +488,97 @@ public class Form {
 			sb.append("]");
 		}
 
-		sb.append(", ");
+		if (creator != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"contentSpace\": ");
+			sb.append("\"creator\": ");
 
-		sb.append(contentSpace);
-		sb.append(", ");
-
-		sb.append("\"creator\": ");
-
-		sb.append(creator);
-		sb.append(", ");
-
-		sb.append("\"dateCreated\": ");
-
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
-		sb.append(", ");
-
-		sb.append("\"dateModified\": ");
-
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
-		sb.append(", ");
-
-		sb.append("\"datePublished\": ");
-
-		sb.append("\"");
-		sb.append(datePublished);
-		sb.append("\"");
-		sb.append(", ");
-
-		sb.append("\"defaultLanguage\": ");
-
-		sb.append("\"");
-		sb.append(defaultLanguage);
-		sb.append("\"");
-		sb.append(", ");
-
-		sb.append("\"description\": ");
-
-		sb.append("\"");
-		sb.append(description);
-		sb.append("\"");
-		sb.append(", ");
-
-		sb.append("\"formRecords\": ");
-
-		if (formRecords == null) {
-			sb.append("null");
+			sb.append(String.valueOf(creator));
 		}
-		else {
+
+		if (dateCreated != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"dateCreated\": ");
+
+			sb.append("\"");
+
+			sb.append(liferayToJSONDateFormat.format(dateCreated));
+
+			sb.append("\"");
+		}
+
+		if (dateModified != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"dateModified\": ");
+
+			sb.append("\"");
+
+			sb.append(liferayToJSONDateFormat.format(dateModified));
+
+			sb.append("\"");
+		}
+
+		if (datePublished != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"datePublished\": ");
+
+			sb.append("\"");
+
+			sb.append(liferayToJSONDateFormat.format(datePublished));
+
+			sb.append("\"");
+		}
+
+		if (defaultLanguage != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"defaultLanguage\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(defaultLanguage));
+
+			sb.append("\"");
+		}
+
+		if (description != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"description\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(description));
+
+			sb.append("\"");
+		}
+
+		if (formRecords != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"formRecords\": ");
+
 			sb.append("[");
 
 			for (int i = 0; i < formRecords.length; i++) {
-				sb.append(formRecords[i]);
+				sb.append(String.valueOf(formRecords[i]));
 
 				if ((i + 1) < formRecords.length) {
 					sb.append(", ");
@@ -407,14 +588,13 @@ public class Form {
 			sb.append("]");
 		}
 
-		sb.append(", ");
+		if (formRecordsIds != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"formRecordsIds\": ");
+			sb.append("\"formRecordsIds\": ");
 
-		if (formRecordsIds == null) {
-			sb.append("null");
-		}
-		else {
 			sb.append("[");
 
 			for (int i = 0; i < formRecordsIds.length; i++) {
@@ -428,88 +608,69 @@ public class Form {
 			sb.append("]");
 		}
 
-		sb.append(", ");
+		if (id != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"id\": ");
+			sb.append("\"id\": ");
 
-		sb.append(id);
-		sb.append(", ");
+			sb.append(id);
+		}
 
-		sb.append("\"name\": ");
+		if (name != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"");
-		sb.append(name);
-		sb.append("\"");
-		sb.append(", ");
+			sb.append("\"name\": ");
 
-		sb.append("\"structure\": ");
+			sb.append("\"");
 
-		sb.append(structure);
-		sb.append(", ");
+			sb.append(_escape(name));
 
-		sb.append("\"structureId\": ");
+			sb.append("\"");
+		}
 
-		sb.append(structureId);
+		if (siteId != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"siteId\": ");
+
+			sb.append(siteId);
+		}
+
+		if (structure != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"structure\": ");
+
+			sb.append(String.valueOf(structure));
+		}
+
+		if (structureId != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"structureId\": ");
+
+			sb.append(structureId);
+		}
 
 		sb.append("}");
 
 		return sb.toString();
 	}
 
-	@GraphQLField
-	@JsonProperty
-	protected String[] availableLanguages;
+	private static String _escape(Object object) {
+		String string = String.valueOf(object);
 
-	@GraphQLField
-	@JsonProperty
-	protected Long contentSpace;
-
-	@GraphQLField
-	@JsonProperty
-	protected Creator creator;
-
-	@GraphQLField
-	@JsonProperty
-	protected Date dateCreated;
-
-	@GraphQLField
-	@JsonProperty
-	protected Date dateModified;
-
-	@GraphQLField
-	@JsonProperty
-	protected Date datePublished;
-
-	@GraphQLField
-	@JsonProperty
-	protected String defaultLanguage;
-
-	@GraphQLField
-	@JsonProperty
-	protected String description;
-
-	@GraphQLField
-	@JsonProperty
-	protected FormRecord[] formRecords;
-
-	@GraphQLField
-	@JsonProperty
-	protected Long[] formRecordsIds;
-
-	@GraphQLField
-	@JsonProperty
-	protected Long id;
-
-	@GraphQLField
-	@JsonProperty
-	protected String name;
-
-	@GraphQLField
-	@JsonProperty
-	protected FormStructure structure;
-
-	@GraphQLField
-	@JsonProperty
-	protected Long structureId;
+		return string.replaceAll("\"", "\\\\\"");
+	}
 
 }

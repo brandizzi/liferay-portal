@@ -2,6 +2,7 @@
  * Possible types that can be returned by the image selector
  */
 const RETURN_TYPES = {
+	downloadURL: 'com.liferay.item.selector.criteria.DownloadURLItemSelectorReturnType',
 	fileEntryItemSelector: 'com.liferay.item.selector.criteria.FileEntryItemSelectorReturnType',
 	url: 'URL'
 };
@@ -25,7 +26,7 @@ function _handleImageEditorChange(
 		const {returnType} = selectedItem;
 		let url = '';
 
-		if (returnType === RETURN_TYPES.url) {
+		if (returnType === RETURN_TYPES.url || RETURN_TYPES.downloadURL) {
 			url = selectedItem.value;
 		}
 		else if (returnType === RETURN_TYPES.fileEntryItemSelector) {
@@ -60,6 +61,7 @@ function destroy() {
 function getButtons(showMapping) {
 	const buttons = [
 		{
+			icon: 'pencil',
 			id: 'select',
 			label: Liferay.Language.get('select-background')
 		}
@@ -68,6 +70,7 @@ function getButtons(showMapping) {
 	if (showMapping) {
 		buttons.push(
 			{
+				icon: 'bolt',
 				id: 'map',
 				label: Liferay.Language.get('map-background')
 			}

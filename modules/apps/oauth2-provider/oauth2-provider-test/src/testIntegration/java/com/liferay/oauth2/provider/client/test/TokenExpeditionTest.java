@@ -125,8 +125,6 @@ public class TokenExpeditionTest extends BaseClientTestCase {
 		Assert.assertEquals(
 			"everything.read", invocationBuilder.get(String.class));
 
-		// Skip JavaParser, will fix
-
 		invocationBuilder = webTarget.request(
 		).header(
 			"Authorization", "Bearer "
@@ -135,8 +133,6 @@ public class TokenExpeditionTest extends BaseClientTestCase {
 		Response response = invocationBuilder.get();
 
 		Assert.assertEquals(403, response.getStatus());
-
-		// Skip JavaParser, will fix
 
 		invocationBuilder = webTarget.request(
 		).header(
@@ -159,6 +155,7 @@ public class TokenExpeditionTest extends BaseClientTestCase {
 
 			Dictionary<String, Object> properties = new HashMapDictionary<>();
 
+			properties.put("auth.verifier.guest.allowed", false);
 			properties.put("oauth2.scope.checker.type", "annotations");
 
 			registerJaxRsApplication(

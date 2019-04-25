@@ -76,12 +76,15 @@ public class AssetBrowserDisplayContext {
 		assetBrowserSearch.setOrderByCol(_getOrderByCol());
 		assetBrowserSearch.setOrderByType(getOrderByType());
 
-		AssetRendererFactory assetRendererFactory = getAssetRendererFactory();
-
 		if (AssetBrowserWebConfigurationValues.SEARCH_WITH_DATABASE) {
+			long[] subtypeSelectionIds = null;
+
+			if (getSubtypeSelectionId() > 0) {
+				subtypeSelectionIds = new long[] {getSubtypeSelectionId()};
+			}
+
 			int total = AssetEntryLocalServiceUtil.getEntriesCount(
-				_getFilterGroupIds(),
-				new long[] {assetRendererFactory.getClassNameId()},
+				_getFilterGroupIds(), _getClassNameIds(), subtypeSelectionIds,
 				_getKeywords(), _getKeywords(), _getKeywords(), _getKeywords(),
 				_getListable(), false, false);
 
@@ -89,11 +92,10 @@ public class AssetBrowserDisplayContext {
 
 			List<AssetEntry> assetEntries =
 				AssetEntryLocalServiceUtil.getEntries(
-					_getFilterGroupIds(),
-					new long[] {assetRendererFactory.getClassNameId()},
-					new long[] {getSubtypeSelectionId()}, _getKeywords(),
-					_getKeywords(), _getKeywords(), _getKeywords(),
-					_getListable(), false, false, assetBrowserSearch.getStart(),
+					_getFilterGroupIds(), _getClassNameIds(),
+					subtypeSelectionIds, _getKeywords(), _getKeywords(),
+					_getKeywords(), _getKeywords(), _getListable(), false,
+					false, assetBrowserSearch.getStart(),
 					assetBrowserSearch.getEnd(), "modifiedDate",
 					StringPool.BLANK, getOrderByType(), StringPool.BLANK);
 
@@ -125,7 +127,7 @@ public class AssetBrowserDisplayContext {
 
 		int total = (int)AssetEntryLocalServiceUtil.searchCount(
 			themeDisplay.getCompanyId(), _getFilterGroupIds(),
-			themeDisplay.getUserId(), assetRendererFactory.getClassName(),
+			themeDisplay.getUserId(), _getClassNameIds(),
 			getSubtypeSelectionId(), _getKeywords(), _isShowNonindexable(),
 			_getStatuses());
 
@@ -133,7 +135,7 @@ public class AssetBrowserDisplayContext {
 
 		Hits hits = AssetEntryLocalServiceUtil.search(
 			themeDisplay.getCompanyId(), _getFilterGroupIds(),
-			themeDisplay.getUserId(), assetRendererFactory.getClassName(),
+			themeDisplay.getUserId(), _getClassNameIds(),
 			getSubtypeSelectionId(), _getKeywords(), _isShowNonindexable(),
 			_getStatuses(), assetBrowserSearch.getStart(),
 			assetBrowserSearch.getEnd(), sort);
@@ -211,11 +213,6 @@ public class AssetBrowserDisplayContext {
 				"selectedGroupId", String.valueOf(selectedGroupId));
 		}
 
-		if (isMultipleSelection()) {
-			portletURL.setParameter(
-				"multipleSelection", Boolean.TRUE.toString());
-		}
-
 		long[] selectedGroupIds = getSelectedGroupIds();
 
 		if (selectedGroupIds.length > 0) {
@@ -231,6 +228,15 @@ public class AssetBrowserDisplayContext {
 
 		if (_getListable() != null) {
 			portletURL.setParameter("listable", String.valueOf(_getListable()));
+		}
+
+		if (isMultipleSelection()) {
+			portletURL.setParameter(
+				"multipleSelection", Boolean.TRUE.toString());
+		}
+
+		if (isShowAddButton()) {
+			portletURL.setParameter("showAddButton", Boolean.TRUE.toString());
 		}
 
 		portletURL.setParameter(
@@ -309,6 +315,30 @@ public class AssetBrowserDisplayContext {
 			_request, "multipleSelection");
 
 		return _multipleSelection;
+	}
+
+	public boolean isShowAddButton() {
+		if (_showAddButton != null) {
+			return _showAddButton;
+		}
+
+		_showAddButton = ParamUtil.getBoolean(_request, "showAddButton");
+
+		return _showAddButton;
+	}
+
+	private long[] _getClassNameIds() {
+		if (_classNameIds != null) {
+			return _classNameIds;
+		}
+
+		AssetRendererFactory assetRendererFactory = getAssetRendererFactory();
+
+		if (assetRendererFactory != null) {
+			_classNameIds = new long[] {assetRendererFactory.getClassNameId()};
+		}
+
+		return _classNameIds;
 	}
 
 	private long[] _getFilterGroupIds() {
@@ -392,6 +422,7 @@ public class AssetBrowserDisplayContext {
 
 	private final AssetHelper _assetHelper;
 	private AssetRendererFactory _assetRendererFactory;
+	private long[] _classNameIds;
 	private String _displayStyle;
 	private String _eventName;
 	private Long _groupId;
@@ -403,6 +434,7 @@ public class AssetBrowserDisplayContext {
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
 	private final HttpServletRequest _request;
+	private Boolean _showAddButton;
 	private Boolean _showNonindexable;
 	private Boolean _showScheduled;
 	private Long _subtypeSelectionId;

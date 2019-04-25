@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.util.TextFormatter;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -552,6 +553,17 @@ public class Entity implements Comparable<Entity> {
 		return entityColumn.getDBName();
 	}
 
+	public List<String> getPKEntityColumnDBNames() {
+		List<String> pkEntityColumnDBNames = new ArrayList<>(
+			_pkEntityColumns.size());
+
+		for (EntityColumn entityColumn : _pkEntityColumns) {
+			pkEntityColumnDBNames.add(entityColumn.getDBName());
+		}
+
+		return pkEntityColumnDBNames;
+	}
+
 	public List<EntityColumn> getPKEntityColumns() {
 		return _pkEntityColumns;
 	}
@@ -628,13 +640,8 @@ public class Entity implements Comparable<Entity> {
 
 		for (EntityColumn entityColumn : _entityColumns) {
 			if (entityColumn.isUADUserId()) {
-				List<EntityColumn> uadAnonymizableEntityColumns =
-					new ArrayList<>();
-
-				uadAnonymizableEntityColumns.add(entityColumn);
-
 				uadAnonymizableEntityColumnsMap.put(
-					entityColumn.getName(), uadAnonymizableEntityColumns);
+					entityColumn.getName(), Arrays.asList(entityColumn));
 			}
 		}
 

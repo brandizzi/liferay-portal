@@ -111,6 +111,10 @@ public class YAMLUtil {
 			"$ref", String.class, "getReference", "setReference");
 
 		schemaTypeDescription.substituteProperty(
+			"additionalProperties", Schema.class, "getAdditionalPropertySchema",
+			"setAdditionalPropertySchema");
+
+		schemaTypeDescription.substituteProperty(
 			"allOf", List.class, "getAllOfSchemas", "setAllOfSchemas");
 
 		schemaTypeDescription.addPropertyParameters("allOf", Schema.class);
@@ -119,6 +123,11 @@ public class YAMLUtil {
 			"anyOf", List.class, "getAnyOfSchemas", "setAnyOfSchemas");
 
 		schemaTypeDescription.addPropertyParameters("anyOf", Schema.class);
+
+		schemaTypeDescription.substituteProperty(
+			"enum", List.class, "getEnumValues", "setEnumValues");
+
+		schemaTypeDescription.addPropertyParameters("enum", String.class);
 
 		schemaTypeDescription.substituteProperty(
 			"oneOf", List.class, "getOneOfSchemas", "setOneOfSchemas");
@@ -131,6 +140,12 @@ public class YAMLUtil {
 
 		schemaTypeDescription.addPropertyParameters(
 			"properties", String.class, Schema.class);
+
+		schemaTypeDescription.substituteProperty(
+			"required", List.class, "getRequiredPropertySchemaNames",
+			"setRequiredPropertySchemaNames");
+
+		schemaTypeDescription.addPropertyParameters("required", String.class);
 
 		openAPIYAMLConstructor.addTypeDescription(schemaTypeDescription);
 

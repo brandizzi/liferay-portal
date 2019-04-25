@@ -59,8 +59,9 @@ import org.osgi.service.component.annotations.Reference;
 	}
 )
 public class CallFunction
-	implements DDMExpressionFunction.Function3<String, String, String, Boolean>,
-			   DDMExpressionFieldAccessorAware, DDMExpressionObserverAware {
+	implements DDMExpressionFieldAccessorAware,
+			   DDMExpressionFunction.Function3<String, String, String, Boolean>,
+			   DDMExpressionObserverAware {
 
 	@Override
 	public Boolean apply(
@@ -231,19 +232,6 @@ public class CallFunction
 				field, "options", options);
 
 		_ddmExpressionObserver.updateFieldProperty(builder.build());
-
-		if (options.size() == 1) {
-			KeyValuePair keyValuePair = options.get(0);
-
-			JSONArray valueJSONArray = jsonFactory.createJSONArray();
-
-			valueJSONArray.put(keyValuePair.getValue());
-
-			builder = UpdateFieldPropertyRequest.Builder.newBuilder(
-				field, "value", valueJSONArray);
-
-			_ddmExpressionObserver.updateFieldProperty(builder.build());
-		}
 	}
 
 	protected void setDDMFormFieldValue(String field, String value) {

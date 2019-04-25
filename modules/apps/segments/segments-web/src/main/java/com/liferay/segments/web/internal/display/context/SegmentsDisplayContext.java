@@ -17,7 +17,6 @@ package com.liferay.segments.web.internal.display.context;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
-import com.liferay.frontend.taglib.clay.servlet.taglib.util.SafeConsumer;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -28,13 +27,17 @@ import com.liferay.portal.kernel.search.BaseModelSearchResult;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.SortFactoryUtil;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.segments.constants.SegmentsActionKeys;
 import com.liferay.segments.model.SegmentsEntry;
 import com.liferay.segments.service.SegmentsEntryService;
+import com.liferay.segments.web.internal.security.permission.resource.SegmentsEntryPermission;
+import com.liferay.segments.web.internal.security.permission.resource.SegmentsResourcePermission;
 import com.liferay.segments.web.internal.util.comparator.SegmentsEntryModifiedDateComparator;
 import com.liferay.segments.web.internal.util.comparator.SegmentsEntryNameComparator;
 
@@ -70,17 +73,28 @@ public class SegmentsDisplayContext {
 		return new DropdownItemList() {
 			{
 				add(
-					SafeConsumer.ignore(
-						dropdownItem -> {
-							dropdownItem.putData(
-								"action", "deleteSegmentsEntries");
-							dropdownItem.setIcon("times");
-							dropdownItem.setLabel(
-								LanguageUtil.get(_request, "delete"));
-							dropdownItem.setQuickAction(true);
-						}));
+					dropdownItem -> {
+						dropdownItem.putData("action", "deleteSegmentsEntries");
+						dropdownItem.setIcon("times-circle");
+						dropdownItem.setLabel(
+							LanguageUtil.get(_request, "delete"));
+						dropdownItem.setQuickAction(true);
+					});
 			}
 		};
+	}
+
+	public String getAvailableActions(SegmentsEntry segmentsEntry)
+		throws PortalException {
+
+		if (SegmentsEntryPermission.contains(
+				_themeDisplay.getPermissionChecker(), segmentsEntry,
+				ActionKeys.DELETE)) {
+
+			return "deleteSegmentsEntries";
+		}
+
+		return StringPool.BLANK;
 	}
 
 	public String getClearResultsURL() {
@@ -232,6 +246,18 @@ public class SegmentsDisplayContext {
 		return true;
 	}
 
+	public Boolean isShowCreationMenu() {
+		if (SegmentsResourcePermission.contains(
+				_themeDisplay.getPermissionChecker(),
+				_themeDisplay.getScopeGroupId(),
+				SegmentsActionKeys.MANAGE_SEGMENTS_ENTRIES)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	private List<DropdownItem> _getFilterNavigationDropdownItems() {
 		return new DropdownItemList() {
 			{
@@ -295,27 +321,23 @@ public class SegmentsDisplayContext {
 		return new DropdownItemList() {
 			{
 				add(
-					SafeConsumer.ignore(
-						dropdownItem -> {
-							dropdownItem.setActive(
-								Objects.equals(
-									_getOrderByCol(), "modified-date"));
-							dropdownItem.setHref(
-								_getPortletURL(), "orderByCol",
-								"modified-date");
-							dropdownItem.setLabel(
-								LanguageUtil.get(_request, "modified-date"));
-						}));
+					dropdownItem -> {
+						dropdownItem.setActive(
+							Objects.equals(_getOrderByCol(), "modified-date"));
+						dropdownItem.setHref(
+							_getPortletURL(), "orderByCol", "modified-date");
+						dropdownItem.setLabel(
+							LanguageUtil.get(_request, "modified-date"));
+					});
 				add(
-					SafeConsumer.ignore(
-						dropdownItem -> {
-							dropdownItem.setActive(
-								Objects.equals(_getOrderByCol(), "name"));
-							dropdownItem.setHref(
-								_getPortletURL(), "orderByCol", "name");
-							dropdownItem.setLabel(
-								LanguageUtil.get(_request, "name"));
-						}));
+					dropdownItem -> {
+						dropdownItem.setActive(
+							Objects.equals(_getOrderByCol(), "name"));
+						dropdownItem.setHref(
+							_getPortletURL(), "orderByCol", "name");
+						dropdownItem.setLabel(
+							LanguageUtil.get(_request, "name"));
+					});
 			}
 		};
 	}

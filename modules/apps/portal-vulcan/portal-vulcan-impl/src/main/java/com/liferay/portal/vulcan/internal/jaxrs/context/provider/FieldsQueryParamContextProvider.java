@@ -16,8 +16,13 @@ package com.liferay.portal.vulcan.internal.jaxrs.context.provider;
 
 import com.liferay.portal.vulcan.fields.FieldsQueryParam;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,12 +32,7 @@ import org.apache.cxf.jaxrs.ext.ContextProvider;
 import org.apache.cxf.message.Message;
 
 /**
- * Allows JAX-RS resources to provide {@link FieldsQueryParam} objects in method
- * parameters, fields or setters by annotating them with {@code
- * javax.ws.rs.core.Context}.
- *
  * @author Alejandro Hernández
- * @review
  */
 @Provider
 public class FieldsQueryParamContextProvider
@@ -43,13 +43,50 @@ public class FieldsQueryParamContextProvider
 		HttpServletRequest httpServletRequest =
 			ContextProviderUtil.getHttpServletRequest(message);
 
-		String fieldNames = httpServletRequest.getParameter("fields");
+		String fieldNamesString = httpServletRequest.getParameter("fields");
 
-		if (fieldNames == null) {
+		if (fieldNamesString == null) {
 			return () -> null;
 		}
 
-		return () -> new HashSet<>(Arrays.asList(fieldNames.split(",")));
+		if (fieldNamesString.isEmpty()) {
+			return Collections::emptySet;
+		}
+
+		Stream<String> stream = Arrays.stream(fieldNamesString.split(","));
+
+		Set<String> fieldNames = stream.map(
+			this::_toPaths
+		).flatMap(
+			List::stream
+		).collect(
+			Collectors.toSet()
+		);
+
+		return () -> fieldNames;
+	}
+
+	private List<String> _toPaths(String string) {
+		if (!string.contains(".")) {
+			return Collections.singletonList(string);
+		}
+
+		List<String> list = new ArrayList<>();
+
+		String pending = string;
+
+		while (!pending.equals("")) {
+			list.add(pending);
+
+			if (pending.contains(".")) {
+				pending = pending.substring(0, pending.lastIndexOf("."));
+			}
+			else {
+				pending = "";
+			}
+		}
+
+		return list;
 	}
 
 }

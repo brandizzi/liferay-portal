@@ -15,11 +15,13 @@
 package com.liferay.portal.layoutconfiguration.util.velocity;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.petra.xml.XMLUtil;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.portlet.PortletContainerException;
 import com.liferay.portal.kernel.portlet.PortletContainerUtil;
 import com.liferay.portal.kernel.portlet.PortletJSONUtil;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
@@ -34,6 +36,7 @@ import com.liferay.portal.kernel.settings.SettingsFactoryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ClassUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
@@ -41,6 +44,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.layoutconfiguration.util.PortletRenderer;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -104,73 +108,31 @@ public class TemplateProcessor implements ColumnProcessor {
 		LayoutTypePortlet layoutTypePortlet =
 			themeDisplay.getLayoutTypePortlet();
 
-		List<Portlet> portlets = layoutTypePortlet.getAllPortlets(columnId);
+		return _processColumn(
+			columnId, classNames, layoutTypePortlet,
+			layoutTypePortlet.getAllPortlets(columnId));
+	}
 
-		StringBundler sb = new StringBundler(portlets.size() * 3 + 10);
+	@Override
+	public String processDynamicColumn(String columnId, String classNames)
+		throws Exception {
 
-		sb.append("<div class=\"portlet-dropzone");
+		List<Portlet> portlets = new ArrayList<>();
 
-		if (layoutTypePortlet.isCustomizable() &&
-			layoutTypePortlet.isColumnDisabled(columnId)) {
+		String portletId = ParamUtil.getString(_request, "p_p_id");
 
-			sb.append(" portlet-dropzone-disabled");
+		try {
+			portlets.add(PortletLocalServiceUtil.getPortletById(portletId));
+		}
+		catch (NullPointerException npe) {
 		}
 
-		if (layoutTypePortlet.isColumnCustomizable(columnId)) {
-			sb.append(" customizable");
-		}
+		ThemeDisplay themeDisplay = (ThemeDisplay)_request.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
-		if (portlets.isEmpty()) {
-			sb.append(" empty");
-		}
-
-		if (Validator.isNotNull(classNames)) {
-			sb.append(" ");
-			sb.append(classNames);
-		}
-
-		sb.append("\" id=\"layout-column_");
-		sb.append(columnId);
-		sb.append("\">");
-
-		for (int i = 0; i < portlets.size(); i++) {
-			Portlet portlet = portlets.get(i);
-
-			Integer columnCount = Integer.valueOf(portlets.size());
-			Integer columnPos = Integer.valueOf(i);
-
-			PortletRenderer portletRenderer = new PortletRenderer(
-				portlet, columnId, columnCount, columnPos);
-
-			if (_portletAjaxRender && (portlet.getRenderWeight() < 1)) {
-				StringBundler renderResultSB = portletRenderer.renderAjax(
-					_request, _response);
-
-				sb.append(renderResultSB);
-			}
-			else {
-				Integer renderWeight = portlet.getRenderWeight();
-
-				List<PortletRenderer> portletRenderers = _portletRenderers.get(
-					renderWeight);
-
-				if (portletRenderers == null) {
-					portletRenderers = new ArrayList<>();
-
-					_portletRenderers.put(renderWeight, portletRenderers);
-				}
-
-				portletRenderers.add(portletRenderer);
-
-				sb.append("[$TEMPLATE_PORTLET_");
-				sb.append(portlet.getPortletId());
-				sb.append("$]");
-			}
-		}
-
-		sb.append("</div>");
-
-		return sb.toString();
+		return _processColumn(
+			columnId, classNames, themeDisplay.getLayoutTypePortlet(),
+			portlets);
 	}
 
 	@Override
@@ -212,11 +174,52 @@ public class TemplateProcessor implements ColumnProcessor {
 			if (!layoutTypePortlet.hasPortletId(portletId, true) &&
 				!layout.isPortletEmbedded(portletId, layout.getGroupId())) {
 
+				String defaultPreferences = portlet.getDefaultPreferences();
+
+				Settings currentSettings = SettingsFactoryUtil.getSettings(
+					new PortletInstanceSettingsLocator(layout, portletId));
+
+				ModifiableSettings currentModifiableSettings =
+					currentSettings.getModifiableSettings();
+
+				Collection<String> currentModifiableSettingsKeys =
+					currentModifiableSettings.getModifiedKeys();
+
+				if (!currentModifiableSettingsKeys.isEmpty()) {
+					StringBundler sb = new StringBundler();
+
+					sb.append("<portlet-preferences>");
+
+					for (String key : currentModifiableSettingsKeys) {
+						String[] values = currentModifiableSettings.getValues(
+							key, null);
+
+						if (values == null) {
+							continue;
+						}
+
+						sb.append("<preference><name>");
+						sb.append(key);
+						sb.append("</name>");
+
+						for (String value : values) {
+							sb.append("<value>");
+							sb.append(XMLUtil.toCompactSafe(value));
+							sb.append("</value>");
+						}
+
+						sb.append("</preference>");
+					}
+
+					sb.append("</portlet-preferences>");
+
+					defaultPreferences = sb.toString();
+				}
+
 				PortletPreferencesFactoryUtil.getLayoutPortletSetup(
 					layout.getCompanyId(), layout.getGroupId(),
-					PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
-					PortletKeys.PREFS_PLID_SHARED, portletId,
-					portlet.getDefaultPreferences());
+					PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid(),
+					portletId, defaultPreferences);
 			}
 		}
 
@@ -304,6 +307,79 @@ public class TemplateProcessor implements ColumnProcessor {
 			portletProviderClassName, portletProviderAction);
 
 		return processPortlet(portletId);
+	}
+
+	private String _processColumn(
+			String columnId, String classNames,
+			LayoutTypePortlet layoutTypePortlet, List<Portlet> portlets)
+		throws PortletContainerException {
+
+		StringBundler sb = new StringBundler(portlets.size() * 3 + 11);
+
+		sb.append("<div class=\"");
+
+		if (layoutTypePortlet.isColumnCustomizable(columnId)) {
+			sb.append("customizable ");
+		}
+
+		if (portlets.isEmpty()) {
+			sb.append("empty ");
+		}
+
+		sb.append("portlet-dropzone ");
+
+		if (layoutTypePortlet.isColumnDisabled(columnId) &&
+			layoutTypePortlet.isCustomizable()) {
+
+			sb.append("portlet-dropzone-disabled");
+		}
+
+		if (Validator.isNotNull(classNames)) {
+			sb.append(classNames);
+		}
+
+		sb.append("\" id=\"layout-column_");
+		sb.append(columnId);
+		sb.append("\">");
+
+		for (int i = 0; i < portlets.size(); i++) {
+			Portlet portlet = portlets.get(i);
+
+			Integer columnCount = Integer.valueOf(portlets.size());
+			Integer columnPos = Integer.valueOf(i);
+
+			PortletRenderer portletRenderer = new PortletRenderer(
+				portlet, columnId, columnCount, columnPos);
+
+			if (_portletAjaxRender && (portlet.getRenderWeight() < 1)) {
+				StringBundler renderResultSB = portletRenderer.renderAjax(
+					_request, _response);
+
+				sb.append(renderResultSB);
+			}
+			else {
+				Integer renderWeight = portlet.getRenderWeight();
+
+				List<PortletRenderer> portletRenderers = _portletRenderers.get(
+					renderWeight);
+
+				if (portletRenderers == null) {
+					portletRenderers = new ArrayList<>();
+
+					_portletRenderers.put(renderWeight, portletRenderers);
+				}
+
+				portletRenderers.add(portletRenderer);
+
+				sb.append("[$TEMPLATE_PORTLET_");
+				sb.append(portlet.getPortletId());
+				sb.append("$]");
+			}
+		}
+
+		sb.append("</div>");
+
+		return sb.toString();
 	}
 
 	private static final RenderWeightComparator _renderWeightComparator =

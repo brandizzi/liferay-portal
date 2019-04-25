@@ -144,16 +144,19 @@ public class StagingImplTest {
 		enableLocalStaging(false);
 	}
 
+	@Ignore
 	@Test
 	public void testLocalStagingAssetCategories() throws Exception {
 		enableLocalStagingWithContent(false, true, false);
 	}
 
+	@Ignore
 	@Test
 	public void testLocalStagingJournal() throws Exception {
 		enableLocalStagingWithContent(true, false, false);
 	}
 
+	@Ignore
 	@Test
 	public void testLocalStagingUpdateLastPublishDate() throws Exception {
 		enableLocalStagingWithContent(true, false, false);
@@ -193,6 +196,7 @@ public class StagingImplTest {
 		enableLocalStaging(true);
 	}
 
+	@Ignore
 	@Test
 	public void testLocalStagingWithLayoutVersioningAssetCategories()
 		throws Exception {
@@ -200,6 +204,7 @@ public class StagingImplTest {
 		enableLocalStagingWithContent(false, true, true);
 	}
 
+	@Ignore
 	@Test
 	public void testLocalStagingWithLayoutVersioningJournal() throws Exception {
 		enableLocalStagingWithContent(true, false, true);

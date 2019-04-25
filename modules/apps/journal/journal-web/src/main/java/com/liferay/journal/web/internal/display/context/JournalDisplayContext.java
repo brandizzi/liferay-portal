@@ -14,6 +14,7 @@
 
 package com.liferay.journal.web.internal.display.context;
 
+import com.liferay.asset.display.page.portlet.AssetDisplayPageFriendlyURLProvider;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.service.AssetEntryLocalServiceUtil;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
@@ -32,11 +33,12 @@ import com.liferay.journal.service.JournalArticleLocalServiceUtil;
 import com.liferay.journal.service.JournalArticleServiceUtil;
 import com.liferay.journal.service.JournalFolderLocalServiceUtil;
 import com.liferay.journal.service.JournalFolderServiceUtil;
+import com.liferay.journal.util.JournalChangeTrackingHelper;
 import com.liferay.journal.util.comparator.FolderArticleArticleIdComparator;
 import com.liferay.journal.util.comparator.FolderArticleDisplayDateComparator;
 import com.liferay.journal.util.comparator.FolderArticleModifiedDateComparator;
 import com.liferay.journal.util.comparator.FolderArticleTitleComparator;
-import com.liferay.journal.web.asset.JournalArticleAssetRenderer;
+import com.liferay.journal.web.asset.model.JournalArticleAssetRenderer;
 import com.liferay.journal.web.configuration.JournalWebConfiguration;
 import com.liferay.journal.web.internal.portlet.action.ActionUtil;
 import com.liferay.journal.web.internal.search.EntriesChecker;
@@ -80,8 +82,6 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.PrefsParamUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -97,10 +97,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.portlet.PortletPreferences;
 import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.util.tracker.ServiceTracker;
 
 /**
  * @author Eudaldo Alonso
@@ -110,12 +113,14 @@ public class JournalDisplayContext {
 	public JournalDisplayContext(
 		HttpServletRequest request, LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse,
-		PortletPreferences portletPreferences, TrashHelper trashHelper) {
+		AssetDisplayPageFriendlyURLProvider assetDisplayPageFriendlyURLProvider,
+		TrashHelper trashHelper) {
 
 		_request = request;
 		_liferayPortletRequest = liferayPortletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
-		_portletPreferences = portletPreferences;
+		_assetDisplayPageFriendlyURLProvider =
+			assetDisplayPageFriendlyURLProvider;
 		_trashHelper = trashHelper;
 
 		_journalWebConfiguration =
@@ -180,7 +185,7 @@ public class JournalDisplayContext {
 			articleActionDropdownItemsProvider =
 				new JournalArticleActionDropdownItemsProvider(
 					article, _liferayPortletRequest, _liferayPortletResponse,
-					_trashHelper);
+					_assetDisplayPageFriendlyURLProvider, _trashHelper);
 
 		return articleActionDropdownItemsProvider.getActionDropdownItems();
 	}
@@ -204,7 +209,8 @@ public class JournalDisplayContext {
 		int page = ParamUtil.getInteger(_request, "page");
 
 		_articleDisplay = JournalArticleLocalServiceUtil.getArticleDisplay(
-			article, null, null, _themeDisplay.getLanguageId(), page,
+			article, article.getDDMTemplateKey(), null,
+			_themeDisplay.getLanguageId(), page,
 			new PortletRequestModel(
 				_liferayPortletRequest, _liferayPortletResponse),
 			_themeDisplay);
@@ -220,7 +226,7 @@ public class JournalDisplayContext {
 			articleActionDropdownItemsProvider =
 				new JournalArticleActionDropdownItemsProvider(
 					article, _liferayPortletRequest, _liferayPortletResponse,
-					_trashHelper);
+					_assetDisplayPageFriendlyURLProvider, _trashHelper);
 
 		return articleActionDropdownItemsProvider.
 			getArticleHistoryActionDropdownItems();
@@ -241,10 +247,19 @@ public class JournalDisplayContext {
 			articleActionDropdownItemsProvider =
 				new JournalArticleActionDropdownItemsProvider(
 					article, _liferayPortletRequest, _liferayPortletResponse,
-					_trashHelper);
+					_assetDisplayPageFriendlyURLProvider, _trashHelper);
 
 		return articleActionDropdownItemsProvider.
 			getArticleVersionActionDropdownItems();
+	}
+
+	public String getChangeListName(JournalArticle journalArticle) {
+		if (_journalChangeTrackingHelper == null) {
+			return StringPool.BLANK;
+		}
+
+		return _journalChangeTrackingHelper.getJournalArticleCTCollectionName(
+			_themeDisplay.getUserId(), journalArticle.getId());
 	}
 
 	public String[] getCharactersBlacklist() throws PortalException {
@@ -382,14 +397,19 @@ public class JournalDisplayContext {
 		return _ddmStructures;
 	}
 
-	public String getDDMTemplateKey() {
-		if (_ddmTemplateKey != null) {
-			return _ddmTemplateKey;
+	public int getDefaultStatus() {
+		PermissionChecker permissionChecker =
+			_themeDisplay.getPermissionChecker();
+
+		if (permissionChecker.isContentReviewer(
+				_themeDisplay.getCompanyId(),
+				_themeDisplay.getScopeGroupId()) ||
+			isNavigationMine()) {
+
+			return WorkflowConstants.STATUS_ANY;
 		}
 
-		_ddmTemplateKey = ParamUtil.getString(_request, "ddmTemplateKey");
-
-		return _ddmTemplateKey;
+		return WorkflowConstants.STATUS_APPROVED;
 	}
 
 	public String getDisplayStyle() {
@@ -418,14 +438,7 @@ public class JournalDisplayContext {
 	}
 
 	public String[] getDisplayViews() {
-		if (_displayViews == null) {
-			_displayViews = StringUtil.split(
-				PrefsParamUtil.getString(
-					_portletPreferences, _request, "displayViews",
-					StringUtil.merge(_journalWebConfiguration.displayViews())));
-		}
-
-		return _displayViews;
+		return _journalWebConfiguration.displayViews();
 	}
 
 	public JournalFolder getFolder() {
@@ -849,34 +862,6 @@ public class JournalDisplayContext {
 
 			articleSearchContainer.setResults(results);
 		}
-		else if (Validator.isNotNull(getDDMTemplateKey())) {
-			List<Long> folderIds = new ArrayList<>(1);
-
-			if (getFolderId() !=
-					JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-
-				folderIds.add(getFolderId());
-			}
-
-			int total = JournalArticleServiceUtil.searchCount(
-				_themeDisplay.getCompanyId(), _themeDisplay.getScopeGroupId(),
-				folderIds, JournalArticleConstants.CLASSNAME_ID_DEFAULT,
-				getKeywords(), -1.0, getDDMStructureKey(), getDDMTemplateKey(),
-				null, null, getStatus(), null);
-
-			articleSearchContainer.setTotal(total);
-
-			List results = JournalArticleServiceUtil.search(
-				_themeDisplay.getCompanyId(), _themeDisplay.getScopeGroupId(),
-				folderIds, JournalArticleConstants.CLASSNAME_ID_DEFAULT,
-				getKeywords(), -1.0, getDDMStructureKey(), getDDMTemplateKey(),
-				null, null, getStatus(), null,
-				articleSearchContainer.getStart(),
-				articleSearchContainer.getEnd(),
-				articleSearchContainer.getOrderByComparator());
-
-			articleSearchContainer.setResults(results);
-		}
 		else if (isSearch()) {
 			List<Long> folderIds = new ArrayList<>(1);
 
@@ -1018,20 +1003,7 @@ public class JournalDisplayContext {
 			return _status;
 		}
 
-		int defaultStatus = WorkflowConstants.STATUS_APPROVED;
-
-		PermissionChecker permissionChecker =
-			_themeDisplay.getPermissionChecker();
-
-		if (permissionChecker.isContentReviewer(
-				_themeDisplay.getCompanyId(),
-				_themeDisplay.getScopeGroupId()) ||
-			isNavigationMine()) {
-
-			defaultStatus = WorkflowConstants.STATUS_ANY;
-		}
-
-		_status = ParamUtil.getInteger(_request, "status", defaultStatus);
+		_status = ParamUtil.getInteger(_request, "status", getDefaultStatus());
 
 		return _status;
 	}
@@ -1080,6 +1052,24 @@ public class JournalDisplayContext {
 		}
 
 		return false;
+	}
+
+	public boolean isChangeListColumnVisible() {
+		if (_journalChangeTrackingHelper == null) {
+			return false;
+		}
+
+		return _journalChangeTrackingHelper.hasActiveCTCollection(
+			_themeDisplay.getCompanyId(), _themeDisplay.getUserId());
+	}
+
+	public boolean isJournalArticleInChangeList(JournalArticle journalArticle) {
+		if (_journalChangeTrackingHelper == null) {
+			return false;
+		}
+
+		return _journalChangeTrackingHelper.isJournalArticleInChangeList(
+			_themeDisplay.getUserId(), journalArticle.getId());
 	}
 
 	public boolean isNavigationHome() {
@@ -1160,7 +1150,6 @@ public class JournalDisplayContext {
 		attributes.put(Field.STATUS, getStatus());
 		attributes.put(Field.TITLE, getKeywords());
 		attributes.put("ddmStructureKey", getDDMStructureKey());
-		attributes.put("ddmTemplateKey", getDDMTemplateKey());
 
 		LinkedHashMap<String, Object> params = new LinkedHashMap<>();
 
@@ -1245,16 +1234,32 @@ public class JournalDisplayContext {
 		return jsonArray;
 	}
 
+	private static JournalChangeTrackingHelper _journalChangeTrackingHelper;
+
+	static {
+		Bundle bundle = FrameworkUtil.getBundle(
+			JournalChangeTrackingHelper.class);
+
+		ServiceTracker<JournalChangeTrackingHelper, JournalChangeTrackingHelper>
+			serviceTracker = new ServiceTracker<>(
+				bundle.getBundleContext(), JournalChangeTrackingHelper.class,
+				null);
+
+		serviceTracker.open();
+
+		_journalChangeTrackingHelper = serviceTracker.getService();
+	}
+
 	private String[] _addMenuFavItems;
 	private JournalArticle _article;
 	private JournalArticleDisplay _articleDisplay;
 	private SearchContainer _articleSearchContainer;
+	private final AssetDisplayPageFriendlyURLProvider
+		_assetDisplayPageFriendlyURLProvider;
 	private String _ddmStructureKey;
 	private String _ddmStructureName;
 	private List<DDMStructure> _ddmStructures;
-	private String _ddmTemplateKey;
 	private String _displayStyle;
-	private String[] _displayViews;
 	private JournalFolder _folder;
 	private Long _folderId;
 	private final JournalWebConfiguration _journalWebConfiguration;
@@ -1266,7 +1271,6 @@ public class JournalDisplayContext {
 	private String _orderByType;
 	private Long _parentFolderId;
 	private final PortalPreferences _portalPreferences;
-	private final PortletPreferences _portletPreferences;
 	private final HttpServletRequest _request;
 	private Integer _restrictionType;
 	private Integer _status;

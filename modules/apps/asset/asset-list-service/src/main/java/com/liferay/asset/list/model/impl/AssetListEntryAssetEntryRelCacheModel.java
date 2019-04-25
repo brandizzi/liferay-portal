@@ -69,7 +69,7 @@ public class AssetListEntryAssetEntryRelCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -91,6 +91,8 @@ public class AssetListEntryAssetEntryRelCacheModel
 		sb.append(assetListEntryId);
 		sb.append(", assetEntryId=");
 		sb.append(assetEntryId);
+		sb.append(", segmentsEntryId=");
+		sb.append(segmentsEntryId);
 		sb.append(", position=");
 		sb.append(position);
 		sb.append(", lastPublishDate=");
@@ -142,6 +144,7 @@ public class AssetListEntryAssetEntryRelCacheModel
 
 		assetListEntryAssetEntryRelImpl.setAssetListEntryId(assetListEntryId);
 		assetListEntryAssetEntryRelImpl.setAssetEntryId(assetEntryId);
+		assetListEntryAssetEntryRelImpl.setSegmentsEntryId(segmentsEntryId);
 		assetListEntryAssetEntryRelImpl.setPosition(position);
 
 		if (lastPublishDate == Long.MIN_VALUE) {
@@ -175,6 +178,8 @@ public class AssetListEntryAssetEntryRelCacheModel
 		assetListEntryId = objectInput.readLong();
 
 		assetEntryId = objectInput.readLong();
+
+		segmentsEntryId = objectInput.readLong();
 
 		position = objectInput.readInt();
 		lastPublishDate = objectInput.readLong();
@@ -211,6 +216,8 @@ public class AssetListEntryAssetEntryRelCacheModel
 
 		objectOutput.writeLong(assetEntryId);
 
+		objectOutput.writeLong(segmentsEntryId);
+
 		objectOutput.writeInt(position);
 		objectOutput.writeLong(lastPublishDate);
 	}
@@ -225,6 +232,7 @@ public class AssetListEntryAssetEntryRelCacheModel
 	public long modifiedDate;
 	public long assetListEntryId;
 	public long assetEntryId;
+	public long segmentsEntryId;
 	public int position;
 	public long lastPublishDate;
 

@@ -29,6 +29,7 @@ import com.liferay.portal.url.builder.MainAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.ModuleAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.PortletDependencyAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.ResourceAbsolutePortalURLBuilder;
+import com.liferay.portal.url.builder.WhiteboardAbsolutePortalURLBuilder;
 
 import java.util.Dictionary;
 
@@ -46,6 +47,16 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 
 		_portal = portal;
 		_request = request;
+
+		String pathContext = portal.getPathContext();
+
+		String pathProxy = portal.getPathProxy();
+
+		_pathContext = pathContext.substring(pathProxy.length());
+
+		_pathImage = _pathContext + Portal.PATH_IMAGE;
+		_pathMain = _pathContext + Portal.PATH_MAIN;
+		_pathModule = _pathContext + Portal.PATH_MODULE;
 	}
 
 	@Override
@@ -54,7 +65,7 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 
 			@Override
 			public String build() {
-				return _build(_portal.getPathImage(), relativeURL);
+				return _build(_pathImage, relativeURL);
 			}
 
 		};
@@ -66,7 +77,7 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 
 			@Override
 			public String build() {
-				return _build(_portal.getPathMain(), relativeURL);
+				return _build(_pathMain, relativeURL);
 			}
 
 		};
@@ -89,8 +100,7 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 					webContextPath += StringPool.SLASH;
 				}
 
-				return _build(
-					_portal.getPathModule() + webContextPath, relativeURL);
+				return _build(_pathModule + webContextPath, relativeURL);
 			}
 
 		};
@@ -168,7 +178,21 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 
 			@Override
 			public String build() {
-				return _build(_portal.getPathContext(), relativeURL);
+				return _build(_pathContext, relativeURL);
+			}
+
+		};
+	}
+
+	@Override
+	public WhiteboardAbsolutePortalURLBuilder forWhiteboard(
+		String servletPattern) {
+
+		return new WhiteboardAbsolutePortalURLBuilder() {
+
+			@Override
+			public String build() {
+				return _build(_pathModule, servletPattern);
 			}
 
 		};
@@ -271,6 +295,10 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 
 	private boolean _ignoreCDNHost;
 	private boolean _ignorePathProxy;
+	private final String _pathContext;
+	private final String _pathImage;
+	private final String _pathMain;
+	private final String _pathModule;
 	private final Portal _portal;
 	private final HttpServletRequest _request;
 

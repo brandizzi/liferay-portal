@@ -14,6 +14,7 @@
 
 package com.liferay.headless.form.dto.v1_0;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,6 +23,10 @@ import com.liferay.petra.string.StringBundler;
 
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.util.Objects;
 
 import javax.annotation.Generated;
 
@@ -33,36 +38,41 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Generated("")
 @GraphQLName("Grid")
-//@JsonFilter("Liferay.Vulcan")
+@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "Grid")
 public class Grid {
 
-	public Columns[] getColumns() {
+	@Schema(description = "https://www.schema.org/FormFieldOption")
+	public Column[] getColumns() {
 		return columns;
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public Rows[] getRows() {
-		return rows;
-	}
-
-	public void setColumns(Columns[] columns) {
+	public void setColumns(Column[] columns) {
 		this.columns = columns;
 	}
 
 	@JsonIgnore
 	public void setColumns(
-		UnsafeSupplier<Columns[], Exception> columnsUnsafeSupplier) {
+		UnsafeSupplier<Column[], Exception> columnsUnsafeSupplier) {
 
 		try {
 			columns = columnsUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Column[] columns;
+
+	@Schema
+	public Long getId() {
+		return id;
 	}
 
 	public void setId(Long id) {
@@ -74,23 +84,64 @@ public class Grid {
 		try {
 			id = idUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void setRows(Rows[] rows) {
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long id;
+
+	@Schema(description = "https://www.schema.org/FormFieldOption")
+	public Row[] getRows() {
+		return rows;
+	}
+
+	public void setRows(Row[] rows) {
 		this.rows = rows;
 	}
 
 	@JsonIgnore
-	public void setRows(UnsafeSupplier<Rows[], Exception> rowsUnsafeSupplier) {
+	public void setRows(UnsafeSupplier<Row[], Exception> rowsUnsafeSupplier) {
 		try {
 			rows = rowsUnsafeSupplier.get();
+		}
+		catch (RuntimeException re) {
+			throw re;
 		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Row[] rows;
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+
+		if (!(object instanceof Grid)) {
+			return false;
+		}
+
+		Grid grid = (Grid)object;
+
+		return Objects.equals(toString(), grid.toString());
+	}
+
+	@Override
+	public int hashCode() {
+		String string = toString();
+
+		return string.hashCode();
 	}
 
 	public String toString() {
@@ -98,16 +149,17 @@ public class Grid {
 
 		sb.append("{");
 
-		sb.append("\"columns\": ");
+		if (columns != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		if (columns == null) {
-			sb.append("null");
-		}
-		else {
+			sb.append("\"columns\": ");
+
 			sb.append("[");
 
 			for (int i = 0; i < columns.length; i++) {
-				sb.append(columns[i]);
+				sb.append(String.valueOf(columns[i]));
 
 				if ((i + 1) < columns.length) {
 					sb.append(", ");
@@ -117,23 +169,27 @@ public class Grid {
 			sb.append("]");
 		}
 
-		sb.append(", ");
+		if (id != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"id\": ");
+			sb.append("\"id\": ");
 
-		sb.append(id);
-		sb.append(", ");
-
-		sb.append("\"rows\": ");
-
-		if (rows == null) {
-			sb.append("null");
+			sb.append(id);
 		}
-		else {
+
+		if (rows != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"rows\": ");
+
 			sb.append("[");
 
 			for (int i = 0; i < rows.length; i++) {
-				sb.append(rows[i]);
+				sb.append(String.valueOf(rows[i]));
 
 				if ((i + 1) < rows.length) {
 					sb.append(", ");
@@ -148,16 +204,10 @@ public class Grid {
 		return sb.toString();
 	}
 
-	@GraphQLField
-	@JsonProperty
-	protected Columns[] columns;
+	private static String _escape(Object object) {
+		String string = String.valueOf(object);
 
-	@GraphQLField
-	@JsonProperty
-	protected Long id;
-
-	@GraphQLField
-	@JsonProperty
-	protected Rows[] rows;
+		return string.replaceAll("\"", "\\\\\"");
+	}
 
 }

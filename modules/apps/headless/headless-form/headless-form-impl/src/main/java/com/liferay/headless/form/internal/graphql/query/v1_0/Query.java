@@ -18,14 +18,12 @@ import com.liferay.headless.form.dto.v1_0.Form;
 import com.liferay.headless.form.dto.v1_0.FormDocument;
 import com.liferay.headless.form.dto.v1_0.FormRecord;
 import com.liferay.headless.form.dto.v1_0.FormStructure;
-import com.liferay.headless.form.internal.resource.v1_0.FormDocumentResourceImpl;
-import com.liferay.headless.form.internal.resource.v1_0.FormRecordResourceImpl;
-import com.liferay.headless.form.internal.resource.v1_0.FormResourceImpl;
-import com.liferay.headless.form.internal.resource.v1_0.FormStructureResourceImpl;
 import com.liferay.headless.form.resource.v1_0.FormDocumentResource;
 import com.liferay.headless.form.resource.v1_0.FormRecordResource;
 import com.liferay.headless.form.resource.v1_0.FormResource;
 import com.liferay.headless.form.resource.v1_0.FormStructureResource;
+import com.liferay.petra.function.UnsafeConsumer;
+import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.vulcan.pagination.Page;
@@ -39,6 +37,8 @@ import java.util.Collection;
 
 import javax.annotation.Generated;
 
+import org.osgi.service.component.ComponentServiceObjects;
+
 /**
  * @author Javier Gamarra
  * @generated
@@ -46,155 +46,217 @@ import javax.annotation.Generated;
 @Generated("")
 public class Query {
 
-	@GraphQLField
-	@GraphQLInvokeDetached
-	public Collection<Form> getContentSpaceFormsPage(
-			@GraphQLName("content-space-id") Long contentSpaceId,
-			@GraphQLName("pageSize") int pageSize,
-			@GraphQLName("page") int page)
-		throws Exception {
+	public static void setFormResourceComponentServiceObjects(
+		ComponentServiceObjects<FormResource>
+			formResourceComponentServiceObjects) {
 
-		FormResource formResource = _createFormResource();
+		_formResourceComponentServiceObjects =
+			formResourceComponentServiceObjects;
+	}
 
-		formResource.setContextCompany(
-			CompanyLocalServiceUtil.getCompany(
-				CompanyThreadLocal.getCompanyId()));
+	public static void setFormDocumentResourceComponentServiceObjects(
+		ComponentServiceObjects<FormDocumentResource>
+			formDocumentResourceComponentServiceObjects) {
 
-		Page paginationPage = formResource.getContentSpaceFormsPage(
-			contentSpaceId, Pagination.of(pageSize, page));
+		_formDocumentResourceComponentServiceObjects =
+			formDocumentResourceComponentServiceObjects;
+	}
 
-		return paginationPage.getItems();
+	public static void setFormRecordResourceComponentServiceObjects(
+		ComponentServiceObjects<FormRecordResource>
+			formRecordResourceComponentServiceObjects) {
+
+		_formRecordResourceComponentServiceObjects =
+			formRecordResourceComponentServiceObjects;
+	}
+
+	public static void setFormStructureResourceComponentServiceObjects(
+		ComponentServiceObjects<FormStructureResource>
+			formStructureResourceComponentServiceObjects) {
+
+		_formStructureResourceComponentServiceObjects =
+			formStructureResourceComponentServiceObjects;
 	}
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public Collection<FormStructure> getContentSpaceFormStructuresPage(
-			@GraphQLName("content-space-id") Long contentSpaceId,
-			@GraphQLName("pageSize") int pageSize,
-			@GraphQLName("page") int page)
-		throws Exception {
-
-		FormStructureResource formStructureResource =
-			_createFormStructureResource();
-
-		formStructureResource.setContextCompany(
-			CompanyLocalServiceUtil.getCompany(
-				CompanyThreadLocal.getCompanyId()));
-
-		Page paginationPage =
-			formStructureResource.getContentSpaceFormStructuresPage(
-				contentSpaceId, Pagination.of(pageSize, page));
-
-		return paginationPage.getItems();
+	public Form getForm(@GraphQLName("formId") Long formId) throws Exception {
+		return _applyComponentServiceObjects(
+			_formResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			formResource -> formResource.getForm(formId));
 	}
 
 	@GraphQLField
 	@GraphQLInvokeDetached
-	public Form getForm(@GraphQLName("form-id") Long formId) throws Exception {
-		FormResource formResource = _createFormResource();
+	public Collection<Form> getSiteFormsPage(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("pageSize") int pageSize,
+			@GraphQLName("page") int page)
+		throws Exception {
 
-		formResource.setContextCompany(
-			CompanyLocalServiceUtil.getCompany(
-				CompanyThreadLocal.getCompanyId()));
+		return _applyComponentServiceObjects(
+			_formResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			formResource -> {
+				Page paginationPage = formResource.getSiteFormsPage(
+					siteId, Pagination.of(pageSize, page));
 
-		return formResource.getForm(formId);
+				return paginationPage.getItems();
+			});
 	}
 
 	@GraphQLField
 	@GraphQLInvokeDetached
 	public FormDocument getFormDocument(
-			@GraphQLName("form-document-id") Long formDocumentId)
+			@GraphQLName("formDocumentId") Long formDocumentId)
 		throws Exception {
 
-		FormDocumentResource formDocumentResource =
-			_createFormDocumentResource();
-
-		formDocumentResource.setContextCompany(
-			CompanyLocalServiceUtil.getCompany(
-				CompanyThreadLocal.getCompanyId()));
-
-		return formDocumentResource.getFormDocument(formDocumentId);
-	}
-
-	@GraphQLField
-	@GraphQLInvokeDetached
-	public Form getFormFetchLatestDraft(@GraphQLName("form-id") Long formId)
-		throws Exception {
-
-		FormResource formResource = _createFormResource();
-
-		formResource.setContextCompany(
-			CompanyLocalServiceUtil.getCompany(
-				CompanyThreadLocal.getCompanyId()));
-
-		return formResource.getFormFetchLatestDraft(formId);
-	}
-
-	@GraphQLField
-	@GraphQLInvokeDetached
-	public Collection<FormRecord> getFormFormRecordsPage(
-			@GraphQLName("form-id") Long formId,
-			@GraphQLName("pageSize") int pageSize,
-			@GraphQLName("page") int page)
-		throws Exception {
-
-		FormRecordResource formRecordResource = _createFormRecordResource();
-
-		formRecordResource.setContextCompany(
-			CompanyLocalServiceUtil.getCompany(
-				CompanyThreadLocal.getCompanyId()));
-
-		Page paginationPage = formRecordResource.getFormFormRecordsPage(
-			formId, Pagination.of(pageSize, page));
-
-		return paginationPage.getItems();
+		return _applyComponentServiceObjects(
+			_formDocumentResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			formDocumentResource -> formDocumentResource.getFormDocument(
+				formDocumentId));
 	}
 
 	@GraphQLField
 	@GraphQLInvokeDetached
 	public FormRecord getFormRecord(
-			@GraphQLName("form-record-id") Long formRecordId)
+			@GraphQLName("formRecordId") Long formRecordId)
 		throws Exception {
 
-		FormRecordResource formRecordResource = _createFormRecordResource();
+		return _applyComponentServiceObjects(
+			_formRecordResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			formRecordResource -> formRecordResource.getFormRecord(
+				formRecordId));
+	}
 
-		formRecordResource.setContextCompany(
-			CompanyLocalServiceUtil.getCompany(
-				CompanyThreadLocal.getCompanyId()));
+	@GraphQLField
+	@GraphQLInvokeDetached
+	public Collection<FormRecord> getFormFormRecordsPage(
+			@GraphQLName("formId") Long formId,
+			@GraphQLName("pageSize") int pageSize,
+			@GraphQLName("page") int page)
+		throws Exception {
 
-		return formRecordResource.getFormRecord(formRecordId);
+		return _applyComponentServiceObjects(
+			_formRecordResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			formRecordResource -> {
+				Page paginationPage = formRecordResource.getFormFormRecordsPage(
+					formId, Pagination.of(pageSize, page));
+
+				return paginationPage.getItems();
+			});
+	}
+
+	@GraphQLField
+	@GraphQLInvokeDetached
+	public FormRecord getFormFormRecordByLatestDraft(
+			@GraphQLName("formId") Long formId)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_formRecordResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			formRecordResource ->
+				formRecordResource.getFormFormRecordByLatestDraft(formId));
 	}
 
 	@GraphQLField
 	@GraphQLInvokeDetached
 	public FormStructure getFormStructure(
-			@GraphQLName("form-structure-id") Long formStructureId)
+			@GraphQLName("formStructureId") Long formStructureId)
 		throws Exception {
 
-		FormStructureResource formStructureResource =
-			_createFormStructureResource();
+		return _applyComponentServiceObjects(
+			_formStructureResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			formStructureResource -> formStructureResource.getFormStructure(
+				formStructureId));
+	}
+
+	@GraphQLField
+	@GraphQLInvokeDetached
+	public Collection<FormStructure> getSiteFormStructuresPage(
+			@GraphQLName("siteId") Long siteId,
+			@GraphQLName("pageSize") int pageSize,
+			@GraphQLName("page") int page)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_formStructureResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			formStructureResource -> {
+				Page paginationPage =
+					formStructureResource.getSiteFormStructuresPage(
+						siteId, Pagination.of(pageSize, page));
+
+				return paginationPage.getItems();
+			});
+	}
+
+	private <T, R, E1 extends Throwable, E2 extends Throwable> R
+			_applyComponentServiceObjects(
+				ComponentServiceObjects<T> componentServiceObjects,
+				UnsafeConsumer<T, E1> unsafeConsumer,
+				UnsafeFunction<T, R, E2> unsafeFunction)
+		throws E1, E2 {
+
+		T resource = componentServiceObjects.getService();
+
+		try {
+			unsafeConsumer.accept(resource);
+
+			return unsafeFunction.apply(resource);
+		}
+		finally {
+			componentServiceObjects.ungetService(resource);
+		}
+	}
+
+	private void _populateResourceContext(FormResource formResource)
+		throws Exception {
+
+		formResource.setContextCompany(
+			CompanyLocalServiceUtil.getCompany(
+				CompanyThreadLocal.getCompanyId()));
+	}
+
+	private void _populateResourceContext(
+			FormDocumentResource formDocumentResource)
+		throws Exception {
+
+		formDocumentResource.setContextCompany(
+			CompanyLocalServiceUtil.getCompany(
+				CompanyThreadLocal.getCompanyId()));
+	}
+
+	private void _populateResourceContext(FormRecordResource formRecordResource)
+		throws Exception {
+
+		formRecordResource.setContextCompany(
+			CompanyLocalServiceUtil.getCompany(
+				CompanyThreadLocal.getCompanyId()));
+	}
+
+	private void _populateResourceContext(
+			FormStructureResource formStructureResource)
+		throws Exception {
 
 		formStructureResource.setContextCompany(
 			CompanyLocalServiceUtil.getCompany(
 				CompanyThreadLocal.getCompanyId()));
-
-		return formStructureResource.getFormStructure(formStructureId);
 	}
 
-	private static FormDocumentResource _createFormDocumentResource() {
-		return new FormDocumentResourceImpl();
-	}
-
-	private static FormRecordResource _createFormRecordResource() {
-		return new FormRecordResourceImpl();
-	}
-
-	private static FormResource _createFormResource() {
-		return new FormResourceImpl();
-	}
-
-	private static FormStructureResource _createFormStructureResource() {
-		return new FormStructureResourceImpl();
-	}
+	private static ComponentServiceObjects<FormResource>
+		_formResourceComponentServiceObjects;
+	private static ComponentServiceObjects<FormDocumentResource>
+		_formDocumentResourceComponentServiceObjects;
+	private static ComponentServiceObjects<FormRecordResource>
+		_formRecordResourceComponentServiceObjects;
+	private static ComponentServiceObjects<FormStructureResource>
+		_formStructureResourceComponentServiceObjects;
 
 }

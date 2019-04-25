@@ -94,6 +94,11 @@ public interface LayoutPageTemplateEntryService extends BaseService {
 		throws PortalException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public LayoutPageTemplateEntry fetchLayoutPageTemplateEntry(
+			long groupId, String name)
+		throws PortalException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public LayoutPageTemplateEntry fetchLayoutPageTemplateEntryByUuidAndGroupId(
 		String uuid, long groupId);
 
@@ -287,10 +292,6 @@ public interface LayoutPageTemplateEntryService extends BaseService {
 		throws PortalException;
 
 	public LayoutPageTemplateEntry updateLayoutPageTemplateEntry(
-			long layoutPageTemplateEntryId, int status)
-		throws PortalException;
-
-	public LayoutPageTemplateEntry updateLayoutPageTemplateEntry(
 			long layoutPageTemplateEntryId, long previewFileEntryId)
 		throws PortalException;
 
@@ -310,6 +311,10 @@ public interface LayoutPageTemplateEntryService extends BaseService {
 	public LayoutPageTemplateEntry updateLayoutPageTemplateEntry(
 			long layoutPageTemplateEntryId, String name,
 			long[] fragmentEntryIds, ServiceContext serviceContext)
+		throws PortalException;
+
+	public LayoutPageTemplateEntry updateStatus(
+			long layoutPageTemplateEntryId, int status)
 		throws PortalException;
 
 }

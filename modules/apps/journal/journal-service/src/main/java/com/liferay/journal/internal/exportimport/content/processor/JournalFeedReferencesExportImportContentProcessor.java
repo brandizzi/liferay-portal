@@ -14,6 +14,7 @@
 
 package com.liferay.journal.internal.exportimport.content.processor;
 
+import com.liferay.exportimport.configuration.ExportImportServiceConfiguration;
 import com.liferay.exportimport.content.processor.ExportImportContentProcessor;
 import com.liferay.exportimport.kernel.exception.ExportImportContentProcessorException;
 import com.liferay.exportimport.kernel.exception.ExportImportContentValidationException;
@@ -33,6 +34,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.StagedModel;
+import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -85,7 +88,9 @@ public class JournalFeedReferencesExportImportContentProcessor
 	public void validateContentReferences(long groupId, String content)
 		throws PortalException {
 
-		validateJournalFeedReferences(groupId, content);
+		if (isValidateJournalFeedReferences()) {
+			validateJournalFeedReferences(groupId, content);
+		}
 	}
 
 	protected JournalFeed getJournalFeed(Map<String, String> map) {
@@ -150,6 +155,22 @@ public class JournalFeedReferencesExportImportContentProcessor
 		}
 
 		return map;
+	}
+
+	protected boolean isValidateJournalFeedReferences() {
+		try {
+			ExportImportServiceConfiguration configuration =
+				_configurationProvider.getCompanyConfiguration(
+					ExportImportServiceConfiguration.class,
+					CompanyThreadLocal.getCompanyId());
+
+			return configuration.validateJournalFeedReferences();
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
+
+		return true;
 	}
 
 	protected String replaceExportJournalFeedReferences(
@@ -360,6 +381,13 @@ public class JournalFeedReferencesExportImportContentProcessor
 		return content;
 	}
 
+	@Reference(unbind = "-")
+	protected void setConfigurationProvider(
+		ConfigurationProvider configurationProvider) {
+
+		_configurationProvider = configurationProvider;
+	}
+
 	protected void validateJournalFeedReferences(long groupId, String content)
 		throws PortalException {
 
@@ -412,6 +440,8 @@ public class JournalFeedReferencesExportImportContentProcessor
 
 	@Reference
 	private CompanyLocalService _companyLocalService;
+
+	private ConfigurationProvider _configurationProvider;
 
 	@Reference
 	private GroupLocalService _groupLocalService;

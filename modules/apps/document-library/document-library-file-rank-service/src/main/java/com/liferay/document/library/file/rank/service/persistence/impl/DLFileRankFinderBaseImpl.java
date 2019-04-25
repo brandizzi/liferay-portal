@@ -16,49 +16,71 @@ package com.liferay.document.library.file.rank.service.persistence.impl;
 
 import com.liferay.document.library.file.rank.model.DLFileRank;
 import com.liferay.document.library.file.rank.service.persistence.DLFileRankPersistence;
-import com.liferay.portal.kernel.bean.BeanReference;
+import com.liferay.document.library.file.rank.service.persistence.impl.constants.DLPersistenceConstants;
+import com.liferay.portal.kernel.configuration.Configuration;
+import com.liferay.portal.kernel.dao.orm.SessionFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+
+import javax.sql.DataSource;
+
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Brian Wing Shun Chan
  * @generated
  */
-public class DLFileRankFinderBaseImpl extends BasePersistenceImpl<DLFileRank> {
+public abstract class DLFileRankFinderBaseImpl
+	extends BasePersistenceImpl<DLFileRank> {
 
 	public DLFileRankFinderBaseImpl() {
 		setModelClass(DLFileRank.class);
+
+		Map<String, String> dbColumnNames = new HashMap<String, String>();
+
+		dbColumnNames.put("active", "active_");
+
+		setDBColumnNames(dbColumnNames);
 	}
 
 	@Override
 	public Set<String> getBadColumnNames() {
-		return getDLFileRankPersistence().getBadColumnNames();
+		return dlFileRankPersistence.getBadColumnNames();
 	}
 
-	/**
-	 * Returns the document library file rank persistence.
-	 *
-	 * @return the document library file rank persistence
-	 */
-	public DLFileRankPersistence getDLFileRankPersistence() {
-		return dlFileRankPersistence;
+	@Override
+	@Reference(
+		target = DLPersistenceConstants.ORIGIN_BUNDLE_SYMBOLIC_NAME_FILTER,
+		unbind = "-"
+	)
+	public void setConfiguration(Configuration configuration) {
+		super.setConfiguration(configuration);
 	}
 
-	/**
-	 * Sets the document library file rank persistence.
-	 *
-	 * @param dlFileRankPersistence the document library file rank persistence
-	 */
-	public void setDLFileRankPersistence(
-		DLFileRankPersistence dlFileRankPersistence) {
-
-		this.dlFileRankPersistence = dlFileRankPersistence;
+	@Override
+	@Reference(
+		target = DLPersistenceConstants.ORIGIN_BUNDLE_SYMBOLIC_NAME_FILTER,
+		unbind = "-"
+	)
+	public void setDataSource(DataSource dataSource) {
+		super.setDataSource(dataSource);
 	}
 
-	@BeanReference(type = DLFileRankPersistence.class)
+	@Override
+	@Reference(
+		target = DLPersistenceConstants.ORIGIN_BUNDLE_SYMBOLIC_NAME_FILTER,
+		unbind = "-"
+	)
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		super.setSessionFactory(sessionFactory);
+	}
+
+	@Reference
 	protected DLFileRankPersistence dlFileRankPersistence;
 
 	private static final Log _log = LogFactoryUtil.getLog(

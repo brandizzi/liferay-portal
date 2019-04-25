@@ -37,6 +37,7 @@ page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.language.UnicodeLanguageUtil" %><%@
 page import="com.liferay.portal.kernel.model.User" %><%@
 page import="com.liferay.portal.kernel.portlet.LiferayPortletURL" %><%@
+page import="com.liferay.portal.kernel.portlet.PortletURLUtil" %><%@
 page import="com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil" %><%@
 page import="com.liferay.portal.kernel.repository.model.FileEntry" %><%@
 page import="com.liferay.portal.kernel.util.FastDateFormatFactoryUtil" %><%@
@@ -52,9 +53,12 @@ page import="com.liferay.taglib.search.ResultRow" %><%@
 page import="com.liferay.user.associated.data.display.UADDisplay" %><%@
 page import="com.liferay.user.associated.data.web.internal.constants.UADConstants" %><%@
 page import="com.liferay.user.associated.data.web.internal.constants.UADWebKeys" %><%@
+page import="com.liferay.user.associated.data.web.internal.display.ScopeDisplay" %><%@
 page import="com.liferay.user.associated.data.web.internal.display.UADApplicationExportDisplay" %><%@
 page import="com.liferay.user.associated.data.web.internal.display.UADApplicationSummaryDisplay" %><%@
 page import="com.liferay.user.associated.data.web.internal.display.UADEntity" %><%@
+page import="com.liferay.user.associated.data.web.internal.display.UADHierarchyDisplay" %><%@
+page import="com.liferay.user.associated.data.web.internal.display.UADInfoPanelDisplay" %><%@
 page import="com.liferay.user.associated.data.web.internal.display.ViewUADEntitiesDisplay" %><%@
 page import="com.liferay.user.associated.data.web.internal.display.context.UADExportProcessDisplayContext" %><%@
 page import="com.liferay.user.associated.data.web.internal.display.context.UADExportProcessManagementToolbarDisplayContext" %><%@
@@ -77,7 +81,9 @@ page import="java.util.Map" %><%@
 page import="java.util.Objects" %><%@
 page import="java.util.TreeMap" %>
 
-<%@ page import="javax.portlet.PortletRequest" %><%@
+<%@ page import="javax.portlet.ActionRequest" %><%@
+page import="javax.portlet.PortletException" %><%@
+page import="javax.portlet.PortletRequest" %><%@
 page import="javax.portlet.PortletURL" %>
 
 <liferay-frontend:defineObjects />

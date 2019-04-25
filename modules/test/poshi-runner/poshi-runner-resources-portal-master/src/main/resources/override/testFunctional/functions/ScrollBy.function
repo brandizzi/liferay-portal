@@ -1,7 +1,0 @@
-<definition default="scrollBy">
-	<command name="scrollBy">
-		<execute function="WaitForSPARefresh" />
-
-		<execute function="Poshi.ScrollBy#scrollBy" />
-	</command>
-</definition>

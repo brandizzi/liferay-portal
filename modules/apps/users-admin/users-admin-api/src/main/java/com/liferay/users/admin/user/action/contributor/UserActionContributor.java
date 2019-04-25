@@ -27,6 +27,8 @@ import javax.portlet.PortletResponse;
 @ProviderType
 public interface UserActionContributor {
 
+	public String getConfirmationMessage(PortletRequest portletRequest);
+
 	public String getMessage(PortletRequest portletRequest);
 
 	public String getURL(
@@ -35,5 +37,7 @@ public interface UserActionContributor {
 
 	public boolean isShow(
 		PortletRequest portletRequest, User user, User selUser);
+
+	public boolean isShowConfirmationMessage(User selUser);
 
 }

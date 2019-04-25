@@ -6,10 +6,10 @@ import Soy from 'metal-soy';
 import templates from './FragmentPreview.soy';
 
 /**
- * Defined ratios for preview sizing
+ * Defined ratios for preview sizing.
+ *
  * @type {Object}
  */
-
 const SIZE_RATIO = {
 	desktop: {
 		height: 9,
@@ -26,23 +26,20 @@ const SIZE_RATIO = {
 };
 
 /**
- * Available preview sizes
+ * Available preview sizes.
+ *
  * @type {Array<string>}
  */
-
 const PREVIEW_SIZES = Object.keys(SIZE_RATIO);
 
 /**
- * Component that renders the preview of a Fragment.
- * It allows modifying the preview with an update method.
+ * Renders the preview of a fragment and allows modifications to the preview.
  */
-
 class FragmentPreview extends PortletBase {
 
 	/**
 	 * @inheritDoc
 	 */
-
 	attached() {
 		this._updatePreview = debounce(
 			this._updatePreview.bind(this),
@@ -64,7 +61,6 @@ class FragmentPreview extends PortletBase {
 	/**
 	 * @inheritDoc
 	 */
-
 	detached() {
 		window.removeEventListener('resize', this._updatePreviewSize);
 
@@ -83,38 +79,36 @@ class FragmentPreview extends PortletBase {
 	/**
 	 * @inheritDoc
 	 */
-
 	shouldUpdate(changes) {
 		return !!changes._currentPreviewSize;
 	}
 
 	/**
-	 * Event sent when the preview frame content has been loaded
+	 * Callback executed when the preview frame content is loaded.
+	 *
 	 * @private
-	 * @review
 	 */
-
 	_handlePreviewLoaded() {
 		this._updatePreview();
 	}
 
 	/**
-	 * Changes the preview size
+	 * Changes the preview size.
+	 *
 	 * @param {Event} event
 	 * @protected
 	 */
-
 	_handlePreviewSizeButtonClick(event) {
 		this._currentPreviewSize = event.delegateTarget.dataset.previewSize || null;
 	}
 
 	/**
-	 * Sets the previewSize property and queues an update
+	 * Sets the preview size property and queues an update.
+	 *
 	 * @param {string} previewSize
 	 * @protected
 	 * @return {string}
 	 */
-
 	_setPreviewSize(previewSize) {
 		this._updatePreviewSize();
 
@@ -122,11 +116,11 @@ class FragmentPreview extends PortletBase {
 	}
 
 	/**
-	 * Updates the rendered preview with the given content.
-	 * Encapsulates the given code inside a frame and renders it.
+	 * Updates the rendered preview with the given content. It encapsulates the
+	 * given code inside a frame and renders it.
+	 *
 	 * @protected
 	 */
-
 	_updatePreview() {
 		if (!this._loading) {
 			this._loading = true;
@@ -154,10 +148,10 @@ class FragmentPreview extends PortletBase {
 	}
 
 	/**
-	 * Updates the preview size using the corresponding ratio
+	 * Updates the preview size using the corresponding ratio.
+	 *
 	 * @protected
 	 */
-
 	_updatePreviewSize() {
 		const preview = this.refs.preview;
 
@@ -188,58 +182,57 @@ class FragmentPreview extends PortletBase {
 
 /**
  * State definition.
+ *
  * @type {!Object}
  * @static
  */
-
 FragmentPreview.STATE = {
 
 	/**
-	 * CSS content of the preview
+	 * CSS content of the preview.
+	 *
 	 * @instance
 	 * @memberOf FragmentPreview
 	 * @type {!string}
 	 */
-
 	css: Config.string().required(),
 
 	/**
-	 * HTML content of the preview
+	 * HTML content of the preview.
+	 *
 	 * @instance
 	 * @memberOf FragmentPreview
 	 * @type {!string}
 	 */
-
 	html: Config.string().required(),
 
 	/**
-	 * JS content of the preview
+	 * JS content of the preview.
+	 *
 	 * @instance
 	 * @memberOf FragmentPreview
 	 * @type {!string}
 	 */
-
 	js: Config.string().required(),
 
 	/**
 	 * Path of the available icons.
+	 *
 	 * @instance
 	 * @memberOf FragmentEditor
 	 * @type {!string}
 	 */
-
 	spritemap: Config.string().required(),
 
 	/**
-	 * URLs used for communicating with backend
+	 * URLs used for communicating with the back-end logic.
+	 *
 	 * @instance
 	 * @memberOf FragmentPreview
-	 * @review
 	 * @type {{
 	 *  render: !string
 	 * }}
 	 */
-
 	urls: Config.shapeOf(
 		{
 			render: Config.string().required()
@@ -247,43 +240,43 @@ FragmentPreview.STATE = {
 	).required(),
 
 	/**
-	 * Ratio of the preview being rendered.
-	 * This property is modified internally with the ui buttons
-	 * presented to the user, but it can be safely altered externally.
+	 * Ratio of the preview being rendered. This property is modified internally
+	 * with the UI buttons presented to the user, but it can be safely altered
+	 * externally.
+	 *
 	 * @default 'full'
 	 * @instance
 	 * @memberOf FragmentPreview
 	 * @protected
 	 * @type {?string}
 	 */
-
 	_currentPreviewSize: Config.oneOf(PREVIEW_SIZES)
 		.internal()
 		.value(null)
 		.setter('_setPreviewSize'),
 
 	/**
-	 * Flag for checking if the preview content is being loaded
+	 * Flag that checks if the preview content is loading.
+	 *
 	 * @default false
 	 * @instance
 	 * @memberOf FragmentPreview
 	 * @protected
 	 * @type {boolean}
 	 */
-
 	_loading: Config.bool()
 		.internal()
 		.value(false),
 
 	/**
-	 * List of available sizes
+	 * List of available sizes.
+	 *
 	 * @default PREVIEW_SIZES
 	 * @instance
 	 * @memberOf FragmentPreview
 	 * @protected
 	 * @type {?Array<string>}
 	 */
-
 	_previewSizes: Config.array()
 		.internal()
 		.value(PREVIEW_SIZES)

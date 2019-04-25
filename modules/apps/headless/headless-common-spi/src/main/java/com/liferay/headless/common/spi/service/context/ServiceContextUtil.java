@@ -16,8 +16,7 @@ package com.liferay.headless.common.spi.service.context;
 
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.ArrayUtil;
-
-import java.util.Objects;
+import com.liferay.portal.kernel.util.StringUtil;
 
 /**
  * @author Víctor Galán
@@ -32,16 +31,16 @@ public class ServiceContextUtil {
 	}
 
 	public static ServiceContext createServiceContext(
-		String[] assetTagNames, Long[] assetCategoryIds, long groupId,
+		String[] assetTagNames, Long[] assetCategoryIds, Long groupId,
 		String viewableBy) {
 
 		return new ServiceContext() {
 			{
-				if (Objects.equals(viewableBy, "anyone")) {
+				if (StringUtil.equalsIgnoreCase(viewableBy, "anyone")) {
 					setAddGuestPermissions(true);
 					setAddGroupPermissions(true);
 				}
-				else if (Objects.equals(viewableBy, "members")) {
+				else if (StringUtil.equalsIgnoreCase(viewableBy, "members")) {
 					setAddGuestPermissions(false);
 					setAddGroupPermissions(true);
 				}
@@ -58,7 +57,9 @@ public class ServiceContextUtil {
 					setAssetTagNames(assetTagNames);
 				}
 
-				setScopeGroupId(groupId);
+				if (groupId != null) {
+					setScopeGroupId(groupId);
+				}
 			}
 		};
 	}

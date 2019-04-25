@@ -30,228 +30,235 @@ definition {
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
-			customFieldName = "Boolean",
-			customFieldType = "True/False",
-			resourceName = "Blogs Entry"
-		);
+			customFieldName = "Text Area",
+			customFieldType = "Text Area",
+			resourceName = "Blogs Entry");
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
 			customFieldName = "Date",
 			customFieldType = "Date",
-			resourceName = "Bookmarks Entry"
-		);
+			resourceName = "Bookmarks Entry");
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
-
-		CustomFields.addCP(
-			customFieldName = "Decimal",
-			customFieldType = "Decimal Number (64-bit)",
-			resourceName = "Bookmarks Folder"
-		);
-
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
-			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
-
-		CustomFields.addCP(
-			customFieldName = "Decimal",
-			customFieldType = "Group of Decimal Numbers (64-bit)",
-			resourceName = "Document"
-		);
-
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
-			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
-
-		CustomFields.addCP(
-			customFieldName = "Decimal",
-			customFieldType = "Decimal Number (32-bit)",
-			resourceName = "Documents Folder"
-		);
-
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
-			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
-
-		CustomFields.addCP(
-			customFieldName = "Integer",
-			customFieldType = "Integer (64-bit)",
-			resourceName = "Message Boards Category"
-		);
-
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
-			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
-
-		CustomFields.addCP(
-			customFieldName = "Integer",
-			customFieldType = "Group of Integers (64-bit)",
-			resourceName = "Message Boards Message"
-		);
-
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
-			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
 			customFieldName = "Number",
-			customFieldType = "Decimal Number or Integer (64-bit)",
-			resourceName = "Organization"
-		);
+			customFieldType = "Number",
+			resourceName = "Bookmarks Folder");
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
-			customFieldName = "Integer",
-			customFieldType = "Integer (16-bit)",
-			resourceName = "Page"
-		);
+			customFieldName = "Dropdown",
+			customFieldType = "Dropdown",
+			resourceName = "Calendar Event");
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
-			customFieldName = "Integer",
-			customFieldType = "Group of Integers (16-bit)",
-			resourceName = "Role"
-		);
+			customFieldName = "Checkbox",
+			customFieldType = "Checkbox",
+			resourceName = "Document");
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
-			customFieldName = "Text",
-			customFieldType = "Text",
-			resourceName = "Site"
-		);
+			customFieldName = "Geolocation",
+			customFieldType = "Geolocation",
+			resourceName = "Documents Folder");
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
-			customFieldName = "Text",
-			customFieldType = "Group of Text Values",
-			resourceName = "User"
-		);
+			customFieldName = "Text Field",
+			customFieldType = "Input Field",
+			resourceName = "Knowledge Base Article");
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
-			customFieldName = "Text",
-			customFieldType = "Group of Text Values",
-			resourceName = "User Group"
-		);
+			customFieldName = "Text Area",
+			customFieldType = "Text Area",
+			resourceName = "Knowledge Base Folder");
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
-			customFieldName = "Text",
-			customFieldType = "Localized Text",
-			resourceName = "Web Content Article"
-		);
+			customFieldName = "Text Field",
+			customFieldType = "Input Field",
+			resourceName = "Message Boards Category");
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
 			customFieldName = "Number",
-			customFieldType = "Group of Decimal Numbers or Integers (64-bit)",
-			resourceName = "Wiki Page"
-		);
+			customFieldType = "Number",
+			resourceName = "Message Boards Message");
+
+		ProductMenu.gotoPortlet(
+			category = "Configuration",
+			panel = "Control Panel",
+			portlet = "Custom Fields");
+
+		CustomFields.addCP(
+			customFieldName = "Dropdown",
+			customFieldType = "Dropdown",
+			resourceName = "Organization");
+
+		ProductMenu.gotoPortlet(
+			category = "Configuration",
+			panel = "Control Panel",
+			portlet = "Custom Fields");
+
+		CustomFields.addCP(
+			customFieldName = "Checkbox",
+			customFieldType = "Checkbox",
+			resourceName = "Page");
+
+		ProductMenu.gotoPortlet(
+			category = "Configuration",
+			panel = "Control Panel",
+			portlet = "Custom Fields");
+
+		CustomFields.addCP(
+			customFieldName = "Radio",
+			customFieldType = "Radio",
+			resourceName = "Role");
+
+		ProductMenu.gotoPortlet(
+			category = "Configuration",
+			panel = "Control Panel",
+			portlet = "Custom Fields");
+
+		CustomFields.addCP(
+			customFieldName = "Geolocation",
+			customFieldType = "Geolocation",
+			resourceName = "Site");
+
+		ProductMenu.gotoPortlet(
+			category = "Configuration",
+			panel = "Control Panel",
+			portlet = "Custom Fields");
+
+		CustomFields.addCP(
+			customFieldName = "Geolocation",
+			customFieldType = "Geolocation",
+			resourceName = "User");
+
+		ProductMenu.gotoPortlet(
+			category = "Configuration",
+			panel = "Control Panel",
+			portlet = "Custom Fields");
+
+		CustomFields.addCP(
+			customFieldName = "Date",
+			customFieldType = "Date",
+			resourceName = "User Group");
+
+		ProductMenu.gotoPortlet(
+			category = "Configuration",
+			panel = "Control Panel",
+			portlet = "Custom Fields");
+
+		CustomFields.addCP(
+			customFieldName = "Text Field",
+			customFieldType = "Input Field",
+			localization = "true",
+			resourceName = "Web Content Article");
+
+		ProductMenu.gotoPortlet(
+			category = "Configuration",
+			panel = "Control Panel",
+			portlet = "Custom Fields");
+
+		CustomFields.addCP(
+			customFieldName = "Text Area",
+			customFieldType = "Text Area",
+			localization = "true",
+			resourceName = "Web Content Folder");
+
+		ProductMenu.gotoPortlet(
+			category = "Configuration",
+			panel = "Control Panel",
+			portlet = "Custom Fields");
+
+		CustomFields.addCP(
+			customFieldName = "Number",
+			customFieldType = "Number",
+			resourceName = "Wiki Page");
 	}
 
 	@priority = "5"
-	test AddCustomFieldUserBoolean {
+	test AddCustomFieldUserTextField {
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
-			customFieldName = "Boolean",
-			customFieldType = "True/False",
-			resourceName = "User"
-		);
+			customFieldName = "Nickname",
+			customFieldType = "Input Field",
+			resourceName = "User",
+			startingValue = "Nickname");
 
 		ProductMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
-			portlet = "Users and Organizations"
-		);
+			portlet = "Users and Organizations");
 
 		User.addCP(
 			userEmailAddress = "userea@liferay.com",
 			userFirstName = "userfn",
 			userLastName = "userln",
-			userScreenName = "usersn"
-		);
+			userScreenName = "usersn");
 
 		ProductMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
-			portlet = "Users and Organizations"
-		);
+			portlet = "Users and Organizations");
 
 		User.gotoEditCP(userScreenName = "usersn");
 
 		User.viewUserCustomFieldsCP(
-			customFieldName = "Boolean",
-			customFieldValue = "False"
-		);
+			customFieldName = "Nickname",
+			customFieldType = "Input Field",
+			startingValue = "Nickname");
 	}
 
-	@ignore = "true"
 	@priority = "5"
-	test EditCustomFieldUserBoolean {
+	test EditCustomFieldUserTextField {
 		property app.server.types = "jboss,resin,tcserver,tomcat,weblogic,websphere,wildfly";
 		property database.types = "db2,hypersonic,mariadb,mysql,oracle,postgresql,sqlserver,sybase";
 		property environment.acceptance = "true";
@@ -260,53 +267,46 @@ definition {
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
-			customFieldName = "Boolean",
-			customFieldType = "True/False",
-			resourceName = "User"
-		);
+			customFieldName = "Text Field",
+			customFieldType = "Input Field",
+			resourceName = "User");
 
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.editCP(
-			customFieldName = "Boolean",
-			customFieldType = "True/False",
-			defaultValue = "True",
-			resourceName = "User"
-		);
+			customFieldName = "Text Field",
+			customFieldType = "Input Field",
+			resourceName = "User",
+			startingValue = "Text Field");
 
 		ProductMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
-			portlet = "Users and Organizations"
-		);
+			portlet = "Users and Organizations");
 
 		User.addCP(
 			userEmailAddress = "userea@liferay.com",
 			userFirstName = "userfn",
 			userLastName = "userln",
-			userScreenName = "usersn"
-		);
+			userScreenName = "usersn");
 
 		ProductMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
-			portlet = "Users and Organizations"
-		);
+			portlet = "Users and Organizations");
 
 		User.gotoEditCP(userScreenName = "usersn");
 
 		User.viewUserCustomFieldsCP(
-			customFieldName = "Boolean",
-			customFieldValue = "True"
-		);
+			customFieldName = "Text Field",
+			customFieldValue = "Text Field",
+			startingValue = "Nickname");
 	}
 
 	@priority = "4"
@@ -314,20 +314,17 @@ definition {
 		ProductMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
-			portlet = "Custom Fields"
-		);
+			portlet = "Custom Fields");
 
 		CustomFields.addCP(
-			customFieldName = "Text",
-			customFieldType = "Text",
-			resourceName = "Wiki Page"
-		);
+			customFieldName = "Text Field",
+			customFieldType = "Input Field",
+			resourceName = "Wiki Page");
 
 		ProductMenu.gotoPortlet(
-			category = "Build",
+			category = "Site Builder",
 			panel = "Site Administration",
-			portlet = "Pages"
-		);
+			portlet = "Pages");
 
 		SitePages.addPublicPage(pageName = "Wiki Test Page");
 
@@ -342,20 +339,17 @@ definition {
 		WikiPage.addPG(
 			customFieldText = "Wiki Text Custom Field",
 			wikiPageContent = "Wiki Page Content",
-			wikiPageTitle = "Wiki Page Title"
-		);
+			wikiPageTitle = "Wiki Page Title");
 
 		WikiPage.editPagePG(
 			customFieldTextEdit = "Wiki Text Custom Field Edit",
 			wikiPageContentEdit = "Wiki Page Content Edit",
-			wikiPageTitle = "Wiki Page Title"
-		);
+			wikiPageTitle = "Wiki Page Title");
 
 		WikiPage.viewPagePG(
 			customFieldText = "Wiki Text Custom Field Edit",
 			wikiPageContent = "Wiki Page Content Edit",
-			wikiPageTitle = "Wiki Page Title"
-		);
+			wikiPageTitle = "Wiki Page Title");
 
 		Navigator.gotoPage(pageName = "Wiki Test Page");
 
@@ -365,8 +359,7 @@ definition {
 			wikiPageRevisionNew = "1.2",
 			wikiPageRevisionOld = "1.0",
 			wikiPageTitle = "Wiki Page Title",
-			wikiVersionSummary = "Reverted to 1.0"
-		);
+			wikiVersionSummary = "Reverted to 1.0");
 
 		Navigator.gotoPage(pageName = "Wiki Test Page");
 
@@ -375,7 +368,6 @@ definition {
 		WikiPage.viewPagePG(
 			customFieldText = "Wiki Text Custom Field",
 			wikiPageContent = "Wiki Page Content",
-			wikiPageTitle = "Wiki Page Title"
-		);
+			wikiPageTitle = "Wiki Page Title");
 	}
 }

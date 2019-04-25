@@ -14,6 +14,7 @@
 
 package com.liferay.portal.vulcan.internal.jaxrs.context.resolver;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -29,15 +30,18 @@ import javax.ws.rs.ext.Provider;
 public class ObjectMapperContextResolver
 	implements ContextResolver<ObjectMapper> {
 
+	@Override
 	public ObjectMapper getContext(Class<?> clazz) {
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		objectMapper.configure(
-			MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
-		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		objectMapper.setDateFormat(new ISO8601DateFormat());
-
-		return objectMapper;
+		return _OBJECT_MAPPER;
 	}
+
+	private static final ObjectMapper _OBJECT_MAPPER = new ObjectMapper() {
+		{
+			configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
+			enable(SerializationFeature.INDENT_OUTPUT);
+			setDateFormat(new ISO8601DateFormat());
+			setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+		}
+	};
 
 }

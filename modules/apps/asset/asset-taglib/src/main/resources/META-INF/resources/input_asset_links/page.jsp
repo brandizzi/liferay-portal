@@ -16,6 +16,33 @@
 
 <%@ include file="/input_asset_links/init.jsp" %>
 
+<liferay-ui:icon-menu
+	cssClass="select-existing-selector"
+	direction="right"
+	id='<%= inputAssetLinksDisplayContext.getRandomNamespace() + "inputAssetLinks" %>'
+	message="select"
+	showArrow="<%= false %>"
+	showWhenSingleIcon="<%= true %>"
+>
+
+	<%
+	for (Map<String, Object> selectorEntry : inputAssetLinksDisplayContext.getSelectorEntries()) {
+	%>
+
+		<liferay-ui:icon
+			cssClass="asset-selector"
+			data='<%= (Map<String, Object>)selectorEntry.get("data") %>'
+			id='<%= (String)selectorEntry.get("id") %>'
+			message='<%= HtmlUtil.escape((String)selectorEntry.get("message")) %>'
+			url="javascript:;"
+		/>
+
+	<%
+	}
+	%>
+
+</liferay-ui:icon-menu>
+
 <liferay-util:buffer
 	var="removeLinkIcon"
 >
@@ -46,14 +73,20 @@
 		AssetEntry assetLinkEntry = inputAssetLinksDisplayContext.getAssetLinkEntry(assetLink);
 		%>
 
-		<liferay-ui:search-container-column-text>
-			<h5>
+		<liferay-ui:search-container-column-text
+			name="title"
+		>
+			<h4 class="list-group-title">
 				<%= HtmlUtil.escape(assetLinkEntry.getTitle(locale)) %>
-			</h5>
+			</h4>
 
-			<div class="text-secondary">
+			<p class="list-group-subtitle">
 				<%= inputAssetLinksDisplayContext.getAssetType(assetLinkEntry) %>
-			</div>
+			</p>
+
+			<p class="list-group-subtitle">
+				<liferay-ui:message key="scope" />: <%= HtmlUtil.escape(inputAssetLinksDisplayContext.getGroupDescriptiveName(assetLinkEntry)) %>
+			</p>
 		</liferay-ui:search-container-column-text>
 
 		<liferay-ui:search-container-column-text
@@ -66,6 +99,7 @@
 	<liferay-ui:search-iterator
 		markupView="lexicon"
 		paginate="<%= false %>"
+		searchResultCssClass="table table-autofit table-heading-nowrap"
 	/>
 </liferay-ui:search-container>
 
@@ -74,33 +108,6 @@
 		<liferay-ui:message key="related-assets-for-staged-asset-types-can-be-managed-on-the-staging-site" />
 	</span>
 </c:if>
-
-<liferay-ui:icon-menu
-	cssClass="select-existing-selector"
-	direction="right"
-	id='<%= inputAssetLinksDisplayContext.getRandomNamespace() + "inputAssetLinks" %>'
-	message="select"
-	showArrow="<%= false %>"
-	showWhenSingleIcon="<%= true %>"
->
-
-	<%
-	for (Map<String, Object> selectorEntry : inputAssetLinksDisplayContext.getSelectorEntries()) {
-	%>
-
-		<liferay-ui:icon
-			cssClass="asset-selector"
-			data='<%= (Map<String, Object>)selectorEntry.get("data") %>'
-			id='<%= (String)selectorEntry.get("id") %>'
-			message='<%= HtmlUtil.escape((String)selectorEntry.get("message")) %>'
-			url="javascript:;"
-		/>
-
-	<%
-	}
-	%>
-
-</liferay-ui:icon-menu>
 
 <aui:input name="assetLinkEntryIds" type="hidden" />
 
@@ -132,14 +139,15 @@
 							var assetEntryIds = event.newVal;
 
 							if (assetEntryIds) {
-								assetEntryIds.forEach(
+								Array.prototype.forEach.call(
+									assetEntryIds,
 									function(assetEntry) {
 										var entityId = assetEntry.entityid;
 
 										if (searchContainerData.indexOf(entityId) == -1) {
 											var entryLink = '<div class="text-right"><a class="modify-link" data-rowId="' + entityId + '" href="javascript:;"><%= UnicodeFormatter.toString(removeLinkIcon) %></a></div>';
 
-											var entryHtml = '<h5>' + A.Escape.html(assetEntry.assettitle) + '</h5><div class="text-secondary">' + A.Escape.html(assetEntry.assettype) + '</div>';
+											var entryHtml = '<h4 class="list-group-title">' + A.Escape.html(assetEntry.assettitle) + '</h4><p class="list-group-subtitle">' + A.Escape.html(assetEntry.assettype) + '</p><p class="list-group-subtitle">' + A.Escape.html(assetEntry.groupdescriptivename) + '</p>';
 
 											searchContainer.addRow([entryHtml, entryLink], entityId);
 

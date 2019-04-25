@@ -17,6 +17,8 @@ package com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexRequest;
 
+import java.util.Arrays;
+
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequestBuilder;
 
@@ -63,9 +65,11 @@ public class IndicesExistsIndexRequestExecutorTest {
 		IndicesExistsRequest indicesExistsRequest =
 			indicesExistsRequestBuilder.request();
 
-		Assert.assertEquals(2, indicesExistsRequest.indices().length);
-		Assert.assertEquals(_INDEX_NAME_1, indicesExistsRequest.indices()[0]);
-		Assert.assertEquals(_INDEX_NAME_2, indicesExistsRequest.indices()[1]);
+		String[] indices = indicesExistsRequest.indices();
+
+		Assert.assertEquals(Arrays.toString(indices), 2, indices.length);
+		Assert.assertEquals(_INDEX_NAME_1, indices[0]);
+		Assert.assertEquals(_INDEX_NAME_2, indices[1]);
 	}
 
 	private static final String _INDEX_NAME_1 = "test_request_index1";

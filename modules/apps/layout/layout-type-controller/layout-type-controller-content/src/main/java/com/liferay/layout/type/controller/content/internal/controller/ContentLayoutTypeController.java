@@ -14,9 +14,13 @@
 
 package com.liferay.layout.type.controller.content.internal.controller;
 
+import com.liferay.fragment.constants.FragmentActionKeys;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
+import com.liferay.fragment.renderer.FragmentRendererController;
+import com.liferay.fragment.renderer.FragmentRendererTracker;
+import com.liferay.info.constants.InfoDisplayWebKeys;
+import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
 import com.liferay.item.selector.ItemSelector;
-import com.liferay.layout.constants.LayoutConstants;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorWebKeys;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
@@ -24,14 +28,17 @@ import com.liferay.layout.type.controller.content.internal.constants.ContentLayo
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutTypeController;
 import com.liferay.portal.kernel.model.impl.BaseLayoutTypeControllerImpl;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.servlet.TransferHeadersHelperUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.servlet.PipingServletResponse;
 
@@ -48,8 +55,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Juergen Kappler
  */
 @Component(
-	immediate = true,
-	property = "layout.type=" + LayoutConstants.LAYOUT_TYPE_CONTENT,
+	immediate = true, property = "layout.type=" + LayoutConstants.TYPE_CONTENT,
 	service = LayoutTypeController.class
 )
 public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
@@ -94,14 +100,23 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 
 		if (layoutMode.equals(Constants.EDIT)) {
 			request.setAttribute(
+				ContentLayoutTypeControllerWebKeys.ITEM_SELECTOR,
+				_itemSelector);
+			request.setAttribute(
 				ContentPageEditorWebKeys.
 					FRAGMENT_COLLECTION_CONTRIBUTOR_TRACKER,
 				_fragmentCollectionContributorTracker);
-
 			request.setAttribute(
-				ContentLayoutTypeControllerWebKeys.ITEM_SELECTOR,
-				_itemSelector);
+				FragmentActionKeys.FRAGMENT_RENDERER_TRACKER,
+				_fragmentRendererTracker);
+			request.setAttribute(
+				InfoDisplayWebKeys.INFO_DISPLAY_CONTRIBUTOR_TRACKER,
+				_infoDisplayContributorTracker);
 		}
+
+		request.setAttribute(
+			FragmentActionKeys.FRAGMENT_RENDERER_CONTROLLER,
+			_fragmentRendererController);
 
 		String page = getViewPage();
 
@@ -125,8 +140,7 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 
 		try {
 			LayoutPageTemplateEntry layoutPageTemplateEntry =
-				_layoutPageTemplateEntryLocalService.
-					fetchLayoutPageTemplateEntryByPlid(layout.getPlid());
+				_fetchLayoutPageTemplateEntry(layout);
 
 			if (layoutPageTemplateEntry != null) {
 				request.setAttribute(
@@ -227,6 +241,28 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 		this.servletContext = servletContext;
 	}
 
+	private LayoutPageTemplateEntry _fetchLayoutPageTemplateEntry(
+		Layout layout) {
+
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			_layoutPageTemplateEntryLocalService.
+				fetchLayoutPageTemplateEntryByPlid(layout.getPlid());
+
+		if (layoutPageTemplateEntry != null) {
+			return layoutPageTemplateEntry;
+		}
+
+		if (layout.getClassNameId() == _portal.getClassNameId(Layout.class)) {
+			Layout publishedLayout = _layoutLocalService.fetchLayout(
+				layout.getClassPK());
+
+			return _layoutPageTemplateEntryLocalService.
+				fetchLayoutPageTemplateEntryByPlid(publishedLayout.getPlid());
+		}
+
+		return null;
+	}
+
 	private static final String _EDIT_LAYOUT_PAGE =
 		"/layout/edit_layout/content.jsp";
 
@@ -241,10 +277,25 @@ public class ContentLayoutTypeController extends BaseLayoutTypeControllerImpl {
 		_fragmentCollectionContributorTracker;
 
 	@Reference
+	private FragmentRendererController _fragmentRendererController;
+
+	@Reference
+	private FragmentRendererTracker _fragmentRendererTracker;
+
+	@Reference
+	private InfoDisplayContributorTracker _infoDisplayContributorTracker;
+
+	@Reference
 	private ItemSelector _itemSelector;
+
+	@Reference
+	private LayoutLocalService _layoutLocalService;
 
 	@Reference
 	private LayoutPageTemplateEntryLocalService
 		_layoutPageTemplateEntryLocalService;
+
+	@Reference
+	private Portal _portal;
 
 }

@@ -77,12 +77,12 @@
 </tr>
 <tr>
 	<td>ENTRY_LIST_TITLE_ON_LIVE</td>
-	<td>//li[contains(@data-title,'${key_webContentTitle}')]//*[@data-qa-id='rowItemContent']//h5</td>
+	<td>//li[contains(@data-title,'${key_webContentTitle}')]//*[@data-qa-id='rowItemContent']//h2</td>
 	<td></td>
 </tr>
 <tr>
 	<td>ENTRY_LIST_LAST_MODIFIED</td>
-	<td>//*[@data-qa-id='row' and contains(.,'${key_webContentTitle}')]//h6[contains(.,'modified')]</td>
+	<td>//*[@data-qa-id='row' and contains(.,'${key_webContentTitle}')]//span[contains(.,'modified')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -114,6 +114,22 @@
 <tr>
 	<td>MOVE_WEB_CONTENT_ARTICLE</td>
 	<td>//li[contains(@class,'move-article') and contains(.,'${key_webContentTitle}')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+<!--SIDEBAR -->
+<tr>
+	<td>SIDEBAR_BODY</td>
+	<td>//div[@class='sidebar-body']//div[contains(@id,'TabsSection')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>SIDEBAR_BUTTON</td>
+	<td>//button[contains(@class,'btn-borderless') and contains(@id,'SidebarButton')]</td>
 	<td></td>
 </tr>
 </tbody>

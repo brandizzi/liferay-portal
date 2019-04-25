@@ -8,16 +8,15 @@ import './FragmentPreview.es';
 import './SourceEditor.es';
 
 /**
- * Component that allows editing an existing or new Fragment
- * It integrates three <SourceEditor /> components for each part of
- * the fragment and a <FragmentPreview /> component for the preview
- * @review
+ * Creates a Fragment Editor component that lets you create a new fragment or
+ * edit an existing fragment. This component integrates three
+ * <code>&lt;SourceEditor /></code> components for each part of the fragment and
+ * a <code>&lt;FragmentPreview /></code> component for the preview.
  */
 class FragmentEditor extends PortletBase {
 
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
 	shouldUpdate(changes) {
 		return changes._html ||
@@ -27,14 +26,14 @@ class FragmentEditor extends PortletBase {
 	}
 
 	/**
-	 * Returns content
+	 * Returns content for the fragment.
+	 *
 	 * @public
 	 * @return {{
 	 *   css: string,
 	 *   html: string,
-	 *   js: string,
+	 *   js: string
 	 * }}
-	 * @review
 	 */
 	getContent() {
 		return ({
@@ -45,19 +44,21 @@ class FragmentEditor extends PortletBase {
 	}
 
 	/**
-	 * Returns true when HTML content is valid, false otherwise.
+	 * Returns <code>true</code> when HTML content is valid.
+	 *
 	 * @public
-	 * @return {boolean} True if HTML is valid
-	 * @review
+	 * @return {boolean} <code>true</code> when HTML is valid; <code>false</code>
+	 * otherwise.
 	 */
 	isHtmlValid() {
 		return this._htmlValid;
 	}
 
 	/**
-	 * Event handler executed when any content is changed
+	 * Callback that propagates the <code>contentChanged</code> event when
+	 * content is modified.
+	 *
 	 * @private
-	 * @review
 	 */
 	_handleContentChanged() {
 		this.emit(
@@ -67,10 +68,10 @@ class FragmentEditor extends PortletBase {
 	}
 
 	/**
-	 * Callback executed when the css editor changes
+	 * Callback executed when the CSS editor changes.
+	 *
 	 * @param {!Event} event
 	 * @private
-	 * @review
 	 */
 	_handleCSSChanged(event) {
 		this._css = event.content;
@@ -78,10 +79,10 @@ class FragmentEditor extends PortletBase {
 	}
 
 	/**
-	 * Callback executed when the html editor changes
+	 * Callback executed when the HTML editor changes.
+	 *
 	 * @param {!Event} event
 	 * @private
-	 * @review
 	 */
 	_handleHTMLChanged(event) {
 		this._html = event.content;
@@ -91,10 +92,10 @@ class FragmentEditor extends PortletBase {
 	}
 
 	/**
-	 * Callback executed when the js editor changes
+	 * Callback executed when the JS editor changes.
+	 *
 	 * @param {!Event} event
 	 * @private
-	 * @review
 	 */
 	_handleJSChanged(event) {
 		this._js = event.content;
@@ -102,86 +103,91 @@ class FragmentEditor extends PortletBase {
 	}
 
 	/**
-	 * Save the fragment content
+	 * Saves the fragment content when the Save button is clicked.
+	 *
 	 * @param {!Event} event
 	 * @private
-	 * @review
 	 */
 	_handleSaveButtonClick(event) {
 		const content = this.getContent();
 		const status = event.delegateTarget.value;
 
-		this._saving = true;
+		if (this.isHtmlValid()) {
+			this._saving = true;
 
-		this.fetch(
-			this.urls.edit,
-			{
-				cssContent: content.css,
-				fragmentCollectionId: this.fragmentCollectionId,
-				fragmentEntryId: this.fragmentEntryId,
-				htmlContent: content.html,
-				jsContent: content.js,
-				name: this.name,
-				status
-			}
-		)
-			.then(
-				response => response.json()
-			)
-			.then(
-				response => {
-					if (response.error) {
-						throw response.error;
-					}
-
-					return response;
+			this.fetch(
+				this.urls.edit,
+				{
+					cssContent: content.css,
+					fragmentCollectionId: this.fragmentCollectionId,
+					fragmentEntryId: this.fragmentEntryId,
+					htmlContent: content.html,
+					jsContent: content.js,
+					name: this.name,
+					status
 				}
 			)
-			.then(
-				response => {
-					const redirectURL = (
-						response.redirect ||
-						this.urls.redirect
-					);
-
-					Liferay.Util.navigate(redirectURL);
-				}
-			)
-			.catch(
-				error => {
-					this._saving = false;
-
-					const message = typeof error === 'string' ?
-						error :
-						Liferay.Language.get('error');
-
-					openToast(
-						{
-							message,
-							title: Liferay.Language.get('error'),
-							type: 'danger'
+				.then(
+					response => response.json()
+				)
+				.then(
+					response => {
+						if (response.error) {
+							throw response.error;
 						}
-					);
-				}
-			);
+
+						return response;
+					}
+				)
+				.then(
+					response => {
+						const redirectURL = (
+							response.redirect ||
+							this.urls.redirect
+						);
+
+						Liferay.Util.navigate(redirectURL);
+					}
+				)
+				.catch(
+					error => {
+						this._saving = false;
+
+						const message = typeof error === 'string' ?
+							error :
+							Liferay.Language.get('error');
+
+						openToast(
+							{
+								message,
+								title: Liferay.Language.get('error'),
+								type: 'danger'
+							}
+						);
+					}
+				);
+		}
+		else {
+			alert(Liferay.Language.get('fragment-html-is-invalid'));
+		}
 	}
 
 }
 
 /**
  * State definition.
- * @review
+ *
  * @static
  * @type {!Object}
  */
 FragmentEditor.STATE = {
 
 	/**
-	 * List of tags to support custom autocomplete in the HTML editor
+	 * List of tags for custom autocompletion in the HTML editor.
+	 *
 	 * @default []
 	 * @instance
 	 * @memberOf FragmentEditor
-	 * @review
 	 * @type Array
 	 */
 	autocompleteTags: Config.arrayOf(
@@ -194,47 +200,45 @@ FragmentEditor.STATE = {
 	),
 
 	/**
-	 * Fragment collection id
+	 * Fragment collection ID.
+	 *
 	 * @default undefined
 	 * @instance
 	 * @memberOf FragmentEditor
-	 * @review
 	 * @type {!string}
 	 */
 	fragmentCollectionId: Config.string().required(),
 
 	/**
-	 * Fragment entry id
+	 * Fragment entry ID.
+	 *
 	 * @default undefined
 	 * @instance
 	 * @memberOf FragmentEditor
-	 * @review
 	 * @type {!string}
 	 */
 	fragmentEntryId: Config.string().required(),
 
 	/**
-	 * Fragment name
+	 * Fragment name.
+	 *
 	 * @default undefined
 	 * @instance
 	 * @memberOf FragmentEditor
-	 * @review
 	 * @type {!string}
 	 */
-
 	name: Config.string().required(),
 
 	/**
-	 * URLs used for communicating with backend
+	 * URLs used for communicating with back-end logic.
+	 *
 	 * @instance
 	 * @memberOf FragmentEditor
-	 * @review
 	 * @type {{
 	 *  edit: !string,
 	 *	redirect: !string
 	 * }}
 	 */
-
 	urls: Config.shapeOf(
 		{
 			edit: Config.string().required(),
@@ -243,13 +247,13 @@ FragmentEditor.STATE = {
 	).required(),
 
 	/**
-	 * Property that contains the updated CSS content of
-	 * the editor. This value will be propagated to the preview.
+	 * Updated CSS content of the editor. This value is propagated to the
+	 * preview pane.
+	 *
 	 * @default ''
 	 * @instance
 	 * @memberOf FragmentEditor
 	 * @private
-	 * @review
 	 * @type {string}
 	 */
 	_css: Config.string()
@@ -257,60 +261,55 @@ FragmentEditor.STATE = {
 		.value(''),
 
 	/**
-	 * Property that contains the updated HTML content of
-	 * the editor. This value will be propagated to the preview.
+	 * Updated HTML content of the editor. This value is propagated to the
+	 * preview pane.
+	 *
 	 * @default ''
 	 * @instance
 	 * @memberOf FragmentEditor
 	 * @private
-	 * @review
 	 * @type {string}
 	 */
-
 	_html: Config.string()
 		.internal()
 		.value(''),
 
 	/**
-	 * Property that contains the flag if updated HTML content of
-	 * the editor is valid.
+	 * Flag to specify if the editor's updated HTML content is valid.
+	 *
 	 * @default true
 	 * @instance
 	 * @memberOf FragmentEditor
 	 * @private
-	 * @review
 	 * @type {boolean}
 	 */
-
 	_htmlValid: Config.bool()
 		.internal()
 		.value(true),
 
 	/**
-	 * Property that contains the updated JS content of
-	 * the editor. This value will be propagated to the preview.
+	 * Updated JS content of the editor. This value is propagated to the preview
+	 * pane.
+	 *
 	 * @default ''
 	 * @instance
 	 * @memberOf FragmentEditor
 	 * @private
-	 * @review
 	 * @type {string}
 	 */
-
 	_js: Config.string()
 		.internal()
 		.value(''),
 
 	/**
-	 * If true, the fragment is being saved
+	 * If <code>true</code>, the fragment is saved.
+	 *
 	 * @default false
 	 * @instance
 	 * @memberOf FragmentEditor
 	 * @private
-	 * @review
 	 * @type {bool}
 	 */
-
 	_saving: Config.bool()
 		.internal()
 		.value(false)

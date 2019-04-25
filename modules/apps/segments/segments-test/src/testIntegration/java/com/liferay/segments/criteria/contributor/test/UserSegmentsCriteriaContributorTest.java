@@ -32,7 +32,6 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -41,9 +40,10 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.odata.entity.ComplexEntityField;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
+import com.liferay.portal.odata.normalizer.Normalizer;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.test.rule.PermissionCheckerTestRule;
+import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.portal.util.test.LayoutTestUtil;
 import com.liferay.portlet.expando.util.test.ExpandoTestUtil;
 import com.liferay.registry.Filter;
@@ -87,7 +87,7 @@ public class UserSegmentsCriteriaContributorTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			PermissionCheckerTestRule.INSTANCE);
+			PermissionCheckerMethodTestRule.INSTANCE);
 
 	@BeforeClass
 	public static void setUpClass() {
@@ -188,7 +188,7 @@ public class UserSegmentsCriteriaContributorTest {
 		Optional<Field> optionalField = fieldStream.filter(
 			field -> StringUtil.endsWith(
 				field.getName(),
-				FriendlyURLNormalizerUtil.normalize(expandoColumn.getName()))
+				Normalizer.normalizeIdentifier(expandoColumn.getName()))
 		).findFirst();
 
 		Assert.assertTrue(optionalField.isPresent());

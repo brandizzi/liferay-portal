@@ -150,7 +150,7 @@ public class PoshiRunnerValidation {
 			"return", "take-screenshot", "task", "var", "while");
 
 		if (Validator.isNotNull(filePath) && filePath.endsWith(".function")) {
-			possibleElementNames = Arrays.asList("execute", "if");
+			possibleElementNames = Arrays.asList("execute", "if", "var");
 		}
 
 		for (Element childElement : childElements) {
@@ -650,9 +650,22 @@ public class PoshiRunnerValidation {
 			}
 
 			List<Element> varElements = element.elements("var");
+			List<String> varNames = new ArrayList<>();
 
 			for (Element varElement : varElements) {
 				validateVarElement(varElement, filePath);
+
+				String varName = varElement.attributeValue("name");
+
+				if (varNames.contains(varName)) {
+					_exceptions.add(
+						new ValidationException(
+							element,
+							"Duplicate variable name: " + varName + "\n",
+							filePath));
+				}
+
+				varNames.add(varName);
 			}
 		}
 	}
@@ -1374,19 +1387,6 @@ public class PoshiRunnerValidation {
 		validateHasNoChildElements(element, filePath);
 		validatePossibleAttributeNames(element, attributeNames, filePath);
 		validateRequiredAttributeNames(element, attributeNames, filePath);
-
-		List<String> testCaseAvailablePropertyNames =
-			PoshiRunnerContext.getTestCaseAvailablePropertyNames();
-
-		String propertyName = element.attributeValue("name");
-
-		if (!testCaseAvailablePropertyNames.contains(propertyName)) {
-			_exceptions.add(
-				new ValidationException(
-					element, "Invalid property name ", propertyName, "\n",
-					filePath));
-		}
-
 		validatePossiblePropertyValues(element, filePath);
 	}
 

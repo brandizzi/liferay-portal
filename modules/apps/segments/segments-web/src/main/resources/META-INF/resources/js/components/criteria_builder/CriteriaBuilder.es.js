@@ -1,12 +1,11 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import ClayToggle from '../shared/ClayToggle.es';
 import CriteriaGroup from './CriteriaGroup.es';
+import getCN from 'classnames';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import {
 	insertAtIndex,
 	removeAtIndex,
-	replaceAtIndex,
-	sub
+	replaceAtIndex
 } from '../../utils/utils.es';
 
 const CRITERIA_GROUP_SHAPE = {
@@ -45,6 +44,8 @@ class CriteriaBuilder extends Component {
 			}
 		),
 		editing: PropTypes.bool.isRequired,
+		editingCriteria: PropTypes.bool.isRequired,
+		emptyContributors: PropTypes.bool.isRequired,
 
 		/**
 		 * Name of the entity that a set of properties belongs to, for example,
@@ -54,7 +55,7 @@ class CriteriaBuilder extends Component {
 		 * @type {?(string|undefined)}
 		 */
 		entityName: PropTypes.string.isRequired,
-		id: PropTypes.number.isRequired,
+		id: PropTypes.string.isRequired,
 
 		/**
 		 * Name displayed to label a contributor and its' properties.
@@ -63,7 +64,6 @@ class CriteriaBuilder extends Component {
 		 */
 		modelLabel: PropTypes.string,
 		onChange: PropTypes.func,
-		onEditToggle: PropTypes.func,
 		propertyKey: PropTypes.string.isRequired,
 		supportedConjunctions: PropTypes.arrayOf(
 			PropTypes.shape(
@@ -137,15 +137,6 @@ class CriteriaBuilder extends Component {
 			);
 
 		return criteria;
-	}
-
-	/**
-	 * Switches the edit state between true and false.
-	 */
-	_handleToggleEdit = () => {
-		const {editing, id, onEditToggle} = this.props;
-
-		return onEditToggle && onEditToggle(id, editing);
 	}
 
 	/**
@@ -264,6 +255,9 @@ class CriteriaBuilder extends Component {
 		const {
 			criteria,
 			editing,
+			editingCriteria,
+			editingId,
+			emptyContributors,
 			entityName,
 			modelLabel,
 			propertyKey,
@@ -273,40 +267,33 @@ class CriteriaBuilder extends Component {
 			supportedPropertyTypes
 		} = this.props;
 
+		const criteriaBuilderClassNames = getCN(
+			'criteria-builder-root',
+			{
+				'read-only-container-root': !editingCriteria && editing && editingId != undefined
+			}
+		);
+
 		return (
-			<div className="criteria-builder-root sheet">
-				<div className="criteria-builder-toolbar">
-					<div className="criteria-model-label">
-						{sub(
-							Liferay.Language.get('x-properties'),
-							[modelLabel]
-						)}
-					</div>
-
-					<ClayToggle
-						checked={editing}
-						className="ml-auto"
-						iconOff="pencil"
-						iconOn="pencil"
-						onChange={this._handleToggleEdit}
+			<div className={criteriaBuilderClassNames}>
+				{(!emptyContributors || editing) &&
+					<CriteriaGroup
+						criteria={criteria}
+						editing={editingCriteria}
+						emptyContributors={emptyContributors}
+						entityName={entityName}
+						groupId={criteria && criteria.groupId}
+						modelLabel={modelLabel}
+						onChange={this._handleCriteriaChange}
+						onMove={this._handleCriterionMove}
+						propertyKey={propertyKey}
+						root
+						supportedConjunctions={supportedConjunctions}
+						supportedOperators={supportedOperators}
+						supportedProperties={supportedProperties}
+						supportedPropertyTypes={supportedPropertyTypes}
 					/>
-				</div>
-
-				<CriteriaGroup
-					criteria={criteria}
-					editing={editing}
-					entityName={entityName}
-					groupId={criteria && criteria.groupId}
-					modelLabel={modelLabel}
-					onChange={this._handleCriteriaChange}
-					onMove={this._handleCriterionMove}
-					propertyKey={propertyKey}
-					root
-					supportedConjunctions={supportedConjunctions}
-					supportedOperators={supportedOperators}
-					supportedProperties={supportedProperties}
-					supportedPropertyTypes={supportedPropertyTypes}
-				/>
+				}
 			</div>
 		);
 	}

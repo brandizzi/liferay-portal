@@ -34,7 +34,7 @@ SelectLayoutPageTemplateEntryDisplayContext selectLayoutPageTemplateEntryDisplay
 			%>
 
 				<div class="col-md-4">
-					<div class="add-layout-action-option card card-type-asset image-card" <%= AUIUtil.buildData(selectBasicPagesVerticalCard.getDataLink()) %>>
+					<div class="add-layout-action-option card card-interactive card-interactive-primary card-type-asset image-card " <%= AUIUtil.buildData(selectBasicPagesVerticalCard.getDataLink()) %>>
 						<div class="aspect-ratio">
 							<div class="aspect-ratio-item-center-middle aspect-ratio-item-fluid layout-type-img">
 								<img src="<%= selectBasicPagesVerticalCard.getImageSrc() %>" />

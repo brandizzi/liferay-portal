@@ -42,7 +42,7 @@ public class DefaultDLViewFileEntryHistoryDisplayContext
 	public DefaultDLViewFileEntryHistoryDisplayContext(
 		HttpServletRequest request, FileVersion fileVersion,
 		ResourceBundle resourceBundle, DLTrashUtil dlTrashUtil,
-		VersioningStrategy versioningStrategy, DLURLHelper dlurlHelper) {
+		VersioningStrategy versioningStrategy, DLURLHelper dlURLHelper) {
 
 		_resourceBundle = resourceBundle;
 
@@ -53,7 +53,7 @@ public class DefaultDLViewFileEntryHistoryDisplayContext
 
 		_uiItemsBuilder = new UIItemsBuilder(
 			request, fileVersion, _resourceBundle, dlTrashUtil,
-			versioningStrategy, dlurlHelper);
+			versioningStrategy, dlURLHelper);
 	}
 
 	@Override
@@ -65,6 +65,7 @@ public class DefaultDLViewFileEntryHistoryDisplayContext
 		menu.setMenuItems(_getMenuItems());
 		menu.setScroll(false);
 		menu.setShowWhenSingleIcon(true);
+		menu.setTriggerCssClass("component-action");
 
 		return menu;
 	}

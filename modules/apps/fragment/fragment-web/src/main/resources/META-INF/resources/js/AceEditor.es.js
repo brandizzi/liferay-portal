@@ -12,15 +12,12 @@ const FragmentAutocompleteProcessor = function(...args) {
 };
 
 /**
- * Component that creates an instance of Ace editor
- * to allow code editing.
- * @review
+ * Creates an Ace Editor component to use for code editing.
  */
 class AceEditor extends Component {
 
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
 	attached() {
 		this._editorDocument = null;
@@ -64,7 +61,6 @@ class AceEditor extends Component {
 
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
 	shouldUpdate() {
 		return false;
@@ -109,12 +105,12 @@ class AceEditor extends Component {
 	}
 
 	/**
-	 * Returns a match object (if any) for "lfr-" tags
-	 * inside the given content.
-	 * @param {string} content
+	 * Returns a match object (if any) for <code>lfr-</code> tags inside the
+	 * given content.
+	 *
+	 * @param {string} content The given content.
 	 * @private
-	 * @return {object} Match result
-	 * @review
+	 * @return {object} The matching result.
 	 */
 	_getAutocompleteMatch(content) {
 		let match = null;
@@ -139,13 +135,13 @@ class AceEditor extends Component {
 	}
 
 	/**
-	 * Returns a tag completion suggestion for the given
-	 * match and selectedSuggestion.
-	 * @param {object} match
-	 * @param {string} selectedSuggestion
+	 * Returns a tag completion suggestion for the given match and selected
+	 * suggestion.
+	 *
+	 * @param {object} match The match.
+	 * @param {string} selectedSuggestion The selected suggestion.
 	 * @private
-	 * @return {string}
-	 * @review
+	 * @return {string} The suggested tag autocompletion.
 	 */
 	_getAutocompleteSuggestion(match, selectedSuggestion) {
 		const tag = this.autocompleteTags.find(
@@ -156,10 +152,10 @@ class AceEditor extends Component {
 	}
 
 	/**
-	 * Callback executed when the internal Ace editor has been
-	 * modified. It simply propagates the event.
+	 * Callback executed when the internal Ace Editor is modified; this
+	 * propagates the <code>contentChanged</code> event.
+	 *
 	 * @private
-	 * @review
 	 */
 	_handleDocumentChanged() {
 		const valid = this._editorSession.getAnnotations().reduce(
@@ -181,11 +177,11 @@ class AceEditor extends Component {
 	}
 
 	/**
-	 * Override AceEditor's session setAnnotations method to avoid showing
-	 * misleading messages.
+	 * Overrides Ace Editor's session <code>setAnnotations</code> method to avoid
+	 * showing misleading messages.
+	 *
 	 * @param {Object} session AceEditor session
 	 * @private
-	 * @review
 	 */
 	_overrideSetAnnotations(session) {
 		const setAnnotations = session.setAnnotations.bind(session);
@@ -200,12 +196,11 @@ class AceEditor extends Component {
 }
 
 /**
- * Available AceEditor syntax
- * @review
+ * Available Ace Editor syntax.
+ *
  * @static
  * @type {Object}
  */
-
 AceEditor.SYNTAX = {
 	css: 'css',
 	html: 'html',
@@ -214,22 +209,20 @@ AceEditor.SYNTAX = {
 
 /**
  * State definition.
- * @review
+ *
  * @static
  * @type {!Object}
  */
-
 AceEditor.STATE = {
 
 	/**
-	 * List of tags to support custom autocomplete in the HTML editor
+	 * List of tags for custom autocompletion in the HTML editor.
+	 *
 	 * @default []
 	 * @instance
 	 * @memberOf AceEditor
-	 * @review
 	 * @type Array
 	 */
-
 	autocompleteTags: Config.arrayOf(
 		Config.shapeOf(
 			{
@@ -240,27 +233,24 @@ AceEditor.STATE = {
 	),
 
 	/**
-	 * Initial content sent to the editor
+	 * Initial content sent to the editor.
+	 *
 	 * @default ''
 	 * @instance
 	 * @memberOf AceEditor
-	 * @review
 	 * @type {string}
 	 */
-
 	initialContent: Config.string().value(''),
 
 	/**
-	 * Syntax used for the editor.
-	 * It will be used for Ace and rendered on the interface.
+	 * Syntax used for the Ace Editor that is rendered on the interface.
+	 *
 	 * @default undefined
 	 * @instance
 	 * @memberOf AceEditor
-	 * @review
-	 * @see AceEditor.SYNTAX
+	 * @see {@link AceEditor.SYNTAX|SYNTAX}
 	 * @type {!string}
 	 */
-
 	syntax: Config.oneOf(Object.values(AceEditor.SYNTAX)).required()
 };
 

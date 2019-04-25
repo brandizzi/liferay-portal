@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -53,15 +54,15 @@ public class SiteVerticalCard implements VerticalCard {
 			data.put(
 				"groupdescriptivename",
 				_group.getDescriptiveName(_themeDisplay.getLocale()));
+			data.put("groupid", String.valueOf(_group.getGroupId()));
+			data.put("groupscopelabel", _group.getScopeLabel(_themeDisplay));
+			data.put(
+				"grouptype", LanguageUtil.get(_request, _group.getTypeLabel()));
+			data.put("url", _group.getDisplayURL(_themeDisplay));
+			data.put("uuid", _group.getUuid());
 		}
 		catch (Exception e) {
 		}
-
-		data.put("groupid", String.valueOf(_group.getGroupId()));
-		data.put(
-			"grouptype", LanguageUtil.get(_request, _group.getTypeLabel()));
-		data.put("url", _group.getDisplayURL(_themeDisplay));
-		data.put("uuid", _group.getUuid());
 
 		return data;
 	}
@@ -72,7 +73,7 @@ public class SiteVerticalCard implements VerticalCard {
 			return "text-muted";
 		}
 
-		return "selector-button";
+		return "card-interactive card-interactive-secondary selector-button";
 	}
 
 	@Override
@@ -93,7 +94,8 @@ public class SiteVerticalCard implements VerticalCard {
 	@Override
 	public String getTitle() {
 		try {
-			return _group.getDescriptiveName(_themeDisplay.getLocale());
+			return HtmlUtil.escape(
+				_group.getDescriptiveName(_themeDisplay.getLocale()));
 		}
 		catch (Exception e) {
 		}

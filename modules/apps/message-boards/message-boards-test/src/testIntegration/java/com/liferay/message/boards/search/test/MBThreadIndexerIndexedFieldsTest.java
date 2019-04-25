@@ -29,18 +29,19 @@ import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.search.test.util.IndexedFieldsFixture;
 import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.test.rule.PermissionCheckerTestRule;
+import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -62,7 +63,7 @@ public class MBThreadIndexerIndexedFieldsTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			PermissionCheckerTestRule.INSTANCE,
+			PermissionCheckerMethodTestRule.INSTANCE,
 			SynchronousDestinationTestRule.INSTANCE);
 
 	@Before
@@ -83,7 +84,7 @@ public class MBThreadIndexerIndexedFieldsTest {
 		String searchTerm = mbThread.getUserName();
 
 		Document document = mbThreadIndexerFixture.searchOnlyOne(
-			_user.getUserId(), searchTerm, Locale.US);
+			_user.getUserId(), searchTerm, LocaleUtil.US);
 
 		indexedFieldsFixture.postProcessDocument(document);
 
@@ -152,11 +153,12 @@ public class MBThreadIndexerIndexedFieldsTest {
 		map.put(Field.STATUS, String.valueOf(mbThread.getStatus()));
 		map.put(Field.USER_ID, String.valueOf(mbThread.getUserId()));
 		map.put(Field.USER_NAME, StringUtil.lowerCase(mbThread.getUserName()));
-
 		map.put("discussion", "false");
-		map.put(
-			"lastPostDate",
-			String.valueOf(mbThread.getLastPostDate().getTime()));
+
+		Date lastPostDate = mbThread.getLastPostDate();
+
+		map.put("lastPostDate", String.valueOf(lastPostDate.getTime()));
+
 		map.put(
 			"participantUserIds",
 			String.valueOf(_getValues(mbThread.getParticipantUserIds())));

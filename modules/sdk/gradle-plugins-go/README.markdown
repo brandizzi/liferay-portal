@@ -1,6 +1,7 @@
 # Go Gradle Plugin
 
-The Go Gradle plugin lets you run [Go](https://golang.org/) as part of your build.
+The Go Gradle plugin lets you run [Go](https://golang.org/) as part of your
+build.
 
 The plugin has been successfully tested with Gradle 3.5.1 up to 4.10.2.
 
@@ -26,13 +27,14 @@ apply plugin: "com.liferay.go"
 
 ## Project Extension
 
-The Go Gradle plugin exposes the following properties through the extension named `go`:
+The Go Gradle plugin exposes the following properties through the extension
+named `go`:
 
 Property Name | Type | Default Value | Description
 ------------- | ---- | ------------- | -----------
 <a name="godir"></a>`goDir` | `File` | `"${project.buildDir}/go"` | The directory where the Go distribution is unpacked.
 `goUrl` | `String` | `"https://dl.google.com/go/go${go.goVersion}.${platform}-${bitMode}.${extension}` | The URL of the Go distribution to download.
-`goVersion` | `String` | `"1.11.4"` | The version of the Go distribution to use.
+`goVersion` | `String` | `"1.11.4"` | The Go distribution's version to use.
 <a name="workingdir"></a>`workingDir` | `File` | `"${project.projectDir}"` | The directory that contains the project's Go source code.
 
 ## Tasks
@@ -42,10 +44,10 @@ The plugin adds a series of tasks to your project:
 Name | Depends On | Type | Description
 ---- | ---------- | ---- | -----------
 <a name="downloadgo"></a>`downloadGo` | \- | [`DownloadGoTask`](#downloadgotask) | Downloads and unpacks the local Go distribution for the project.
-[`goBuild${programName}`](#gocommandprogramName-task) | `downloadGo` | [`ExecuteGoTask`](#executegotask) | Compile packages and dependencies for the Go program.
-[`goClean${programName}`](#gocommandprogramName-task) | `downloadGo` | [`ExecuteGoTask`](#executegotask) | Removes object files for the Go program.
-[`goRun${programName}`](#gocommandprogramName-task) | `downloadGo` | [`ExecuteGoTask`](#executegotask) | Compile and run the Go program.
-[`goTest${programName}`](#gocommandprogramName-task) | `downloadGo` | [`ExecuteGoTask`](#executegotask) | Test packages for the Go program.
+[`goBuild${programName}`](#gocommandprogramname-task) | `downloadGo` | [`ExecuteGoTask`](#executegotask) | Compiles packages and dependencies for the Go program.
+[`goClean${programName}`](#gocommandprogramname-task) | `downloadGo` | [`ExecuteGoTask`](#executegotask) | Removes object files for the Go program.
+[`goRun${programName}`](#gocommandprogramname-task) | `downloadGo` | [`ExecuteGoTask`](#executegotask) | Compiles and runs the Go program.
+[`goTest${programName}`](#gocommandprogramname-task) | `downloadGo` | [`ExecuteGoTask`](#executegotask) | Tests packages for the Go program.
 
 ### DownloadGoTask
 
@@ -58,12 +60,15 @@ Property Name | Type | Default Value | Description
 `goDir` | `File` | `null` | The directory where the Go distribution is unpacked.
 `goUrl` | `String` | `null` | The URL of the Go distribution to download.
 
-The properties of type `File` support any type that can be resolved by [`project.file`](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.css.Object)).
-Moreover, it is possible to use Closures and Callables as values for the `String` properties, to defer evaluation until task execution.
+The `File` type properties support any type that can be resolved by
+[`project.file`](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.css.Object)).
+Moreover, it is possible to use Closures and Callables as values for the
+`String` properties, to defer evaluation until task execution.
 
 ### ExecuteGoTask
 
-This is the base task to run Go in a Gradle build. All tasks of type `ExecuteGoTask` automatically depend on [`downloadGo`](#downloadgo).
+This is the base task to run Go in a Gradle build. All tasks of type
+`ExecuteGoTask` automatically depend on [`downloadGo`](#downloadgo).
 
 #### Task Properties
 
@@ -75,10 +80,12 @@ Property Name | Type | Default Value | Description
 `inheritProxy` | `boolean` | `true` | Whether to set the `http_proxy`, `https_proxy`, and `no_proxy` environment variables in the Go invocation based on the values of the system properties `https.proxyHost`, `https.proxyPort`, `https.proxyUser`, `https.proxyPassword`, `https.nonProxyHosts`, `https.proxyHost`, `https.proxyPort`, `https.proxyUser`, `https.proxyPassword`, and `https.nonProxyHosts`. If these environment variables are already set, their values will not be overwritten.
 `goDir` | `File` | `go.goDir`](#godir) | The directory that contains the executable to invoke.
 `useGradleExec` | `boolean` | <p>**If running in a [Gradle Daemon](https://docs.gradle.org/current/userguide/gradle_daemon.html):** `true`</p><p>**Otherwise:** `false`</p> | Whether to invoke Go using [`project.exec`](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:exec(org.gradle.api.Action)), which can solve hanging problems with the Gradle Daemon.
-<a name="workingdir"></a>`workingDir` | `File` | `go.workingDir`](#workingdir) | The working directory to use in the Go invocation.
+<a name="workingdirproperty"></a>`workingDir` | `File` | `go.workingDir`](#workingdir) | The working directory to use in the Go invocation.
 
-The properties of type `File` support any type that can be resolved by [`project.file`](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.css.Object)).
-Moreover, it is possible to use Closures and Callables as values for the `String` properties to defer evaluation until task execution.
+The `File` type properties support any type that can be resolved by
+[`project.file`](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.css.Object)).
+Moreover, it is possible to use Closures and Callables as values for the
+`String` properties to defer evaluation until task execution.
 
 #### Task Methods
 
@@ -91,8 +98,9 @@ Method | Description
 
 ### go${command}${programName} Task
 
-For each Go program in <a name="workingdir"></a>`workingDir`, four tasks of type [`ExecuteGoTask`](#executegotask) are added.
-Each of these tasks are automatically configured with sensible defaults:
+For each Go program in [`workingDir`](#workingdirproperty), four tasks of type
+[`ExecuteGoTask`](#executegotask) are added. Each of these tasks are
+automatically configured with sensible defaults:
 
 Property Name | Default Value
 ------------- | -------------

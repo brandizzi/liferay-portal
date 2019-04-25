@@ -14,6 +14,7 @@
 
 package com.liferay.sharing.notifications.internal.notifications;
 
+import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.UserNotificationEvent;
@@ -23,6 +24,8 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserNotificationEventLocalService;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.sharing.constants.SharingPortletKeys;
+import com.liferay.sharing.model.SharingEntry;
+import com.liferay.sharing.service.SharingEntryLocalService;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -52,6 +55,26 @@ public class SharingUserNotificationHandler
 			JSONFactoryUtil.createJSONObject(
 				userNotificationEvent.getPayload());
 
+		SharingEntry sharingEntry = _sharingEntryLocalService.fetchSharingEntry(
+			userNotificationEventPayloadJSONObject.getLong("classPK"));
+
+		if (sharingEntry == null) {
+			_userNotificationEventLocalService.deleteUserNotificationEvent(
+				userNotificationEvent.getUserNotificationEventId());
+
+			return null;
+		}
+
+		AssetRenderer<?> assetRenderer = getAssetRenderer(
+			sharingEntry.getClassName(), sharingEntry.getClassPK());
+
+		if (assetRenderer == null) {
+			_userNotificationEventLocalService.deleteUserNotificationEvent(
+				userNotificationEvent.getUserNotificationEventId());
+
+			return null;
+		}
+
 		String message = userNotificationEventPayloadJSONObject.getString(
 			"message");
 
@@ -62,6 +85,9 @@ public class SharingUserNotificationHandler
 
 		return message;
 	}
+
+	@Reference
+	private SharingEntryLocalService _sharingEntryLocalService;
 
 	@Reference
 	private UserNotificationEventLocalService

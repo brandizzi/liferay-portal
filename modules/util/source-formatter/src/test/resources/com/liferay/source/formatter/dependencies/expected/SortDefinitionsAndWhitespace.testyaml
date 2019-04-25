@@ -1,3 +1,22 @@
+#
+# See http://elasticsearch.org/guide/en/elasticsearch/reference/current/setup-configuration.html
+# For more information.
+#
+
+http.host: _local_
+
+# ZZZZZ
+    # CCCC
+    # BBBB
+        # AAAA
+
+cachepool:
+    bulk:
+        # bbbbb
+        request_size: 200
+        response_size: 100
+        # aaaaa
+
 components:
     schemas:
         Email:
@@ -29,6 +48,11 @@ paths:
     "/addresses":
         get:
             parameters:
+                - in: path
+                  name: generic-parent-id
+                  required: true
+                  schema:
+                      type: object
                 - in: query
                   name: page
                   schema:
@@ -37,11 +61,6 @@ paths:
                   name: pageSize
                   schema:
                       type: integer
-                - in: path
-                  name: generic-parent-id
-                  required: true
-                  schema:
-                      type: object
             responses:
                 200:
                     content:
@@ -69,3 +88,13 @@ paths:
                                 $ref: "#/components/schemas/PostalAddress"
                     description: ""
             tags: ["PostalAddress"]
+tags:
+    - description: Operations on Account
+      name: Account
+    - description: Operations on Countries
+      name: Country
+tagsA:
+    - description: Operations on AccountA
+      name: AccountA
+    - description: Operations on CountriesA
+      name: CountryA

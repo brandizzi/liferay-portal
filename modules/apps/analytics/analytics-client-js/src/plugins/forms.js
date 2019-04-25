@@ -68,7 +68,9 @@ function trackFieldBlurred(analytics) {
 	const onBlur = ({target}) => {
 		const {form} = target;
 
-		if (!form || !isTrackableForm(form)) return;
+		if (!form || !isTrackableForm(form)) {
+			return;
+		}
 
 		const payload = getFieldPayload(target);
 
@@ -103,7 +105,9 @@ function trackFieldFocused(analytics) {
 	const onFocus = ({target}) => {
 		const {form} = target;
 
-		if (!form || !isTrackableForm(form)) return;
+		if (!form || !isTrackableForm(form)) {
+			return;
+		}
 
 		const payload = getFieldPayload(target);
 
@@ -124,8 +128,15 @@ function trackFieldFocused(analytics) {
  * @param {object} The Analytics client instance
  */
 function trackFormSubmitted(analytics) {
-	const onSubmit = ({target}) => {
-		if (!isTrackableForm(target)) return;
+	const onSubmit = event => {
+		const {target} = event;
+
+		if (
+			!isTrackableForm(target) ||
+			(isTrackableForm(target) && event.defaultPrevented)
+		) {
+			return;
+		}
 
 		analytics.send('formSubmitted', applicationId, getFormPayload(target));
 	};

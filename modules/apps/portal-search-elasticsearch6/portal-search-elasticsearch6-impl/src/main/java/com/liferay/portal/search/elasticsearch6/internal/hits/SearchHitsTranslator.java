@@ -14,17 +14,24 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.hits;
 
-import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.search.document.Document;
-import com.liferay.portal.search.document.Field;
-import com.liferay.portal.search.geolocation.GeoLocationPoint;
+import com.liferay.portal.search.document.DocumentBuilder;
+import com.liferay.portal.search.document.DocumentBuilderFactory;
+import com.liferay.portal.search.elasticsearch6.internal.document.DocumentFieldsTranslator;
+import com.liferay.portal.search.geolocation.GeoBuilders;
 import com.liferay.portal.search.highlight.HighlightField;
+import com.liferay.portal.search.highlight.HighlightFieldBuilderFactory;
 import com.liferay.portal.search.hits.SearchHit;
+import com.liferay.portal.search.hits.SearchHitBuilder;
+import com.liferay.portal.search.hits.SearchHitBuilderFactory;
 import com.liferay.portal.search.hits.SearchHits;
+import com.liferay.portal.search.hits.SearchHitsBuilder;
+import com.liferay.portal.search.hits.SearchHitsBuilderFactory;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.apache.lucene.search.Explanation;
 
@@ -36,99 +43,18 @@ import org.elasticsearch.common.text.Text;
  */
 public class SearchHitsTranslator {
 
-	public SearchHit translate(
-		org.elasticsearch.search.SearchHit elasticsearchSearchHit,
-		String alternateUidFieldName) {
+	public SearchHitsTranslator(
+		SearchHitBuilderFactory searchHitBuilderFactory,
+		SearchHitsBuilderFactory searchHitsBuilderFactory,
+		DocumentBuilderFactory documentBuilderFactory,
+		HighlightFieldBuilderFactory highlightFieldBuilderFactory,
+		GeoBuilders geoBuilders) {
 
-		SearchHit searchHit = new SearchHit();
-
-		searchHit.setId(elasticsearchSearchHit.getId());
-
-		if (elasticsearchSearchHit.getExplanation() != null) {
-			Explanation explanation = elasticsearchSearchHit.getExplanation();
-
-			searchHit.setExplanation(explanation.toString());
-		}
-
-		if (elasticsearchSearchHit.getMatchedQueries() != null) {
-			searchHit.setMatchedQueries(
-				elasticsearchSearchHit.getMatchedQueries());
-		}
-
-		Map<String, DocumentField> documentFieldsMap =
-			elasticsearchSearchHit.getFields();
-
-		Document document = new Document();
-
-		searchHit.setDocument(document);
-
-		if (MapUtil.isNotEmpty(documentFieldsMap)) {
-			documentFieldsMap.forEach(
-				(fieldName, documentField) -> {
-					Field field = new Field(documentField.getName());
-
-					String documentFieldName = documentField.getName();
-
-					if (documentFieldName.endsWith(_GEOPOINT_SUFFIX)) {
-						String[] values = StringUtil.split(
-							documentField.getValue());
-
-						GeoLocationPoint geoLocationPoint = null;
-
-						if (values.length == 2) {
-							geoLocationPoint = new GeoLocationPoint(
-								Double.valueOf(values[0]),
-								Double.valueOf(values[1]));
-						}
-						else {
-							geoLocationPoint = new GeoLocationPoint(values[0]);
-						}
-
-						field.addValue(geoLocationPoint);
-					}
-					else {
-						field.addValues(documentField.getValues());
-					}
-
-					document.addField(field);
-				});
-		}
-
-		Map<String, Object> sourceMap = elasticsearchSearchHit.getSourceAsMap();
-
-		if (MapUtil.isNotEmpty(sourceMap)) {
-			sourceMap.forEach(searchHit::addSource);
-		}
-
-		populateUID(document, alternateUidFieldName);
-
-		Map
-			<String,
-			 org.elasticsearch.search.fetch.subphase.highlight.HighlightField>
-				highlightFieldsMap =
-					elasticsearchSearchHit.getHighlightFields();
-
-		if (MapUtil.isNotEmpty(highlightFieldsMap)) {
-			highlightFieldsMap.forEach(
-				(fieldName, elasticsearchHighlightField) -> {
-					HighlightField highlightField = new HighlightField(
-						elasticsearchHighlightField.getName());
-
-					Text[] fragments =
-						elasticsearchHighlightField.getFragments();
-
-					for (final Text fragment : fragments) {
-						highlightField.addFragment(fragment.string());
-					}
-
-					searchHit.addHighlightField(highlightField);
-				});
-		}
-
-		searchHit.setScore(elasticsearchSearchHit.getScore());
-		searchHit.setVersion(elasticsearchSearchHit.getVersion());
-
-		return searchHit;
+		_searchHitBuilderFactory = searchHitBuilderFactory;
+		_searchHitsBuilderFactory = searchHitsBuilderFactory;
+		_documentBuilderFactory = documentBuilderFactory;
+		_highlightFieldBuilderFactory = highlightFieldBuilderFactory;
+		_geoBuilders = geoBuilders;
 	}
 
 	public SearchHits translate(
@@ -141,53 +67,119 @@ public class SearchHitsTranslator {
 		org.elasticsearch.search.SearchHits elasticsearchSearchHits,
 		String alternateUidFieldName) {
 
-		SearchHits searchHits = new SearchHits();
+		SearchHitsBuilder searchHitsBuilder =
+			_searchHitsBuilderFactory.getSearchHitsBuilder();
 
-		searchHits.setTotalHits(elasticsearchSearchHits.totalHits);
-
-		searchHits.setMaxScore(elasticsearchSearchHits.getMaxScore());
-
-		org.elasticsearch.search.SearchHit[] elasticsearchSearchHitArray =
-			elasticsearchSearchHits.getHits();
-
-		for (org.elasticsearch.search.SearchHit elasticsearchSearchHit :
-				elasticsearchSearchHitArray) {
-
-			SearchHit searchHit = translate(
-				elasticsearchSearchHit, alternateUidFieldName);
-
-			searchHits.addSearchHit(searchHit);
-		}
-
-		return searchHits;
+		return searchHitsBuilder.addSearchHits(
+			Stream.of(
+				elasticsearchSearchHits.getHits()
+			).map(
+				elasticsearchSearchHit -> translate(
+					elasticsearchSearchHit, alternateUidFieldName)
+			)
+		).maxScore(
+			elasticsearchSearchHits.getMaxScore()
+		).totalHits(
+			elasticsearchSearchHits.totalHits
+		).build();
 	}
 
-	protected void populateUID(
-		Document document, String alternateUidFieldName) {
+	protected String getExplanationString(
+		org.elasticsearch.search.SearchHit elasticsearchSearchHit) {
 
-		Field uidField = document.getField(_UID_FIELD_NAME);
+		Explanation explanation = elasticsearchSearchHit.getExplanation();
 
-		if (uidField != null) {
-			return;
+		if (explanation != null) {
+			return explanation.toString();
 		}
 
-		if (Validator.isNull(alternateUidFieldName)) {
-			return;
-		}
-
-		Field field = document.getField(alternateUidFieldName);
-
-		if (field != null) {
-			Field newUidField = new Field(_UID_FIELD_NAME);
-
-			newUidField.addValues(field.getValues());
-
-			document.addField(newUidField);
-		}
+		return StringPool.BLANK;
 	}
 
-	private static final String _GEOPOINT_SUFFIX = ".geopoint";
+	protected SearchHit translate(
+		org.elasticsearch.search.SearchHit elasticsearchSearchHit,
+		String alternateUidFieldName) {
 
-	private static final String _UID_FIELD_NAME = "uid";
+		SearchHitBuilder searchHitBuilder =
+			_searchHitBuilderFactory.getSearchHitBuilder();
+
+		return searchHitBuilder.addHighlightFields(
+			translateHighlightFields(elasticsearchSearchHit)
+		).addSources(
+			elasticsearchSearchHit.getSourceAsMap()
+		).document(
+			translateDocument(elasticsearchSearchHit, alternateUidFieldName)
+		).explanation(
+			getExplanationString(elasticsearchSearchHit)
+		).id(
+			elasticsearchSearchHit.getId()
+		).matchedQueries(
+			elasticsearchSearchHit.getMatchedQueries()
+		).score(
+			elasticsearchSearchHit.getScore()
+		).version(
+			elasticsearchSearchHit.getVersion()
+		).build();
+	}
+
+	protected Document translateDocument(
+		org.elasticsearch.search.SearchHit elasticsearchSearchHit,
+		String alternateUidFieldName) {
+
+		DocumentFieldsTranslator documentFieldsTranslator =
+			new DocumentFieldsTranslator(_geoBuilders);
+
+		Map<String, DocumentField> documentFieldsMap =
+			elasticsearchSearchHit.getFields();
+
+		DocumentBuilder documentBuilder = _documentBuilderFactory.builder();
+
+		documentFieldsTranslator.translate(documentFieldsMap, documentBuilder);
+
+		documentFieldsTranslator.populateAlternateUID(
+			documentFieldsMap, documentBuilder, alternateUidFieldName);
+
+		return documentBuilder.build();
+	}
+
+	protected HighlightField translateHighlightField(
+		org.elasticsearch.search.fetch.subphase.highlight.HighlightField
+			elasticsearchHighlightField) {
+
+		return _highlightFieldBuilderFactory.builder(
+		).fragments(
+			Stream.of(
+				elasticsearchHighlightField.getFragments()
+			).map(
+				Text::string
+			)
+		).name(
+			elasticsearchHighlightField.getName()
+		).build();
+	}
+
+	protected Stream<HighlightField> translateHighlightFields(
+		org.elasticsearch.search.SearchHit elasticsearchSearchHit) {
+
+		Map
+			<String,
+			 org.elasticsearch.search.fetch.subphase.highlight.HighlightField>
+				map = elasticsearchSearchHit.getHighlightFields();
+
+		Collection
+			<org.elasticsearch.search.fetch.subphase.highlight.HighlightField>
+				values = map.values();
+
+		Stream<org.elasticsearch.search.fetch.subphase.highlight.HighlightField>
+			stream = values.stream();
+
+		return stream.map(this::translateHighlightField);
+	}
+
+	private final DocumentBuilderFactory _documentBuilderFactory;
+	private final GeoBuilders _geoBuilders;
+	private final HighlightFieldBuilderFactory _highlightFieldBuilderFactory;
+	private final SearchHitBuilderFactory _searchHitBuilderFactory;
+	private final SearchHitsBuilderFactory _searchHitsBuilderFactory;
 
 }

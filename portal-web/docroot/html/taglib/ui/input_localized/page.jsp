@@ -16,15 +16,13 @@
 
 <%@ include file="/html/taglib/ui/input_localized/init.jsp" %>
 
-<div class="input-group input-localized input-localized-<%= type %>" id="<portlet:namespace /><%= id %>BoundingBox">
-	<c:if test="<%= Validator.isNotNull(inputAddon) %>">
-		<div class="input-group-item input-group-item-shrink input-group-prepend">
-			<span class="input-group-text text-truncate" id="<portlet:namespace /><%= id %>InputAddon">
-				<liferay-ui:message key="<%= StringUtil.shorten(inputAddon, 40) %>" />
-			</span>
-		</div>
-	</c:if>
+<c:if test="<%= Validator.isNotNull(inputAddon) %>">
+	<div class="form-text" id="<portlet:namespace /><%= id %>InputAddon">
+		<liferay-ui:message key="<%= StringUtil.shorten(inputAddon, 40) %>" />
+	</div>
+</c:if>
 
+<div class="input-group input-localized input-localized-<%= type %>" id="<portlet:namespace /><%= id %>BoundingBox">
 	<div class="input-group-item">
 		<c:choose>
 			<c:when test='<%= type.equals("editor") %>'>
@@ -47,14 +45,6 @@
 
 						inputLocalized.updateInputLanguage(editor.getHTML());
 					}
-
-					$('#<portlet:namespace /><%= id %>ContentBox').on(
-						'click',
-						'.palette-item-inner',
-						function() {
-							window['<portlet:namespace /><%= HtmlUtil.escapeJS(inputEditorName) %>'].focus();
-						}
-					);
 				</aui:script>
 			</c:when>
 			<c:when test='<%= type.equals("input") %>'>
@@ -227,18 +217,24 @@
 </c:if>
 
 <c:if test="<%= Validator.isNotNull(inputAddon) %>">
-	<aui:script sandbox="<%= true %>">
-		var inputAddon = '<%= inputAddon.toString() %>';
+	<script>
+		(function() {
+			var inputAddon = '<%= inputAddon.toString() %>';
 
-		if (inputAddon.length > 40) {
-			$('#<portlet:namespace /><%= id %>InputAddon').on(
-				'mouseenter',
-				function(event) {
-					Liferay.Portal.ToolTip.show(event.currentTarget, inputAddon);
+			if (inputAddon.length > 40) {
+				var inputAddonElement = document.getElementById('<portlet:namespace /><%= id %>InputAddon');
+
+				if (inputAddonElement) {
+					inputAddonElement.addEventListener(
+						'mouseenter',
+						function(event) {
+							Liferay.Portal.ToolTip.show(event.currentTarget, inputAddon);
+						}
+					);
 				}
-			);
-		}
-	</aui:script>
+			}
+		})();
+	</script>
 </c:if>
 
 <c:choose>

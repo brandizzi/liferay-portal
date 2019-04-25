@@ -1,6 +1,6 @@
-import {JSXComponent} from 'metal-jsx';
-import mockPages from 'mock/mockPages.es';
 import LayoutProvider from 'source/components/LayoutProvider/LayoutProvider.es';
+import mockPages from 'mock/mockPages.es';
+import {JSXComponent} from 'metal-jsx';
 import {PagesVisitor} from 'source/util/visitors.es';
 
 let component;
@@ -58,7 +58,7 @@ class Parent extends JSXComponent {
 	}
 }
 
-describe.only(
+describe(
 	'LayoutProvider',
 	() => {
 		beforeEach(
@@ -248,6 +248,7 @@ describe.only(
 
 								const {child, provider} = component.refs;
 								const mockEvent = {
+									addedToPlaceholder: true,
 									source: {
 										columnIndex: 0,
 										pageIndex: 0,
@@ -260,11 +261,13 @@ describe.only(
 									}
 								};
 
+								const fields = provider.state.pages[0].rows[1].columns[0].fields;
+
 								child.emit('fieldMoved', mockEvent);
 
 								jest.runAllTimers();
 
-								expect(provider.state.pages).toMatchSnapshot();
+								expect(provider.state.pages[0].rows[0].columns[0].fields).toEqual(fields);
 								expect(child.props.pages).toEqual(provider.state.pages);
 							}
 						);
@@ -301,7 +304,8 @@ describe.only(
 										columnIndex: 1,
 										pageIndex: 0,
 										rowIndex: 0
-									}
+									},
+									targetIsEmptyRow: false
 								};
 
 								child.emit('fieldMoved', mockEvent);
@@ -329,7 +333,8 @@ describe.only(
 										columnIndex: 1,
 										pageIndex: 0,
 										rowIndex: 0
-									}
+									},
+									targetIsEmptyRow: false
 								};
 
 								child.emit('fieldMoved', mockEvent);
@@ -348,6 +353,7 @@ describe.only(
 
 								const {child, provider} = component.refs;
 								const mockEvent = {
+									addedToPlaceholder: true,
 									source: {
 										columnIndex: 0,
 										pageIndex: 0,
@@ -581,35 +587,38 @@ describe.only(
 				);
 
 				describe(
-					'fieldEdited',
+					'fieldResized',
 					() => {
 						it(
-							'should listen the fieldEdited event and change the state of the focusedField and pages for the data wich was received',
+							'should listen to the columnResized event and resize the field when the left arrow is pulled',
 							() => {
 								component = new Parent();
 
 								const {child, provider} = component.refs;
 								const mockEvent = {
-									columnIndex: 0,
-									pageIndex: 0,
-									rowIndex: 0
+									column: 7,
+									direction: 'left',
+									source: {
+										dataset: {
+											ddmFieldColumn: 1,
+											ddmFieldPage: 0,
+											ddmFieldRow: 0
+										}
+									}
 								};
 
-								child.emit('fieldEdited', mockEvent);
+								child.emit('columnResized', mockEvent);
 
-								expect(provider.props.children[0].props.events).toMatchObject(
-									{
-										fieldEdited: expect.any(Function)
-									}
-								);
-								expect(provider.state.focusedField).toEqual(mockEvent);
+								jest.runAllTimers();
+
 								expect(provider.state.pages).toMatchSnapshot();
+								expect(child.props.pages).toEqual(provider.state.pages);
 							}
 						);
 					}
 				);
 
-				describe(
+				xdescribe(
 					'fieldChangesCanceled',
 					() => {
 						it(
@@ -623,18 +632,24 @@ describe.only(
 
 								const {child, provider} = component.refs;
 								const mockedData = {
-									fieldName: 'text1',
+									fieldName: 'original',
 									name: 'text1',
-									settingsContext: [],
+									settingsContext: {
+										pages: []
+									},
 									type: 'text'
 								};
 
 								provider.setState(
 									{
 										focusedField: {
+											fieldName: 'changed',
 											icon: 'text',
 											name: 'text1',
-											originalContext: mockedData
+											originalContext: mockedData,
+											settingsContext: {
+												pages: []
+											}
 										}
 									}
 								);
@@ -643,12 +658,7 @@ describe.only(
 
 								jest.runAllTimers();
 
-								expect(provider.state.focusedField).toEqual(
-									{
-										...provider.state.focusedField,
-										...mockedData
-									}
-								);
+								expect(provider.state.focusedField.fieldName).toEqual('original');
 								expect(provider.state.pages).toMatchSnapshot();
 							}
 						);

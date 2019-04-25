@@ -14,7 +14,6 @@
 
 package com.liferay.product.navigation.control.menu.web.internal.portlet.action;
 
-import com.liferay.layout.constants.LayoutConstants;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -22,6 +21,7 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.service.LayoutLocalService;
@@ -88,8 +88,11 @@ public class FindLayoutsMVCResourceCommand extends BaseMVCResourceCommand {
 		List<Layout> layouts = _layoutLocalService.getLayouts(
 			themeDisplay.getScopeGroupId(), keywords,
 			new String[] {
-				LayoutConstants.TYPE_PORTLET,
-				LayoutConstants.LAYOUT_TYPE_CONTENT
+				LayoutConstants.TYPE_CONTENT, LayoutConstants.TYPE_EMBEDDED,
+				LayoutConstants.TYPE_LINK_TO_LAYOUT,
+				LayoutConstants.TYPE_FULL_PAGE_APPLICATION,
+				LayoutConstants.TYPE_PANEL, LayoutConstants.TYPE_PORTLET,
+				LayoutConstants.TYPE_URL
 			},
 			0, 10, null);
 
@@ -124,8 +127,11 @@ public class FindLayoutsMVCResourceCommand extends BaseMVCResourceCommand {
 		int totalCount = _layoutLocalService.getLayoutsCount(
 			themeDisplay.getScopeGroupId(), keywords,
 			new String[] {
-				LayoutConstants.TYPE_PORTLET,
-				LayoutConstants.LAYOUT_TYPE_CONTENT
+				LayoutConstants.TYPE_CONTENT, LayoutConstants.TYPE_EMBEDDED,
+				LayoutConstants.TYPE_LINK_TO_LAYOUT,
+				LayoutConstants.TYPE_FULL_PAGE_APPLICATION,
+				LayoutConstants.TYPE_PANEL, LayoutConstants.TYPE_PORTLET,
+				LayoutConstants.TYPE_URL
 			});
 
 		jsonObject.put("totalCount", totalCount);

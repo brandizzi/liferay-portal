@@ -30,7 +30,6 @@ import com.liferay.portal.kernel.model.ContainerModel;
 import com.liferay.portal.kernel.model.SystemEvent;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.TrashedModel;
-import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
@@ -71,32 +70,6 @@ public abstract class BaseTrashHandler implements TrashHandler {
 			extraDataJSONObject.toString());
 	}
 
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 *             #checkRestorableEntry(long, long, String)}
-	 */
-	@Deprecated
-	@Override
-	public void checkDuplicateEntry(
-			long classPK, long containerModelId, String newName)
-		throws PortalException {
-
-		checkRestorableEntry(classPK, containerModelId, newName);
-	}
-
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 *             #checkRestorableEntry(TrashEntry, long, String)}
-	 */
-	@Deprecated
-	@Override
-	public void checkDuplicateTrashEntry(
-			TrashEntry trashEntry, long containerModelId, String newName)
-		throws PortalException {
-
-		checkRestorableEntry(trashEntry, containerModelId, newName);
-	}
-
 	@Override
 	public void checkRestorableEntry(
 			long classPK, long containerModelId, String newName)
@@ -114,16 +87,6 @@ public abstract class BaseTrashHandler implements TrashHandler {
 		throws PortalException {
 
 		return null;
-	}
-
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 *             #getContainerModel(long)}
-	 */
-	@Deprecated
-	@Override
-	public String getContainerModelClassName() {
-		return getContainerModelClassName(0);
 	}
 
 	@Override
@@ -165,16 +128,6 @@ public abstract class BaseTrashHandler implements TrashHandler {
 
 	@Override
 	public Filter getExcludeFilter(SearchContext searchContext) {
-		return null;
-	}
-
-	/**
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 *             #getExcludeFilter(SearchContext)}
-	 */
-	@Deprecated
-	@Override
-	public Query getExcludeQuery(SearchContext searchContext) {
 		return null;
 	}
 

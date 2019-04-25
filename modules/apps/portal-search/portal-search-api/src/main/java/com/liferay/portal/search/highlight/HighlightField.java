@@ -16,33 +16,16 @@ package com.liferay.portal.search.highlight;
 
 import aQute.bnd.annotation.ProviderType;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
-public class HighlightField {
+public interface HighlightField {
 
-	public HighlightField(String name) {
-		_name = name;
-	}
+	public List<String> getFragments();
 
-	public void addFragment(String fragment) {
-		_fragments.add(fragment);
-	}
-
-	public List<String> getFragments() {
-		return Collections.unmodifiableList(_fragments);
-	}
-
-	public String getName() {
-		return _name;
-	}
-
-	private List<String> _fragments = new ArrayList<>();
-	private final String _name;
+	public String getName();
 
 }

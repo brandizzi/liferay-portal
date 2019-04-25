@@ -41,7 +41,7 @@ public class Database {
 			"com.mysql.cj.jdbc.Driver", "jdbc:mysql://", "localhost", 0,
 			"lportal",
 			"?characterEncoding=UTF-8&dontTrackOpenResources=true" +
-				"&holdResultsOpenOverStatementClose=true" +
+				"&holdResultsOpenOverStatementClose=true&serverTimezone=GMT" +
 					"&useFastDateParsing=false&useUnicode=true");
 	}
 

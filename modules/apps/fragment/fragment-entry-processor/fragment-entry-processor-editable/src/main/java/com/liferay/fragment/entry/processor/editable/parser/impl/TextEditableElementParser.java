@@ -16,11 +16,11 @@ package com.liferay.fragment.entry.processor.editable.parser.impl;
 
 import com.liferay.fragment.entry.processor.editable.EditableFragmentEntryProcessor;
 import com.liferay.fragment.entry.processor.editable.parser.EditableElementParser;
+import com.liferay.fragment.entry.processor.editable.parser.util.EditableElementParserUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.StringUtil;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import org.osgi.service.component.annotations.Component;
@@ -53,15 +53,7 @@ public class TextEditableElementParser implements EditableElementParser {
 	public void replace(
 		Element element, String value, JSONObject configJSONObject) {
 
-		Document document = Jsoup.parseBodyFragment(value);
-
-		Document.OutputSettings outputSettings = new Document.OutputSettings();
-
-		outputSettings.prettyPrint(false);
-
-		document.outputSettings(outputSettings);
-
-		Element bodyElement = document.body();
+		Element bodyElement = EditableElementParserUtil.getDocumentBody(value);
 
 		if (configJSONObject == null) {
 			element.html(bodyElement.html());
@@ -69,13 +61,12 @@ public class TextEditableElementParser implements EditableElementParser {
 			return;
 		}
 
-		String textAlignment = configJSONObject.getString("textAlignment");
-		String textColor = configJSONObject.getString("textColor");
-		String textStyle = configJSONObject.getString("textStyle");
-
-		element.addClass("text-" + textAlignment);
-		element.addClass("text-palette-" + textColor);
-		element.addClass(textStyle);
+		EditableElementParserUtil.addClass(
+			element, configJSONObject, "text-", "textAlignment");
+		EditableElementParserUtil.addClass(
+			element, configJSONObject, "text-", "textColor");
+		EditableElementParserUtil.addClass(
+			element, configJSONObject, StringPool.BLANK, "textStyle");
 
 		element.html(bodyElement.html());
 	}

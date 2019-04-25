@@ -221,6 +221,13 @@ public class DDMStructureLayoutPersistenceTest {
 	}
 
 	@Test
+	public void testCountByGroupId() throws Exception {
+		_persistence.countByGroupId(RandomTestUtil.nextLong());
+
+		_persistence.countByGroupId(0L);
+	}
+
+	@Test
 	public void testCountByStructureVersionId() throws Exception {
 		_persistence.countByStructureVersionId(RandomTestUtil.nextLong());
 

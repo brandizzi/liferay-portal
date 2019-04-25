@@ -13,6 +13,13 @@ create table CTCollection (
 	statusDate DATE null
 );
 
+create table CTCollection_CTEntryAggregate (
+	companyId LONG not null,
+	ctCollectionId LONG not null,
+	ctEntryAggregateId LONG not null,
+	primary key (ctCollectionId, ctEntryAggregateId)
+);
+
 create table CTCollections_CTEntries (
 	companyId LONG not null,
 	ctCollectionId LONG not null,
@@ -27,10 +34,12 @@ create table CTEntry (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	classNameId LONG,
-	classPK LONG,
-	resourcePrimKey LONG,
+	originalCTCollectionId LONG,
+	modelClassNameId LONG,
+	modelClassPK LONG,
+	modelResourcePrimKey LONG,
 	changeType INTEGER,
+	collision BOOLEAN,
 	status INTEGER
 );
 
@@ -41,8 +50,8 @@ create table CTEntryAggregate (
 	userName VARCHAR(75) null,
 	createDate DATE null,
 	modifiedDate DATE null,
-	ctCollectionId LONG,
-	ownerCTEntryId LONG
+	ownerCTEntryId LONG,
+	status INTEGER
 );
 
 create table CTEntryAggregates_CTEntries (
@@ -50,24 +59,6 @@ create table CTEntryAggregates_CTEntries (
 	ctEntryId LONG not null,
 	ctEntryAggregateId LONG not null,
 	primary key (ctEntryId, ctEntryAggregateId)
-);
-
-create table CTEntryBag (
-	ctEntryBagId LONG not null primary key,
-	companyId LONG,
-	userId LONG,
-	userName VARCHAR(75) null,
-	createDate DATE null,
-	modifiedDate DATE null,
-	ownerCTEntryId LONG,
-	ctCollectionId LONG
-);
-
-create table CTEntryBags_CTEntries (
-	companyId LONG not null,
-	ctEntryId LONG not null,
-	ctEntryBagId LONG not null,
-	primary key (ctEntryId, ctEntryBagId)
 );
 
 create table CTProcess (

@@ -22,7 +22,7 @@ ContentPageEditorDisplayContext contentPageEditorDisplayContext = (ContentPageEd
 
 <soy:component-renderer
 	componentId='<%= PortalUtil.getPortletNamespace(ContentPageEditorPortletKeys.CONTENT_PAGE_EDITOR_PORTLET) + "toolbar" %>'
-	context="<%= contentPageEditorDisplayContext.getFragmentsEditorToolbarContext() %>"
+	context="<%= contentPageEditorDisplayContext.getFragmentsEditorToolbarSoyContext() %>"
 	module="js/components/toolbar/FragmentsEditorToolbar.es"
 	templateNamespace="com.liferay.layout.content.page.editor.web.FragmentsEditorToolbar.render"
 />

@@ -1,3 +1,12 @@
+@media (min-width: 576px) {
+	.ddm-form-builder,
+	.ddm-translation-manager {
+		.modal-sm {
+			max-width: 300px;
+		}
+	}
+}
+
 .form-builder-publish-popover {
 	max-width: 500px;
 }
@@ -463,6 +472,10 @@
 		position: absolute;
 		right: 15px;
 		top: 0;
+	}
+
+	.lfr-search-container-wrapper .list-group .list-group-item h2.h5 {
+		font-weight: 600;
 	}
 
 	.liferay-ddm-form-renderer-wizard-disabled {

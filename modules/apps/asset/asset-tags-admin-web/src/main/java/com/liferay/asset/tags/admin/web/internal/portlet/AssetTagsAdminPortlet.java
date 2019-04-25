@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.IOException;
 
@@ -130,8 +129,8 @@ public class AssetTagsAdminPortlet extends MVCPortlet {
 			return;
 		}
 
-		String[] mergeTagNames = StringUtil.split(
-			ParamUtil.getString(actionRequest, "mergeTagNames"));
+		String[] mergeTagNames = ParamUtil.getStringValues(
+			actionRequest, "mergeTagNames");
 
 		for (String mergeTagName : mergeTagNames) {
 			if (targetTagName.equals(mergeTagName)) {
@@ -181,19 +180,10 @@ public class AssetTagsAdminPortlet extends MVCPortlet {
 		return false;
 	}
 
-	@Reference(unbind = "-")
-	protected void setAssetTagLocalService(
-		AssetTagLocalService assetTagLocalService) {
-
-		_assetTagLocalService = assetTagLocalService;
-	}
-
-	@Reference(unbind = "-")
-	protected void setAssetTagService(AssetTagService assetTagService) {
-		_assetTagService = assetTagService;
-	}
-
+	@Reference
 	private AssetTagLocalService _assetTagLocalService;
+
+	@Reference
 	private AssetTagService _assetTagService;
 
 }

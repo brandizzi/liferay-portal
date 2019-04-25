@@ -30,10 +30,10 @@ import com.liferay.asset.publisher.web.internal.util.AssetPublisherCustomizer;
 import com.liferay.asset.publisher.web.internal.util.AssetPublisherCustomizerRegistry;
 import com.liferay.asset.publisher.web.internal.util.AssetPublisherWebUtil;
 import com.liferay.asset.publisher.web.internal.util.AssetQueryRule;
-import com.liferay.asset.service.AssetEntryUsageLocalService;
 import com.liferay.asset.util.AssetHelper;
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.Staging;
+import com.liferay.info.provider.InfoListProviderTracker;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
@@ -52,8 +52,6 @@ import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.LayoutRevisionLocalService;
-import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.settings.LocalizedValuesMap;
@@ -143,8 +141,8 @@ public class AssetPublisherConfigurationAction
 			new AssetPublisherDisplayContext(
 				assetEntryActionRegistry, assetHelper, assetPublisherCustomizer,
 				assetPublisherHelper, assetPublisherWebConfiguration,
-				assetPublisherWebUtil, renderRequest, renderResponse,
-				renderRequest.getPreferences());
+				assetPublisherWebUtil, infoListProviderTracker, renderRequest,
+				renderResponse, renderRequest.getPreferences());
 
 		request.setAttribute(
 			AssetPublisherWebKeys.ASSET_PUBLISHER_DISPLAY_CONTEXT,
@@ -356,9 +354,6 @@ public class AssetPublisherConfigurationAction
 			ActionRequest actionRequest, PortletPreferences preferences)
 		throws Exception {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
 		long[] assetEntryIds = ParamUtil.getLongValues(
 			actionRequest, "assetEntryIds");
 		int assetEntryOrder = ParamUtil.getInteger(
@@ -366,23 +361,9 @@ public class AssetPublisherConfigurationAction
 		String assetEntryType = ParamUtil.getString(
 			actionRequest, "assetEntryType");
 
-		long userId = portal.getUserId(actionRequest);
-		long groupId = portal.getScopeGroupId(actionRequest);
-		long classNameId = portal.getClassNameId(Layout.class);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-			actionRequest);
-
 		for (long assetEntryId : assetEntryIds) {
 			assetPublisherWebUtil.addSelection(
 				preferences, assetEntryId, assetEntryOrder, assetEntryType);
-
-			assetEntryUsageLocalService.addAssetEntryUsage(
-				userId, groupId, assetEntryId, classNameId,
-				themeDisplay.getPlid(), portletDisplay.getPortletResource(),
-				serviceContext);
 		}
 	}
 
@@ -479,8 +460,8 @@ public class AssetPublisherConfigurationAction
 				actionRequest, "queryTagNames" + index);
 		}
 		else {
-			values = StringUtil.split(
-				ParamUtil.getString(actionRequest, "queryCategoryIds" + index));
+			values = ParamUtil.getStringValues(
+				actionRequest, "queryCategoryIds" + index);
 		}
 
 		return new AssetQueryRule(contains, andOperator, name, values);
@@ -600,13 +581,6 @@ public class AssetPublisherConfigurationAction
 		}
 
 		preferences.setValues("assetEntryXml", newEntries);
-
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		assetEntryUsageLocalService.deleteAssetEntryUsages(
-			portal.getClassNameId(Layout.class), themeDisplay.getPlid(),
-			portal.getPortletId(actionRequest));
 	}
 
 	protected void setScopes(
@@ -829,9 +803,6 @@ public class AssetPublisherConfigurationAction
 	protected AssetEntryActionRegistry assetEntryActionRegistry;
 
 	@Reference
-	protected AssetEntryUsageLocalService assetEntryUsageLocalService;
-
-	@Reference
 	protected AssetHelper assetHelper;
 
 	@Reference
@@ -850,6 +821,9 @@ public class AssetPublisherConfigurationAction
 
 	@Reference
 	protected GroupLocalService groupLocalService;
+
+	@Reference
+	protected InfoListProviderTracker infoListProviderTracker;
 
 	@Reference
 	protected ItemSelector itemSelector;

@@ -47,6 +47,19 @@ create table LayoutPageTemplateStructure (
 	createDate DATE null,
 	modifiedDate DATE null,
 	classNameId LONG,
-	classPK LONG,
+	classPK LONG
+);
+
+create table LayoutPageTemplateStructureRel (
+	uuid_ VARCHAR(75) null,
+	lPageTemplateStructureRelId LONG not null primary key,
+	groupId LONG,
+	companyId LONG,
+	userId LONG,
+	userName VARCHAR(75) null,
+	createDate DATE null,
+	modifiedDate DATE null,
+	layoutPageTemplateStructureId LONG,
+	segmentsExperienceId LONG,
 	data_ STRING null
 );

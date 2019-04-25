@@ -14,19 +14,25 @@
 
 package com.liferay.frontend.taglib.clay.servlet.taglib.soy;
 
-import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.TableDisplayContext;
-import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Schema;
-import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Size;
+import com.liferay.frontend.taglib.clay.internal.ClayTableTagSchemaContributorsProvider;
+import com.liferay.frontend.taglib.clay.internal.ClayTagDataSourceProvider;
+import com.liferay.frontend.taglib.clay.internal.servlet.taglib.display.context.TableDefaults;
+import com.liferay.frontend.taglib.clay.servlet.taglib.contributor.ClayTableTagSchemaContributor;
+import com.liferay.frontend.taglib.clay.servlet.taglib.data.ClayTagDataSource;
+import com.liferay.frontend.taglib.clay.servlet.taglib.model.table.Schema;
+import com.liferay.frontend.taglib.clay.servlet.taglib.model.table.Size;
 import com.liferay.frontend.taglib.clay.servlet.taglib.soy.base.BaseClayTag;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author Iván Zaera Avellón
  */
-public class TableTag extends BaseClayTag {
+public class TableTag<T> extends BaseClayTag {
 
 	@Override
 	public int doStartTag() {
@@ -34,23 +40,42 @@ public class TableTag extends BaseClayTag {
 		setHydrate(true);
 		setModuleBaseName("table");
 
-		if (_tableDisplayContext != null) {
-			_populateContext(_tableDisplayContext);
+		int returnValue = super.doStartTag();
+
+		ClayTagDataSource<T> clayTagDataSource = getClayTagDataSource();
+
+		if (clayTagDataSource != null) {
+			_populateContext(clayTagDataSource);
 		}
 
-		return super.doStartTag();
-	}
+		List<ClayTableTagSchemaContributor> clayTableTagSchemaContributors =
+			getTableTagSchemaContributors();
 
-	public TableDisplayContext getDisplayContext() {
-		return _tableDisplayContext;
+		if (clayTableTagSchemaContributors != null) {
+			_populateSchema(clayTableTagSchemaContributors);
+		}
+
+		putValue("schema", _schema.toMap());
+
+		Map<String, Object> context = getContext();
+
+		boolean selectable = GetterUtil.getBoolean(context.get("selectable"));
+
+		boolean showCheckbox = GetterUtil.getBoolean(
+			context.get("showCheckbox"),
+			TableDefaults.isShowCheckbox(selectable));
+
+		setShowCheckbox(showCheckbox);
+
+		return returnValue;
 	}
 
 	public void setActionsMenuVariant(String actionsMenuVariant) {
 		putValue("actionsMenuVariant", actionsMenuVariant);
 	}
 
-	public void setDisplayContext(TableDisplayContext tableDisplayContext) {
-		_tableDisplayContext = tableDisplayContext;
+	public void setDataSourceKey(String dataSourceKey) {
+		putValue("dataSourceKey", dataSourceKey);
 	}
 
 	public void setItems(Collection<?> items) {
@@ -58,13 +83,7 @@ public class TableTag extends BaseClayTag {
 	}
 
 	public void setSchema(Schema schema) {
-		Map<String, ?> schemaMap = null;
-
-		if (schema != null) {
-			schemaMap = schema.toMap();
-		}
-
-		putValue("schema", schemaMap);
+		_schema = schema;
 	}
 
 	public void setSelectable(Boolean selectable) {
@@ -73,6 +92,10 @@ public class TableTag extends BaseClayTag {
 
 	public void setShowActionsMenu(Boolean showActionsMenu) {
 		putValue("showActionsMenu", showActionsMenu);
+	}
+
+	public void setShowCheckbox(Boolean showCheckbox) {
+		putValue("showCheckbox", showCheckbox);
 	}
 
 	public void setSize(Size size) {
@@ -89,6 +112,10 @@ public class TableTag extends BaseClayTag {
 		putValue("tableClasses", tableClasses);
 	}
 
+	public void setTableSchemaContributorKey(String tableSchemaContributorKey) {
+		putValue("tableSchemaContributorKey", tableSchemaContributorKey);
+	}
+
 	public void setUseDefaultClasses(Boolean useDefaultClasses) {
 		putValue("useDefaultClasses", useDefaultClasses);
 	}
@@ -97,74 +124,53 @@ public class TableTag extends BaseClayTag {
 		putValue("wrapTable", wrapTable);
 	}
 
-	@Override
-	protected void cleanUp() {
-		super.cleanUp();
-
-		_tableDisplayContext = null;
-	}
-
-	private void _populateContext(TableDisplayContext tableDisplayContext) {
+	protected ClayTagDataSource<T> getClayTagDataSource() {
 		Map<String, Object> context = getContext();
 
-		if (context.get("actionsMenuVariant") == null) {
-			setActionsMenuVariant(tableDisplayContext.getActionsMenuVariant());
+		String dataSourceKey = (String)context.get("dataSourceKey");
+
+		if (Validator.isNull(dataSourceKey)) {
+			return null;
 		}
 
-		if (context.get("dependencies") == null) {
-			Collection<String> dependencies =
-				tableDisplayContext.getDependencies();
+		return (ClayTagDataSource<T>)
+			ClayTagDataSourceProvider.getClayTagDataSource(dataSourceKey);
+	}
 
-			if (dependencies != null) {
-				setDependencies(new HashSet<>(dependencies));
-			}
+	protected List<ClayTableTagSchemaContributor>
+		getTableTagSchemaContributors() {
+
+		Map<String, Object> context = getContext();
+
+		String tableSchemaContributorKey = GetterUtil.getString(
+			context.get("tableSchemaContributorKey"));
+
+		if (Validator.isNull(tableSchemaContributorKey)) {
+			return null;
 		}
 
-		if (context.get("elementClasses") == null) {
-			setElementClasses(tableDisplayContext.getElementClasses());
-		}
+		return ClayTableTagSchemaContributorsProvider.
+			getClayTableTagSchemaContributors(tableSchemaContributorKey);
+	}
 
-		if (context.get("id") == null) {
-			setId(tableDisplayContext.getId());
-		}
-
-		if (context.get("schema") == null) {
-			setSchema(tableDisplayContext.getSchema());
-		}
-
-		if (context.get("selectable") == null) {
-			setSelectable(tableDisplayContext.isSelectable());
-		}
-
-		if (context.get("showActionsMenu") == null) {
-			setShowActionsMenu(tableDisplayContext.isShowActionsMenu());
-		}
+	private void _populateContext(ClayTagDataSource<T> clayTagDataSource) {
+		Map<String, Object> context = getContext();
 
 		if (context.get("items") == null) {
-			setItems(tableDisplayContext.getItems());
-		}
-
-		if (context.get("size") == null) {
-			setSize(tableDisplayContext.getSize());
-		}
-
-		if (context.get("spritemap") == null) {
-			setSpritemap(tableDisplayContext.getSpritemap());
-		}
-
-		if (context.get("tableClasses") == null) {
-			setTableClasses(tableDisplayContext.getTableClasses());
-		}
-
-		if (context.get("useDefaultClasses") == null) {
-			setUseDefaultClasses(tableDisplayContext.isUseDefaultClasses());
-		}
-
-		if (context.get("wrapTable") == null) {
-			setWrapTable(tableDisplayContext.isWrapTable());
+			setItems(clayTagDataSource.getItems(request));
 		}
 	}
 
-	private TableDisplayContext _tableDisplayContext;
+	private void _populateSchema(
+		List<ClayTableTagSchemaContributor> clayTableTagSchemaContributors) {
+
+		for (ClayTableTagSchemaContributor clayTableTagSchemaContributor :
+				clayTableTagSchemaContributors) {
+
+			clayTableTagSchemaContributor.populate(_schema);
+		}
+	}
+
+	private Schema _schema = new Schema();
 
 }

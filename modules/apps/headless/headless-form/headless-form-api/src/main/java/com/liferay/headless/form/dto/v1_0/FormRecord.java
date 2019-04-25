@@ -14,6 +14,7 @@
 
 package com.liferay.headless.form.dto.v1_0;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -23,7 +24,13 @@ import com.liferay.petra.string.StringBundler;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLName;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import java.util.Date;
+import java.util.Objects;
 
 import javax.annotation.Generated;
 
@@ -35,44 +42,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Generated("")
 @GraphQLName("FormRecord")
-//@JsonFilter("Liferay.Vulcan")
+@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "FormRecord")
 public class FormRecord {
 
+	@Schema
 	public Creator getCreator() {
 		return creator;
-	}
-
-	public Date getDateCreated() {
-		return dateCreated;
-	}
-
-	public Date getDateModified() {
-		return dateModified;
-	}
-
-	public Date getDatePublished() {
-		return datePublished;
-	}
-
-	public Boolean getDraft() {
-		return draft;
-	}
-
-	public FieldValues[] getFieldValues() {
-		return fieldValues;
-	}
-
-	public Form getForm() {
-		return form;
-	}
-
-	public Long getFormId() {
-		return formId;
-	}
-
-	public Long getId() {
-		return id;
 	}
 
 	public void setCreator(Creator creator) {
@@ -86,9 +62,21 @@ public class FormRecord {
 		try {
 			creator = creatorUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Creator creator;
+
+	@Schema
+	public Date getDateCreated() {
+		return dateCreated;
 	}
 
 	public void setDateCreated(Date dateCreated) {
@@ -102,9 +90,21 @@ public class FormRecord {
 		try {
 			dateCreated = dateCreatedUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Date dateCreated;
+
+	@Schema
+	public Date getDateModified() {
+		return dateModified;
 	}
 
 	public void setDateModified(Date dateModified) {
@@ -118,9 +118,21 @@ public class FormRecord {
 		try {
 			dateModified = dateModifiedUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Date dateModified;
+
+	@Schema
+	public Date getDatePublished() {
+		return datePublished;
 	}
 
 	public void setDatePublished(Date datePublished) {
@@ -134,9 +146,21 @@ public class FormRecord {
 		try {
 			datePublished = datePublishedUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Date datePublished;
+
+	@Schema
+	public Boolean getDraft() {
+		return draft;
 	}
 
 	public void setDraft(Boolean draft) {
@@ -150,25 +174,49 @@ public class FormRecord {
 		try {
 			draft = draftUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void setFieldValues(FieldValues[] fieldValues) {
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Boolean draft;
+
+	@Schema(description = "https://www.schema.org/FormFieldValue")
+	public FieldValue[] getFieldValues() {
+		return fieldValues;
+	}
+
+	public void setFieldValues(FieldValue[] fieldValues) {
 		this.fieldValues = fieldValues;
 	}
 
 	@JsonIgnore
 	public void setFieldValues(
-		UnsafeSupplier<FieldValues[], Exception> fieldValuesUnsafeSupplier) {
+		UnsafeSupplier<FieldValue[], Exception> fieldValuesUnsafeSupplier) {
 
 		try {
 			fieldValues = fieldValuesUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected FieldValue[] fieldValues;
+
+	@Schema
+	public Form getForm() {
+		return form;
 	}
 
 	public void setForm(Form form) {
@@ -180,9 +228,21 @@ public class FormRecord {
 		try {
 			form = formUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	protected Form form;
+
+	@Schema
+	public Long getFormId() {
+		return formId;
 	}
 
 	public void setFormId(Long formId) {
@@ -196,9 +256,21 @@ public class FormRecord {
 		try {
 			formId = formIdUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	protected Long formId;
+
+	@Schema
+	public Long getId() {
+		return id;
 	}
 
 	public void setId(Long id) {
@@ -210,9 +282,38 @@ public class FormRecord {
 		try {
 			id = idUnsafeSupplier.get();
 		}
+		catch (RuntimeException re) {
+			throw re;
+		}
 		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected Long id;
+
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+
+		if (!(object instanceof FormRecord)) {
+			return false;
+		}
+
+		FormRecord formRecord = (FormRecord)object;
+
+		return Objects.equals(toString(), formRecord.toString());
+	}
+
+	@Override
+	public int hashCode() {
+		String string = toString();
+
+		return string.hashCode();
 	}
 
 	public String toString() {
@@ -220,47 +321,82 @@ public class FormRecord {
 
 		sb.append("{");
 
-		sb.append("\"creator\": ");
+		DateFormat liferayToJSONDateFormat = new SimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-		sb.append(creator);
-		sb.append(", ");
+		if (creator != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"dateCreated\": ");
+			sb.append("\"creator\": ");
 
-		sb.append("\"");
-		sb.append(dateCreated);
-		sb.append("\"");
-		sb.append(", ");
-
-		sb.append("\"dateModified\": ");
-
-		sb.append("\"");
-		sb.append(dateModified);
-		sb.append("\"");
-		sb.append(", ");
-
-		sb.append("\"datePublished\": ");
-
-		sb.append("\"");
-		sb.append(datePublished);
-		sb.append("\"");
-		sb.append(", ");
-
-		sb.append("\"draft\": ");
-
-		sb.append(draft);
-		sb.append(", ");
-
-		sb.append("\"fieldValues\": ");
-
-		if (fieldValues == null) {
-			sb.append("null");
+			sb.append(String.valueOf(creator));
 		}
-		else {
+
+		if (dateCreated != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"dateCreated\": ");
+
+			sb.append("\"");
+
+			sb.append(liferayToJSONDateFormat.format(dateCreated));
+
+			sb.append("\"");
+		}
+
+		if (dateModified != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"dateModified\": ");
+
+			sb.append("\"");
+
+			sb.append(liferayToJSONDateFormat.format(dateModified));
+
+			sb.append("\"");
+		}
+
+		if (datePublished != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"datePublished\": ");
+
+			sb.append("\"");
+
+			sb.append(liferayToJSONDateFormat.format(datePublished));
+
+			sb.append("\"");
+		}
+
+		if (draft != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"draft\": ");
+
+			sb.append(draft);
+		}
+
+		if (fieldValues != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"fieldValues\": ");
+
 			sb.append("[");
 
 			for (int i = 0; i < fieldValues.length; i++) {
-				sb.append(fieldValues[i]);
+				sb.append(String.valueOf(fieldValues[i]));
 
 				if ((i + 1) < fieldValues.length) {
 					sb.append(", ");
@@ -270,61 +406,45 @@ public class FormRecord {
 			sb.append("]");
 		}
 
-		sb.append(", ");
+		if (form != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append("\"form\": ");
+			sb.append("\"form\": ");
 
-		sb.append(form);
-		sb.append(", ");
+			sb.append(String.valueOf(form));
+		}
 
-		sb.append("\"formId\": ");
+		if (formId != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
 
-		sb.append(formId);
-		sb.append(", ");
+			sb.append("\"formId\": ");
 
-		sb.append("\"id\": ");
+			sb.append(formId);
+		}
 
-		sb.append(id);
+		if (id != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"id\": ");
+
+			sb.append(id);
+		}
 
 		sb.append("}");
 
 		return sb.toString();
 	}
 
-	@GraphQLField
-	@JsonProperty
-	protected Creator creator;
+	private static String _escape(Object object) {
+		String string = String.valueOf(object);
 
-	@GraphQLField
-	@JsonProperty
-	protected Date dateCreated;
-
-	@GraphQLField
-	@JsonProperty
-	protected Date dateModified;
-
-	@GraphQLField
-	@JsonProperty
-	protected Date datePublished;
-
-	@GraphQLField
-	@JsonProperty
-	protected Boolean draft;
-
-	@GraphQLField
-	@JsonProperty
-	protected FieldValues[] fieldValues;
-
-	@GraphQLField
-	@JsonProperty
-	protected Form form;
-
-	@GraphQLField
-	@JsonProperty
-	protected Long formId;
-
-	@GraphQLField
-	@JsonProperty
-	protected Long id;
+		return string.replaceAll("\"", "\\\\\"");
+	}
 
 }

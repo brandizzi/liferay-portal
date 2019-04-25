@@ -85,7 +85,14 @@ public class JournalArticleImageUpgradeUtil {
 			}
 		}
 		catch (PortalException pe) {
-			_log.error("Unable to get file entry from URL " + url, pe);
+			String message = "Unable to get file entry from URL " + url;
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(message, pe);
+			}
+			else if (_log.isWarnEnabled()) {
+				_log.warn(message);
+			}
 		}
 
 		return fileEntry;
@@ -202,12 +209,17 @@ public class JournalArticleImageUpgradeUtil {
 			return fileEntry.getUuid();
 		}
 		catch (PortalException pe) {
-			_log.error(
-				StringBundler.concat(
-					"Unable to get file entry with group ID ",
-					String.valueOf(groupId), ", folder ID ",
-					String.valueOf(folderId), ", and title ", title),
-				pe);
+			String message = StringBundler.concat(
+				"Unable to get file entry with group ID ",
+				String.valueOf(groupId), ", folder ID ",
+				String.valueOf(folderId), ", and title ", title);
+
+			if (_log.isDebugEnabled()) {
+				_log.debug(message, pe);
+			}
+			else if (_log.isWarnEnabled()) {
+				_log.warn(message);
+			}
 
 			throw pe;
 		}

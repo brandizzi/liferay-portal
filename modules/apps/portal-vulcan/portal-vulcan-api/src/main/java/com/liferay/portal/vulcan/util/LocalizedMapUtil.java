@@ -26,22 +26,22 @@ import java.util.stream.Stream;
 public class LocalizedMapUtil {
 
 	public static Map<Locale, String> merge(
-		Map<Locale, String> map, Map.Entry<Locale, String> mapEntry) {
+		Map<Locale, String> map, Map.Entry<Locale, String> entry) {
 
 		if (map == null) {
 			return Stream.of(
-				mapEntry
+				entry
 			).collect(
 				Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)
 			);
 		}
 
-		if (mapEntry == null) {
+		if (entry == null) {
 			return map;
 		}
 
-		if (mapEntry.getValue() == null) {
-			map.remove(mapEntry.getValue());
+		if (entry.getValue() == null) {
+			map.remove(entry.getKey());
 
 			return map;
 		}
@@ -49,12 +49,22 @@ public class LocalizedMapUtil {
 		Set<Map.Entry<Locale, String>> mapEntries = map.entrySet();
 
 		return Stream.concat(
-			mapEntries.stream(), Stream.of(mapEntry)
+			mapEntries.stream(), Stream.of(entry)
 		).collect(
 			Collectors.toMap(
 				Map.Entry::getKey, Map.Entry::getValue,
 				(value1, value2) -> value2)
 		);
+	}
+
+	public static Map<Locale, String> patch(
+		Map<Locale, String> map, Locale locale, String value) {
+
+		if (value != null) {
+			map.put(locale, value);
+		}
+
+		return map;
 	}
 
 }

@@ -121,7 +121,7 @@ JournalArticle article = journalDisplayContext.getArticle();
 
 							<liferay-ui:search-container-column-text>
 								<clay:vertical-card
-									verticalCard="<%= new JournalArticleHistoryVerticalCard(articleVersion, renderRequest, renderResponse, searchContainer.getRowChecker(), trashHelper) %>"
+									verticalCard="<%= new JournalArticleHistoryVerticalCard(articleVersion, renderRequest, renderResponse, searchContainer.getRowChecker(), assetDisplayPageFriendlyURLProvider, trashHelper) %>"
 								/>
 							</liferay-ui:search-container-column-text>
 						</c:when>
@@ -136,6 +136,14 @@ JournalArticle article = journalDisplayContext.getArticle();
 								name="title"
 								value="<%= HtmlUtil.escape(articleVersion.getTitle(locale)) %>"
 							/>
+
+							<c:if test="<%= journalDisplayContext.isChangeListColumnVisible() %>">
+								<liferay-ui:search-container-column-text
+									cssClass="change-list-title progress-group-feedback table-cell-content"
+									name="change-list"
+									value="<%= HtmlUtil.escape(journalDisplayContext.getChangeListName(articleVersion)) %>"
+								/>
+							</c:if>
 
 							<liferay-ui:search-container-column-text
 								cssClass="table-cell-expand-smallest table-cell-minw-100"

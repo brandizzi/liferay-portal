@@ -1,19 +1,18 @@
 import Component from 'metal-component';
 import Soy from 'metal-soy';
-import { CancellablePromise } from 'metal-promise';
-import { async, core } from 'metal';
+import {CancellablePromise} from 'metal-promise';
+import {async, core} from 'metal';
 
 import componentTemplates from './EffectsComponent.soy';
 import controlsTemplates from './EffectsControls.soy';
 
 /**
- * Effects Component
- * @review
+ * Creates an Effects component.
  */
 class EffectsComponent extends Component {
+
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
 	attached() {
 		this.cache_ = {};
@@ -28,17 +27,17 @@ class EffectsComponent extends Component {
 
 	/**
 	 * @inheritDoc
-	 * @review
 	 */
 	detached() {
 		this.cache_ = {};
 	}
 
 	/**
-	 * Returns whether the carousel can be scrolled towards the right
+	 * Returns <code>true</code> if the carousel can be scrolled to the right.
+	 *
 	 * @private
-	 * @return {boolean} True if the carousel can be scrolled, false otherwise.
-	 * @review
+	 * @return {boolean} <code>True</code> if the carousel can be scrolled to
+	 * the right; <code>false</code> otherwise.
 	 */
 	canScrollForward_() {
 		const carousel = this.refs.carousel;
@@ -51,12 +50,12 @@ class EffectsComponent extends Component {
 	}
 
 	/**
-	 * Generates a specific thumbnail for a given effect.
+	 * Generates a thumbnail for a given effect.
+	 *
 	 * @param  {String} effect The effect to generate the thumbnail for.
-	 * @param  {ImageData} imageData The image data to apply the effect to.
-	 * @return {CancellablePromise} A promise to be fullfilled when the
-	 * thumbnail has been generated.
-	 * @review
+	 * @param  {ImageData} imageData The image data to which the effect is applied.
+	 * @return {CancellablePromise} A promise that resolves when the thumbnail
+	 * is generated.
 	 */
 	generateThumbnail_(effect, imageData) {
 		let promise = this.spawnWorker_({
@@ -74,10 +73,10 @@ class EffectsComponent extends Component {
 
 	/**
 	 * Generates the complete set of thumbnails for the component effects.
-	 * @param  {ImageData} imageData The thumbnail image data (small version)
-	 * @return {CancellablePromise} A promise to be fullfilled when all thumbnails
-	 * have been generated.
-	 * @review
+	 *
+	 * @param  {ImageData} imageData The thumbnail image data (small version).
+	 * @return {CancellablePromise} A promise that resolves when the thumbnails
+	 * are generated.
 	 */
 	generateThumbnails_(imageData) {
 		return CancellablePromise.all(
@@ -86,11 +85,11 @@ class EffectsComponent extends Component {
 	}
 
 	/**
-	 * Generates a resized version of the image data to generate the
-	 * thumbnails more efficiently.
-	 * @param  {ImageData} imageData The original image data
-	 * @return {ImageData} The resized image data
-	 * @review
+	 * Generates a resized version of the image data to generate the thumbnails
+	 * more efficiently.
+	 *
+	 * @param  {ImageData} imageData The original image data.
+	 * @return {ImageData} The resized image data.
 	 */
 	generateThumbnailImageData_(imageData) {
 		let thumbnailSize = this.thumbnailSize;
@@ -115,10 +114,10 @@ class EffectsComponent extends Component {
 	}
 
 	/**
-	 * Starts optimistically prefetching all the effect results.
-	 * @return {CancellablePromise} A promise to be fullfilled when all
-	 * the effects have been prefetched
-	 * @review
+	 * Prefetches all the effect results.
+	 *
+	 * @return {CancellablePromise} A promise that resolves when all the effects
+	 * are prefetched.
 	 */
 	prefetchEffects_() {
 		return new CancellablePromise((resolve, reject) => {
@@ -127,7 +126,8 @@ class EffectsComponent extends Component {
 
 				if (!missingEffects.length) {
 					resolve();
-				} else {
+				}
+				else {
 					this.getImageEditorImageData()
 						.then((imageData) => this.process(imageData, missingEffects[0]))
 						.then(() => this.prefetchEffects_());
@@ -138,20 +138,20 @@ class EffectsComponent extends Component {
 
 	/**
 	 * Applies the selected effect to the image.
-	 * @param  {ImageData} imageData ImageData representation of the image.
-	 * @return {CancellablePromise} A promise that will resolve when the webworker
+	 *
+	 * @param  {ImageData} imageData The image data representation of the image.
+	 * @return {CancellablePromise} A promise that resolves when the webworker
 	 * finishes processing the image.
-	 * @review
 	 */
 	preview(imageData) {
 		return this.process(imageData);
 	}
 
 	/**
-	 * Notifies the editor that the component wants to generate a new
-	 * preview of the current image.
-	 * @param  {MouseEvent} event
-	 * @review
+	 * Notifies the editor that the component wants to generate a new preview of
+	 * the current image.
+	 *
+	 * @param  {MouseEvent} event The mouse event.
 	 */
 	previewEffect(event) {
 		this.currentEffect_ = event.delegateTarget.getAttribute('data-effect');
@@ -160,11 +160,11 @@ class EffectsComponent extends Component {
 
 	/**
 	 * Applies the selected effect to the image.
-	 * @param  {ImageData} imageData ImageData representation of the image.
+	 *
+	 * @param  {ImageData} imageData The image data representation of the image.
 	 * @param {String} effectName The effect to apply to the image.
-	 * @return {CancellablePromise} A promise that will resolve when the webworker
+	 * @return {CancellablePromise} A promise that resolves when the webworker
 	 * finishes processing the image.
-	 * @review
 	 */
 	process(imageData, effectName) {
 		let effect = effectName || this.currentEffect_;
@@ -183,9 +183,9 @@ class EffectsComponent extends Component {
 	}
 
 	/**
-	 * Makes the carousel scroll left to reveal options off the visible area
+	 * Makes the carousel scroll left to reveal options of the visible area.
+	 *
 	 * @return void
-	 * @review
 	 */
 	scrollLeft() {
 		const carousel = this.refs.carousel;
@@ -195,14 +195,14 @@ class EffectsComponent extends Component {
 		if (marginLeft < 0) {
 			const newMarginValue = Math.min(marginLeft + itemWidth, 0);
 
-			this.carouselOffset =  newMarginValue + 'px';
+			this.carouselOffset = newMarginValue + 'px';
 		}
 	}
 
 	/**
-	 * Makes the caousel scroll right to reveal options off the visible area
+	 * Makes the carousel scroll right to reveal options of the visible area.
+	 *
 	 * @return void
-	 * @review
 	 */
 	scrollRight() {
 		if (this.canScrollForward_()) {
@@ -215,12 +215,12 @@ class EffectsComponent extends Component {
 	}
 
 	/**
-	 * Spawns the a webworker to do the image processing in a different thread.
-	 * @param  {String} workerURI URI of the worker to spawn.
-	 * @param  {Object} message An object with the image and effect preset.
-	 * @return {CancellablePromise} A promise that will resolve when the webworker
+	 * Spawns a webworker to process the image in a different thread.
+	 *
+	 * @param  {String} workerURI The URI of the worker to spawn.
+	 * @param  {Object} message The image and effect preset.
+	 * @return {CancellablePromise} A promise that resolves when the webworker
 	 * finishes processing the image.
-	 * @review
 	 */
 	spawnWorker_(message) {
 		return new CancellablePromise((resolve, reject) => {
@@ -234,14 +234,15 @@ class EffectsComponent extends Component {
 
 /**
  * State definition.
- * @review
+ *
  * @static
  * @type {!Object}
  */
 EffectsComponent.STATE = {
+
 	/**
-	 * Offset to the carousel item with the 'px' postfix
-	 * @review
+	 * Offset in pixels (<code>px</code> postfix) for the carousel item.
+	 *
 	 * @type {String}
 	 */
 	carouselOffset: {
@@ -250,8 +251,8 @@ EffectsComponent.STATE = {
 	},
 
 	/**
-	 * Array of available effects
-	 * @review
+	 * Array of available effects.
+	 *
 	 * @type {Object}
 	 */
 	effects: {
@@ -260,8 +261,8 @@ EffectsComponent.STATE = {
 	},
 
 	/**
-	 * Injected helper to get the editor image data
-	 * @review
+	 * Injected helper that retrieves the editor image data.
+	 *
 	 * @type {Function}
 	 */
 	getImageEditorImageData: {
@@ -269,8 +270,8 @@ EffectsComponent.STATE = {
 	},
 
 	/**
-	 * Path of this module
-	 * @review
+	 * Path of this module.
+	 *
 	 * @type {Function}
 	 */
 	modulePath: {
@@ -278,8 +279,8 @@ EffectsComponent.STATE = {
 	},
 
 	/**
-	 * Injected helper to get the editor image data
-	 * @review
+	 * Injected helper that retrieves the editor image data.
+	 *
 	 * @type {Function}
 	 */
 	requestImageEditorPreview: {
@@ -287,8 +288,8 @@ EffectsComponent.STATE = {
 	},
 
 	/**
-	 * Size of the thumbnails. (size x size)
-	 * @review
+	 * Size of the thumbnails (size x size).
+	 *
 	 * @type {Number}
 	 */
 	thumbnailSize: {

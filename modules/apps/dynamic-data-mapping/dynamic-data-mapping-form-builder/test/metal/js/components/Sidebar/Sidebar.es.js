@@ -274,6 +274,8 @@ describe(
 					}
 				);
 
+				const spy = jest.spyOn(component, 'emit');
+
 				const event = {
 					preventDefault: jest.fn()
 				};
@@ -286,7 +288,11 @@ describe(
 					},
 					target: {
 						parentElement: {
-							getAttribute: jest.fn()
+							dataset: {
+								ddmFieldColumn: 0,
+								ddmFieldPage: 0,
+								ddmFieldRow: 0
+							}
 						}
 					}
 				};
@@ -297,7 +303,11 @@ describe(
 
 				component._handleDragEnded(data, event);
 
+				jest.runAllTimers();
+
 				expect(component).toMatchSnapshot();
+
+				expect(spy).toHaveBeenCalledWith('fieldAdded', expect.anything());
 			}
 		);
 
@@ -326,7 +336,7 @@ describe(
 
 				component._handleFieldSettingsClicked({data});
 
-				expect(spy).toHaveBeenCalled();
+				expect(spy).toHaveBeenCalledWith('fieldDuplicated', expect.anything());
 			}
 		);
 

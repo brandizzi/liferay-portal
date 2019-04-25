@@ -4,28 +4,22 @@
  * FragmentsEditor
  */
 {template .render}
-	{@param classPK: ?}
 	{@param defaultEditorConfigurations: ?}
 	{@param defaultLanguageId: string}
-	{@param defaultSegmentId: string}
 	{@param fragmentEntryLinks: ?}
 	{@param imageSelectorURL: string}
 	{@param languageId: string}
 	{@param layoutData: ?}
 	{@param portletNamespace: string}
 	{@param spritemap: string}
-	{@param? fragmentsEditorSidebarVisible: bool}
-	{@param? getAssetClassTypesURL: any}
-	{@param? getAssetDisplayContributorsURL: any}
+	{@param? defaultSegmentsExperienceId: string}
 	{@param? id: string}
 	{@param? mappingFieldsURL: string}
-	{@param? segmentId: string}
 	{@param? selectMappingDialogEditableId: string}
 	{@param? selectMappingDialogEditableType: string}
 	{@param? selectMappingDialogFragmentEntryLinkId: string}
 	{@param? selectMappingDialogMappedFieldId: string}
 	{@param? selectMappingDialogVisible: bool}
-	{@param? selectMappingTypeDialogVisible: bool}
 	{@param? selectedMappingTypes: [
 		subtype: [
 			id: string,
@@ -37,7 +31,6 @@
 		]
 	]}
 	{@param? store: ?}
-	{@param? updateLayoutPageTemplateEntryAssetTypeURL: any}
 
 	<div class="fragments-editor" id="{$id}">
 		{call com.liferay.layout.content.page.editor.web.FragmentsEditorSidebar.render}
@@ -48,16 +41,14 @@
 		{call com.liferay.layout.content.page.editor.web.FragmentEntryLinkList.render}
 			{param defaultEditorConfigurations: $defaultEditorConfigurations /}
 			{param defaultLanguageId: $defaultLanguageId /}
-			{param defaultSegmentId: $defaultSegmentId /}
+			{param defaultSegmentsExperienceId: $defaultSegmentsExperienceId /}
 			{param fragmentEntryLinks: $fragmentEntryLinks /}
-			{param fragmentsEditorSidebarVisible: $fragmentsEditorSidebarVisible ?: true /}
 			{param imageSelectorURL: $imageSelectorURL /}
 			{param languageId: $languageId /}
 			{param layoutData: $layoutData /}
 			{param mappingFieldsURL: $mappingFieldsURL /}
 			{param portletNamespace: $portletNamespace /}
 			{param ref: 'fragmentsEditorRender' /}
-			{param segmentId: $segmentId /}
 			{param store: $store /}
 			{param translating: $languageId != $defaultLanguageId /}
 		{/call}
@@ -75,19 +66,9 @@
 				{param store: $store /}
 			{/call}
 		{/if}
-		{if $getAssetClassTypesURL
-			and $getAssetDisplayContributorsURL
-			and $updateLayoutPageTemplateEntryAssetTypeURL
-			and $selectMappingTypeDialogVisible}
-			{call com.liferay.layout.content.page.editor.web.SelectMappingTypeDialog.render}
-				{param classPK: $classPK /}
-				{param getAssetClassTypesURL: $getAssetClassTypesURL /}
-				{param getAssetDisplayContributorsURL: $getAssetDisplayContributorsURL /}
-				{param portletNamespace: $portletNamespace /}
-				{param spritemap: $spritemap /}
-				{param store: $store /}
-				{param updateLayoutPageTemplateEntryAssetTypeURL: $updateLayoutPageTemplateEntryAssetTypeURL /}
-			{/call}
-		{/if}
+
+		{call com.liferay.layout.content.page.editor.web.SelectMappingTypeDialog.render}
+			{param store: $store /}
+		{/call}
 	</div>
 {/template}

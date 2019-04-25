@@ -81,10 +81,10 @@ public class CTEntryAggregateCacheModel
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
-		sb.append(", ctCollectionId=");
-		sb.append(ctCollectionId);
 		sb.append(", ownerCTEntryId=");
 		sb.append(ownerCTEntryId);
+		sb.append(", status=");
+		sb.append(status);
 		sb.append("}");
 
 		return sb.toString();
@@ -119,8 +119,8 @@ public class CTEntryAggregateCacheModel
 			ctEntryAggregateImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
-		ctEntryAggregateImpl.setCtCollectionId(ctCollectionId);
 		ctEntryAggregateImpl.setOwnerCTEntryId(ownerCTEntryId);
+		ctEntryAggregateImpl.setStatus(status);
 
 		ctEntryAggregateImpl.resetOriginalValues();
 
@@ -138,9 +138,9 @@ public class CTEntryAggregateCacheModel
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
 
-		ctCollectionId = objectInput.readLong();
-
 		ownerCTEntryId = objectInput.readLong();
+
+		status = objectInput.readInt();
 	}
 
 	@Override
@@ -161,9 +161,9 @@ public class CTEntryAggregateCacheModel
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
 
-		objectOutput.writeLong(ctCollectionId);
-
 		objectOutput.writeLong(ownerCTEntryId);
+
+		objectOutput.writeInt(status);
 	}
 
 	public long ctEntryAggregateId;
@@ -172,7 +172,7 @@ public class CTEntryAggregateCacheModel
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
-	public long ctCollectionId;
 	public long ownerCTEntryId;
+	public int status;
 
 }

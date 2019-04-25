@@ -81,8 +81,17 @@ public class MenuItemProvider {
 
 		long folderId = _getFolderId(folder);
 
+		if (!_hasPermission(
+				themeDisplay.getPermissionChecker(),
+				themeDisplay.getScopeGroupId(), folderId,
+				ActionKeys.ADD_DOCUMENT)) {
+
+			return null;
+		}
+
 		URLMenuItem urlMenuItem = new URLMenuItem();
 
+		urlMenuItem.setIcon("upload");
 		urlMenuItem.setLabel(
 			LanguageUtil.get(
 				PortalUtil.getHttpServletRequest(portletRequest),
@@ -125,10 +134,10 @@ public class MenuItemProvider {
 
 		URLMenuItem urlMenuItem = new URLMenuItem();
 
+		urlMenuItem.setIcon("folder");
 		urlMenuItem.setLabel(
 			LanguageUtil.get(
-				PortalUtil.getHttpServletRequest(portletRequest),
-				(folder != null) ? "subfolder" : "folder"));
+				PortalUtil.getHttpServletRequest(portletRequest), "folder"));
 
 		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
@@ -171,6 +180,7 @@ public class MenuItemProvider {
 
 		URLMenuItem urlMenuItem = new URLMenuItem();
 
+		urlMenuItem.setIcon("upload-multiple");
 		urlMenuItem.setLabel(
 			LanguageUtil.get(
 				PortalUtil.getHttpServletRequest(portletRequest),
@@ -216,6 +226,7 @@ public class MenuItemProvider {
 
 		URLMenuItem urlMenuItem = new URLMenuItem();
 
+		urlMenuItem.setIcon("repository");
 		urlMenuItem.setLabel(
 			LanguageUtil.get(
 				PortalUtil.getHttpServletRequest(portletRequest),
@@ -257,6 +268,7 @@ public class MenuItemProvider {
 
 		URLMenuItem urlMenuItem = new URLMenuItem();
 
+		urlMenuItem.setIcon("shortcut");
 		urlMenuItem.setLabel(
 			LanguageUtil.get(
 				PortalUtil.getHttpServletRequest(portletRequest), "shortcut"));

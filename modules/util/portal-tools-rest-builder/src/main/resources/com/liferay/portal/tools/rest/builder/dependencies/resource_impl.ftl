@@ -14,7 +14,7 @@ import org.osgi.service.component.annotations.ServiceScope;
  * @author ${configYAML.author}
  */
 @Component(
-	properties = "OSGI-INF/liferay/rest/${escapedVersion}/${schemaPath}.properties",
+	properties = "OSGI-INF/liferay/rest/${escapedVersion}/${stringUtil.toLowerCase(schemaPath)}.properties",
 	scope = ServiceScope.PROTOTYPE,
 	service = ${schemaName}Resource.class
 )

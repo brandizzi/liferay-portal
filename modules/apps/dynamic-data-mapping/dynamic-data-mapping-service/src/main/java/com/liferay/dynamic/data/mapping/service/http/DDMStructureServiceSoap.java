@@ -70,94 +70,6 @@ public class DDMStructureServiceSoap {
 
 	public static com.liferay.dynamic.data.mapping.model.DDMStructureSoap
 			addStructure(
-				long userId, long groupId, long classNameId,
-				String[] nameMapLanguageIds, String[] nameMapValues,
-				String[] descriptionMapLanguageIds,
-				String[] descriptionMapValues,
-				com.liferay.dynamic.data.mapping.model.DDMForm ddmForm,
-				com.liferay.dynamic.data.mapping.model.DDMFormLayout
-					ddmFormLayout,
-				String storageType,
-				com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws RemoteException {
-
-		try {
-			Map<Locale, String> nameMap = LocalizationUtil.getLocalizationMap(
-				nameMapLanguageIds, nameMapValues);
-			Map<Locale, String> descriptionMap =
-				LocalizationUtil.getLocalizationMap(
-					descriptionMapLanguageIds, descriptionMapValues);
-
-			com.liferay.dynamic.data.mapping.model.DDMStructure returnValue =
-				DDMStructureServiceUtil.addStructure(
-					userId, groupId, classNameId, nameMap, descriptionMap,
-					ddmForm, ddmFormLayout, storageType, serviceContext);
-
-			return com.liferay.dynamic.data.mapping.model.DDMStructureSoap.
-				toSoapModel(returnValue);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
-	/**
-	 * Adds a structure referencing a default parent structure, using the portal
-	 * property <code>dynamic.data.lists.storage.type</code> storage type and
-	 * default structure type.
-	 *
-	 * @param userId the primary key of the structure's creator/owner
-	 * @param groupId the primary key of the group
-	 * @param classNameId the primary key of the class name for the
-	 structure's related model
-	 * @param nameMap the structure's locales and localized names
-	 * @param descriptionMap the structure's locales and localized
-	 descriptions
-	 * @param xsd the structure's XML schema definition
-	 * @param serviceContext the service context to be applied. Can set the
-	 UUID, creation date, modification date, guest permissions,
-	 and group permissions for the structure.
-	 * @return the structure
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #addStructure(long, long, long, Map, Map, DDMForm,
-	 DDMFormLayout, ServiceContext)}
-	 */
-	@Deprecated
-	public static com.liferay.dynamic.data.mapping.model.DDMStructureSoap
-			addStructure(
-				long userId, long groupId, long classNameId,
-				String[] nameMapLanguageIds, String[] nameMapValues,
-				String[] descriptionMapLanguageIds,
-				String[] descriptionMapValues, String xsd,
-				com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws RemoteException {
-
-		try {
-			Map<Locale, String> nameMap = LocalizationUtil.getLocalizationMap(
-				nameMapLanguageIds, nameMapValues);
-			Map<Locale, String> descriptionMap =
-				LocalizationUtil.getLocalizationMap(
-					descriptionMapLanguageIds, descriptionMapValues);
-
-			com.liferay.dynamic.data.mapping.model.DDMStructure returnValue =
-				DDMStructureServiceUtil.addStructure(
-					userId, groupId, classNameId, nameMap, descriptionMap, xsd,
-					serviceContext);
-
-			return com.liferay.dynamic.data.mapping.model.DDMStructureSoap.
-				toSoapModel(returnValue);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
-	public static com.liferay.dynamic.data.mapping.model.DDMStructureSoap
-			addStructure(
 				long groupId, long parentStructureId, long classNameId,
 				String structureKey, String[] nameMapLanguageIds,
 				String[] nameMapValues, String[] descriptionMapLanguageIds,
@@ -192,42 +104,15 @@ public class DDMStructureServiceSoap {
 		}
 	}
 
-	/**
-	 * Adds a structure referencing its parent structure.
-	 *
-	 * @param groupId the primary key of the group
-	 * @param parentStructureId the primary key of the parent structure
-	 (optionally {@link
-	 com.liferay.dynamic.data.mapping.model.DDMStructureConstants#DEFAULT_PARENT_STRUCTURE_ID})
-	 * @param classNameId the primary key of the class name for the
-	 structure's related model
-	 * @param structureKey the unique string identifying the structure
-	 (optionally <code>null</code>)
-	 * @param nameMap the structure's locales and localized names
-	 * @param descriptionMap the structure's locales and localized
-	 descriptions
-	 * @param xsd the structure's XML schema definition
-	 * @param storageType the structure's storage type. It can be "xml" or
-	 "expando". For more information, see {@link
-	 com.liferay.dynamic.data.mapping.storage.StorageType}.
-	 * @param type the structure's type. For more information, see {@link
-	 com.liferay.dynamic.data.mapping.model.DDMStructureConstants}.
-	 * @param serviceContext the service context to be applied. Can set the
-	 UUID, creation date, modification date, guest permissions,
-	 and group permissions for the structure.
-	 * @return the structure
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #addStructure(long, long, long, String, Map, Map, DDMForm,
-	 DDMFormLayout, String, int, ServiceContext)}
-	 */
-	@Deprecated
 	public static com.liferay.dynamic.data.mapping.model.DDMStructureSoap
 			addStructure(
-				long groupId, long parentStructureId, long classNameId,
-				String structureKey, String[] nameMapLanguageIds,
+				long groupId, long classNameId, String[] nameMapLanguageIds,
 				String[] nameMapValues, String[] descriptionMapLanguageIds,
-				String[] descriptionMapValues, String xsd, String storageType,
-				int type,
+				String[] descriptionMapValues,
+				com.liferay.dynamic.data.mapping.model.DDMForm ddmForm,
+				com.liferay.dynamic.data.mapping.model.DDMFormLayout
+					ddmFormLayout,
+				String storageType,
 				com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws RemoteException {
 
@@ -240,9 +125,8 @@ public class DDMStructureServiceSoap {
 
 			com.liferay.dynamic.data.mapping.model.DDMStructure returnValue =
 				DDMStructureServiceUtil.addStructure(
-					groupId, parentStructureId, classNameId, structureKey,
-					nameMap, descriptionMap, xsd, storageType, type,
-					serviceContext);
+					groupId, classNameId, nameMap, descriptionMap, ddmForm,
+					ddmFormLayout, storageType, serviceContext);
 
 			return com.liferay.dynamic.data.mapping.model.DDMStructureSoap.
 				toSoapModel(returnValue);
@@ -256,10 +140,9 @@ public class DDMStructureServiceSoap {
 
 	public static com.liferay.dynamic.data.mapping.model.DDMStructureSoap
 			addStructure(
-				long userId, long groupId, String parentStructureKey,
-				long classNameId, String structureKey,
-				String[] nameMapLanguageIds, String[] nameMapValues,
-				String[] descriptionMapLanguageIds,
+				long groupId, String parentStructureKey, long classNameId,
+				String structureKey, String[] nameMapLanguageIds,
+				String[] nameMapValues, String[] descriptionMapLanguageIds,
 				String[] descriptionMapValues,
 				com.liferay.dynamic.data.mapping.model.DDMForm ddmForm,
 				com.liferay.dynamic.data.mapping.model.DDMFormLayout
@@ -277,75 +160,9 @@ public class DDMStructureServiceSoap {
 
 			com.liferay.dynamic.data.mapping.model.DDMStructure returnValue =
 				DDMStructureServiceUtil.addStructure(
-					userId, groupId, parentStructureKey, classNameId,
-					structureKey, nameMap, descriptionMap, ddmForm,
-					ddmFormLayout, storageType, type, serviceContext);
-
-			return com.liferay.dynamic.data.mapping.model.DDMStructureSoap.
-				toSoapModel(returnValue);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
-	/**
-	 * Adds a structure referencing the parent structure by its structure key.
-	 * In case the parent structure is not found, it uses the default parent
-	 * structure ID.
-	 *
-	 * @param userId the primary key of the structure's creator/owner
-	 * @param groupId the primary key of the group
-	 * @param parentStructureKey the unique string identifying the
-	 structure
-	 * @param classNameId the primary key of the class name for the
-	 structure's related model
-	 * @param structureKey unique string identifying the structure
-	 (optionally <code>null</code>)
-	 * @param nameMap the structure's locales and localized names
-	 * @param descriptionMap the structure's locales and localized
-	 descriptions
-	 * @param xsd the XML schema definition of the structure
-	 * @param storageType the storage type of the structure. It can be XML
-	 or expando. For more information, see {@link
-	 com.liferay.dynamic.data.mapping.storage.StorageType}.
-	 * @param type the structure's type. For more information, see {@link
-	 com.liferay.dynamic.data.mapping.model.DDMStructureConstants}.
-	 * @param serviceContext the service context to be applied. Must have
-	 the <code>ddmResource</code> attribute to check permissions.
-	 Can set the UUID, creation date, modification date, guest
-	 permissions, and group permissions for the structure.
-	 * @return the structure
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #addStructure(long, long, String, long, String, Map, Map,
-	 DDMForm, DDMFormLayout, String, int, ServiceContext)}
-	 */
-	@Deprecated
-	public static com.liferay.dynamic.data.mapping.model.DDMStructureSoap
-			addStructure(
-				long userId, long groupId, String parentStructureKey,
-				long classNameId, String structureKey,
-				String[] nameMapLanguageIds, String[] nameMapValues,
-				String[] descriptionMapLanguageIds,
-				String[] descriptionMapValues, String xsd, String storageType,
-				int type,
-				com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws RemoteException {
-
-		try {
-			Map<Locale, String> nameMap = LocalizationUtil.getLocalizationMap(
-				nameMapLanguageIds, nameMapValues);
-			Map<Locale, String> descriptionMap =
-				LocalizationUtil.getLocalizationMap(
-					descriptionMapLanguageIds, descriptionMapValues);
-
-			com.liferay.dynamic.data.mapping.model.DDMStructure returnValue =
-				DDMStructureServiceUtil.addStructure(
-					userId, groupId, parentStructureKey, classNameId,
-					structureKey, nameMap, descriptionMap, xsd, storageType,
-					type, serviceContext);
+					groupId, parentStructureKey, classNameId, structureKey,
+					nameMap, descriptionMap, ddmForm, ddmFormLayout,
+					storageType, type, serviceContext);
 
 			return com.liferay.dynamic.data.mapping.model.DDMStructureSoap.
 				toSoapModel(returnValue);
@@ -1002,59 +819,6 @@ public class DDMStructureServiceSoap {
 		}
 	}
 
-	/**
-	 * Updates the structure matching the class name ID, structure key, and
-	 * group, replacing its old parent structure, name map, description map, and
-	 * XSD with new ones.
-	 *
-	 * @param groupId the primary key of the group
-	 * @param parentStructureId the primary key of the new parent structure
-	 * @param classNameId the primary key of the class name for the
-	 structure's related model
-	 * @param structureKey the unique string identifying the structure
-	 * @param nameMap the structure's new locales and localized names
-	 * @param descriptionMap the structure's new locales and localized
-	 description
-	 * @param definition the structure's new XML schema definition
-	 * @param serviceContext the service context to be applied. Can set the
-	 modification date.
-	 * @return the updated structure
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #updateStructure(long, long, long, String, Map, Map, DDMForm,
-	 DDMFormLayout, ServiceContext)}
-	 */
-	@Deprecated
-	public static com.liferay.dynamic.data.mapping.model.DDMStructureSoap
-			updateStructure(
-				long groupId, long parentStructureId, long classNameId,
-				String structureKey, String[] nameMapLanguageIds,
-				String[] nameMapValues, String[] descriptionMapLanguageIds,
-				String[] descriptionMapValues, String definition,
-				com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws RemoteException {
-
-		try {
-			Map<Locale, String> nameMap = LocalizationUtil.getLocalizationMap(
-				nameMapLanguageIds, nameMapValues);
-			Map<Locale, String> descriptionMap =
-				LocalizationUtil.getLocalizationMap(
-					descriptionMapLanguageIds, descriptionMapValues);
-
-			com.liferay.dynamic.data.mapping.model.DDMStructure returnValue =
-				DDMStructureServiceUtil.updateStructure(
-					groupId, parentStructureId, classNameId, structureKey,
-					nameMap, descriptionMap, definition, serviceContext);
-
-			return com.liferay.dynamic.data.mapping.model.DDMStructureSoap.
-				toSoapModel(returnValue);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
 	public static com.liferay.dynamic.data.mapping.model.DDMStructureSoap
 			updateStructure(
 				long structureId, long parentStructureId,
@@ -1078,55 +842,6 @@ public class DDMStructureServiceSoap {
 				DDMStructureServiceUtil.updateStructure(
 					structureId, parentStructureId, nameMap, descriptionMap,
 					ddmForm, ddmFormLayout, serviceContext);
-
-			return com.liferay.dynamic.data.mapping.model.DDMStructureSoap.
-				toSoapModel(returnValue);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
-	/**
-	 * Updates the structure matching the structure ID, replacing the old parent
-	 * structure ID, name map, description map, and XSD with the new values.
-	 *
-	 * @param structureId the primary key of the structure
-	 * @param parentStructureId the new parent structure primary key
-	 * @param nameMap the structure's new locales and localized names
-	 * @param descriptionMap the structure's new locales and localized
-	 description
-	 * @param definition the new XML schema definition of the structure
-	 * @param serviceContext the service context to be applied. Can set the
-	 modification date.
-	 * @return the updated structure
-	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
-	 #updateStructure(long, long, Map, Map, DDMForm,
-	 DDMFormLayout, ServiceContext)}
-	 */
-	@Deprecated
-	public static com.liferay.dynamic.data.mapping.model.DDMStructureSoap
-			updateStructure(
-				long structureId, long parentStructureId,
-				String[] nameMapLanguageIds, String[] nameMapValues,
-				String[] descriptionMapLanguageIds,
-				String[] descriptionMapValues, String definition,
-				com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws RemoteException {
-
-		try {
-			Map<Locale, String> nameMap = LocalizationUtil.getLocalizationMap(
-				nameMapLanguageIds, nameMapValues);
-			Map<Locale, String> descriptionMap =
-				LocalizationUtil.getLocalizationMap(
-					descriptionMapLanguageIds, descriptionMapValues);
-
-			com.liferay.dynamic.data.mapping.model.DDMStructure returnValue =
-				DDMStructureServiceUtil.updateStructure(
-					structureId, parentStructureId, nameMap, descriptionMap,
-					definition, serviceContext);
 
 			return com.liferay.dynamic.data.mapping.model.DDMStructureSoap.
 				toSoapModel(returnValue);

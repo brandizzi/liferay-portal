@@ -19,6 +19,10 @@ package com.liferay.portal.vulcan.yaml.openapi;
  */
 public class Parameter {
 
+	public String getExample() {
+		return _example;
+	}
+
 	public String getIn() {
 		return _in;
 	}
@@ -35,6 +39,14 @@ public class Parameter {
 		return _schema;
 	}
 
+	public boolean isRequired() {
+		return _required;
+	}
+
+	public void setExample(String example) {
+		_example = example;
+	}
+
 	public void setIn(String in) {
 		_in = in;
 	}
@@ -47,13 +59,19 @@ public class Parameter {
 		_reference = reference;
 	}
 
+	public void setRequired(boolean required) {
+		_required = required;
+	}
+
 	public void setSchema(Schema schema) {
 		_schema = schema;
 	}
 
+	private String _example;
 	private String _in;
 	private String _name;
 	private String _reference;
+	private boolean _required;
 	private Schema _schema;
 
 }

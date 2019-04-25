@@ -24,6 +24,8 @@ public interface AcceptLanguage {
 
 	public List<Locale> getLocales();
 
+	public String getPreferredLanguageId();
+
 	public Locale getPreferredLocale();
 
 }

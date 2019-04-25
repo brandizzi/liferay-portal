@@ -23,6 +23,10 @@ import java.util.Map;
  */
 public class Operation {
 
+	public String getDescription() {
+		return _description;
+	}
+
 	public String getOperationId() {
 		return _operationId;
 	}
@@ -35,12 +39,16 @@ public class Operation {
 		return _requestBody;
 	}
 
-	public Map<String, Response> getResponses() {
+	public Map<Integer, Response> getResponses() {
 		return _responses;
 	}
 
 	public List<String> getTags() {
 		return _tags;
+	}
+
+	public void setDescription(String description) {
+		_description = description;
 	}
 
 	public void setOperationId(String operationId) {
@@ -55,7 +63,7 @@ public class Operation {
 		_requestBody = requestBody;
 	}
 
-	public void setResponses(Map<String, Response> responses) {
+	public void setResponses(Map<Integer, Response> responses) {
 		_responses = responses;
 	}
 
@@ -63,10 +71,11 @@ public class Operation {
 		_tags = tags;
 	}
 
+	private String _description;
 	private String _operationId;
-	private List<Parameter> _parameters;
+	private List<Parameter> _parameters = new ArrayList<>();
 	private RequestBody _requestBody;
-	private Map<String, Response> _responses;
+	private Map<Integer, Response> _responses;
 	private List<String> _tags = new ArrayList<>();
 
 }

@@ -16,7 +16,6 @@ package com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java.pars
 
 import com.liferay.portal.kernel.util.CamelCaseUtil;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java.JavaMethodParameter;
 import com.liferay.portal.tools.rest.builder.internal.freemarker.tool.java.parser.util.OpenAPIParserUtil;
 import com.liferay.portal.tools.rest.builder.internal.freemarker.util.OpenAPIUtil;
 import com.liferay.portal.vulcan.yaml.config.ConfigYAML;
@@ -24,19 +23,139 @@ import com.liferay.portal.vulcan.yaml.openapi.Items;
 import com.liferay.portal.vulcan.yaml.openapi.OpenAPIYAML;
 import com.liferay.portal.vulcan.yaml.openapi.Schema;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author Peter Shin
  */
 public class DTOOpenAPIParser {
 
-	public static List<JavaMethodParameter> getJavaMethodParameters(
+	public static Map<String, Schema> getEnumSchemas(Schema schema) {
+		Map<String, Schema> propertySchemas = schema.getPropertySchemas();
+
+		if (propertySchemas == null) {
+			return Collections.emptyMap();
+		}
+
+		Map<String, Schema> enumSchemas = new TreeMap<>();
+
+		for (Map.Entry<String, Schema> entry : propertySchemas.entrySet()) {
+			Schema propertySchema = entry.getValue();
+			String propertySchemaName = entry.getKey();
+
+			List<String> enumValues = propertySchema.getEnumValues();
+
+			if ((enumValues != null) && !enumValues.isEmpty()) {
+				enumSchemas.put(
+					StringUtil.upperCaseFirstLetter(propertySchemaName),
+					propertySchema);
+			}
+		}
+
+		return enumSchemas;
+	}
+
+	public static Map<String, String> getProperties(
 		ConfigYAML configYAML, OpenAPIYAML openAPIYAML, Schema schema) {
 
+		Map<String, String> javaDataTypeMap =
+			OpenAPIParserUtil.getJavaDataTypeMap(configYAML, openAPIYAML);
+		Map<String, String> properties = new TreeMap<>();
+
+		Map<String, Schema> propertySchemas = _getPropertySchemas(schema);
+
+		for (Map.Entry<String, Schema> entry : propertySchemas.entrySet()) {
+			String propertySchemaName = entry.getKey();
+			Schema propertySchema = entry.getValue();
+
+			String propertyName = _getPropertyName(
+				propertySchema, propertySchemaName);
+			String propertyType = _getPropertyType(
+				javaDataTypeMap, propertySchema, propertySchemaName);
+
+			properties.put(propertyName, propertyType);
+		}
+
+		return properties;
+	}
+
+	public static Map<String, String> getProperties(
+		ConfigYAML configYAML, OpenAPIYAML openAPIYAML, String schemaName) {
+
+		Map<String, Schema> schemas = OpenAPIUtil.getAllSchemas(openAPIYAML);
+
+		return getProperties(configYAML, openAPIYAML, schemas.get(schemaName));
+	}
+
+	public static Schema getPropertySchema(String propertyName, Schema schema) {
+		Map<String, Schema> propertySchemas = _getPropertySchemas(schema);
+
+		for (Map.Entry<String, Schema> entry : propertySchemas.entrySet()) {
+			String propertySchemaName = entry.getKey();
+			Schema propertySchema = entry.getValue();
+
+			String curPropertyName = _getPropertyName(
+				propertySchema, propertySchemaName);
+
+			if (StringUtil.equalsIgnoreCase(curPropertyName, propertyName)) {
+				return propertySchema;
+			}
+		}
+
+		return null;
+	}
+
+	public static boolean isSchemaProperty(
+		OpenAPIYAML openAPIYAML, String propertyName, Schema schema) {
+
+		Map<String, Schema> schemas = OpenAPIUtil.getAllSchemas(openAPIYAML);
+
+		Map<String, Schema> propertySchemas = _getPropertySchemas(schema);
+
+		for (Map.Entry<String, Schema> entry : propertySchemas.entrySet()) {
+			String propertySchemaName = entry.getKey();
+			Schema propertySchema = entry.getValue();
+
+			String curPropertyName = _getPropertyName(
+				propertySchema, propertySchemaName);
+
+			if (StringUtil.equalsIgnoreCase(curPropertyName, propertyName)) {
+				String schemaName = StringUtil.upperCaseFirstLetter(
+					propertySchemaName);
+
+				if (propertySchema.getItems() != null) {
+					schemaName = OpenAPIUtil.formatSingular(schemaName);
+				}
+
+				if (schemas.containsKey(schemaName)) {
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		return false;
+	}
+
+	private static String _getPropertyName(
+		Schema propertySchema, String propertySchemaName) {
+
+		String name = CamelCaseUtil.toCamelCase(propertySchemaName);
+
+		if (StringUtil.equalsIgnoreCase(propertySchema.getType(), "object")) {
+			if (propertySchema.getItems() != null) {
+				return OpenAPIUtil.formatSingular(name);
+			}
+		}
+
+		return name;
+	}
+
+	private static Map<String, Schema> _getPropertySchemas(Schema schema) {
 		Map<String, Schema> propertySchemas = null;
 
 		Items items = schema.getItems();
@@ -44,47 +163,29 @@ public class DTOOpenAPIParser {
 		if (items != null) {
 			propertySchemas = items.getPropertySchemas();
 		}
+		else if (schema.getAllOfSchemas() != null) {
+			propertySchemas = OpenAPIParserUtil.getAllOfPropertySchemas(schema);
+		}
 		else {
 			propertySchemas = schema.getPropertySchemas();
 		}
 
 		if (propertySchemas == null) {
-			return Collections.emptyList();
+			return Collections.emptyMap();
 		}
 
-		Map<String, String> javaDataTypeMap =
-			OpenAPIParserUtil.getJavaDataTypeMap(configYAML, openAPIYAML);
-		List<JavaMethodParameter> javaMethodParameters = new ArrayList<>(
-			propertySchemas.size());
-
-		for (Map.Entry<String, Schema> entry : propertySchemas.entrySet()) {
-			String propertySchemaName = entry.getKey();
-			Schema propertySchema = entry.getValue();
-
-			String parameterName = CamelCaseUtil.toCamelCase(
-				propertySchemaName);
-			String parameterType = _getParameterType(
-				javaDataTypeMap, propertySchema, propertySchemaName);
-
-			javaMethodParameters.add(
-				new JavaMethodParameter(parameterName, parameterType));
-		}
-
-		return javaMethodParameters;
+		return propertySchemas;
 	}
 
-	public static List<JavaMethodParameter> getJavaMethodParameters(
-		ConfigYAML configYAML, OpenAPIYAML openAPIYAML, String schemaName) {
-
-		Map<String, Schema> schemas = OpenAPIUtil.getAllSchemas(openAPIYAML);
-
-		return getJavaMethodParameters(
-			configYAML, openAPIYAML, schemas.get(schemaName));
-	}
-
-	private static String _getParameterType(
+	private static String _getPropertyType(
 		Map<String, String> javaDataTypeMap, Schema propertySchema,
 		String propertySchemaName) {
+
+		List<String> enumValues = propertySchema.getEnumValues();
+
+		if ((enumValues != null) && !enumValues.isEmpty()) {
+			return StringUtil.upperCaseFirstLetter(propertySchemaName);
+		}
 
 		Items items = propertySchema.getItems();
 		String type = propertySchema.getType();
@@ -92,16 +193,61 @@ public class DTOOpenAPIParser {
 		if (StringUtil.equals(type, "array") && (items != null) &&
 			StringUtil.equalsIgnoreCase(items.getType(), "object")) {
 
-			return OpenAPIParserUtil.getArrayClassName(
-				StringUtil.upperCaseFirstLetter(propertySchemaName));
+			String name = StringUtil.upperCaseFirstLetter(propertySchemaName);
+
+			if (items != null) {
+				name = OpenAPIUtil.formatSingular(name);
+			}
+
+			if (javaDataTypeMap.containsKey(name)) {
+				return name + "[]";
+			}
 		}
 
 		if (StringUtil.equalsIgnoreCase(type, "object")) {
-			return StringUtil.upperCaseFirstLetter(propertySchemaName);
+			String name = StringUtil.upperCaseFirstLetter(propertySchemaName);
+
+			if (items != null) {
+				name = OpenAPIUtil.formatSingular(name);
+			}
+
+			if (javaDataTypeMap.containsKey(name)) {
+				return name;
+			}
 		}
 
-		return OpenAPIParserUtil.getJavaDataType(
+		String javaDataType = OpenAPIParserUtil.getJavaDataType(
 			javaDataTypeMap, propertySchema);
+
+		if (StringUtil.equals(javaDataType, "java.util.Map")) {
+			String name = OpenAPIParserUtil.getJavaDataType(
+				javaDataTypeMap, propertySchema.getAdditionalPropertySchema());
+
+			if (name.lastIndexOf('.') != -1) {
+				name = name.substring(name.lastIndexOf(".") + 1);
+			}
+
+			return "Map<String, " + name + ">";
+		}
+
+		if (javaDataType.startsWith("[")) {
+			String name = OpenAPIParserUtil.getElementClassName(javaDataType);
+
+			if (name.lastIndexOf('.') != -1) {
+				name = name.substring(name.lastIndexOf(".") + 1);
+			}
+
+			return name + "[]";
+		}
+
+		String propertyType = javaDataType;
+
+		if (propertyType.lastIndexOf('.') != -1) {
+			propertyType = propertyType.substring(
+				propertyType.lastIndexOf(".") + 1);
+		}
+
+		return propertyType;
 	}
 
 }

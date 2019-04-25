@@ -15,17 +15,16 @@
 package com.liferay.oauth2.provider.jsonws.internal.security.auth.verifier;
 
 import com.liferay.oauth2.provider.constants.OAuth2ProviderConstants;
-import com.liferay.oauth2.provider.jsonws.internal.constants.OAuth2JSONWSConstants;
 import com.liferay.oauth2.provider.jsonws.internal.service.access.policy.scope.SAPEntryScope;
 import com.liferay.oauth2.provider.jsonws.internal.service.access.policy.scope.SAPEntryScopeDescriptorFinderRegistrator;
 import com.liferay.oauth2.provider.model.OAuth2Application;
-import com.liferay.oauth2.provider.model.OAuth2ApplicationScopeAliases;
 import com.liferay.oauth2.provider.model.OAuth2Authorization;
 import com.liferay.oauth2.provider.rest.spi.bearer.token.provider.BearerTokenProvider;
 import com.liferay.oauth2.provider.rest.spi.bearer.token.provider.BearerTokenProviderAccessor;
 import com.liferay.oauth2.provider.scope.liferay.LiferayOAuth2Scope;
 import com.liferay.oauth2.provider.scope.liferay.OAuth2ProviderScopeLiferayConstants;
 import com.liferay.oauth2.provider.scope.liferay.ScopeLocator;
+import com.liferay.oauth2.provider.scope.spi.scope.finder.ScopeFinder;
 import com.liferay.oauth2.provider.service.OAuth2ApplicationLocalService;
 import com.liferay.oauth2.provider.service.OAuth2ApplicationScopeAliasesLocalService;
 import com.liferay.oauth2.provider.service.OAuth2AuthorizationLocalService;
@@ -39,6 +38,7 @@ import com.liferay.portal.kernel.security.auth.verifier.AuthVerifier;
 import com.liferay.portal.kernel.security.auth.verifier.AuthVerifierResult;
 import com.liferay.portal.kernel.security.service.access.policy.ServiceAccessPolicyThreadLocal;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -52,11 +52,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.component.annotations.ReferencePolicyOption;
 
@@ -109,15 +112,16 @@ public class OAuth2JSONWSAuthVerifier implements AuthVerifier {
 			Set<String> scopes = new HashSet<>();
 
 			for (String scope : accessToken.getScopes()) {
-				Collection<LiferayOAuth2Scope> liferayOAuth2Scopes =
-					_scopeLocator.getLiferayOAuth2Scopes(
-						companyId, scope,
-						OAuth2JSONWSConstants.APPLICATION_NAME);
+				for (String jaxRsApplicationName : _jaxRsApplicationNames) {
+					Collection<LiferayOAuth2Scope> liferayOAuth2Scopes =
+						_scopeLocator.getLiferayOAuth2Scopes(
+							companyId, scope, jaxRsApplicationName);
 
-				for (LiferayOAuth2Scope liferayOAuth2Scope :
-						liferayOAuth2Scopes) {
+					for (LiferayOAuth2Scope liferayOAuth2Scope :
+							liferayOAuth2Scopes) {
 
-					scopes.add(liferayOAuth2Scope.getScope());
+						scopes.add(liferayOAuth2Scope.getScope());
+					}
 				}
 			}
 
@@ -150,6 +154,20 @@ public class OAuth2JSONWSAuthVerifier implements AuthVerifier {
 
 			return authVerifierResult;
 		}
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(&(osgi.jaxrs.name=*)(sap.scope.finder=true))"
+	)
+	protected void addJaxRsApplicationName(
+		ServiceReference<ScopeFinder> serviceReference) {
+
+		_jaxRsApplicationNames.add(
+			GetterUtil.getString(
+				serviceReference.getProperty("osgi.jaxrs.name")));
 	}
 
 	protected BearerTokenProvider.AccessToken getAccessToken(
@@ -213,13 +231,9 @@ public class OAuth2JSONWSAuthVerifier implements AuthVerifier {
 			oAuth2Authorization.getOAuth2ApplicationScopeAliasesId();
 
 		if (oAuth2ApplicationScopeAliasesId > 0) {
-			OAuth2ApplicationScopeAliases oAuth2ApplicationScopeAliases =
-				_oAuth2ApplicationScopeAliasesLocalService.
-					getOAuth2ApplicationScopeAliases(
-						oAuth2ApplicationScopeAliasesId);
-
 			scopeAliasesList =
-				oAuth2ApplicationScopeAliases.getScopeAliasesList();
+				_oAuth2ApplicationScopeAliasesLocalService.getScopeAliasesList(
+					oAuth2ApplicationScopeAliasesId);
 		}
 
 		BearerTokenProvider.AccessToken accessToken =
@@ -234,6 +248,14 @@ public class OAuth2JSONWSAuthVerifier implements AuthVerifier {
 		return accessToken;
 	}
 
+	protected void removeJaxRsApplicationName(
+		ServiceReference<ScopeFinder> serviceReference) {
+
+		_jaxRsApplicationNames.remove(
+			GetterUtil.getString(
+				serviceReference.getProperty("osgi.jaxrs.name")));
+	}
+
 	private static final String _TOKEN_KEY = "Bearer";
 
 	private static final Log _log = LogFactoryUtil.getLog(
@@ -244,6 +266,9 @@ public class OAuth2JSONWSAuthVerifier implements AuthVerifier {
 		policyOption = ReferencePolicyOption.GREEDY
 	)
 	private volatile BearerTokenProviderAccessor _bearerTokenProviderAccessor;
+
+	private final Set<String> _jaxRsApplicationNames =
+		Collections.newSetFromMap(new ConcurrentHashMap<>());
 
 	@Reference
 	private OAuth2ApplicationLocalService _oAuth2ApplicationLocalService;

@@ -1,4 +1,8 @@
 .criteria-builder-root {
+	opacity: 1;
+	transition: opacity 0.2s ease-in-out;
+	will-change: opacity;
+
 	.criteria-builder-toolbar {
 		align-items: center;
 		display: flex;
@@ -9,5 +13,9 @@
 		.criteria-model-label {
 			font-weight: 600;
 		}
+	}
+
+	&.read-only-container-root {
+		opacity: 0.4;
 	}
 }

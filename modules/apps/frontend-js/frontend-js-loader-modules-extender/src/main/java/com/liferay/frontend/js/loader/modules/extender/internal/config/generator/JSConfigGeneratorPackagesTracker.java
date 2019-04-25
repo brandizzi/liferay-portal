@@ -16,7 +16,7 @@ package com.liferay.frontend.js.loader.modules.extender.internal.config.generato
 
 import aQute.lib.converter.Converter;
 
-import com.liferay.frontend.js.loader.modules.extender.internal.Details;
+import com.liferay.frontend.js.loader.modules.extender.internal.configuration.Details;
 import com.liferay.osgi.util.ServiceTrackerFactory;
 
 import java.net.URL;
@@ -41,7 +41,7 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
  * @author Carlos Sierra Andrés
  */
 @Component(
-	configurationPid = "com.liferay.frontend.js.loader.modules.extender.internal.Details",
+	configurationPid = "com.liferay.frontend.js.loader.modules.extender.internal.configuration.Details",
 	immediate = true, service = JSConfigGeneratorPackagesTracker.class
 )
 public class JSConfigGeneratorPackagesTracker

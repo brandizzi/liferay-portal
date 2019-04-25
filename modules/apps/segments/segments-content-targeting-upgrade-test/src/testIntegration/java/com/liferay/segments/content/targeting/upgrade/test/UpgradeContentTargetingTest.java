@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBInspector;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.jdbc.DataAccess;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.model.Group;
@@ -37,10 +38,11 @@ import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 import com.liferay.portal.kernel.upgrade.UpgradeStep;
 import com.liferay.portal.kernel.upgrade.util.UpgradeProcessUtil;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
-import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.odata.normalizer.Normalizer;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
@@ -386,6 +388,53 @@ public class UpgradeContentTargetingTest {
 	}
 
 	@Test
+	public void testUpgradeContentTargetingUserSegmentsWithPreviousVisitedSiteRule()
+		throws Exception {
+
+		long contentTargetingUserSegmentId = -1L;
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put("value", "liferay");
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		jsonArray.put(jsonObject);
+
+		insertContentTargetingRuleInstance(
+			contentTargetingUserSegmentId, "PreviousVisitedSiteRule",
+			jsonArray.toString());
+
+		insertContentTargetingUserSegment(
+			contentTargetingUserSegmentId,
+			RandomTestUtil.randomLocaleStringMap(),
+			RandomTestUtil.randomLocaleStringMap());
+
+		_upgradeContentTargeting.upgrade();
+
+		SegmentsEntry segmentsEntry =
+			_segmentsEntryLocalService.fetchSegmentsEntry(
+				_group.getGroupId(), "ct_" + contentTargetingUserSegmentId,
+				false);
+
+		Assert.assertNotNull(segmentsEntry);
+
+		Criteria criteriaObj = segmentsEntry.getCriteriaObj();
+
+		Assert.assertNotNull(criteriaObj);
+
+		Criteria.Criterion criterion = criteriaObj.getCriterion("context");
+
+		Assert.assertNotNull(criterion);
+
+		Assert.assertEquals(
+			Criteria.Conjunction.AND,
+			Criteria.Conjunction.parse(criterion.getConjunction()));
+		Assert.assertEquals(
+			"contains(referrerURL, 'liferay')", criterion.getFilterString());
+	}
+
+	@Test
 	public void testUpgradeContentTargetingUserSegmentsWithRegularRoleRule()
 		throws Exception {
 
@@ -597,7 +646,11 @@ public class UpgradeContentTargetingTest {
 			ps.setLong(2, _group.getGroupId());
 			ps.setLong(3, _group.getCompanyId());
 			ps.setLong(4, TestPropsValues.getUserId());
-			ps.setString(5, TestPropsValues.getUser().getFullName());
+
+			User user = TestPropsValues.getUser();
+
+			ps.setString(5, user.getFullName());
+
 			ps.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
 			ps.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
 			ps.setLong(8, contentTargetingUserSegmentId);
@@ -628,7 +681,11 @@ public class UpgradeContentTargetingTest {
 			ps.setLong(2, _group.getGroupId());
 			ps.setLong(3, _group.getCompanyId());
 			ps.setLong(4, TestPropsValues.getUserId());
-			ps.setString(5, TestPropsValues.getUser().getFullName());
+
+			User user = TestPropsValues.getUser();
+
+			ps.setString(5, user.getFullName());
+
 			ps.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
 			ps.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
 			ps.setString(
@@ -694,7 +751,7 @@ public class UpgradeContentTargetingTest {
 		sb.append("(customField/_");
 		sb.append(expandoColumn.getColumnId());
 		sb.append("_");
-		sb.append(FriendlyURLNormalizerUtil.normalize(expandoColumn.getName()));
+		sb.append(Normalizer.normalizeIdentifier(expandoColumn.getName()));
 		sb.append(" eq '");
 		sb.append(expandoValue);
 		sb.append("')");
@@ -720,7 +777,7 @@ public class UpgradeContentTargetingTest {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		DateFormat dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
-			"yyyy-MM-dd HH:mm", Locale.ENGLISH);
+			"yyyy-MM-dd HH:mm", LocaleUtil.ENGLISH);
 
 		jsonObject.put(
 			"startDate",

@@ -27,18 +27,19 @@ import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.search.test.util.IndexedFieldsFixture;
 import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
-import com.liferay.portal.test.rule.PermissionCheckerTestRule;
+import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.junit.Before;
@@ -59,7 +60,7 @@ public class PollsQuestionIndexerIndexedFieldsTest {
 	public static final AggregateTestRule aggregateTestRule =
 		new AggregateTestRule(
 			new LiferayIntegrationTestRule(),
-			PermissionCheckerTestRule.INSTANCE,
+			PermissionCheckerMethodTestRule.INSTANCE,
 			SynchronousDestinationTestRule.INSTANCE);
 
 	@Before
@@ -78,7 +79,7 @@ public class PollsQuestionIndexerIndexedFieldsTest {
 		PollsQuestion pollsQuestion =
 			pollsQuestionFixture.createPollsQuestion();
 
-		String searchTerm = pollsQuestion.getDescription(Locale.US);
+		String searchTerm = pollsQuestion.getDescription(LocaleUtil.US);
 
 		Document document = pollsQuestionIndexerFixture.searchOnlyOne(
 			searchTerm);
@@ -172,7 +173,9 @@ public class PollsQuestionIndexerIndexedFieldsTest {
 			sb.append(StringPool.SPACE);
 		}
 
-		return sb.toString().trim();
+		String s = sb.toString();
+
+		return s.trim();
 	}
 
 	private String _getTitleField(PollsQuestion pollsQuestion) {
@@ -185,20 +188,23 @@ public class PollsQuestionIndexerIndexedFieldsTest {
 			sb.append(StringPool.SPACE);
 		}
 
-		return sb.toString().trim();
+		String s = sb.toString();
+
+		return s.trim();
 	}
 
 	private void _populateDates(
 		PollsQuestion pollsQuestion, Map<String, String> map) {
 
-		indexedFieldsFixture.populateDate(
-			Field.CREATE_DATE, pollsQuestion.getCreateDate(), map);
+		Date createDate = pollsQuestion.getCreateDate();
+
+		indexedFieldsFixture.populateDate(Field.CREATE_DATE, createDate, map);
+
 		indexedFieldsFixture.populateDate(
 			Field.MODIFIED_DATE, pollsQuestion.getModifiedDate(), map);
 
 		map.put(
-			"createDate_Number_sortable",
-			String.valueOf(pollsQuestion.getCreateDate().getTime()));
+			"createDate_Number_sortable", String.valueOf(createDate.getTime()));
 	}
 
 	private void _populateRoles(

@@ -18,6 +18,7 @@ import com.liferay.petra.nio.CharsetDecoderUtil;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.tools.ToolsUtil;
@@ -362,9 +363,11 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		SourceCheck sourceCheck =
 			sourceChecksResult.getMostRecentProcessedSourceCheck();
 
-		sourceChecks.remove(sourceCheck);
+		if (sourceCheck != null) {
+			sourceChecks.remove(sourceCheck);
 
-		sourceChecks.add(0, sourceCheck);
+			sourceChecks.add(0, sourceCheck);
+		}
 
 		return format(
 			file, fileName, absolutePath, newContent, originalContent,
@@ -391,13 +394,12 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 		throws IOException {
 
 		if (!forceIncludeAllFiles &&
-			(_sourceFormatterArgs.getRecentChangesFileNames() != null)) {
+			!SetUtil.isEmpty(
+				_sourceFormatterArgs.getRecentChangesFileNames())) {
 
 			return SourceFormatterUtil.filterRecentChangesFileNames(
-				_sourceFormatterArgs.getBaseDirName(),
 				_sourceFormatterArgs.getRecentChangesFileNames(), excludes,
-				includes, _sourceFormatterExcludes,
-				_sourceFormatterArgs.isIncludeSubrepositories());
+				includes, _sourceFormatterExcludes);
 		}
 
 		return SourceFormatterUtil.filterFileNames(
@@ -427,6 +429,10 @@ public abstract class BaseSourceProcessor implements SourceProcessor {
 
 	protected Map<String, Properties> getPropertiesMap() {
 		return _propertiesMap;
+	}
+
+	protected List<SourceCheck> getSourceChecks() {
+		return _sourceChecks;
 	}
 
 	protected SourceFormatterExcludes getSourceFormatterExcludes() {
