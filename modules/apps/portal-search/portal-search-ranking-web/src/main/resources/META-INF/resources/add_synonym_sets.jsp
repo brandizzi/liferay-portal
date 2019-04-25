@@ -17,13 +17,14 @@
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %><%@
-	taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
-	taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
-	taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
+taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
+taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 
 <liferay-frontend:defineObjects />
 
 <liferay-theme:defineObjects />
+
+<portlet:defineObjects />
 
 <%
 String synonymSetsRootElementId = renderResponse.getNamespace() + "-synonym-sets-root";
@@ -31,10 +32,27 @@ String synonymSetsRootElementId = renderResponse.getNamespace() + "-synonym-sets
 portletDisplay.setShowBackIcon(true);
 %>
 
-<div id="<%= synonymSetsRootElementId %>"></div>
+<portlet:actionURL name="updateSynonymsEntry" var="updateSynonymsEntryURL">
+	<portlet:param name="mvcRenderCommandName" value="updateSynonymsEntry" />
+</portlet:actionURL>
+
+<liferay-frontend:edit-form
+	action="<%= updateSynonymsEntryURL %>"
+	name="synonymSetsForm"
+>
+	<aui:input name="synonymSetsInput" type="hidden" value="" />
+
+	<liferay-frontend:edit-form-body>
+		<div id="<%= synonymSetsRootElementId %>"></div>
+	</liferay-frontend:edit-form-body>
+</liferay-frontend:edit-form>
 
 <aui:script require='<%= npmResolvedPackageName + "/js/index-synonym-sets.es as SynonymSets" %>'>
 	SynonymSets.default(
-		'<%= synonymSetsRootElementId %>'
+		'<%= synonymSetsRootElementId %>',
+		{
+			formName: "<%= renderResponse.getNamespace() + "synonymSetsForm" %>",
+			inputName: "<%= renderResponse.getNamespace() + "synonymSetsInput" %>"
+		}
 	);
 </aui:script>
