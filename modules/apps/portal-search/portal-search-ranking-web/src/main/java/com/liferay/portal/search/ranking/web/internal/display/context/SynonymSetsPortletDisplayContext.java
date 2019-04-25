@@ -61,7 +61,8 @@ public class SynonymSetsPortletDisplayContext {
 			synonymSetsEntryDisplayContextList = new ArrayList();
 
 		for (String synonymSet :
-				_synonymIndexer.getSynonymSets(INDEX_NAME_PREFIX + getCompanyId())) {
+				_synonymIndexer.getSynonymSets(
+					INDEX_NAME_PREFIX + getCompanyId())) {
 
 			synonymSetsEntryDisplayContextList.add(
 				new SynonymSetsEntryDisplayContext(synonymSet));
@@ -312,6 +313,8 @@ public class SynonymSetsPortletDisplayContext {
 		return String.valueOf(_themeDisplay.getCompanyId());
 	}
 
+	private static final String INDEX_NAME_PREFIX = "liferay-";
+
 	private String _displayStyle;
 	private String _keywords;
 	private String _orderByCol;
@@ -321,7 +324,5 @@ public class SynonymSetsPortletDisplayContext {
 	private final HttpServletRequest _request;
 	private SearchContainer<SynonymSetsEntryDisplayContext> _searchContainer;
 	private final ThemeDisplay _themeDisplay;
-
-	private static final String INDEX_NAME_PREFIX = "liferay-";
 
 }
