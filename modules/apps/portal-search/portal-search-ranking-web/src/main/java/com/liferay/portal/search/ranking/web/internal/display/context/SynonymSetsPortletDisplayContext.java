@@ -107,7 +107,7 @@ public class SynonymSetsPortletDisplayContext {
 					dropdownItem -> {
 						dropdownItem.setHref(
 							_renderResponse.createRenderURL(),
-							"mvcRenderCommandName", "addSynonymSetsEntry",
+							"mvcRenderCommandName", "updateSynonymsEntryRender",
 							"redirect", PortalUtil.getCurrentURL(_request));
 						dropdownItem.setLabel(
 							LanguageUtil.get(_request, "new-synonym-set"));

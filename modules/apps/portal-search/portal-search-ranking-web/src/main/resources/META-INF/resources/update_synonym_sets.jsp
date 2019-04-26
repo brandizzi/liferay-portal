@@ -28,12 +28,13 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 
 <%
 String synonymSetsRootElementId = renderResponse.getNamespace() + "-synonym-sets-root";
+String synonymSets = (String)request.getAttribute("synonymSets");
 
 portletDisplay.setShowBackIcon(true);
 %>
 
-<portlet:actionURL name="updateSynonymsEntry" var="updateSynonymsEntryURL">
-	<portlet:param name="mvcRenderCommandName" value="updateSynonymsEntry" />
+<portlet:actionURL name="updateSynonymsEntryAction" var="updateSynonymsEntryURL">
+	<portlet:param name="mvcRenderCommandName" value="updateSynonymsEntryAction" />
 </portlet:actionURL>
 
 <liferay-frontend:edit-form
@@ -41,6 +42,7 @@ portletDisplay.setShowBackIcon(true);
 	name="synonymSetsForm"
 >
 	<aui:input name="synonymSetsInput" type="hidden" value="" />
+	<aui:input name="originalSynonymSetsInput" type="hidden" value="" />
 
 	<liferay-frontend:edit-form-body>
 		<div id="<%= synonymSetsRootElementId %>"></div>
@@ -52,7 +54,9 @@ portletDisplay.setShowBackIcon(true);
 		'<%= synonymSetsRootElementId %>',
 		{
 			formName: "<%= renderResponse.getNamespace() + "synonymSetsForm" %>",
-			inputName: "<%= renderResponse.getNamespace() + "synonymSetsInput" %>"
+			inputName: "<%= renderResponse.getNamespace() + "synonymSetsInput" %>",
+			originalInputName: "<%= renderResponse.getNamespace() + "originalSynonymSetsInput" %>",
+			synonymSets: "<%= synonymSets %>"
 		}
 	);
 </aui:script>

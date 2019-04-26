@@ -7,7 +7,9 @@ class SynonymSetsForm extends Component {
 	static propTypes = {
 		formName: PropTypes.string,
 		inputName: PropTypes.string,
-		onClickSubmit: PropTypes.func
+		onClickSubmit: PropTypes.func,
+		originalInputName: PropTypes.string,
+		synonymSets: PropTypes.string
 	};
 
 	state = {
@@ -24,10 +26,12 @@ class SynonymSetsForm extends Component {
 	};
 
 	_handleSubmit = () => {
+		event.preventDefault();
 		const form = document.forms[this.props.formName];
 		const synonymSetsString = this.state.synonyms.map(s => s.value).toString();
 
 		form.elements[this.props.inputName].value = synonymSetsString;
+		form.elements[this.props.originalInputName].value = this._originalSynonymSets;
 		form.submit();
 	};
 
@@ -36,6 +40,21 @@ class SynonymSetsForm extends Component {
 			synonyms: value
 		});
 	};
+
+	constructor(props) {
+		super(props);
+
+		if (props.synonymSets.length > 0) {
+			this._originalSynonymSets = props.synonymSets;
+
+			(props.synonymSets).split(',').forEach((synonym) => {
+				this.state.synonyms.push({
+					label: synonym,
+					value: synonym
+				});
+			});
+		}
+	}
 
 	render() {
 		const {synonyms} = this.state;
