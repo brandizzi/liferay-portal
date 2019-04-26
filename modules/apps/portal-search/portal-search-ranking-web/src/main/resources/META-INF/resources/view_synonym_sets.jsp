@@ -63,9 +63,9 @@ SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext = (SynonymSets
 			modelVar="synonymSetsEntry"
 		>
 			<portlet:renderURL var="rowURL">
-				<portlet:param name="mvcRenderCommandName" value="editSynonymSetsEntry" />
+				<portlet:param name="mvcRenderCommandName" value="updateSynonymsEntryRender" />
 				<portlet:param name="redirect" value="<%= currentURL %>" />
-				<portlet:param name="synonymSetsEntryId" value="" />
+				<portlet:param name="synonymSets" value="<%= synonymSetsEntry.getSynonyms() %>" />
 			</portlet:renderURL>
 
 			<liferay-ui:search-container-column-text

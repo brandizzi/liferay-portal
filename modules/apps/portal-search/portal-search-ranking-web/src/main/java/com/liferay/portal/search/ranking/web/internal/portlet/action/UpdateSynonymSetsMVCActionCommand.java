@@ -35,7 +35,7 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + ResultsRankingPortletKeys.RESULTS_RANKING,
-		"mvc.command.name=updateSynonymsEntry"
+		"mvc.command.name=updateSynonymsEntryAction"
 	},
 	service = MVCActionCommand.class
 )
@@ -49,10 +49,17 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		String newSynonymSets = ParamUtil.getString(
 			actionRequest, "synonymSetsInput");
 
+		String originalSynonymSets = ParamUtil.getString(
+			actionRequest, "originalSynonymSetsInput");
+
 		long companyId = portal.getCompanyId(actionRequest);
 
 		String[] synonymSets = _synonymIndexer.getSynonymSets(
 			"liferay-" + companyId);
+
+		if (ArrayUtil.contains(synonymSets, originalSynonymSets, true)) {
+			synonymSets = ArrayUtil.remove(synonymSets, originalSynonymSets);
+		}
 
 		synonymSets = ArrayUtil.append(synonymSets, newSynonymSets);
 

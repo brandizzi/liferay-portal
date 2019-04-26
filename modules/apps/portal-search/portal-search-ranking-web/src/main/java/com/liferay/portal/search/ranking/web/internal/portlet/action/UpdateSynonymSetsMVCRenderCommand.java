@@ -15,15 +15,13 @@
 package com.liferay.portal.search.ranking.web.internal.portlet.action;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.search.ranking.web.internal.constants.ResultsRankingPortletKeys;
 
 import javax.portlet.PortletException;
-import javax.portlet.PortletSession;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -35,23 +33,24 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + ResultsRankingPortletKeys.RESULTS_RANKING,
-		"mvc.command.name=addSynonymSetsEntry"
+		"mvc.command.name=updateSynonymsEntryRender"
 	},
 	service = MVCRenderCommand.class
 )
-public class AddSynonymSetsMVCRenderCommand implements MVCRenderCommand {
+public class UpdateSynonymSetsMVCRenderCommand implements MVCRenderCommand {
 
 	@Override
 	public String render(
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws PortletException {
 
-		PortletSession portletSession = renderRequest.getPortletSession();
+		String synonymSets = ParamUtil.getString(renderRequest, "synonymSets");
 
-		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
-			renderRequest);
+		if (synonymSets != null) {
+			renderRequest.setAttribute("synonymSets", synonymSets);
+		}
 
-		return "/add_synonym_sets.jsp";
+		return "/update_synonym_sets.jsp";
 	}
 
 	@Reference
