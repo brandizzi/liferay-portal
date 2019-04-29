@@ -61,7 +61,9 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 			synonymSets = ArrayUtil.remove(synonymSets, originalSynonymSets);
 		}
 
-		synonymSets = ArrayUtil.append(synonymSets, newSynonymSets);
+		if ("" != newSynonymSets) {
+			synonymSets = ArrayUtil.append(synonymSets, newSynonymSets);
+		}
 
 		_synonymIndexer.updateSynonymSets("liferay-" + companyId, synonymSets);
 

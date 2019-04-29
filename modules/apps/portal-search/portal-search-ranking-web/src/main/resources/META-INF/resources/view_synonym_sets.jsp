@@ -34,7 +34,6 @@ SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext = (SynonymSets
 %>
 
 <clay:management-toolbar
-	actionDropdownItems="<%= synonymSetsPortletDisplayContext.getActionDropdownItems() %>"
 	clearResultsURL="<%= synonymSetsPortletDisplayContext.getClearResultsURL() %>"
 	componentId="synonymSetsEntriesManagementToolbar"
 	creationMenu="<%= synonymSetsPortletDisplayContext.getCreationMenu() %>"
@@ -83,6 +82,11 @@ SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext = (SynonymSets
 						<liferay-ui:message key="approved" />
 					</span>
 				</span>
+			</liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text>
+				<clay:dropdown-actions
+					dropdownItems="<%= synonymSetsPortletDisplayContext.getActionDropdownItems(synonymSetsEntry) %>"
+				/>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 
