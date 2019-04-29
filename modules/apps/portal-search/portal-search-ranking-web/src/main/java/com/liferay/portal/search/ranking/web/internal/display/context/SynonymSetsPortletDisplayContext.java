@@ -74,15 +74,16 @@ public class SynonymSetsPortletDisplayContext {
 		_searchContainer.setResults(synonymSetsEntryDisplayContextList);
 	}
 
-	public List<DropdownItem> getActionDropdownItems() {
+	public List<DropdownItem> getActionDropdownItems(SynonymSetsEntryDisplayContext synonymSetsEntryDisplayContext) {
 		return new DropdownItemList() {
 			{
 				add(
 					dropdownItem -> {
 						dropdownItem.setHref(
 							_renderResponse.createActionURL(),
-							ActionRequest.ACTION_NAME, "/synonym/delete_entry",
-							"redirect", PortalUtil.getCurrentURL(_request));
+							ActionRequest.ACTION_NAME, "updateSynonymsEntryAction",
+							"synonymSetsInput", "",
+							"originalSynonymSetsInput", synonymSetsEntryDisplayContext.getSynonyms());
 						dropdownItem.setIcon("times");
 						dropdownItem.setLabel(
 							LanguageUtil.get(_request, "delete"));
