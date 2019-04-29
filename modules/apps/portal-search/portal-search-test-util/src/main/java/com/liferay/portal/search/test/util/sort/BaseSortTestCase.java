@@ -14,16 +14,20 @@
 
 package com.liferay.portal.search.test.util.sort;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.SortFactory;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.search.internal.SortFactoryImpl;
 import com.liferay.portal.search.test.util.DocumentsAssert;
 import com.liferay.portal.search.test.util.indexing.BaseIndexingTestCase;
 import com.liferay.portal.search.test.util.indexing.DocumentCreationHelper;
 import com.liferay.portal.search.test.util.indexing.DocumentCreationHelpers;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Locale;
 import java.util.function.Function;
 
 import org.junit.Test;
@@ -49,7 +53,48 @@ public abstract class BaseSortTestCase extends BaseIndexingTestCase {
 		SortFactory sortFactory = new SortFactoryImpl();
 
 		assertOrder(
-			sortFactory.getDefaultSorts(), Field.PRIORITY, "[3.0, 2.0, 1.0]");
+			sortFactory.getDefaultSorts(), Field.PRIORITY, "[3.0, 2.0, 1.0]",
+			null);
+	}
+
+	@Test
+	public void testEnglishCaseSensitiveSort() throws Exception {
+		testLocaleSort(
+			LocaleUtil.US, new String[] {"a", "E", "c", "O", "u", "A"},
+			"[a, A, c, E, O, u]");
+	}
+
+	@Test
+	public void testFranceDialectsSort() throws Exception {
+		testLocaleSort(
+			LocaleUtil.FRANCE, new String[] {"e", "a", "d", "ç"},
+			"[a, ç, d, e]");
+	}
+
+	@Test
+	public void testGermanDialectsSort() throws Exception {
+		testLocaleSort(
+			LocaleUtil.GERMANY,
+			new String[] {"a", "x", "ä", "ö", "o", "u", "ź"},
+			"[a, ä, o, ö, u, x, ź]");
+	}
+
+	@Test
+	public void testPolishDialectsSort() throws Exception {
+		testLocaleSort(
+			new Locale("pl", "PL"),
+			new String[] {"f", "ć", "ź", "d", "ł", "ś", "b"},
+			"[b, ć, d, f, ł, ś, ź]");
+	}
+
+	@Test
+	public void testPortugueseDialectSort() throws Exception {
+		testLocaleSort(
+			LocaleUtil.BRAZIL,
+			new String[] {
+				"a", "e", "c", "u", "à", "á", "é", "ã", "o", "õ", "ü", "ç"
+			},
+			"[a, á, à, ã, c, ç, e, é, o, õ, u, ü]");
 	}
 
 	@Test
@@ -62,6 +107,14 @@ public abstract class BaseSortTestCase extends BaseIndexingTestCase {
 		testDoubleFieldSortable(Field.PRIORITY);
 	}
 
+	@Test
+	public void testSpanishDialectSort() throws Exception {
+		testLocaleSort(
+			LocaleUtil.SPAIN,
+			new String[] {"a", "d", "c", "ch", "ll", "ñ", "p", "e"},
+			"[a, c, ch, d, e, ll, ñ, p]");
+	}
+
 	protected void addDocuments(
 			Function<Double, DocumentCreationHelper> function, double... values)
 		throws Exception {
@@ -71,13 +124,17 @@ public abstract class BaseSortTestCase extends BaseIndexingTestCase {
 		}
 	}
 
-	protected void assertOrder(Sort[] sorts, String fieldName, String expected)
+	protected void assertOrder(
+			Sort[] sorts, String fieldName, String expected, Locale locale)
 		throws Exception {
 
 		assertSearch(
 			indexingTestHelper -> {
 				indexingTestHelper.define(
-					searchContext -> searchContext.setSorts(sorts));
+					searchContext -> {
+						searchContext.setSorts(sorts);
+						searchContext.setLocale(locale);
+					});
 
 				indexingTestHelper.search();
 
@@ -86,14 +143,6 @@ public abstract class BaseSortTestCase extends BaseIndexingTestCase {
 						indexingTestHelper.getRequestString(), hits.getDocs(),
 						fieldName, expected));
 			});
-	}
-
-	protected void assertOrder(String fieldName, int sortType, String expected)
-		throws Exception {
-
-		assertOrder(
-			new Sort[] {new Sort(fieldName, sortType, false)}, fieldName,
-			expected);
 	}
 
 	protected void testDoubleField(String fieldName) throws Exception {
@@ -110,7 +159,9 @@ public abstract class BaseSortTestCase extends BaseIndexingTestCase {
 
 		addDocuments(function, values);
 
-		assertOrder(fieldName, Sort.DOUBLE_TYPE, "[1.0, 5.3, 10.0, 40.0]");
+		assertOrder(
+			new Sort[] {new Sort(fieldName, Sort.DOUBLE_TYPE, false)},
+			fieldName, "[1.0, 5.3, 10.0, 40.0]", null);
 	}
 
 	protected void testDoubleFieldSortable(String fieldName) throws Exception {
@@ -119,5 +170,27 @@ public abstract class BaseSortTestCase extends BaseIndexingTestCase {
 			value -> DocumentCreationHelpers.singleNumberSortable(
 				fieldName, value));
 	}
+
+	protected void testLocaleSort(
+			Locale locale, String[] values, String expected)
+		throws Exception {
+
+		String fieldName = Field.TITLE;
+
+		String fieldNameSortable =
+			fieldName + StringPool.UNDERLINE + LocaleUtil.toLanguageId(locale) +
+				_SORTABLE;
+
+		addDocuments(
+			value -> DocumentCreationHelpers.singleTextSortable(
+				fieldName, fieldNameSortable, value),
+			Arrays.asList(values));
+
+		assertOrder(
+			new Sort[] {new Sort(fieldNameSortable, Sort.STRING_TYPE, false)},
+			fieldName, expected, locale);
+	}
+
+	private static final String _SORTABLE = "_sortable";
 
 }

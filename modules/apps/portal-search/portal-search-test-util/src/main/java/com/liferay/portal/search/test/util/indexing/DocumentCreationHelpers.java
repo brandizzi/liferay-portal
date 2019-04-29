@@ -58,4 +58,13 @@ public class DocumentCreationHelpers {
 		return document -> document.addText(fieldName, values);
 	}
 
+	public static DocumentCreationHelper singleTextSortable(
+		String fieldName, String fieldNameSortable, String... values) {
+
+		return document -> {
+			document.addText(fieldName, values);
+			document.addText(fieldNameSortable, values);
+		};
+	}
+
 }
