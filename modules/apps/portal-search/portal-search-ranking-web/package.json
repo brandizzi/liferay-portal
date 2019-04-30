@@ -70,7 +70,7 @@
 			"<rootDir>/test/js/setup.js"
 		]
 	},
-	"main": "js/index.es.js",
+	"main": "js/index-synonym-sets.es.js",
 	"name": "portal-search-ranking-web",
 	"private": true,
 	"scripts": {
