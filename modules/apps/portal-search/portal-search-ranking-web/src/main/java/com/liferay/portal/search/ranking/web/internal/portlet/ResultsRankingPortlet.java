@@ -18,12 +18,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.search.legacy.searcher.SearchRequestBuilderFactory;
-import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.ranking.web.internal.constants.ResultsRankingPortletKeys;
-import com.liferay.portal.search.ranking.web.internal.display.context.ResultsRankingPortletDisplayContext;
 import com.liferay.portal.search.ranking.web.internal.display.context.SynonymSetsPortletDisplayContext;
-import com.liferay.portal.search.searcher.Searcher;
 import com.liferay.portal.search.synonym.SynonymIndexer;
 
 import java.io.IOException;
@@ -74,16 +70,6 @@ public class ResultsRankingPortlet extends MVCPortlet {
 		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
 			renderRequest);
 
-		ResultsRankingPortletDisplayContext
-			resultsRankingPortletDisplayContext =
-				new ResultsRankingPortletDisplayContext(
-					httpServletRequest, _language, _queries, renderRequest,
-					renderResponse, _searcher, _searchRequestBuilderFactory);
-
-		renderRequest.setAttribute(
-			ResultsRankingPortletKeys.RESULTS_RANKING_DISPLAY_CONTEXT,
-			resultsRankingPortletDisplayContext);
-
 		try {
 			SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext =
 				new SynonymSetsPortletDisplayContext(
@@ -106,15 +92,6 @@ public class ResultsRankingPortlet extends MVCPortlet {
 
 	@Reference
 	private Portal _portal;
-
-	@Reference
-	private Queries _queries;
-
-	@Reference
-	private Searcher _searcher;
-
-	@Reference
-	private SearchRequestBuilderFactory _searchRequestBuilderFactory;
 
 	@Reference
 	private SynonymIndexer _synonymIndexer;
