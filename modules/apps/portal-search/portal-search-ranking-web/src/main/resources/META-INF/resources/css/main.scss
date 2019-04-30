@@ -1,12 +1,5 @@
 @import "variables";
 
-.results-rankings-root, .results-ranking-modal-root {
-	@import 'alias';
-	@import 'empty_state';
-	@import 'list';
-	@import 'list_item';
-	@import 'modal';
+.synonym-sets-root {
 	@import 'multiselect';
-	@import 'page_toolbar';
-	@import 'results_ranking_form';
 }
