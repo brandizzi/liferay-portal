@@ -34,7 +34,7 @@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
 <portlet:defineObjects />
 
 <%
-String tabs = ParamUtil.getString(request, "tabs", "results-rankings");
+String tabs = ParamUtil.getString(request, "tabs", "synonym-sets");
 %>
 
 <clay:navigation-bar
@@ -42,18 +42,6 @@ String tabs = ParamUtil.getString(request, "tabs", "results-rankings");
 	navigationItems="<%=
 		new JSPNavigationItemList(pageContext) {
 			{
-				add(
-					navigationItem -> {
-						navigationItem.setActive(tabs.equals("results-rankings"));
-						navigationItem.setHref(renderResponse.createRenderURL(), "tabs", "results-rankings");
-						navigationItem.setLabel(LanguageUtil.get(request, "results-rankings"));
-					});
-				add(
-					navigationItem -> {
-						navigationItem.setActive(tabs.equals("field-weights"));
-						navigationItem.setHref(renderResponse.createRenderURL(), "tabs", "field-weights");
-						navigationItem.setLabel(LanguageUtil.get(request, "field-weights"));
-					});
 				add(
 					navigationItem -> {
 						navigationItem.setActive(tabs.equals("synonym-sets"));
@@ -66,12 +54,6 @@ String tabs = ParamUtil.getString(request, "tabs", "results-rankings");
 />
 
 <c:choose>
-	<c:when test='<%= tabs.equals("results-rankings") %>'>
-		<liferay-util:include page="/view_results_rankings.jsp" servletContext="<%= application %>" />
-	</c:when>
-	<c:when test='<%= tabs.equals("field-weights") %>'>
-		<liferay-util:include page="/field_mappings.jsp" servletContext="<%= application %>" />
-	</c:when>
 	<c:when test='<%= tabs.equals("synonym-sets") %>'>
 		<liferay-util:include page="/synonym-sets.jsp" servletContext="<%= application %>" />
 	</c:when>
