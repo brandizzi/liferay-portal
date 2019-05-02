@@ -6,6 +6,8 @@ import {withA11y} from '@storybook/addon-a11y';
 
 import Alias from 'components/alias/index.es';
 import ClayEmptyState from 'components/shared/ClayEmptyState.es';
+import Item from 'components/list/Item.es';
+import ItemDragPreview from 'components/list/ItemDragPreview.es';
 import List from 'components/list/index.es';
 import PageToolbar from 'components/PageToolbar.es';
 import ResultsRankingForm from 'components/ResultsRankingForm.es';
@@ -52,6 +54,7 @@ storiesOf('Main|ResultsRankingForm', module)
 				cancelUrl=""
 				fetchDocumentsHiddenUrl=""
 				fetchDocumentsUrl=""
+				formName="testFm"
 				saveActionUrl="#"
 				searchTerm={text('Search Term', 'example')}
 			/>
@@ -62,8 +65,9 @@ storiesOf('Main|ResultsRankingForm', module)
 		() => (
 			<ResultsRankingForm
 				cancelUrl=""
-				fetchDocumentsHiddenUrl="http://www.mocky.io/v2/5cabd9ab3000002900103266"
-				fetchDocumentsUrl="http://www.mocky.io/v2/5cabd1073000002900103260"
+				fetchDocumentsHiddenUrl="http://www.mocky.io/v2/5cd31439310000e29a339bbd"
+				fetchDocumentsUrl="http://www.mocky.io/v2/5cca1d49310000bf0312ce66"
+				formName="testFm"
 				initialAliases={['one', 'two', 'three']}
 				saveActionUrl="#"
 				searchTerm={text('Search Term', 'example')}
@@ -76,7 +80,16 @@ storiesOf('Components|PageToolbar', module)
 
 storiesOf('Components|Alias', module)
 	.addDecorator(withSheet)
-	.add('default', () => <Alias keywords={array('Keywords', [], ',')} />);
+	.add(
+		'default',
+		() => (
+			<Alias
+				keywords={array('Keywords', [], ',')}
+				onClickDelete={action('onClickDelete')}
+				onClickSubmit={action('onClickSubmit')}
+			/>
+		)
+	);
 
 storiesOf('Components|List', module)
 	.addDecorator(withSheet)
@@ -116,6 +129,48 @@ storiesOf('Components|List', module)
 				fetchDocumentsUrl=""
 				onAddResultSubmit={action('onAddResultSubmit')}
 				onLoadResults={action('load-results')}
+			/>
+		)
+	)
+	.add(
+		'item',
+		() => (
+			<div className="list-group">
+				<Item.DecoratedComponent
+					{...mockDataMap['1']}
+				/>
+
+				<Item.DecoratedComponent
+					{...mockDataMap['1']}
+					hidden
+					pinned={false}
+				/>
+
+				<Item.DecoratedComponent />
+
+				<Item.DecoratedComponent
+					date="Apr 18 2018, 11:04 AM"
+					title="Item with date only"
+				/>
+
+				<Item.DecoratedComponent
+					author="Test Test"
+					date="Apr 18 2018, 11:04 AM"
+					title="Item with date and title"
+				/>
+
+				<Item.DecoratedComponent
+					clicks="100"
+					title="Item with title and clicks"
+				/>
+			</div>
+		)
+	)
+	.add(
+		'item drag preview',
+		() => (
+			<ItemDragPreview
+				{...mockDataMap['1']}
 			/>
 		)
 	);

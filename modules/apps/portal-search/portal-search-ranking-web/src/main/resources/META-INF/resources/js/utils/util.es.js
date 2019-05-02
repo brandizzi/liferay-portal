@@ -10,6 +10,30 @@ export function insertAtIndex(list, index, item) {
 }
 
 /**
+ * Checks if a value is an array.
+ * @param {*} val The value to test.
+ */
+export function isArray(val) {
+	return Object.prototype.toString.call(val) === '[object Array]';
+}
+
+/**
+ * Checks if a value is null or undefined.
+ * @param {*} val The variable to check.
+ */
+export function isNil(val) {
+	return val == null;
+}
+
+/**
+ * Checks if a value is null.
+ * @param {*} val The value to check.
+ */
+export function isNull(val) {
+	return val === null;
+}
+
+/**
  * Removes an item at the specified index.
  * @param {Array} list The list the where an item will be removed.
  * @param {number} index The position where the item will be removed.
@@ -45,14 +69,6 @@ export function removeIdFromList(list = [], toRemove) {
 				curId !== toRemove;
 		}
 	);
-}
-
-/**
- * Checks if a value is an array.
- * @param {*} val The value to test.
- */
-export function isArray(val) {
-	return Object.prototype.toString.call(val) === '[object Array]';
 }
 
 /**

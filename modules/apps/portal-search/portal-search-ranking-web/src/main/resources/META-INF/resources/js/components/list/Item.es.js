@@ -1,14 +1,42 @@
 import ClayButton from 'components/shared/ClayButton.es';
 import ClayIcon from 'components/shared/ClayIcon.es';
 import DRAG_TYPES from 'utils/drag-types.es';
-import Dropdown from './Dropdown.es';
 import getCN from 'classnames';
-import React, {Component} from 'react';
+import ItemDropdown from './ItemDropdown.es';
+import React, {PureComponent} from 'react';
 import {DragSource as dragSource, DropTarget as dropTarget} from 'react-dnd';
 import {findDOMNode} from 'react-dom';
 import {getEmptyImage} from 'react-dnd-html5-backend';
+import {isNil} from 'utils/util.es';
+import {KEY_CODES} from 'utils/constants.es';
 import {PropTypes} from 'prop-types';
 import {sub} from 'utils/language.es';
+
+const HOVER_TYPES = {
+	BOTTOM: 'bottom',
+	TOP: 'top'
+};
+
+const ROOT_CLASS = 'list-item-root';
+
+/**
+ * Component used for displaying a pin icon when an item is pinned. This should
+ * be identical to the pin quick action button so that when hovered over, the
+ * icons should align exactly on top of each other. This icon should not be
+ * focusable or clickable.
+ */
+const ResultPinIconDisplay = () => (
+	<div className="quick-action-menu result-pin-icon-display">
+		<ClayButton
+			borderless
+			className="component-action quick-action-item"
+			iconName="pin"
+			monospaced
+			tabIndex="-1"
+			title={Liferay.Language.get('pinned-result')}
+		/>
+	</div>
+);
 
 /**
  * Passes the required values to the drop target and drag preview.
@@ -24,16 +52,17 @@ function beginDrag(
 		description,
 		extension,
 		hidden,
-		hoverIndex,
 		id,
 		index,
-		lastIndex,
+		onBlur,
 		pinned,
 		selected,
 		title,
 		type
 	}
 ) {
+	onBlur();
+
 	return {
 		author,
 		clicks,
@@ -41,10 +70,8 @@ function beginDrag(
 		description,
 		extension,
 		hidden,
-		hoverIndex,
 		id,
 		index,
-		lastIndex,
 		pinned,
 		selected,
 		title,
@@ -60,11 +87,30 @@ function beginDrag(
  * @returns {boolean} True if the target should accept the item.
  */
 function canDrop(props, monitor) {
-	const {hoverIndex, pinned} = props;
+	const {index: dropIndex, pinned} = props;
 
-	const {index: itemIndex} = monitor.getItem();
+	const {index: dragIndex} = monitor.getItem();
 
-	return pinned && itemIndex !== hoverIndex && itemIndex + 1 !== hoverIndex;
+	return pinned && dragIndex !== dropIndex;
+}
+
+/**
+ * Passes necessary values for the `endDrag` method.
+ *
+ * hoveringBelow: For determining if the index should be +1 if below.
+ * index: For the position of where the move the dragged item.
+ *
+ * @param {Object} props The current props of the component being dropped.
+ * @param {DropTargetMonitor} monitor
+ * @param {DragDropContainer} component The drop target component.
+ */
+function drop({index}, monitor, component) {
+	const decoratedComponent = component.getDecoratedComponentInstance();
+
+	return {
+		hoverPosition: decoratedComponent.state.hoverPosition,
+		index
+	};
 }
 
 /**
@@ -75,52 +121,80 @@ function canDrop(props, monitor) {
  * @param {DropTargetMonitor} monitor
  */
 function endDrag(props, monitor) {
-	const {hoverIndex, onMove} = props;
+	const {onFocus, onMove} = props;
 
-	const {index: itemIndex} = monitor.getItem();
+	const {index: dragIndex} = monitor.getItem();
 
 	if (monitor.didDrop()) {
-		onMove(itemIndex, hoverIndex);
-	}
+		const {hoverPosition, index: dropIndex} = monitor.getDropResult();
 
-	props.onDragHover(null);
+		const destIndex = hoverPosition === HOVER_TYPES.TOP ?
+			dropIndex :
+			dropIndex + 1;
+
+		const focusIndex = dragIndex < destIndex ?
+			destIndex - 1 :
+			destIndex;
+
+		if (hoverPosition !== null) {
+			onMove(dragIndex, destIndex);
+		}
+
+		onFocus(hoverPosition !== null ? focusIndex : dragIndex);
+	}
+	else {
+		onFocus(dragIndex);
+	}
 }
 
 /**
- * Updates the hover indicator line.
+ * Updates the hover indicator line. Performs logic to hide the hover indicator
+ * for hovering over a different item, but moving to the same index. This is
+ * done here instead of ideally in `canDrop` so the state doesn't need to be
+ * lifted to a parent component. This also means though that everywhere we
+ * depend on `canDrop` we have to also have to check `hoverPosition !== null`.
+ *
  * @param {Object} props The component's current props.
  * @param {DropTargetMonitor} monitor
  * @param {DragDropContainer} component The component being hovered over.
  */
 function hover(props, monitor, component) {
-	const {index, onDragHover} = props;
+	const {index: dropIndex} = props;
 
-	if (isHoverAbove(monitor, component)) {
-		onDragHover(index);
+	const {index: dragIndex} = monitor.getItem();
+
+	const hoverAbove = isHoverAbove(monitor, component);
+
+	const destIndex = hoverAbove ? dropIndex - 1 : dropIndex + 1;
+
+	if (dragIndex === destIndex) {
+		component.setState({hoverPosition: null});
+	}
+	else if (hoverAbove) {
+		component.setState({hoverPosition: HOVER_TYPES.TOP});
 	}
 	else {
-		onDragHover(index + 1);
+		component.setState({hoverPosition: HOVER_TYPES.BOTTOM});
 	}
 }
 
 /**
  * A helper method for drag and drop methods.
- * Checks if the mouse is hovering over an item's top-half.
+ *
+ * Checks if the mouse is hovering over an item's top-half by:
+ * 1) hoverMiddleY: Get vertical middle.
+ * 2) clientOffset: Determine mouse position.
+ * 3) hoverClientY: Get pixels to the top.
+ *
  * @param {DropTargetMonitor} monitor
  * @param {DragDropContainer} component The component being hovered over.
  */
 function isHoverAbove(monitor, component) {
 	const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
 
-	// Get vertical middle
-
 	const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
 
-	// Determine mouse position
-
 	const clientOffset = monitor.getClientOffset();
-
-	// Get pixels to the top
 
 	const hoverClientY = clientOffset.y - hoverBoundingRect.top;
 
@@ -132,11 +206,10 @@ const DND_PROPS = {
 	connectDragPreview: PropTypes.func,
 	connectDragSource: PropTypes.func,
 	connectDropTarget: PropTypes.func,
-	dragging: PropTypes.bool,
-	hovering: PropTypes.bool
+	dragging: PropTypes.bool
 };
 
-class Item extends Component {
+class Item extends PureComponent {
 	static propTypes = {
 		...DND_PROPS,
 		addedResult: PropTypes.bool,
@@ -145,19 +218,20 @@ class Item extends Component {
 		date: PropTypes.string,
 		description: PropTypes.string,
 		extension: PropTypes.string,
+		focus: PropTypes.bool,
 		hidden: PropTypes.bool,
-		hoverIndex: PropTypes.number,
 		id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 		index: PropTypes.number,
 		initialPinned: PropTypes.number,
-		lastIndex: PropTypes.number,
+		onBlur: PropTypes.func,
 		onClickHide: PropTypes.func,
 		onClickPin: PropTypes.func,
-		onDragHover: PropTypes.func,
+		onFocus: PropTypes.func,
 		onMove: PropTypes.func,
 		onRemoveSelect: PropTypes.func,
 		onSelect: PropTypes.func,
 		pinned: PropTypes.bool,
+		reorder: PropTypes.bool,
 		searchTerm: PropTypes.string,
 		selected: PropTypes.bool,
 		title: PropTypes.string,
@@ -166,13 +240,24 @@ class Item extends Component {
 	};
 
 	static defaultProps = {
+		author: '',
 		connectDragPreview: val => val,
 		connectDragSource: val => val,
-		connectDropTarget: val => val
+		connectDropTarget: val => val,
+		date: '',
+		onBlur: () => {},
+		onFocus: () => {},
+		onMove: () => {},
+		onRemoveSelect: () => {},
+		onSelect: () => {},
+		title: '-',
+		type: ''
 	};
 
+	rootRef = React.createRef();
+
 	state = {
-		hovering: false
+		hoverPosition: null
 	};
 
 	/**
@@ -196,36 +281,80 @@ class Item extends Component {
 		}
 	}
 
+	/**
+	 * Use HTMLElement focus method so that pressing tab will focus starting
+	 * from the currently focused item. This is needed when using arrow keys to
+	 * change focus between items.
+	 * @param {Object} prevProps The previous props before updating.
+	 */
+	componentDidUpdate(prevProps) {
+		const {focus} = this.props;
+
+		if (prevProps.focus !== focus && focus) {
+			this.rootRef.current.focus();
+		}
+	}
+
 	_handleAddedResultMouseOver = event => {
 		const message = Liferay.Language.get('added-results-cannot-be-hidden');
 
 		Liferay.Portal.ToolTip.show(event.currentTarget, message);
 	};
 
-	_handleMouseEnter = () => {
-		this.setState({hovering: true});
+	_handleBlur = () => {
+		this.props.onBlur();
+	}
+
+	_handleFocus = event => {
+		if (event.target.classList.contains(ROOT_CLASS)) {
+			const {index, onFocus} = this.props;
+
+			onFocus(index);
+		}
+	}
+
+	_handleHide = () => {
+		const {hidden, id, onBlur, onClickHide, onRemoveSelect} = this.props;
+
+		onRemoveSelect([id]);
+
+		onClickHide([id], !hidden);
+
+		if (onBlur) {
+			onBlur();
+		}
 	};
 
-	_handleMouseLeave = () => {
-		this.setState({hovering: false});
+	_handleKeyDown = event => {
+		const {focus} = this.props;
+
+		if (focus) {
+			if (event.key === KEY_CODES.S) {
+				this._handleSelect();
+			}
+			else if (event.key === KEY_CODES.P) {
+				this._handlePin();
+			}
+			else if (event.key === KEY_CODES.H) {
+				this._handleHide();
+			}
+		}
+	}
+
+	_handlePin = () => {
+		const {addedResult, id, onClickPin, onRemoveSelect, pinned} = this.props;
+
+		if (addedResult) {
+			onRemoveSelect([id]);
+		}
+
+		onClickPin([id], !pinned);
 	};
 
 	_handleSelect = () => {
-		this.props.onSelect(this.props.id);
-	};
+		const {id, onSelect} = this.props;
 
-	_handlePin = () => {
-		if (this.props.addedResult) {
-			this.props.onRemoveSelect([this.props.id]);
-		}
-
-		this.props.onClickPin([this.props.id], !this.props.pinned);
-	};
-
-	_handleHide = () => {
-		this.props.onRemoveSelect([this.props.id]);
-
-		this.props.onClickHide([this.props.id], !this.props.hidden);
+		onSelect(id);
 	};
 
 	_renderDescription = () => {
@@ -259,14 +388,14 @@ class Item extends Component {
 			date,
 			dragging,
 			extension,
+			focus,
 			hidden,
-			hoverIndex,
 			id,
-			index,
-			lastIndex,
 			onClickHide,
 			onClickPin,
+			over,
 			pinned,
+			reorder,
 			selected,
 			style,
 			title,
@@ -274,7 +403,7 @@ class Item extends Component {
 			url
 		} = this.props;
 
-		const {hovering} = this.state;
+		const {hoverPosition} = this.state;
 
 		const colorScheme = {
 			doc: 'blue',
@@ -293,17 +422,23 @@ class Item extends Component {
 		);
 
 		const listClasses = getCN(
-			'list-item-root',
+			ROOT_CLASS,
 			'list-group-item',
 			'list-group-item-flex',
 			{
-				'list-item-drag-hover': canDrop && index === hoverIndex,
-				'list-item-drag-hover-below':
-					index + 1 === hoverIndex && hoverIndex === lastIndex,
+				'item-drop-indicator-above': over &&
+					canDrop &&
+					hoverPosition === HOVER_TYPES.TOP,
+				'item-drop-indicator-below': over &&
+					canDrop &&
+					hoverPosition === HOVER_TYPES.BOTTOM,
 				'list-item-dragging': dragging,
+				'list-item-has-clicks': !isNil(clicks),
 				'results-ranking-item-added-result': addedResult,
+				'results-ranking-item-focus': focus,
 				'results-ranking-item-hidden': hidden,
-				'results-ranking-item-pinned': pinned
+				'results-ranking-item-pinned': pinned,
+				'results-ranking-item-reorder': reorder
 			}
 		);
 
@@ -311,9 +446,12 @@ class Item extends Component {
 			<li
 				className={listClasses}
 				data-testid={id}
-				onMouseEnter={this._handleMouseEnter}
-				onMouseLeave={this._handleMouseLeave}
+				onBlur={this._handleBlur}
+				onFocus={this._handleFocus}
+				onKeyDown={this._handleKeyDown}
+				ref={this.rootRef}
 				style={style}
+				tabIndex={0}
 			>
 				<div
 					className="autofit-col result-drag"
@@ -331,6 +469,7 @@ class Item extends Component {
 					<div className="custom-control custom-checkbox">
 						<label>
 							<input
+								aria-label={Liferay.Language.get('select')}
 								checked={selected}
 								className="custom-control-input"
 								onChange={this._handleSelect}
@@ -344,52 +483,60 @@ class Item extends Component {
 
 				<div className="autofit-col">
 					<span className={classSticker}>
-						{extension ? (
-							extension.toUpperCase()
-						) : (
+						{extension ?
+							extension.toUpperCase() :
 							<ClayIcon iconName="web-content" />
-						)}
+						}
 					</span>
 				</div>
 
 				<div className="autofit-col autofit-col-expand">
 					<section className="autofit-section">
-						<h4 className="list-group-title">
+						<div className="list-group-title">
 							<span className="text-truncate-inline">
 								{url ? <a href={url}>{title}</a> : title}
 							</span>
-						</h4>
+						</div>
 
-						<p className="list-group-subtext">
-							{`${author} - ${date}`}
-						</p>
+						{(author || date) &&
+							<p className="list-group-subtext">
+								{author && <span className="author">{author}</span>}
 
-						<p className="list-group-subtext">{`[${type}]`}</p>
+								{date && <span className="date">{date}</span>}
+							</p>
+						}
+
+						{type &&
+							<p className="list-group-subtext">{`[${type}]`}</p>
+						}
 
 						{this._renderDescription()}
 					</section>
 				</div>
 
-				{onClickHide && (
-					<div className="autofit-col">
-						<div className="result-hide">
-							{addedResult ? (
+				<div className="autofit-col">
+					{pinned && <ResultPinIconDisplay />}
+
+					<div className="quick-action-menu">
+						{onClickHide && (
+							addedResult ? (
 								<span
 									className="disabled-button-tooltip"
 									onMouseOver={this._handleAddedResultMouseOver}
 								>
 									<ClayButton
 										borderless
-										className="component-action lfr-portal-tooltip"
+										className="component-action quick-action-item lfr-portal-tooltip"
 										disabled
 										iconName="hidden"
 										monospaced
+										title={Liferay.Language.get('hide-result')}
 									/>
 								</span>
 							) : (
 								<ClayButton
 									borderless
-									className="component-action"
+									className="component-action quick-action-item"
 									iconName={hidden ? 'view' : 'hidden'}
 									monospaced
 									onClick={this._handleHide}
@@ -398,18 +545,14 @@ class Item extends Component {
 										Liferay.Language.get('hide-result')
 									}
 								/>
-							)}
-						</div>
-					</div>
-				)}
+							)
+						)}
 
-				{onClickPin && (
-					<div className="autofit-col">
-						<div className="result-pin">
+						{onClickPin && (
 							<ClayButton
 								borderless
-								className="component-action"
-								iconName={hovering && pinned ? 'unpin' : 'pin'}
+								className="component-action quick-action-item"
+								iconName={pinned ? 'unpin' : 'pin'}
 								monospaced
 								onClick={this._handlePin}
 								title={pinned ?
@@ -417,29 +560,27 @@ class Item extends Component {
 									Liferay.Language.get('pin-result')
 								}
 							/>
-						</div>
+						)}
 					</div>
-				)}
 
-				{onClickPin && onClickHide && (
-					<div className="autofit-col">
-						<Dropdown
-							addedResult={addedResult}
-							hidden={hidden}
-							onClickHide={this._handleHide}
-							onClickPin={this._handlePin}
-							pinned={pinned}
-						/>
-					</div>
-				)}
-
-				<div className="click-count list-group-text sticker-bottom-right">
-					{sub(
-						Liferay.Language.get('clicks-x'),
-						[<b key="CLICK_COUNT">{clicks}</b>],
-						false
-					)}
+					<ItemDropdown
+						addedResult={addedResult}
+						hidden={hidden}
+						onClickHide={this._handleHide}
+						onClickPin={this._handlePin}
+						pinned={pinned}
+					/>
 				</div>
+
+				{!isNil(clicks) &&
+					<div className="click-count list-group-text sticker-bottom-right">
+						{sub(
+							Liferay.Language.get('clicks-x'),
+							[<b key="CLICK_COUNT">{clicks}</b>],
+							false
+						)}
+					</div>
+				}
 			</li>
 		);
 	}
@@ -462,10 +603,12 @@ export default dropTarget(
 	DRAG_TYPES.LIST_ITEM,
 	{
 		canDrop,
+		drop,
 		hover
 	},
 	(connect, monitor) => ({
 		canDrop: monitor.canDrop(),
-		connectDropTarget: connect.dropTarget()
+		connectDropTarget: connect.dropTarget(),
+		over: monitor.isOver()
 	})
 )(ItemWithDrag);

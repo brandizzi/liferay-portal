@@ -348,13 +348,11 @@ class AddResult extends Component {
 										<div className="input-group">
 											<div className="input-group-item">
 												<input
-													aria-label="Search for"
+													aria-label={Liferay.Language.get('search-your-engine')}
 													className="form-control input-group-inset input-group-inset-after"
 													onChange={this._handleSearchChange}
 													onKeyDown={this._handleSearchKeyDown}
-													placeholder={Liferay.Language.get(
-														'search-your-engine'
-													)}
+													placeholder={Liferay.Language.get('search-your-engine')}
 													type="text"
 													value={addResultSearchTerm}
 												/>
@@ -394,7 +392,7 @@ class AddResult extends Component {
 														<div className="custom-control custom-checkbox">
 															<label>
 																<input
-																	aria-label="Checkbox for search results"
+																	aria-label={Liferay.Language.get('select-all')}
 																	checked={this._getCurrentResultSelectedIds().length === results.items.length}
 																	className="custom-control-input"
 																	onChange={this._handleAllCheckbox}
@@ -447,7 +445,7 @@ class AddResult extends Component {
 
 										<ul className="list-group" data-testid="add-result-items">
 											{results.items.map(
-												result => (
+												(result, index) => (
 													<Item
 														author={result.author}
 														clicks={result.clicks}
@@ -455,6 +453,7 @@ class AddResult extends Component {
 														extension={result.extension}
 														hidden={result.hidden}
 														id={result.id}
+														index={index}
 														key={result.id}
 														onSelect={this._handleSelect}
 														selected={addResultSelectedIds.includes(result.id)}

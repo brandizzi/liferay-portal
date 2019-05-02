@@ -8,6 +8,10 @@
 		line-height: 21px;
 	}
 
+	&:focus {
+		outline: none;
+	}
+
 	/**
 	* This is a fix for mouse events to properly fire for disabled buttons.
 	* Otherwise, the tooltip will not hide after leaving the button.
@@ -41,6 +45,18 @@
 		margin-top: 8px;
 	}
 
+	.list-group-subtext {
+		.author + .date {
+			&:before {
+				content: ' - ';
+			}
+		}
+	}
+
+	.quick-action-menu {
+		background-color: transparent;
+	}
+
 	.result-drag {
 		padding: 0;
 
@@ -60,14 +76,42 @@
 		}
 	}
 
-	.result-pin, .result-hide {
-		visibility: hidden;
+	.result-pin-icon-display {
+		display: flex;
+
+		button {
+			color: $main;
+			pointer-events: none;
+		}
 	}
 
 	&:hover {
-		.result-pin, .result-hide {
-			visibility: visible;
+		.quick-action-menu.result-pin-icon-display {
+			display: none;
 		}
+	}
+
+	&.item-drop-indicator-above:before {
+		background-color: $primary;
+		content: '';
+		height: 4px;
+		left: 0;
+		position: absolute;
+		top: -2px;
+		width: 100%;
+		z-index: 1;
+	}
+
+	&.item-drop-indicator-below:after {
+		background-color: $primary;
+		bottom: -3px;
+		content: '';
+		height: 4px;
+		left: 0;
+		opacity: 1;
+		position: absolute;
+		width: 100%;
+		z-index: 1;
 	}
 
 	&.list-item-drag-hover {
@@ -86,18 +130,21 @@
 		opacity: 0.4;
 	}
 
-	&.results-ranking-item-pinned {
-		.result-pin {
-			visibility: visible;
+	&.list-item-has-clicks {
+		min-height: 96px;
+	}
 
-			button {
-				color: $main;
-			}
-		}
+	&.results-ranking-item-focus {
+		border-color: transparent;
+		border-radius: 2px;
+		box-shadow: 0 0 0 0.125rem $white, 0 0 0 0.25rem $primaryL2;
+		z-index: 2;
 
-		&:hover {
-			.result-pin button {
-				color: inherit;
+		&.results-ranking-item-reorder {
+			background-color: $primaryL4;
+
+			.result-drag-sticker {
+				background-color: $primaryL4;
 			}
 		}
 	}
