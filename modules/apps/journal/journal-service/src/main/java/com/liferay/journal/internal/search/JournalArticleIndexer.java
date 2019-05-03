@@ -53,7 +53,6 @@ import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.QueryFilter;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
-import com.liferay.portal.kernel.search.highlight.HighlightUtil;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
@@ -77,6 +76,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.search.batch.BatchIndexingHelper;
 import com.liferay.portal.search.filter.DateRangeFilterBuilder;
 import com.liferay.portal.search.filter.FilterBuilders;
+import com.liferay.portal.search.highlight.HighlightHelper;
 import com.liferay.portal.search.index.IndexStatusManager;
 import com.liferay.portal.search.localization.SearchLocalizationHelper;
 import com.liferay.trash.TrashHelper;
@@ -763,12 +763,12 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 
 			Set<String> highlights = new HashSet<>();
 
-			HighlightUtil.addSnippet(document, highlights, snippet, "temp");
+			_highlightHelper.addSnippet(document, highlights, snippet, "temp");
 
-			content = HighlightUtil.highlight(
+			content = _highlightHelper.highlight(
 				content, ArrayUtil.toStringArray(highlights),
-				HighlightUtil.HIGHLIGHT_TAG_OPEN,
-				HighlightUtil.HIGHLIGHT_TAG_CLOSE);
+				HighlightHelper.HIGHLIGHT_TAG_OPEN,
+				HighlightHelper.HIGHLIGHT_TAG_CLOSE, snippetLocale);
 		}
 		catch (Exception e) {
 			if (_log.isDebugEnabled()) {
@@ -971,7 +971,7 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 	};
 
 	private static final String[] _HIGHLIGHT_TAGS = {
-		HighlightUtil.HIGHLIGHT_TAG_OPEN, HighlightUtil.HIGHLIGHT_TAG_CLOSE
+		HighlightHelper.HIGHLIGHT_TAG_OPEN, HighlightHelper.HIGHLIGHT_TAG_CLOSE
 	};
 
 	private static final Log _log = LogFactoryUtil.getLog(
@@ -987,6 +987,9 @@ public class JournalArticleIndexer extends BaseIndexer<JournalArticle> {
 
 	@Reference
 	private FilterBuilders _filterBuilders;
+
+	@Reference
+	private HighlightHelper _highlightHelper;
 
 	@Reference
 	private Html _html;
