@@ -18,12 +18,12 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Summary;
-import com.liferay.portal.kernel.search.highlight.HighlightUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Html;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.highlight.HighlightHelper;
 import com.liferay.portal.search.spi.model.result.contributor.ModelSummaryContributor;
 
 import java.util.HashSet;
@@ -73,12 +73,12 @@ public class LayoutModelSummaryContributor implements ModelSummaryContributor {
 
 		Set<String> highlights = new HashSet<>();
 
-		HighlightUtil.addSnippet(document, highlights, snippet, "temp");
+		_highlightHelper.addSnippet(document, highlights, snippet, "temp");
 
-		content = HighlightUtil.highlight(
+		content = _highlightHelper.highlight(
 			content, ArrayUtil.toStringArray(highlights),
-			HighlightUtil.HIGHLIGHT_TAG_OPEN,
-			HighlightUtil.HIGHLIGHT_TAG_CLOSE);
+			HighlightHelper.HIGHLIGHT_TAG_OPEN,
+			HighlightHelper.HIGHLIGHT_TAG_CLOSE, locale);
 
 		Summary summary = new Summary(locale, name, content);
 
@@ -92,8 +92,11 @@ public class LayoutModelSummaryContributor implements ModelSummaryContributor {
 	};
 
 	private static final String[] _HIGHLIGHT_TAGS = {
-		HighlightUtil.HIGHLIGHT_TAG_OPEN, HighlightUtil.HIGHLIGHT_TAG_CLOSE
+		HighlightHelper.HIGHLIGHT_TAG_OPEN, HighlightHelper.HIGHLIGHT_TAG_CLOSE
 	};
+
+	@Reference
+	private HighlightHelper _highlightHelper;
 
 	@Reference
 	private Html _html;
