@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.test.util;
 
+import com.liferay.petra.string.StringPool;
+import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONObject;
 
@@ -58,7 +60,8 @@ public class AssertUtils {
 
 		Collections.sort(list);
 
-		return list.toString();
+		return StringPool.OPEN_BRACKET + StringUtil.merge(list, ",") +
+			StringPool.CLOSE_BRACKET;
 	}
 
 	private static String _toString(JSONObject jsonObject) {
@@ -67,12 +70,13 @@ public class AssertUtils {
 
 		keys.forEachRemaining(
 			key -> {
-				list.add(key + ":" + _toString(jsonObject.get(key)));
+				list.add(_toString(key) + ":" + _toString(jsonObject.get(key)));
 			});
 
 		Collections.sort(list);
 
-		return list.toString();
+		return StringPool.OPEN_CURLY_BRACE + StringUtil.merge(list, ",") +
+			StringPool.CLOSE_CURLY_BRACE;
 	}
 
 	private static String _toString(Map<?, ?> map) {
@@ -94,9 +98,19 @@ public class AssertUtils {
 		else if (object instanceof JSONArray) {
 			return _toString((JSONArray)object);
 		}
+		else if (object instanceof String) {
+			return _toString((String)object);
+		}
 		else {
 			return object.toString();
 		}
+	}
+
+	private static String _toString(String string) {
+		String escapedString = string.replace(
+			StringPool.QUOTE, StringPool.BACK_SLASH + StringPool.QUOTE);
+
+		return StringPool.QUOTE + escapedString + StringPool.QUOTE;
 	}
 
 }
