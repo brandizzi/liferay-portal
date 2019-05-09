@@ -38,7 +38,7 @@ public class ElasticsearchIndexInformationTest {
 	public void setUp() throws Exception {
 		setUpElasticsearchFixture();
 
-		setUpCompanyIndexFactoryFixture();
+		setUpIndexFixture();
 		setUpElasticsearchIndexInformation();
 	}
 
@@ -49,9 +49,9 @@ public class ElasticsearchIndexInformationTest {
 
 	@Test
 	public void testGetCompanyIndexName() throws Exception {
-		_companyIndexFactoryFixture.createIndices();
-
 		long companyId = RandomTestUtil.randomLong();
+
+		_indexFixture.createIndex(getIndexNameBuilder(companyId));
 
 		Assert.assertEquals(
 			getIndexNameBuilder(companyId),
@@ -60,28 +60,36 @@ public class ElasticsearchIndexInformationTest {
 
 	@Test
 	public void testGetFieldMappings() throws Exception {
-		_companyIndexFactoryFixture.createIndices();
+		long companyId = 123;
+
+		String indexName = getIndexNameBuilder(companyId);
+
+		_indexFixture.createIndex(indexName);
+
+		JSONObject typeMappingsJSONObject = loadJSONObject(
+			testName.getMethodName());
+
+		_indexFixture.addTypeMappings(indexName, typeMappingsJSONObject);
 
 		String fieldMappings = _elasticsearchIndexInformation.getFieldMappings(
-			_companyIndexFactoryFixture.getIndexName());
+			indexName);
 
-		JSONObject expectedJSONObject = loadJSONObject(
-			testName.getMethodName());
 		JSONObject actualJSONObject = _jsonFactory.createJSONObject(
 			fieldMappings);
 
-		AssertUtils.assertEquals("", expectedJSONObject, actualJSONObject);
+		AssertUtils.assertEquals("", typeMappingsJSONObject, actualJSONObject);
 	}
 
 	@Test
 	public void testGetIndexNames() throws Exception {
-		_companyIndexFactoryFixture.createIndices();
+		String indexName = "test-index";
+
+		_indexFixture.createIndex(indexName);
 
 		String[] indexNames = _elasticsearchIndexInformation.getIndexNames();
 
 		Assert.assertEquals(indexNames.toString(), 1, indexNames.length);
-		Assert.assertEquals(
-			_companyIndexFactoryFixture.getIndexName(), indexNames[0]);
+		Assert.assertEquals(indexName, indexNames[0]);
 	}
 
 	@Rule
@@ -97,11 +105,6 @@ public class ElasticsearchIndexInformationTest {
 			"ElasticsearchIndexInformationTest-" + suffix + ".json");
 
 		return _jsonFactory.createJSONObject(json);
-	}
-
-	protected void setUpCompanyIndexFactoryFixture() {
-		_companyIndexFactoryFixture = new CompanyIndexFactoryFixture(
-			_elasticsearchFixture, testName.getMethodName());
 	}
 
 	protected void setUpElasticsearchFixture() throws Exception {
@@ -122,9 +125,13 @@ public class ElasticsearchIndexInformationTest {
 		};
 	}
 
-	private CompanyIndexFactoryFixture _companyIndexFactoryFixture;
+	protected void setUpIndexFixture() {
+		_indexFixture = new IndexFixture(_elasticsearchFixture);
+	}
+
 	private ElasticsearchFixture _elasticsearchFixture;
 	private ElasticsearchIndexInformation _elasticsearchIndexInformation;
+	private IndexFixture _indexFixture;
 	private final JSONFactory _jsonFactory = new JSONFactoryImpl();
 
 }
