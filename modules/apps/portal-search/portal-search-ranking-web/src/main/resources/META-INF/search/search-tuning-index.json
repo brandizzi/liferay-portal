@@ -1,0 +1,55 @@
+{
+	"mappings": {
+		"_doc": {
+			"properties": {
+				"aliases": {
+					"store": true,
+					"type": "keyword"
+				},
+				"displayDate": {
+					"format": "yyyyMMddHHmmss",
+					"store": true,
+					"type": "date"
+				},
+				"hidden_documents": {
+					"store": true,
+					"type": "keyword"
+				},
+				"index": {
+					"store": true,
+					"type": "keyword"
+				},
+				"modified": {
+					"format": "yyyyMMddHHmmss",
+					"store": true,
+					"type": "date"
+				},
+				"pins" : {
+					"properties" : {
+						"position" : {
+							"store": true,
+							"type" : "integer"
+						},
+						"uid" : {
+							"store": true,
+							"type" : "keyword"
+						}
+					},
+					"type" : "nested"
+				},
+				"queryString": {
+					"store": true,
+					"type": "keyword"
+				},
+				"status": {
+					"store": true,
+					"type": "keyword"
+				},
+				"uid": {
+					"store": true,
+					"type": "keyword"
+				}
+			}
+		}
+	}
+}
