@@ -47,8 +47,7 @@ Export-Package:\
 	com.liferay.portal.search.sort,\
 	com.liferay.portal.search.stats,\
 	com.liferay.portal.search.suggest,\
-	com.liferay.portal.search.summary,\
-	com.liferay.portal.search.synonym
+	com.liferay.portal.search.summary
 Import-Package:\
 	com.liferay.portal.kernel.search;version="[7.1.0,8.1.0)",\
 	\
