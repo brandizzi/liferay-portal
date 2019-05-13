@@ -67,21 +67,27 @@ public class RankingEntryDisplayContextBuilder {
 		}
 	}
 
-	private void _setAliases(
-		RankingEntryDisplayContext rankingEntryDisplayContext) {
-
-		Object value = _document.getValue("aliases");
-
-		List<Object> aliases = new ArrayList<>();
+	private List<Object> _getListObject(Object value) {
+		List<Object> values = new ArrayList<>();
 
 		if (value != null) {
 			if (value instanceof List) {
-				aliases = (List<Object>)value;
+				values = (List<Object>) value;
 			}
 			else {
-				aliases.add(value);
+				values.add(value);
 			}
+		}
 
+		return values;
+	}
+
+	private void _setAliases(
+		RankingEntryDisplayContext rankingEntryDisplayContext) {
+
+		List<Object> aliases = _getListObject(_document.getValue("aliases"));
+
+		if (!aliases.isEmpty()) {
 			rankingEntryDisplayContext.setAliases(
 				StringUtil.merge(aliases, StringPool.COMMA_AND_SPACE));
 		}
@@ -99,8 +105,8 @@ public class RankingEntryDisplayContextBuilder {
 	private void _setHiddenResultsCount(
 		RankingEntryDisplayContext rankingEntryDisplayContext) {
 
-		List<Object> values = (List<Object>)_document.getValue(
-			"hidden_documents");
+		List<Object> values = _getListObject(_document.getValue(
+			"hidden_documents"));
 
 		int size = 0;
 
@@ -133,8 +139,8 @@ public class RankingEntryDisplayContextBuilder {
 	private void _setPinnedResultsCount(
 		RankingEntryDisplayContext rankingEntryDisplayContext) {
 
-		List<Object> values = (List<Object>)_document.getValue(
-			"pinned_documents");
+		List<Object> values = _getListObject(_document.getValue(
+			"pinned_documents"));
 
 		int size = 0;
 

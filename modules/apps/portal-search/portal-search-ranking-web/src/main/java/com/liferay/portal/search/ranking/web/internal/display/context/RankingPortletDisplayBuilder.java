@@ -277,20 +277,22 @@ public class RankingPortletDisplayBuilder {
 				add(
 					dropdownItem -> {
 						dropdownItem.setActive(
+							Objects.equals(_getOrderByCol(), "keywords"));
+						dropdownItem.setHref(
+							portletURL, "orderByCol", "keywords");
+						dropdownItem.setLabel(
+							LanguageUtil.get(
+								_httpServletRequest, "search-term"));
+					});
+				add(
+					dropdownItem -> {
+						dropdownItem.setActive(
 							Objects.equals(_getOrderByCol(), "modified-date"));
 						dropdownItem.setHref(
 							portletURL, "orderByCol", "modified-date");
 						dropdownItem.setLabel(
 							LanguageUtil.get(
 								_httpServletRequest, "modified-date"));
-					});
-				add(
-					dropdownItem -> {
-						dropdownItem.setActive(
-							Objects.equals(_getOrderByCol(), "name"));
-						dropdownItem.setHref(portletURL, "orderByCol", "name");
-						dropdownItem.setLabel(
-							LanguageUtil.get(_httpServletRequest, "name"));
 					});
 			}
 		};
@@ -332,8 +334,12 @@ public class RankingPortletDisplayBuilder {
 	}
 
 	private SearchContainer<RankingEntryDisplayContext> _search() {
+		SearchContainer<RankingEntryDisplayContext> searchContainer =
+			getSearchContainer(getKeywords());
+
 		SearchRankingRequest searchRankingRequest = new SearchRankingRequest(
-			_queries, _searchEngineAdapter);
+			_httpServletRequest, _queries, searchContainer,
+			_searchEngineAdapter);
 
 		SearchRankingResponse searchRankingResponse =
 			searchRankingRequest.search();
@@ -341,9 +347,6 @@ public class RankingPortletDisplayBuilder {
 		SearchHits searchHits = searchRankingResponse.getSearchHits();
 
 		List<SearchHit> searchHitList = searchHits.getSearchHits();
-
-		SearchContainer<RankingEntryDisplayContext> searchContainer =
-			getSearchContainer(getKeywords());
 
 		searchContainer.setResults(
 			getRankingEntryDisplayContexts(searchHitList));
