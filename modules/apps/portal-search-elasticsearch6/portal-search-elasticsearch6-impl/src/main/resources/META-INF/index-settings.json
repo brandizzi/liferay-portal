@@ -14,14 +14,6 @@
 			"keyword_lowercase": {
 				"filter": "lowercase",
 				"tokenizer": "keyword"
-			},
-			"standard_liferay": {
-				"filter": [
-					"english_stop",
-					"english_synonyms",
-					"lowercase"
-				],
-				"tokenizer": "standard"
 			}
 		},
 		"filter": {
