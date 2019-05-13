@@ -12,19 +12,6 @@
 		outline: none;
 	}
 
-	/**
-	* This is a fix for mouse events to properly fire for disabled buttons.
-	* Otherwise, the tooltip will not hide after leaving the button.
-	*/
-
-	.disabled-button-tooltip {
-		cursor: not-allowed;
-
-		button {
-			pointer-events: none;
-		}
-	}
-
 	.icon-grey {
 		background-color: $mainLighten28;
 	}

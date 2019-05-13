@@ -72,19 +72,26 @@ export function removeIdFromList(list = [], toRemove) {
 }
 
 /**
- * Creates an object that maps the data id to corresponding object.
+ * Converts an array of search result objects to a map of id to result object.
+ * If an id already exists in the dataMap it will be ignored.
+ * Use `updateDataMap` to update specific ids.
  * @param {Array} resultsData The items in search results.
+ * @param {Object} initialMap The initial map data to prevent overwrites.
  * @return {Object} The new object that uses id as the key.
  */
-export function resultsDataToMap(resultsData) {
+export function resultsDataToMap(resultsData, initialMap = {}) {
 	return resultsData.reduce(
-		(acc, cur) => (
-			{
-				...acc,
-				[cur.id]: cur
-			}
-		),
-		{}
+		(acc, cur) => {
+			return acc[cur.id] ?
+				acc :
+				(
+					{
+						...acc,
+						[cur.id]: cur
+					}
+				);
+		},
+		initialMap
 	);
 }
 

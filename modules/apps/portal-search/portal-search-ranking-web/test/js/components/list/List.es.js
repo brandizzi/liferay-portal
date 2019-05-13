@@ -28,13 +28,10 @@ describe(
 						dataLoading={false}
 						dataMap={DATA_MAP}
 						onClickHide={jest.fn()}
+						onClickPin={jest.fn()}
 						onLoadResults={jest.fn()}
-						onSearchBarEnter={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
 						resultIds={[102, 104, 103]}
-						searchBarTerm={''}
-						selected={[104]}
-						totalResultsCount={300}
+						showLoadMore={true}
 					/>
 				);
 
@@ -55,13 +52,9 @@ describe(
 						dataLoading={false}
 						dataMap={DATA_MAP}
 						onClickHide={jest.fn()}
-						onLoadResults={jest.fn()}
-						onSearchBarEnter={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
+						onClickPin={jest.fn()}
 						resultIds={[]}
-						searchBarTerm={''}
-						selected={[104]}
-						totalResultsCount={300}
+						showLoadMore={true}
 					/>
 				);
 
@@ -78,13 +71,9 @@ describe(
 						dataLoading={true}
 						dataMap={DATA_MAP}
 						onClickHide={jest.fn()}
-						onLoadResults={jest.fn()}
-						onSearchBarEnter={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
+						onClickPin={jest.fn()}
 						resultIds={[]}
-						searchBarTerm={''}
-						selected={[104]}
-						totalResultsCount={300}
+						showLoadMore={true}
 					/>
 				);
 
@@ -103,13 +92,10 @@ describe(
 						dataLoading={false}
 						dataMap={DATA_MAP}
 						onClickHide={jest.fn()}
+						onClickPin={jest.fn()}
 						onLoadResults={mockLoad}
-						onSearchBarEnter={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
 						resultIds={[102, 104, 103]}
-						searchBarTerm={''}
-						selected={[104]}
-						totalResultsCount={300}
+						showLoadMore={true}
 					/>
 				);
 
@@ -131,13 +117,10 @@ describe(
 						dataLoading={false}
 						dataMap={DATA_MAP}
 						onClickHide={jest.fn()}
+						onClickPin={jest.fn()}
 						onLoadResults={mockLoad}
-						onSearchBarEnter={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
 						resultIds={[102, 104, 103]}
-						searchBarTerm={''}
-						selected={[104]}
-						totalResultsCount={300}
+						showLoadMore={true}
 					/>
 				);
 
@@ -158,13 +141,10 @@ describe(
 						dataLoading={false}
 						dataMap={DATA_MAP}
 						onClickHide={jest.fn()}
+						onClickPin={jest.fn()}
 						onLoadResults={mockLoad}
-						onSearchBarEnter={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
 						resultIds={[102, 104, 103]}
-						searchBarTerm={''}
-						selected={[104]}
-						totalResultsCount={300}
+						showLoadMore={true}
 					/>
 				);
 
@@ -185,13 +165,10 @@ describe(
 						dataLoading={false}
 						dataMap={DATA_MAP}
 						onClickHide={jest.fn()}
+						onClickPin={jest.fn()}
 						onLoadResults={mockLoad}
-						onSearchBarEnter={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
 						resultIds={[102, 104, 103]}
-						searchBarTerm={''}
-						selected={[104]}
-						totalResultsCount={300}
+						showLoadMore={true}
 					/>
 				);
 
@@ -213,13 +190,10 @@ describe(
 						dataLoading={false}
 						dataMap={DATA_MAP}
 						onClickHide={jest.fn()}
+						onClickPin={jest.fn()}
 						onLoadResults={mockLoad}
-						onSearchBarEnter={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
 						resultIds={[102, 104, 103]}
-						searchBarTerm={''}
-						selected={[104]}
-						totalResultsCount={300}
+						showLoadMore={true}
 					/>
 				);
 

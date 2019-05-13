@@ -16,7 +16,6 @@ describe(
 
 				const {queryByText} = render(
 					<ItemDropdown
-						addedResult={false}
 						hidden={false}
 						onClickHide={jest.fn()}
 						onClickPin={jest.fn()}
@@ -35,7 +34,6 @@ describe(
 
 				const {queryByText} = render(
 					<ItemDropdown
-						addedResult={false}
 						hidden={false}
 						itemCount={2}
 						onClickHide={jest.fn()}
@@ -54,7 +52,6 @@ describe(
 
 				const {queryByText} = render(
 					<ItemDropdown
-						addedResult={false}
 						hidden={false}
 						onClickHide={jest.fn()}
 						onClickPin={jest.fn()}
@@ -73,7 +70,6 @@ describe(
 
 				const {queryByText} = render(
 					<ItemDropdown
-						addedResult={false}
 						hidden={false}
 						itemCount={2}
 						onClickHide={jest.fn()}
@@ -92,7 +88,6 @@ describe(
 
 				const {queryByText} = render(
 					<ItemDropdown
-						addedResult={false}
 						hidden={false}
 						onClickHide={jest.fn()}
 						onClickPin={jest.fn()}
@@ -111,7 +106,6 @@ describe(
 
 				const {queryByText} = render(
 					<ItemDropdown
-						addedResult={false}
 						hidden={false}
 						itemCount={2}
 						onClickHide={jest.fn()}
@@ -130,7 +124,6 @@ describe(
 
 				const {queryByText} = render(
 					<ItemDropdown
-						addedResult={false}
 						hidden={true}
 						onClickHide={jest.fn()}
 						onClickPin={jest.fn()}
@@ -149,7 +142,6 @@ describe(
 
 				const {queryByText} = render(
 					<ItemDropdown
-						addedResult={false}
 						hidden={true}
 						itemCount={2}
 						onClickHide={jest.fn()}
@@ -163,30 +155,11 @@ describe(
 		);
 
 		it(
-			'should not have option to show for added results',
-			() => {
-
-				const {queryByText} = render(
-					<ItemDropdown
-						addedResult={true}
-						hidden={false}
-						onClickHide={jest.fn()}
-						onClickPin={jest.fn()}
-						pinned={true}
-					/>
-				);
-
-				expect(queryByText('Show Result')).toBeNull();
-			}
-		);
-
-		it(
 			'should have option to pin hidden',
 			() => {
 
 				const {queryByText} = render(
 					<ItemDropdown
-						addedResult={true}
 						hidden={true}
 						onClickHide={jest.fn()}
 						onClickPin={jest.fn()}
@@ -205,7 +178,6 @@ describe(
 
 				const {queryByText} = render(
 					<ItemDropdown
-						addedResult={true}
 						hidden={true}
 						itemCount={2}
 						onClickHide={jest.fn()}
@@ -224,7 +196,6 @@ describe(
 
 				const {queryByText} = render(
 					<ItemDropdown
-						addedResult={true}
 						hidden={false}
 						onClickPin={jest.fn()}
 						pinned={true}
@@ -242,7 +213,6 @@ describe(
 
 				const {container, getByTestId} = render(
 					<ItemDropdown
-						addedResult={false}
 						hidden={false}
 						onClickHide={jest.fn()}
 						onClickPin={jest.fn()}
@@ -264,7 +234,6 @@ describe(
 
 				const {getByText} = render(
 					<ItemDropdown
-						addedResult={false}
 						hidden={false}
 						onClickHide={onClickHide}
 						onClickPin={jest.fn()}
@@ -286,7 +255,6 @@ describe(
 
 				const {getByText} = render(
 					<ItemDropdown
-						addedResult={false}
 						hidden={false}
 						onClickHide={jest.fn()}
 						onClickPin={onClickPin}

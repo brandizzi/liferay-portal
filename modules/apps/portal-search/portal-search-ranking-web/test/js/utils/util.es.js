@@ -119,10 +119,33 @@ describe('utils', () => {
 
 	describe('resultsDataToMap', () => {
 		it('should return a mapped set of data', () => {
-			expect(resultsDataToMap(RESULTS_LIST)).toEqual({
-				102: RESULTS_LIST.filter(({id}) => id === 102)[0],
-				103: RESULTS_LIST.filter(({id}) => id === 103)[0]
-			});
+			expect(resultsDataToMap(RESULTS_LIST))
+				.toEqual(
+					{
+						102: RESULTS_LIST.filter(({id}) => id === 102)[0],
+						103: RESULTS_LIST.filter(({id}) => id === 103)[0]
+					}
+				);
+		});
+
+		it('should not replace existing ids', () => {
+			const newResults = [
+				{
+					id: 103,
+					pinned: true,
+					title: 'Different Title'
+				}
+			];
+
+			const originalDataMap = resultsDataToMap(RESULTS_LIST);
+
+			expect(resultsDataToMap(newResults, originalDataMap))
+				.toEqual(originalDataMap);
+		});
+
+		it('should be an empty set if data is empty', () => {
+			expect(resultsDataToMap([]))
+				.toEqual({});
 		});
 	});
 

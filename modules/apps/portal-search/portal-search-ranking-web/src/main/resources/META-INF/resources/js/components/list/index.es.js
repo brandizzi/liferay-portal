@@ -21,12 +21,9 @@ class List extends PureComponent {
 		onClickPin: PropTypes.func,
 		onLoadResults: PropTypes.func,
 		onMove: PropTypes.func,
-		onSearchBarEnter: PropTypes.func,
-		onUpdateSearchBarTerm: PropTypes.func,
 		resultIds: PropTypes.arrayOf(Number),
 		resultIdsPinned: PropTypes.arrayOf(Number),
-		searchBarTerm: PropTypes.string,
-		totalResultsCount: PropTypes.number
+		showLoadMore: PropTypes.bool
 	};
 
 	static defaultProps = {
@@ -148,12 +145,6 @@ class List extends PureComponent {
 		}
 	};
 
-	_hasMoreData = () => {
-		const {resultIds, totalResultsCount} = this.props;
-
-		return resultIds.length < totalResultsCount;
-	};
-
 	/**
 	 * Handles the pin action. Updates the focus index to keep the same item
 	 * focused.
@@ -229,10 +220,8 @@ class List extends PureComponent {
 			onAddResultSubmit,
 			onClickHide,
 			onClickPin,
-			onSearchBarEnter,
-			onUpdateSearchBarTerm,
 			resultIds,
-			searchBarTerm
+			showLoadMore
 		} = this.props;
 
 		const {selectedIds} = this.state;
@@ -243,18 +232,14 @@ class List extends PureComponent {
 
 				<SearchBar
 					dataMap={dataMap}
-					disableSearch={!resultIds.length && !this._hasMoreData()}
 					fetchDocumentsUrl={fetchDocumentsUrl}
 					onAddResultSubmit={onAddResultSubmit}
 					onClickHide={onClickHide}
 					onClickPin={onClickPin}
 					onRemoveSelect={this._handleRemoveSelect}
-					onSearchBarEnter={onSearchBarEnter}
 					onSelectAll={this._handleSelectAll}
 					onSelectClear={this._handleSelectClear}
-					onUpdateSearchBarTerm={onUpdateSearchBarTerm}
 					resultIds={resultIds}
-					searchBarTerm={searchBarTerm}
 					selectedIds={selectedIds}
 				/>
 
@@ -294,7 +279,7 @@ class List extends PureComponent {
 							/>
 						}
 
-						{this._hasMoreData() && (
+						{showLoadMore && (
 							<div className="load-more-container">
 								<ClayButton
 									className="load-more-button"

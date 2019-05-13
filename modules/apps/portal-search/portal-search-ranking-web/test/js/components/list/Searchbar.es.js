@@ -22,47 +22,17 @@ describe(
 		afterEach(cleanup);
 
 		it(
-			'should have the searchbar term in the input',
-			() => {
-				const {getByPlaceholderText} = render(
-					<SearchBar
-						dataMap={DATA_MAP}
-						onAddResultSubmit={jest.fn()}
-						onClickHide={jest.fn()}
-						onClickPin={jest.fn()}
-						onSearchBarEnter={jest.fn()}
-						onSelectAll={jest.fn()}
-						onSelectClear={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
-						resultIds={[102, 104, 103]}
-						searchBarTerm={'test'}
-						selectedIds={[]}
-					/>
-				);
-
-				const input = getByPlaceholderText('Contains Text');
-
-				expect(input.value).toEqual('test');
-			}
-		);
-
-		it(
 			'should have an add result button when onAddResultSubmit is defined',
 			() => {
-				const onUpdateSearchBarTerm = jest.fn();
-
 				const {queryByText} = render(
 					<SearchBar
 						dataMap={DATA_MAP}
 						onAddResultSubmit={jest.fn()}
 						onClickHide={jest.fn()}
 						onClickPin={jest.fn()}
-						onSearchBarEnter={jest.fn()}
 						onSelectAll={jest.fn()}
 						onSelectClear={jest.fn()}
-						onUpdateSearchBarTerm={onUpdateSearchBarTerm}
 						resultIds={[102, 104, 103]}
-						searchBarTerm={'test'}
 						selectedIds={[]}
 					/>
 				);
@@ -74,17 +44,13 @@ describe(
 		it(
 			'should not have an add result button when onAddResultSubmit is not defined',
 			() => {
-				const onUpdateSearchBarTerm = jest.fn();
-
 				const {queryByText} = render(
 					<SearchBar
 						dataMap={DATA_MAP}
 						onClickHide={jest.fn()}
 						onClickPin={jest.fn()}
-						onSearchBarEnter={jest.fn()}
 						onSelectAll={jest.fn()}
 						onSelectClear={jest.fn()}
-						onUpdateSearchBarTerm={onUpdateSearchBarTerm}
 						resultIds={[102, 104, 103]}
 						searchBarTerm={'test'}
 						selectedIds={[]}
@@ -99,23 +65,19 @@ describe(
 			'should show what is selected using selectedIds',
 			() => {
 
-				const {queryByText, queryByPlaceholderText} = render(
+				const {queryByText} = render(
 					<SearchBar
 						dataMap={DATA_MAP}
 						onAddResultSubmit={jest.fn()}
 						onClickHide={jest.fn()}
 						onClickPin={jest.fn()}
-						onSearchBarEnter={jest.fn()}
 						onSelectAll={jest.fn()}
 						onSelectClear={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
 						resultIds={[102, 104, 103]}
-						searchBarTerm={'test'}
 						selectedIds={[102, 103]}
 					/>
 				);
 
-				expect(queryByPlaceholderText('Contains Text')).toBeNull();
 				expect(queryByText('2 of 3 Items Selected')).not.toBeNull();
 				expect(queryByText('Add a Result')).toBeNull();
 			}
@@ -131,12 +93,9 @@ describe(
 						onAddResultSubmit={jest.fn()}
 						onClickHide={jest.fn()}
 						onClickPin={jest.fn()}
-						onSearchBarEnter={jest.fn()}
 						onSelectAll={jest.fn()}
 						onSelectClear={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
 						resultIds={[102, 104, 103]}
-						searchBarTerm={'test'}
 						selectedIds={[102, 103]}
 					/>
 				);
@@ -150,88 +109,21 @@ describe(
 		it(
 			'should show no items selected with empty selectedIds',
 			() => {
-				const {queryByPlaceholderText, queryByText} = render(
+				const {queryByText} = render(
 					<SearchBar
 						dataMap={DATA_MAP}
 						onAddResultSubmit={jest.fn()}
 						onClickHide={jest.fn()}
 						onClickPin={jest.fn()}
-						onSearchBarEnter={jest.fn()}
 						onSelectAll={jest.fn()}
 						onSelectClear={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
 						resultIds={[102, 104, 103]}
-						searchBarTerm={'test'}
 						selectedIds={[]}
 					/>
 				);
 
 				expect(queryByText('Items Selected')).toBeNull();
-				expect(queryByPlaceholderText('Contains Text')).not.toBeNull();
 				expect(queryByText('Add a Result')).not.toBeNull();
-			}
-		);
-
-		it(
-			'should update the input value upon change',
-			() => {
-				const onUpdateSearchBarTerm = jest.fn();
-
-				const {queryByPlaceholderText} = render(
-					<SearchBar
-						dataMap={DATA_MAP}
-						onAddResultSubmit={jest.fn()}
-						onClickHide={jest.fn()}
-						onClickPin={jest.fn()}
-						onSearchBarEnter={jest.fn()}
-						onSelectAll={jest.fn()}
-						onSelectClear={jest.fn()}
-						onUpdateSearchBarTerm={onUpdateSearchBarTerm}
-						resultIds={[102, 104, 103]}
-						searchBarTerm={'test'}
-						selectedIds={[]}
-					/>
-				);
-
-				const input = queryByPlaceholderText('Contains Text');
-
-				fireEvent.change(input, {target: {value: 'test'}});
-
-				expect(input.value).toEqual('test');
-			}
-		);
-
-		it(
-			'should call the onLoadResults function when the searchbar enter is pressed',
-			() => {
-				const onSearchBarEnter = jest.fn();
-
-				const {queryByPlaceholderText} = render(
-					<SearchBar
-						dataMap={DATA_MAP}
-						onAddResultSubmit={jest.fn()}
-						onClickHide={jest.fn()}
-						onClickPin={jest.fn()}
-						onSearchBarEnter={onSearchBarEnter}
-						onSelectAll={jest.fn()}
-						onSelectClear={jest.fn()}
-						onUpdateSearchBarTerm={jest.fn()}
-						resultIds={[102, 104, 103]}
-						searchBarTerm={'test'}
-						selectedIds={[]}
-					/>
-				);
-
-				const input = queryByPlaceholderText('Contains Text');
-
-				fireEvent.change(input, {target: {value: 'test'}});
-
-				fireEvent.keyDown(input, {key: 'Enter',
-					keyCode: 13,
-					which: 13
-				});
-
-				expect(onSearchBarEnter).toHaveBeenCalledTimes(1);
 			}
 		);
 	}

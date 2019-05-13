@@ -7,7 +7,6 @@ import {PropTypes} from 'prop-types';
 
 class ItemDropdown extends Component {
 	static propTypes = {
-		addedResult: PropTypes.bool,
 		hidden: PropTypes.bool,
 		itemCount: PropTypes.number,
 		onClickHide: PropTypes.func,
@@ -16,7 +15,6 @@ class ItemDropdown extends Component {
 	};
 
 	static defaultProps = {
-		addedResult: false,
 		itemCount: 1
 	};
 
@@ -66,7 +64,6 @@ class ItemDropdown extends Component {
 
 	render() {
 		const {
-			addedResult,
 			hidden,
 			itemCount,
 			onClickHide,
@@ -135,7 +132,7 @@ class ItemDropdown extends Component {
 						</li>
 					)}
 
-					{!addedResult && onClickHide && (
+					{onClickHide && (
 						<li>
 							<ClayButton
 								className="dropdown-item"

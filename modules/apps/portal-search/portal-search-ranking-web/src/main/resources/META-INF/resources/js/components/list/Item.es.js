@@ -295,12 +295,6 @@ class Item extends PureComponent {
 		}
 	}
 
-	_handleAddedResultMouseOver = event => {
-		const message = Liferay.Language.get('added-results-cannot-be-hidden');
-
-		Liferay.Portal.ToolTip.show(event.currentTarget, message);
-	};
-
 	_handleBlur = () => {
 		this.props.onBlur();
 	}
@@ -379,7 +373,6 @@ class Item extends PureComponent {
 
 	render() {
 		const {
-			addedResult,
 			author,
 			canDrop,
 			clicks,
@@ -434,7 +427,6 @@ class Item extends PureComponent {
 					hoverPosition === HOVER_TYPES.BOTTOM,
 				'list-item-dragging': dragging,
 				'list-item-has-clicks': !isNil(clicks),
-				'results-ranking-item-added-result': addedResult,
 				'results-ranking-item-focus': focus,
 				'results-ranking-item-hidden': hidden,
 				'results-ranking-item-pinned': pinned,
@@ -518,35 +510,19 @@ class Item extends PureComponent {
 					{pinned && <ResultPinIconDisplay />}
 
 					<div className="quick-action-menu">
-						{onClickHide && (
-							addedResult ? (
-								<span
-									className="disabled-button-tooltip"
-									onMouseOver={this._handleAddedResultMouseOver}
-								>
-									<ClayButton
-										borderless
-										className="component-action quick-action-item lfr-portal-tooltip"
-										disabled
-										iconName="hidden"
-										monospaced
-										title={Liferay.Language.get('hide-result')}
-									/>
-								</span>
-							) : (
-								<ClayButton
-									borderless
-									className="component-action quick-action-item"
-									iconName={hidden ? 'view' : 'hidden'}
-									monospaced
-									onClick={this._handleHide}
-									title={hidden ?
-										Liferay.Language.get('show-result') :
-										Liferay.Language.get('hide-result')
-									}
-								/>
-							)
-						)}
+						{onClickHide &&
+							<ClayButton
+								borderless
+								className="component-action quick-action-item"
+								iconName={hidden ? 'view' : 'hidden'}
+								monospaced
+								onClick={this._handleHide}
+								title={hidden ?
+									Liferay.Language.get('show-result') :
+									Liferay.Language.get('hide-result')
+								}
+							/>
+						}
 
 						{onClickPin && (
 							<ClayButton
@@ -563,13 +539,14 @@ class Item extends PureComponent {
 						)}
 					</div>
 
-					<ItemDropdown
-						addedResult={addedResult}
-						hidden={hidden}
-						onClickHide={this._handleHide}
-						onClickPin={this._handlePin}
-						pinned={pinned}
-					/>
+					{(onClickPin || onClickHide) &&
+						<ItemDropdown
+							hidden={hidden}
+							onClickHide={this._handleHide}
+							onClickPin={this._handlePin}
+							pinned={pinned}
+						/>
+					}
 				</div>
 
 				{!isNil(clicks) &&
