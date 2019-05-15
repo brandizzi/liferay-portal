@@ -4,10 +4,10 @@
 			"english_liferay": {
 				"filter": [
 					"english_possessive_stemmer",
-					"english_stemmer",
+					"lowercase",
 					"english_stop",
-					"english_synonyms",
-					"lowercase"
+					"english_stemmer",
+					"english_synonyms"
 				],
 				"tokenizer": "standard"
 			},
