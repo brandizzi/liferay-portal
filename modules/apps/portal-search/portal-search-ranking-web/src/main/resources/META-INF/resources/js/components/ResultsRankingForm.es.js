@@ -752,8 +752,6 @@ class ResultsRankingForm extends Component {
 				<PageToolbar
 					onCancel={cancelUrl}
 					onPublish={this._handlePublish}
-					onSaveAsDraft={this._handleSaveAsDraft}
-					submitDisabled={this._getDisablePublish()}
 				/>
 
 				<div className="container-fluid container-fluid-max-xl container-form-lg">

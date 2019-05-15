@@ -15,6 +15,7 @@ describe(
 				const {getByText} = render(
 					<PageToolbar
 						onCancel={'cancel'}
+						onPublish={jest.fn()}
 						submitDisabled={true}
 					/>
 				);
@@ -30,6 +31,7 @@ describe(
 				const {getByText} = render(
 					<PageToolbar
 						onCancel={'cancel'}
+						onPublish={jest.fn()}
 						submitDisabled={false}
 					/>
 				);

@@ -11,7 +11,7 @@ class PageToolbar extends Component {
 	};
 
 	static defaultProps = {
-		submitDisabled: true
+		submitDisabled: false
 	};
 
 	render() {
@@ -37,24 +37,28 @@ class PageToolbar extends Component {
 							/>
 						</li>
 
-						<li className="tbar-item">
-							<ClayButton
-								label={Liferay.Language.get('save-as-draft')}
-								onClick={onSaveAsDraft}
-								size="sm"
-							/>
-						</li>
+						{onSaveAsDraft && (
+							<li className="tbar-item">
+								<ClayButton
+									label={Liferay.Language.get('save-as-draft')}
+									onClick={onSaveAsDraft}
+									size="sm"
+								/>
+							</li>
+						)}
 
-						<li className="tbar-item">
-							<ClayButton
-								disabled={submitDisabled}
-								displayStyle="primary"
-								label={Liferay.Language.get('publish')}
-								onClick={onPublish}
-								size="sm"
-								type="submit"
-							/>
-						</li>
+						{onPublish && (
+							<li className="tbar-item">
+								<ClayButton
+									disabled={submitDisabled}
+									displayStyle="primary"
+									label={Liferay.Language.get('publish')}
+									onClick={onPublish}
+									size="sm"
+									type="submit"
+								/>
+							</li>
+						)}
 					</ul>
 				</div>
 			</nav>
