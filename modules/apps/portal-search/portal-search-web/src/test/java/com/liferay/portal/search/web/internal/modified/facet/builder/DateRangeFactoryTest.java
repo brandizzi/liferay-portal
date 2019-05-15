@@ -14,12 +14,17 @@
 
 package com.liferay.portal.search.web.internal.modified.facet.builder;
 
+import com.liferay.portal.json.JSONFactoryImpl;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.util.DateFormatFactoryImpl;
+
+import java.text.ParseException;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -27,11 +32,33 @@ import org.junit.Test;
  */
 public class DateRangeFactoryTest {
 
+	@Before
+	public void setUp() {
+		JSONFactoryUtil jsonFactoryUtil = new JSONFactoryUtil();
+
+		jsonFactoryUtil.setJSONFactory(new JSONFactoryImpl());
+	}
+
 	@Test
 	public void testBoundedRange() {
 		Assert.assertEquals(
 			"[20180131000000 TO 20180228235959]",
 			_dateRangeFactory.getRangeString("2018-01-31", "2018-02-28"));
+	}
+
+	@Test(expected = ParseException.class)
+	public void testDateFormatShouldBeyyyyMMddHHmmss() throws Exception {
+		_dateRangeFactory.validateRange(_INVALID_DATE_FORMAT);
+	}
+
+	@Test(expected = ParseException.class)
+	public void testInvalidRangeAliases() throws Exception {
+		_dateRangeFactory.validateRange(_INVALID_RANGE_ALIASES);
+	}
+
+	@Test(expected = ParseException.class)
+	public void testInvalidRangeWithoutBrackets() throws Exception {
+		_dateRangeFactory.validateRange(_WITHOUT_BRACKETS);
 	}
 
 	@Test
@@ -100,6 +127,15 @@ public class DateRangeFactoryTest {
 			_dateRangeFactory.replaceAliases(
 				"[past-year TO past-month]", calendar));
 	}
+
+	private static final String _INVALID_DATE_FORMAT =
+		"[{\"label\":\"past-hour\",\"range\":\"20190908 TO *\"}]";
+
+	private static final String _INVALID_RANGE_ALIASES =
+		"[{\"label\":\"past-hour\",\"range\":\"[past-test TO *]\"}]";
+
+	private static final String _WITHOUT_BRACKETS =
+		"[{\"label\":\"past-hour\",\"range\":\"past-hour TO *\"}]";
 
 	private final DateRangeFactory _dateRangeFactory = new DateRangeFactory(
 		new DateFormatFactoryImpl());
