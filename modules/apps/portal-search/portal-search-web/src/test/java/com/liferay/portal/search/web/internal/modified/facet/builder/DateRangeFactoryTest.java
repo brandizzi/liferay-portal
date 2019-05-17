@@ -16,6 +16,7 @@ package com.liferay.portal.search.web.internal.modified.facet.builder;
 
 import com.liferay.portal.util.DateFormatFactoryImpl;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -100,6 +101,26 @@ public class DateRangeFactoryTest {
 			_dateRangeFactory.replaceAliases(
 				"[past-year TO past-month]", calendar));
 	}
+
+	@Test(expected = ParseException.class)
+	public void testInvalidDateFormat() throws Exception {
+		_dateRangeFactory.replaceAliases(
+			"[20190302 TO 20190303]", Calendar.getInstance());
+	}
+
+	@Test(expected = ParseException.class)
+	public void testInvalidRangeAliases() throws Exception {
+		_dateRangeFactory.replaceAliases(
+			"[past-test TO *]", Calendar.getInstance());
+	}
+
+	@Test(expected = ParseException.class)
+	public void testInvalidRangeWithoutBrackets() throws Exception {
+		_dateRangeFactory.replaceAliases(
+				"20190302000000 TO 20190303235999", Calendar.getInstance());
+	}
+
+
 
 	private final DateRangeFactory _dateRangeFactory = new DateRangeFactory(
 		new DateFormatFactoryImpl());

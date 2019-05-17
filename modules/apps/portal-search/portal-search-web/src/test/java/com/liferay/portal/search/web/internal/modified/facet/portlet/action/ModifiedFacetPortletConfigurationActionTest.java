@@ -1,5 +1,6 @@
 package com.liferay.portal.search.web.internal.modified.facet.portlet.action;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 
@@ -23,29 +24,43 @@ public class ModifiedFacetPortletConfigurationActionTest {
 	@Test(expected = ParseException.class)
 	public void testDateFormatShouldBeyyyyMMddHHmmss() throws Exception {
 		_modifiedFacetPortletConfigurationAction.validateRange(
-			_INVALID_DATE_FORMAT);
+			getDateRangeJSON("past-hour", "[20190908 TO *]"));
 	}
 
 	@Test(expected = ParseException.class)
 	public void testInvalidRangeAliases() throws Exception {
 		_modifiedFacetPortletConfigurationAction.validateRange(
-			_INVALID_RANGE_ALIASES);
+			getDateRangeJSON("past-hour", "[past-test TO *]"));
 	}
 
 	@Test(expected = ParseException.class)
 	public void testInvalidRangeWithoutBrackets() throws Exception {
 		_modifiedFacetPortletConfigurationAction.validateRange(
-			_WITHOUT_BRACKETS);
+			getDateRangeJSON("past-hour", "past-hour TO *"));
 	}
 
-	private static final String _INVALID_DATE_FORMAT =
-		"[{\"label\":\"past-hour\",\"range\":\"20190908 TO *\"}]";
+	@Test
+	public void testValidRangeWithDates() throws Exception {
+		_modifiedFacetPortletConfigurationAction.validateRange(
+			getDateRangeJSON("past-hour", "[20190509000000 TO 20190509235999]"));
+	}
 
-	private static final String _INVALID_RANGE_ALIASES =
-		"[{\"label\":\"past-hour\",\"range\":\"[past-test TO *]\"}]";
-
-	private static final String _WITHOUT_BRACKETS =
-		"[{\"label\":\"past-hour\",\"range\":\"past-hour TO *\"}]";
+	@Test
+	public void testValidRangeWithAsterisk() throws Exception {
+		_modifiedFacetPortletConfigurationAction.validateRange(
+			getDateRangeJSON("past-hour", "[20190509000000 TO *]"));
+	}
+	
+	@Test
+	public void testValidRangeWithPastHour() throws Exception {
+		_modifiedFacetPortletConfigurationAction.validateRange(
+			getDateRangeJSON("past-hour", "[20190509000000 TO past-hour]"));
+	}
+	
+	protected String getDateRangeJSON(String label, String range) {
+		return StringBundler.concat(
+			"[{\"label\":\"", label, "\",\"range\":\"", range, "\"}]");
+	}
 
 	private final ModifiedFacetPortletConfigurationAction
 		_modifiedFacetPortletConfigurationAction =
