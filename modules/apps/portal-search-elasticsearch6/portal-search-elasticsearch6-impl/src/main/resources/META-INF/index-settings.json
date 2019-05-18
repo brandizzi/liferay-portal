@@ -14,6 +14,15 @@
 					"english_stemmer"
 				],
 				"tokenizer": "standard"
+			},
+			"liferay_analyzer_es": {
+				"filter": [
+					"lowercase",
+					"spanish_stop",
+					"liferay_filter_synonym_es",
+					"spanish_stemmer"
+				],
+				"tokenizer": "standard"
 			}
 		},
 		"filter": {
@@ -33,6 +42,19 @@
 				"lenient": true,
 				"synonyms": [],
 				"type": "synonym"
+			},
+			"liferay_filter_synonym_es": {
+				"lenient": true,
+				"synonyms": [],
+				"type": "synonym"
+			},
+			"spanish_stemmer": {
+				"language": "light_spanish",
+				"type": "stemmer"
+			},
+			"spanish_stop": {
+				"stopwords": "_spanish_",
+				"type": "stop"
 			}
 		}
 	}
