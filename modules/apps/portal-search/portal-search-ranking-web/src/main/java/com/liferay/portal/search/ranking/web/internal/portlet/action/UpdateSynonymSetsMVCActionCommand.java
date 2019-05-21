@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.ranking.web.internal.constants.ResultsRankingPortletKeys;
 import com.liferay.portal.search.synonym.SynonymIndexer;
 
@@ -63,7 +64,7 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 					synonymSets, originalSynonymSets);
 			}
 
-			if ("" != newSynonymSets) {
+			if (!Validator.isBlank(newSynonymSets)) {
 				synonymSets = ArrayUtil.append(synonymSets, newSynonymSets);
 			}
 
