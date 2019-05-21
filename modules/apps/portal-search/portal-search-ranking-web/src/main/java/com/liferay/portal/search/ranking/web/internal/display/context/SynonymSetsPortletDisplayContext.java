@@ -58,12 +58,11 @@ public class SynonymSetsPortletDisplayContext {
 			WebKeys.THEME_DISPLAY);
 
 		List<SynonymSetsEntryDisplayContext>
-			synonymSetsEntryDisplayContextList = new ArrayList();
+			synonymSetsEntryDisplayContextList = new ArrayList<>();
 
 		for (String synonymSet :
 				_synonymIndexer.getSynonymSets(
-					INDEX_NAME_PREFIX + getCompanyId(),
-					"liferay_filter_synonym_en")) {
+					getCompanyId(),	"liferay_filter_synonym_en")) {
 
 			synonymSetsEntryDisplayContextList.add(
 				new SynonymSetsEntryDisplayContext(synonymSet));
@@ -317,8 +316,6 @@ public class SynonymSetsPortletDisplayContext {
 	private String getCompanyId() {
 		return String.valueOf(_themeDisplay.getCompanyId());
 	}
-
-	private static final String INDEX_NAME_PREFIX = "liferay-";
 
 	private String _displayStyle;
 	private String _keywords;
