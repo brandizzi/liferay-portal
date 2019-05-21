@@ -50,6 +50,14 @@ import org.osgi.service.component.annotations.Reference;
 public class ElasticsearchSynonymIndexer implements SynonymIndexer {
 
 	@Override
+	public String[] getFilterNames() {
+		return new String[] {
+			"liferay_filter_synonym_en",
+			"liferay_filter_synonym_es"
+		};
+	}
+
+	@Override
 	public String[] getSynonymSets(long companyId, String filterName) {
 		return getSynonymSets(
 			indexNameBuilder.getIndexName(companyId), filterName);

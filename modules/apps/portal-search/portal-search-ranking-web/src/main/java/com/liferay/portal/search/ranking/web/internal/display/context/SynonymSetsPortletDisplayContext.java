@@ -62,7 +62,8 @@ public class SynonymSetsPortletDisplayContext {
 
 		for (String synonymSet :
 				_synonymIndexer.getSynonymSets(
-					INDEX_NAME_PREFIX + getCompanyId())) {
+					INDEX_NAME_PREFIX + getCompanyId(),
+					"liferay_filter_synonym_en")) {
 
 			synonymSetsEntryDisplayContextList.add(
 				new SynonymSetsEntryDisplayContext(synonymSet));
@@ -74,16 +75,19 @@ public class SynonymSetsPortletDisplayContext {
 		_searchContainer.setResults(synonymSetsEntryDisplayContextList);
 	}
 
-	public List<DropdownItem> getActionDropdownItems(SynonymSetsEntryDisplayContext synonymSetsEntryDisplayContext) {
+	public List<DropdownItem> getActionDropdownItems(
+		SynonymSetsEntryDisplayContext synonymSetsEntryDisplayContext) {
+
 		return new DropdownItemList() {
 			{
 				add(
 					dropdownItem -> {
 						dropdownItem.setHref(
 							_renderResponse.createActionURL(),
-							ActionRequest.ACTION_NAME, "updateSynonymsEntryAction",
-							"synonymSetsInput", "",
-							"originalSynonymSetsInput", synonymSetsEntryDisplayContext.getSynonyms());
+							ActionRequest.ACTION_NAME,
+							"updateSynonymsEntryAction", "synonymSetsInput", "",
+							"originalSynonymSetsInput",
+							synonymSetsEntryDisplayContext.getSynonyms());
 						dropdownItem.setIcon("times");
 						dropdownItem.setLabel(
 							LanguageUtil.get(_request, "delete"));

@@ -54,18 +54,22 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
 		long companyId = portal.getCompanyId(actionRequest);
 
-		String[] synonymSets = _synonymIndexer.getSynonymSets(
-			"liferay-" + companyId);
+		for (String filterName : _synonymIndexer.getFilterNames()) {
+			String[] synonymSets = _synonymIndexer.getSynonymSets(
+				"liferay-" + companyId, filterName);
 
-		if (ArrayUtil.contains(synonymSets, originalSynonymSets, true)) {
-			synonymSets = ArrayUtil.remove(synonymSets, originalSynonymSets);
+			if (ArrayUtil.contains(synonymSets, originalSynonymSets, true)) {
+				synonymSets = ArrayUtil.remove(
+					synonymSets, originalSynonymSets);
+			}
+
+			if ("" != newSynonymSets) {
+				synonymSets = ArrayUtil.append(synonymSets, newSynonymSets);
+			}
+
+			_synonymIndexer.updateSynonymSets(
+				"liferay-" + companyId, filterName, synonymSets);
 		}
-
-		if ("" != newSynonymSets) {
-			synonymSets = ArrayUtil.append(synonymSets, newSynonymSets);
-		}
-
-		_synonymIndexer.updateSynonymSets("liferay-" + companyId, synonymSets);
 
 		actionResponse.setRenderParameter("tabs", "synonym-sets");
 
