@@ -56,7 +56,7 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
 		for (String filterName : _synonymIndexer.getFilterNames()) {
 			String[] synonymSets = _synonymIndexer.getSynonymSets(
-				"liferay-" + companyId, filterName);
+				companyId, filterName);
 
 			if (ArrayUtil.contains(synonymSets, originalSynonymSets, true)) {
 				synonymSets = ArrayUtil.remove(
@@ -68,7 +68,7 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 			}
 
 			_synonymIndexer.updateSynonymSets(
-				"liferay-" + companyId, filterName, synonymSets);
+				companyId, filterName, synonymSets);
 		}
 
 		actionResponse.setRenderParameter("tabs", "synonym-sets");
