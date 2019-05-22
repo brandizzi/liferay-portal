@@ -22,6 +22,8 @@ import aQute.bnd.annotation.ProviderType;
 @ProviderType
 public interface SynonymIndexer {
 
+	public String[] getFilterNames();
+
 	public String[] getSynonymSets(long companyId, String filterName);
 
 	public String[] getSynonymSets(String indexName, String filterName);
