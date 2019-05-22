@@ -128,7 +128,7 @@ describe(
 			'should update the pinnedAdded',
 			async() => {
 
-				const {container, getByTestId, getByText} = render(
+				const {container, getByTestId} = render(
 					<ResultsRankingForm
 						cancelUrl={'cancel'}
 						fetchDocumentsHiddenUrl={FETCH_HIDDEN_DOCUMENTS_URL}
@@ -142,8 +142,6 @@ describe(
 				fireEvent.click(getByTestId('109').querySelector('.result-pin button'));
 
 				expect(container.querySelector('#pinnedAdded').value).toEqual('109');
-
-				expect(getByText('Publish')).not.toHaveAttribute('disabled');
 			}
 		);
 
@@ -151,7 +149,7 @@ describe(
 			'should update the pinnedAdded back',
 			async() => {
 
-				const {container, getByTestId, getByText} = render(
+				const {container, getByTestId} = render(
 					<ResultsRankingForm
 						cancelUrl={'cancel'}
 						fetchDocumentsHiddenUrl={FETCH_HIDDEN_DOCUMENTS_URL}
@@ -167,8 +165,6 @@ describe(
 				fireEvent.click(getByTestId('109').querySelector('.result-pin button'));
 
 				expect(container.querySelector('#pinnedAdded').value).toEqual('');
-
-				expect(getByText('Publish')).toHaveAttribute('disabled');
 			}
 		);
 
@@ -176,7 +172,7 @@ describe(
 			'should update the pinnedRemoved',
 			async() => {
 
-				const {container, getByTestId, getByText} = render(
+				const {container, getByTestId} = render(
 					<ResultsRankingForm
 						cancelUrl={'cancel'}
 						fetchDocumentsHiddenUrl={FETCH_HIDDEN_DOCUMENTS_URL}
@@ -190,8 +186,6 @@ describe(
 				fireEvent.click(getByTestId('100').querySelector('.result-pin button'));
 
 				expect(container.querySelector('#pinnedRemoved').value).toEqual('100');
-
-				expect(getByText('Publish')).not.toHaveAttribute('disabled');
 			}
 		);
 
@@ -199,7 +193,7 @@ describe(
 			'should update the pinnedRemoved back',
 			async() => {
 
-				const {container, getByTestId, getByText} = render(
+				const {container, getByTestId} = render(
 					<ResultsRankingForm
 						cancelUrl={'cancel'}
 						fetchDocumentsHiddenUrl={FETCH_HIDDEN_DOCUMENTS_URL}
@@ -215,8 +209,6 @@ describe(
 				fireEvent.click(getByTestId('100').querySelector('.result-pin button'));
 
 				expect(container.querySelector('#pinnedRemoved').value).toEqual('');
-
-				expect(getByText('Publish')).toHaveAttribute('disabled');
 			}
 		);
 
@@ -224,7 +216,7 @@ describe(
 			'should update the hiddenAdded',
 			async() => {
 
-				const {container, getByTestId, getByText} = render(
+				const {container, getByTestId} = render(
 					<ResultsRankingForm
 						cancelUrl={'cancel'}
 						fetchDocumentsHiddenUrl={FETCH_HIDDEN_DOCUMENTS_URL}
@@ -238,8 +230,6 @@ describe(
 				fireEvent.click(within(getByTestId('100')).getByTitle(HIDE_BUTTON_LABEL));
 
 				expect(container.querySelector(HIDDEN_IDS_ADDED_INPUT_SELECTOR).value).toEqual('100');
-
-				expect(getByText('Publish')).not.toHaveAttribute('disabled');
 			}
 		);
 
@@ -265,8 +255,6 @@ describe(
 				fireEvent.click(within(getByTestId('105')).getByTitle(SHOW_BUTTON_LABEL));
 
 				expect(container.querySelector(HIDDEN_IDS_ADDED_INPUT_SELECTOR).value).toEqual('');
-
-				expect(getByText('Publish')).toHaveAttribute('disabled');
 			}
 		);
 
@@ -290,8 +278,6 @@ describe(
 				fireEvent.click(within(getByTestId('200')).getByTitle(SHOW_BUTTON_LABEL));
 
 				expect(container.querySelector(HIDDEN_IDS_REMOVED_INPUT_SELECTOR).value).toEqual('200');
-
-				expect(getByText('Publish')).not.toHaveAttribute('disabled');
 			}
 		);
 
@@ -319,8 +305,6 @@ describe(
 				fireEvent.click(within(getByTestId('200')).getByTitle(HIDE_BUTTON_LABEL));
 
 				expect(container.querySelector(HIDDEN_IDS_REMOVED_INPUT_SELECTOR).value).toEqual('');
-
-				expect(getByText('Publish')).toHaveAttribute('disabled');
 			}
 		);
 

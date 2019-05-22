@@ -139,6 +139,12 @@ class ResultsRankingForm extends Component {
 		resultIdsPinned: [],
 
 		/**
+		 * Toggles on and off the debugger form.
+		 * @type {boolean}
+		 */
+		showDebugger: false,
+
+		/**
 		 * Total number of hidden results returned from the fetch request.
 		 * @type {number}
 		 */
@@ -733,6 +739,7 @@ class ResultsRankingForm extends Component {
 			hiddenCur,
 			resultIdsHidden,
 			resultIdsPinned,
+			showDebugger,
 			totalResultsHiddenCount,
 			totalResultsVisibleCount,
 			visibleCur,
@@ -819,38 +826,40 @@ class ResultsRankingForm extends Component {
 					</div>
 				</div>
 
-				<FormValueDebugger
-					values={[
-						{
-							name: `${namespace}aliases`,
-							value: aliases
-						},
-						{
-							name: `${namespace}hiddenIdsAdded`,
-							value: this._getHiddenAdded()
-						},
-						{
-							name: `${namespace}hiddenIdsRemoved`,
-							value: this._getHiddenRemoved()
-						},
-						{
-							name: `${namespace}pinnedIds`,
-							value: resultIdsPinned
-						},
-						{
-							name: `${namespace}pinnedIdsEndIndex`,
-							value: dataLoadIndex.pinned.end
-						},
-						{
-							name: `${namespace}pinnedIdsStartIndex`,
-							value: dataLoadIndex.pinned.start
-						},
-						{
-							name: `${namespace}workflowAction`,
-							value: workflowAction
-						}
-					]}
-				/>
+				{showDebugger &&
+					<FormValueDebugger
+						values={[
+							{
+								name: `${namespace}aliases`,
+								value: aliases
+							},
+							{
+								name: `${namespace}hiddenIdsAdded`,
+								value: this._getHiddenAdded()
+							},
+							{
+								name: `${namespace}hiddenIdsRemoved`,
+								value: this._getHiddenRemoved()
+							},
+							{
+								name: `${namespace}pinnedIds`,
+								value: resultIdsPinned
+							},
+							{
+								name: `${namespace}pinnedIdsEndIndex`,
+								value: dataLoadIndex.pinned.end
+							},
+							{
+								name: `${namespace}pinnedIdsStartIndex`,
+								value: dataLoadIndex.pinned.start
+							},
+							{
+								name: `${namespace}workflowAction`,
+								value: workflowAction
+							}
+						]}
+					/>
+				}
 			</div>
 		);
 	}
