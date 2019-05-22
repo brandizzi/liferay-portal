@@ -1,0 +1,14 @@
+Bundle-Name: Liferay Portal Search Synonyms Web
+Bundle-SymbolicName: com.liferay.portal.search.synonyms.web
+Bundle-Version: 1.0.0
+Provide-Capability:\
+	soy;\
+		type="portal-search-admin-web";\
+		version:Version="${Bundle-Version}"
+Require-Capability:\
+	osgi.extender;\
+		filter:="(&(osgi.extender=jsp.taglib)(uri=http://liferay.com/tld/soy))",\
+	soy;\
+		filter:="(type=metal)"
+Web-ContextPath: /portal-search-synonyms-web
+-includeresource: package.json
