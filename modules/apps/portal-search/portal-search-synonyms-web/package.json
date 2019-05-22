@@ -40,27 +40,7 @@
 		"react-select": "^2.4.2",
 		"react-tabs": "^3.0.0"
 	},
-	"devDependencies": {
-		"@babel/plugin-proposal-class-properties": "^7.4.0",
-		"@babel/plugin-proposal-object-rest-spread": "^7.4.0",
-		"@babel/preset-env": "^7.4.2",
-		"@babel/preset-react": "^7.0.0",
-		"@storybook/addon-a11y": "^5.0.6",
-		"@storybook/addon-actions": "^5.0.6",
-		"@storybook/addon-knobs": "^5.0.6",
-		"@storybook/addon-options": "^5.0.6",
-		"@storybook/react": "^5.0.5",
-		"babel-plugin-module-resolver": "^3.2.0",
-		"clay-css": "^2.11.1",
-		"css-loader": "^2.1.1",
-		"eslint-plugin-react": "^7.12.4",
-		"http-proxy-middleware": "^0.19.1",
-		"liferay-lang-key-dev-loader": "^1.0.3",
-		"liferay-npm-scripts": "^1.4.9",
-		"node-sass": "^4.11.0",
-		"sass-loader": "^7.1.0",
-		"style-loader": "^0.23.1"
-	},
+
 	"main": "js/index-synonym-sets.es.js",
 	"name": "portal-search-synonyms-web",
 	"private": true,
