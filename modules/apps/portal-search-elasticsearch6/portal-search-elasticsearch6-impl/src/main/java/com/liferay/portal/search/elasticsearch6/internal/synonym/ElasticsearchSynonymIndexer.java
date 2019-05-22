@@ -52,8 +52,7 @@ public class ElasticsearchSynonymIndexer implements SynonymIndexer {
 	@Override
 	public String[] getFilterNames() {
 		return new String[] {
-			"liferay_filter_synonym_en",
-			"liferay_filter_synonym_es"
+			"liferay_filter_synonym_en", "liferay_filter_synonym_es"
 		};
 	}
 
@@ -188,6 +187,7 @@ public class ElasticsearchSynonymIndexer implements SynonymIndexer {
 	@Reference
 	protected ElasticsearchClientResolver elasticsearchClientResolver;
 
+	@Reference
 	protected IndexNameBuilder indexNameBuilder;
 
 	@Reference
