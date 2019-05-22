@@ -62,7 +62,8 @@ public class SynonymSetsPortletDisplayContext {
 
 		for (String synonymSet :
 				synonymIndexer.getSynonymSets(
-					_themeDisplay.getCompanyId(), "liferay_filter_synonym_en")) {
+					_themeDisplay.getCompanyId(),
+					"liferay_filter_synonym_en")) {
 
 			synonymSetsEntryDisplayContextList.add(
 				new SynonymSetsEntryDisplayContext(synonymSet));
