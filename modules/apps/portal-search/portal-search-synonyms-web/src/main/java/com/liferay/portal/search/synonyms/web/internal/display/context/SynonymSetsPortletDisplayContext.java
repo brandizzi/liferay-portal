@@ -62,7 +62,7 @@ public class SynonymSetsPortletDisplayContext {
 
 		for (String synonymSet :
 				synonymIndexer.getSynonymSets(
-					_getCompanyId(), "liferay_filter_synonym_en")) {
+					_themeDisplay.getCompanyId(), "liferay_filter_synonym_en")) {
 
 			synonymSetsEntryDisplayContextList.add(
 				new SynonymSetsEntryDisplayContext(synonymSet));
@@ -220,10 +220,6 @@ public class SynonymSetsPortletDisplayContext {
 
 	public Boolean isShowCreationMenu() {
 		return true;
-	}
-
-	private String _getCompanyId() {
-		return String.valueOf(_themeDisplay.getCompanyId());
 	}
 
 	private List<DropdownItem> _getFilterNavigationDropdownItems() {
