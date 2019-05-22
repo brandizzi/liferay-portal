@@ -47,7 +47,7 @@ class SynonymSetsForm extends Component {
 		if (props.synonymSets.length > 0) {
 			this._originalSynonymSets = props.synonymSets;
 
-			(props.synonymSets).split(',').forEach((synonym) => {
+			(props.synonymSets).split(',').forEach(synonym => {
 				this.state.synonyms.push({
 					label: synonym,
 					value: synonym

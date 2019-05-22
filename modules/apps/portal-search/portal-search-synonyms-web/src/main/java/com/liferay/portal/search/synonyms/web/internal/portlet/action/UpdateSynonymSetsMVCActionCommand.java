@@ -20,8 +20,8 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.search.synonyms.web.internal.constants.SynonymsPortletKeys;
 import com.liferay.portal.search.synonym.SynonymIndexer;
+import com.liferay.portal.search.synonyms.web.internal.constants.SynonymsPortletKeys;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;

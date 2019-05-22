@@ -46,29 +46,30 @@ import javax.servlet.http.HttpServletRequest;
 public class SynonymSetsPortletDisplayContext {
 
 	public SynonymSetsPortletDisplayContext(
-			HttpServletRequest request, RenderRequest renderRequest,
-			RenderResponse renderResponse, SynonymIndexer _synonymIndexer)
+			HttpServletRequest httpServletRequest, RenderRequest renderRequest,
+			RenderResponse renderResponse, SynonymIndexer synonymIndexer)
 		throws PortalException {
 
-		_request = request;
+		_httpServletRequest = httpServletRequest;
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
 
-		_themeDisplay = (ThemeDisplay)_request.getAttribute(
+		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
 		List<SynonymSetsEntryDisplayContext>
 			synonymSetsEntryDisplayContextList = new ArrayList<>();
 
 		for (String synonymSet :
-				_synonymIndexer.getSynonymSets(
-					getCompanyId(),	"liferay_filter_synonym_en")) {
+				synonymIndexer.getSynonymSets(
+					_getCompanyId(), "liferay_filter_synonym_en")) {
 
 			synonymSetsEntryDisplayContextList.add(
 				new SynonymSetsEntryDisplayContext(synonymSet));
 		}
 
 		_searchContainer = getSearchContainer();
+
 		_searchContainer.setSearch(true);
 		_searchContainer.setTotal(synonymSetsEntryDisplayContextList.size());
 		_searchContainer.setResults(synonymSetsEntryDisplayContextList);
@@ -89,7 +90,7 @@ public class SynonymSetsPortletDisplayContext {
 							synonymSetsEntryDisplayContext.getSynonyms());
 						dropdownItem.setIcon("times");
 						dropdownItem.setLabel(
-							LanguageUtil.get(_request, "delete"));
+							LanguageUtil.get(_httpServletRequest, "delete"));
 						dropdownItem.setQuickAction(true);
 					});
 			}
@@ -112,9 +113,11 @@ public class SynonymSetsPortletDisplayContext {
 						dropdownItem.setHref(
 							_renderResponse.createRenderURL(),
 							"mvcRenderCommandName", "updateSynonymsEntryRender",
-							"redirect", PortalUtil.getCurrentURL(_request));
+							"redirect",
+							PortalUtil.getCurrentURL(_httpServletRequest));
 						dropdownItem.setLabel(
-							LanguageUtil.get(_request, "new-synonym-set"));
+							LanguageUtil.get(
+								_httpServletRequest, "new-synonym-set"));
 					});
 			}
 		};
@@ -139,14 +142,15 @@ public class SynonymSetsPortletDisplayContext {
 						dropdownGroupItem.setDropdownItems(
 							_getFilterNavigationDropdownItems());
 						dropdownGroupItem.setLabel(
-							LanguageUtil.get(_request, "filter-by-navigation"));
+							LanguageUtil.get(
+								_httpServletRequest, "filter-by-navigation"));
 					});
 				addGroup(
 					dropdownGroupItem -> {
 						dropdownGroupItem.setDropdownItems(
 							_getOrderByDropdownItems());
 						dropdownGroupItem.setLabel(
-							LanguageUtil.get(_request, "order-by"));
+							LanguageUtil.get(_httpServletRequest, "order-by"));
 					});
 			}
 		};
@@ -157,7 +161,8 @@ public class SynonymSetsPortletDisplayContext {
 			return _orderByType;
 		}
 
-		_orderByType = ParamUtil.getString(_request, "orderByType", "asc");
+		_orderByType = ParamUtil.getString(
+			_httpServletRequest, "orderByType", "asc");
 
 		return _orderByType;
 	}
@@ -168,21 +173,19 @@ public class SynonymSetsPortletDisplayContext {
 		return portletURL.toString();
 	}
 
-	public SearchContainer getSearchContainer() throws PortalException {
-		if (_searchContainer != null) {
-			return _searchContainer;
+	public SearchContainer<SynonymSetsEntryDisplayContext> getSearchContainer()
+		throws PortalException {
+
+		if (_searchContainer == null) {
+			_searchContainer = new SearchContainer<>(
+				_renderRequest, _getPortletURL(), null, "there-are-no-entries");
+
+			_searchContainer.setId("synonymSetsEntries");
+			_searchContainer.setOrderByCol(_getOrderByCol());
+			_searchContainer.setOrderByType(getOrderByType());
+			_searchContainer.setRowChecker(
+				new EmptyOnClickRowChecker(_renderResponse));
 		}
-
-		SearchContainer searchContainer = new SearchContainer(
-			_renderRequest, _getPortletURL(), null, "there-are-no-entries");
-
-		searchContainer.setId("synonymSetsEntries");
-		searchContainer.setOrderByCol(_getOrderByCol());
-		searchContainer.setOrderByType(getOrderByType());
-		searchContainer.setRowChecker(
-			new EmptyOnClickRowChecker(_renderResponse));
-
-		_searchContainer = searchContainer;
 
 		return _searchContainer;
 	}
@@ -219,6 +222,10 @@ public class SynonymSetsPortletDisplayContext {
 		return true;
 	}
 
+	private String _getCompanyId() {
+		return String.valueOf(_themeDisplay.getCompanyId());
+	}
+
 	private List<DropdownItem> _getFilterNavigationDropdownItems() {
 		return new DropdownItemList() {
 			{
@@ -227,7 +234,7 @@ public class SynonymSetsPortletDisplayContext {
 						dropdownItem.setActive(true);
 						dropdownItem.setHref(_renderResponse.createRenderURL());
 						dropdownItem.setLabel(
-							LanguageUtil.get(_request, "all"));
+							LanguageUtil.get(_httpServletRequest, "all"));
 					});
 			}
 		};
@@ -238,7 +245,7 @@ public class SynonymSetsPortletDisplayContext {
 			return _keywords;
 		}
 
-		_keywords = ParamUtil.getString(_request, "keywords");
+		_keywords = ParamUtil.getString(_httpServletRequest, "keywords");
 
 		return _keywords;
 	}
@@ -264,7 +271,8 @@ public class SynonymSetsPortletDisplayContext {
 						dropdownItem.setHref(
 							_getPortletURL(), "orderByCol", "modified-date");
 						dropdownItem.setLabel(
-							LanguageUtil.get(_request, "modified-date"));
+							LanguageUtil.get(
+								_httpServletRequest, "modified-date"));
 					});
 				add(
 					dropdownItem -> {
@@ -273,7 +281,7 @@ public class SynonymSetsPortletDisplayContext {
 						dropdownItem.setHref(
 							_getPortletURL(), "orderByCol", "name");
 						dropdownItem.setLabel(
-							LanguageUtil.get(_request, "name"));
+							LanguageUtil.get(_httpServletRequest, "name"));
 					});
 			}
 		};
@@ -313,17 +321,13 @@ public class SynonymSetsPortletDisplayContext {
 		return false;
 	}
 
-	private String getCompanyId() {
-		return String.valueOf(_themeDisplay.getCompanyId());
-	}
-
 	private String _displayStyle;
+	private final HttpServletRequest _httpServletRequest;
 	private String _keywords;
 	private String _orderByCol;
 	private String _orderByType;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
-	private final HttpServletRequest _request;
 	private SearchContainer<SynonymSetsEntryDisplayContext> _searchContainer;
 	private final ThemeDisplay _themeDisplay;
 

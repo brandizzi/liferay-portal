@@ -18,9 +18,9 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.search.synonym.SynonymIndexer;
 import com.liferay.portal.search.synonyms.web.internal.constants.SynonymsPortletKeys;
 import com.liferay.portal.search.synonyms.web.internal.display.context.SynonymSetsPortletDisplayContext;
-import com.liferay.portal.search.synonym.SynonymIndexer;
 
 import java.io.IOException;
 

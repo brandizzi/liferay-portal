@@ -19,10 +19,10 @@ package com.liferay.portal.search.synonyms.web.internal.constants;
  */
 public class SynonymsPortletKeys {
 
-	public static final String SYNONYMS =
-		"com_liferay_portal_search_synonyms_web_portlet_SynonymsPortlet";
-
 	public static final String SYNONYM_SETS_DISPLAY_CONTEXT =
 		"SYNONYM_SETS_DISPLAY_CONTEXT";
+
+	public static final String SYNONYMS =
+		"com_liferay_portal_search_synonyms_web_portlet_SynonymsPortlet";
 
 }

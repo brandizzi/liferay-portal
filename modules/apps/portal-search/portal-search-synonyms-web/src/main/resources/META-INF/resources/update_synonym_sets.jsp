@@ -53,10 +53,10 @@ portletDisplay.setShowBackIcon(true);
 	SynonymSets.default(
 		'<%= synonymSetsRootElementId %>',
 		{
-			formName: "<%= renderResponse.getNamespace() + "synonymSetsForm" %>",
-			inputName: "<%= renderResponse.getNamespace() + "synonymSetsInput" %>",
-			originalInputName: "<%= renderResponse.getNamespace() + "originalSynonymSetsInput" %>",
-			synonymSets: "<%= synonymSets %>"
+			formName: '<%= renderResponse.getNamespace() + "synonymSetsForm" %>',
+			inputName: '<%= renderResponse.getNamespace() + "synonymSetsInput" %>',
+			originalInputName: '<%= renderResponse.getNamespace() + "originalSynonymSetsInput" %>',
+			synonymSets: '<%= synonymSets %>'
 		}
 	);
 </aui:script>

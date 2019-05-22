@@ -30,8 +30,7 @@ page import="com.liferay.portal.search.synonyms.web.internal.display.context.Syn
 <liferay-theme:defineObjects />
 
 <%
-SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext = (SynonymSetsPortletDisplayContext)request.getAttribute(
-	SynonymsPortletKeys.SYNONYM_SETS_DISPLAY_CONTEXT);
+SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext = (SynonymSetsPortletDisplayContext)request.getAttribute(SynonymsPortletKeys.SYNONYM_SETS_DISPLAY_CONTEXT);
 %>
 
 <clay:management-toolbar
@@ -84,6 +83,7 @@ SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext = (SynonymSets
 					</span>
 				</span>
 			</liferay-ui:search-container-column-text>
+
 			<liferay-ui:search-container-column-text>
 				<clay:dropdown-actions
 					dropdownItems="<%= synonymSetsPortletDisplayContext.getActionDropdownItems(synonymSetsEntry) %>"
