@@ -21,10 +21,10 @@ import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.document.Document;
+import com.liferay.portal.search.ranking.web.internal.index.Ranking;
 
 import java.text.DateFormat;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,9 +33,12 @@ import java.util.List;
  */
 public class RankingEntryDisplayContextBuilder {
 
-	public RankingEntryDisplayContextBuilder(String id, Document document) {
+	public RankingEntryDisplayContextBuilder(
+		String id, Document document, Ranking ranking) {
+
 		_id = id;
 		_document = document;
+		_ranking = ranking;
 	}
 
 	public RankingEntryDisplayContext build() {
@@ -55,6 +58,10 @@ public class RankingEntryDisplayContextBuilder {
 		return rankingEntryDisplayContext;
 	}
 
+	protected static String getSizeString(List<?> list) {
+		return String.valueOf(list.size());
+	}
+
 	private Date _getDate(String name) {
 		try {
 			DateFormat dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
@@ -67,25 +74,10 @@ public class RankingEntryDisplayContextBuilder {
 		}
 	}
 
-	private List<Object> _getListObject(Object value) {
-		List<Object> values = new ArrayList<>();
-
-		if (value != null) {
-			if (value instanceof List) {
-				values = (List<Object>) value;
-			}
-			else {
-				values.add(value);
-			}
-		}
-
-		return values;
-	}
-
 	private void _setAliases(
 		RankingEntryDisplayContext rankingEntryDisplayContext) {
 
-		List<Object> aliases = _getListObject(_document.getValue("aliases"));
+		List<String> aliases = _ranking.getAliases();
 
 		if (!aliases.isEmpty()) {
 			rankingEntryDisplayContext.setAliases(
@@ -105,28 +97,20 @@ public class RankingEntryDisplayContextBuilder {
 	private void _setHiddenResultsCount(
 		RankingEntryDisplayContext rankingEntryDisplayContext) {
 
-		List<Object> values = _getListObject(_document.getValue(
-			"hidden_documents"));
-
-		int size = 0;
-
-		if ((values != null) && !values.isEmpty()) {
-			size = values.size();
-		}
-
-		rankingEntryDisplayContext.setHiddenResultsCount(String.valueOf(size));
+		rankingEntryDisplayContext.setHiddenResultsCount(
+			getSizeString(_ranking.getHiddenIds()));
 	}
 
 	private void _setIndex(
 		RankingEntryDisplayContext rankingEntryDisplayContext) {
 
-		rankingEntryDisplayContext.setIndex(_document.getString("index"));
+		rankingEntryDisplayContext.setIndex(_ranking.getIndex());
 	}
 
 	private void _setKeywords(
 		RankingEntryDisplayContext rankingEntryDisplayContext) {
 
-		rankingEntryDisplayContext.setKeywords(_document.getString("keywords"));
+		rankingEntryDisplayContext.setKeywords(_ranking.getQueryString());
 	}
 
 	private void _setModifiedDate(
@@ -139,22 +123,15 @@ public class RankingEntryDisplayContextBuilder {
 	private void _setPinnedResultsCount(
 		RankingEntryDisplayContext rankingEntryDisplayContext) {
 
-		List<Object> values = _getListObject(_document.getValue(
-			"pinned_documents"));
-
-		int size = 0;
-
-		if ((values != null) && !values.isEmpty()) {
-			size = values.size();
-		}
-
-		rankingEntryDisplayContext.setPinnedResultsCount(String.valueOf(size));
+		rankingEntryDisplayContext.setPinnedResultsCount(
+			getSizeString(_ranking.getPins()));
 	}
 
 	private void _setStatus(
 		RankingEntryDisplayContext rankingEntryDisplayContext) {
 
-		rankingEntryDisplayContext.setStatus(_document.getString("status"));
+		rankingEntryDisplayContext.setStatus(
+			String.valueOf(_ranking.getStatus()));
 	}
 
 	private void _setUid(
@@ -168,5 +145,6 @@ public class RankingEntryDisplayContextBuilder {
 
 	private final Document _document;
 	private final String _id;
+	private final Ranking _ranking;
 
 }

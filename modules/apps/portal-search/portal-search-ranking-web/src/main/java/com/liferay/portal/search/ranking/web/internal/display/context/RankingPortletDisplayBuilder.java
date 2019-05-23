@@ -27,16 +27,19 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.hits.SearchHit;
 import com.liferay.portal.search.hits.SearchHits;
 import com.liferay.portal.search.query.Queries;
+import com.liferay.portal.search.ranking.web.internal.index.DocumentToRankingTranslator;
+import com.liferay.portal.search.ranking.web.internal.index.Ranking;
 import com.liferay.portal.search.ranking.web.internal.request.SearchRankingRequest;
 import com.liferay.portal.search.ranking.web.internal.request.SearchRankingResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -50,11 +53,13 @@ import javax.servlet.http.HttpServletRequest;
 public class RankingPortletDisplayBuilder {
 
 	public RankingPortletDisplayBuilder(
+		DocumentToRankingTranslator documentToRankingTranslator,
 		HttpServletRequest httpServletRequest, Language language,
 		Queries queries, RenderRequest renderRequest,
 		RenderResponse renderResponse,
 		SearchEngineAdapter searchEngineAdapter) {
 
+		_documentToRankingTranslator = documentToRankingTranslator;
 		_httpServletRequest = httpServletRequest;
 		_language = language;
 		_queries = queries;
@@ -85,6 +90,21 @@ public class RankingPortletDisplayBuilder {
 		rankingPortletDisplayContext.setTotalItems(searchContainer.getTotal());
 
 		return rankingPortletDisplayContext;
+	}
+
+	protected RankingEntryDisplayContext buildDisplayContext(
+		SearchHit searchHit) {
+
+		String id = searchHit.getId();
+
+		Document document = searchHit.getDocument();
+
+		Ranking ranking = _documentToRankingTranslator.translate(document, id);
+
+		RankingEntryDisplayContextBuilder rankingEntryDisplayContextBuilder =
+			new RankingEntryDisplayContextBuilder(id, document, ranking);
+
+		return rankingEntryDisplayContextBuilder.build();
 	}
 
 	protected List<DropdownItem> getActionDropdownItems() {
@@ -170,23 +190,12 @@ public class RankingPortletDisplayBuilder {
 	protected List<RankingEntryDisplayContext> getRankingEntryDisplayContexts(
 		List<SearchHit> searchHitList) {
 
-		List<RankingEntryDisplayContext> rankingEntryDisplayContexts =
-			new ArrayList<>();
-
-		searchHitList.forEach(
-			searchHit -> {
-				RankingEntryDisplayContextBuilder
-					rankingEntryDisplayContextBuilder =
-						new RankingEntryDisplayContextBuilder(
-							searchHit.getId(), searchHit.getDocument());
-
-				RankingEntryDisplayContext rankingEntryDisplayContext =
-					rankingEntryDisplayContextBuilder.build();
-
-				rankingEntryDisplayContexts.add(rankingEntryDisplayContext);
-			});
-
-		return rankingEntryDisplayContexts;
+		return searchHitList.stream(
+		).map(
+			this::buildDisplayContext
+		).collect(
+			Collectors.toList()
+		);
 	}
 
 	protected String getSearchActionURL() {
@@ -346,16 +355,16 @@ public class RankingPortletDisplayBuilder {
 
 		SearchHits searchHits = searchRankingResponse.getSearchHits();
 
-		List<SearchHit> searchHitList = searchHits.getSearchHits();
-
 		searchContainer.setResults(
-			getRankingEntryDisplayContexts(searchHitList));
+			getRankingEntryDisplayContexts(searchHits.getSearchHits()));
+
 		searchContainer.setSearch(true);
 		searchContainer.setTotal(searchRankingResponse.getTotalHits());
 
 		return searchContainer;
 	}
 
+	private final DocumentToRankingTranslator _documentToRankingTranslator;
 	private final HttpServletRequest _httpServletRequest;
 	private final Language _language;
 	private final Queries _queries;

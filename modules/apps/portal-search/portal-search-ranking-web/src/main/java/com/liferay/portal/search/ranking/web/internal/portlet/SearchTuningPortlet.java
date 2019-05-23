@@ -23,6 +23,7 @@ import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.ranking.web.internal.constants.SearchTuningPortletKeys;
 import com.liferay.portal.search.ranking.web.internal.display.context.RankingPortletDisplayBuilder;
 import com.liferay.portal.search.ranking.web.internal.display.context.RankingPortletDisplayContext;
+import com.liferay.portal.search.ranking.web.internal.index.DocumentToRankingTranslator;
 
 import java.io.IOException;
 
@@ -75,8 +76,8 @@ public class SearchTuningPortlet extends MVCPortlet {
 
 		RankingPortletDisplayContext rankingPortletDisplayContext =
 			new RankingPortletDisplayBuilder(
-				httpServletRequest, language, queries, renderRequest,
-				renderResponse, searchEngineAdapter
+				documentToRankingTranslator, httpServletRequest, language,
+				queries, renderRequest, renderResponse, searchEngineAdapter
 			).build();
 
 		renderRequest.setAttribute(
@@ -85,6 +86,9 @@ public class SearchTuningPortlet extends MVCPortlet {
 
 		super.render(renderRequest, renderResponse);
 	}
+
+	@Reference
+	protected DocumentToRankingTranslator documentToRankingTranslator;
 
 	@Reference
 	protected Language language;
