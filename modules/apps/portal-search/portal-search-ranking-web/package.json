@@ -29,7 +29,7 @@
 	},
 	"dependencies": {
 		"classnames": "^2.2.6",
-		"lodash.isfunction": "^3.0.9",
+		"lodash.isfunction": "3.0.9",
 		"lodash.times": "^4.3.2",
 		"metal-uri": "2.4.0",
 		"prop-types": "^15.6.2",
