@@ -16,7 +16,8 @@ AUI.add(
 
 			if (emptySearchInput.val() === 'true') {
 				instance.emptySearchEnabled = true;
-			} else {
+			}
+			else {
 				instance.emptySearchEnabled = false;
 			}
 
@@ -54,6 +55,15 @@ AUI.add(
 				);
 			},
 
+			removePortletIdAndState: function(queryString) {
+				var searchParams = new URLSearchParams(queryString);
+
+				searchParams.delete('p_p_id');
+				searchParams.delete('p_p_state');
+
+				return '?' + searchParams.toString();
+			},
+
 			search: function() {
 				var instance = this;
 
@@ -63,6 +73,8 @@ AUI.add(
 					var queryString = instance.updateQueryString(
 						document.location.search
 					);
+
+					queryString = instance.removePortletIdAndState(queryString);
 
 					document.location.href = searchURL + queryString;
 				}
