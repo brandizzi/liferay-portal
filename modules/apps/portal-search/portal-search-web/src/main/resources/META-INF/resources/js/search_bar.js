@@ -47,6 +47,15 @@ AUI.add(
 					return (instance.getKeywords() !== '') || instance.emptySearchEnabled;
 				},
 
+				removePortletIdAndState: function(queryString) {
+					var searchParams = new URLSearchParams(queryString);
+
+					searchParams.delete('p_p_id');
+					searchParams.delete('p_p_state');
+
+					return '?' + searchParams.toString();
+				},
+
 				search: function() {
 					var instance = this;
 
@@ -54,6 +63,7 @@ AUI.add(
 						var searchURL = instance.form.get('action');
 
 						var queryString = instance.updateQueryString(document.location.search);
+						queryString = instance.removePortletIdAndState(queryString);
 
 						document.location.href = searchURL + queryString;
 					}
