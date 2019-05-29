@@ -26,6 +26,7 @@ import com.liferay.portal.search.elasticsearch6.internal.util.LogUtil;
 import com.liferay.portal.search.elasticsearch6.internal.util.ResourceUtil;
 import com.liferay.portal.search.elasticsearch6.settings.IndexSettingsContributor;
 import com.liferay.portal.search.elasticsearch6.settings.IndexSettingsHelper;
+import com.liferay.portal.search.index.IndexNameBuilder;
 
 import java.util.Map;
 import java.util.Set;
