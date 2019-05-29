@@ -49,7 +49,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Arquillian.class)
 @SybaseDumpTransactionLog(dumpBefore = {SybaseDump.CLASS, SybaseDump.METHOD})
-public class DefaultDDLStructuresPortalInstanceTest {
+public class DefaultDDLStructuresPortalInstanceDefaultIndexerProblemTest {
 
 	@ClassRule
 	@Rule
@@ -61,6 +61,8 @@ public class DefaultDDLStructuresPortalInstanceTest {
 	@Before
 	public void setUp() throws Exception {
 		_indexer = IndexerRegistryUtil.getIndexer(DDMStructure.class);
+
+		_setUpUnregisterIndexer();
 
 		_company = addCompany();
 
@@ -112,10 +114,14 @@ public class DefaultDDLStructuresPortalInstanceTest {
 	@After
 	public void tearDown() throws Exception {
 		CompanyLocalServiceUtil.deleteCompany(_company.getCompanyId());
+
+		_setUpRegisterIndexer();
 	}
 
 	@Test
 	public void test() throws PortalException {
+		_setUpRegisterIndexer();
+
 		User user = _company.getDefaultUser();
 
 		SearchContext searchContext = new SearchContext();
@@ -123,6 +129,8 @@ public class DefaultDDLStructuresPortalInstanceTest {
 		searchContext.setCompanyId(_company.getCompanyId());
 		searchContext.setKeywords(user.getFullName());
 		searchContext.setUserId(user.getUserId());
+		searchContext.setAttribute(
+			"entryClassName", DDMStructure.class.getName());
 
 		QueryConfig queryConfig = searchContext.getQueryConfig();
 
@@ -130,7 +138,7 @@ public class DefaultDDLStructuresPortalInstanceTest {
 
 		Hits hits = _indexer.search(searchContext);
 
-		Assert.assertEquals("Must have 9 documents", 9, hits.getLength());
+		Assert.assertEquals("Must have 0 documents", 0, hits.getLength());
 	}
 
 	protected Company addCompany() throws Exception {
@@ -140,7 +148,16 @@ public class DefaultDDLStructuresPortalInstanceTest {
 			webId, webId, "test.com", false, 0, true);
 	}
 
+	private static void _setUpRegisterIndexer() {
+		IndexerRegistryUtil.register(_indexer);
+	}
+
+	private static void _setUpUnregisterIndexer() {
+		IndexerRegistryUtil.unregister(_indexer);
+	}
+
+	private static Indexer<DDMStructure> _indexer;
+
 	private Company _company;
-	private Indexer<DDMStructure> _indexer;
 
 }
