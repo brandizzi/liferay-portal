@@ -16,7 +16,7 @@ package com.liferay.portal.search.elasticsearch6.internal.synonym;
 
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchClientResolver;
-import com.liferay.portal.search.elasticsearch6.internal.index.IndexNameBuilder;
+import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.synonym.SynonymException;
 import com.liferay.portal.search.synonym.SynonymIndexer;
 
