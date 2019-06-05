@@ -135,7 +135,7 @@ public class DDLRecordIndexerIndexedFieldsTest {
 		ddlRecordFixture = new DDLRecordFixture(
 			ddlRecordSetLocalService, group, user);
 
-		_ddlRecords = ddlRecordFixture.getDdlRecords();
+		_ddlRecords = ddlRecordFixture.getDDLRecords();
 	}
 
 	protected void setUpIndexedFieldsFixture() {

@@ -55,7 +55,7 @@ public class DDLRecordFixture {
 			User user)
 		throws Exception {
 
-		this.ddlRecordSetLocalService = ddlRecordSetLocalService;
+		_ddlRecordSetLocalService = ddlRecordSetLocalService;
 		_group = group;
 		_user = user;
 
@@ -68,14 +68,14 @@ public class DDLRecordFixture {
 			String name, String description, Locale locale)
 		throws Exception {
 
-		DDLRecord ddlRecord = addRecord(name, description, locale);
+		DDLRecord ddlRecord = addDDLRecord(name, description, locale);
 
 		_ddlRecords.add(ddlRecord);
 
 		return ddlRecord;
 	}
 
-	public List<DDLRecord> getDdlRecords() {
+	public List<DDLRecord> getDDLRecords() {
 		return _ddlRecords;
 	}
 
@@ -86,7 +86,7 @@ public class DDLRecordFixture {
 		_group.setModelAttributes(group.getModelAttributes());
 	}
 
-	protected DDLRecord addRecord(
+	protected DDLRecord addDDLRecord(
 			String name, String description, Locale locale)
 		throws Exception {
 
@@ -100,9 +100,7 @@ public class DDLRecordFixture {
 
 		Set<Locale> localesSet = nameMap.keySet();
 
-		Locale[] locales = new Locale[nameMap.size()];
-
-		localesSet.toArray(locales);
+		Locale[] locales = localesSet.toArray(new Locale[nameMap.size()]);
 
 		DDMFormValues ddmFormValues = createDDMFormValues(locales);
 
@@ -181,7 +179,7 @@ public class DDLRecordFixture {
 	protected DDLRecordSet getDdlRecordSet(long recordSetId)
 		throws PortalException {
 
-		return ddlRecordSetLocalService.getRecordSet(recordSetId);
+		return _ddlRecordSetLocalService.getRecordSet(recordSetId);
 	}
 
 	protected void setUpDdlRecordTestHelper() throws Exception {
@@ -195,7 +193,7 @@ public class DDLRecordFixture {
 			PortalUtil.getClassNameId(DDLRecordSet.class), _group);
 	}
 
-	protected DDLRecordSetLocalService ddlRecordSetLocalService;
+	protected DDLRecordSetLocalService _ddlRecordSetLocalService;
 	protected DDMStructureTestHelper ddmStructureTestHelper;
 	protected DDLRecordTestHelper recordTestHelper;
 

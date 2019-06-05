@@ -115,7 +115,7 @@ public class DDLRecordSetIndexerReindexTest {
 		throws Exception {
 
 		try {
-			DDLRecord ddmFormInstanceRecord = ddlRecordFixture.addRecord(
+			DDLRecord ddmFormInstanceRecord = ddlRecordFixture.addDDLRecord(
 				name, description, Locale.US);
 
 			return ddmFormInstanceRecord;
