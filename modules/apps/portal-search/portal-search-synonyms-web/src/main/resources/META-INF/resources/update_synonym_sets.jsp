@@ -20,6 +20,8 @@
 taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 
+<%@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
+
 <liferay-frontend:defineObjects />
 
 <liferay-theme:defineObjects />
@@ -30,7 +32,9 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 String synonymSetsRootElementId = renderResponse.getNamespace() + "-synonym-sets-root";
 String synonymSets = (String)request.getAttribute("synonymSets");
 
+String redirect = ParamUtil.getString(request, "redirect");
 portletDisplay.setShowBackIcon(true);
+portletDisplay.setURLBack(redirect);
 %>
 
 <portlet:actionURL name="updateSynonymsEntryAction" var="updateSynonymsEntryURL">

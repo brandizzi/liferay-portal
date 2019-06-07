@@ -33,22 +33,6 @@ page import="com.liferay.portal.search.synonyms.web.internal.display.context.Syn
 SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext = (SynonymSetsPortletDisplayContext)request.getAttribute(SynonymsPortletKeys.SYNONYM_SETS_DISPLAY_CONTEXT);
 %>
 
-<clay:management-toolbar
-	clearResultsURL="<%= synonymSetsPortletDisplayContext.getClearResultsURL() %>"
-	componentId="synonymSetsEntriesManagementToolbar"
-	creationMenu="<%= synonymSetsPortletDisplayContext.getCreationMenu() %>"
-	disabled="<%= synonymSetsPortletDisplayContext.isDisabledManagementBar() %>"
-	filterDropdownItems="<%= synonymSetsPortletDisplayContext.getFilterItemsDropdownItems() %>"
-	itemsTotal="<%= synonymSetsPortletDisplayContext.getTotalItems() %>"
-	searchActionURL="<%= synonymSetsPortletDisplayContext.getSearchActionURL() %>"
-	searchContainerId="synonymSetsEntries"
-	searchFormName="searchFm"
-	selectable="<%= true %>"
-	showCreationMenu="<%= synonymSetsPortletDisplayContext.isShowCreationMenu() %>"
-	sortingOrder="<%= synonymSetsPortletDisplayContext.getOrderByType() %>"
-	sortingURL="<%= synonymSetsPortletDisplayContext.getSortingURL() %>"
-/>
-
 <aui:form cssClass="container-fluid-1280" method="post" name="SynonymSetsEntriesFm">
 	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 
@@ -73,15 +57,9 @@ SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext = (SynonymSets
 			>
 				<h2 class="h5">
 					<aui:a href="<%= rowURL %>">
-						<%= synonymSetsEntry.getSynonyms() %>
+						<%= synonymSetsEntry.getSynonymsFormatted() %>
 					</aui:a>
 				</h2>
-
-				<span class="text-default">
-					<span class="label label-success text-uppercase">
-						<liferay-ui:message key="approved" />
-					</span>
-				</span>
 			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text>

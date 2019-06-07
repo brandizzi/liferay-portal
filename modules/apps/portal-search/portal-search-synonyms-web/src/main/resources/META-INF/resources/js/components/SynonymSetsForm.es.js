@@ -20,11 +20,6 @@ class SynonymSetsForm extends Component {
 		window.history.back();
 	};
 
-	_handleSaveAsDraft = () => {
-
-		/* TODO: Call backend to save as draft synonym sets */
-	};
-
 	_handleSubmit = () => {
 		event.preventDefault();
 		const form = document.forms[this.props.formName];
@@ -74,14 +69,9 @@ class SynonymSetsForm extends Component {
 						<label>{Liferay.Language.get('synonyms')}</label>
 						<ClayMultiselect
 							onAction={this._handleUpdate}
+							onSubmit={this._handleSubmit}
 							value={synonyms}
 						/>
-
-						<div className="form-feedback-group">
-							<div className="form-text">
-								{Liferay.Language.get('add-an-alias-instruction')}
-							</div>
-						</div>
 
 						<div className="sheet-footer">
 							<ClayButton
@@ -91,10 +81,6 @@ class SynonymSetsForm extends Component {
 								displayStyle="primary"
 								label={Liferay.Language.get('publish')}
 								onClick={this._handleSubmit}
-							/>
-							<ClayButton
-								label={Liferay.Language.get('save-as-draft')}
-								onClick={this._handleSaveAsDraft}
 							/>
 							<ClayButton
 								label={Liferay.Language.get('cancel')}

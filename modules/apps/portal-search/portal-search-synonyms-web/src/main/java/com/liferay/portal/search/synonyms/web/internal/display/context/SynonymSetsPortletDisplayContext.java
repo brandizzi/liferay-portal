@@ -94,6 +94,21 @@ public class SynonymSetsPortletDisplayContext {
 							LanguageUtil.get(_httpServletRequest, "delete"));
 						dropdownItem.setQuickAction(true);
 					});
+
+				add(
+					dropdownItem -> {
+						dropdownItem.setHref(
+							_renderResponse.createRenderURL(),
+							"mvcRenderCommandName", "updateSynonymsEntryRender",
+							"redirect",
+							PortalUtil.getCurrentURL(_httpServletRequest),
+							"synonymSets",
+							synonymSetsEntryDisplayContext.getSynonyms());
+
+						dropdownItem.setLabel(
+							LanguageUtil.get(
+								_httpServletRequest, "edit"));
+					});
 			}
 		};
 	}

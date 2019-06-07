@@ -27,6 +27,10 @@ public class SynonymSetsEntryDisplayContext {
 		return _synonyms;
 	}
 
+	public String getSynonymsFormatted() {
+		return _synonyms.replace(",", ", ");
+	}
+
 	private final String _synonyms;
 
 }
