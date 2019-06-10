@@ -14,13 +14,13 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.index;
 
+import org.elasticsearch.client.AdminClient;
+
 import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch6.internal.connection.IndexName;
 import com.liferay.portal.search.index.IndexNameBuilder;
-
-import org.elasticsearch.client.AdminClient;
 
 /**
  * @author Adam Brandizzi

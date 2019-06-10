@@ -14,26 +14,30 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.document;
 
-import com.liferay.portal.search.elasticsearch6.internal.connection.IndexName;
-import com.liferay.portal.search.elasticsearch6.internal.query.QueryBuilderFactory;
-import com.liferay.portal.search.elasticsearch6.internal.query.SearchAssert;
-
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.QueryBuilder;
+
+import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchClientResolver;
+import com.liferay.portal.search.elasticsearch6.internal.connection.IndexName;
+import com.liferay.portal.search.elasticsearch6.internal.connection.SearchAssert;
+import com.liferay.portal.search.elasticsearch6.internal.query.QueryBuilderFactory;
 
 /**
  * @author André de Oliveira
  */
 public class SingleFieldFixture {
 
-	public SingleFieldFixture(Client client, IndexName indexName, String type) {
-		_client = client;
-		_type = type;
+	public SingleFieldFixture(
+		ElasticsearchClientResolver elasticsearchClientResolver,
+		IndexName indexName, String type) {
 
+		_client = elasticsearchClientResolver.getClient();
 		_index = indexName.getName();
+		_type = type;
 	}
 
+	
 	public void assertNoHits(String text) throws Exception {
 		SearchAssert.assertNoHits(_client, _field, _createQueryBuilder(text));
 	}
