@@ -89,5 +89,25 @@ describe('Liferay.Search.SearchBar', function() {
 				['aui-node', 'liferay-search-bar']
 			)
 		);
+
+		it(
+			'should remove portlet id and state query string',
+			withAlloyUI(
+				function (done, A) {
+					var form = A.Node.create(getFormTemplate('example'));
+
+					var searchBar = new Liferay.Search.SearchBar(form);
+
+					var queryString = '?p_p_id=com_liferay_portal_search_web_search_bar_portlet_SearchBarPortlet&p_p_state=maximized&q=example';
+
+					queryString = searchBar.removePortletIdAndState(queryString);
+
+					assert.equal(queryString, '?q=example');
+
+			        done();
+				},
+				['aui-node', 'liferay-search-bar']
+			)
+		);
 	});
 });
