@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.index;
 
+import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchClientResolver;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch6.internal.connection.Index;
 import com.liferay.portal.search.elasticsearch6.internal.connection.IndexCreator;
@@ -27,7 +28,7 @@ import org.elasticsearch.client.Client;
 /**
  * @author André de Oliveira
  */
-public class LiferayIndexFixture {
+public class LiferayIndexFixture implements ElasticsearchClientResolver {
 
 	public LiferayIndexFixture(String subdirName, IndexName indexName) {
 		_elasticsearchFixture = new ElasticsearchFixture(subdirName);
@@ -46,6 +47,7 @@ public class LiferayIndexFixture {
 			_index.getName(), _elasticsearchFixture.getIndicesAdminClient());
 	}
 
+	@Override
 	public Client getClient() {
 		return _elasticsearchFixture.getClient();
 	}
