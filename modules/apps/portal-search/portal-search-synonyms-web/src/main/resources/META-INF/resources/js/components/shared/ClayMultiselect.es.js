@@ -27,8 +27,10 @@ class ClayMultiselect extends Component {
 		this.props.onAction(value);
 	};
 
-	_handleInputChange = inputValue => {
-		this.setState({inputValue});
+	_handleInputChange = (inputValue, event) => {
+		if (event.action == "input-change") {
+			this.setState({inputValue});
+		}
 	};
 
 	_handleKeyDown = event => {
