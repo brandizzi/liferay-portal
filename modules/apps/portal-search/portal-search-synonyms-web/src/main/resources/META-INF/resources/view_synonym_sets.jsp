@@ -33,8 +33,23 @@ page import="com.liferay.portal.search.synonyms.web.internal.display.context.Syn
 SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext = (SynonymSetsPortletDisplayContext)request.getAttribute(SynonymsPortletKeys.SYNONYM_SETS_DISPLAY_CONTEXT);
 %>
 
-<aui:form cssClass="container-fluid-1280" method="post" name="SynonymSetsEntriesFm">
-	<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+<clay:management-toolbar
+	actionDropdownItems="<%= synonymSetsPortletDisplayContext.getActionDropdownMultipleItems() %>"
+	componentId="synonymSetsEntriesManagementToolbar"
+	creationMenu="<%= synonymSetsPortletDisplayContext.getCreationMenu() %>"
+	disabled="<%= synonymSetsPortletDisplayContext.isDisabledManagementBar() %>"
+	searchContainerId="synonymSetsEntries"
+	selectable="<%= true %>"
+	showCreationMenu="<%= true %>"
+	showSearch="<%= false %>"
+/>
+
+<portlet:actionURL name="updateSynonymsEntryAction" var="updateSynonymsEntryActionURL">
+	<portlet:param name="mvcRenderCommandName" value="updateSynonymsEntryAction" />
+</portlet:actionURL>
+
+<aui:form action="<%= updateSynonymsEntryActionURL %>" cssClass="container-fluid-1280" method="post" name="SynonymSetsEntriesFm">
+	<aui:input name="multipleSynonymSets" type="hidden" value="" />
 
 	<liferay-ui:search-container
 		id="synonymSetsEntries"
@@ -55,11 +70,9 @@ SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext = (SynonymSets
 				colspan="<%= 2 %>"
 				cssClass="table-cell-expand table-title"
 			>
-				<h2 class="h5">
-					<aui:a href="<%= rowURL %>">
-						<%= synonymSetsEntry.getSynonymsFormatted() %>
-					</aui:a>
-				</h2>
+				<aui:a href="<%= rowURL %>">
+					<%= synonymSetsEntry.getSynonymsFormatted() %>
+				</aui:a>
 			</liferay-ui:search-container-column-text>
 
 			<liferay-ui:search-container-column-text>
@@ -74,3 +87,46 @@ SynonymSetsPortletDisplayContext synonymSetsPortletDisplayContext = (SynonymSets
 		/>
 	</liferay-ui:search-container>
 </aui:form>
+
+<aui:script>
+	var deleteMultipleSynonyms = function() {
+		if (confirm('<liferay-ui:message key="are-you-sure-you-want-to-delete-the-selected-entries" />')) {
+			var searchContainer = document.getElementById('<portlet:namespace />SynonymSetsEntriesFm');
+			var selector = 'input[type=checkbox]';
+
+			var checkedSynonyms = $(searchContainer).find(selector).toArray().reduce(
+				function(checked, item) {
+					item = $(item);
+					if (item.prop('checked')) {
+						checked.push(item.parent().siblings()[0].children[0].innerHTML.trim().replace(/, /g, ','));
+					}
+					return checked;
+				},
+				[]
+			);
+
+			var form = document.forms['<portlet:namespace />SynonymSetsEntriesFm'];
+			form.elements['<portlet:namespace />multipleSynonymSets'].value = checkedSynonyms.join(";");
+			form.submit();
+		}
+	};
+
+	var ACTIONS = {
+		'deleteMultipleSynonyms': deleteMultipleSynonyms
+	};
+
+	Liferay.componentReady('synonymSetsEntriesManagementToolbar').then(
+		function(managementToolbar) {
+			managementToolbar.on(
+				'actionItemClicked',
+				function(event) {
+					var itemData = event.data.item.data;
+
+					if (itemData && itemData.action && ACTIONS[itemData.action]) {
+						ACTIONS[itemData.action]();
+					}
+				}
+			);
+		}
+	);
+</aui:script>

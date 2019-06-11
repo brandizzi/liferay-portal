@@ -47,29 +47,56 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		String newSynonymSets = ParamUtil.getString(
-			actionRequest, "synonymSetsInput");
-
-		String originalSynonymSets = ParamUtil.getString(
-			actionRequest, "originalSynonymSetsInput");
-
 		long companyId = portal.getCompanyId(actionRequest);
 
-		for (String filterName : _synonymIndexer.getFilterNames()) {
-			String[] synonymSets = _synonymIndexer.getSynonymSets(
-				companyId, filterName);
+		String multipleSynonymSets = ParamUtil.getString(
+			actionRequest, "multipleSynonymSets");
 
-			if (ArrayUtil.contains(synonymSets, originalSynonymSets, true)) {
-				synonymSets = ArrayUtil.remove(
-					synonymSets, originalSynonymSets);
+		if (Validator.isNotNull(multipleSynonymSets)) {
+			String[] multipleSynonymSetsList = multipleSynonymSets.split(";");
+
+			for (String filterName : _synonymIndexer.getFilterNames()) {
+				String[] synonymSets = _synonymIndexer.getSynonymSets(
+					companyId, filterName);
+
+				for (String synonymToBeDeleted : multipleSynonymSetsList) {
+					if (ArrayUtil.contains(
+							synonymSets, synonymToBeDeleted, true)) {
+
+						synonymSets = ArrayUtil.remove(
+							synonymSets, synonymToBeDeleted);
+					}
+				}
+
+				_synonymIndexer.updateSynonymSets(
+					companyId, filterName, synonymSets);
 			}
+		}
+		else {
+			String newSynonymSets = ParamUtil.getString(
+				actionRequest, "synonymSetsInput");
 
-			if (!Validator.isBlank(newSynonymSets)) {
-				synonymSets = ArrayUtil.append(synonymSets, newSynonymSets);
+			String originalSynonymSets = ParamUtil.getString(
+				actionRequest, "originalSynonymSetsInput");
+
+			for (String filterName : _synonymIndexer.getFilterNames()) {
+				String[] synonymSets = _synonymIndexer.getSynonymSets(
+					companyId, filterName);
+
+				if (ArrayUtil.contains(
+						synonymSets, originalSynonymSets, true)) {
+
+					synonymSets = ArrayUtil.remove(
+						synonymSets, originalSynonymSets);
+				}
+
+				if (!Validator.isBlank(newSynonymSets)) {
+					synonymSets = ArrayUtil.append(synonymSets, newSynonymSets);
+				}
+
+				_synonymIndexer.updateSynonymSets(
+					companyId, filterName, synonymSets);
 			}
-
-			_synonymIndexer.updateSynonymSets(
-				companyId, filterName, synonymSets);
 		}
 
 		actionResponse.setRenderParameter("tabs", "synonym-sets");
