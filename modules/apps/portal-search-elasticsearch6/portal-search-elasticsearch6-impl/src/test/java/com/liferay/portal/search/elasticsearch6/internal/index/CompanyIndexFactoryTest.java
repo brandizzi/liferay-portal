@@ -62,7 +62,7 @@ public class CompanyIndexFactoryTest {
 			_companyIndexFactoryFixture.getCompanyIndexFactory();
 
 		_singleFieldFixture = new SingleFieldFixture(
-			_elasticsearchFixture.getClient(),
+			_elasticsearchFixture,
 			new IndexName(_companyIndexFactoryFixture.getIndexName()),
 			LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE);
 	}
