@@ -91,12 +91,12 @@ public class SortPortletPreferencesImpl implements SortPortletPreferences {
 		SortPortletPreferencesImpl.class);
 
 	private static final Preset[] _presets = {
-		new Preset("", "Relevance"), new Preset("title", "Title"),
-		new Preset("modified-", "Modified"),
-		new Preset("modified+", "Modified (oldest first)"),
-		new Preset("createDate-", "Created"),
-		new Preset("createDate+", "Created (oldest first)"),
-		new Preset("userName", "User")
+		new Preset("", "relevance"), new Preset("title", "title"),
+		new Preset("modified-", "modified"),
+		new Preset("modified+", "modified-oldest-first"),
+		new Preset("createDate-", "created"),
+		new Preset("createDate+", "created-oldest-first"),
+		new Preset("userName", "user")
 	};
 
 	private final PortletPreferencesHelper _portletPreferencesHelper;
