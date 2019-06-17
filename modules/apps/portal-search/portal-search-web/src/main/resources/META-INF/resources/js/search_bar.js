@@ -1,8 +1,6 @@
 AUI.add(
 	'liferay-search-bar',
 	function(A) {
-		var FacetUtil = Liferay.Search.FacetUtil;
-
 		var SearchBar = function(form) {
 			var instance = this;
 
@@ -16,7 +14,8 @@ AUI.add(
 
 			if (emptySearchInput.val() === 'true') {
 				instance.emptySearchEnabled = true;
-			} else {
+			}
+			else {
 				instance.emptySearchEnabled = false;
 			}
 
@@ -71,59 +70,34 @@ AUI.add(
 			updateQueryString: function(queryString) {
 				var instance = this;
 
-				var hasQuestionMark = false;
+				var searchParams = new URLSearchParams(queryString);
 
-				if (queryString[0] === '?') {
-					hasQuestionMark = true;
-				}
-
-				queryString = FacetUtil.updateQueryString(
+				searchParams.set(
 					instance.keywordsInput.get('name'),
-					[instance.getKeywords()],
-					queryString
+					instance.getKeywords()
 				);
+				searchParams.delete('p_p_id');
+				searchParams.delete('p_p_state');
+
 
 				if (instance.scopeSelect) {
-					queryString = FacetUtil.updateQueryString(
+					searchParams.set(
 						instance.scopeSelect.get('name'),
-						[instance.scopeSelect.val()],
-						queryString
+						instance.scopeSelect.val(),
 					);
 				}
 
-				if (hasQuestionMark) {
-					var parts = queryString.split('?');
-
-					queryString = parts[1];
-
-					hasQuestionMark = false;
-				}
-
-				var parameterArray = queryString.split('&');
-
-				parameterArray = FacetUtil.removeURLParameters(
-					'start',
-					parameterArray
-				);
+				searchParams.delete('start');
 
 				if (instance.resetStartPage) {
 					var resetStartPageName = instance.resetStartPage.get(
 						'name'
 					);
 
-					parameterArray = FacetUtil.removeURLParameters(
-						resetStartPageName,
-						parameterArray
-					);
+					searchParams.delete(resetStartPageName);
 				}
 
-				queryString = parameterArray.join('&');
-
-				if (!hasQuestionMark) {
-					queryString = '?' + queryString;
-				}
-
-				return queryString;
+				return '?' + searchParams.toString();
 			},
 
 			_onClick: function(event) {
@@ -143,8 +117,5 @@ AUI.add(
 
 		Liferay.namespace('Search').SearchBar = SearchBar;
 	},
-	'',
-	{
-		requires: ['liferay-search-facet-util']
-	}
+	''
 );
