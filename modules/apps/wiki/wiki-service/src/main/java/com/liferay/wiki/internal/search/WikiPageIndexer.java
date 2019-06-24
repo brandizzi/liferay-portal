@@ -63,20 +63,14 @@ import java.util.Locale;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Brian Wing Shun Chan
  * @author Harry Mark
  * @author Bruno Farache
  * @author Raymond Augé
+ * @deprecated As of Judson (7.1.x), since 7.1.0
  */
-@Component(
-	immediate = true,
-	property = "related.entry.indexer.class.name=com.liferay.wiki.model.WikiPage",
-	service = {Indexer.class, RelatedEntryIndexer.class}
-)
+@Deprecated
 public class WikiPageIndexer
 	extends BaseIndexer<WikiPage> implements RelatedEntryIndexer {
 
@@ -377,26 +371,22 @@ public class WikiPageIndexer
 		indexableActionableDynamicQuery.performActions();
 	}
 
-	@Reference(unbind = "-")
 	protected void setWikiEngineRenderer(
 		WikiEngineRenderer wikiEngineRenderer) {
 
 		_wikiEngineRenderer = wikiEngineRenderer;
 	}
 
-	@Reference(unbind = "-")
 	protected void setWikiNodeLocalService(
 		WikiNodeLocalService wikiNodeLocalService) {
 
 		_wikiNodeLocalService = wikiNodeLocalService;
 	}
 
-	@Reference(unbind = "-")
 	protected void setWikiNodeService(WikiNodeService wikiNodeService) {
 		_wikiNodeService = wikiNodeService;
 	}
 
-	@Reference(unbind = "-")
 	protected void setWikiPageLocalService(
 		WikiPageLocalService wikiPageLocalService) {
 
@@ -406,21 +396,14 @@ public class WikiPageIndexer
 	private static final Log _log = LogFactoryUtil.getLog(
 		WikiPageIndexer.class);
 
-	@Reference
 	private IndexWriterHelper _indexWriterHelper;
-
 	private final RelatedEntryIndexer _relatedEntryIndexer =
 		new BaseRelatedEntryIndexer();
-
-	@Reference
 	private TrashHelper _trashHelper;
-
 	private WikiEngineRenderer _wikiEngineRenderer;
 	private WikiNodeLocalService _wikiNodeLocalService;
 	private WikiNodeService _wikiNodeService;
 	private WikiPageLocalService _wikiPageLocalService;
-
-	@Reference(target = "(model.class.name=com.liferay.wiki.model.WikiPage)")
 	private ModelResourcePermission<WikiPage> _wikiPageModelResourcePermission;
 
 }
