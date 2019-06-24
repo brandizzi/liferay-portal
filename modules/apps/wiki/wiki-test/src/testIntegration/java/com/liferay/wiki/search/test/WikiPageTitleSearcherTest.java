@@ -96,7 +96,7 @@ public class WikiPageTitleSearcherTest {
 		addPage("Barcelona", "Spanish city");
 		addPage("Madrid", "Spanish city");
 
-		assertSearch("city", 0);
+		assertSearch("city", 2);
 	}
 
 	@Test
