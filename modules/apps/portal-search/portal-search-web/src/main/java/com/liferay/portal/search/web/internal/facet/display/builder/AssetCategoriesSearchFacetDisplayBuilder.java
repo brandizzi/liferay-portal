@@ -65,6 +65,10 @@ public class AssetCategoriesSearchFacetDisplayBuilder implements Serializable {
 		return assetCategoriesSearchFacetDisplayContext;
 	}
 
+	public long getExcludedGroupId() {
+		return _excludedGroupId;
+	}
+
 	public void setAssetCategoryLocalService(
 		AssetCategoryLocalService assetCategoryLocalService) {
 
@@ -79,6 +83,10 @@ public class AssetCategoriesSearchFacetDisplayBuilder implements Serializable {
 
 	public void setDisplayStyle(String displayStyle) {
 		_displayStyle = displayStyle;
+	}
+
+	public void setExcludedGroupId(long excludedGroupId) {
+		_excludedGroupId = excludedGroupId;
 	}
 
 	public void setFacet(Facet facet) {
@@ -149,6 +157,8 @@ public class AssetCategoriesSearchFacetDisplayBuilder implements Serializable {
 		if (_buckets.isEmpty()) {
 			return getEmptyTermDisplayContexts();
 		}
+
+		_removeExcludedGroup();
 
 		List<AssetCategoriesSearchFacetTermDisplayContext>
 			assetCategoriesSearchFacetTermDisplayContexts = new ArrayList<>(
@@ -339,10 +349,25 @@ public class AssetCategoriesSearchFacetDisplayBuilder implements Serializable {
 		return null;
 	}
 
+	private void _removeExcludedGroup() {
+		for (int i = 0; i < _buckets.size(); i++) {
+			Tuple tuple = _buckets.get(i);
+
+			AssetCategory assetCategory = (AssetCategory)tuple.getObject(i);
+
+			if ((assetCategory.getGroupId() > 0) &&
+				(assetCategory.getGroupId() == _excludedGroupId)) {
+
+				_buckets.remove(i);
+			}
+		}
+	}
+
 	private AssetCategoryLocalService _assetCategoryLocalService;
 	private AssetCategoryPermissionChecker _assetCategoryPermissionChecker;
 	private List<Tuple> _buckets;
 	private String _displayStyle;
+	private long _excludedGroupId;
 	private Facet _facet;
 	private boolean _frequenciesVisible;
 	private int _frequencyThreshold;
