@@ -350,17 +350,25 @@ public class AssetCategoriesSearchFacetDisplayBuilder implements Serializable {
 	}
 
 	private void _removeExcludedGroup() {
-		for (int i = 0; i < _buckets.size(); i++) {
-			Tuple tuple = _buckets.get(i);
+		Stream<Tuple> stream = _buckets.stream();
 
-			AssetCategory assetCategory = (AssetCategory)tuple.getObject(i);
+		_buckets = stream.filter(
+			tuple -> {
+				if (_excludedGroupId == 0) {
+					return true;
+				}
 
-			if ((assetCategory.getGroupId() > 0) &&
-				(assetCategory.getGroupId() == _excludedGroupId)) {
+				AssetCategory assetCategory = (AssetCategory)tuple.getObject(0);
 
-				_buckets.remove(i);
+				if (assetCategory.getGroupId() == _excludedGroupId) {
+					return false;
+				}
+
+				return true;
 			}
-		}
+		).collect(
+			Collectors.toList()
+		);
 	}
 
 	private AssetCategoryLocalService _assetCategoryLocalService;
