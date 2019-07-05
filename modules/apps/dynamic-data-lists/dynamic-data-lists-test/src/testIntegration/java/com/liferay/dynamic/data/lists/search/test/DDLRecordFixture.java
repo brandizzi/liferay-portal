@@ -60,9 +60,9 @@ public class DDLRecordFixture {
 		_group = group;
 		_user = user;
 
-		setUpDdmStructureTestHelper();
+		setUpDDMStructureTestHelper();
 
-		setUpDdlRecordTestHelper();
+		setUpDDLRecordTestHelper();
 	}
 
 	public DDLRecord createDDLRecord(
@@ -76,7 +76,7 @@ public class DDLRecordFixture {
 		return ddlRecord;
 	}
 
-	public List<DDLRecord> getDdlRecords() {
+	public List<DDLRecord> getDDLRecords() {
 		return _ddlRecords;
 	}
 
@@ -144,19 +144,19 @@ public class DDLRecordFixture {
 			name, localizedValue);
 	}
 
-	protected DDLRecordSet getDdlRecordSet(long recordSetId)
+	protected DDLRecordSet getDDLRecordSet(long recordSetId)
 		throws PortalException {
 
 		return ddlRecordSetLocalService.getRecordSet(recordSetId);
 	}
 
-	protected void setUpDdlRecordTestHelper() throws Exception {
+	protected void setUpDDLRecordTestHelper() throws Exception {
 		DDLRecordSet recordSet = addRecordSet();
 
 		recordTestHelper = new DDLRecordTestHelper(_group, _user, recordSet);
 	}
 
-	protected void setUpDdmStructureTestHelper() throws Exception {
+	protected void setUpDDMStructureTestHelper() throws Exception {
 		ddmStructureTestHelper = new DDMStructureTestHelper(
 			PortalUtil.getClassNameId(DDLRecordSet.class), _group);
 	}

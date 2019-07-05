@@ -43,26 +43,26 @@ public class DDLRecordSetFixture {
 		_group = group;
 		_user = user;
 
-		setUpDdlRecordTestHelper();
+		setUpDDLRecordTestHelper();
 	}
 
 	public DDLRecordSet createDDLRecordSet() throws Exception {
-		DDLRecordSet ddlRecordSet = addRecordSet();
+		DDLRecordSet ddlRecordSet = addDDLRecordSet();
 
 		_ddlRecordSets.add(ddlRecordSet);
 
 		return ddlRecordSet;
 	}
 
-	public DDLRecordSet getDdlRecordSet() {
+	public DDLRecordSet getDDLRecordSet() {
 		return _ddlRecordSet;
 	}
 
-	public List<DDLRecordSet> getDdlRecordSets() {
+	public List<DDLRecordSet> getDDLRecordSets() {
 		return _ddlRecordSets;
 	}
 
-	protected DDLRecordSet addRecordSet() throws Exception {
+	protected DDLRecordSet addDDLRecordSet() throws Exception {
 		DDLRecordSetTestHelper recordSetTestHelper = new DDLRecordSetTestHelper(
 			_group, _user);
 
@@ -98,7 +98,7 @@ public class DDLRecordSetFixture {
 		return ddmForm;
 	}
 
-	protected void setUpDdlRecordTestHelper() throws Exception {
+	protected void setUpDDLRecordTestHelper() throws Exception {
 		_ddlRecordSet = createDDLRecordSet();
 
 		_recordTestHelper = new DDLRecordTestHelper(
