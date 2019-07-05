@@ -134,7 +134,7 @@ public class DDLRecordIndexerIndexedFieldsTest {
 		ddlRecordFixture = new DDLRecordFixture(
 			ddlRecordSetLocalService, group, user);
 
-		_ddlRecords = ddlRecordFixture.getDdlRecords();
+		_ddlRecords = ddlRecordFixture.getDDLRecords();
 	}
 
 	protected void setUpIndexedFieldsFixture() {
@@ -303,7 +303,7 @@ public class DDLRecordIndexerIndexedFieldsTest {
 
 	private String _getTitle(long recordSetId, Locale locale) {
 		try {
-			DDLRecordSet recordSet = ddlRecordFixture.getDdlRecordSet(
+			DDLRecordSet recordSet = ddlRecordFixture.getDDLRecordSet(
 				recordSetId);
 
 			DDMStructure ddmStructure = recordSet.getDDMStructure();
@@ -327,7 +327,7 @@ public class DDLRecordIndexerIndexedFieldsTest {
 			DDLRecord ddlRecord, Map<String, String> map)
 		throws Exception {
 
-		DDLRecordSet recordSet = ddlRecordFixture.getDdlRecordSet(
+		DDLRecordSet recordSet = ddlRecordFixture.getDDLRecordSet(
 			ddlRecord.getRecordSetId());
 
 		DDMStructure ddmStructure = recordSet.getDDMStructure();
