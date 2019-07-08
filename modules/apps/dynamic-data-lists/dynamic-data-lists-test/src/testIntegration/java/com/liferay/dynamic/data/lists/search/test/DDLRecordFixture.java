@@ -56,7 +56,7 @@ public class DDLRecordFixture {
 			User user)
 		throws Exception {
 
-		this.ddlRecordSetLocalService = ddlRecordSetLocalService;
+		_ddlRecordSetLocalService = ddlRecordSetLocalService;
 		_group = group;
 		_user = user;
 
@@ -69,7 +69,7 @@ public class DDLRecordFixture {
 			String name, String description, Locale locale)
 		throws Exception {
 
-		DDLRecord ddlRecord = _addRecord(name, description, locale);
+		DDLRecord ddlRecord = _addDDLRecord(name, description, locale);
 
 		_ddlRecords.add(ddlRecord);
 
@@ -91,7 +91,7 @@ public class DDLRecordFixture {
 		DDLRecordSetTestHelper recordSetTestHelper = new DDLRecordSetTestHelper(
 			_group);
 
-		DDMStructure ddmStructure = ddmStructureTestHelper.addStructure(
+		DDMStructure ddmStructure = _ddmStructureTestHelper.addStructure(
 			createDDMForm(LocaleUtil.US), StorageType.JSON.toString());
 
 		return recordSetTestHelper.addRecordSet(ddmStructure);
@@ -122,7 +122,7 @@ public class DDLRecordFixture {
 	protected DDMFormValues createDDMFormValues(Locale... locales)
 		throws Exception {
 
-		DDLRecordSet recordSet = recordTestHelper.getRecordSet();
+		DDLRecordSet recordSet = _ddlRecordTestHelper.getRecordSet();
 
 		DDMStructure ddmStructure = recordSet.getDDMStructure();
 
@@ -147,25 +147,23 @@ public class DDLRecordFixture {
 	protected DDLRecordSet getDDLRecordSet(long recordSetId)
 		throws PortalException {
 
-		return ddlRecordSetLocalService.getRecordSet(recordSetId);
+		return _ddlRecordSetLocalService.getRecordSet(recordSetId);
 	}
 
 	protected void setUpDDLRecordTestHelper() throws Exception {
 		DDLRecordSet recordSet = addRecordSet();
 
-		recordTestHelper = new DDLRecordTestHelper(_group, _user, recordSet);
+		_ddlRecordTestHelper = new DDLRecordTestHelper(
+			_group, _user, recordSet);
 	}
 
 	protected void setUpDDMStructureTestHelper() throws Exception {
-		ddmStructureTestHelper = new DDMStructureTestHelper(
+		_ddmStructureTestHelper = new DDMStructureTestHelper(
 			PortalUtil.getClassNameId(DDLRecordSet.class), _group);
 	}
 
-	protected DDLRecordSetLocalService ddlRecordSetLocalService;
-	protected DDMStructureTestHelper ddmStructureTestHelper;
-	protected DDLRecordTestHelper recordTestHelper;
-
-	private DDLRecord _addRecord(String name, String description, Locale locale)
+	private DDLRecord _addDDLRecord(
+			String name, String description, Locale locale)
 		throws Exception {
 
 		Map<Locale, String> nameMap = new HashMap<>();
@@ -195,11 +193,14 @@ public class DDLRecordFixture {
 
 		ddmFormValues.addDDMFormFieldValue(descriptionDDMFormFieldValue);
 
-		return recordTestHelper.addRecord(
+		return _ddlRecordTestHelper.addRecord(
 			ddmFormValues, WorkflowConstants.ACTION_PUBLISH);
 	}
 
 	private final List<DDLRecord> _ddlRecords = new ArrayList<>();
+	private final DDLRecordSetLocalService _ddlRecordSetLocalService;
+	private DDLRecordTestHelper _ddlRecordTestHelper;
+	private DDMStructureTestHelper _ddmStructureTestHelper;
 	private final Group _group;
 	private final User _user;
 
