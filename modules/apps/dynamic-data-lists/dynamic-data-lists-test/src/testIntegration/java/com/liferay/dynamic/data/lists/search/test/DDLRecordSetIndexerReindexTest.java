@@ -135,7 +135,7 @@ public class DDLRecordSetIndexerReindexTest {
 	protected void setUpDdlRecordSetFixture() throws Exception {
 		ddlRecordSetFixture = new DDLRecordSetFixture(group, user);
 
-		_ddlRecordSets = ddlRecordSetFixture.getDdlRecordSets();
+		_ddlRecordSets = ddlRecordSetFixture.getDDLRecordSets();
 	}
 
 	protected void setUpDdlRecordSetIndexerFixture() {

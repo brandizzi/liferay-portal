@@ -73,7 +73,7 @@ public class DDLRecordSetIndexerIndexedFieldsTest {
 
 	@Test
 	public void testIndexedFields() throws Exception {
-		DDLRecordSet ddlRecortSet = ddlRecordSetFixture.getDdlRecordSet();
+		DDLRecordSet ddlRecortSet = ddlRecordSetFixture.getDDLRecordSet();
 
 		String searchTerm = user.getFullName();
 
@@ -89,7 +89,7 @@ public class DDLRecordSetIndexerIndexedFieldsTest {
 	protected void setUpDdlRecordSetFixture() throws Exception {
 		ddlRecordSetFixture = new DDLRecordSetFixture(group, user);
 
-		_ddlRecordSets = ddlRecordSetFixture.getDdlRecordSets();
+		_ddlRecordSets = ddlRecordSetFixture.getDDLRecordSets();
 	}
 
 	protected void setUpIndexedFieldsFixture() {
