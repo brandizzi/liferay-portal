@@ -15,7 +15,6 @@
 package com.liferay.dynamic.data.lists.search.test;
 
 import com.liferay.dynamic.data.lists.helper.DDLRecordSetTestHelper;
-import com.liferay.dynamic.data.lists.helper.DDLRecordTestHelper;
 import com.liferay.dynamic.data.lists.model.DDLRecordSet;
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormField;
@@ -42,16 +41,7 @@ public class DDLRecordSetFixture {
 	public DDLRecordSetFixture(Group group, User user) throws Exception {
 		_group = group;
 		_user = user;
-
-		setUpDDLRecordTestHelper();
-	}
-
-	public DDLRecordSet createDDLRecordSet() throws Exception {
-		DDLRecordSet ddlRecordSet = addDDLRecordSet();
-
-		_ddlRecordSets.add(ddlRecordSet);
-
-		return ddlRecordSet;
+		_ddlRecordSet = createDDLRecordSet();
 	}
 
 	public DDLRecordSet getDDLRecordSet() {
@@ -62,10 +52,9 @@ public class DDLRecordSetFixture {
 		return _ddlRecordSets;
 	}
 
-	protected DDLRecordSet addDDLRecordSet() throws Exception {
+	protected DDLRecordSet createDDLRecordSet() throws Exception {
 		DDLRecordSetTestHelper ddlRecordSetTestHelper =
-			new DDLRecordSetTestHelper(
-				_group, _user);
+			new DDLRecordSetTestHelper(_group, _user);
 
 		DDMStructureTestHelper ddmStructureTestHelper =
 			new DDMStructureTestHelper(
@@ -74,7 +63,12 @@ public class DDLRecordSetFixture {
 		DDMStructure ddmStructure = ddmStructureTestHelper.addStructure(
 			createDDMForm(LocaleUtil.US), StorageType.JSON.toString());
 
-		return ddlRecordSetTestHelper.addRecordSet(ddmStructure);
+		DDLRecordSet ddlRecordSet = ddlRecordSetTestHelper.addRecordSet(
+			ddmStructure);
+
+		_ddlRecordSets.add(ddlRecordSet);
+
+		return ddlRecordSet;
 	}
 
 	protected DDMForm createDDMForm(Locale... locales) {
@@ -99,17 +93,9 @@ public class DDLRecordSetFixture {
 		return ddmForm;
 	}
 
-	protected void setUpDDLRecordTestHelper() throws Exception {
-		_ddlRecordSet = createDDLRecordSet();
-
-		_recordTestHelper = new DDLRecordTestHelper(
-			_group, _user, _ddlRecordSet);
-	}
-
-	private DDLRecordSet _ddlRecordSet;
+	private final DDLRecordSet _ddlRecordSet;
 	private final List<DDLRecordSet> _ddlRecordSets = new ArrayList<>();
 	private final Group _group;
-	private DDLRecordTestHelper _recordTestHelper;
 	private final User _user;
 
 }

@@ -14,7 +14,6 @@
 
 package com.liferay.dynamic.data.lists.search.test;
 
-import com.liferay.dynamic.data.lists.helper.DDLRecordSetTestHelper;
 import com.liferay.dynamic.data.lists.helper.DDLRecordTestHelper;
 import com.liferay.dynamic.data.lists.model.DDLRecord;
 import com.liferay.dynamic.data.lists.model.DDLRecordSet;
@@ -69,7 +68,35 @@ public class DDLRecordFixture {
 			String name, String description, Locale locale)
 		throws Exception {
 
-		DDLRecord ddlRecord = _addDDLRecord(name, description, locale);
+		Map<Locale, String> nameMap = new HashMap<>();
+
+		nameMap.put(locale, name);
+
+		Map<Locale, String> descriptionMap = new HashMap<>();
+
+		descriptionMap.put(locale, description);
+
+		Set<Locale> localesSet = nameMap.keySet();
+
+		Locale[] locales = new Locale[nameMap.size()];
+
+		localesSet.toArray(locales);
+
+		DDMFormValues ddmFormValues = createDDMFormValues(locales);
+
+		DDMFormFieldValue nameDDMFormFieldValue =
+			createLocalizedDDMFormFieldValue("name", nameMap, locale);
+
+		ddmFormValues.addDDMFormFieldValue(nameDDMFormFieldValue);
+
+		DDMFormFieldValue descriptionDDMFormFieldValue =
+			createLocalizedDDMFormFieldValue(
+				"description", descriptionMap, locale);
+
+		ddmFormValues.addDDMFormFieldValue(descriptionDDMFormFieldValue);
+
+		DDLRecord ddlRecord = _ddlRecordTestHelper.addRecord(
+			ddmFormValues, WorkflowConstants.ACTION_PUBLISH);
 
 		_ddlRecords.add(ddlRecord);
 
@@ -88,9 +115,6 @@ public class DDLRecordFixture {
 	}
 
 	protected DDLRecordSet addRecordSet() throws Exception {
-		DDLRecordSetTestHelper ddlRecordSetTestHelpernew DDLRecordSetTestHelper(
-			_group);
-
 		DDMStructure ddmStructure = _ddmStructureTestHelper.addStructure(
 			createDDMForm(LocaleUtil.US), StorageType.JSON.toString());
 
@@ -160,41 +184,6 @@ public class DDLRecordFixture {
 	protected void setUpDDMStructureTestHelper() throws Exception {
 		_ddmStructureTestHelper = new DDMStructureTestHelper(
 			PortalUtil.getClassNameId(DDLRecordSet.class), _group);
-	}
-
-	private DDLRecord _addDDLRecord(
-			String name, String description, Locale locale)
-		throws Exception {
-
-		Map<Locale, String> nameMap = new HashMap<>();
-
-		nameMap.put(locale, name);
-
-		Map<Locale, String> descriptionMap = new HashMap<>();
-
-		descriptionMap.put(locale, description);
-
-		Set<Locale> localesSet = nameMap.keySet();
-
-		Locale[] locales = new Locale[nameMap.size()];
-
-		localesSet.toArray(locales);
-
-		DDMFormValues ddmFormValues = createDDMFormValues(locales);
-
-		DDMFormFieldValue nameDDMFormFieldValue =
-			createLocalizedDDMFormFieldValue("name", nameMap, locale);
-
-		ddmFormValues.addDDMFormFieldValue(nameDDMFormFieldValue);
-
-		DDMFormFieldValue descriptionDDMFormFieldValue =
-			createLocalizedDDMFormFieldValue(
-				"description", descriptionMap, locale);
-
-		ddmFormValues.addDDMFormFieldValue(descriptionDDMFormFieldValue);
-
-		return _ddlRecordTestHelper.addRecord(
-			ddmFormValues, WorkflowConstants.ACTION_PUBLISH);
 	}
 
 	private final List<DDLRecord> _ddlRecords = new ArrayList<>();
