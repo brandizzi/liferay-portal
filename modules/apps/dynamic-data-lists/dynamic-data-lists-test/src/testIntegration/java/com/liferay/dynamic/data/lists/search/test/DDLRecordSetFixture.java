@@ -63,8 +63,9 @@ public class DDLRecordSetFixture {
 	}
 
 	protected DDLRecordSet addDDLRecordSet() throws Exception {
-		DDLRecordSetTestHelper recordSetTestHelper = new DDLRecordSetTestHelper(
-			_group, _user);
+		DDLRecordSetTestHelper ddlRecordSetTestHelper =
+			new DDLRecordSetTestHelper(
+				_group, _user);
 
 		DDMStructureTestHelper ddmStructureTestHelper =
 			new DDMStructureTestHelper(
@@ -73,7 +74,7 @@ public class DDLRecordSetFixture {
 		DDMStructure ddmStructure = ddmStructureTestHelper.addStructure(
 			createDDMForm(LocaleUtil.US), StorageType.JSON.toString());
 
-		return recordSetTestHelper.addRecordSet(ddmStructure);
+		return ddlRecordSetTestHelper.addRecordSet(ddmStructure);
 	}
 
 	protected DDMForm createDDMForm(Locale... locales) {
