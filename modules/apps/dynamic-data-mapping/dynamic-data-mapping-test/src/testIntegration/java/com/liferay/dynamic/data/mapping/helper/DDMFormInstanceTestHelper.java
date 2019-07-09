@@ -126,15 +126,17 @@ public class DDMFormInstanceTestHelper {
 	public DDMFormInstance addDDMFormInstance(DDMStructure ddmStructure)
 		throws Exception {
 
+		Locale defaultLocale = getDefaultLocale(ddmStructure);
+
 		Map<Locale, String> nameMap = new HashMap<>();
 
-		nameMap.put(LocaleUtil.US, RandomTestUtil.randomString());
+		nameMap.put(defaultLocale, RandomTestUtil.randomString());
 
 		Map<Locale, String> descriptionMap = new HashMap<>();
 
-		descriptionMap.put(LocaleUtil.US, RandomTestUtil.randomString());
+		descriptionMap.put(defaultLocale, RandomTestUtil.randomString());
 
-		DDMForm settingsDDMForm = DDMFormTestUtil.createDDMForm();
+		DDMForm settingsDDMForm = DDMFormTestUtil.createDDMForm(defaultLocale);
 
 		DDMFormValues settingsDDMFormValues =
 			DDMFormValuesTestUtil.createDDMFormValues(settingsDDMForm);
@@ -152,23 +154,25 @@ public class DDMFormInstanceTestHelper {
 			DDMStructure ddmStructure, FileEntry fileEntry)
 		throws Exception {
 
+		Locale defaultLocale = getDefaultLocale(ddmStructure);
+
 		Map<Locale, String> nameMap = new HashMap<>();
 
-		nameMap.put(LocaleUtil.US, RandomTestUtil.randomString());
+		nameMap.put(defaultLocale, RandomTestUtil.randomString());
 
 		Map<Locale, String> descriptionMap = new HashMap<>();
 
-		descriptionMap.put(LocaleUtil.US, RandomTestUtil.randomString());
+		descriptionMap.put(defaultLocale, RandomTestUtil.randomString());
 
 		DDMForm fileEntryDDMForm = new DDMForm();
 
 		Set<Locale> availableLocales = new LinkedHashSet<>();
 
-		availableLocales.add(LocaleUtil.US);
+		availableLocales.add(defaultLocale);
 
 		fileEntryDDMForm.setAvailableLocales(availableLocales);
 
-		fileEntryDDMForm.setDefaultLocale(LocaleUtil.US);
+		fileEntryDDMForm.setDefaultLocale(defaultLocale);
 
 		DDMFormTestUtil.addDocumentLibraryDDMFormField(
 			fileEntryDDMForm, "DocumentsAndMedia9t17");
@@ -221,9 +225,11 @@ public class DDMFormInstanceTestHelper {
 			long formInstanceId, DDMStructure ddmStructure)
 		throws Exception {
 
+		Locale defaultLocale = getDefaultLocale(ddmStructure);
+
 		Map<Locale, String> nameMap = new HashMap<>();
 
-		nameMap.put(LocaleUtil.US, RandomTestUtil.randomString());
+		nameMap.put(defaultLocale, RandomTestUtil.randomString());
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(_group.getGroupId());
@@ -234,6 +240,16 @@ public class DDMFormInstanceTestHelper {
 		return DDMFormInstanceLocalServiceUtil.updateFormInstance(
 			formInstanceId, ddmStructure.getStructureId(), nameMap, null,
 			formInstance.getSettingsDDMFormValues(), serviceContext);
+	}
+
+	protected Locale getDefaultLocale(DDMStructure ddmStructure) {
+		DDMForm ddmForm = ddmStructure.getDDMForm();
+
+		if (ddmForm != null) {
+			return ddmForm.getDefaultLocale();
+		}
+
+		return LocaleUtil.getSiteDefault();
 	}
 
 	private final Group _group;

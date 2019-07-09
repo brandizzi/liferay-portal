@@ -67,13 +67,18 @@ public class DDMFormInstanceFixture {
 	}
 
 	protected DDMFormInstance addDDMFormInstance() throws Exception {
+		return addDDMFormInstance(LocaleUtil.US);
+	}
+
+	protected DDMFormInstance addDDMFormInstance(Locale locale)
+		throws Exception {
+
 		DDMStructureTestHelper ddmStructureTestHelper =
 			new DDMStructureTestHelper(
 				PortalUtil.getClassNameId(DDMFormInstance.class), _group);
 
 		DDMStructure ddmStructure = ddmStructureTestHelper.addStructure(
-			DDMFormFixture.createDDMForm(LocaleUtil.US),
-			StorageType.JSON.toString());
+			DDMFormFixture.createDDMForm(locale), StorageType.JSON.toString());
 
 		DDMFormInstanceTestHelper ddmFormInstanceTestHelper =
 			new DDMFormInstanceTestHelper(_group, _user);

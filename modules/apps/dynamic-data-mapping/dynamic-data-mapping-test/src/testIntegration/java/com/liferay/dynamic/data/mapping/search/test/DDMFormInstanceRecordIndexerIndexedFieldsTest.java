@@ -17,6 +17,7 @@ package com.liferay.dynamic.data.mapping.search.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecord;
+import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
 import com.liferay.dynamic.data.mapping.util.DDMIndexer;
 import com.liferay.petra.string.StringBundler;
@@ -31,6 +32,7 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -51,6 +53,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -74,6 +77,8 @@ public class DDMFormInstanceRecordIndexerIndexedFieldsTest {
 
 	@Before
 	public void setUp() throws Exception {
+		_defaultLocale = LocaleThreadLocal.getDefaultLocale();
+
 		setUpIndexedFieldsFixture();
 
 		setUpDDMFormInstanceRecordIndexerFixture();
@@ -83,12 +88,22 @@ public class DDMFormInstanceRecordIndexerIndexedFieldsTest {
 		setUpDDMFormInstanceRecordFixture();
 	}
 
+	@After
+	public void tearDown() {
+		LocaleThreadLocal.setDefaultLocale(_defaultLocale);
+	}
+
 	@Test
 	public void testIndexedFields() throws Exception {
-		String searchTerm = user.getFullName();
+		Locale locale = LocaleUtil.JAPAN;
+
+		setTestLocale(locale);
+
+		String searchTerm = "新規";
 
 		DDMFormInstanceRecord ddmFormInstanceRecord =
-			ddmFormInstanceRecordFixture.createDDMFormInstanceRecord();
+			ddmFormInstanceRecordFixture.createDDMFormInstanceRecord(
+				"新規", "新規", locale);
 
 		Document document = ddmFormInstanceRecordIndexerFixture.searchOnlyOne(
 			searchTerm);
@@ -101,7 +116,11 @@ public class DDMFormInstanceRecordIndexerIndexedFieldsTest {
 		FieldValuesAssert.assertFieldValues(expected, document, searchTerm);
 	}
 
-	protected void setUpDDMFormInstanceRecordFixture() throws Exception {
+	protected void setTestLocale(Locale locale) {
+		LocaleThreadLocal.setDefaultLocale(locale);
+	}
+
+	protected void setUpDDMFormInstanceRecordFixture() {
 		ddmFormInstanceRecordFixture = new DDMFormInstanceRecordFixture(
 			group, user);
 
@@ -266,9 +285,12 @@ public class DDMFormInstanceRecordIndexerIndexedFieldsTest {
 		Document document = DocumentFixture.newDocument(
 			user.getCompanyId(), group.getGroupId(), className);
 
+		DDMFormInstance formInstance = ddmFormInstanceRecord.getFormInstance();
+
+		DDMStructure structure = formInstance.getStructure();
+
 		_ddmIndexer.addAttributes(
-			document, ddmFormInstanceRecordFixture.getDdmStructure(),
-			ddmFormInstanceRecord.getDDMFormValues());
+			document, structure, ddmFormInstanceRecord.getDDMFormValues());
 
 		Map<String, String> fieldValues = _getFieldValues(document);
 
@@ -328,6 +350,8 @@ public class DDMFormInstanceRecordIndexerIndexedFieldsTest {
 
 	@Inject
 	private DDMIndexer _ddmIndexer;
+
+	private Locale _defaultLocale;
 
 	@DeleteAfterTestRun
 	private List<Group> _groups;
