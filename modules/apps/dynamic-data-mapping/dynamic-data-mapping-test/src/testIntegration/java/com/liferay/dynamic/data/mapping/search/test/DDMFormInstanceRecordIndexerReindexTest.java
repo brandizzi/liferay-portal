@@ -85,7 +85,7 @@ public class DDMFormInstanceRecordIndexerReindexTest {
 			DDMFormInstanceRecord.class);
 	}
 
-	protected void setUpDDMFormInstanceRecordFixture() throws Exception {
+	protected void setUpDDMFormInstanceRecordFixture() {
 		ddmFormInstanceRecordFixture = new DDMFormInstanceRecordFixture(
 			group, user);
 
