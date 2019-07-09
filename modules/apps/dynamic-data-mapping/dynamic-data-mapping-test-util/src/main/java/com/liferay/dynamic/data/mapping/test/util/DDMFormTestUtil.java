@@ -96,6 +96,11 @@ public class DDMFormTestUtil {
 		return availableLocales;
 	}
 
+	public static DDMForm createDDMForm(Locale defaultLocale) {
+		return createDDMForm(
+			createAvailableLocales(defaultLocale), defaultLocale);
+	}
+
 	public static DDMForm createDDMForm(
 		Set<Locale> availableLocales, Locale defaultLocale) {
 
@@ -117,7 +122,7 @@ public class DDMFormTestUtil {
 	}
 
 	public static DDMFormField createDDMFormField(
-		String name, String label, String type, String dataType,
+		Locale locale, String name, String label, String type, String dataType,
 		boolean localizable, boolean repeatable, boolean required) {
 
 		DDMFormField ddmFormField = new DDMFormField(name, type);
@@ -129,9 +134,18 @@ public class DDMFormTestUtil {
 
 		LocalizedValue localizedValue = ddmFormField.getLabel();
 
-		localizedValue.addString(LocaleUtil.US, label);
+		localizedValue.addString(locale, label);
 
 		return ddmFormField;
+	}
+
+	public static DDMFormField createDDMFormField(
+		String name, String label, String type, String dataType,
+		boolean localizable, boolean repeatable, boolean required) {
+
+		return createDDMFormField(
+			LocaleUtil.US, name, label, type, dataType, localizable, repeatable,
+			required);
 	}
 
 	public static DDMFormField createDDMFormField(
