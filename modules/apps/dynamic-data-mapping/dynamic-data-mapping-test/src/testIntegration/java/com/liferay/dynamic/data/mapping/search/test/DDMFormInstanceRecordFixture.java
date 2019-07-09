@@ -15,7 +15,7 @@
 package com.liferay.dynamic.data.mapping.search.test;
 
 import com.liferay.dynamic.data.mapping.helper.DDMFormInstanceRecordTestHelper;
-import com.liferay.dynamic.data.mapping.helper.DDMFormInstanceTestHelper;
+import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecord;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
@@ -23,23 +23,19 @@ import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.dynamic.data.mapping.model.Value;
 import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
 import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
-import com.liferay.dynamic.data.mapping.storage.StorageType;
 import com.liferay.dynamic.data.mapping.test.util.DDMFormValuesTestUtil;
-import com.liferay.dynamic.data.mapping.test.util.DDMStructureTestHelper;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Luan Maoski
@@ -47,20 +43,27 @@ import java.util.Set;
  */
 public class DDMFormInstanceRecordFixture {
 
-	public DDMFormInstanceRecordFixture(Group group, User user)
-		throws Exception {
-
+	public DDMFormInstanceRecordFixture(Group group, User user) {
 		_group = group;
 		_user = user;
 
-		_setUpDDMFormInstanceRecordTestHelper();
+		_setUpDDMFormInstanceFixture();
 	}
 
 	public DDMFormInstanceRecord createDDMFormInstanceRecord()
 		throws Exception {
 
+		return createDDMFormInstanceRecord(
+			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
+			LocaleUtil.US);
+	}
+
+	public DDMFormInstanceRecord createDDMFormInstanceRecord(
+			String name, String description, Locale locale)
+		throws Exception {
+
 		DDMFormInstanceRecord ddmFormInstanceRecord = _addDDMFormInstanceRecord(
-			RandomTestUtil.randomString(), RandomTestUtil.randomString());
+			name, description, locale);
 
 		_ddmFormInstanceRecords.add(ddmFormInstanceRecord);
 
@@ -71,32 +74,23 @@ public class DDMFormInstanceRecordFixture {
 		return _ddmFormInstanceRecords;
 	}
 
-	public DDMStructure getDdmStructure() {
-		return _ddmStructure;
-	}
-
 	public ServiceContext getServiceContext() throws Exception {
 		return ServiceContextTestUtil.getServiceContext(
 			_group.getGroupId(), _user.getUserId());
 	}
 
-	protected DDMFormValues createDDMFormValues(Locale... locales)
-		throws Exception {
-
-		DDMFormInstance ddmFormInstance =
-			_ddmFormInstanceRecordTestHelper.getDDMFormInstance();
-
-		DDMStructure ddmStructure = ddmFormInstance.getStructure();
+	protected DDMFormValues createDDMFormValues(
+		DDMForm ddmForm, Locale locale) {
 
 		return DDMFormValuesTestUtil.createDDMFormValues(
-			ddmStructure.getDDMForm(),
-			DDMFormValuesTestUtil.createAvailableLocales(locales), locales[0]);
+			ddmForm, DDMFormValuesTestUtil.createAvailableLocales(locale),
+			locale);
 	}
 
 	protected DDMFormFieldValue createLocalizedDDMFormFieldValue(
-		String name, Map<Locale, String> values) {
+		String name, Map<Locale, String> values, Locale locale) {
 
-		Value localizedValue = new LocalizedValue(LocaleUtil.US);
+		Value localizedValue = new LocalizedValue(locale);
 
 		for (Map.Entry<Locale, String> value : values.entrySet()) {
 			localizedValue.addString(value.getKey(), value.getValue());
@@ -106,68 +100,59 @@ public class DDMFormInstanceRecordFixture {
 			name, localizedValue);
 	}
 
-	private DDMFormInstance _addDDMFormInstance(DDMStructure ddmStructure)
-		throws Exception {
-
-		DDMFormInstanceTestHelper ddmFormInstanceTestHelper =
-			new DDMFormInstanceTestHelper(_group);
-
-		return ddmFormInstanceTestHelper.addDDMFormInstance(ddmStructure);
-	}
-
 	private DDMFormInstanceRecord _addDDMFormInstanceRecord(
-			String name, String description)
+			String name, String description, Locale locale)
 		throws Exception {
+
+		DDMFormInstanceRecordTestHelper ddmFormInstanceRecordTestHelper =
+			_getDDMFormInstanceRecordTestHelper(locale);
 
 		Map<Locale, String> nameMap = new HashMap<>();
 
-		nameMap.put(LocaleUtil.US, name);
+		nameMap.put(locale, name);
 
 		Map<Locale, String> descriptionMap = new HashMap<>();
 
-		descriptionMap.put(LocaleUtil.US, description);
+		descriptionMap.put(locale, description);
 
-		Set<Locale> localesSet = nameMap.keySet();
+		DDMFormInstance ddmFormInstance =
+			ddmFormInstanceRecordTestHelper.getDDMFormInstance();
 
-		Locale[] locales = new Locale[nameMap.size()];
+		DDMStructure ddmStructure = ddmFormInstance.getStructure();
 
-		localesSet.toArray(locales);
-
-		DDMFormValues ddmFormValues = createDDMFormValues(locales);
+		DDMFormValues ddmFormValues = createDDMFormValues(
+			ddmStructure.getDDMForm(), locale);
 
 		DDMFormFieldValue nameDDMFormFieldValue =
-			createLocalizedDDMFormFieldValue("name", nameMap);
+			createLocalizedDDMFormFieldValue("name", nameMap, locale);
 
 		ddmFormValues.addDDMFormFieldValue(nameDDMFormFieldValue);
 
 		DDMFormFieldValue descriptionDDMFormFieldValue =
-			createLocalizedDDMFormFieldValue("description", descriptionMap);
+			createLocalizedDDMFormFieldValue(
+				"description", descriptionMap, locale);
 
 		ddmFormValues.addDDMFormFieldValue(descriptionDDMFormFieldValue);
 
-		return _ddmFormInstanceRecordTestHelper.addDDMFormInstanceRecord(
+		return ddmFormInstanceRecordTestHelper.addDDMFormInstanceRecord(
 			ddmFormValues);
 	}
 
-	private void _setUpDDMFormInstanceRecordTestHelper() throws Exception {
-		DDMStructureTestHelper ddmStructureTestHelper =
-			new DDMStructureTestHelper(
-				PortalUtil.getClassNameId(DDMFormInstance.class), _group);
+	private DDMFormInstanceRecordTestHelper _getDDMFormInstanceRecordTestHelper(
+			Locale locale)
+		throws Exception {
 
-		_ddmStructure = ddmStructureTestHelper.addStructure(
-			DDMFormFixture.createDDMForm(LocaleUtil.US),
-			StorageType.JSON.toString());
-
-		DDMFormInstance ddmFormInstance = _addDDMFormInstance(_ddmStructure);
-
-		_ddmFormInstanceRecordTestHelper = new DDMFormInstanceRecordTestHelper(
-			_group, _user, ddmFormInstance);
+		return new DDMFormInstanceRecordTestHelper(
+			_group, _user, _ddmFormInstanceFixture.addDDMFormInstance(locale));
 	}
 
+	private void _setUpDDMFormInstanceFixture() {
+		_ddmFormInstanceFixture = new DDMFormInstanceFixture(_group, _user);
+	}
+
+	private DDMFormInstanceFixture _ddmFormInstanceFixture;
 	private final List<DDMFormInstanceRecord> _ddmFormInstanceRecords =
 		new ArrayList<>();
-	private DDMFormInstanceRecordTestHelper _ddmFormInstanceRecordTestHelper;
-	private DDMStructure _ddmStructure;
 	private final Group _group;
 	private final User _user;
 

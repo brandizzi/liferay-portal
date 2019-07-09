@@ -26,19 +26,23 @@ import java.util.Locale;
 public class DDMFormFixture {
 
 	protected static DDMForm createDDMForm(Locale... locales) {
-		DDMForm ddmForm = DDMFormTestUtil.createDDMForm(
-			DDMFormTestUtil.createAvailableLocales(locales), locales[0]);
+		Locale defaultLocale = locales[0];
 
-		DDMFormField nameDDMFormField = DDMFormTestUtil.createTextDDMFormField(
-			"name", true, false, false);
+		DDMForm ddmForm = DDMFormTestUtil.createDDMForm(
+			DDMFormTestUtil.createAvailableLocales(locales), defaultLocale);
+
+		DDMFormField nameDDMFormField = DDMFormTestUtil.createDDMFormField(
+			defaultLocale, "name", "name", "text", "string", true, false,
+			false);
 
 		nameDDMFormField.setIndexType("keyword");
 
 		ddmForm.addDDMFormField(nameDDMFormField);
 
 		DDMFormField descriptionDDMFormField =
-			DDMFormTestUtil.createTextDDMFormField(
-				"description", true, false, false);
+			DDMFormTestUtil.createDDMFormField(
+				defaultLocale, "description", "description", "text", "string",
+				true, false, false);
 
 		descriptionDDMFormField.setIndexType("text");
 
