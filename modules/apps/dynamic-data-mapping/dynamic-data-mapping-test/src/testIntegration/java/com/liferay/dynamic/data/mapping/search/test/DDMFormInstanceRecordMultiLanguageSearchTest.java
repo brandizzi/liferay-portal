@@ -17,6 +17,7 @@ package com.liferay.dynamic.data.mapping.search.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecord;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Group;
@@ -128,14 +129,14 @@ public class DDMFormInstanceRecordMultiLanguageSearchTest {
 		DDMFormInstance formInstance = ddmFormInstanceRecord.getFormInstance();
 
 		if (type == _NAME) {
-			return _DDM_KEYWORD + formInstance.getStructureId() +
-				StringPool.UNDERLINE + StringPool.UNDERLINE + _NAME +
-					StringPool.UNDERLINE;
+			return StringBundler.concat(
+				_DDM_KEYWORD, formInstance.getStructureId(),
+				StringPool.DOUBLE_UNDERLINE, _NAME ,StringPool.UNDERLINE);
 		}
 
-		return _DDM_TEXT + formInstance.getStructureId() +
-			StringPool.UNDERLINE + StringPool.UNDERLINE + _DESCRIPTION +
-				StringPool.UNDERLINE;
+		return StringBundler.concat(
+			_DDM_TEXT, formInstance.getStructureId(),
+			StringPool.DOUBLE_UNDERLINE, _DESCRIPTION, StringPool.UNDERLINE);
 	}
 
 	protected Map<String, String> getResultMap(
