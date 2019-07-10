@@ -379,12 +379,10 @@ public class DDLRecordIndexerIndexedFieldsTest {
 		map.put("localized_title", title);
 
 		for (Locale locale : LanguageUtil.getAvailableLocales()) {
-			String languageId = LocaleUtil.toLanguageId(locale);
-
-			String key = "localized_title_" + languageId;
+			String key = "localized_title_" + LocaleUtil.toLanguageId(locale);
 
 			map.put(key, title);
-			map.put(key.concat("_sortable"), title);
+			map.put(key + "_sortable", title);
 		}
 	}
 
