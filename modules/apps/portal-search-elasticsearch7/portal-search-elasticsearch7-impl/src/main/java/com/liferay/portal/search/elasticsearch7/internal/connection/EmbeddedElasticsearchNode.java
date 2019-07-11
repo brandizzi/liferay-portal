@@ -22,8 +22,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.lucene.util.SetOnce;
-
 import org.elasticsearch.analysis.common.CommonAnalysisPlugin;
 import org.elasticsearch.common.logging.LogConfigurator;
 import org.elasticsearch.common.settings.Settings;
@@ -68,17 +66,6 @@ public class EmbeddedElasticsearchNode extends Node {
 		Collection<Class<? extends Plugin>> classpathPlugins) {
 
 		super(environment, classpathPlugins, false);
-	}
-
-	protected void registerDerivedNodeNameWithLogger(String nodeName) {
-		try {
-			LogConfigurator.setNodeName(nodeName);
-		}
-		catch (SetOnce.AlreadySetException soase) {
-			if (_log.isDebugEnabled()) {
-				_log.debug("Node name has already been set");
-			}
-		}
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
