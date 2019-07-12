@@ -344,6 +344,7 @@ public class CompanyLocalServiceImpl extends CompanyLocalServiceBaseImpl {
 				defaultUser.setCompanyId(companyId);
 				defaultUser.setDefaultUser(true);
 				defaultUser.setContactId(counterLocalService.increment());
+				defaultUser.setFirstName("default");
 				defaultUser.setPassword("password");
 				defaultUser.setScreenName(
 					String.valueOf(defaultUser.getUserId()));
