@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.Time;
 
 /**
  * @author Michael C. Han
@@ -41,10 +42,22 @@ public class IndexOnStartupPortalInstanceLifecycleListener
 
 	@Override
 	public void portalInstanceRegistered(Company company) throws Exception {
-		if (!GetterUtil.getBoolean(_props.get(PropsKeys.INDEX_ON_STARTUP))) {
-			return;
-		}
+		if (_indexOnStartup()) {
+			_waitIndexOnStartupDelay();
 
+			_reindex(company);
+		}
+	}
+
+	private long _getIndexOnStartupDelay() {
+		return GetterUtil.getLong(_props.get(PropsKeys.INDEX_ON_STARTUP_DELAY));
+	}
+
+	private boolean _indexOnStartup() {
+		return GetterUtil.getBoolean(_props.get(PropsKeys.INDEX_ON_STARTUP));
+	}
+
+	private void _reindex(Company company) {
 		try {
 			_indexWriterHelper.reindex(
 				UserConstants.USER_ID_DEFAULT,
@@ -53,6 +66,14 @@ public class IndexOnStartupPortalInstanceLifecycleListener
 		}
 		catch (SearchException se) {
 			_log.error("Unable to reindex on activation", se);
+		}
+	}
+
+	private void _waitIndexOnStartupDelay() throws InterruptedException {
+		long delay = _getIndexOnStartupDelay();
+
+		if (delay > 0) {
+			Thread.sleep(Time.SECOND * delay);
 		}
 	}
 
