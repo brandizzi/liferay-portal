@@ -16,8 +16,12 @@ package com.liferay.message.boards.internal.search;
 
 import com.liferay.message.boards.model.MBCategory;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
 import com.liferay.portal.search.spi.model.registrar.ModelSearchRegistrarHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -25,6 +29,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Javier Gamarra
@@ -44,13 +50,35 @@ public class MBCategorySearcherRegistrar {
 					Field.UID);
 				modelSearchDefinition.setModelIndexWriteContributor(
 					modelIndexWriterContributor);
+				modelSearchDefinition.setModelDocumentContributors(
+					modelDocumentContributors);
 			});
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(indexer.class.name=com.liferay.message.boards.model.MBCategory)"
+	)
+	protected void addModelDocumentContributor(
+		ModelDocumentContributor modelDocumentContributor) {
+
+		modelDocumentContributors.add(modelDocumentContributor);
 	}
 
 	@Deactivate
 	protected void deactivate() {
 		_serviceRegistration.unregister();
 	}
+
+	protected void removeModelDocumentContributor(
+		ModelDocumentContributor modelDocumentContributor) {
+
+		modelDocumentContributors.remove(modelDocumentContributor);
+	}
+
+	protected List<ModelDocumentContributor> modelDocumentContributors =
+		new ArrayList<>();
 
 	@Reference(
 		target = "(indexer.class.name=com.liferay.message.boards.model.MBCategory)"
