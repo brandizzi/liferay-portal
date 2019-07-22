@@ -16,10 +16,14 @@ package com.liferay.blogs.internal.search;
 
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
 import com.liferay.portal.search.spi.model.registrar.ModelSearchRegistrarHelper;
 import com.liferay.portal.search.spi.model.result.contributor.ModelSummaryContributor;
 import com.liferay.portal.search.spi.model.result.contributor.ModelVisibilityContributor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -27,6 +31,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Luan Maoski
@@ -48,6 +54,8 @@ public class BlogsEntrySearchRegistrar {
 					Field.CONTENT, Field.TITLE);
 				modelSearchDefinition.setModelIndexWriteContributor(
 					modelIndexWriterContributor);
+				modelSearchDefinition.setModelDocumentContributors(
+					modelDocumentContributors);
 				modelSearchDefinition.setModelSummaryContributor(
 					modelSummaryContributor);
 				modelSearchDefinition.setModelVisibilityContributor(
@@ -55,10 +63,30 @@ public class BlogsEntrySearchRegistrar {
 			});
 	}
 
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(indexer.class.name=com.liferay.blogs.model.BlogsEntry)"
+	)
+	protected void addModelDocumentContributor(
+		ModelDocumentContributor modelDocumentContributor) {
+
+		modelDocumentContributors.add(modelDocumentContributor);
+	}
+
 	@Deactivate
 	protected void deactivate() {
 		_serviceRegistration.unregister();
 	}
+
+	protected void removeModelDocumentContributor(
+		ModelDocumentContributor modelDocumentContributor) {
+
+		modelDocumentContributors.remove(modelDocumentContributor);
+	}
+
+	protected List<ModelDocumentContributor> modelDocumentContributors =
+		new ArrayList<>();
 
 	@Reference(
 		target = "(indexer.class.name=com.liferay.blogs.model.BlogsEntry)"
