@@ -15,6 +15,7 @@
 package com.liferay.portal.search.internal.indexer;
 
 import com.liferay.portal.kernel.model.BaseModel;
+import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
 import com.liferay.portal.search.spi.model.registrar.ModelSearchConfigurator;
 import com.liferay.portal.search.spi.model.registrar.ModelSearchDefinition;
@@ -23,6 +24,7 @@ import com.liferay.portal.search.spi.model.registrar.contributor.ModelSearchDefi
 import com.liferay.portal.search.spi.model.result.contributor.ModelSummaryContributor;
 import com.liferay.portal.search.spi.model.result.contributor.ModelVisibilityContributor;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 
@@ -54,6 +56,7 @@ public class ModelSearchRegistrarHelperImpl
 			new ModelSearchConfiguratorImpl<>(
 				bundleContext,
 				modelSearchDefinitionImpl._modelIndexWriterContributor,
+				modelSearchDefinitionImpl._modelDocumentContributors,
 				modelSearchDefinitionImpl._modelVisibilityContributor,
 				modelSearchDefinitionImpl._modelSearchSettingsImpl,
 				modelSearchDefinitionImpl._modelSummaryContributor),
@@ -81,6 +84,13 @@ public class ModelSearchRegistrarHelperImpl
 
 			_modelSearchSettingsImpl.setDefaultSelectedLocalizedFieldNames(
 				defaultSelectedLocalizedFieldNames);
+		}
+
+		@Override
+		public void setModelDocumentContributors(
+			Iterable<ModelDocumentContributor> modelDocumentContributors) {
+
+			_modelDocumentContributors = modelDocumentContributors;
 		}
 
 		@Override
@@ -117,6 +127,8 @@ public class ModelSearchRegistrarHelperImpl
 			_modelSearchSettingsImpl.setSelectAllLocales(selectAllLocales);
 		}
 
+		private Iterable<ModelDocumentContributor> _modelDocumentContributors =
+			new ArrayList<>();
 		private ModelIndexerWriterContributor<?> _modelIndexWriterContributor;
 		private final ModelSearchSettingsImpl _modelSearchSettingsImpl;
 		private ModelSummaryContributor _modelSummaryContributor;
