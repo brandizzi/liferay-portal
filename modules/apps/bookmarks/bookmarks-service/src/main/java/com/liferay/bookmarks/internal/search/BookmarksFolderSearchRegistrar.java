@@ -16,9 +16,13 @@ package com.liferay.bookmarks.internal.search;
 
 import com.liferay.bookmarks.model.BookmarksFolder;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
 import com.liferay.portal.search.spi.model.registrar.ModelSearchRegistrarHelper;
 import com.liferay.portal.search.spi.model.result.contributor.ModelSummaryContributor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -26,6 +30,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Luan Maoski
@@ -43,15 +49,37 @@ public class BookmarksFolderSearchRegistrar {
 					Field.ENTRY_CLASS_PK, Field.TITLE, Field.UID);
 				modelSearchDefinition.setModelIndexWriteContributor(
 					modelIndexWriterContributor);
+				modelSearchDefinition.setModelDocumentContributors(
+					modelDocumentContributors);
 				modelSearchDefinition.setModelSummaryContributor(
 					modelSummaryContributor);
 			});
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(indexer.class.name=com.liferay.bookmarks.model.BookmarksFolder)"
+	)
+	protected void addModelDocumentContributor(
+		ModelDocumentContributor modelDocumentContributor) {
+
+		modelDocumentContributors.add(modelDocumentContributor);
 	}
 
 	@Deactivate
 	protected void deactivate() {
 		_serviceRegistration.unregister();
 	}
+
+	protected void removeModelDocumentContributor(
+		ModelDocumentContributor modelDocumentContributor) {
+
+		modelDocumentContributors.remove(modelDocumentContributor);
+	}
+
+	protected List<ModelDocumentContributor> modelDocumentContributors =
+		new ArrayList<>();
 
 	@Reference(
 		target = "(indexer.class.name=com.liferay.bookmarks.model.BookmarksFolder)"
