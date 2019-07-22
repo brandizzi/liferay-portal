@@ -38,11 +38,13 @@ public class ModelSearchConfiguratorImpl<T extends BaseModel<?>>
 	public ModelSearchConfiguratorImpl(
 		BundleContext bundleContext,
 		ModelIndexerWriterContributor<T> modelIndexerWriterContributor,
+		Iterable<ModelDocumentContributor> modelDocumentContributor,
 		ModelVisibilityContributor modelVisibilityContributor,
 		ModelSearchSettings modelSearchSettings,
 		ModelSummaryContributor modelSummaryContributor) {
 
 		_modelIndexerWriterContributor = modelIndexerWriterContributor;
+		_modelDocumentContributors = modelDocumentContributor;
 		_modelVisibilityContributor = modelVisibilityContributor;
 		_modelSearchSettings = modelSearchSettings;
 		_modelSummaryContributor = modelSummaryContributor;
@@ -60,15 +62,10 @@ public class ModelSearchConfiguratorImpl<T extends BaseModel<?>>
 		_searchContextContributors = ServiceTrackerListFactory.open(
 			bundleContext, SearchContextContributor.class,
 			"(indexer.class.name=" + className + ")");
-
-		_modelDocumentContributors = ServiceTrackerListFactory.open(
-			bundleContext, ModelDocumentContributor.class,
-			"(indexer.class.name=" + modelSearchSettings.getClassName() + ")");
 	}
 
 	@Override
 	public void close() {
-		_modelDocumentContributors.close();
 		_keywordQueryContributors.close();
 		_queryConfigContributors.close();
 		_searchContextContributors.close();
@@ -122,9 +119,7 @@ public class ModelSearchConfiguratorImpl<T extends BaseModel<?>>
 	private final ServiceTrackerList
 		<KeywordQueryContributor, KeywordQueryContributor>
 			_keywordQueryContributors;
-	private final ServiceTrackerList
-		<ModelDocumentContributor, ModelDocumentContributor>
-			_modelDocumentContributors;
+	private final Iterable<ModelDocumentContributor> _modelDocumentContributors;
 	private final ModelIndexerWriterContributor<T>
 		_modelIndexerWriterContributor;
 	private final ModelSearchSettings _modelSearchSettings;
