@@ -16,9 +16,13 @@ package com.liferay.calendar.internal.search;
 
 import com.liferay.calendar.model.Calendar;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 import com.liferay.portal.search.spi.model.index.contributor.ModelIndexerWriterContributor;
 import com.liferay.portal.search.spi.model.registrar.ModelSearchRegistrarHelper;
 import com.liferay.portal.search.spi.model.result.contributor.ModelSummaryContributor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
@@ -26,6 +30,8 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
@@ -45,16 +51,38 @@ public class CalendarSearchRegistrar {
 					Field.DESCRIPTION, Field.NAME, CalendarField.RESOURCE_NAME);
 				modelSearchDefinition.setModelIndexWriteContributor(
 					modelIndexWriterContributor);
+				modelSearchDefinition.setModelDocumentContributors(
+					modelDocumentContributors);
 				modelSearchDefinition.setModelSummaryContributor(
 					modelSummaryContributor);
 				modelSearchDefinition.setSelectAllLocales(true);
 			});
 	}
 
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(indexer.class.name=com.liferay.calendar.model.Calendar)"
+	)
+	protected void addModelDocumentContributor(
+		ModelDocumentContributor modelDocumentContributor) {
+
+		modelDocumentContributors.add(modelDocumentContributor);
+	}
+
 	@Deactivate
 	protected void deactivate() {
 		_serviceRegistration.unregister();
 	}
+
+	protected void removeModelDocumentContributor(
+		ModelDocumentContributor modelDocumentContributor) {
+
+		modelDocumentContributors.remove(modelDocumentContributor);
+	}
+
+	protected List<ModelDocumentContributor> modelDocumentContributors =
+		new ArrayList<>();
 
 	@Reference(
 		target = "(indexer.class.name=com.liferay.calendar.model.Calendar)"
