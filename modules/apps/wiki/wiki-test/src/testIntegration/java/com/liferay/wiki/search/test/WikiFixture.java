@@ -15,10 +15,11 @@
 package com.liferay.wiki.search.test;
 
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
-import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.model.WikiPage;
 import com.liferay.wiki.service.WikiNodeLocalServiceUtil;
@@ -26,14 +27,16 @@ import com.liferay.wiki.util.test.WikiTestUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author Luan Maoski
  */
 public class WikiFixture {
 
-	public WikiFixture(Group group) {
+	public WikiFixture(Group group, User user) {
 		_group = group;
+		_user = user;
 	}
 
 	public WikiNode createWikiNode() throws Exception {
@@ -71,16 +74,24 @@ public class WikiFixture {
 		return _wikiPages;
 	}
 
+	public void updateDisplaySettings(Locale locale) throws Exception {
+		Group group = GroupTestUtil.updateDisplaySettings(
+			_group.getGroupId(), null, locale);
+
+		_group.setModelAttributes(group.getModelAttributes());
+	}
+
 	protected ServiceContext getServiceContext() throws Exception {
 		return ServiceContextTestUtil.getServiceContext(
 			_group.getGroupId(), getUserId());
 	}
 
 	protected long getUserId() throws Exception {
-		return TestPropsValues.getUserId();
+		return _user.getUserId();
 	}
 
 	private final Group _group;
+	private final User _user;
 	private final List<WikiNode> _wikiNodes = new ArrayList<>();
 	private final List<WikiPage> _wikiPages = new ArrayList<>();
 

@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
@@ -99,11 +100,13 @@ public class WikiNodeIndexerReindexTest {
 
 		_groups = userSearchFixture.getGroups();
 
+		_user = TestPropsValues.getUser();
+
 		_users = userSearchFixture.getUsers();
 	}
 
 	protected void setUpWikiNodeFixture() {
-		wikiNodeFixture = new WikiFixture(_group);
+		wikiNodeFixture = new WikiFixture(_group, _user);
 
 		_wikiNodes = wikiNodeFixture.getWikiNodes();
 	}
@@ -120,6 +123,8 @@ public class WikiNodeIndexerReindexTest {
 
 	@DeleteAfterTestRun
 	private List<Group> _groups;
+
+	private User _user;
 
 	@DeleteAfterTestRun
 	private List<User> _users;

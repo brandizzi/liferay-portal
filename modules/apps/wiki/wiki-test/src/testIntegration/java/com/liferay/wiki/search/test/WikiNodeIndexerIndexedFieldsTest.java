@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.search.test.util.IndexedFieldsFixture;
@@ -114,11 +115,13 @@ public class WikiNodeIndexerIndexedFieldsTest {
 
 		_groups = userSearchFixture.getGroups();
 
+		_user = TestPropsValues.getUser();
+
 		_users = userSearchFixture.getUsers();
 	}
 
 	protected void setUpWikiFixture() {
-		wikiNodeFixture = new WikiFixture(_group);
+		wikiNodeFixture = new WikiFixture(_group, _user);
 
 		_wikiNodes = wikiNodeFixture.getWikiNodes();
 	}
@@ -197,6 +200,8 @@ public class WikiNodeIndexerIndexedFieldsTest {
 
 	@DeleteAfterTestRun
 	private List<Group> _groups;
+
+	private User _user;
 
 	@DeleteAfterTestRun
 	private List<User> _users;

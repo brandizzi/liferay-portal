@@ -15,7 +15,6 @@
 package com.liferay.wiki.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
@@ -25,9 +24,9 @@ import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
-import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.search.test.util.IndexedFieldsFixture;
 import com.liferay.portal.search.test.util.IndexerFixture;
@@ -38,12 +37,12 @@ import com.liferay.users.admin.test.util.search.UserSearchFixture;
 import com.liferay.wiki.model.WikiNode;
 import com.liferay.wiki.model.WikiPage;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -54,7 +53,7 @@ import org.junit.runner.RunWith;
  * @author Luan Maoski
  */
 @RunWith(Arquillian.class)
-public class WikiPageIndexerIndexedFieldsTest {
+public class WikiPageMultiLanguageSearchTest {
 
 	@ClassRule
 	@Rule
@@ -66,33 +65,50 @@ public class WikiPageIndexerIndexedFieldsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		setUpUserSearchFixture();
-		setUpIndexedFieldsFixture();
 		setUpWikiPageIndexerFixture();
-		setUpWikiFixture();
+		_defaultLocale = LocaleThreadLocal.getDefaultLocale();
+	}
+
+	@After
+	public void tearDown() {
+		LocaleThreadLocal.setDefaultLocale(_defaultLocale);
 	}
 
 	@Test
-	public void testIndexedFields() throws Exception {
-		WikiPage wikiPage = wikiPageFixture.createWikiPage();
-
-		String searchTerm = wikiPage.getTitle();
-
-		Document document = wikiPageIndexerFixture.searchOnlyOne(searchTerm);
-
-		indexedFieldsFixture.postProcessDocument(document);
-
-		Map<String, String> expected = _expectedFieldValues(wikiPage);
-
-		FieldValuesAssert.assertFieldValues(expected, document, searchTerm);
+	public void testChineseSubject() throws Exception {
+		_testLocaleKeywords(LocaleUtil.CHINA, "你好");
 	}
 
-	protected void setUpIndexedFieldsFixture() {
-		indexedFieldsFixture = new IndexedFieldsFixture(
-			resourcePermissionLocalService, searchEngineHelper);
+	@Test
+	public void testEnglishSubject() throws Exception {
+		_testLocaleKeywords(LocaleUtil.US, "firstName");
 	}
 
-	protected void setUpUserSearchFixture() throws Exception {
+	@Test
+	public void testJapaneseSubject() throws Exception {
+		_testLocaleKeywords(LocaleUtil.JAPAN, "東京");
+	}
+
+	protected void assertFieldValues(
+		String prefix, Locale locale, Map<String, String> map,
+		String searchTerm) {
+
+		Document document = wikiPageIndexerFixture.searchOnlyOne(
+			_user.getUserId(), searchTerm, locale);
+
+		FieldValuesAssert.assertFieldValues(map, prefix, document, searchTerm);
+	}
+
+	protected void setTestLocale(Locale locale) throws Exception {
+		wikiPageFixture.updateDisplaySettings(locale);
+
+		LocaleThreadLocal.setDefaultLocale(locale);
+	}
+
+	protected void setUpUserSearchFixture(
+			String firstName, String lastName, Locale locale)
+		throws Exception {
+
 		userSearchFixture = new UserSearchFixture();
 
 		userSearchFixture.setUp();
@@ -101,7 +117,8 @@ public class WikiPageIndexerIndexedFieldsTest {
 
 		_groups = userSearchFixture.getGroups();
 
-		_user = TestPropsValues.getUser();
+		_user = userSearchFixture.addUser(
+			RandomTestUtil.randomString(), firstName, lastName, locale, _group);
 
 		_users = userSearchFixture.getUsers();
 	}
@@ -129,79 +146,34 @@ public class WikiPageIndexerIndexedFieldsTest {
 	protected WikiFixture wikiPageFixture;
 	protected IndexerFixture<WikiPage> wikiPageIndexerFixture;
 
-	private Map<String, String> _expectedFieldValues(WikiPage wikiPage)
+	private Map<String, String> _getResultMap(WikiPage wikiPage) {
+		return new HashMap<String, String>() {
+			{
+				put(
+					Field.ENTRY_CLASS_PK,
+					String.valueOf(wikiPage.getResourcePrimKey()));
+			}
+		};
+	}
+
+	private void _testLocaleKeywords(Locale locale, String keywords)
 		throws Exception {
 
-		Map<String, String> map = new HashMap<>();
+		setUpUserSearchFixture(keywords, _LAST_NAME, locale);
 
-		map.put(Field.COMPANY_ID, String.valueOf(wikiPage.getCompanyId()));
-		map.put(Field.ENTRY_CLASS_NAME, WikiPage.class.getName());
-		map.put(
-			Field.ENTRY_CLASS_PK,
-			String.valueOf(wikiPage.getResourcePrimKey()));
-		map.put(Field.GROUP_ID, String.valueOf(wikiPage.getGroupId()));
-		map.put(Field.SCOPE_GROUP_ID, String.valueOf(wikiPage.getGroupId()));
-		map.put(Field.STAGING_GROUP, String.valueOf(_group.isStagingGroup()));
-		map.put(Field.TITLE, wikiPage.getTitle());
-		map.put(
-			Field.TITLE + "_sortable",
-			StringUtil.lowerCase(wikiPage.getTitle()));
-		map.put(Field.STATUS, String.valueOf(wikiPage.getStatus()));
-		map.put(Field.USER_ID, String.valueOf(wikiPage.getUserId()));
-		map.put(Field.USER_NAME, StringUtil.lowerCase(wikiPage.getUserName()));
-		map.put(Field.USER_NAME, StringUtil.lowerCase(wikiPage.getUserName()));
+		setUpWikiFixture();
 
-		map.put("nodeId", String.valueOf(wikiPage.getNodeId()));
-		map.put(
-			"rootEntryClassPK", String.valueOf(wikiPage.getResourcePrimKey()));
-		map.put("viewCount", "0");
-		map.put("viewCount_sortable", "0");
-		map.put("visible", "true");
+		WikiPage wikiPage = wikiPageFixture.createWikiPage();
 
-		indexedFieldsFixture.populatePriority("0.0", map);
-		indexedFieldsFixture.populateUID(
-			WikiPage.class.getName(), wikiPage.getResourcePrimKey(), map);
+		setTestLocale(locale);
 
-		_populateDates(wikiPage, map);
-		_populateRoles(wikiPage, map);
-		_populateTitle(wikiPage, map);
-
-		return map;
+		assertFieldValues(
+			Field.ENTRY_CLASS_PK, locale, _getResultMap(wikiPage), keywords);
 	}
 
-	private void _populateDates(WikiPage wikiPage, Map<String, String> map) {
-		indexedFieldsFixture.populateDate(
-			Field.MODIFIED_DATE, wikiPage.getModifiedDate(), map);
-		indexedFieldsFixture.populateDate(
-			Field.CREATE_DATE, wikiPage.getCreateDate(), map);
-		indexedFieldsFixture.populateDate(Field.PUBLISH_DATE, new Date(0), map);
-		indexedFieldsFixture.populateExpirationDateWithForever(map);
-	}
+	private static final String _LAST_NAME = "lastName";
 
-	private void _populateRoles(WikiPage wikiPage, Map<String, String> map)
-		throws Exception {
-
-		indexedFieldsFixture.populateRoleIdFields(
-			wikiPage.getCompanyId(), WikiPage.class.getName(),
-			wikiPage.getResourcePrimKey(), wikiPage.getGroupId(), null, map);
-	}
-
-	private void _populateTitle(WikiPage wikiPage, Map<String, String> map) {
-		for (Locale locale :
-				LanguageUtil.getAvailableLocales(wikiPage.getGroupId())) {
-
-			String title = StringUtil.lowerCase(wikiPage.getTitle());
-
-			String languageId = LocaleUtil.toLanguageId(locale);
-
-			String key = "localized_title_" + languageId;
-
-			map.put("localized_title", title);
-			map.put(key, title);
-			map.put(key.concat("_sortable"), title);
-		}
-	}
-
+	private Locale _defaultLocale;
 	private Group _group;
 
 	@DeleteAfterTestRun

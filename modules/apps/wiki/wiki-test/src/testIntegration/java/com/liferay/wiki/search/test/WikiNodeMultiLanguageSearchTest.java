@@ -18,13 +18,16 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
-import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.search.test.util.IndexedFieldsFixture;
 import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.test.rule.Inject;
@@ -32,11 +35,14 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.users.admin.test.util.search.UserSearchFixture;
 import com.liferay.wiki.model.WikiNode;
-import com.liferay.wiki.model.WikiPage;
+import com.liferay.wiki.service.WikiNodeLocalServiceUtil;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -47,7 +53,7 @@ import org.junit.runner.RunWith;
  * @author Luan Maoski
  */
 @RunWith(Arquillian.class)
-public class WikiPageIndexerReindexTest {
+public class WikiNodeMultiLanguageSearchTest {
 
 	@ClassRule
 	@Rule
@@ -59,40 +65,50 @@ public class WikiPageIndexerReindexTest {
 
 	@Before
 	public void setUp() throws Exception {
-		setUpUserSearchFixture();
-		setUpIndexedFieldsFixture();
 		setUpWikiNodeIndexerFixture();
-		setUpWikiNodeFixture();
+		_defaultLocale = LocaleThreadLocal.getDefaultLocale();
+	}
+
+	@After
+	public void tearDown() {
+		LocaleThreadLocal.setDefaultLocale(_defaultLocale);
 	}
 
 	@Test
-	public void testReindex() throws Exception {
-		Locale locale = LocaleUtil.US;
-
-		WikiPage wikiPage = wikiPageFixture.createWikiPage();
-
-		String searchTerm = wikiPage.getTitle();
-
-		wikiPageIndexerFixture.searchOnlyOne(searchTerm);
-
-		Document document = wikiPageIndexerFixture.searchOnlyOne(
-			searchTerm, locale);
-
-		wikiPageIndexerFixture.deleteDocument(document);
-
-		wikiPageIndexerFixture.searchNoOne(searchTerm, locale);
-
-		wikiPageIndexerFixture.reindex(wikiPage.getCompanyId());
-
-		wikiPageIndexerFixture.searchOnlyOne(searchTerm);
+	public void testChineseSubject() throws Exception {
+		_testLocaleKeywords(LocaleUtil.CHINA, "你好");
 	}
 
-	protected void setUpIndexedFieldsFixture() {
-		indexedFieldsFixture = new IndexedFieldsFixture(
-			resourcePermissionLocalService, searchEngineHelper);
+	@Test
+	public void testEnglishSubject() throws Exception {
+		_testLocaleKeywords(LocaleUtil.US, "firstName");
 	}
 
-	protected void setUpUserSearchFixture() throws Exception {
+	@Test
+	public void testJapaneseSubject() throws Exception {
+		_testLocaleKeywords(LocaleUtil.JAPAN, "東京");
+	}
+
+	protected void assertFieldValues(
+		String prefix, Locale locale, Map<String, String> map,
+		String searchTerm) {
+
+		Document document = wikiNodeIndexerFixture.searchOnlyOne(
+			_user.getUserId(), searchTerm, locale);
+
+		FieldValuesAssert.assertFieldValues(map, prefix, document, searchTerm);
+	}
+
+	protected void setTestLocale(Locale locale) throws Exception {
+		wikiNodeFixture.updateDisplaySettings(locale);
+
+		LocaleThreadLocal.setDefaultLocale(locale);
+	}
+
+	protected void setUpUserSearchFixture(
+			String firstName, String lastName, Locale locale)
+		throws Exception {
+
 		userSearchFixture = new UserSearchFixture();
 
 		userSearchFixture.setUp();
@@ -101,19 +117,20 @@ public class WikiPageIndexerReindexTest {
 
 		_groups = userSearchFixture.getGroups();
 
-		_user = TestPropsValues.getUser();
+		_user = userSearchFixture.addUser(
+			RandomTestUtil.randomString(), firstName, lastName, locale, _group);
 
 		_users = userSearchFixture.getUsers();
 	}
 
-	protected void setUpWikiNodeFixture() {
-		wikiPageFixture = new WikiFixture(_group, _user);
+	protected void setUpWikiFixture() {
+		wikiNodeFixture = new WikiFixture(_group, _user);
 
-		_wikiNodes = wikiPageFixture.getWikiNodes();
+		_wikiNodes = wikiNodeFixture.getWikiNodes();
 	}
 
 	protected void setUpWikiNodeIndexerFixture() {
-		wikiPageIndexerFixture = new IndexerFixture<>(WikiPage.class);
+		wikiNodeIndexerFixture = new IndexerFixture<>(WikiNode.class);
 	}
 
 	protected IndexedFieldsFixture indexedFieldsFixture;
@@ -125,9 +142,38 @@ public class WikiPageIndexerReindexTest {
 	protected SearchEngineHelper searchEngineHelper;
 
 	protected UserSearchFixture userSearchFixture;
-	protected WikiFixture wikiPageFixture;
-	protected IndexerFixture<WikiPage> wikiPageIndexerFixture;
+	protected WikiFixture wikiNodeFixture;
+	protected IndexerFixture<WikiNode> wikiNodeIndexerFixture;
 
+	private Map<String, String> _getResultMap(WikiNode wikiNode) {
+		return new HashMap<String, String>() {
+			{
+				put(Field.ENTRY_CLASS_PK, String.valueOf(wikiNode.getNodeId()));
+			}
+		};
+	}
+
+	private void _testLocaleKeywords(Locale locale, String keywords)
+		throws Exception {
+
+		setUpUserSearchFixture(keywords, _LAST_NAME, locale);
+
+		setUpWikiFixture();
+
+		WikiNode wikiNode = wikiNodeFixture.createWikiNode();
+
+		setTestLocale(locale);
+
+		wikiNode = WikiNodeLocalServiceUtil.moveNodeToTrash(
+			wikiNodeFixture.getUserId(), wikiNode.getNodeId());
+
+		assertFieldValues(
+			Field.ENTRY_CLASS_PK, locale, _getResultMap(wikiNode), keywords);
+	}
+
+	private static final String _LAST_NAME = "lastName";
+
+	private Locale _defaultLocale;
 	private Group _group;
 
 	@DeleteAfterTestRun
@@ -140,8 +186,5 @@ public class WikiPageIndexerReindexTest {
 
 	@DeleteAfterTestRun
 	private List<WikiNode> _wikiNodes;
-
-	@DeleteAfterTestRun
-	private List<WikiPage> _wikiPages;
 
 }
