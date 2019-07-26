@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriterHelper;
-import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
@@ -40,13 +39,11 @@ import java.util.Locale;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-
 /**
  * @author Eudaldo Alonso
+ * @deprecated As of Judson (7.1.x)
  */
-@Component(immediate = true, service = Indexer.class)
+@Deprecated
 public class WikiNodeIndexer extends BaseIndexer<WikiNode> {
 
 	public static final String CLASS_NAME = WikiNode.class.getName();
@@ -166,7 +163,6 @@ public class WikiNodeIndexer extends BaseIndexer<WikiNode> {
 		indexableActionableDynamicQuery.performActions();
 	}
 
-	@Reference(unbind = "-")
 	protected void setWikiNodeLocalService(
 		WikiNodeLocalService wikiNodeLocalService) {
 
@@ -176,15 +172,9 @@ public class WikiNodeIndexer extends BaseIndexer<WikiNode> {
 	private static final Log _log = LogFactoryUtil.getLog(
 		WikiNodeIndexer.class);
 
-	@Reference
 	private IndexWriterHelper _indexWriterHelper;
-
-	@Reference
 	private TrashHelper _trashHelper;
-
 	private WikiNodeLocalService _wikiNodeLocalService;
-
-	@Reference(target = "(model.class.name=com.liferay.wiki.model.WikiNode)")
 	private ModelResourcePermission<WikiNode> _wikiNodeModelResourcePermission;
 
 }
