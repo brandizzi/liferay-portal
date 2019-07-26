@@ -23,8 +23,10 @@ import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
+import com.liferay.portal.kernel.service.PersistedResourcedModelLocalService;
 import com.liferay.portal.search.indexer.BaseModelRetriever;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.osgi.service.component.annotations.Component;
@@ -61,8 +63,11 @@ public class BaseModelRetrieverImpl implements BaseModelRetriever {
 		PersistedModelLocalService persistedModelLocalService =
 			_getPersistedModelLocalService(className);
 
+		PersistedModel persistedModel = null;
+
 		try {
-			return persistedModelLocalService.getPersistedModel(classPK);
+			persistedModel = persistedModelLocalService.getPersistedModel(
+				classPK);
 		}
 		catch (PortalException pe) {
 			if (_log.isWarnEnabled()) {
@@ -71,9 +76,26 @@ public class BaseModelRetrieverImpl implements BaseModelRetriever {
 						"No ", className, " found for class PK ", classPK),
 					pe);
 			}
-
-			return null;
 		}
+
+		if (persistedModel == null) {
+			try {
+				List<? extends PersistedModel> persistedModels =
+					_persistedResourcedModelLocalService.getPersistedModel(
+						classPK);
+				persistedModel = persistedModels.get(0);
+			}
+			catch (PortalException pe) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						StringBundler.concat(
+							"No ", className, " found for class PK ", classPK),
+						pe);
+				}
+			}
+		}
+
+		return persistedModel;
 	}
 
 	private PersistedModelLocalService _getPersistedModelLocalService(
@@ -98,5 +120,9 @@ public class BaseModelRetrieverImpl implements BaseModelRetriever {
 	@Reference
 	private PersistedModelLocalServiceRegistry
 		_persistedModelLocalServiceRegistry;
+
+	@Reference
+	private PersistedResourcedModelLocalService
+		_persistedResourcedModelLocalService;
 
 }
