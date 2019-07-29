@@ -37,7 +37,7 @@ import javax.portlet.PortletResponse;
 
 /**
  * @author Leonardo Barros
- * @deprecated As of Judson (7.1.x), since 7.1.0
+ * @deprecated As of Judson (7.1.x)
  */
 @Deprecated
 public class DDMFormInstanceIndexer extends BaseIndexer<DDMFormInstance> {
