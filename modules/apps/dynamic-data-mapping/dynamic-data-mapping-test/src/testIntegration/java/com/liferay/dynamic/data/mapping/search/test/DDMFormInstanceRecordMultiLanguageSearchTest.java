@@ -131,7 +131,7 @@ public class DDMFormInstanceRecordMultiLanguageSearchTest {
 		if (type == _NAME) {
 			return StringBundler.concat(
 				_DDM_KEYWORD, formInstance.getStructureId(),
-				StringPool.DOUBLE_UNDERLINE, _NAME ,StringPool.UNDERLINE);
+				StringPool.DOUBLE_UNDERLINE, _NAME, StringPool.UNDERLINE);
 		}
 
 		return StringBundler.concat(
