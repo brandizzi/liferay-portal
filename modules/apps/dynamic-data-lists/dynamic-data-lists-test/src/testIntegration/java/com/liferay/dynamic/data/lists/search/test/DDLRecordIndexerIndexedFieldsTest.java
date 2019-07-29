@@ -59,6 +59,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.After;
 import org.junit.Before;
@@ -190,8 +191,9 @@ public class DDLRecordIndexerIndexedFieldsTest {
 
 		Set<Map.Entry<String, Field>> entrySet = fieldsMap.entrySet();
 
-		return entrySet.stream(
-		).collect(
+		Stream<Map.Entry<String, Field>> stream = entrySet.stream();
+
+		return stream.collect(
 			Collectors.toMap(
 				Map.Entry::getKey,
 				entry -> {
@@ -208,8 +210,7 @@ public class DDLRecordIndexerIndexedFieldsTest {
 					}
 
 					return String.valueOf(Arrays.asList(values));
-				})
-		);
+				}));
 	}
 
 	private Map<String, String> _expectedFieldValues(DDLRecord ddlRecord)
