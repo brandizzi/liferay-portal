@@ -61,12 +61,12 @@ public class BaseConfigurationModelTest {
 
 	@Before
 	public void setUp() throws Exception {
-		reflectionConfigurationModel();
+		setUpConfigurationModelConstructor();
 
 		defaultLocale = LocaleThreadLocal.getDefaultLocale();
 	}
 
-	protected void reflectionConfigurationModel()
+	protected void setUpConfigurationModelConstructor()
 		throws ClassNotFoundException, NoSuchMethodException {
 
 		bundle = FrameworkUtil.getBundle(ConfigurationModelIndexerTest.class);
