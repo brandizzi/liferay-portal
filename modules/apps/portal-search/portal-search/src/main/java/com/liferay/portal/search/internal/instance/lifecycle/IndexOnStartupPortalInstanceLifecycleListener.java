@@ -42,22 +42,22 @@ public class IndexOnStartupPortalInstanceLifecycleListener
 
 	@Override
 	public void portalInstanceRegistered(Company company) throws Exception {
-		if (_indexOnStartup()) {
-			_waitIndexOnStartupDelay();
+		if (isIndexOnStartup()) {
+			waitIndexOnStartupDelay();
 
-			_reindex(company);
+			reindex(company);
 		}
 	}
 
-	private long _getIndexOnStartupDelay() {
+	protected long getIndexOnStartupDelay() {
 		return GetterUtil.getLong(_props.get(PropsKeys.INDEX_ON_STARTUP_DELAY));
 	}
 
-	private boolean _indexOnStartup() {
+	protected boolean isIndexOnStartup() {
 		return GetterUtil.getBoolean(_props.get(PropsKeys.INDEX_ON_STARTUP));
 	}
 
-	private void _reindex(Company company) {
+	protected void reindex(Company company) {
 		try {
 			_indexWriterHelper.reindex(
 				UserConstants.USER_ID_DEFAULT,
@@ -69,8 +69,8 @@ public class IndexOnStartupPortalInstanceLifecycleListener
 		}
 	}
 
-	private void _waitIndexOnStartupDelay() throws InterruptedException {
-		long delay = _getIndexOnStartupDelay();
+	protected void waitIndexOnStartupDelay() throws InterruptedException {
+		long delay = getIndexOnStartupDelay();
 
 		if (delay > 0) {
 			Thread.sleep(Time.SECOND * delay);
