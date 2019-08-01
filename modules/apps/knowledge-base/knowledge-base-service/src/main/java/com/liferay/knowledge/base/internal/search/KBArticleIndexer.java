@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -47,6 +48,8 @@ import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermi
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
@@ -139,6 +142,8 @@ public class KBArticleIndexer extends BaseIndexer<KBArticle> {
 			"parentMessageId", kbArticle.getParentResourcePrimKey());
 		document.addKeyword("titleKeyword", kbArticle.getTitle(), true);
 		document.addKeywordSortable("urlTitle", kbArticle.getUrlTitle());
+
+		_addLocalizedFields(document, kbArticle);
 
 		return document;
 	}
@@ -282,6 +287,33 @@ public class KBArticleIndexer extends BaseIndexer<KBArticle> {
 
 	@Reference
 	protected KBFolderLocalService kbFolderLocalService;
+
+	private void _addLocalizedFields(Document document, KBArticle kbArticle) {
+		try {
+			for (Locale locale :
+					LanguageUtil.getAvailableLocales(kbArticle.getGroupId())) {
+
+				String languageId = LocaleUtil.toLanguageId(locale);
+
+				document.addText(
+					LocalizationUtil.getLocalizedName(
+						Field.DESCRIPTION, languageId),
+					kbArticle.getDescription());
+				document.addText(
+					LocalizationUtil.getLocalizedName(Field.TITLE, languageId),
+					kbArticle.getTitle());
+				document.addText(
+					LocalizationUtil.getLocalizedName(
+						Field.CONTENT, languageId),
+					kbArticle.getContent());
+			}
+		}
+		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(e, e);
+			}
+		}
+	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		KBArticleIndexer.class);
