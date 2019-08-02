@@ -16,6 +16,7 @@ package com.liferay.users.admin.test.util.search;
 
 import com.liferay.asset.kernel.model.AssetTag;
 import com.liferay.asset.kernel.service.AssetTagLocalServiceUtil;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Address;
 import com.liferay.portal.kernel.model.Contact;
@@ -146,13 +147,14 @@ public class UserSearchFixture {
 
 		return addUser(
 			screenName, RandomTestUtil.randomString(),
-			RandomTestUtil.randomString(), LocaleUtil.getDefault(), group,
-			assetTagNames);
+			RandomTestUtil.randomString(), StringPool.BLANK,
+			LocaleUtil.getDefault(), group, assetTagNames);
 	}
 
 	public User addUser(
-			String screenName, String firstName, String lastName, Locale locale,
-			Group group, String... assetTagNames)
+			String screenName, String firstName, String lastName,
+			String jobTitle, Locale locale, Group group,
+			String... assetTagNames)
 		throws Exception {
 
 		ServiceContext serviceContext = getServiceContext(group);
@@ -160,8 +162,8 @@ public class UserSearchFixture {
 		serviceContext.setAssetTagNames(assetTagNames);
 
 		User user = _addUser(
-			screenName, firstName, lastName, new long[] {group.getGroupId()},
-			locale, serviceContext);
+			screenName, firstName, lastName, jobTitle,
+			new long[] {group.getGroupId()}, locale, serviceContext);
 
 		_users.add(user);
 
@@ -369,12 +371,13 @@ public class UserSearchFixture {
 
 	private User _addUser(
 			String screenName, String firstName, String lastName,
-			long[] groupIds, Locale locale, ServiceContext serviceContext)
+			String jobTitle, long[] groupIds, Locale locale,
+			ServiceContext serviceContext)
 		throws Exception {
 
 		return UserTestUtil.addUser(
 			_companyId, TestPropsValues.getUserId(), screenName, locale,
-			firstName, lastName, groupIds, serviceContext);
+			firstName, lastName, jobTitle, groupIds, serviceContext);
 	}
 
 	private final List<Address> _addresses = new ArrayList<>();
