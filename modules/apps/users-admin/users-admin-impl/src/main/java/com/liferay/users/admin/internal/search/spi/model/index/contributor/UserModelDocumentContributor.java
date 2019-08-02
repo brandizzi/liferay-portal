@@ -34,6 +34,8 @@ import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.OrganizationLocalService;
 import com.liferay.portal.kernel.service.RegionService;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.spi.model.index.contributor.ModelDocumentContributor;
 
@@ -93,6 +95,8 @@ public class UserModelDocumentContributor
 			document.addKeyword("userGroupIds", user.getUserGroupIds());
 
 			populateAddresses(document, user.getAddresses(), 0, 0);
+
+			populateLocalizedFields(document, user);
 		}
 		catch (Exception e) {
 			if (_log.isWarnEnabled()) {
@@ -216,6 +220,18 @@ public class UserModelDocumentContributor
 		document.addText("region", regions.toArray(new String[0]));
 		document.addText("street", streets.toArray(new String[0]));
 		document.addText("zip", zips.toArray(new String[0]));
+	}
+
+	protected void populateLocalizedFields(Document document, User user) {
+		for (Locale locale :
+				LanguageUtil.getAvailableLocales(user.getGroupId())) {
+
+			String languageId = LocaleUtil.toLanguageId(locale);
+
+			document.addText(
+				LocalizationUtil.getLocalizedName("jobTitle", languageId),
+				user.getJobTitle());
+		}
 	}
 
 	@Reference
