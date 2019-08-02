@@ -15,10 +15,8 @@
 package com.liferay.users.admin.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Address;
-import com.liferay.portal.kernel.model.Contact;
 import com.liferay.portal.kernel.model.Country;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Organization;
@@ -37,6 +35,8 @@ import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.search.test.util.IndexedFieldsFixture;
@@ -282,15 +282,26 @@ public class UserIndexerIndexedFieldsTest {
 
 		Map<String, String> expected = _expectedValues(user);
 
-		expected.put("jobTitle", user.getJobTitle());
+		expected.put(_JOB_TITLE, user.getJobTitle());
 		expected.put(
-			"jobTitle_sortable", StringUtil.toLowerCase(user.getJobTitle()));
+			Field.getSortableFieldName(_JOB_TITLE),
+			StringUtil.toLowerCase(user.getJobTitle()));
+
+		for (Locale locale :
+				LanguageUtil.getAvailableLocales(group.getGroupId())) {
+
+			String languageId = LocaleUtil.toLanguageId(locale);
+
+			expected.put(
+				LocalizationUtil.getLocalizedName(_JOB_TITLE, languageId),
+				user.getJobTitle());
+		}
 
 		return expected;
 	}
 
 	private Map<String, String> _expectedValuesWithOrganization(User user)
-		throws Exception, PortalException {
+		throws Exception {
 
 		Map<String, String> expected = _expectedValues(user);
 
@@ -345,11 +356,10 @@ public class UserIndexerIndexedFieldsTest {
 		return values;
 	}
 
-	@DeleteAfterTestRun
-	private List<Address> _addresses = new ArrayList<>();
+	private static final String _JOB_TITLE = "jobTitle";
 
 	@DeleteAfterTestRun
-	private final List<Contact> _contacts = new ArrayList<>();
+	private List<Address> _addresses = new ArrayList<>();
 
 	@DeleteAfterTestRun
 	private List<Group> _groups;

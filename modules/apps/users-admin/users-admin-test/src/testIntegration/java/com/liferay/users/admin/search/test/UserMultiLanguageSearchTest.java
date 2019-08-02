@@ -15,6 +15,8 @@
 package com.liferay.users.admin.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Document;
@@ -24,6 +26,7 @@ import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
 import com.liferay.portal.search.test.util.IndexerFixture;
@@ -72,7 +75,7 @@ public class UserMultiLanguageSearchTest {
 	}
 
 	@Test
-	public void testChineseValue() throws Exception {
+	public void testChineseFirstName() throws Exception {
 		Locale locale = LocaleUtil.CHINA;
 
 		setTestLocale(locale);
@@ -80,15 +83,33 @@ public class UserMultiLanguageSearchTest {
 		String keywords = "你好";
 
 		userSearchFixture.addUser(
-			null, keywords, RandomTestUtil.randomString(), locale, group);
+			null, keywords, RandomTestUtil.randomString(), StringPool.BLANK,
+			locale, group);
 
-		Map<String, String> map = _getMapResult(keywords);
+		Map<String, String> map = _getMapResult(keywords, _FIRST_NAME);
 
-		assertFieldValues(_PREFIX, locale, map, keywords);
+		assertFieldValues(_FIRST_NAME, locale, map, keywords);
 	}
 
 	@Test
-	public void testEnglishValue() throws Exception {
+	public void testChineseJobTitle() throws Exception {
+		Locale locale = LocaleUtil.CHINA;
+
+		setTestLocale(locale);
+
+		String keywords = "你好";
+
+		userSearchFixture.addUser(
+			null, RandomTestUtil.randomString(), RandomTestUtil.randomString(),
+			keywords, locale, group);
+
+		Map<String, String> map = _getLocalizedMapResult(keywords, _JOB_TITLE);
+
+		assertFieldValues(_JOB_TITLE, locale, map, keywords);
+	}
+
+	@Test
+	public void testEnglishFirstName() throws Exception {
 		Locale locale = LocaleUtil.US;
 
 		setTestLocale(locale);
@@ -96,15 +117,33 @@ public class UserMultiLanguageSearchTest {
 		String keywords = StringUtil.toLowerCase(RandomTestUtil.randomString());
 
 		userSearchFixture.addUser(
-			null, keywords, RandomTestUtil.randomString(), locale, group);
+			null, keywords, RandomTestUtil.randomString(), StringPool.BLANK,
+			locale, group);
 
-		Map<String, String> map = _getMapResult(keywords);
+		Map<String, String> map = _getMapResult(keywords, _FIRST_NAME);
 
-		assertFieldValues(_PREFIX, locale, map, keywords);
+		assertFieldValues(_FIRST_NAME, locale, map, keywords);
 	}
 
 	@Test
-	public void testJapaneseValue() throws Exception {
+	public void testEnglishJobTitle() throws Exception {
+		Locale locale = LocaleUtil.US;
+
+		setTestLocale(locale);
+
+		String keywords = StringUtil.toLowerCase(RandomTestUtil.randomString());
+
+		userSearchFixture.addUser(
+			null, RandomTestUtil.randomString(), RandomTestUtil.randomString(),
+			keywords, locale, group);
+
+		Map<String, String> map = _getLocalizedMapResult(keywords, _JOB_TITLE);
+
+		assertFieldValues(_JOB_TITLE, locale, map, keywords);
+	}
+
+	@Test
+	public void testJapaneseFirstName() throws Exception {
 		Locale locale = LocaleUtil.JAPAN;
 
 		setTestLocale(locale);
@@ -112,11 +151,29 @@ public class UserMultiLanguageSearchTest {
 		String keywords = "東京";
 
 		userSearchFixture.addUser(
-			null, keywords, RandomTestUtil.randomString(), locale, group);
+			null, keywords, RandomTestUtil.randomString(), StringPool.BLANK,
+			locale, group);
 
-		Map<String, String> map = _getMapResult(keywords);
+		Map<String, String> map = _getMapResult(keywords, _FIRST_NAME);
 
-		assertFieldValues(_PREFIX, locale, map, keywords);
+		assertFieldValues(_FIRST_NAME, locale, map, keywords);
+	}
+
+	@Test
+	public void testJapaneseJobTitle() throws Exception {
+		Locale locale = LocaleUtil.JAPAN;
+
+		setTestLocale(locale);
+
+		String keywords = "東京";
+
+		userSearchFixture.addUser(
+			null, RandomTestUtil.randomString(), RandomTestUtil.randomString(),
+			keywords, locale, group);
+
+		Map<String, String> map = _getLocalizedMapResult(keywords, _JOB_TITLE);
+
+		assertFieldValues(_JOB_TITLE, locale, map, keywords);
 	}
 
 	protected void assertFieldValues(
@@ -159,16 +216,39 @@ public class UserMultiLanguageSearchTest {
 	protected IndexerFixture<User> indexerFixture;
 	protected UserSearchFixture userSearchFixture;
 
-	private Map<String, String> _getMapResult(String keywords) {
+	private Map<String, String> _getLocalizedMapResult(
+		String keywords, String field) {
+
 		return new HashMap<String, String>() {
 			{
-				put(_PREFIX, keywords);
-				put(_PREFIX + "_sortable", keywords);
+				put(field, keywords);
+				put(field + "_sortable", keywords);
+
+				for (Locale locale :
+						LanguageUtil.getAvailableLocales(group.getGroupId())) {
+
+					String languageId = LocaleUtil.toLanguageId(locale);
+
+					put(
+						LocalizationUtil.getLocalizedName(field, languageId),
+						keywords);
+				}
 			}
 		};
 	}
 
-	private static final String _PREFIX = "firstName";
+	private Map<String, String> _getMapResult(String keywords, String field) {
+		return new HashMap<String, String>() {
+			{
+				put(field, keywords);
+				put(field + "_sortable", keywords);
+			}
+		};
+	}
+
+	private static final String _FIRST_NAME = "firstName";
+
+	private static final String _JOB_TITLE = "jobTitle";
 
 	private Locale _defaultLocale;
 
