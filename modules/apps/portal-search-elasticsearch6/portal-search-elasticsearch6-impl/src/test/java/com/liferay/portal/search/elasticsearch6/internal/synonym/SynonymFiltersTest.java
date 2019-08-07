@@ -44,19 +44,7 @@ import org.junit.Test;
 /**
  * @author Adam Brandizzi
  */
-public class SynonymsTest {
-
-	public void assertMatchPhraseQuerySearch(
-			String text, String... expectedValues)
-		throws Exception {
-
-		MatchPhraseQueryBuilder matchPhraseQueryBuilder =
-			new MatchPhraseQueryBuilder(_FIELD_NAME, text);
-
-		SearchAssert.assertSearch(
-			_elasticsearchFixture.getClient(), _FIELD_NAME,
-			matchPhraseQueryBuilder, expectedValues);
-	}
+public class SynonymFiltersTest {
 
 	@Before
 	public void setUp() throws Exception {
@@ -227,6 +215,18 @@ public class SynonymsTest {
 					createIndexRequestExecutor(elasticsearchClientResolver));
 			}
 		};
+	}
+
+	protected void assertMatchPhraseQuerySearch(
+			String text, String... expectedValues)
+		throws Exception {
+
+		MatchPhraseQueryBuilder matchPhraseQueryBuilder =
+			new MatchPhraseQueryBuilder(_FIELD_NAME, text);
+
+		SearchAssert.assertSearch(
+			_elasticsearchFixture.getClient(), _FIELD_NAME,
+			matchPhraseQueryBuilder, expectedValues);
 	}
 
 	protected void createIndex(String suffix) {
