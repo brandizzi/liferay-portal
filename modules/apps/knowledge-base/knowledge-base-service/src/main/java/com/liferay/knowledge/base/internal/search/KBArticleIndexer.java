@@ -297,15 +297,15 @@ public class KBArticleIndexer extends BaseIndexer<KBArticle> {
 
 				document.addText(
 					LocalizationUtil.getLocalizedName(
+						Field.CONTENT, languageId),
+					kbArticle.getContent());
+				document.addText(
+					LocalizationUtil.getLocalizedName(
 						Field.DESCRIPTION, languageId),
 					kbArticle.getDescription());
 				document.addText(
 					LocalizationUtil.getLocalizedName(Field.TITLE, languageId),
 					kbArticle.getTitle());
-				document.addText(
-					LocalizationUtil.getLocalizedName(
-						Field.CONTENT, languageId),
-					kbArticle.getContent());
 			}
 		}
 		catch (Exception e) {
