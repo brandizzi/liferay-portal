@@ -250,7 +250,8 @@ public class SynonymFiltersTest {
 
 	protected String getSource(String suffix) {
 		return ResourceUtil.getResourceAsString(
-			getClass(), "SynonymsTest-" + suffix + ".json");
+			getClass(),
+			"dependencies/synonym-filters-test-" + suffix + ".json");
 	}
 
 	private static final String _FIELD_NAME = "content";
