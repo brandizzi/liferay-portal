@@ -209,12 +209,6 @@ public class JournalFolderIndexer
 		indexableActionableDynamicQuery.performActions();
 	}
 
-	protected void setJournalFolderLocalService(
-		JournalFolderLocalService journalFolderLocalService) {
-
-		_journalFolderLocalService = journalFolderLocalService;
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		JournalFolderIndexer.class);
 
