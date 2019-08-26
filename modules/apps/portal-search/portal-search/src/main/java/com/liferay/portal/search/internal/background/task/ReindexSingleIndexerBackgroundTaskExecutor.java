@@ -22,12 +22,16 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.IndexWriterHelperUtil;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.SearchEngine;
+import com.liferay.portal.kernel.search.SearchEngineHelper;
+import com.liferay.portal.kernel.search.SearchEngineHelperUtil;
 import com.liferay.portal.kernel.search.background.task.ReindexBackgroundTaskConstants;
 import com.liferay.portal.kernel.search.background.task.ReindexStatusMessageSenderUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.Serializable;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -69,12 +73,22 @@ public class ReindexSingleIndexerBackgroundTaskExecutor
 			return;
 		}
 
+		SearchEngineHelper searchEngineHelper =
+			SearchEngineHelperUtil.getSearchEngineHelper();
+
+		Collection<SearchEngine> searchEngines =
+			searchEngineHelper.getSearchEngines();
+
 		for (long companyId : companyIds) {
 			ReindexStatusMessageSenderUtil.sendStatusMessage(
 				ReindexBackgroundTaskConstants.SINGLE_START, companyId,
 				companyIds);
 
 			try {
+				for (SearchEngine searchEngine : searchEngines) {
+					searchEngine.initialize(companyId);
+				}
+
 				IndexWriterHelperUtil.deleteEntityDocuments(
 					indexer.getSearchEngineId(), companyId, className, true);
 
