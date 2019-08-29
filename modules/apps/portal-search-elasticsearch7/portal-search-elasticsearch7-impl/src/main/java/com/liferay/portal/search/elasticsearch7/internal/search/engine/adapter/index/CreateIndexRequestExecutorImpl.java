@@ -14,7 +14,10 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index;
 
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchClientResolver;
+import com.liferay.portal.search.elasticsearch7.internal.util.LogUtil;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexResponse;
 
@@ -37,25 +40,28 @@ public class CreateIndexRequestExecutorImpl
 
 	@Override
 	public CreateIndexResponse execute(CreateIndexRequest createIndexRequest) {
-		org.elasticsearch.action.admin.indices.create.CreateIndexRequest
+		org.elasticsearch.client.indices.CreateIndexRequest
 			elasticsearchCreateIndexRequest = createCreateIndexRequest(
 				createIndexRequest);
 
-		org.elasticsearch.action.admin.indices.create.CreateIndexResponse
+		org.elasticsearch.client.indices.CreateIndexResponse
 			elasticsearchCreateIndexResponse = getCreateIndexResponse(
 				elasticsearchCreateIndexRequest);
 
+		LogUtil.logActionResponse(_log, elasticsearchCreateIndexResponse);
+
 		return new CreateIndexResponse(
-			elasticsearchCreateIndexResponse.isAcknowledged());
+			elasticsearchCreateIndexResponse.isAcknowledged(),
+			elasticsearchCreateIndexResponse.index());
 	}
 
-	protected org.elasticsearch.action.admin.indices.create.CreateIndexRequest
+	protected org.elasticsearch.client.indices.CreateIndexRequest
 		createCreateIndexRequest(CreateIndexRequest createIndexRequest) {
 
-		org.elasticsearch.action.admin.indices.create.CreateIndexRequest
+		org.elasticsearch.client.indices.CreateIndexRequest
 			elasticsearchCreateIndexRequest =
-				new org.elasticsearch.action.admin.indices.create.
-					CreateIndexRequest(createIndexRequest.getIndexName());
+				new org.elasticsearch.client.indices.CreateIndexRequest(
+					createIndexRequest.getIndexName());
 
 		elasticsearchCreateIndexRequest.source(
 			createIndexRequest.getSource(), XContentType.JSON);
@@ -63,9 +69,9 @@ public class CreateIndexRequestExecutorImpl
 		return elasticsearchCreateIndexRequest;
 	}
 
-	protected org.elasticsearch.action.admin.indices.create.CreateIndexResponse
+	protected org.elasticsearch.client.indices.CreateIndexResponse
 		getCreateIndexResponse(
-			org.elasticsearch.action.admin.indices.create.CreateIndexRequest
+			org.elasticsearch.client.indices.CreateIndexRequest
 				elasticsearchCreateIndexRequest) {
 
 		RestHighLevelClient restHighLevelClient =
@@ -88,6 +94,9 @@ public class CreateIndexRequestExecutorImpl
 
 		_elasticsearchClientResolver = elasticsearchClientResolver;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		CreateIndexRequestExecutorImpl.class);
 
 	private ElasticsearchClientResolver _elasticsearchClientResolver;
 
