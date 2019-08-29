@@ -19,8 +19,13 @@ package com.liferay.portal.search.engine.adapter.index;
  */
 public class CreateIndexResponse implements IndexResponse {
 
-	public CreateIndexResponse(boolean acknowledged) {
+	public CreateIndexResponse(boolean acknowledged, String index) {
 		_acknowledged = acknowledged;
+		_index = index;
+	}
+
+	public String getIndex() {
+		return _index;
 	}
 
 	public boolean isAcknowledged() {
@@ -28,5 +33,6 @@ public class CreateIndexResponse implements IndexResponse {
 	}
 
 	private final boolean _acknowledged;
+	private final String _index;
 
 }
