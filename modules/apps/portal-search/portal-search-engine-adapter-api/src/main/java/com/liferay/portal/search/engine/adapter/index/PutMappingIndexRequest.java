@@ -47,6 +47,12 @@ public class PutMappingIndexRequest
 		return _mapping;
 	}
 
+	/**
+	 * @return
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement. Types
+	 *             are no longer supported.
+	 */
+	@Deprecated
 	@Override
 	public String getMappingName() {
 		return _mappingName;
