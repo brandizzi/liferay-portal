@@ -14,10 +14,13 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.cluster;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchClientResolver;
 import com.liferay.portal.search.engine.adapter.cluster.ClusterHealthStatus;
 import com.liferay.portal.search.engine.adapter.cluster.StatsClusterRequest;
@@ -49,7 +52,16 @@ public class StatsClusterRequestExecutorImpl
 
 		RestClient restClient = restHighLevelClient.getLowLevelClient();
 
-		Request request = new Request("GET", "/_cluster/stats");
+		String nodeIds = StringPool.BLANK;
+
+		if (ArrayUtil.isNotEmpty(statsClusterRequest.getNodeIds())) {
+			nodeIds =
+				"?nodeId=" + StringUtil.merge(statsClusterRequest.getNodeIds());
+		}
+
+		String endpoint = "/_cluster/stats" + nodeIds;
+
+		Request request = new Request("GET", endpoint);
 
 		try {
 			Response response = restClient.performRequest(request);
