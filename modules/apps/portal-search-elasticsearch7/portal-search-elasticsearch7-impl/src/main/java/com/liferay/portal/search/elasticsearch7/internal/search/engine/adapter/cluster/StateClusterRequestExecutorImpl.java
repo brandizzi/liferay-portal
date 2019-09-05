@@ -14,7 +14,10 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.cluster;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchClientResolver;
 import com.liferay.portal.search.engine.adapter.cluster.StateClusterRequest;
 import com.liferay.portal.search.engine.adapter.cluster.StateClusterResponse;
@@ -47,7 +50,17 @@ public class StateClusterRequestExecutorImpl
 
 		RestClient restClient = restHighLevelClient.getLowLevelClient();
 
-		Request request = new Request("GET", "/_cluster/state");
+		String indicies = StringPool.BLANK;
+
+		if (ArrayUtil.isNotEmpty(stateClusterRequest.getIndexNames())) {
+			indicies =
+				"?indices=" +
+					StringUtil.merge(stateClusterRequest.getIndexNames());
+		}
+
+		String endpoint = "/_cluster/state" + indicies;
+
+		Request request = new Request("GET", endpoint);
 
 		try {
 			Response response = restClient.performRequest(request);

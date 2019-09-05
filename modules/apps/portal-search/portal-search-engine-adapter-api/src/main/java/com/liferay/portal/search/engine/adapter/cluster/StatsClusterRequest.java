@@ -23,8 +23,8 @@ import org.osgi.annotation.versioning.ProviderType;
 public class StatsClusterRequest
 	implements ClusterRequest<StatsClusterResponse> {
 
-	public StatsClusterRequest(String[] indexNames) {
-		_indexNames = indexNames;
+	public StatsClusterRequest(String[] nodeIds) {
+		_nodeIds = nodeIds;
 	}
 
 	@Override
@@ -34,11 +34,19 @@ public class StatsClusterRequest
 		return clusterRequestExecutor.executeClusterRequest(this);
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getNodeIds()}
+	 */
+	@Deprecated
 	@Override
 	public String[] getIndexNames() {
-		return _indexNames;
+		throw new UnsupportedOperationException();
 	}
 
-	private final String[] _indexNames;
+	public String[] getNodeIds() {
+		return _nodeIds;
+	}
+
+	private final String[] _nodeIds;
 
 }
