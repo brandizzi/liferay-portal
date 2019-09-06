@@ -30,6 +30,7 @@ import com.liferay.portal.search.filter.ComplexQueryBuilderFactory;
 import com.liferay.portal.search.filter.ComplexQueryPart;
 import com.liferay.portal.search.query.BooleanQuery;
 import com.liferay.portal.search.query.Query;
+import com.liferay.portal.search.rescore.Rescore;
 import com.liferay.portal.search.stats.StatsRequest;
 
 import java.util.Collection;
@@ -326,15 +327,24 @@ public class CommonSearchSourceBuilderAssemblerImpl
 		SearchSourceBuilder searchSourceBuilder,
 		BaseSearchRequest baseSearchRequest) {
 
-		Query query = baseSearchRequest.getRescoreQuery();
+		List<Rescore> rescores = baseSearchRequest.getRescores();
 
-		if (query == null) {
+		if (ListUtil.isEmpty(rescores)) {
 			return;
 		}
 
-		searchSourceBuilder.addRescorer(
-			new QueryRescorerBuilder(
-				_queryToQueryBuilderTranslator.translate(query)));
+		for (Rescore rescore : rescores) {
+			QueryRescorerBuilder queryRescorerBuilder =
+				new QueryRescorerBuilder(
+					_queryToQueryBuilderTranslator.translate(
+						rescore.getQuery()));
+
+			if (rescore.getWindowSize() != null) {
+				queryRescorerBuilder.windowSize(rescore.getWindowSize());
+			}
+
+			searchSourceBuilder.addRescorer(queryRescorerBuilder);
+		}
 	}
 
 	protected void setStatsRequests(

@@ -48,6 +48,8 @@ import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.legacy.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.legacy.searcher.SearchResponseBuilderFactory;
+import com.liferay.portal.search.query.Queries;
+import com.liferay.portal.search.rescore.RescoreBuilderFactory;
 import com.liferay.portal.search.searcher.SearchRequest;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
 import com.liferay.portal.search.searcher.SearchResponseBuilder;
@@ -413,7 +415,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 			searchRequest.isIncludeResponseString());
 		baseSearchRequest.setPostFilterQuery(
 			searchRequest.getPostFilterQuery());
-		baseSearchRequest.setRescoreQuery(searchRequest.getRescoreQuery());
+		baseSearchRequest.setRescores(searchRequest.getRescores());
 		baseSearchRequest.setStatsRequests(searchRequest.getStatsRequests());
 
 		setAggregations(baseSearchRequest, searchRequest);
@@ -503,6 +505,12 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 
 		_searchResponseBuilderFactory = searchResponseBuilderFactory;
 	}
+
+	@Reference
+	protected Queries queries;
+
+	@Reference
+	protected RescoreBuilderFactory rescoreBuilderFactory;
 
 	private SearchRequestBuilder _getSearchRequestBuilder(
 		SearchContext searchContext) {
