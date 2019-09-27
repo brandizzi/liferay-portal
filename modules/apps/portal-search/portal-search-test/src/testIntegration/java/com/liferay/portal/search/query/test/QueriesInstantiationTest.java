@@ -53,6 +53,7 @@ import com.liferay.portal.search.query.TermQuery;
 import com.liferay.portal.search.query.TermsQuery;
 import com.liferay.portal.search.query.TermsSetQuery;
 import com.liferay.portal.search.query.WildcardQuery;
+import com.liferay.portal.search.query.WrapperQuery;
 import com.liferay.portal.search.script.Script;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -424,6 +425,14 @@ public class QueriesInstantiationTest {
 		WildcardQuery wildcardQuery = _queries.wildcard("field", "value");
 
 		Assert.assertNotNull(wildcardQuery);
+	}
+
+	@Test
+	public void testWrapperQuery() {
+		WrapperQuery wrapperQuery = _queries.wrapper(
+			"{\"query\":\"match_all\":{}}");
+
+		Assert.assertNotNull(wrapperQuery);
 	}
 
 	@Inject
