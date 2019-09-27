@@ -138,4 +138,8 @@ public interface Queries {
 
 	public WildcardQuery wildcard(String field, String value);
 
+	public WrapperQuery wrapper(byte[] source);
+
+	public WrapperQuery wrapper(String source);
+
 }
