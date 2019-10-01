@@ -17,6 +17,7 @@ package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.
 import com.liferay.portal.kernel.search.filter.FilterTranslator;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.aggregation.Aggregation;
 import com.liferay.portal.search.aggregation.AggregationTranslator;
 import com.liferay.portal.search.aggregation.pipeline.PipelineAggregation;
@@ -30,6 +31,7 @@ import com.liferay.portal.search.filter.ComplexQueryBuilderFactory;
 import com.liferay.portal.search.filter.ComplexQueryPart;
 import com.liferay.portal.search.query.BooleanQuery;
 import com.liferay.portal.search.query.Query;
+import com.liferay.portal.search.rescore.Rescore;
 import com.liferay.portal.search.stats.StatsRequest;
 
 import java.util.Collection;
@@ -326,15 +328,18 @@ public class CommonSearchSourceBuilderAssemblerImpl
 		SearchSourceBuilder searchSourceBuilder,
 		BaseSearchRequest baseSearchRequest) {
 
-		Query query = baseSearchRequest.getRescoreQuery();
-
-		if (query == null) {
+		List<Rescore> rescores = baseSearchRequest.getRescores();
+		if (rescores == null) {
 			return;
 		}
+		for (Rescore rescore : rescores) {
+			QueryRescorerBuilder queryRescorerBuilder =
+				new QueryRescorerBuilder(
+					_queryToQueryBuilderTranslator.translate(
+						rescore.getQuery()));
 
-		searchSourceBuilder.addRescorer(
-			new QueryRescorerBuilder(
-				_queryToQueryBuilderTranslator.translate(query)));
+			searchSourceBuilder.addRescorer(queryRescorerBuilder);
+		}
 	}
 
 	protected void setStatsRequests(
