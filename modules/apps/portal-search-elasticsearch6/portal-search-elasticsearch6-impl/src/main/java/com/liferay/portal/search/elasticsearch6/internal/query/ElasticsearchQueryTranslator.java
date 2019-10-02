@@ -489,6 +489,13 @@ public class ElasticsearchQueryTranslator
 		_wildcardQueryTranslator = wildcardQueryTranslator;
 	}
 
+	@Reference(unbind = "-")
+	protected void setWrapperQueryTranslator(
+		WrapperQueryTranslator wrapperQueryTranslator) {
+
+		_wrapperQueryTranslator = wrapperQueryTranslator;
+	}
+
 	private BooleanQueryTranslator _booleanQueryTranslator;
 	private BoostingQueryTranslator _boostingQueryTranslator;
 	private CommonTermsQueryTranslator _commonTermsQueryTranslator;
