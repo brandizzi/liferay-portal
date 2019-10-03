@@ -50,14 +50,19 @@ import com.liferay.portal.search.legacy.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.legacy.searcher.SearchResponseBuilderFactory;
 import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.query.WrapperQuery;
+import com.liferay.portal.search.rescore.Rescore;
+import com.liferay.portal.search.rescore.RescoreBuilder;
+import com.liferay.portal.search.rescore.RescoreBuilderFactory;
 import com.liferay.portal.search.searcher.SearchRequest;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
 import com.liferay.portal.search.searcher.SearchResponseBuilder;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.time.StopWatch;
+
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -348,12 +353,21 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		SearchRequestBuilder searchRequestBuilder = _getSearchRequestBuilder(
 			searchContext);
 
+		RescoreBuilder rescoreBuilder =
+			_rescoreBuilderFactory.getRescoreBuilder();
+
 		WrapperQuery wrapperQuery = _queries.wrapper(
 			"{\"match\":{\"content_en_US\":\"Ripley\"}}");
 
 		wrapperQuery.setBoost(1000.0f);
 
-		searchRequestBuilder.rescoreQuery(wrapperQuery);
+		Rescore rescore = rescoreBuilder.query(
+			wrapperQuery
+		).windowSize(
+			1000
+		).build();
+
+		searchRequestBuilder.rescores(Arrays.asList(rescore));
 
 		return searchRequestBuilder.build();
 	}
@@ -496,6 +510,13 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		baseSearchRequest.setQuery(searchRequest.getQuery());
 	}
 
+	@Reference(unbind = "-")
+	protected void setRescoreBuilderFactory(
+		RescoreBuilderFactory rescoreBuilderFactory) {
+
+		_rescoreBuilderFactory = rescoreBuilderFactory;
+	}
+
 	@Reference(target = "(search.engine.impl=Elasticsearch)", unbind = "-")
 	protected void setSearchEngineAdapter(
 		SearchEngineAdapter searchEngineAdapter) {
@@ -537,6 +558,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 	private boolean _logExceptionsOnly;
 	private Props _props;
 	private Queries _queries;
+	private RescoreBuilderFactory _rescoreBuilderFactory;
 	private SearchEngineAdapter _searchEngineAdapter;
 	private SearchRequestBuilderFactory _searchRequestBuilderFactory;
 	private SearchResponseBuilderFactory _searchResponseBuilderFactory;
