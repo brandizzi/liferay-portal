@@ -48,6 +48,8 @@ import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.legacy.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.legacy.searcher.SearchResponseBuilderFactory;
+import com.liferay.portal.search.query.Queries;
+import com.liferay.portal.search.query.WrapperQuery;
 import com.liferay.portal.search.searcher.SearchRequest;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
 import com.liferay.portal.search.searcher.SearchResponseBuilder;
@@ -56,7 +58,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.time.StopWatch;
-
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -347,6 +348,13 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		SearchRequestBuilder searchRequestBuilder = _getSearchRequestBuilder(
 			searchContext);
 
+		WrapperQuery wrapperQuery = _queries.wrapper(
+			"{\"match\":{\"content_en_US\":\"Ripley\"}}");
+
+		wrapperQuery.setBoost(1000.0f);
+
+		searchRequestBuilder.rescoreQuery(wrapperQuery);
+
 		return searchRequestBuilder.build();
 	}
 
@@ -477,6 +485,11 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 		_props = props;
 	}
 
+	@Reference(unbind = "-")
+	protected void setQueries(Queries queries) {
+		_queries = queries;
+	}
+
 	protected void setQuery(
 		BaseSearchRequest baseSearchRequest, SearchRequest searchRequest) {
 
@@ -523,6 +536,7 @@ public class ElasticsearchIndexSearcher extends BaseIndexSearcher {
 	private IndexNameBuilder _indexNameBuilder;
 	private boolean _logExceptionsOnly;
 	private Props _props;
+	private Queries _queries;
 	private SearchEngineAdapter _searchEngineAdapter;
 	private SearchRequestBuilderFactory _searchRequestBuilderFactory;
 	private SearchResponseBuilderFactory _searchResponseBuilderFactory;
