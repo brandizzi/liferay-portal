@@ -21,7 +21,8 @@ import ResultRankingsForm from '../../../src/main/resources/META-INF/resources/j
 import {
 	FETCH_HIDDEN_DOCUMENTS_URL,
 	FETCH_SEARCH_DOCUMENTS_URL,
-	FETCH_VISIBLE_DOCUMENTS_URL
+	FETCH_VISIBLE_DOCUMENTS_URL,
+	VALIDATE_FORM_URL
 } from '../mocks/data.es';
 
 import '@testing-library/jest-dom/extend-expect';
@@ -49,6 +50,7 @@ describe('ResultRankingsForm', () => {
 				formName={FORM_NAME}
 				initialInactive={false}
 				searchQuery="example"
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
@@ -67,6 +69,7 @@ describe('ResultRankingsForm', () => {
 				formName={FORM_NAME}
 				initialInactive={false}
 				searchQuery=""
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
@@ -86,6 +89,7 @@ describe('ResultRankingsForm', () => {
 				formName={FORM_NAME}
 				initialInactive={false}
 				searchQuery=""
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
@@ -108,6 +112,7 @@ describe('ResultRankingsForm', () => {
 				initialAliases={['one', 'two', 'three']}
 				initialInactive={false}
 				searchQuery=""
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
@@ -129,6 +134,7 @@ describe('ResultRankingsForm', () => {
 				initialAliases={['one', 'two', 'three']}
 				initialInactive={false}
 				searchQuery=""
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
@@ -153,6 +159,7 @@ describe('ResultRankingsForm', () => {
 				formName={FORM_NAME}
 				initialInactive={false}
 				searchQuery=""
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
@@ -180,6 +187,7 @@ describe('ResultRankingsForm', () => {
 				initialAliases={['one', 'two', 'three']}
 				initialInactive={false}
 				searchQuery=""
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
@@ -206,6 +214,7 @@ describe('ResultRankingsForm', () => {
 				formName={FORM_NAME}
 				initialInactive={false}
 				searchQuery=""
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
@@ -230,6 +239,7 @@ describe('ResultRankingsForm', () => {
 				formName={FORM_NAME}
 				initialInactive={false}
 				searchQuery=""
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
@@ -260,6 +270,7 @@ describe('ResultRankingsForm', () => {
 				formName={FORM_NAME}
 				initialInactive={false}
 				searchQuery=""
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
@@ -286,6 +297,7 @@ describe('ResultRankingsForm', () => {
 				formName={FORM_NAME}
 				initialInactive={false}
 				searchQuery=""
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
@@ -318,6 +330,7 @@ describe('ResultRankingsForm', () => {
 				formName={FORM_NAME}
 				initialInactive={false}
 				searchQuery=""
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
@@ -344,6 +357,7 @@ describe('ResultRankingsForm', () => {
 				fetchDocumentsVisibleUrl={FETCH_VISIBLE_DOCUMENTS_URL}
 				formName={FORM_NAME}
 				searchQuery=""
+				validateFormUrl={VALIDATE_FORM_URL}
 			/>
 		);
 
