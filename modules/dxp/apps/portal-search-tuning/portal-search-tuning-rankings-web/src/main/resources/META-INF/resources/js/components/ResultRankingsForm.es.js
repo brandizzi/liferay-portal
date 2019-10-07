@@ -15,7 +15,7 @@ import React, {Component} from 'react';
 
 import ThemeContext from '../ThemeContext.es';
 import FormValueDebugger from '../utils/FormValueDebugger.es';
-import {fetchDocuments} from '../utils/api.es';
+import {fetchDocuments, fetchResponse} from '../utils/api.es';
 import {DEFAULT_DELTA} from '../utils/constants.es';
 import {
 	isNil,
@@ -43,7 +43,8 @@ class ResultRankingsForm extends Component {
 		formName: PropTypes.string.isRequired,
 		initialAliases: PropTypes.arrayOf(String),
 		initialInactive: PropTypes.bool,
-		searchQuery: PropTypes.string.isRequired
+		searchQuery: PropTypes.string.isRequired,
+		validateFormUrl: PropTypes.string.isRequired
 	};
 
 	static defaultProps = {
@@ -457,14 +458,33 @@ class ResultRankingsForm extends Component {
 	 * submits the form.
 	 */
 	_handlePublish = () => {
-		this.setState(
-			{
-				workflowAction: this.context.constants.WORKFLOW_ACTION_PUBLISH
-			},
-			() => {
-				submitForm(document[this.props.formName]);
+		const {indexName, namespace, resultsRankingUid} = this.context;
+
+		fetchResponse(this.props.validateFormUrl, {
+			[`${namespace}index`]: indexName,
+			[`${namespace}aliases`]: this.state.aliases,
+			[`${namespace}resultsRankingUid`]: resultsRankingUid
+		}).then(response => {
+			if (response.errors.length) {
+				response.errors.forEach(message => {
+					Liferay.Util.openToast({
+						message,
+						title: Liferay.Language.get('error'),
+						type: 'danger'
+					});
+				});
+			} else {
+				this.setState(
+					{
+						workflowAction: this.context.constants
+							.WORKFLOW_ACTION_PUBLISH
+					},
+					() => {
+						submitForm(document[this.props.formName]);
+					}
+				);
 			}
-		);
+		});
 	};
 
 	/**
