@@ -116,10 +116,18 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 			sendRedirect(actionRequest, actionResponse, redirect);
 		}
-		catch (DuplicateQueryStringException dqse) {
-			SessionErrors.add(actionRequest, Exception.class);
+		catch (Exception e) {
+			if (e instanceof DuplicateAliasStringException) {
+				SessionErrors.add(actionRequest, Exception.class);
 
-			actionResponse.setRenderParameter("mvcPath", "/error.jsp");
+				actionResponse.setRenderParameter(
+					"mvcRenderCommandName", "editResultsRankingEntry");
+			}
+			else {
+				SessionErrors.add(actionRequest, Exception.class);
+
+				actionResponse.setRenderParameter("mvcPath", "/error.jsp");
+			}
 		}
 	}
 
@@ -358,8 +366,9 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 	}
 
 	protected void guardDuplicateQueryString(
-		ActionRequest actionRequest,
-		EditRankingMVCActionRequest editRankingMVCActionRequest) {
+			ActionRequest actionRequest,
+			EditRankingMVCActionRequest editRankingMVCActionRequest)
+		throws DuplicateQueryStringException {
 
 		_guardDuplicateQueryStrings(
 			actionRequest, editRankingMVCActionRequest,
@@ -378,10 +387,18 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 				actionRequest, actionResponse,
 				editRankingMVCActionRequest.getRedirect());
 		}
-		catch (DuplicateQueryStringException dqse) {
-			SessionErrors.add(actionRequest, Exception.class);
+		catch (Exception e) {
+			if (e instanceof DuplicateAliasStringException) {
+				SessionErrors.add(actionRequest, Exception.class);
 
-			actionResponse.setRenderParameter("mvcPath", "/error.jsp");
+				actionResponse.setRenderParameter(
+					"mvcRenderCommandName", "editResultsRankingEntry");
+			}
+			else {
+				SessionErrors.add(actionRequest, Exception.class);
+
+				actionResponse.setRenderParameter("mvcPath", "/error.jsp");
+			}
 		}
 	}
 
@@ -527,6 +544,9 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 	private final ResultRankingsConfiguration _resultRankingsConfiguration =
 		new DefaultResultRankingsConfiguration();
+
+	private class DuplicateAliasStringException extends RuntimeException {
+	}
 
 	private class DuplicateQueryStringException extends RuntimeException {
 	}

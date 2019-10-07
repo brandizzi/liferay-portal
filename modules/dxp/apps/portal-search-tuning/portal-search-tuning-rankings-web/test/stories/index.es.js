@@ -80,6 +80,7 @@ storiesOf('Pages|ResultRankingsForm', module).add('default', () => (
 		saveActionUrl="#"
 		searchQuery={text('Search Term', 'example')}
 		status={1}
+		validateFormUrl="http://www.mocky.io/v2/5d9dfbea3200008407329b6f"
 	/>
 ));
 
