@@ -15,6 +15,8 @@ export const FETCH_SEARCH_DOCUMENTS_URL = 'https://getSearch';
 
 export const FETCH_VISIBLE_DOCUMENTS_URL = 'https://getVisible';
 
+export const VALIDATE_FORM_URL = 'https://getValidate';
+
 export function getMockResultsData(
 	size = 10,
 	startId = 0,

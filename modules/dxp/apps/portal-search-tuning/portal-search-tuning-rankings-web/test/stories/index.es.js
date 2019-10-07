@@ -79,6 +79,7 @@ storiesOf('Pages|ResultRankingsForm', module).add('default', () => (
 		initialAliases={['one', 'two', 'three']}
 		saveActionUrl="#"
 		searchQuery={text('Search Term', 'example')}
+		validateFormUrl="http://www.mocky.io/v2/5d9dfbea3200008407329b6f"
 	/>
 ));
 

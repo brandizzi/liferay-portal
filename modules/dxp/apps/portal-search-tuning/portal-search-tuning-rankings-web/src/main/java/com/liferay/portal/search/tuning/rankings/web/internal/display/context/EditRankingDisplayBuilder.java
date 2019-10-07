@@ -128,6 +128,8 @@ public class EditRankingDisplayBuilder {
 			"initialAliases", _getAliases()
 		).put(
 			"searchQuery", _getKeywords()
+		).put(
+			"validateFormUrl", _getValidateResultRankingsResourceURL()
 		).build();
 	}
 
@@ -154,6 +156,14 @@ public class EditRankingDisplayBuilder {
 			"companyId", String.valueOf(_themeDisplay.getCompanyId()));
 		resourceURL.setParameter(Constants.CMD, "getSearchResults");
 		resourceURL.setResourceID("/results_ranking/get_results");
+
+		return resourceURL.toString();
+	}
+
+	private String _getValidateResultRankingsResourceURL() {
+		ResourceURL resourceURL = _renderResponse.createResourceURL();
+
+		resourceURL.setResourceID("/results_ranking/validate");
 
 		return resourceURL.toString();
 	}
