@@ -45,6 +45,10 @@ renderResponse.setTitle(LanguageUtil.get(request, "new-ranking"));
 
 <portlet:actionURL name="/results_ranking/edit" var="addResultsRankingEntryURL" />
 
+<div class="result-rankings-alert-container sheet-lg">
+	<liferay-ui:error exception="<%= Exception.class %>" message="ranking-with-that-search-query-already-exists" />
+</div>
+
 <liferay-frontend:edit-form
 	action="<%= addResultsRankingEntryURL %>"
 >
