@@ -441,16 +441,18 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 		String resultsRankingUid = ParamUtil.getString(
 			actionRequest, "resultsRankingUid");
 
-		if (duplicateQueryStringsDetector.detect(
-				duplicateQueryStringsDetector.builder().index(
-					index).queryStrings(
-						aliases).unlessRankingId(
-							resultsRankingUid).build())) {
+		List<String> duplicateQueryStrings =
+			duplicateQueryStringsDetector.detect(
+				duplicateQueryStringsDetector.builder(
+				).index(
+					index
+				).queryStrings(
+					aliases
+				).unlessRankingId(
+					resultsRankingUid
+				).build());
 
-			return true;
-		}
-
-		return false;
+		return ListUtil.isNotEmpty(duplicateQueryStrings);
 	}
 
 	private boolean _isDuplicateQueryString(
@@ -460,17 +462,16 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 		String index = _getIndexName(
 			actionRequest, editRankingMVCActionRequest);
 
-		if (duplicateQueryStringsDetector.detect(
-				duplicateQueryStringsDetector.builder().index(
-					index).queryStrings(
-						Arrays.asList(
-							editRankingMVCActionRequest.getQueryString())).
-								build())) {
+		List<String> duplicateQueryStrings =
+			duplicateQueryStringsDetector.detect(
+				duplicateQueryStringsDetector.builder(
+				).index(
+					index
+				).queryStrings(
+					Arrays.asList(editRankingMVCActionRequest.getQueryString())
+				).build());
 
-			return true;
-		}
-
-		return false;
+		return ListUtil.isNotEmpty(duplicateQueryStrings);
 	}
 
 	private boolean _isInactive(
