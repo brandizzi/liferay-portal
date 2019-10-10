@@ -444,16 +444,18 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 		String resultsRankingUid = ParamUtil.getString(
 			actionRequest, "resultsRankingUid");
 
-		if (duplicateQueryStringsDetector.detect(
-				duplicateQueryStringsDetector.builder().index(
-					index).queryStrings(
-						queryStrings).unlessRankingId(
-							resultsRankingUid).build())) {
+		List<String> duplicateQueryStrings =
+			duplicateQueryStringsDetector.detect(
+				duplicateQueryStringsDetector.builder(
+				).index(
+					index
+				).queryStrings(
+					queryStrings
+				).unlessRankingId(
+					resultsRankingUid
+				).build());
 
-			return true;
-		}
-
-		return false;
+		return ListUtil.isNotEmpty(duplicateQueryStrings);
 	}
 
 	private List<String> _getAliases(
