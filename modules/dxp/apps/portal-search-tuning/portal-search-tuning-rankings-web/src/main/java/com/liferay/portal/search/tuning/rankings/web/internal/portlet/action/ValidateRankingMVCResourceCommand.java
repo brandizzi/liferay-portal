@@ -22,8 +22,10 @@ import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.tuning.rankings.web.internal.constants.ResultRankingsPortletKeys;
@@ -82,13 +84,18 @@ public class ValidateRankingMVCResourceCommand implements MVCResourceCommand {
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
-		if (_isDuplicateAlias(
-				resourceRequest, validateRankingMVCResourceRequest)) {
+		List<String> duplicateQueryStrings = _getDuplicateAliases(
+			resourceRequest, validateRankingMVCResourceRequest);
 
+		if (ListUtil.isNotEmpty(duplicateQueryStrings)) {
 			jsonArray.put(
-				LanguageUtil.get(
+				LanguageUtil.format(
 					portal.getHttpServletRequest(resourceRequest),
-					"ranking-already-exists-for-the-keyword-and-or-alias"));
+					"aliases-must-be-unique-across-all-rankings.-the-" +
+						"following-aliases-already-exist-x",
+					StringUtil.merge(
+						duplicateQueryStrings, StringPool.COMMA_AND_SPACE),
+					false));
 		}
 
 		return JSONUtil.put("errors", jsonArray);
@@ -140,6 +147,26 @@ public class ValidateRankingMVCResourceCommand implements MVCResourceCommand {
 		);
 	}
 
+	private List<String> _getDuplicateAliases(
+		ResourceRequest resourceRequest,
+		ValidateRankingMVCResourceRequest validateRankingMVCResourceRequest) {
+
+		String index = _getIndexName(
+			resourceRequest, validateRankingMVCResourceRequest);
+
+		List<String> aliases = _getAliases(validateRankingMVCResourceRequest);
+
+		return duplicateQueryStringsDetector.detect(
+			duplicateQueryStringsDetector.builder(
+			).index(
+				index
+			).queryStrings(
+				aliases
+			).unlessRankingId(
+				validateRankingMVCResourceRequest.getResultsRankingUid()
+			).build());
+	}
+
 	private String _getIndexName(
 		ResourceRequest resourceRequest,
 		ValidateRankingMVCResourceRequest validateRankingMVCResourceRequest) {
@@ -153,30 +180,6 @@ public class ValidateRankingMVCResourceCommand implements MVCResourceCommand {
 		}
 
 		return index;
-	}
-
-	private boolean _isDuplicateAlias(
-		ResourceRequest resourceRequest,
-		ValidateRankingMVCResourceRequest validateRankingMVCResourceRequest) {
-
-		String index = _getIndexName(
-			resourceRequest, validateRankingMVCResourceRequest);
-
-		List<String> aliases = _getAliases(validateRankingMVCResourceRequest);
-
-		String resultsRankingUid =
-			validateRankingMVCResourceRequest.getResultsRankingUid();
-
-		if (duplicateQueryStringsDetector.detect(
-				duplicateQueryStringsDetector.builder().index(
-					index).queryStrings(
-						aliases).unlessRankingId(
-							resultsRankingUid).build())) {
-
-			return true;
-		}
-
-		return false;
 	}
 
 	private boolean _isUpdateSpecial(String string) {
