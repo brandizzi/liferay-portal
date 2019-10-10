@@ -1,6 +1,6 @@
 @import 'variables';
 
-.portlet-search-ranking,
+.portlet-result-rankings,
 .results-rankings-root,
 .results-ranking-modal-root {
 	@import 'empty_state';
@@ -8,6 +8,7 @@
 	@import 'list';
 	@import 'list_item';
 	@import 'modal';
+	@import 'page';
 	@import 'page_toolbar';
 	@import 'result_rankings_form';
 }
