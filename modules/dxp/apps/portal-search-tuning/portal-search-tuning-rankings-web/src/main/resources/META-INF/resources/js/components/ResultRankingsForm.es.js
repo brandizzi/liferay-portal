@@ -702,7 +702,7 @@ class ResultRankingsForm extends Component {
 		} = this.state;
 
 		return (
-			<div className="results-ranking-form-root">
+			<div className="result-rankings-form-root">
 				<HiddenInput name={`${namespace}aliases`} value={aliases} />
 
 				<HiddenInput

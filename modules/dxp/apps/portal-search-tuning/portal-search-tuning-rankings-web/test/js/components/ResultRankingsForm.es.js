@@ -52,7 +52,7 @@ describe('ResultRankingsForm', () => {
 		);
 
 		expect(
-			container.querySelector('.results-ranking-form-root')
+			container.querySelector('.result-rankings-form-root')
 		).toBeInTheDocument();
 	});
 
