@@ -16,6 +16,7 @@ package com.liferay.portal.search.test.util;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.document.Document;
 
@@ -24,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -102,6 +104,18 @@ public class DocumentsAssert {
 
 	private static List<Object> _getFieldValues(
 		String fieldName, com.liferay.portal.kernel.search.Document document) {
+
+		String[] names = StringUtil.split(fieldName, ".");
+
+		if (names.length > 1) {
+			Field field = document.getField(names[0]);
+
+			for (Field nestedField : field.getFields()) {
+				if (Objects.equals(nestedField.getName(), names[1])) {
+					return Arrays.asList((Object[])nestedField.getValues());
+				}
+			}
+		}
 
 		return Arrays.asList((Object[])document.getValues(fieldName));
 	}
