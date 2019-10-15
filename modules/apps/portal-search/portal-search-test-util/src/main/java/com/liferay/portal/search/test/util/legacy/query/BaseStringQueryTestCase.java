@@ -15,6 +15,7 @@
 package com.liferay.portal.search.test.util.legacy.query;
 
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.FieldArray;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.TermFilter;
@@ -101,6 +102,25 @@ public abstract class BaseStringQueryTestCase extends BaseIndexingTestCase {
 	}
 
 	@Test
+	public void testFieldArray() throws Exception {
+		FieldArray fieldArray = new FieldArray("array_title");
+
+		Field nestedField = new Field("");
+
+		Field field = new Field("title");
+
+		field.setValue("java");
+
+		nestedField.addField(field);
+
+		fieldArray.addField(nestedField);
+
+		addDocument(DocumentCreationHelpers.field(fieldArray));
+
+		assertSearch("array_title.title", "java", Arrays.asList("java"));
+	}
+
+	@Test
 	public void testPrefixOperatorMust() throws Exception {
 		addDocuments("alpha bravo", "alpha charlie", "charlie delta");
 
@@ -147,6 +167,13 @@ public abstract class BaseStringQueryTestCase extends BaseIndexingTestCase {
 	protected void assertSearch(String queryString, List<String> expectedValues)
 		throws Exception {
 
+		assertSearch(_FIELD_NAME, queryString, expectedValues);
+	}
+
+	protected void assertSearch(
+			String fieldName, String queryString, List<String> expectedValues)
+		throws Exception {
+
 		assertSearch(
 			indexingTestHelper -> {
 				indexingTestHelper.setFilter(
@@ -159,7 +186,7 @@ public abstract class BaseStringQueryTestCase extends BaseIndexingTestCase {
 				indexingTestHelper.verify(
 					hits -> DocumentsAssert.assertValues(
 						indexingTestHelper.getRequestString(), hits.getDocs(),
-						_FIELD_NAME, expectedValues));
+						fieldName, expectedValues));
 			});
 	}
 
