@@ -422,7 +422,7 @@ function AddResultModal({
 
 	return (
 		<ClayModal
-			className="modal-full-screen-sm-down results-ranking-modal-root"
+			className="modal-full-screen-sm-down result-ranking-modal-root"
 			observer={observer}
 			size="lg"
 		>
