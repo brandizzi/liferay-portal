@@ -17,7 +17,7 @@ import ResultRankingsForm from './components/ResultRankingsForm.es';
 export default function({context, props}) {
 	return (
 		<ThemeContext.Provider value={context}>
-			<div className="results-rankings-root">
+			<div className="result-rankings-root">
 				<ResultRankingsForm {...props} />
 			</div>
 		</ThemeContext.Provider>
