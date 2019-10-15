@@ -17,6 +17,7 @@ package com.liferay.portal.search.elasticsearch7.internal;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.FieldArray;
 import com.liferay.portal.kernel.search.geolocation.GeoLocationPoint;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -77,6 +78,10 @@ public class SearchHitDocumentTranslatorImpl
 			return translateGeoPoint(documentField);
 		}
 
+		if (fieldName.contains(".")) {
+			return translateArray(fieldName, documentField);
+		}
+
 		return translate(documentField);
 	}
 
@@ -87,6 +92,23 @@ public class SearchHitDocumentTranslatorImpl
 
 		return new Field(
 			name, ArrayUtil.toStringArray(values.toArray(new Object[0])));
+	}
+
+	protected Field translateArray(
+		String fieldName, DocumentField documentField) {
+
+		String[] names = StringUtil.split(fieldName, ".");
+
+		FieldArray fieldArray = new FieldArray(names[0]);
+
+		Collection<Object> values = documentField.getValues();
+
+		fieldArray.addField(
+			new Field(
+				names[1],
+				ArrayUtil.toStringArray(values.toArray(new Object[0]))));
+
+		return fieldArray;
 	}
 
 	protected Field translateGeoPoint(DocumentField documentField) {
