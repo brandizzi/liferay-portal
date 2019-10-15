@@ -1,8 +1,8 @@
 @import 'variables';
 
 .portlet-result-rankings,
-.results-rankings-root,
-.results-ranking-modal-root {
+.result-rankings-root,
+.result-ranking-modal-root {
 	@import 'empty_state';
 	@import 'loading';
 	@import 'list';
@@ -13,7 +13,7 @@
 	@import 'result_rankings_form';
 }
 
-body.open .results-rankings-root .page-toolbar-root.navbar {
+body.open .result-rankings-root .page-toolbar-root.navbar {
 	left: 320px;
 	width: calc(100% - 320px);
 }

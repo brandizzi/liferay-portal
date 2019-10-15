@@ -648,7 +648,7 @@ class ResultRankingsForm extends Component {
 		} = this.state;
 
 		return (
-			<div className="results-ranking-form-root">
+			<div className="result-rankings-form-root">
 				<HiddenInputs
 					valueMap={{
 						aliases,
@@ -669,7 +669,7 @@ class ResultRankingsForm extends Component {
 					onPublish={this._handlePublish}
 				/>
 
-				<div className="container-fluid container-fluid-max-xl container-form-lg results-rankings-container">
+				<div className="container-fluid container-fluid-max-xl container-form-lg result-rankings-container">
 					<div className="form-section-header sheet sheet-lg">
 						<label>{Liferay.Language.get('query')}</label>
 

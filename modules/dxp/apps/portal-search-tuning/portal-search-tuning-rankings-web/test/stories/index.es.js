@@ -57,7 +57,7 @@ addDecorator(storyFn => {
 	return (
 		<ClayIconSpriteContext.Provider value={context.spritemap}>
 			<ThemeContext.Provider value={context}>
-				<div className="results-rankings-root">{storyFn()}</div>
+				<div className="result-rankings-root">{storyFn()}</div>
 			</ThemeContext.Provider>
 		</ClayIconSpriteContext.Provider>
 	);
