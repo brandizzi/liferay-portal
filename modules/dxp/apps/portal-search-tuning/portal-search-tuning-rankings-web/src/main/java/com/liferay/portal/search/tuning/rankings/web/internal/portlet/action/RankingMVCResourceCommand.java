@@ -83,7 +83,8 @@ public class RankingMVCResourceCommand implements MVCResourceCommand {
 	protected JSONObject getHiddenResults(ResourceRequest resourceRequest) {
 		RankingGetHiddenResultsBuilder rankingGetHiddenResultsBuilder =
 			new RankingGetHiddenResultsBuilder(
-				queries, rankingIndexReader, searchEngineAdapter);
+				queries, rankingIndexReader, resourceRequest,
+				searchEngineAdapter);
 
 		RankingMVCResourceRequest rankingMVCResourceRequest =
 			new RankingMVCResourceRequest(resourceRequest);
@@ -115,8 +116,8 @@ public class RankingMVCResourceCommand implements MVCResourceCommand {
 	protected JSONObject getSearchResults(ResourceRequest resourceRequest) {
 		RankingGetSearchResultsBuilder rankingGetSearchResultsBuilder =
 			new RankingGetSearchResultsBuilder(
-				complexQueryPartBuilderFactory, queries, searcher,
-				searchRequestBuilderFactory);
+				complexQueryPartBuilderFactory, queries, resourceRequest,
+				searcher, searchRequestBuilderFactory);
 
 		RankingMVCResourceRequest rankingMVCResourceRequest =
 			new RankingMVCResourceRequest(resourceRequest);
@@ -137,7 +138,7 @@ public class RankingMVCResourceCommand implements MVCResourceCommand {
 		RankingGetVisibleResultsBuilder rankingGetVisibleResultsBuilder =
 			new RankingGetVisibleResultsBuilder(
 				complexQueryPartBuilderFactory, rankingIndexReader,
-				rankingSearchRequestHelper, queries, searcher,
+				rankingSearchRequestHelper, resourceRequest, queries, searcher,
 				searchRequestBuilderFactory);
 
 		RankingMVCResourceRequest rankingMVCResourceRequest =

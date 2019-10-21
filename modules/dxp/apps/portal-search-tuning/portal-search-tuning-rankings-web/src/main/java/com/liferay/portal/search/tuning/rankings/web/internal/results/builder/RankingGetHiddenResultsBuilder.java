@@ -17,7 +17,9 @@ package com.liferay.portal.search.tuning.rankings.web.internal.results.builder;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.document.GetDocumentRequest;
@@ -29,8 +31,11 @@ import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import javax.portlet.ResourceRequest;
 
 /**
  * @author André de Oliveira
@@ -40,10 +45,12 @@ public class RankingGetHiddenResultsBuilder {
 
 	public RankingGetHiddenResultsBuilder(
 		Queries queries, RankingIndexReader rankingIndexReader,
+		ResourceRequest resourceRequest,
 		SearchEngineAdapter searchEngineAdapter) {
 
 		_queries = queries;
 		_rankingIndexReader = rankingIndexReader;
+		_resourceRequest = resourceRequest;
 		_searchEngineAdapter = searchEngineAdapter;
 	}
 
@@ -93,12 +100,15 @@ public class RankingGetHiddenResultsBuilder {
 
 		Stream<String> stream = ids.stream();
 
+		ThemeDisplay themeDisplay = (ThemeDisplay)_resourceRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
 		return stream.map(
 			id -> getDocument(ranking.getIndex(), id, LIFERAY_DOCUMENT_TYPE)
 		).filter(
 			document -> document != null
 		).map(
-			this::translate
+			document -> translate(document, themeDisplay.getLocale())
 		);
 	}
 
@@ -110,13 +120,15 @@ public class RankingGetHiddenResultsBuilder {
 		return idsQuery;
 	}
 
-	protected JSONObject translate(Document document) {
+	protected JSONObject translate(Document document, Locale locale) {
 		RankingJSONBuilder rankingJSONBuilder = new RankingJSONBuilder();
 
 		return rankingJSONBuilder.document(
 			document
 		).hidden(
 			true
+		).locale(
+			locale
 		).build();
 	}
 
@@ -125,6 +137,7 @@ public class RankingGetHiddenResultsBuilder {
 	private final Queries _queries;
 	private String _rankingId;
 	private final RankingIndexReader _rankingIndexReader;
+	private final ResourceRequest _resourceRequest;
 	private final SearchEngineAdapter _searchEngineAdapter;
 
 }

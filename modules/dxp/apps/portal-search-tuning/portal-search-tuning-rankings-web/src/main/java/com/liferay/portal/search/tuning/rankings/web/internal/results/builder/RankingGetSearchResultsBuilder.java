@@ -17,6 +17,8 @@ package com.liferay.portal.search.tuning.rankings.web.internal.results.builder;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.filter.ComplexQueryPartBuilderFactory;
 import com.liferay.portal.search.query.Queries;
@@ -25,7 +27,10 @@ import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.searcher.SearchResponse;
 import com.liferay.portal.search.searcher.Searcher;
 
+import java.util.Locale;
 import java.util.stream.Stream;
+
+import javax.portlet.ResourceRequest;
 
 /**
  * @author André de Oliveira
@@ -35,11 +40,12 @@ public class RankingGetSearchResultsBuilder {
 
 	public RankingGetSearchResultsBuilder(
 		ComplexQueryPartBuilderFactory complexQueryPartBuilderFactory,
-		Queries queries, Searcher searcher,
+		Queries queries, ResourceRequest resourceRequest, Searcher searcher,
 		SearchRequestBuilderFactory searchRequestBuilderFactory) {
 
 		_complexQueryPartBuilderFactory = complexQueryPartBuilderFactory;
 		_queries = queries;
+		_resourceRequest = resourceRequest;
 		_searcher = searcher;
 		_searchRequestBuilderFactory = searchRequestBuilderFactory;
 	}
@@ -103,14 +109,20 @@ public class RankingGetSearchResultsBuilder {
 
 		Stream<Document> stream = searchResponse.getDocumentsStream();
 
-		return stream.map(this::translate);
+		ThemeDisplay themeDisplay = (ThemeDisplay)_resourceRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		return stream.map(
+			document -> translate(document, themeDisplay.getLocale()));
 	}
 
-	protected JSONObject translate(Document document) {
+	protected JSONObject translate(Document document, Locale locale) {
 		RankingJSONBuilder rankingJSONBuilder = new RankingJSONBuilder();
 
 		return rankingJSONBuilder.document(
 			document
+		).locale(
+			locale
 		).build();
 	}
 
@@ -120,6 +132,7 @@ public class RankingGetSearchResultsBuilder {
 	private int _from;
 	private final Queries _queries;
 	private String _queryString;
+	private final ResourceRequest _resourceRequest;
 	private final Searcher _searcher;
 	private final SearchRequestBuilderFactory _searchRequestBuilderFactory;
 	private int _size;

@@ -18,7 +18,9 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.filter.ComplexQueryPartBuilderFactory;
 import com.liferay.portal.search.query.Queries;
@@ -31,8 +33,11 @@ import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
 import com.liferay.portal.search.tuning.rankings.web.internal.searcher.RankingSearchRequestHelper;
 
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import javax.portlet.ResourceRequest;
 
 /**
  * @author André de Oliveira
@@ -43,13 +48,14 @@ public class RankingGetVisibleResultsBuilder {
 	public RankingGetVisibleResultsBuilder(
 		ComplexQueryPartBuilderFactory complexQueryPartBuilderFactory,
 		RankingIndexReader rankingIndexReader,
-		RankingSearchRequestHelper rankingSearchRequestHelper, Queries queries,
-		Searcher searcher,
+		RankingSearchRequestHelper rankingSearchRequestHelper,
+		ResourceRequest resourceRequest, Queries queries, Searcher searcher,
 		SearchRequestBuilderFactory searchRequestBuilderFactory) {
 
 		_complexQueryPartBuilderFactory = complexQueryPartBuilderFactory;
 		_rankingIndexReader = rankingIndexReader;
 		_rankingSearchRequestHelper = rankingSearchRequestHelper;
+		_resourceRequest = resourceRequest;
 		_queries = queries;
 		_searcher = searcher;
 		_searchRequestBuilderFactory = searchRequestBuilderFactory;
@@ -139,14 +145,22 @@ public class RankingGetVisibleResultsBuilder {
 
 		Stream<Document> stream = searchResponse.getDocumentsStream();
 
-		return stream.map(document -> translate(document, ranking));
+		ThemeDisplay themeDisplay = (ThemeDisplay)_resourceRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		return stream.map(
+			document -> translate(document, ranking, themeDisplay.getLocale()));
 	}
 
-	protected JSONObject translate(Document document, Ranking ranking) {
+	protected JSONObject translate(
+		Document document, Ranking ranking, Locale locale) {
+
 		RankingJSONBuilder rankingJSONBuilder = new RankingJSONBuilder();
 
 		return rankingJSONBuilder.document(
 			document
+		).locale(
+			locale
 		).pinned(
 			ranking.isPinned(document.getString(Field.UID))
 		).build();
@@ -161,6 +175,7 @@ public class RankingGetVisibleResultsBuilder {
 	private String _rankingId;
 	private final RankingIndexReader _rankingIndexReader;
 	private final RankingSearchRequestHelper _rankingSearchRequestHelper;
+	private final ResourceRequest _resourceRequest;
 	private final Searcher _searcher;
 	private final SearchRequestBuilderFactory _searchRequestBuilderFactory;
 	private int _size;

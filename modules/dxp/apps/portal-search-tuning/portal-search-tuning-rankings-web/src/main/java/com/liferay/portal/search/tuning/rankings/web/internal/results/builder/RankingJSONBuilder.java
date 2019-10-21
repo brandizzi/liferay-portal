@@ -17,8 +17,11 @@ package com.liferay.portal.search.tuning.rankings.web.internal.results.builder;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.document.Document;
+
+import java.util.Locale;
 
 /**
  * @author André de Oliveira
@@ -39,7 +42,7 @@ public class RankingJSONBuilder {
 			).put(
 				"title", getTitle()
 			).put(
-				"type", _document.getString(Field.ENTRY_CLASS_NAME)
+				"type", getType(_locale)
 			));
 	}
 
@@ -51,6 +54,12 @@ public class RankingJSONBuilder {
 
 	public RankingJSONBuilder hidden(boolean hidden) {
 		_hidden = hidden;
+
+		return this;
+	}
+
+	public RankingJSONBuilder locale(Locale locale) {
+		_locale = locale;
 
 		return this;
 	}
@@ -83,8 +92,17 @@ public class RankingJSONBuilder {
 		return _document.getString(Field.TITLE);
 	}
 
+	protected String getType(Locale locale) {
+		_locale = locale;
+
+		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
+
+		return ResourceActionsUtil.getModelResource(_locale, entryClassName);
+	}
+
 	private Document _document;
 	private boolean _hidden;
+	private Locale _locale;
 	private boolean _pinned;
 
 }
