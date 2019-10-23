@@ -29,7 +29,7 @@ public class RankingJSONBuilder {
 	public JSONObject build() {
 		return build(
 			JSONUtil.put(
-				"author", _document.getString(Field.USER_NAME)
+				"author", getAuthor()
 			).put(
 				"clicks", _document.getString("clicks")
 			).put(
@@ -73,14 +73,34 @@ public class RankingJSONBuilder {
 		return jsonObject;
 	}
 
-	protected String getTitle() {
-		String title = _document.getString(Field.TITLE + "_en_US");
+	protected String getAuthor() {
+		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
 
-		if (!Validator.isBlank(title)) {
-			return title;
+		if (entryClassName.equals("com.liferay.portal.kernel.model.User")) {
+			return _document.getString("screenName");
 		}
 
-		return _document.getString(Field.TITLE);
+		return _document.getString(Field.USER_NAME);
+	}
+
+	protected String getTitle() {
+		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
+		String title = _document.getString(Field.TITLE);
+		String titleUS = _document.getString(Field.TITLE + "_en_US");
+
+		if (Validator.isBlank(title) && Validator.isBlank(titleUS)) {
+			if (entryClassName.equals("com.liferay.portal.kernel.model.User")) {
+				return _document.getString("fullName");
+			}
+
+			return _document.getString("name");
+		}
+
+		if (!Validator.isBlank(titleUS)) {
+			return titleUS;
+		}
+
+		return title;
 	}
 
 	private Document _document;
