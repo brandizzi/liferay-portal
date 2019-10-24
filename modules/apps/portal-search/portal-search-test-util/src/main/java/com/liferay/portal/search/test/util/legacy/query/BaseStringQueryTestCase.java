@@ -121,6 +121,32 @@ public abstract class BaseStringQueryTestCase extends BaseIndexingTestCase {
 	}
 
 	@Test
+	public void testFieldArrayManyItems() throws Exception {
+		FieldArray fieldArray = new FieldArray("array_title");
+
+		Field nestedField = new Field("");
+
+		Field field1 = new Field("title");
+
+		field1.setValue("java");
+
+		nestedField.addField(field1);
+
+		Field field2 = new Field("content");
+
+		field1.setValue("eclipse");
+
+		nestedField.addField(field2);
+		
+		fieldArray.addField(nestedField);
+
+		addDocument(DocumentCreationHelpers.field(fieldArray));
+
+		assertSearch(
+			"array_title.title", "java", Arrays.asList("java", "eclipse"));
+	}
+
+	@Test
 	public void testPrefixOperatorMust() throws Exception {
 		addDocuments("alpha bravo", "alpha charlie", "charlie delta");
 
