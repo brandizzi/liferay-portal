@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.tuning.rankings.web.internal.results.builder;
 
+import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
+import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.search.Field;
@@ -37,6 +39,8 @@ public class RankingJSONBuilder {
 				"clicks", _document.getString("clicks")
 			).put(
 				"description", _document.getString(Field.DESCRIPTION)
+			).put(
+				"icon", getIcon()
 			).put(
 				"id", _document.getString(Field.UID)
 			).put(
@@ -90,6 +94,20 @@ public class RankingJSONBuilder {
 		}
 
 		return _document.getString(Field.USER_NAME);
+	}
+
+	protected String getIcon() {
+		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
+
+		AssetRendererFactory<?> assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				entryClassName);
+
+		if (assetRendererFactory != null) {
+			return assetRendererFactory.getIconCssClass();
+		}
+
+		return null;
 	}
 
 	protected String getTitle() {
