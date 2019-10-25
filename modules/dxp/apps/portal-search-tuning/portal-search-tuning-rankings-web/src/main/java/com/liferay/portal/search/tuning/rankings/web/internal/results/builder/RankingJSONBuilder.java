@@ -18,6 +18,7 @@ import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -87,9 +88,7 @@ public class RankingJSONBuilder {
 	}
 
 	protected String getAuthor() {
-		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
-
-		if (entryClassName.equals("com.liferay.portal.kernel.model.User")) {
+		if (isUser()) {
 			return _document.getString("screenName");
 		}
 
@@ -123,9 +122,7 @@ public class RankingJSONBuilder {
 			return title;
 		}
 
-		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
-
-		if (entryClassName.equals("com.liferay.portal.kernel.model.User")) {
+		if (isUser()) {
 			return _document.getString("fullName");
 		}
 
@@ -133,11 +130,15 @@ public class RankingJSONBuilder {
 	}
 
 	protected String getType(Locale locale) {
-		_locale = locale;
-
 		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
 
-		return ResourceActionsUtil.getModelResource(_locale, entryClassName);
+		return ResourceActionsUtil.getModelResource(locale, entryClassName);
+	}
+
+	private boolean isUser() {
+		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
+
+		return entryClassName.equals(User.class.getName());
 	}
 
 	private Document _document;
