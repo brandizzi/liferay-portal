@@ -43,5 +43,4 @@ public class DocumentToSynonymSetTranslatorImpl
 		return new SynonymSet.SynonymSetBuilder();
 	}
 
-
 }

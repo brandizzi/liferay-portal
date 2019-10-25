@@ -43,14 +43,13 @@ import javax.servlet.http.HttpServletRequest;
 public class SearchSynonymSetRequest {
 
 	public SearchSynonymSetRequest(
-		HttpServletRequest httpServletRequest, Queries queries, Sorts sorts,
-		SearchContainer searchContainer,
+		Queries queries, Collection<Sort> sorts,
+		SearchContainer searchContainer, SearchContext searchContext,
 		SearchEngineAdapter searchEngineAdapter) {
 
-		_httpServletRequest = httpServletRequest;
 		_queries = queries;
 		_sorts = sorts;
-		_searchContext = SearchContextFactory.getInstance(httpServletRequest);
+		_searchContext = searchContext;
 		_searchContainer = searchContainer;
 		_searchEngineAdapter = searchEngineAdapter;
 	}
@@ -71,7 +70,7 @@ public class SearchSynonymSetRequest {
 		searchSearchRequest.setFetchSource(true);
 		searchSearchRequest.setIndexNames(SynonymSetIndexDefinition.INDEX_NAME);
 		searchSearchRequest.setSize(_searchContainer.getDelta());
-		searchSearchRequest.setSorts(_getSorts());
+		searchSearchRequest.setSorts(_sorts);
 		searchSearchRequest.setStart(_searchContainer.getStart());
 
 		SearchSearchResponse searchSearchResponse =
@@ -88,27 +87,11 @@ public class SearchSynonymSetRequest {
 		return searchRankingResponse;
 	}
 
-	private Collection<Sort> _getSorts() {
-		String orderByCol = ParamUtil.getString(
-			_httpServletRequest, "orderByCol",
-			SynonymSetFields.SYNONYMS_KEYWORD);
-		String orderByType = ParamUtil.getString(
-			_httpServletRequest, "orderByType", "asc");
-
-		SortOrder sortOrder = SortOrder.ASC;
-
-		if (Objects.equals(orderByType, "desc")) {
-			sortOrder = SortOrder.DESC;
-		}
-
-		return Arrays.asList(_sorts.field(orderByCol, sortOrder));
-	}
-
-	private final HttpServletRequest _httpServletRequest;
 	private final Queries _queries;
 	private final SearchContainer _searchContainer;
 	private final SearchContext _searchContext;
 	private final SearchEngineAdapter _searchEngineAdapter;
-	private final Sorts _sorts;
+	
+	private final Collection<Sort> _sorts;
 
 }

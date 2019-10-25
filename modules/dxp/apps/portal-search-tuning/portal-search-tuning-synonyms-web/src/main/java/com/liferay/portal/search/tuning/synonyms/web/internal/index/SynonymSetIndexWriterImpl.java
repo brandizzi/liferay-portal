@@ -52,19 +52,12 @@ public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 	@Override
 	public void update(SynonymSet ranking) {
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
-				SynonymSetIndexDefinition.INDEX_NAME, ranking.getId(),
+			SynonymSetIndexDefinition.INDEX_NAME, ranking.getId(),
 			_synonymSetToDocumentTranslator.translate(ranking));
 
 		indexDocumentRequest.setRefresh(true);
 
 		_searchEngineAdapter.execute(indexDocumentRequest);
-	}
-
-	@Reference(unbind = "-")
-	protected void setSynonymSetToDocumentTranslator(
-			SynonymSetToDocumentTranslator synonymSetToDocumentTranslator) {
-
-		_synonymSetToDocumentTranslator = synonymSetToDocumentTranslator;
 	}
 
 	@Reference(unbind = "-")
@@ -74,7 +67,14 @@ public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 		_searchEngineAdapter = searchEngineAdapter;
 	}
 
-	private SynonymSetToDocumentTranslator _synonymSetToDocumentTranslator;
+	@Reference(unbind = "-")
+	protected void setSynonymSetToDocumentTranslator(
+		SynonymSetToDocumentTranslator synonymSetToDocumentTranslator) {
+
+		_synonymSetToDocumentTranslator = synonymSetToDocumentTranslator;
+	}
+
 	private SearchEngineAdapter _searchEngineAdapter;
+	private SynonymSetToDocumentTranslator _synonymSetToDocumentTranslator;
 
 }

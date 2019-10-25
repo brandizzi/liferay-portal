@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
 
 import javax.portlet.ActionURL;
@@ -56,31 +58,13 @@ public class SynonymsDisplayContextTest {
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 
-		Mockito.when(
-			_httpServletRequest.getAttribute(WebKeys.THEME_DISPLAY)
-		).thenReturn(
-			_themeDisplay
-		);
+		setUpThemeDisplay();
 
-		Mockito.when(
-			_portal.getCurrentURL(_httpServletRequest)
-		).thenReturn(
-			"/"
-		);
+		setUpPortal();
 
-		Mockito.when(
-			_renderResponse.createActionURL()
-		).thenReturn(
-			_actionURL
-		);
+		setUpRenderResponse();
 
-		Mockito.when(
-			_renderResponse.createRenderURL()
-		).thenReturn(
-			_renderURL
-		);
-
-		PropsUtil.setProps(_props);
+		setUpProps();
 	}
 
 	@Test
@@ -113,6 +97,40 @@ public class SynonymsDisplayContextTest {
 		Assert.assertEquals(2, synonymsDisplayContext.getItemsTotal());
 	}
 
+	protected void setUpPortal() {
+		Mockito.when(
+			_portal.getCurrentURL(_httpServletRequest)
+		).thenReturn(
+			"/"
+		);
+	}
+
+	protected void setUpProps() {
+		PropsUtil.setProps(_props);
+	}
+
+	protected void setUpRenderResponse() {
+		Mockito.when(
+			_renderResponse.createActionURL()
+		).thenReturn(
+			_actionURL
+		);
+
+		Mockito.when(
+			_renderResponse.createRenderURL()
+		).thenReturn(
+			_renderURL
+		);
+	}
+
+	protected void setUpThemeDisplay() {
+		Mockito.when(
+			_httpServletRequest.getAttribute(WebKeys.THEME_DISPLAY)
+		).thenReturn(
+			_themeDisplay
+		);
+	}
+
 	@Mock
 	private ActionURL _actionURL;
 
@@ -138,7 +156,7 @@ public class SynonymsDisplayContextTest {
 	private RenderURL _renderURL;
 
 	@Mock
-	private SynonymIndexer _synonymIndexer;
+	private SynonymSetIndexReader _synonymSetIndexReader;
 
 	@Mock
 	private ThemeDisplay _themeDisplay;
