@@ -16,14 +16,21 @@ package com.liferay.portal.search.tuning.rankings.web.internal.results.builder;
 
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.document.library.configuration.DLConfiguration;
+import com.liferay.document.library.kernel.model.DLFileEntryConstants;
+import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.document.Document;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -31,6 +38,11 @@ import java.util.Locale;
  * @author Bryan Engler
  */
 public class RankingJSONBuilder {
+
+	public RankingJSONBuilder() {
+		_dlConfiguration = ConfigurableUtil.createConfigurable(
+			DLConfiguration.class, new HashMap<String, Object>());
+	}
 
 	public JSONObject build() {
 		return build(
@@ -102,7 +114,20 @@ public class RankingJSONBuilder {
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
 				entryClassName);
 
-		if (assetRendererFactory != null) {
+		if (entryClassName.equals(DLFileEntryConstants.getClassName())) {
+			try {
+				long entryClassPk = _document.getLong(Field.ENTRY_CLASS_PK);
+
+				FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
+					entryClassPk);
+
+				return getIconFileMimeType(fileEntry.getMimeType());
+			}
+			catch (PortalException pe) {
+				return "document-default";
+			}
+		}
+		else if (assetRendererFactory != null) {
 			return assetRendererFactory.getIconCssClass();
 		}
 
@@ -134,12 +159,74 @@ public class RankingJSONBuilder {
 		return ResourceActionsUtil.getModelResource(locale, entryClassName);
 	}
 
+	private boolean _containsMimeType(String[] mimeTypes, String mimeType) {
+		for (String curMimeType : mimeTypes) {
+			int pos = curMimeType.indexOf("/");
+
+			if (pos != -1) {
+				if (mimeType.equals(curMimeType)) {
+					return true;
+				}
+			}
+			else {
+				if (mimeType.startsWith(curMimeType)) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private String getIconFileMimeType(String mimeType) {
+		if (_containsMimeType(_dlConfiguration.codeFileMimeTypes(), mimeType)) {
+			return "document-code";
+		}
+		else if (_containsMimeType(
+					_dlConfiguration.compressedFileMimeTypes(), mimeType)) {
+
+			return "document-compressed";
+		}
+		else if (_containsMimeType(
+					_dlConfiguration.multimediaFileMimeTypes(), mimeType)) {
+
+			if (mimeType.startsWith("image")) {
+				return "document-image";
+			}
+
+			return "document-multimedia";
+		}
+		else if (_containsMimeType(
+					_dlConfiguration.presentationFileMimeTypes(), mimeType)) {
+
+			return "document-presentation";
+		}
+		else if (_containsMimeType(
+					_dlConfiguration.spreadSheetFileMimeTypes(), mimeType)) {
+
+			return "document-table";
+		}
+		else if (_containsMimeType(
+					_dlConfiguration.textFileMimeTypes(), mimeType)) {
+
+			return "document-text";
+		}
+		else if (_containsMimeType(
+					_dlConfiguration.vectorialFileMimeTypes(), mimeType)) {
+
+			return "document-pdf";
+		}
+
+		return "document-default";
+	}
+
 	private boolean isUser() {
 		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
 
 		return entryClassName.equals(User.class.getName());
 	}
 
+	private final DLConfiguration _dlConfiguration;
 	private Document _document;
 	private Locale _locale;
 	private boolean _hidden;
