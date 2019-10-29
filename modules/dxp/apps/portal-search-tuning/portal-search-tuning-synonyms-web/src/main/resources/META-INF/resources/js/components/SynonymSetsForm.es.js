@@ -57,7 +57,6 @@ class SynonymSetsForm extends Component {
 	static propTypes = {
 		formName: PropTypes.string.isRequired,
 		inputName: PropTypes.string.isRequired,
-		originalInputName: PropTypes.string.isRequired,
 		synonymSets: PropTypes.string
 	};
 
@@ -74,8 +73,6 @@ class SynonymSetsForm extends Component {
 		super(props);
 
 		if (props.synonymSets.length > 0) {
-			this._originalSynonymSets = props.synonymSets;
-
 			props.synonymSets.split(',').forEach(synonym => {
 				this.state.synonyms.push({
 					label: synonym,
@@ -103,10 +100,6 @@ class SynonymSetsForm extends Component {
 		);
 
 		form.elements[this.props.inputName].value = synonymSetsString;
-
-		form.elements[
-			this.props.originalInputName
-		].value = this._originalSynonymSets;
 
 		submitForm(form);
 	};

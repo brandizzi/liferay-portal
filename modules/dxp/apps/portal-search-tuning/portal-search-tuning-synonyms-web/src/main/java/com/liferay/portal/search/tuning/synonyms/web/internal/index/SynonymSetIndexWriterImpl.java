@@ -30,11 +30,14 @@ public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 
 	@Override
 	public String create(SynonymSet synonymSet) {
+		IndexDocumentRequest documentRequest = new IndexDocumentRequest(
+			SynonymSetIndexDefinition.INDEX_NAME,
+			_synonymSetToDocumentTranslator.translate(synonymSet));
+
+		documentRequest.setRefresh(true);
+
 		IndexDocumentResponse indexDocumentResponse =
-			_searchEngineAdapter.execute(
-				new IndexDocumentRequest(
-					SynonymSetIndexDefinition.INDEX_NAME,
-					_synonymSetToDocumentTranslator.translate(synonymSet)));
+			_searchEngineAdapter.execute(documentRequest);
 
 		return indexDocumentResponse.getUid();
 	}
