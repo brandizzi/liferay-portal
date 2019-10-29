@@ -20,8 +20,14 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
 import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
+
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -42,6 +48,25 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
+	protected void addSynonymSetsToIndex(
+		String[] synonymsArray, String indexName) {
+
+		for (String synonyms : synonymsArray) {
+			SynonymSet.SynonymSetBuilder synonymSetBuilder =
+				new SynonymSet.SynonymSetBuilder();
+
+			SynonymSet synonymSet = synonymSetBuilder.inactive(
+				false
+			).index(
+				indexName
+			).synonyms(
+				synonyms
+			).build();
+
+			_synonymSetIndexWriter.create(synonymSet);
+		}
+	}
+
 	@Override
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
@@ -55,9 +80,10 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		String originalSynonymSet = ParamUtil.getString(
 			actionRequest, "originalSynonymSet");
 
+		String[] synonymSets = null;
+
 		for (String filterName : _FILTER_NAMES) {
-			String[] synonymSets = _synonymIndexer.getSynonymSets(
-				companyId, filterName);
+			synonymSets = _synonymIndexer.getSynonymSets(companyId, filterName);
 
 			if (ArrayUtil.contains(synonymSets, originalSynonymSet, true)) {
 				synonymSets = ArrayUtil.remove(synonymSets, originalSynonymSet);
@@ -71,9 +97,24 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 				companyId, filterName, synonymSets);
 		}
 
+		String indexName = _indexNameBuilder.getIndexName(companyId);
+
+		removeSynonymSetsFromIndex(indexName);
+
+		addSynonymSetsToIndex(synonymSets, indexName);
+
 		String redirect = ParamUtil.getString(actionRequest, "redirect");
 
 		sendRedirect(actionRequest, actionResponse, redirect);
+	}
+
+	protected void removeSynonymSetsFromIndex(String indexName) {
+		List<SynonymSet> synonymSets = _synonymSetIndexReader.searchByIndexName(
+			indexName);
+
+		for (SynonymSet synonymSet : synonymSets) {
+			_synonymSetIndexWriter.remove(synonymSet.getId());
+		}
 	}
 
 	@Reference
@@ -84,6 +125,15 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 	};
 
 	@Reference
+	private IndexNameBuilder _indexNameBuilder;
+
+	@Reference
 	private SynonymIndexer _synonymIndexer;
+
+	@Reference
+	private SynonymSetIndexReader _synonymSetIndexReader;
+
+	@Reference
+	private SynonymSetIndexWriter _synonymSetIndexWriter;
 
 }
