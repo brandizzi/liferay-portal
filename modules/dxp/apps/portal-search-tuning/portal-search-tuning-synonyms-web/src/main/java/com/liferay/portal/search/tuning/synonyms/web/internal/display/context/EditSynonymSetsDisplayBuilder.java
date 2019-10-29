@@ -14,10 +14,14 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.display.context;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -31,16 +35,20 @@ public class EditSynonymSetsDisplayBuilder {
 
 	public EditSynonymSetsDisplayBuilder(
 		HttpServletRequest httpServletRequest, RenderRequest renderRequest,
-		RenderResponse renderResponse) {
+		RenderResponse renderResponse,
+		SynonymSetIndexReader synonymSetIndexReader) {
 
 		_httpServletRequest = httpServletRequest;
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
+		_synonymSetIndexReader = synonymSetIndexReader;
 	}
 
 	public EditSynonymSetsDisplayContext build() {
 		EditSynonymSetsDisplayContext editSynonymSetsDisplayContext =
 			new EditSynonymSetsDisplayContext();
+
+		_synonymSetOptional = _getSynonymSetOptional();
 
 		_setBackURL(editSynonymSetsDisplayContext);
 		_setData(editSynonymSetsDisplayContext);
@@ -73,8 +81,20 @@ public class EditSynonymSetsDisplayBuilder {
 		return ParamUtil.getString(_httpServletRequest, "redirect");
 	}
 
+	private Optional<SynonymSet> _getSynonymSetOptional() {
+		return Optional.ofNullable(
+			ParamUtil.getString(_renderRequest, "synonymSetId", null)
+		).flatMap(
+			_synonymSetIndexReader::fetchOptional
+		);
+	}
+
 	private String _getSynonymSets() {
-		return ParamUtil.getString(_httpServletRequest, "synonymSets");
+		return _synonymSetOptional.map(
+			SynonymSet::getSynonyms
+		).orElse(
+			StringPool.BLANK
+		);
 	}
 
 	private void _setBackURL(
@@ -126,5 +146,7 @@ public class EditSynonymSetsDisplayBuilder {
 	private final HttpServletRequest _httpServletRequest;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
+	private final SynonymSetIndexReader _synonymSetIndexReader;
+	private Optional<SynonymSet> _synonymSetOptional;
 
 }

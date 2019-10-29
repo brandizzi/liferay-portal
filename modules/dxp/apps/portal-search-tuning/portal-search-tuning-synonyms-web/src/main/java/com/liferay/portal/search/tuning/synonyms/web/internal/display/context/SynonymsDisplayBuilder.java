@@ -110,7 +110,7 @@ public class SynonymsDisplayBuilder {
 		editRenderURL.setParameter("mvcRenderCommandName", "editSynonymSet");
 		editRenderURL.setParameter(
 			"redirect", _portal.getCurrentURL(_httpServletRequest));
-		editRenderURL.setParameter("synonymSets", synonymSet.getSynonyms());
+		editRenderURL.setParameter("synonymSetId", synonymSet.getId());
 
 		return editRenderURL;
 	}
