@@ -14,7 +14,9 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.display.context;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -74,7 +76,13 @@ public class EditSynonymSetsDisplayBuilder {
 	}
 
 	private String _getSynonymSets() {
-		return ParamUtil.getString(_httpServletRequest, "synonymSets");
+		String synonymSets = (String)_renderRequest.getAttribute("synonymSets");
+
+		if (Validator.isNull(synonymSets)) {
+			synonymSets = StringPool.BLANK;
+		}
+
+		return synonymSets;
 	}
 
 	private void _setBackURL(
