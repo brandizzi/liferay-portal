@@ -45,6 +45,10 @@ public class EditSynonymSetsDisplayContext {
 		return _redirect;
 	}
 
+	public String getSynonymSetId() {
+		return _synonymSetId;
+	}
+
 	public void setBackURL(String backURL) {
 		_backURL = backURL;
 	}
@@ -69,11 +73,16 @@ public class EditSynonymSetsDisplayContext {
 		_redirect = redirect;
 	}
 
+	public void setSynonymSetId(String synonymSetId) {
+		_synonymSetId = synonymSetId;
+	}
+
 	private String _backURL;
 	private Map<String, Object> _data;
 	private String _formName;
 	private String _inputName;
 	private String _originalInputName;
 	private String _redirect;
+	private String _synonymSetId;
 
 }

@@ -59,20 +59,14 @@ SynonymsDisplayContext synonymsDisplayContext = (SynonymsDisplayContext)request.
 	>
 		<liferay-ui:search-container-row
 			className="com.liferay.portal.search.tuning.synonyms.web.internal.display.context.SynonymSetDisplayContext"
-			keyProperty="synonymSet"
+			keyProperty="synonymSetId"
 			modelVar="synonymSetDisplayContext"
 		>
-			<portlet:renderURL var="rowURL">
-				<portlet:param name="mvcRenderCommandName" value="editSynonymSet" />
-				<portlet:param name="redirect" value="<%= currentURL %>" />
-				<portlet:param name="synonymSets" value="<%= synonymSetDisplayContext.getSynonymSet() %>" />
-			</portlet:renderURL>
-
 			<liferay-ui:search-container-column-text
 				colspan="<%= 2 %>"
 				cssClass="table-cell-expand table-title"
 			>
-				<aui:a href="<%= rowURL %>">
+				<aui:a href="<%= synonymSetDisplayContext.getEditRenderURL() %>">
 					<%= HtmlUtil.escape(synonymSetDisplayContext.getDisplayedSynonymSet()) %>
 				</aui:a>
 			</liferay-ui:search-container-column-text>
