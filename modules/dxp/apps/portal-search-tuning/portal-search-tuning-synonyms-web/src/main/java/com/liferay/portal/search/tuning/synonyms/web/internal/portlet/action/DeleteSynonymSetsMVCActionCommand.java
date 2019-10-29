@@ -20,8 +20,14 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
 import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
+
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -41,6 +47,21 @@ import org.osgi.service.component.annotations.Reference;
 	service = MVCActionCommand.class
 )
 public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
+
+	protected void deleteSynonymSetsFromIndex(
+		String[] deletedSynonymSets, String indexName) {
+
+		List<SynonymSet> synonymSets = _synonymSetIndexReader.searchByIndexName(
+			indexName);
+
+		for (SynonymSet synonymSet : synonymSets) {
+			if (ArrayUtil.contains(
+					deletedSynonymSets, synonymSet.getSynonyms())) {
+
+				_synonymSetIndexWriter.remove(synonymSet.getId());
+			}
+		}
+	}
 
 	@Override
 	protected void doProcessAction(
@@ -67,6 +88,9 @@ public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 				companyId, filterName, synonymSets);
 		}
 
+		deleteSynonymSetsFromIndex(
+			deletedSynonymSets, _indexNameBuilder.getIndexName(companyId));
+
 		String redirect = ParamUtil.getString(actionRequest, "redirect");
 
 		sendRedirect(actionRequest, actionResponse, redirect);
@@ -90,6 +114,15 @@ public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 	};
 
 	@Reference
+	private IndexNameBuilder _indexNameBuilder;
+
+	@Reference
 	private SynonymIndexer _synonymIndexer;
+
+	@Reference
+	private SynonymSetIndexReader _synonymSetIndexReader;
+
+	@Reference
+	private SynonymSetIndexWriter _synonymSetIndexWriter;
 
 }

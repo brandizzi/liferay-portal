@@ -191,7 +191,8 @@ public class SynonymsDisplayBuilder {
 							ActionRequest.ACTION_NAME, "deleteSynonymSet");
 						deleteURL.setParameter(Constants.CMD, Constants.DELETE);
 						deleteURL.setParameter(
-							"deletedSynonymSetsString", synonymSet.getSynonyms());
+							"deletedSynonymSetsString",
+							synonymSet.getSynonyms());
 						deleteURL.setParameter(
 							"redirect",
 							_portal.getCurrentURL(_httpServletRequest));
