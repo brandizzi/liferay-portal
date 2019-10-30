@@ -59,7 +59,7 @@ SynonymsDisplayContext synonymsDisplayContext = (SynonymsDisplayContext)request.
 	>
 		<liferay-ui:search-container-row
 			className="com.liferay.portal.search.tuning.synonyms.web.internal.display.context.SynonymSetDisplayContext"
-			keyProperty="synonymSet"
+			keyProperty="synonymSetId"
 			modelVar="synonymSetDisplayContext"
 		>
 			<liferay-ui:search-container-column-text
