@@ -18,15 +18,17 @@ import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.document.library.configuration.DLConfiguration;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
-import com.liferay.document.library.kernel.service.DLAppLocalServiceUtil;
+import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.search.Field;
-import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
+import com.liferay.portal.kernel.security.permission.ResourceActions;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.document.Document;
 
@@ -39,9 +41,13 @@ import java.util.Locale;
  */
 public class RankingJSONBuilder {
 
-	public RankingJSONBuilder() {
+	public RankingJSONBuilder(
+		DLAppLocalService dlAppLocalService, ResourceActions resourceActions) {
+
+		_dlAppLocalService = dlAppLocalService;
 		_dlConfiguration = ConfigurableUtil.createConfigurable(
 			DLConfiguration.class, new HashMap<String, Object>());
+		_resourceActions = resourceActions;
 	}
 
 	public JSONObject build() {
@@ -100,7 +106,7 @@ public class RankingJSONBuilder {
 	}
 
 	protected String getAuthor() {
-		if (isUser()) {
+		if (_isUser()) {
 			return _document.getString("screenName");
 		}
 
@@ -114,16 +120,21 @@ public class RankingJSONBuilder {
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
 				entryClassName);
 
+		long entryClassPK = _document.getLong(Field.ENTRY_CLASS_PK);
+
 		if (entryClassName.equals(DLFileEntryConstants.getClassName())) {
 			try {
-				long entryClassPk = _document.getLong(Field.ENTRY_CLASS_PK);
+				FileEntry fileEntry = _dlAppLocalService.getFileEntry(
+					entryClassPK);
 
-				FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
-					entryClassPk);
-
-				return getIconFileMimeType(fileEntry.getMimeType());
+				return _getIconFileMimeType(fileEntry.getMimeType());
 			}
 			catch (PortalException pe) {
+				if (_log.isWarnEnabled()) {
+					_log.warn(
+						"Unable to get file entry for " + entryClassPK, pe);
+				}
+
 				return "document-default";
 			}
 		}
@@ -139,7 +150,7 @@ public class RankingJSONBuilder {
 		String titleUS = _document.getString(Field.TITLE + "_en_US");
 
 		if (Validator.isBlank(title) && Validator.isBlank(titleUS)) {
-			if (isUser()) {
+			if (_isUser()) {
 				return _document.getString("fullName");
 			}
 
@@ -156,7 +167,7 @@ public class RankingJSONBuilder {
 	protected String getType(Locale locale) {
 		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
 
-		return ResourceActionsUtil.getModelResource(locale, entryClassName);
+		return _resourceActions.getModelResource(locale, entryClassName);
 	}
 
 	private boolean _containsMimeType(String[] mimeTypes, String mimeType) {
@@ -178,7 +189,7 @@ public class RankingJSONBuilder {
 		return false;
 	}
 
-	private String getIconFileMimeType(String mimeType) {
+	private String _getIconFileMimeType(String mimeType) {
 		if (_containsMimeType(_dlConfiguration.codeFileMimeTypes(), mimeType)) {
 			return "document-code";
 		}
@@ -220,16 +231,21 @@ public class RankingJSONBuilder {
 		return "document-default";
 	}
 
-	private boolean isUser() {
+	private boolean _isUser() {
 		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
 
 		return entryClassName.equals(User.class.getName());
 	}
 
+	private static final Log _log = LogFactoryUtil.getLog(
+		RankingJSONBuilder.class);
+
+	private final DLAppLocalService _dlAppLocalService;
 	private final DLConfiguration _dlConfiguration;
 	private Document _document;
-	private Locale _locale;
 	private boolean _hidden;
+	private Locale _locale;
 	private boolean _pinned;
+	private final ResourceActions _resourceActions;
 
 }
