@@ -31,6 +31,10 @@ public class SynonymSetDisplayContext {
 		return _dropDownItems;
 	}
 
+	public String getEditRenderURL() {
+		return _editRenderURL;
+	}
+
 	public String getSynonymSet() {
 		return _synonymSet;
 	}
@@ -43,12 +47,17 @@ public class SynonymSetDisplayContext {
 		_dropDownItems = dropDownItems;
 	}
 
+	public void setEditRenderURL(String editRenderURL) {
+		_editRenderURL = editRenderURL;
+	}
+
 	public void setSynonyms(String synonyms) {
 		_synonymSet = synonyms;
 	}
 
 	private String _displayedSynonymSet;
 	private List<DropdownItem> _dropDownItems;
+	private String _editRenderURL;
 	private String _synonymSet;
 
 }
