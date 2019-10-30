@@ -127,9 +127,9 @@ public class RankingGetHiddenResultsBuilder {
 			document
 		).hidden(
 			true
-		).build(
+		).locale(
 			locale
-		);
+		).build();
 	}
 
 	protected static final String LIFERAY_DOCUMENT_TYPE = "LiferayDocumentType";

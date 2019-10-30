@@ -159,11 +159,11 @@ public class RankingGetVisibleResultsBuilder {
 
 		return rankingJSONBuilder.document(
 			document
+		).locale(
+			locale
 		).pinned(
 			ranking.isPinned(document.getString(Field.UID))
-		).build(
-			locale
-		);
+		).build();
 	}
 
 	private long _companyId;

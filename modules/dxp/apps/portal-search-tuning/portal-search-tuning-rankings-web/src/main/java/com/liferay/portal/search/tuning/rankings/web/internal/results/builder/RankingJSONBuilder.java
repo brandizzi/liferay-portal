@@ -29,7 +29,7 @@ import java.util.Locale;
  */
 public class RankingJSONBuilder {
 
-	public JSONObject build(Locale locale) {
+	public JSONObject build() {
 		return build(
 			JSONUtil.put(
 				"author", _document.getString(Field.USER_NAME)
@@ -42,7 +42,7 @@ public class RankingJSONBuilder {
 			).put(
 				"title", getTitle()
 			).put(
-				"type", getType(locale)
+				"type", getType(_locale)
 			));
 	}
 
@@ -54,6 +54,12 @@ public class RankingJSONBuilder {
 
 	public RankingJSONBuilder hidden(boolean hidden) {
 		_hidden = hidden;
+
+		return this;
+	}
+
+	public RankingJSONBuilder locale(Locale locale) {
+		_locale = locale;
 
 		return this;
 	}
