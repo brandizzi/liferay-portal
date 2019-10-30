@@ -158,6 +158,7 @@ public class SynonymsDisplayBuilder {
 
 		synonymSetDisplayContext.setDisplayedSynonymSet(
 			getDisplayedSynonymSet(synonyms));
+		synonymSetDisplayContext.setSynonymSetId(synonymSet.getId());
 		synonymSetDisplayContext.setSynonyms(synonyms);
 
 		return synonymSetDisplayContext;
@@ -200,9 +201,7 @@ public class SynonymsDisplayBuilder {
 						deleteURL.setParameter(
 							ActionRequest.ACTION_NAME, "deleteSynonymSet");
 						deleteURL.setParameter(Constants.CMD, Constants.DELETE);
-						deleteURL.setParameter(
-							"deletedSynonymSetsString",
-							synonymSet.getSynonyms());
+						deleteURL.setParameter("rowIds", synonymSet.getId());
 						deleteURL.setParameter(
 							"redirect",
 							_portal.getCurrentURL(_httpServletRequest));
