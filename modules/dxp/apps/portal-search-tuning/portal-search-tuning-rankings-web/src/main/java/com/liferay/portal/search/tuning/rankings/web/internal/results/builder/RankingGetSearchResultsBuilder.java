@@ -121,9 +121,9 @@ public class RankingGetSearchResultsBuilder {
 
 		return rankingJSONBuilder.document(
 			document
-		).build(
+		).locale(
 			locale
-		);
+		).build();
 	}
 
 	private long _companyId;
