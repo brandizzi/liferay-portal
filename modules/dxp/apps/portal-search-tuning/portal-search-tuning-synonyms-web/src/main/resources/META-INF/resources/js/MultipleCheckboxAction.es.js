@@ -18,24 +18,7 @@ export default function(nameSpace) {
 				)
 			)
 		) {
-			const searchContainer = document.getElementById(
-				`${nameSpace}SynonymSetsEntriesFm`
-			);
-			const selector = 'input[type=checkbox]';
-
-			const checkedSynonyms = new Array();
-
-			searchContainer.querySelectorAll(selector).forEach(item => {
-				if (item.checked) {
-					checkedSynonyms.push(item.value);
-				}
-			});
-
 			const form = document.forms[`${nameSpace}SynonymSetsEntriesFm`];
-
-			form.elements[
-				`${nameSpace}deletedSynonymSetsString`
-			].value = checkedSynonyms.join(', ');
 
 			form.submit();
 		}
