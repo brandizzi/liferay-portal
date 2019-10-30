@@ -45,6 +45,7 @@ import javax.portlet.ActionURL;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.RenderURL;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -103,6 +104,17 @@ public class SynonymsDisplayBuilder {
 		return StringUtil.replace(synonymSet, ',', ", ");
 	}
 
+	protected RenderURL buildEditRenderURL(SynonymSet synonymSet) {
+		RenderURL editRenderURL = _renderResponse.createRenderURL();
+
+		editRenderURL.setParameter("mvcRenderCommandName", "editSynonymSet");
+		editRenderURL.setParameter(
+			"redirect", _portal.getCurrentURL(_httpServletRequest));
+		editRenderURL.setParameter("synonymSets", synonymSet.getSynonyms());
+
+		return editRenderURL;
+	}
+
 	protected SearchContainer<SynonymSetDisplayContext> buildSearchContainer() {
 		SearchContainer<SynonymSetDisplayContext> searchContainer =
 			new SearchContainer<>(
@@ -138,8 +150,12 @@ public class SynonymsDisplayBuilder {
 
 		String synonyms = synonymSet.getSynonyms();
 
+		RenderURL editRenderURL = buildEditRenderURL(synonymSet);
+
 		synonymSetDisplayContext.setDropDownItems(
-			buildSynonymSetDropdownItemList(synonymSet));
+			buildSynonymSetDropdownItemList(synonymSet, editRenderURL));
+		synonymSetDisplayContext.setEditRenderURL(editRenderURL.toString());
+
 		synonymSetDisplayContext.setDisplayedSynonymSet(
 			getDisplayedSynonymSet(synonyms));
 		synonymSetDisplayContext.setSynonyms(synonyms);
@@ -163,19 +179,13 @@ public class SynonymsDisplayBuilder {
 	}
 
 	protected List<DropdownItem> buildSynonymSetDropdownItemList(
-		SynonymSet synonymSet) {
+		SynonymSet synonymSet, RenderURL editRenderURL) {
 
 		return new DropdownItemList() {
 			{
 				add(
 					dropdownItem -> {
-						dropdownItem.setHref(
-							_renderResponse.createRenderURL(),
-							"mvcRenderCommandName", "editSynonymSet",
-							"redirect",
-							_portal.getCurrentURL(_httpServletRequest),
-							"synonymSets", synonymSet.getSynonyms());
-
+						dropdownItem.setHref(editRenderURL);
 						dropdownItem.setLabel(
 							_language.get(_httpServletRequest, "edit"));
 						dropdownItem.setQuickAction(true);
