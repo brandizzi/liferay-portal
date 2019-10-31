@@ -371,27 +371,6 @@ class Item extends PureComponent {
 		onSelect(id);
 	};
 
-	_renderDescription = () => {
-		const {description} = this.props;
-
-		let descriptionBlock = '';
-
-		if (description) {
-			const descriptionText =
-				description.length > 75
-					? `${description.slice(0, 75)}...`
-					: description;
-
-			descriptionBlock = (
-				<p className="list-group-text list-item-description">
-					{descriptionText}
-				</p>
-			);
-		}
-
-		return descriptionBlock;
-	};
-
 	render() {
 		const {
 			author,
@@ -400,6 +379,7 @@ class Item extends PureComponent {
 			connectDragSource,
 			connectDropTarget,
 			date,
+			description,
 			dragging,
 			focus,
 			hidden,
@@ -502,7 +482,11 @@ class Item extends PureComponent {
 							<p className="list-group-subtext">{`[${type}]`}</p>
 						)}
 
-						{this._renderDescription()}
+						{description && (
+							<p className="list-group-text list-item-description">
+								{description}
+							</p>
+						)}
 					</section>
 				</div>
 
