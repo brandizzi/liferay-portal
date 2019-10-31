@@ -14,13 +14,10 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.portlet.action;
 
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
@@ -28,7 +25,9 @@ import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIn
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
 import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -65,36 +64,35 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 			_synonymSetIndexReader::fetchOptional
 		);
 
-		String originalSynonymSet = synonymSetOptional.map(
-			synonymSet -> synonymSet.getSynonyms()
-		).orElse(
-			StringPool.BLANK
-		);
-
-		String[] synonymSets = null;
-
-		for (String filterName : _FILTER_NAMES) {
-			synonymSets = _synonymIndexer.getSynonymSets(companyId, filterName);
-
-			if (ArrayUtil.contains(synonymSets, originalSynonymSet, true)) {
-				synonymSets = ArrayUtil.remove(synonymSets, originalSynonymSet);
-			}
-
-			if (!Validator.isBlank(newSynonymSet)) {
-				synonymSets = ArrayUtil.append(synonymSets, newSynonymSet);
-			}
-
-			_synonymIndexer.updateSynonymSets(
-				companyId, filterName, synonymSets);
-		}
-
 		String indexName = _indexNameBuilder.getIndexName(companyId);
 
 		persistSynonymSet(indexName, newSynonymSet, synonymSetOptional);
 
+		String[] synonymSets = getSynonyms(indexName);
+
+		for (String filterName : _FILTER_NAMES) {
+			_synonymIndexer.updateSynonymSets(
+				companyId, filterName, synonymSets);
+		}
+
 		String redirect = ParamUtil.getString(actionRequest, "redirect");
 
 		sendRedirect(actionRequest, actionResponse, redirect);
+	}
+
+	protected String[] getSynonyms(String indexName) {
+		List<SynonymSet> synonymSets = _synonymSetIndexReader.searchByIndexName(
+			indexName);
+
+		Stream<SynonymSet> stream = synonymSets.stream();
+
+		String[] synonyms = stream.map(
+			SynonymSet::getSynonyms
+		).toArray(
+			String[]::new
+		);
+
+		return synonyms;
 	}
 
 	protected void persistSynonymSet(
