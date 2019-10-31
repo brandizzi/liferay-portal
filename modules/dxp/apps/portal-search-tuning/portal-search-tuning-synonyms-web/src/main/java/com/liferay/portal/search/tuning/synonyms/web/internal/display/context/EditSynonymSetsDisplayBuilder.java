@@ -54,8 +54,8 @@ public class EditSynonymSetsDisplayBuilder {
 		_setData(editSynonymSetsDisplayContext);
 		_setFormName(editSynonymSetsDisplayContext);
 		_setInputName(editSynonymSetsDisplayContext);
-		_setOriginalInputName(editSynonymSetsDisplayContext);
 		_setRedirect(editSynonymSetsDisplayContext);
+		_setSynonymSetId(editSynonymSetsDisplayContext);
 
 		return editSynonymSetsDisplayContext;
 	}
@@ -71,10 +71,6 @@ public class EditSynonymSetsDisplayBuilder {
 
 	private String _getInputName() {
 		return "newSynonymSet";
-	}
-
-	private String _getOriginalInputName() {
-		return "originalSynonymSet";
 	}
 
 	private String _getRedirect() {
@@ -111,9 +107,6 @@ public class EditSynonymSetsDisplayBuilder {
 		).put(
 			"inputName", _renderResponse.getNamespace() + _getInputName()
 		).put(
-			"originalInputName",
-			_renderResponse.getNamespace() + _getOriginalInputName()
-		).put(
 			"synonymSets", _getSynonymSets()
 		).build();
 
@@ -132,17 +125,18 @@ public class EditSynonymSetsDisplayBuilder {
 		editSynonymSetsDisplayContext.setInputName(_getInputName());
 	}
 
-	private void _setOriginalInputName(
-		EditSynonymSetsDisplayContext editSynonymSetsDisplayContext) {
-
-		editSynonymSetsDisplayContext.setOriginalInputName(
-			_getOriginalInputName());
-	}
-
 	private void _setRedirect(
 		EditSynonymSetsDisplayContext editSynonymSetsDisplayContext) {
 
 		editSynonymSetsDisplayContext.setRedirect(_getRedirect());
+	}
+
+	private void _setSynonymSetId(
+		EditSynonymSetsDisplayContext editSynonymSetsDisplayContext) {
+
+		_synonymSetOptional.ifPresent(
+			synonymSet -> editSynonymSetsDisplayContext.setSynonymSetId(
+				synonymSet.getId()));
 	}
 
 	private final HttpServletRequest _httpServletRequest;
