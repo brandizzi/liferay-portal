@@ -28,7 +28,6 @@ import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIn
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
 import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.portlet.ActionRequest;
@@ -50,23 +49,6 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
-	protected void addSynonymSetsToIndex(
-		String[] synonymsArray, String indexName) {
-
-		for (String synonyms : synonymsArray) {
-			SynonymSet.SynonymSetBuilder synonymSetBuilder =
-				new SynonymSet.SynonymSetBuilder();
-
-			SynonymSet synonymSet = synonymSetBuilder.index(
-				indexName
-			).synonyms(
-				synonyms
-			).build();
-
-			_synonymSetIndexWriter.create(synonymSet);
-		}
-	}
-
 	@Override
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
@@ -77,11 +59,13 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		String newSynonymSet = ParamUtil.getString(
 			actionRequest, "newSynonymSet");
 
-		String originalSynonymSet = Optional.ofNullable(
+		Optional<SynonymSet> synonymSetOptional = Optional.ofNullable(
 			ParamUtil.getString(actionRequest, "synonymSetId", null)
 		).flatMap(
 			_synonymSetIndexReader::fetchOptional
-		).map(
+		);
+
+		String originalSynonymSet = synonymSetOptional.map(
 			synonymSet -> synonymSet.getSynonyms()
 		).orElse(
 			StringPool.BLANK
@@ -106,21 +90,34 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
 		String indexName = _indexNameBuilder.getIndexName(companyId);
 
-		removeSynonymSetsFromIndex(indexName);
-
-		addSynonymSetsToIndex(synonymSets, indexName);
+		persistSynonymSet(indexName, newSynonymSet, synonymSetOptional);
 
 		String redirect = ParamUtil.getString(actionRequest, "redirect");
 
 		sendRedirect(actionRequest, actionResponse, redirect);
 	}
 
-	protected void removeSynonymSetsFromIndex(String indexName) {
-		List<SynonymSet> synonymSets = _synonymSetIndexReader.searchByIndexName(
-			indexName);
+	protected void persistSynonymSet(
+		String indexName, String synonyms,
+		Optional<SynonymSet> synonymSetOptional) {
 
-		for (SynonymSet synonymSet : synonymSets) {
-			_synonymSetIndexWriter.remove(synonymSet.getId());
+		SynonymSet.SynonymSetBuilder synonymSetBuilder =
+			new SynonymSet.SynonymSetBuilder();
+
+		synonymSetBuilder.index(
+			indexName
+		).synonyms(
+			synonyms
+		);
+
+		if (synonymSetOptional.isPresent()) {
+			synonymSetOptional.ifPresent(
+				synonymSet -> synonymSetBuilder.id(synonymSet.getId()));
+
+			_synonymSetIndexWriter.update(synonymSetBuilder.build());
+		}
+		else {
+			_synonymSetIndexWriter.create(synonymSetBuilder.build());
 		}
 	}
 
