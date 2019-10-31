@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.portlet.action;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -28,6 +29,7 @@ import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIn
 import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -75,8 +77,15 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		String newSynonymSet = ParamUtil.getString(
 			actionRequest, "newSynonymSet");
 
-		String originalSynonymSet = ParamUtil.getString(
-			actionRequest, "originalSynonymSet");
+		String originalSynonymSet = Optional.ofNullable(
+			ParamUtil.getString(actionRequest, "synonymSetId", null)
+		).flatMap(
+			_synonymSetIndexReader::fetchOptional
+		).map(
+			synonymSet -> synonymSet.getSynonyms()
+		).orElse(
+			StringPool.BLANK
+		);
 
 		String[] synonymSets = null;
 
