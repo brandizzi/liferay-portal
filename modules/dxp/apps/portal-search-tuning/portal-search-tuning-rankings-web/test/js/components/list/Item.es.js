@@ -94,7 +94,7 @@ describe('Item', () => {
 		expect(
 			container.querySelector('.list-item-description')
 		).toHaveTextContent(
-			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod ips...'
+			'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod'
 		);
 	});
 
