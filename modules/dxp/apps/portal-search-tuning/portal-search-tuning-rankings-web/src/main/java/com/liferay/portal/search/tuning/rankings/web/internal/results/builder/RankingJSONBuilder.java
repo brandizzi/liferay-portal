@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.security.permission.ResourceActions;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.document.Document;
 
@@ -56,7 +57,7 @@ public class RankingJSONBuilder {
 		).put(
 			"clicks", _document.getString("clicks")
 		).put(
-			"description", _document.getString(Field.DESCRIPTION)
+			"description", getDescription()
 		).put(
 			"hidden", _hidden
 		).put(
@@ -102,6 +103,13 @@ public class RankingJSONBuilder {
 		}
 
 		return _document.getString(Field.USER_NAME);
+	}
+
+	protected String getDescription() {
+		String content = _document.getString(
+			Field.getLocalizedName(_locale, Field.CONTENT));
+
+		return StringUtil.shorten(content, 200);
 	}
 
 	protected String getIcon() {
