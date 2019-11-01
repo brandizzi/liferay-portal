@@ -70,7 +70,7 @@ public class EditSynonymSetsDisplayBuilder {
 	}
 
 	private String _getInputName() {
-		return "newSynonymSet";
+		return "synonymSet";
 	}
 
 	private String _getRedirect() {
