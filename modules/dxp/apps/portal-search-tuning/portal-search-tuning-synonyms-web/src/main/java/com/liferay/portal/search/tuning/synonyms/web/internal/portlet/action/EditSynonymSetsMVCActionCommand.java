@@ -42,42 +42,27 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"javax.portlet.name=" + SynonymsPortletKeys.SYNONYMS,
-		"mvc.command.name=updateSynonymSet"
+		"mvc.command.name=editSynonymSet"
 	},
 	service = MVCActionCommand.class
 )
-public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
+public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
 	@Override
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long companyId = portal.getCompanyId(actionRequest);
+		String indexName = _indexNameBuilder.getIndexName(
+			portal.getCompanyId(actionRequest));
 
-		String newSynonymSet = ParamUtil.getString(
-			actionRequest, "newSynonymSet");
+		updateSynonymSetIndex(
+			indexName, ParamUtil.getString(actionRequest, "synonymSet"),
+			getSynonymSetOptional(actionRequest));
 
-		Optional<SynonymSet> synonymSetOptional = Optional.ofNullable(
-			ParamUtil.getString(actionRequest, "synonymSetId", null)
-		).flatMap(
-			_synonymSetIndexReader::fetchOptional
-		);
+		updateSynonymSetFilters(indexName, getSynonyms(indexName));
 
-		String indexName = _indexNameBuilder.getIndexName(companyId);
-
-		persistSynonymSet(indexName, newSynonymSet, synonymSetOptional);
-
-		String[] synonymSets = getSynonyms(indexName);
-
-		for (String filterName : _FILTER_NAMES) {
-			_synonymIndexer.updateSynonymSets(
-				companyId, filterName, synonymSets);
-		}
-
-		String redirect = ParamUtil.getString(actionRequest, "redirect");
-
-		sendRedirect(actionRequest, actionResponse, redirect);
+		sendRedirect(actionRequest, actionResponse);
 	}
 
 	protected String[] getSynonyms(String indexName) {
@@ -95,7 +80,25 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		return synonyms;
 	}
 
-	protected void persistSynonymSet(
+	protected Optional<SynonymSet> getSynonymSetOptional(
+		ActionRequest actionRequest) {
+
+		return Optional.ofNullable(
+			ParamUtil.getString(actionRequest, "synonymSetId", null)
+		).flatMap(
+			_synonymSetIndexReader::fetchOptional
+		);
+	}
+
+	protected void updateSynonymSetFilters(
+		String indexName, String[] synonyms) {
+
+		for (String filterName : _FILTER_NAMES) {
+			_synonymIndexer.updateSynonymSets(indexName, filterName, synonyms);
+		}
+	}
+
+	protected void updateSynonymSetIndex(
 		String indexName, String synonyms,
 		Optional<SynonymSet> synonymSetOptional) {
 
@@ -108,10 +111,10 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 			synonyms
 		);
 
-		if (synonymSetOptional.isPresent()) {
-			synonymSetOptional.ifPresent(
-				synonymSet -> synonymSetBuilder.id(synonymSet.getId()));
+		synonymSetOptional.ifPresent(
+			synonymSet1 -> synonymSetBuilder.id(synonymSet1.getId()));
 
+		if (synonymSetOptional.isPresent()) {
 			_synonymSetIndexWriter.update(synonymSetBuilder.build());
 		}
 		else {

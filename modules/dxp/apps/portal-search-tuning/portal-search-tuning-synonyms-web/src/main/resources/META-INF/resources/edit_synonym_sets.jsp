@@ -35,12 +35,12 @@ portletDisplay.setShowBackIcon(true);
 portletDisplay.setURLBack(editSynonymSetsDisplayContext.getBackURL());
 %>
 
-<portlet:actionURL name="updateSynonymSet" var="updateSynonymSetURL">
+<portlet:actionURL name="editSynonymSet" var="editSynonymSetURL">
 	<portlet:param name="mvcPath" value="/view_synonym_sets.jsp" />
 </portlet:actionURL>
 
 <liferay-frontend:edit-form
-	action="<%= updateSynonymSetURL %>"
+	action="<%= editSynonymSetURL %>"
 	name="<%= editSynonymSetsDisplayContext.getFormName() %>"
 >
 	<aui:input name="<%= editSynonymSetsDisplayContext.getInputName() %>" type="hidden" value="" />
