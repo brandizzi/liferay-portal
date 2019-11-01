@@ -19,6 +19,7 @@ import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.document.library.configuration.DLConfiguration;
 import com.liferay.document.library.kernel.model.DLFileEntryConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -29,12 +30,23 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.security.permission.ResourceActions;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.FastDateFormatConstants;
+import com.liferay.portal.kernel.util.FastDateFormatFactory;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.document.Document;
 
+import java.text.DateFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+
+import javax.portlet.ResourceRequest;
 
 /**
  * @author André de Oliveira
@@ -43,12 +55,20 @@ import java.util.Locale;
 public class RankingJSONBuilder {
 
 	public RankingJSONBuilder(
-		DLAppLocalService dlAppLocalService, ResourceActions resourceActions) {
+		DLAppLocalService dlAppLocalService,
+		FastDateFormatFactory fastDateFormatFactory,
+		ResourceActions resourceActions, ResourceRequest resourceRequest) {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
 		_dlAppLocalService = dlAppLocalService;
 		_dlConfiguration = ConfigurableUtil.createConfigurable(
 			DLConfiguration.class, new HashMap<String, Object>());
+		_fastDateFormatFactory = fastDateFormatFactory;
+		_locale = themeDisplay.getLocale();
 		_resourceActions = resourceActions;
+		_themeDisplay = themeDisplay;
 	}
 
 	public JSONObject build() {
@@ -58,6 +78,8 @@ public class RankingJSONBuilder {
 			).put(
 				"clicks", _document.getString("clicks")
 			).put(
+				"date", getDate()
+			).put(
 				"description", getDescription()
 			).put(
 				"icon", getIcon()
@@ -66,9 +88,7 @@ public class RankingJSONBuilder {
 			).put(
 				"title", getTitle()
 			).put(
-				"fields", _document.getFields()
-			).put(
-				"type", getType(_locale)
+				"type", getType()
 			));
 	}
 
@@ -80,12 +100,6 @@ public class RankingJSONBuilder {
 
 	public RankingJSONBuilder hidden(boolean hidden) {
 		_hidden = hidden;
-
-		return this;
-	}
-
-	public RankingJSONBuilder locale(Locale locale) {
-		_locale = locale;
 
 		return this;
 	}
@@ -114,6 +128,28 @@ public class RankingJSONBuilder {
 		}
 
 		return _document.getString(Field.USER_NAME);
+	}
+
+	protected Date getCreateDate() {
+		String dateStringFieldValue = _document.getString(Field.CREATE_DATE);
+
+		if (Validator.isNull(dateStringFieldValue)) {
+			return null;
+		}
+
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+
+		try {
+			return dateFormat.parse(dateStringFieldValue);
+		}
+		catch (Exception e) {
+			throw new IllegalArgumentException(
+				"Unable to parse date string: " + dateStringFieldValue, e);
+		}
+	}
+
+	protected String getDate() {
+		return _formatDate(getCreateDate());
 	}
 
 	protected String getDescription() {
@@ -174,10 +210,10 @@ public class RankingJSONBuilder {
 		return title;
 	}
 
-	protected String getType(Locale locale) {
+	protected String getType() {
 		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
 
-		return _resourceActions.getModelResource(locale, entryClassName);
+		return _resourceActions.getModelResource(_locale, entryClassName);
 	}
 
 	private boolean _containsMimeType(String[] mimeTypes, String mimeType) {
@@ -197,6 +233,18 @@ public class RankingJSONBuilder {
 		}
 
 		return false;
+	}
+
+	private String _formatDate(Date date) {
+		if (date == null) {
+			return StringPool.BLANK;
+		}
+
+		Format format = _fastDateFormatFactory.getDateTime(
+			FastDateFormatConstants.MEDIUM, FastDateFormatConstants.SHORT,
+			_locale, _themeDisplay.getTimeZone());
+
+		return format.format(date);
 	}
 
 	private String _getIconFileMimeType(String mimeType) {
@@ -253,9 +301,11 @@ public class RankingJSONBuilder {
 	private final DLAppLocalService _dlAppLocalService;
 	private final DLConfiguration _dlConfiguration;
 	private Document _document;
+	private final FastDateFormatFactory _fastDateFormatFactory;
 	private boolean _hidden;
-	private Locale _locale;
+	private final Locale _locale;
 	private boolean _pinned;
 	private final ResourceActions _resourceActions;
+	private final ThemeDisplay _themeDisplay;
 
 }
