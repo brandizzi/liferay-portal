@@ -16,7 +16,7 @@ export const mockDataMap = {
 		date: 'Apr 18 2018, 11:04 AM',
 		description: 'This is a description of the document.',
 		hidden: false,
-		icon: 'documents-and-media',
+		icon: 'web-content',
 		id: '1',
 		pinned: true,
 		title: 'Title Example 1',
@@ -28,7 +28,7 @@ export const mockDataMap = {
 		date: 'Apr 18 2018, 11:04 AM',
 		description: 'This is a description of the document.',
 		hidden: false,
-		icon: 'documents-and-media',
+		icon: 'blogs',
 		id: '2',
 		pinned: true,
 		title: 'Title Example 2',
@@ -40,23 +40,21 @@ export const mockDataMap = {
 		date: 'Apr 18 2018, 11:04 AM',
 		description: 'This is a description of the document.',
 		hidden: false,
-		icon: 'web-content',
+		icon: 'wiki',
 		id: '3',
 		pinned: false,
 		title: 'Title Example 3',
 		type: 'Web Content'
 	},
 	4: {
-		author: 'Test Test',
+		author: 'test.test',
 		clicks: 0,
-		date: 'Apr 18 2018, 11:04 AM',
-		description: 'This is a description of the document.',
 		hidden: false,
-		icon: 'web-content',
+		icon: 'user',
 		id: '4',
 		pinned: false,
-		title: 'Title Example 4',
-		type: 'Web Content'
+		title: 'Test Test',
+		type: 'User'
 	},
 	5: {
 		author: 'Test Test',
@@ -65,7 +63,7 @@ export const mockDataMap = {
 		description:
 			'This is a description of the document. This is a description of the document. This is a description of the document. This is a description of the document. This is a description of the document. This is a description of the document.',
 		hidden: false,
-		icon: 'documents-and-media',
+		icon: 'document-pdf',
 		id: '5',
 		pinned: false,
 		title:
