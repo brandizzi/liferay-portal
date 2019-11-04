@@ -21,13 +21,11 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetFilterHelper;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
-import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -60,24 +58,9 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 			indexName, ParamUtil.getString(actionRequest, "synonymSet"),
 			getSynonymSetOptional(actionRequest));
 
-		updateSynonymSetFilters(indexName, getSynonyms(indexName));
+		_synonymSetFilterHelper.updateFilters(indexName);
 
 		sendRedirect(actionRequest, actionResponse);
-	}
-
-	protected String[] getSynonyms(String indexName) {
-		List<SynonymSet> synonymSets = _synonymSetIndexReader.searchByIndexName(
-			indexName);
-
-		Stream<SynonymSet> stream = synonymSets.stream();
-
-		String[] synonyms = stream.map(
-			SynonymSet::getSynonyms
-		).toArray(
-			String[]::new
-		);
-
-		return synonyms;
 	}
 
 	protected Optional<SynonymSet> getSynonymSetOptional(
@@ -88,14 +71,6 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		).flatMap(
 			_synonymSetIndexReader::fetchOptional
 		);
-	}
-
-	protected void updateSynonymSetFilters(
-		String indexName, String[] synonyms) {
-
-		for (String filterName : _FILTER_NAMES) {
-			_synonymIndexer.updateSynonymSets(indexName, filterName, synonyms);
-		}
 	}
 
 	protected void updateSynonymSetIndex(
@@ -125,15 +100,11 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 	@Reference
 	protected Portal portal;
 
-	private static final String[] _FILTER_NAMES = {
-		"liferay_filter_synonym_en", "liferay_filter_synonym_es"
-	};
-
 	@Reference
 	private IndexNameBuilder _indexNameBuilder;
 
 	@Reference
-	private SynonymIndexer _synonymIndexer;
+	private SynonymSetFilterHelper _synonymSetFilterHelper;
 
 	@Reference
 	private SynonymSetIndexReader _synonymSetIndexReader;
