@@ -43,6 +43,7 @@ public class ReindexStatusMessageSenderImpl
 		message.put(ReindexBackgroundTaskConstants.CLASS_NAME, className);
 		message.put(ReindexBackgroundTaskConstants.COUNT, count);
 		message.put(ReindexBackgroundTaskConstants.TOTAL, total);
+		message.put("source", ReindexStatusMessageSender.class.getName());
 		message.put("status", BackgroundTaskConstants.STATUS_IN_PROGRESS);
 
 		sendBackgroundTaskStatusMessage(message);
@@ -60,6 +61,7 @@ public class ReindexStatusMessageSenderImpl
 		message.put(ReindexBackgroundTaskConstants.COMPANY_ID, companyId);
 		message.put(ReindexBackgroundTaskConstants.COMPANY_IDS, companyIds);
 		message.put(ReindexBackgroundTaskConstants.PHASE, phase);
+		message.put("source", ReindexStatusMessageSender.class.getName());
 		message.put("status", BackgroundTaskConstants.STATUS_IN_PROGRESS);
 
 		sendBackgroundTaskStatusMessage(message);
