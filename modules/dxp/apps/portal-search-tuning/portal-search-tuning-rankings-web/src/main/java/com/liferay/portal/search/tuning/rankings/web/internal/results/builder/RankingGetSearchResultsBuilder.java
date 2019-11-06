@@ -18,6 +18,7 @@ import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.security.permission.ResourceActions;
 import com.liferay.portal.kernel.util.FastDateFormatFactory;
 import com.liferay.portal.search.document.Document;
@@ -56,14 +57,16 @@ public class RankingGetSearchResultsBuilder {
 		_searchRequestBuilderFactory = searchRequestBuilderFactory;
 	}
 
-	public JSONArray build() {
-		Stream<JSONObject> stream = getElements();
+	public JSONObject build() {
+		SearchRequest searchRequest = buildSearchRequest();
 
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+		SearchResponse searchResponse = _searcher.search(searchRequest);
 
-		stream.forEach(jsonArray::put);
-
-		return jsonArray;
+		return JSONUtil.put(
+			"documents", buildDocuments(searchResponse)
+		).put(
+			"total", searchResponse.getTotalHits()
+		);
 	}
 
 	public RankingGetSearchResultsBuilder companyId(long companyId) {
@@ -108,11 +111,17 @@ public class RankingGetSearchResultsBuilder {
 		).build();
 	}
 
-	protected Stream<JSONObject> getElements() {
-		SearchRequest searchRequest = buildSearchRequest();
+	protected JSONArray buildDocuments(SearchResponse searchResponse) {
+		Stream<JSONObject> stream = getElements(searchResponse);
 
-		SearchResponse searchResponse = _searcher.search(searchRequest);
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
+		stream.forEach(jsonArray::put);
+
+		return jsonArray;
+	}
+
+	protected Stream<JSONObject> getElements(SearchResponse searchResponse) {
 		Stream<Document> stream = searchResponse.getDocumentsStream();
 
 		return stream.map(this::translate);

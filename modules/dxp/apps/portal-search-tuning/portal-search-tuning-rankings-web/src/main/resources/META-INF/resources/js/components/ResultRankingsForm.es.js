@@ -28,7 +28,7 @@ import Alias from './alias/Alias.es';
 import List from './list/List.es';
 import ErrorBoundary from './shared/ErrorBoundary.es';
 
-const DELTA = 50;
+const DELTA = 5;
 
 const HiddenInputs = ({valueMap}) => {
 	const {namespace} = useContext(ThemeContext);
