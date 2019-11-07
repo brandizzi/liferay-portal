@@ -18,6 +18,7 @@ import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.security.permission.ResourceActions;
 import com.liferay.portal.kernel.util.FastDateFormatFactory;
@@ -67,21 +68,27 @@ public class RankingGetVisibleResultsBuilder {
 		_searchRequestBuilderFactory = searchRequestBuilderFactory;
 	}
 
-	public JSONArray build() {
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
-
+	public JSONObject build() {
 		Optional<Ranking> optional = _rankingIndexReader.fetchOptional(
 			_rankingId);
 
-		Stream<JSONObject> stream = optional.map(
-			this::getElements
-		).orElse(
-			Stream.empty()
+		if (!optional.isPresent()) {
+			return JSONUtil.put(
+				"documents", JSONFactoryUtil.createJSONArray()
+			).put(
+				"total", 0
+			);
+		}
+
+		Ranking ranking = optional.get();
+
+		SearchResponse searchResponse = getSearchResponse(ranking);
+
+		return JSONUtil.put(
+			"documents", buildDocuments(ranking, searchResponse)
+		).put(
+			"total", searchResponse.getTotalHits()
 		);
-
-		stream.forEach(jsonArray::put);
-
-		return jsonArray;
 	}
 
 	public RankingGetVisibleResultsBuilder companyId(long companyId) {
@@ -114,6 +121,21 @@ public class RankingGetVisibleResultsBuilder {
 		return this;
 	}
 
+	protected JSONArray buildDocuments(
+		Ranking ranking, SearchResponse searchResponse) {
+
+		Stream<Document> documentStream = searchResponse.getDocumentsStream();
+
+		Stream<JSONObject> jsonObjectStream = documentStream.map(
+			document -> translate(document, ranking));
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		jsonObjectStream.forEach(jsonArray::put);
+
+		return jsonArray;
+	}
+
 	protected SearchRequest buildSearchRequest(Ranking ranking) {
 		String queryStringOfUrl = _queryString;
 
@@ -144,14 +166,10 @@ public class RankingGetVisibleResultsBuilder {
 		return searchRequestBuilder.build();
 	}
 
-	protected Stream<JSONObject> getElements(Ranking ranking) {
+	protected SearchResponse getSearchResponse(Ranking ranking) {
 		SearchRequest searchRequest = buildSearchRequest(ranking);
 
-		SearchResponse searchResponse = _searcher.search(searchRequest);
-
-		Stream<Document> stream = searchResponse.getDocumentsStream();
-
-		return stream.map(document -> translate(document, ranking));
+		return _searcher.search(searchRequest);
 	}
 
 	protected JSONObject translate(Document document, Ranking ranking) {
