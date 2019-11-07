@@ -93,6 +93,16 @@ public class RankingGetSearchResultsBuilder {
 		return this;
 	}
 
+	protected JSONArray buildDocuments(SearchResponse searchResponse) {
+		Stream<JSONObject> stream = getElements(searchResponse);
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		stream.forEach(jsonArray::put);
+
+		return jsonArray;
+	}
+
 	protected SearchRequest buildSearchRequest() {
 		RankingSearchRequestBuilder rankingSearchRequestBuilder =
 			new RankingSearchRequestBuilder(
@@ -109,16 +119,6 @@ public class RankingGetSearchResultsBuilder {
 			_queryString
 		).build(
 		).build();
-	}
-
-	protected JSONArray buildDocuments(SearchResponse searchResponse) {
-		Stream<JSONObject> stream = getElements(searchResponse);
-
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
-
-		stream.forEach(jsonArray::put);
-
-		return jsonArray;
 	}
 
 	protected Stream<JSONObject> getElements(SearchResponse searchResponse) {
