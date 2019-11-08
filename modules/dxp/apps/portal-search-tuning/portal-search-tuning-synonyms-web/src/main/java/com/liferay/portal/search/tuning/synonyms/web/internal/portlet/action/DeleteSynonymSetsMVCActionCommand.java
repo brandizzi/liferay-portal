@@ -14,10 +14,6 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.portlet.action;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
@@ -26,6 +22,10 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
 import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -81,17 +81,19 @@ public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
 	private String[] _removeSynonym(
 		String[] synonymSets, String synonymToBeDeleted) {
-		
+
 		if (ArrayUtil.contains(synonymSets, synonymToBeDeleted, true)) {
-			List<String> synonymSetsList = new ArrayList<String>(
+			List<String> synonymSetsList = new ArrayList<>(
 				Arrays.asList(synonymSets));
-				
+
 			for (String synonymSet : synonymSets) {
 				if (synonymSet.equals(synonymToBeDeleted)) {
 					synonymSetsList.remove(synonymToBeDeleted);
+
 					break;
 				}
 			}
+
 			return synonymSetsList.toArray(new String[0]);
 		}
 

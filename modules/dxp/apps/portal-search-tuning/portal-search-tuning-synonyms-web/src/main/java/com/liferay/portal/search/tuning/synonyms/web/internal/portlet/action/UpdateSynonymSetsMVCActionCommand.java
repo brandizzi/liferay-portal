@@ -14,10 +14,6 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.portlet.action;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -26,6 +22,10 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
 import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -58,14 +58,13 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
 		String originalSynonymSet = ParamUtil.getString(
 			actionRequest, "originalSynonymSet");
-		
+
 		for (String filterName : _FILTER_NAMES) {
 			String[] synonymSets = _synonymIndexer.getSynonymSets(
 				companyId, filterName);
 
 			if (ArrayUtil.contains(synonymSets, originalSynonymSet, true)) {
-				synonymSets = _removeSynonym(
-					synonymSets, originalSynonymSet);
+				synonymSets = _removeSynonym(synonymSets, originalSynonymSet);
 			}
 
 			if (!Validator.isBlank(newSynonymSet)) {
@@ -80,26 +79,27 @@ public class UpdateSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
 		sendRedirect(actionRequest, actionResponse, redirect);
 	}
-	
-	private static String[] _removeSynonym(
-		String[] synonymSets, String originalSynonymSet) {
-		
-		List<String> synonymSetsList = new ArrayList<String>(
-			Arrays.asList(synonymSets));
-		
-		for (String synonymSet : synonymSets) {
-			if (synonymSet.equals(originalSynonymSet)) {
-				synonymSetsList.remove(originalSynonymSet);
-				break;
-			}
-		}
-		
-		return synonymSetsList.toArray(new String[0]);
-	}
 
 	@Reference
 	protected Portal portal;
- 
+
+	private static String[] _removeSynonym(
+		String[] synonymSets, String originalSynonymSet) {
+
+		List<String> synonymSetsList = new ArrayList<>(
+			Arrays.asList(synonymSets));
+
+		for (String synonymSet : synonymSets) {
+			if (synonymSet.equals(originalSynonymSet)) {
+				synonymSetsList.remove(originalSynonymSet);
+
+				break;
+			}
+		}
+
+		return synonymSetsList.toArray(new String[0]);
+	}
+
 	private static final String[] _FILTER_NAMES = {
 		"liferay_filter_synonym_en", "liferay_filter_synonym_es"
 	};
