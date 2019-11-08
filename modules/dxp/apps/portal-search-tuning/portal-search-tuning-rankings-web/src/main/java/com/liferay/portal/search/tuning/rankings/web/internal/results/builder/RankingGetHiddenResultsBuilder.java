@@ -18,9 +18,11 @@ import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.security.permission.ResourceActions;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.FastDateFormatFactory;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.document.GetDocumentRequest;
@@ -59,27 +61,65 @@ public class RankingGetHiddenResultsBuilder {
 		_searchEngineAdapter = searchEngineAdapter;
 	}
 
-	public JSONArray build() {
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
-
+	public JSONObject build() {
 		Optional<Ranking> optional = _rankingIndexReader.fetchOptional(
 			_rankingId);
 
-		Stream<JSONObject> stream = optional.map(
-			this::getElements
-		).orElse(
-			Stream.empty()
+		if (!optional.isPresent()) {
+			return JSONUtil.put(
+				"documents", JSONFactoryUtil.createJSONArray()
+			).put(
+				"total", 0
+			);
+		}
+
+		Ranking ranking = optional.get();
+
+		List<String> ids = ranking.getBlockIds();
+
+		List<String> paginatedIds = paginateIds(ids);
+
+		return JSONUtil.put(
+			"documents", buildDocuments(paginatedIds, ranking)
+		).put(
+			"total", ids.size()
 		);
+	}
 
-		stream.forEach(jsonArray::put);
+	public RankingGetHiddenResultsBuilder from(int from) {
+		_from = from;
 
-		return jsonArray;
+		return this;
 	}
 
 	public RankingGetHiddenResultsBuilder rankingId(String rankingId) {
 		_rankingId = rankingId;
 
 		return this;
+	}
+
+	public RankingGetHiddenResultsBuilder size(int size) {
+		_size = size;
+
+		return this;
+	}
+
+	protected JSONArray buildDocuments(List<String> ids, Ranking ranking) {
+		Stream<String> stringStream = ids.stream();
+
+		Stream<JSONObject> jsonObjectStream = stringStream.map(
+			id -> getDocument(ranking.getIndex(), id, LIFERAY_DOCUMENT_TYPE)
+		).filter(
+			document -> document != null
+		).map(
+			this::translate
+		);
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		jsonObjectStream.forEach(jsonArray::put);
+
+		return jsonArray;
 	}
 
 	protected Document getDocument(String index, String id, String type) {
@@ -100,26 +140,18 @@ public class RankingGetHiddenResultsBuilder {
 		return getDocumentResponse.getDocument();
 	}
 
-	protected Stream<JSONObject> getElements(Ranking ranking) {
-		List<String> ids = ranking.getBlockIds();
-
-		Stream<String> stream = ids.stream();
-
-		return stream.map(
-			id -> getDocument(ranking.getIndex(), id, LIFERAY_DOCUMENT_TYPE)
-		).filter(
-			document -> document != null
-		).map(
-			this::translate
-		);
-	}
-
 	protected Query getIdsQuery(List<String> ids) {
 		IdsQuery idsQuery = _queries.ids();
 
 		idsQuery.addIds(ArrayUtil.toStringArray(ids));
 
 		return idsQuery;
+	}
+
+	protected List<String> paginateIds(List<String> ids) {
+		int end = _from + _size;
+
+		return ListUtil.subList(ids, _from, end);
 	}
 
 	protected JSONObject translate(Document document) {
@@ -138,11 +170,13 @@ public class RankingGetHiddenResultsBuilder {
 
 	private final DLAppLocalService _dlAppLocalService;
 	private final FastDateFormatFactory _fastDateFormatFactory;
+	private int _from;
 	private final Queries _queries;
 	private String _rankingId;
 	private final RankingIndexReader _rankingIndexReader;
 	private final ResourceActions _resourceActions;
 	private final ResourceRequest _resourceRequest;
 	private final SearchEngineAdapter _searchEngineAdapter;
+	private int _size;
 
 }
