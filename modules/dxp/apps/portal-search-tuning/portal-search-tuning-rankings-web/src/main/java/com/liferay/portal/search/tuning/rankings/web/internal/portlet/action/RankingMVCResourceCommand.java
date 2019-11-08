@@ -93,10 +93,13 @@ public class RankingMVCResourceCommand implements MVCResourceCommand {
 		RankingMVCResourceRequest rankingMVCResourceRequest =
 			new RankingMVCResourceRequest(resourceRequest);
 
-		return getJSONObject(
-			rankingGetHiddenResultsBuilder.rankingId(
-				rankingMVCResourceRequest.getRankingId()
-			).build());
+		return rankingGetHiddenResultsBuilder.rankingId(
+			rankingMVCResourceRequest.getRankingId()
+		).from(
+			rankingMVCResourceRequest.getFrom()
+		).size(
+			rankingMVCResourceRequest.getSize()
+		).build();
 	}
 
 	protected JSONObject getJSONObject(ResourceRequest resourceRequest) {
