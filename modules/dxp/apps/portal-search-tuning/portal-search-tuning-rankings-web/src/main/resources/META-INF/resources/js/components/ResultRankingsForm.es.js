@@ -11,11 +11,12 @@
 
 import ClayTabs from '@clayui/tabs';
 import {PropTypes} from 'prop-types';
-import React, {Component, useContext} from 'react';
+import React, {Component} from 'react';
 
 import ThemeContext from '../ThemeContext.es';
 import FormValueDebugger from '../utils/FormValueDebugger.es';
 import {fetchDocuments} from '../utils/api.es';
+import {DEFAULT_DELTA} from '../utils/constants.es';
 import {
 	isNil,
 	move,
@@ -27,22 +28,9 @@ import PageToolbar from './PageToolbar.es';
 import Alias from './alias/Alias.es';
 import List from './list/List.es';
 import ErrorBoundary from './shared/ErrorBoundary.es';
+import HiddenInputs from './shared/HiddenInputs.es';
 
-const DELTA = 5;
-
-const HiddenInputs = ({valueMap}) => {
-	const {namespace} = useContext(ThemeContext);
-
-	return Object.keys(valueMap).map(key => (
-		<input
-			id={`${namespace}${key}`}
-			key={key}
-			name={`${namespace}${key}`}
-			type="hidden"
-			value={valueMap[key]}
-		/>
-	));
-};
+const DELTA = DEFAULT_DELTA.label;
 
 class ResultRankingsForm extends Component {
 	static contextType = ThemeContext;
@@ -133,7 +121,8 @@ class ResultRankingsForm extends Component {
 		inactive: this.props.initialInactive,
 
 		/**
-		 * A full list of IDs which include hidden and pinned items.
+		 * A full list of IDs which include hidden and pinned items. This is
+		 * equivalent to the IDs in dataMap, but in a sorted order.
 		 * @type {Array}
 		 */
 		resultIds: [],
@@ -184,7 +173,6 @@ class ResultRankingsForm extends Component {
 	constructor(props) {
 		super(props);
 
-		this._initialResultIds = [];
 		this._initialResultIdsHidden = [];
 		this._initialResultIdsPinned = [];
 	}
@@ -193,15 +181,6 @@ class ResultRankingsForm extends Component {
 		this._handleFetchResultsDataVisible();
 		this._handleFetchResultsDataHidden();
 	}
-
-	/**
-	 * Returns a boolean of whether the alias list has changed.
-	 */
-	_getAliasUnchanged = () =>
-		this.props.initialAliases.length === this.state.aliases.length &&
-		this.props.initialAliases.every(item =>
-			this.state.aliases.includes(item)
-		);
 
 	/**
 	 * Gets the added changes in hidden from the initial and current states.
@@ -217,22 +196,6 @@ class ResultRankingsForm extends Component {
 	_getHiddenRemoved = () =>
 		this._initialResultIdsHidden.filter(
 			item => !this.state.resultIdsHidden.includes(item)
-		);
-
-	/**
-	 * Gets the removed changes in pinned from the initial and current states.
-	 */
-	_getPinnedRemoved = () =>
-		this._initialResultIdsPinned.filter(
-			item => !this.state.resultIdsPinned.includes(item)
-		);
-
-	/**
-	 * Gets the added changes in pinned from the initial and current states.
-	 */
-	_getPinnedAdded = () =>
-		this.state.resultIdsPinned.filter(
-			item => !this._initialResultIdsPinned.includes(item)
 		);
 
 	/**
@@ -292,9 +255,6 @@ class ResultRankingsForm extends Component {
 				hidden: hide,
 				pinned: false
 			}),
-			resultIds: hide
-				? removeIdFromList(state.resultIds, ids)
-				: [...state.resultIds, ...ids],
 			resultIdsHidden: hide
 				? [...ids, ...state.resultIdsHidden]
 				: removeIdFromList(state.resultIdsHidden, ids),
@@ -305,8 +265,8 @@ class ResultRankingsForm extends Component {
 	};
 
 	/**
-	 * Retrieves results data from a search query. This will also handle loading
-	 * more data to the results list.
+	 * Retrieves visible results data which contains pinned results. This also
+	 * handles loading more data into the results list.
 	 */
 	_handleFetchResultsDataVisible = () => {
 		this.setState({
@@ -323,65 +283,54 @@ class ResultRankingsForm extends Component {
 			[`${namespace}size`]: DELTA
 		})
 			.then(({items, total}) => {
-				const definedItems = items || {};
+				const fetchedItems = items || {};
 
-				// Get duplicate results in order to set addedResult property to
-				// false in setState.
-
-				const duplicateItems = definedItems
-					.filter(({id}) => this._initialResultIds.includes(id))
+				// Get existing results to update its addedResult property.
+				const existingFetchedIds = fetchedItems
+					.filter(({id}) => this.state.resultIds.includes(id))
 					.map(({id}) => id);
 
-				// Remove duplicate results from the new list of results to avoid
-				// duplicate key errors.
-
-				const newItems = definedItems.filter(
-					({id}) => !this._initialResultIds.includes(id)
+				// Remove duplicate results from the new list of results to
+				// avoid duplicate key errors.
+				const newItems = fetchedItems.filter(
+					({id}) => !this.state.resultIds.includes(id)
 				);
 
-				// Add new data to the current map of all data.
-
-				const mappedData = resultsDataToMap(newItems);
-
-				// Get the ids of all items and pinned items.
-
-				const pinnedIds = newItems
+				const newIds = newItems.map(({id}) => id);
+				const newPinnedIds = newItems
 					.filter(({pinned}) => pinned)
 					.map(({id}) => id);
 
-				const ids = newItems.map(({id}) => id);
-
-				// Keep history of all initial results, to get the difference
-				// for addedResults and for all added/removed hidden/pinned.
-
+				// Keep history of all initially pinned results to update the
+				// end index of pinned results.
 				this._initialResultIdsPinned = [
 					...this._initialResultIdsPinned,
-					...pinnedIds
+					...newPinnedIds
 				];
-
-				this._initialResultIds = [...this._initialResultIds, ...ids];
 
 				this.setState(
 					state => ({
 						dataLoadingVisible: false,
 						dataMap: {
-							// In the case when a previously added result
-							// is actually one of the results that loads in,
-							// its 'addedResult' property must be set to
-							// false. This prevents confusion since
-							// unpinning or unhiding results added from
-							// the add results modal should remove it from
-							// results list entirely.
-
-							...updateDataMap(state.dataMap, duplicateItems, {
-								addedResult: false
-							}),
-							...mappedData
+							// In the case when a previously added result is
+							// actually one of the results that loads in, its
+							// 'addedResult' property must be set to false.
+							// This prevents confusion since unpinning or
+							// un-hiding added results removes it from results
+							// list entirely.
+							...updateDataMap(
+								state.dataMap,
+								existingFetchedIds,
+								{
+									addedResult: false
+								}
+							),
+							...resultsDataToMap(newItems)
 						},
-						resultIds: [...state.resultIds, ...ids],
+						resultIds: [...state.resultIds, ...newIds],
 						resultIdsPinned: [
 							...state.resultIdsPinned,
-							...pinnedIds
+							...newPinnedIds
 						],
 						totalResultsVisibleCount: total,
 						visibleCur: state.visibleCur + 1
@@ -430,61 +379,46 @@ class ResultRankingsForm extends Component {
 			[`${namespace}size`]: DELTA
 		})
 			.then(({items, total}) => {
-				const definedItems = items || {};
+				const fetchedItems = items || {};
 
-				// Get duplicate results in order to set addedResult property to
-				// false in setState.
-
-				const duplicateItems = definedItems
-					.filter(({id}) => this._initialResultIdsHidden.includes(id))
+				// Get already existing results in order to set addedResult
+				// property to false in setState.
+				const existingFetchedIds = fetchedItems
+					.filter(({id}) => this.state.resultIds.includes(id))
 					.map(({id}) => id);
 
-				// Remove duplicate results from the new list of results to avoid
-				// duplicate key errors.
-
-				const newItems = definedItems.filter(
-					({id}) => !this._initialResultIdsHidden.includes(id)
+				// Remove duplicate results from the new list of results to
+				// avoid duplicate key errors.
+				const newItems = fetchedItems.filter(
+					({id}) => !this.state.resultIds.includes(id)
 				);
 
-				// Add new data to the current map of all data
-
-				const mappedData = resultsDataToMap(newItems);
-
-				// Get the ids of all items.
-
-				const ids = newItems
-					.filter(
-						({id}) => !this._initialResultIdsHidden.includes(id)
-					)
-					.map(({id}) => id);
+				const newIds = newItems.map(({id}) => id);
 
 				// Keep history of all initial results, to get the difference
 				// for addedResults and for all added/removed hidden/pinned
-
 				this._initialResultIdsHidden = [
 					...this._initialResultIdsHidden,
-					...ids
+					...newIds
 				];
 
 				this.setState(state => ({
 					dataLoadingHidden: false,
-
 					dataMap: {
-						// In the case when a previously added result
-						// is actually one of the results that loads in,
-						// its 'addedResult' property must be set to
-						// false. This prevents confusion since
-						// unpinning or unhiding results added from
-						// the add results modal should remove it from
-						// results list entirely.
-
-						...updateDataMap(state.dataMap, duplicateItems, {
+						// In the case when a previously added result is
+						// actually one of the results that loads in, its
+						// 'addedResult' property must be set to false.
+						// This prevents confusion since unpinning or
+						// un-hiding added results removes it from results
+						// list entirely.
+						...updateDataMap(state.dataMap, existingFetchedIds, {
 							addedResult: false
 						}),
-						...mappedData
+						...resultsDataToMap(newItems)
 					},
 					hiddenCur: state.hiddenCur + 1,
-					resultIdsHidden: [...state.resultIdsHidden, ...ids],
+					resultIds: [...state.resultIds, ...newIds],
+					resultIdsHidden: [...state.resultIdsHidden, ...newIds],
 					totalResultsHiddenCount: total
 				}));
 			})
@@ -557,7 +491,7 @@ class ResultRankingsForm extends Component {
 		const preMappedData = updateDataMap(
 			mappedData,
 			addedResultsDataList
-				.filter(result => !this._initialResultIds.includes(result.id))
+				.filter(({id}) => !this.state.resultIds.includes(id))
 				.map(({id}) => id),
 			{
 				addedResult: true,
@@ -571,7 +505,7 @@ class ResultRankingsForm extends Component {
 		const newMappedData = updateDataMap(
 			preMappedData,
 			addedResultsDataList
-				.filter(result => this._initialResultIds.includes(result.id))
+				.filter(({id}) => this.state.resultIds.includes(id))
 				.map(({id}) => id),
 			{
 				pinned: true
@@ -585,6 +519,10 @@ class ResultRankingsForm extends Component {
 				...state.dataMap,
 				...newMappedData
 			},
+			resultIds: [
+				...state.resultIds,
+				...addedResultsIds.filter(id => !state.resultIds.includes(id))
+			],
 
 			// Remove any results from hidden if they are getting pinned
 			// and considered as an addedResult.

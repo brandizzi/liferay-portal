@@ -101,7 +101,7 @@ export function removeIdFromList(list = [], toRemove) {
 /**
  * Converts an array of search result objects to a map of id to result object.
  * If an id already exists in the dataMap it will be ignored.
- * Use `updateDataMap` to update specific ids.
+ * Use `updateDataMap` to update specific properties from ids.
  * @param {Array} resultsData The items in search results.
  * @param {Object} initialMap The initial map data to prevent overwrites.
  * @return {Object} The new object that uses id as the key.
@@ -130,7 +130,12 @@ export function toggleListItem(list, id) {
 }
 
 /**
- * Updates the specified ids in the dataMap with new properties.
+ * Updates the specified ids in the dataMap with new properties. Ignores
+ * performing updates on ids that don't exist in the dataMap.
+ *
+ * Do NOT use this method for adding new items to the data map since new ids
+ * will be ignored. They are ignored to prevent creating new items with
+ * incomplete properties.
  * @param {Object} dataMap The data map that will be updated.
  * @param {Array} ids The list of ids to update.
  * @param {Object} properties The item's new properties.
@@ -138,6 +143,10 @@ export function toggleListItem(list, id) {
  */
 export function updateDataMap(dataMap, ids, properties) {
 	return ids.reduce((updatedDataMap, id) => {
+		if (!dataMap[id]) {
+			return updatedDataMap;
+		}
+
 		return {
 			...updatedDataMap,
 			[id]: {
