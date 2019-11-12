@@ -299,5 +299,39 @@ describe('utils', () => {
 				})
 			).toEqual(updatedDataMap);
 		});
+
+		it('ignores ids that do not exist in the map', () => {
+			const initialDataMap = {
+				101: {
+					addedResult: false,
+					hidden: false,
+					id: 101
+				},
+				102: {
+					addedResult: true,
+					hidden: false,
+					id: 102
+				}
+			};
+
+			const updatedDataMap = {
+				101: {
+					addedResult: false,
+					hidden: false,
+					id: 101
+				},
+				102: {
+					addedResult: false,
+					hidden: false,
+					id: 102
+				}
+			};
+
+			expect(
+				updateDataMap(initialDataMap, [102, 103], {
+					addedResult: false
+				})
+			).toEqual(updatedDataMap);
+		});
 	});
 });
