@@ -51,22 +51,25 @@ public class RankingJSONBuilder {
 	}
 
 	public JSONObject build() {
-		return build(
-			JSONUtil.put(
-				"author", getAuthor()
-			).put(
-				"clicks", _document.getString("clicks")
-			).put(
-				"description", _document.getString(Field.DESCRIPTION)
-			).put(
-				"icon", getIcon()
-			).put(
-				"id", _document.getString(Field.UID)
-			).put(
-				"title", getTitle()
-			).put(
-				"type", getType(_locale)
-			));
+		return JSONUtil.put(
+			"author", getAuthor()
+		).put(
+			"clicks", _document.getString("clicks")
+		).put(
+			"description", _document.getString(Field.DESCRIPTION)
+		).put(
+			"hidden", _hidden
+		).put(
+			"icon", getIcon()
+		).put(
+			"id", _document.getString(Field.UID)
+		).put(
+			"pinned", _pinned
+		).put(
+			"title", getTitle()
+		).put(
+			"type", getType(_locale)
+		);
 	}
 
 	public RankingJSONBuilder document(Document document) {
@@ -93,18 +96,6 @@ public class RankingJSONBuilder {
 		return this;
 	}
 
-	protected JSONObject build(JSONObject jsonObject) {
-		if (_hidden) {
-			jsonObject.put("hidden", true);
-		}
-
-		if (_pinned) {
-			jsonObject.put("pinned", true);
-		}
-
-		return jsonObject;
-	}
-
 	protected String getAuthor() {
 		if (_isUser()) {
 			return _document.getString("screenName");
@@ -114,15 +105,9 @@ public class RankingJSONBuilder {
 	}
 
 	protected String getIcon() {
-		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
+		if (_isFileEntry()) {
+			long entryClassPK = _document.getLong(Field.ENTRY_CLASS_PK);
 
-		AssetRendererFactory<?> assetRendererFactory =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
-				entryClassName);
-
-		long entryClassPK = _document.getLong(Field.ENTRY_CLASS_PK);
-
-		if (entryClassName.equals(DLFileEntryConstants.getClassName())) {
 			try {
 				FileEntry fileEntry = _dlAppLocalService.getFileEntry(
 					entryClassPK);
@@ -138,7 +123,12 @@ public class RankingJSONBuilder {
 				return "document-default";
 			}
 		}
-		else if (assetRendererFactory != null) {
+
+		AssetRendererFactory<?> assetRendererFactory =
+			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+				_document.getString(Field.ENTRY_CLASS_NAME));
+
+		if (assetRendererFactory != null) {
 			return assetRendererFactory.getIconCssClass();
 		}
 
@@ -230,6 +220,12 @@ public class RankingJSONBuilder {
 		}
 
 		return "document-default";
+	}
+
+	private boolean _isFileEntry() {
+		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
+
+		return entryClassName.equals(DLFileEntryConstants.getClassName());
 	}
 
 	private boolean _isUser() {
