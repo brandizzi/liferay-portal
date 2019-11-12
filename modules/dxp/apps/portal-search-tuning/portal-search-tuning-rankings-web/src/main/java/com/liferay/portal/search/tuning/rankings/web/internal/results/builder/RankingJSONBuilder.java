@@ -84,23 +84,25 @@ public class RankingJSONBuilder {
 	}
 
 	protected String getTitle() {
+		String title = _document.getString(Field.TITLE + "_en_US");
+
+		if (!Validator.isBlank(title)) {
+			return title;
+		}
+
+		title = _document.getString(Field.TITLE);
+
+		if (!Validator.isBlank(title)) {
+			return title;
+		}
+
 		String entryClassName = _document.getString(Field.ENTRY_CLASS_NAME);
-		String title = _document.getString(Field.TITLE);
-		String titleUS = _document.getString(Field.TITLE + "_en_US");
 
-		if (Validator.isBlank(title) && Validator.isBlank(titleUS)) {
-			if (entryClassName.equals("com.liferay.portal.kernel.model.User")) {
-				return _document.getString("fullName");
-			}
-
-			return _document.getString("name");
+		if (entryClassName.equals("com.liferay.portal.kernel.model.User")) {
+			return _document.getString("fullName");
 		}
 
-		if (!Validator.isBlank(titleUS)) {
-			return titleUS;
-		}
-
-		return title;
+		return _document.getString("name");
 	}
 
 	private Document _document;
