@@ -18,9 +18,9 @@ import '@testing-library/jest-dom/extend-expect';
 
 describe('ClayEmptyState', () => {
 	it('renders', () => {
-		const {asFragment} = render(<ClayEmptyState />);
+		const {container} = render(<ClayEmptyState />);
 
-		expect(asFragment()).toMatchSnapshot();
+		expect(container).not.toBeNull();
 	});
 
 	it('displays a custom title', () => {

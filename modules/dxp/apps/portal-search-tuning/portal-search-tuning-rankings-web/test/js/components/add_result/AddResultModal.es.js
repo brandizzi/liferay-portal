@@ -29,6 +29,8 @@ import '@testing-library/jest-dom/extend-expect';
 const MODAL_ID = 'add-result-modal';
 const RESULTS_LIST_ID = 'add-result-items';
 
+const START_ID = 100;
+
 describe('AddResultModal', () => {
 	beforeEach(() => {
 		fetch.mockResponse(JSON.stringify(getMockResultsData()));
@@ -187,11 +189,7 @@ describe('AddResultModal', () => {
 		});
 	});
 
-	/**
-	 * Temporarily disable pagination test until pagination is fixed
-	 * in LPS-96397. (LPS-101090)
-	 */
-	xit('shows next page results in the modal after navigation is pressed', async () => {
+	it('shows next page results in the modal after navigation is pressed', async () => {
 		const onAddResultSubmit = jest.fn();
 
 		const {getByTestId} = render(
@@ -214,23 +212,23 @@ describe('AddResultModal', () => {
 
 		await waitForElement(() => getByTestId(RESULTS_LIST_ID));
 
+		fetch.mockResponse(JSON.stringify(getMockResultsData(10, 10)));
+
 		fireEvent.click(modal.querySelector('.lexicon-icon-angle-right'));
 
-		await waitForElement(() => getByTestId('150'));
+		const nextPageStartId = START_ID + 10;
+
+		await waitForElement(() => getByTestId(`${nextPageStartId}`));
 
 		expect(modal).not.toHaveTextContent('100 This is a Document Example');
 		expect(modal).not.toHaveTextContent(
-			'149 This is a Web Content Example'
+			'109 This is a Web Content Example'
 		);
-		expect(modal).toHaveTextContent('150 This is a Document Example');
-		expect(modal).toHaveTextContent('199 This is a Web Content Example');
+		expect(modal).toHaveTextContent('110 This is a Document Example');
+		expect(modal).toHaveTextContent('119 This is a Web Content Example');
 	});
 
-	/**
-	 * Temporarily disable pagination test until pagination is fixed
-	 * in LPS-96397. (LPS-101090)
-	 */
-	xit('updates results count in the modal after page delta is pressed', async () => {
+	it('updates results count in the modal after page delta is pressed', async () => {
 		const onAddResultSubmit = jest.fn();
 
 		const {getByTestId, queryAllByText} = render(
@@ -251,14 +249,14 @@ describe('AddResultModal', () => {
 
 		fireEvent.keyDown(input, {key: 'Enter', keyCode: 13, which: 13});
 
+		fetch.mockResponse(JSON.stringify(getMockResultsData(50, 0)));
+
 		await waitForElement(() => getByTestId(RESULTS_LIST_ID));
 
 		fireEvent.click(queryAllByText('x-items')[4]);
 
-		await waitForElement(() => getByTestId('139'));
+		await waitForElement(() => getByTestId('110'));
 
-		expect(modal).not.toHaveTextContent(
-			'149 This is a Web Content Example'
-		);
+		expect(modal).toHaveTextContent('149 This is a Web Content Example');
 	});
 });
