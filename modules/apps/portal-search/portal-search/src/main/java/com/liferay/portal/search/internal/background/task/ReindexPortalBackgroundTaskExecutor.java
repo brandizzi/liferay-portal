@@ -15,6 +15,7 @@
 package com.liferay.portal.search.internal.background.task;
 
 import com.liferay.petra.executor.PortalExecutorManager;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -44,6 +45,10 @@ public class ReindexPortalBackgroundTaskExecutor
 		throws Exception {
 
 		for (long companyId : companyIds) {
+			Class<?> clazz = getClass();
+
+			_log.error("LPS-100272 " + clazz.getName() + ": starting reindex of " + companyId);
+
 			ReindexStatusMessageSenderUtil.sendStatusMessage(
 				ReindexBackgroundTaskConstants.PORTAL_START, companyId,
 				companyIds);
@@ -59,6 +64,10 @@ public class ReindexPortalBackgroundTaskExecutor
 				_log.error(e, e);
 			}
 			finally {
+				_log.error(
+					StringBundler.concat(
+						"LPS-100272 " + clazz.getName(), ": reindex of ", companyId, "done"));
+
 				ReindexStatusMessageSenderUtil.sendStatusMessage(
 					ReindexBackgroundTaskConstants.PORTAL_END, companyId,
 					companyIds);
