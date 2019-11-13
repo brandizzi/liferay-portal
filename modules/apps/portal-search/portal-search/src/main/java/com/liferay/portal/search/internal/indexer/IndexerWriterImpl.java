@@ -201,8 +201,14 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 
 					});
 
+				Class<?> clazz = getClass();
+
 				try {
+					_log.error(clazz.getName() + ": indexing " + companyId);
+
 					batchIndexingActionable.performActions();
+
+					_log.error(clazz.getName() + ": done " + companyId);
 				}
 				catch (Exception pe) {
 					if (_log.isWarnEnabled()) {

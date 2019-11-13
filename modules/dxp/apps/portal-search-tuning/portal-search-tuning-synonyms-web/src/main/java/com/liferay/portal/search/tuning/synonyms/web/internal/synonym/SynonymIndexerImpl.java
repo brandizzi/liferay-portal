@@ -18,6 +18,8 @@ import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.index.CloseIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.GetIndexIndexRequest;
@@ -79,9 +81,14 @@ public class SynonymIndexerImpl implements SynonymIndexer {
 	public void updateSynonymSets(
 		String indexName, String filterName, String[] synonymSets) {
 
+		Class<?> clazz = getClass();
+
+		_log.error(clazz.getName() + ": closing index " + indexName);
+
 		closeIndex(indexName);
 
 		try {
+			_log.error(clazz.getName() + ": updating setings on " + indexName);
 			UpdateIndexSettingsIndexRequest updateIndexSettingsIndexRequest =
 				new UpdateIndexSettingsIndexRequest(indexName);
 
@@ -90,9 +97,11 @@ public class SynonymIndexerImpl implements SynonymIndexer {
 			updateIndexSettingsIndexRequest.setSettings(settings);
 
 			searchEngineAdapter.execute(updateIndexSettingsIndexRequest);
+			_log.error(clazz.getName() + ": setings updated on" + indexName);
 		}
 		finally {
 			openIndex(indexName);
+			_log.error(clazz.getName() + ": index reopened > " + indexName);
 		}
 	}
 
@@ -133,5 +142,8 @@ public class SynonymIndexerImpl implements SynonymIndexer {
 
 	@Reference
 	protected SearchEngineAdapter searchEngineAdapter;
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		SynonymIndexerImpl.class);
 
 }

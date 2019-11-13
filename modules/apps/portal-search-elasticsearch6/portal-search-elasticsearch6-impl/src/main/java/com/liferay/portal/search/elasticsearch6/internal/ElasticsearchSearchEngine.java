@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch6.internal;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -103,6 +104,10 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 
 	@Override
 	public void initialize(long companyId) {
+		Class<?> clazz = getClass();
+
+		_log.error(clazz.getName() + ": initializing company " + companyId);
+
 		super.initialize(companyId);
 
 		waitForYellowStatus();
@@ -114,6 +119,10 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 		_elasticsearchConnectionManager.registerCompanyId(companyId);
 
 		waitForYellowStatus();
+
+		_log.error(
+			StringBundler.concat(
+				clazz.getName(), ": company ", companyId, "initialized"));
 	}
 
 	@Override
@@ -132,7 +141,11 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 	public void removeCompany(long companyId) {
 		super.removeCompany(companyId);
 
+		Class<?> clazz = getClass();
+
 		try {
+			_log.error(clazz.getName() + ": removing company " + companyId);
+
 			_indexFactory.deleteIndices(
 				_elasticsearchConnectionManager.getAdminClient(), companyId);
 
