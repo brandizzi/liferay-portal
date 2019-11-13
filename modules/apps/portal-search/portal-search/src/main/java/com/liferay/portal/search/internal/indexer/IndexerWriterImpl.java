@@ -201,8 +201,14 @@ public class IndexerWriterImpl<T extends BaseModel<?>>
 
 					});
 
+				Class<?> clazz = getClass();
+
 				try {
+					_log.error("LPS-100272 " + clazz.getName() + ": indexing " + companyId);
+
 					batchIndexingActionable.performActions();
+
+					_log.error("LPS-100272 " + clazz.getName() + ": done " + companyId);
 				}
 				catch (Exception pe) {
 					if (_log.isWarnEnabled()) {

@@ -17,6 +17,8 @@ package com.liferay.portal.search.internal.batch;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.search.batch.BatchIndexingActionable;
 
@@ -46,11 +48,20 @@ public class DynamicQueryBatchIndexingActionableAdapter
 
 	@Override
 	public void performActions() {
+		Class<?> clazz = getClass();
+
 		try {
+			_log.error(
+				"LPS-100272 " + clazz.getName() + ": performing action with " +
+					_indexableActionableDynamicQuery);
+
 			_indexableActionableDynamicQuery.performActions();
 		}
 		catch (PortalException pe) {
 			throw new RuntimeException(pe);
+		}
+		finally {
+			_log.error("LPS-100272 " + clazz.getName() + ": action performed");
 		}
 	}
 
@@ -79,6 +90,9 @@ public class DynamicQueryBatchIndexingActionableAdapter
 	public void setSearchEngineId(String searchEngineId) {
 		_indexableActionableDynamicQuery.setSearchEngineId(searchEngineId);
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		DynamicQueryBatchIndexingActionableAdapter.class);
 
 	private final IndexableActionableDynamicQuery
 		_indexableActionableDynamicQuery;

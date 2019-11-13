@@ -166,9 +166,7 @@ public class SearchEngineInitializer implements Runnable {
 
 		stopWatch.start();
 
-		if (_log.isInfoEnabled()) {
-			_log.info("Reindexing with " + indexer.getClass() + " started");
-		}
+		_log.warn("Reindexing with " + indexer.getClass() + " started");
 
 		indexer.reindex(new String[] {String.valueOf(_companyId)});
 
