@@ -19,6 +19,8 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.index;
  */
 public interface SynonymSetFilterHelper {
 
+	public String[] getSynonyms(String indexName);
+
 	public void updateFilters(long companyId);
 
 	public void updateFilters(String indexName);

@@ -30,16 +30,7 @@ import org.osgi.service.component.annotations.Reference;
 public class SynonymSetFilterHelperImpl implements SynonymSetFilterHelper {
 
 	@Override
-	public void updateFilters(long companyId) {
-		updateFilters(_indexNameBuilder.getIndexName(companyId));
-	}
-
-	@Override
-	public void updateFilters(String indexName) {
-		updateFilters(indexName, getSynonyms(indexName));
-	}
-
-	protected String[] getSynonyms(String indexName) {
+	public String[] getSynonyms(String indexName) {
 		List<SynonymSet> synonymSets = _synonymSetIndexReader.searchByIndexName(
 			indexName);
 
@@ -50,6 +41,16 @@ public class SynonymSetFilterHelperImpl implements SynonymSetFilterHelper {
 		).toArray(
 			String[]::new
 		);
+	}
+
+	@Override
+	public void updateFilters(long companyId) {
+		updateFilters(_indexNameBuilder.getIndexName(companyId));
+	}
+
+	@Override
+	public void updateFilters(String indexName) {
+		updateFilters(indexName, getSynonyms(indexName));
 	}
 
 	protected void updateFilters(String indexName, String[] synonyms) {
