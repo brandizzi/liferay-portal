@@ -144,7 +144,8 @@ public class CompanyIndexFactory implements IndexFactory {
 		LiferayDocumentTypeFactory liferayDocumentTypeFactory =
 			new LiferayDocumentTypeFactory(indicesAdminClient, jsonFactory);
 
-		setSettings(createIndexRequestBuilder, liferayDocumentTypeFactory);
+		setSettings(
+			indexName, createIndexRequestBuilder, liferayDocumentTypeFactory);
 
 		addLiferayDocumentTypeMappings(
 			createIndexRequestBuilder, liferayDocumentTypeFactory);
@@ -206,7 +207,7 @@ public class CompanyIndexFactory implements IndexFactory {
 	}
 
 	protected void loadIndexSettingsContributors(
-		final Settings.Builder builder) {
+		String indexName, final Settings.Builder builder) {
 
 		IndexSettingsHelper indexSettingsHelper = new IndexSettingsHelper() {
 
@@ -222,6 +223,8 @@ public class CompanyIndexFactory implements IndexFactory {
 
 			indexSettingsContributor.populate(indexSettingsHelper);
 		}
+
+		_spiIndexSettingsContributorHolder.contributeAll(indexName, builder);
 	}
 
 	protected void loadTestModeIndexSettings(SettingsBuilder settingsBuilder) {
@@ -276,7 +279,7 @@ public class CompanyIndexFactory implements IndexFactory {
 	}
 
 	protected void setSettings(
-		CreateIndexRequestBuilder createIndexRequestBuilder,
+		String indexName, CreateIndexRequestBuilder createIndexRequestBuilder,
 		LiferayDocumentTypeFactory liferayDocumentTypeFactory) {
 
 		Settings.Builder builder = Settings.builder();
@@ -293,7 +296,7 @@ public class CompanyIndexFactory implements IndexFactory {
 
 		loadAdditionalIndexConfigurations(settingsBuilder);
 
-		loadIndexSettingsContributors(builder);
+		loadIndexSettingsContributors(indexName, builder);
 
 		createIndexRequestBuilder.setSettings(builder);
 	}
@@ -312,6 +315,10 @@ public class CompanyIndexFactory implements IndexFactory {
 
 		liferayDocumentTypeFactory.createOptionalDefaultTypeMappings(indexName);
 	}
+
+	@Reference
+	protected SPIIndexSettingsContributorHolder
+		_spiIndexSettingsContributorHolder;
 
 	@Reference
 	protected IndexNameBuilder indexNameBuilder;
