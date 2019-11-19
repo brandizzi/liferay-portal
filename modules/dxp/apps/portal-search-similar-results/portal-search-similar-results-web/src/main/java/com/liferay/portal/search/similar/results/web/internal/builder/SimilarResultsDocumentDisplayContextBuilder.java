@@ -612,17 +612,17 @@ public class SimilarResultsDocumentDisplayContextBuilder {
 		AssetEntry assetEntry, AssetRenderer<?> assetRenderer, String className,
 		long classPK) {
 
-		String urlString = _portal.getCurrentURL(_renderRequest);
+		String currentURL = _portal.getCurrentURL(_renderRequest);
 
 		if (_similarResultsRoute == null) {
-			return urlString;
+			return currentURL;
 		}
 
 		SimilarResultsContributor similarResultsContributor =
 			_similarResultsRoute.getContributor();
 
 		DestinationBuilderImpl destinationBuilderImpl =
-			new DestinationBuilderImpl(urlString, _http);
+			new DestinationBuilderImpl(currentURL, _http);
 
 		DestinationHelper destinationHelper = new DestinationHelper() {
 

@@ -18,6 +18,7 @@ import com.liferay.petra.string.CharPool;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.URLCodec;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.similar.results.web.spi.contributor.helper.DestinationBuilder;
 
 /**
@@ -37,7 +38,9 @@ public class DestinationBuilderImpl implements DestinationBuilder {
 
 	@Override
 	public DestinationBuilder replace(String oldSub, String newSub) {
-		_urlString = StringUtil.replaceFirst(_urlString, oldSub, newSub);
+		if (Validator.isNotNull(oldSub) && Validator.isNotNull(newSub)) {
+			_urlString = StringUtil.replaceFirst(_urlString, oldSub, newSub);
+		}
 
 		return this;
 	}
