@@ -161,10 +161,17 @@ public class SimilarResultsPortlet extends MVCPortlet {
 			similarResultsDocumentDisplayContexts = new ArrayList<>();
 
 		for (Document document : documents) {
-			similarResultsDocumentDisplayContexts.add(
-				doBuildSummary(
+			SimilarResultsDocumentDisplayContext
+				similarResultsDocumentDisplayContext = doBuildSummary(
 					document, similarResultsRoute, renderRequest,
-					renderResponse, themeDisplay));
+					renderResponse, themeDisplay);
+
+			if (!similarResultsDocumentDisplayContext.
+					isTemporarilyUnavailable()) {
+
+				similarResultsDocumentDisplayContexts.add(
+					similarResultsDocumentDisplayContext);
+			}
 		}
 
 		return similarResultsDocumentDisplayContexts;
