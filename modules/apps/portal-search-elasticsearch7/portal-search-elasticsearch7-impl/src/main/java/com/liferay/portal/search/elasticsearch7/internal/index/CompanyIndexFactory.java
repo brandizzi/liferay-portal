@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.index;
 
+import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
+import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.log.Log;
@@ -27,6 +29,7 @@ import com.liferay.portal.search.elasticsearch7.internal.util.ResourceUtil;
 import com.liferay.portal.search.elasticsearch7.settings.IndexSettingsContributor;
 import com.liferay.portal.search.elasticsearch7.settings.IndexSettingsHelper;
 import com.liferay.portal.search.index.IndexNameBuilder;
+import com.liferay.portal.search.spi.model.index.contributor.IndexContributor;
 
 import java.io.IOException;
 
@@ -43,8 +46,10 @@ import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
 
+import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
@@ -95,7 +100,9 @@ public class CompanyIndexFactory implements IndexFactory {
 
 	@Activate
 	@Modified
-	protected void activate(Map<String, Object> properties) {
+	protected void activate(
+		BundleContext bundleContext, Map<String, Object> properties) {
+
 		ElasticsearchConfiguration elasticsearchConfiguration =
 			ConfigurableUtil.createConfigurable(
 				ElasticsearchConfiguration.class, properties);
@@ -110,6 +117,9 @@ public class CompanyIndexFactory implements IndexFactory {
 			elasticsearchConfiguration.indexNumberOfShards());
 		setOverrideTypeMappings(
 			elasticsearchConfiguration.overrideTypeMappings());
+
+		_indexContributors = ServiceTrackerListFactory.open(
+			bundleContext, IndexContributor.class);
 	}
 
 	@Reference(
@@ -160,6 +170,13 @@ public class CompanyIndexFactory implements IndexFactory {
 		}
 
 		updateLiferayDocumentType(indexName, liferayDocumentTypeFactory);
+
+		loadIndexContributors(indexName);
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_indexContributors.close();
 	}
 
 	protected String getIndexName(long companyId) {
@@ -208,6 +225,12 @@ public class CompanyIndexFactory implements IndexFactory {
 	protected void loadIndexConfigurations(SettingsBuilder settingsBuilder) {
 		settingsBuilder.put("index.number_of_replicas", _indexNumberOfReplicas);
 		settingsBuilder.put("index.number_of_shards", _indexNumberOfShards);
+	}
+
+	protected void loadIndexContributors(String indexName) {
+		for (IndexContributor indexContributor : _indexContributors) {
+			indexContributor.onAfterCreate(indexName);
+		}
 	}
 
 	protected void loadIndexSettingsContributors(
@@ -329,6 +352,8 @@ public class CompanyIndexFactory implements IndexFactory {
 
 	private volatile String _additionalIndexConfigurations;
 	private String _additionalTypeMappings;
+	private ServiceTrackerList<IndexContributor, IndexContributor>
+		_indexContributors;
 	private String _indexNumberOfReplicas;
 	private String _indexNumberOfShards;
 	private final Set<IndexSettingsContributor> _indexSettingsContributors =
