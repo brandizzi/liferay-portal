@@ -19,7 +19,17 @@
 
 							<div class="similar-results-metadata">
 								<p class="list-group-subtext">
-									${htmlUtil.escape(entry.getCreatorUserName())} - ${entry.getCreationDateString()}
+									<#if (entry.getCreatorUserName()??) && validator.isNotNull(entry.getCreatorUserName())>
+										<span class="subtext-item">
+											${htmlUtil.escape(entry.getCreatorUserName())}
+										</span>
+									</#if>
+
+									<#if (entry.getCreationDateString()??) && validator.isNotNull(entry.getCreationDateString())>
+										<span class="subtext-item">
+											${entry.getCreationDateString()}
+										</span>
+									</#if>
 								</p>
 
 								<p class="list-group-subtext">

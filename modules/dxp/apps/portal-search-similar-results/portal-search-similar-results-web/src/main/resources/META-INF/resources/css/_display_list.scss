@@ -13,8 +13,16 @@
 			line-height: 18px;
 		}
 
-		.related-results-metadata + .related-results-description {
+		.similar-results-metadata + .similar-results-description {
 			margin-top: 8px;
+		}
+
+		.similar-results-metadata {
+			.subtext-item + .subtext-item {
+				&:before {
+					content: ' - ';
+				}
+			}
 		}
 	}
 }
