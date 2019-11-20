@@ -14,49 +14,52 @@
 
 package com.liferay.portal.search.similar.results.web.internal.display.context;
 
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.util.Validator;
+
 /**
  * @author Kevin Tan
  */
 public class SimilarResultsDocumentDisplayContext {
 
 	public String getCategoriesString() {
-		return _categoriesString;
+		return _getNonnullValue(_categoriesString);
 	}
 
 	public String getContent() {
-		return _content;
+		return _getNonnullValue(_content);
 	}
 
 	public String getCreationDateString() {
-		return _creationDateString;
+		return _getNonnullValue(_creationDateString);
 	}
 
 	public String getCreatorUserName() {
-		return _creatorUserName;
+		return _getNonnullValue(_creatorUserName);
 	}
 
 	public String getIconId() {
-		if (_iconId == null) {
-			_iconId = "web-content";
+		if (Validator.isNull(_iconId)) {
+			return "web-content";
 		}
 
 		return _iconId;
 	}
 
 	public String getModelResource() {
-		return _modelResource;
+		return _getNonnullValue(_modelResource);
 	}
 
 	public String getThumbnailURLString() {
-		return _thumbnailURLString;
+		return _getNonnullValue(_thumbnailURLString);
 	}
 
 	public String getTitle() {
-		return _title;
+		return _getNonnullValue(_title);
 	}
 
 	public String getViewURL() {
-		return _viewURL;
+		return _getNonnullValue(_viewURL);
 	}
 
 	public boolean isTemporarilyUnavailable() {
@@ -101,6 +104,14 @@ public class SimilarResultsDocumentDisplayContext {
 
 	public void setViewURL(String viewURL) {
 		_viewURL = viewURL;
+	}
+
+	private String _getNonnullValue(String value) {
+		if (Validator.isNull(value)) {
+			return StringPool.BLANK;
+		}
+
+		return value;
 	}
 
 	private String _categoriesString;
