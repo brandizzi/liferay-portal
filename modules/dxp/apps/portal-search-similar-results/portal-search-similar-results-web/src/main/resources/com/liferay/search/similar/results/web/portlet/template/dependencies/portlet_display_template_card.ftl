@@ -18,7 +18,7 @@
 							<div class="card-row">
 								<div class="autofit-col autofit-col-expand">
 									<section class="autofit-section">
-										<#if validator.isNotNull(entry.getCategoriesString())>
+										<#if (entry.getCategoriesString()??) && validator.isNotNull(entry.getCategoriesString())>
 											<span class="card-category text-truncate-inline">
 												${entry.getCategoriesString()}
 											</span>
@@ -30,21 +30,25 @@
 											</a>
 										</h3>
 
-										<p class="card-subtitle">
-											<span class="text-truncate-inline">
-												<span class="text-truncate">
-													${htmlUtil.escape(entry.getCreatorUserName())}
+										<#if (entry.getCreatorUserName()??) && validator.isNotNull(entry.getCreatorUserName())>
+											<p class="card-subtitle">
+												<span class="text-truncate-inline">
+													<span class="text-truncate">
+														${htmlUtil.escape(entry.getCreatorUserName())}
+													</span>
 												</span>
-											</span>
-										</p>
+											</p>
+										</#if>
 
-										<p class="card-subtitle">
-											<span class="text-truncate-inline">
-												<span class="text-truncate">
-													${entry.getCreationDateString()}
+										<#if (entry.getCreationDateString()??) && validator.isNotNull(entry.getCreationDateString())>
+											<p class="card-subtitle">
+												<span class="text-truncate-inline">
+													<span class="text-truncate">
+														${entry.getCreationDateString()}
+													</span>
 												</span>
-											</span>
-										</p>
+											</p>
+										</#if>
 
 										<p class="card-subtitle">
 											<span class="text-truncate-inline">
