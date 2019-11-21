@@ -17,12 +17,8 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.index;
 /**
  * @author Adam Brandizzi
  */
-public interface SynonymSetFilterHelper {
+public interface SynonymFilterNameHolder {
 
-	public String[] getSynonyms(String indexName);
-
-	public void updateFilters(long companyId);
-
-	public void updateFilters(String indexName);
+	public String[] getNames();
 
 }

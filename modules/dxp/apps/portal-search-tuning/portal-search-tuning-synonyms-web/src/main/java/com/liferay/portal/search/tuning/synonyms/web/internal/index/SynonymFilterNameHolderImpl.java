@@ -14,15 +14,21 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.index;
 
+import org.osgi.service.component.annotations.Component;
+
 /**
  * @author Adam Brandizzi
  */
-public interface SynonymSetFilterHelper {
+@Component(immediate = true, service = SynonymFilterNameHolder.class)
+public class SynonymFilterNameHolderImpl implements SynonymFilterNameHolder {
 
-	public String[] getSynonyms(String indexName);
+	@Override
+	public String[] getNames() {
+		return _FILTER_NAMES;
+	}
 
-	public void updateFilters(long companyId);
-
-	public void updateFilters(String indexName);
+	private static final String[] _FILTER_NAMES = {
+		"liferay_filter_synonym_en", "liferay_filter_synonym_es"
+	};
 
 }

@@ -11,7 +11,8 @@ Export-Package:\
 	com.liferay.portal.search.spi.model.registrar,\
 	com.liferay.portal.search.spi.model.registrar.contributor,\
 	com.liferay.portal.search.spi.model.result.contributor,\
-	com.liferay.portal.search.spi.searcher
+	com.liferay.portal.search.spi.searcher,\
+	com.liferay.portal.search.spi.settings
 Import-Package:\
 	com.liferay.portal.kernel.search;version="[8.1.0,9.1.0)",\
 	\
