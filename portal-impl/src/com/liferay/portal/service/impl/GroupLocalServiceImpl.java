@@ -4683,8 +4683,25 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 		indexableActionableDynamicQuery.setSearchEngineId(
 			indexer.getSearchEngineId());
 
-		indexableActionableDynamicQuery.performActions();
+		Thread thread = new Thread(
+				() -> performActions(indexableActionableDynamicQuery));
+
+		thread.run();
 	}
+
+	private void performActions(
+		final IndexableActionableDynamicQuery indexableActionableDynamicQuery){
+
+		try {
+			indexableActionableDynamicQuery.performActions();
+		}
+		catch (PortalException pe) {
+			if (_log.isErrorEnabled()) {
+				_log.error(pe);
+			}
+		}
+	}
+	
 
 	protected void reindexUsersInOrganization(long organizationId)
 		throws PortalException {
