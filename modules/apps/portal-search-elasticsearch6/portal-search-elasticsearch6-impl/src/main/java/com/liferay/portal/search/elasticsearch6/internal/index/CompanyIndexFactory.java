@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch6.internal.index;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.log.Log;
@@ -27,10 +28,13 @@ import com.liferay.portal.search.elasticsearch6.internal.util.ResourceUtil;
 import com.liferay.portal.search.elasticsearch6.settings.IndexSettingsContributor;
 import com.liferay.portal.search.elasticsearch6.settings.IndexSettingsHelper;
 import com.liferay.portal.search.index.IndexNameBuilder;
+import com.liferay.portal.search.spi.model.index.contributor.IndexContributor;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
@@ -83,6 +87,8 @@ public class CompanyIndexFactory implements IndexFactory {
 			return;
 		}
 
+		executeIndexContributorsBeforeRemove(indexName);
+
 		DeleteIndexRequestBuilder deleteIndexRequestBuilder =
 			indicesAdminClient.prepareDelete(indexName);
 
@@ -108,6 +114,15 @@ public class CompanyIndexFactory implements IndexFactory {
 			elasticsearchConfiguration.indexNumberOfShards());
 		setOverrideTypeMappings(
 			elasticsearchConfiguration.overrideTypeMappings());
+	}
+
+	@Reference(
+		cardinality = ReferenceCardinality.MULTIPLE,
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void addIndexContributor(IndexContributor indexContributor) {
+		_indexContributors.add(indexContributor);
 	}
 
 	@Reference(
@@ -155,6 +170,50 @@ public class CompanyIndexFactory implements IndexFactory {
 		LogUtil.logActionResponse(_log, createIndexResponse);
 
 		updateLiferayDocumentType(indexName, liferayDocumentTypeFactory);
+
+		executeIndexContributorsAfterCreate(indexName);
+	}
+
+	protected void executeIndexContributorAfterCreate(
+		IndexContributor indexContributor, String indexName) {
+
+		try {
+			indexContributor.onAfterCreate(indexName);
+		}
+		catch (Throwable t) {
+			_log.error(
+				StringBundler.concat(
+					"Unable to apply contributor ", indexContributor,
+					" when creating index ", indexName),
+				t);
+		}
+	}
+
+	protected void executeIndexContributorBeforeRemove(
+		IndexContributor indexContributor, String indexName) {
+
+		try {
+			indexContributor.onBeforeRemove(indexName);
+		}
+		catch (Throwable t) {
+			_log.error(
+				StringBundler.concat(
+					"Unable to apply contributor ", indexContributor,
+					" when removing index ", indexName),
+				t);
+		}
+	}
+
+	protected void executeIndexContributorsAfterCreate(String indexName) {
+		for (IndexContributor indexContributor : _indexContributors) {
+			executeIndexContributorAfterCreate(indexContributor, indexName);
+		}
+	}
+
+	protected void executeIndexContributorsBeforeRemove(String indexName) {
+		for (IndexContributor indexContributor : _indexContributors) {
+			executeIndexContributorBeforeRemove(indexContributor, indexName);
+		}
 	}
 
 	protected String getIndexName(long companyId) {
@@ -247,6 +306,10 @@ public class CompanyIndexFactory implements IndexFactory {
 		}
 	}
 
+	protected void removeIndexContributor(IndexContributor indexContributor) {
+		_indexContributors.remove(indexContributor);
+	}
+
 	protected void removeIndexSettingsContributor(
 		IndexSettingsContributor indexSettingsContributor) {
 
@@ -324,6 +387,8 @@ public class CompanyIndexFactory implements IndexFactory {
 
 	private volatile String _additionalIndexConfigurations;
 	private String _additionalTypeMappings;
+	private final List<IndexContributor> _indexContributors =
+		new CopyOnWriteArrayList<>();
 	private String _indexNumberOfReplicas;
 	private String _indexNumberOfShards;
 	private final Set<IndexSettingsContributor> _indexSettingsContributors =
