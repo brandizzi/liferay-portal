@@ -18,6 +18,7 @@ import com.liferay.portal.json.JSONFactoryImpl;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch6.internal.connection.IndexName;
+import com.liferay.portal.search.elasticsearch6.internal.index.CompanyIndexFactoryFixture.TestIndexNameBuilder;
 import com.liferay.portal.search.index.IndexNameBuilder;
 
 /**
@@ -32,10 +33,18 @@ public class CompanyIndexFactoryFixture {
 		_indexName = indexName;
 	}
 
-	public void createIndices() throws Exception {
+	public void createIndices() {
 		CompanyIndexFactory companyIndexFactory = getCompanyIndexFactory();
 
 		companyIndexFactory.createIndices(
+			_elasticsearchFixture.getAdminClient(),
+			RandomTestUtil.randomLong());
+	}
+
+	public void deleteIndices() {
+		CompanyIndexFactory companyIndexFactory = getCompanyIndexFactory();
+
+		companyIndexFactory.deleteIndices(
 			_elasticsearchFixture.getAdminClient(),
 			RandomTestUtil.randomLong());
 	}
