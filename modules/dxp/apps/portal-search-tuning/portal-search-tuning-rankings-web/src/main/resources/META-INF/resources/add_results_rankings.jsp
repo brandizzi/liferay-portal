@@ -23,7 +23,8 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
 page import="com.liferay.portal.kernel.util.Constants" %><%@
-page import="com.liferay.portal.kernel.util.ParamUtil" %>
+page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
+page import="com.liferay.portal.search.tuning.rankings.web.internal.exception.DuplicateQueryStringException" %>
 
 <liferay-frontend:defineObjects />
 
@@ -43,11 +44,14 @@ portletDisplay.setURLBack(redirect);
 renderResponse.setTitle(LanguageUtil.get(request, "new-ranking"));
 %>
 
-<portlet:actionURL name="/results_ranking/edit" var="addResultsRankingEntryURL" />
-
 <div class="result-rankings-alert-container sheet-lg">
-	<liferay-ui:error exception="<%= Exception.class %>" message="ranking-with-that-search-query-already-exists" />
+	<liferay-ui:error exception="<%= DuplicateQueryStringException.class %>" message="ranking-with-that-search-query-already-exists" />
+	<liferay-ui:error exception="<%= Exception.class %>" message="an-unexpected-error-occurred" />
+
+	<liferay-ui:error-principal />
 </div>
+
+<portlet:actionURL name="/results_ranking/edit" var="addResultsRankingEntryURL" />
 
 <liferay-frontend:edit-form
 	action="<%= addResultsRankingEntryURL %>"
