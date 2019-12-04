@@ -15,12 +15,12 @@
 package com.liferay.portal.search.tuning.rankings.web.internal.portlet.action;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayPortletURL;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ListUtil;
@@ -28,6 +28,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.tuning.rankings.web.internal.configuration.DefaultResultRankingsConfiguration;
 import com.liferay.portal.search.tuning.rankings.web.internal.configuration.ResultRankingsConfiguration;
 import com.liferay.portal.search.tuning.rankings.web.internal.constants.ResultRankingsConstants;
@@ -53,6 +54,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -119,15 +121,24 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 		}
 		catch (Exception e) {
 			if (e instanceof DuplicateQueryStringException) {
+				LiferayPortletResponse liferayPortletResponse =
+					portal.getLiferayPortletResponse(actionResponse);
+
+				PortletURL renderURL = liferayPortletResponse.createRenderURL();
+
+				renderURL.setParameter(
+					"mvcRenderCommandName", "addResultsRankingEntry");
+				renderURL.setParameter(
+					"redirect", editRankingMVCActionRequest.getRedirect());
+
+				actionRequest.setAttribute(
+					WebKeys.REDIRECT, renderURL.toString());
+
 				SessionErrors.add(actionRequest, Exception.class);
 
-				SessionMessages.add(
-					actionRequest,
-					portal.getPortletId(actionRequest) +
-						SessionMessages.KEY_SUFFIX_HIDE_DEFAULT_ERROR_MESSAGE);
+				hideDefaultErrorMessage(actionRequest);
 
-				actionResponse.setRenderParameter(
-					"mvcRenderCommandName", "addResultsRankingEntry");
+				sendRedirect(actionRequest, actionResponse);
 			}
 			else {
 				SessionErrors.add(actionRequest, Exception.class);
