@@ -57,6 +57,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "new-ranking"));
 			<liferay-ui:message key="customize-how-users-see-results-for-a-given-search-query" />
 		</div>
 
+		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= Constants.ADD %>" />
 		<aui:input name="resultActionCmd" type="hidden" value="<%= resultActionCmd %>" />
 		<aui:input name="resultActionUid" type="hidden" value="<%= resultActionUid %>" />
