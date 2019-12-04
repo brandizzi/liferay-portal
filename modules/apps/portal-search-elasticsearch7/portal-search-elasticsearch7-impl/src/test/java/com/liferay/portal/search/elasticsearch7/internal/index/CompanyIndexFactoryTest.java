@@ -21,10 +21,14 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch7.internal.connection.IndexName;
 import com.liferay.portal.search.elasticsearch7.internal.document.SingleFieldFixture;
+import com.liferay.portal.search.elasticsearch7.internal.query.QueryBuilderFactories;
 import com.liferay.portal.search.elasticsearch7.internal.settings.BaseIndexSettingsContributor;
 import com.liferay.portal.search.elasticsearch7.internal.util.ResourceUtil;
 import com.liferay.portal.search.elasticsearch7.settings.IndexSettingsHelper;
 import com.liferay.portal.search.elasticsearch7.settings.TypeMappingsHelper;
+import com.liferay.portal.search.spi.model.index.contributor.IndexContributor;
+
+import java.io.IOException;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,7 +37,9 @@ import java.util.Map;
 
 import org.elasticsearch.action.admin.indices.get.GetIndexResponse;
 import org.elasticsearch.client.IndicesClient;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.cluster.metadata.MappingMetaData;
 import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.settings.Settings;
@@ -76,6 +82,8 @@ public class CompanyIndexFactoryTest {
 			_elasticsearchFixture.getRestHighLevelClient(),
 			new IndexName(_companyIndexFactoryFixture.getIndexName()),
 			LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE);
+
+		_singleFieldFixture.setQueryBuilderFactory(QueryBuilderFactories.MATCH);
 	}
 
 	@Test
@@ -177,6 +185,55 @@ public class CompanyIndexFactoryTest {
 
 		Assert.assertEquals("1", settings.get("index.number_of_replicas"));
 		Assert.assertEquals("2", settings.get("index.number_of_shards"));
+	}
+
+	@Test
+	public void testIndexContributors() throws Exception {
+		CompanyIndexFactoryFixture companyIndexFactoryFixture =
+			new CompanyIndexFactoryFixture(_elasticsearchFixture, "other");
+
+		addIndexContributor(
+			new IndexContributor() {
+
+				@Override
+				public void onAfterCreate(String indexName) {
+					companyIndexFactoryFixture.createIndices();
+				}
+
+				@Override
+				public void onBeforeRemove(String indexName) {
+					companyIndexFactoryFixture.deleteIndices();
+				}
+
+			});
+
+		createIndices();
+
+		assertHasIndex(companyIndexFactoryFixture.getIndexName());
+
+		deleteIndices();
+
+		assertNoIndex(companyIndexFactoryFixture.getIndexName());
+	}
+
+	@Test
+	public void testIndexContributorsThrowsException() throws Exception {
+		addIndexContributor(
+			new IndexContributor() {
+
+				@Override
+				public void onAfterCreate(String indexName) {
+					throw new RuntimeException();
+				}
+
+				@Override
+				public void onBeforeRemove(String indexName) {
+					throw new RuntimeException();
+				}
+
+			});
+
+		createIndices();
 	}
 
 	@Test
@@ -283,6 +340,10 @@ public class CompanyIndexFactoryTest {
 	@Rule
 	public TestName testName = new TestName();
 
+	protected void addIndexContributor(IndexContributor indexContributor) {
+		_companyIndexFactory.addIndexContributor(indexContributor);
+	}
+
 	protected void addIndexSettingsContributor(String mappings) {
 		_companyIndexFactory.addIndexSettingsContributor(
 			new BaseIndexSettingsContributor(1) {
@@ -344,6 +405,11 @@ public class CompanyIndexFactoryTest {
 			restHighLevelClient.indices());
 	}
 
+	protected void assertHasIndex(String indexName) {
+		Assert.assertTrue(
+			"Index " + indexName + " does not exist", hasIndex(indexName));
+	}
+
 	protected void assertIndicesExist(String... indexNames) {
 		GetIndexResponse getIndexResponse = _elasticsearchFixture.getIndex(
 			_companyIndexFactoryFixture.getIndexName());
@@ -363,6 +429,11 @@ public class CompanyIndexFactoryTest {
 
 	protected void assertNoAnalyzer(String field) throws Exception {
 		assertAnalyzer(field, null);
+	}
+
+	protected void assertNoIndex(String indexName) {
+		Assert.assertFalse(
+			"Index " + indexName + " exists", hasIndex(indexName));
 	}
 
 	protected void assertType(String field, String type) throws Exception {
@@ -385,6 +456,16 @@ public class CompanyIndexFactoryTest {
 			indicesClient, RandomTestUtil.randomLong());
 	}
 
+	protected void deleteIndices() {
+		RestHighLevelClient restHighLevelClient =
+			_elasticsearchFixture.getRestHighLevelClient();
+
+		IndicesClient indicesClient = restHighLevelClient.indices();
+
+		_companyIndexFactory.deleteIndices(
+			indicesClient, RandomTestUtil.randomLong());
+	}
+
 	protected Settings getIndexSettings() {
 		String name = _companyIndexFactoryFixture.getIndexName();
 
@@ -397,10 +478,31 @@ public class CompanyIndexFactoryTest {
 		return immutableOpenMap.get(name);
 	}
 
+	protected boolean hasIndex(String indexName) {
+		RestHighLevelClient restHighLevelClient =
+			_elasticsearchFixture.getRestHighLevelClient();
+
+		IndicesClient indicesClient = restHighLevelClient.indices();
+
+		GetIndexRequest getIndexRequest = new GetIndexRequest(indexName);
+
+		try {
+			return indicesClient.exists(
+				getIndexRequest, RequestOptions.DEFAULT);
+		}
+		catch (IOException ioe) {
+			throw new RuntimeException(ioe);
+		}
+	}
+
 	protected void indexOneDocument(String field) {
+		indexOneDocument(field, RandomTestUtil.randomString());
+	}
+
+	protected void indexOneDocument(String field, String value) {
 		_singleFieldFixture.setField(field);
 
-		_singleFieldFixture.indexDocument(RandomTestUtil.randomString());
+		_singleFieldFixture.indexDocument(value);
 	}
 
 	protected String loadAdditionalAnalyzers() throws Exception {
