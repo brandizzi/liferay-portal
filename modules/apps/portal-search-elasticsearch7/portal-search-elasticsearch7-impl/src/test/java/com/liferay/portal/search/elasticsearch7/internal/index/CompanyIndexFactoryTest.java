@@ -21,10 +21,12 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch7.internal.connection.IndexName;
 import com.liferay.portal.search.elasticsearch7.internal.document.SingleFieldFixture;
+import com.liferay.portal.search.elasticsearch7.internal.query.QueryBuilderFactories;
 import com.liferay.portal.search.elasticsearch7.internal.settings.BaseIndexSettingsContributor;
 import com.liferay.portal.search.elasticsearch7.internal.util.ResourceUtil;
 import com.liferay.portal.search.elasticsearch7.settings.IndexSettingsHelper;
 import com.liferay.portal.search.elasticsearch7.settings.TypeMappingsHelper;
+import com.liferay.portal.search.spi.model.index.contributor.IndexContributor;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -76,6 +78,8 @@ public class CompanyIndexFactoryTest {
 			_elasticsearchFixture.getRestHighLevelClient(),
 			new IndexName(_companyIndexFactoryFixture.getIndexName()),
 			LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE);
+
+		_singleFieldFixture.setQueryBuilderFactory(QueryBuilderFactories.MATCH);
 	}
 
 	@Test
@@ -177,6 +181,27 @@ public class CompanyIndexFactoryTest {
 
 		Assert.assertEquals("1", settings.get("index.number_of_replicas"));
 		Assert.assertEquals("2", settings.get("index.number_of_shards"));
+	}
+
+	@Test
+	public void testIndexContributors() throws Exception {
+		addIndexContributor(
+			indexName -> indexOneDocument(
+				"contributedField", "contributed value"));
+
+		createIndices();
+
+		_singleFieldFixture.assertSearch("contributed", "contributed value");
+	}
+
+	@Test
+	public void testIndexContributorsThrowsException() throws Exception {
+		addIndexContributor(
+			indexName -> {
+				throw new RuntimeException();
+			});
+
+		createIndices();
 	}
 
 	@Test
@@ -282,6 +307,10 @@ public class CompanyIndexFactoryTest {
 
 	@Rule
 	public TestName testName = new TestName();
+
+	protected void addIndexContributor(IndexContributor indexContributor) {
+		_companyIndexFactory.addIndexContributor(indexContributor);
+	}
 
 	protected void addIndexSettingsContributor(String mappings) {
 		_companyIndexFactory.addIndexSettingsContributor(
@@ -398,9 +427,13 @@ public class CompanyIndexFactoryTest {
 	}
 
 	protected void indexOneDocument(String field) {
+		indexOneDocument(field, RandomTestUtil.randomString());
+	}
+
+	protected void indexOneDocument(String field, String value) {
 		_singleFieldFixture.setField(field);
 
-		_singleFieldFixture.indexDocument(RandomTestUtil.randomString());
+		_singleFieldFixture.indexDocument(value);
 	}
 
 	protected String loadAdditionalAnalyzers() throws Exception {
