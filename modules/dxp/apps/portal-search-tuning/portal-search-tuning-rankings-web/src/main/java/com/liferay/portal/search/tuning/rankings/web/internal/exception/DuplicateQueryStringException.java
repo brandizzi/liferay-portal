@@ -18,8 +18,4 @@ package com.liferay.portal.search.tuning.rankings.web.internal.exception;
  * @author Kevin Tan
  */
 public class DuplicateQueryStringException extends RuntimeException {
-
-	public DuplicateQueryStringException() {
-	}
-
 }
