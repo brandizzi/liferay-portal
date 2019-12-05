@@ -178,9 +178,8 @@ public class ValidateRankingMVCResourceCommand implements MVCResourceCommand {
 		String index = validateRankingMVCResourceRequest.getIndexName();
 
 		if (Validator.isBlank(index)) {
-			long companyId = portal.getCompanyId(resourceRequest);
-
-			index = indexNameBuilder.getIndexName(companyId);
+			index = indexNameBuilder.getIndexName(
+				portal.getCompanyId(resourceRequest));
 		}
 
 		return index;
