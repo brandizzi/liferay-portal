@@ -169,10 +169,10 @@ public class CompanyIndexFactory implements IndexFactory {
 
 		updateLiferayDocumentType(indexName, liferayDocumentTypeFactory);
 
-		executeIndexContributors(indexName);
+		executeIndexContributorsAfterCreate(indexName);
 	}
 
-	protected void executeIndexContributor(
+	protected void executeIndexContributorAfterCreate(
 		IndexContributor indexContributor, String indexName) {
 
 		try {
@@ -187,9 +187,9 @@ public class CompanyIndexFactory implements IndexFactory {
 		}
 	}
 
-	protected void executeIndexContributors(String indexName) {
+	protected void executeIndexContributorsAfterCreate(String indexName) {
 		for (IndexContributor indexContributor : _indexContributors) {
-			executeIndexContributor(indexContributor, indexName);
+			executeIndexContributorAfterCreate(indexContributor, indexName);
 		}
 	}
 
