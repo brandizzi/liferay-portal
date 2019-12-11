@@ -642,7 +642,7 @@ definition {
 		DragAndDrop.javaScriptDragAndDropToObject(
 			key_assetTitle = "New Site Journal",
 			locator1 = "SearchTuning#RESULT_RANKINGS_RESULT_DRAG_HANDLE",
-			locator2 = "//li[contains(@class,'results-ranking-item-pinned')][3]",
+			locator2 = "//li[contains(@class,'result-ranking-item-pinned')][3]",
 			value1 = "");
 
 		Button.clickSave();
