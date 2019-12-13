@@ -14,12 +14,9 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.index.contributor;
 
-import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
-import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexResponse;
 import com.liferay.portal.search.spi.model.index.contributor.IndexContributor;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetFilterHelper;
-import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexDefinition;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexHelper;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -32,25 +29,17 @@ public class SynonymSetIndexContributor implements IndexContributor {
 
 	@Override
 	public void onAfterCreate(String indexName) {
-		if (isSynonymIndexAvailable()) {
-			_synonymSetFilterHelper.updateFilters(indexName);
+		if (!_synonymSetIndexHelper.isSynonymSetIndexReady(indexName)) {
+			_synonymSetIndexHelper.createSynonymSetIndex(indexName);
 		}
+
+		_synonymSetFilterHelper.updateFilters(indexName);
 	}
-
-	protected boolean isSynonymIndexAvailable() {
-		IndicesExistsIndexRequest indicesExistsIndexRequest =
-			new IndicesExistsIndexRequest(SynonymSetIndexDefinition.INDEX_NAME);
-
-		IndicesExistsIndexResponse indicesExistsIndexResponse =
-			_searchEngineAdapter.execute(indicesExistsIndexRequest);
-
-		return indicesExistsIndexResponse.isExists();
-	}
-
-	@Reference
-	private SearchEngineAdapter _searchEngineAdapter;
 
 	@Reference
 	private SynonymSetFilterHelper _synonymSetFilterHelper;
+
+	@Reference
+	private SynonymSetIndexHelper _synonymSetIndexHelper;
 
 }

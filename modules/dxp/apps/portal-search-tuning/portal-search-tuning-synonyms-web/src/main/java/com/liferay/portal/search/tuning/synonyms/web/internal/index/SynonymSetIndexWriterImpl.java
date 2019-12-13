@@ -29,9 +29,9 @@ import org.osgi.service.component.annotations.Reference;
 public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 
 	@Override
-	public String create(SynonymSet synonymSet) {
+	public String create(String indexName, SynonymSet synonymSet) {
 		IndexDocumentRequest documentRequest = new IndexDocumentRequest(
-			SynonymSetIndexDefinition.INDEX_NAME,
+			_synonymSetIndexHelper.getSynonynSetIndexName(indexName),
 			_synonymSetToDocumentTranslator.translate(synonymSet));
 
 		documentRequest.setRefresh(true);
@@ -43,9 +43,9 @@ public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 	}
 
 	@Override
-	public void remove(String id) {
+	public void remove(String indexName, String id) {
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			SynonymSetIndexDefinition.INDEX_NAME, id);
+			_synonymSetIndexHelper.getSynonynSetIndexName(indexName), id);
 
 		deleteDocumentRequest.setRefresh(true);
 
@@ -53,9 +53,10 @@ public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 	}
 
 	@Override
-	public void update(SynonymSet ranking) {
+	public void update(String indexName, SynonymSet ranking) {
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
-			SynonymSetIndexDefinition.INDEX_NAME, ranking.getId(),
+			_synonymSetIndexHelper.getSynonynSetIndexName(indexName),
+			ranking.getId(),
 			_synonymSetToDocumentTranslator.translate(ranking));
 
 		indexDocumentRequest.setRefresh(true);
@@ -63,21 +64,13 @@ public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 		_searchEngineAdapter.execute(indexDocumentRequest);
 	}
 
-	@Reference(unbind = "-")
-	protected void setSearchEngineAdapter(
-		SearchEngineAdapter searchEngineAdapter) {
-
-		_searchEngineAdapter = searchEngineAdapter;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSynonymSetToDocumentTranslator(
-		SynonymSetToDocumentTranslator synonymSetToDocumentTranslator) {
-
-		_synonymSetToDocumentTranslator = synonymSetToDocumentTranslator;
-	}
-
+	@Reference
 	private SearchEngineAdapter _searchEngineAdapter;
+
+	@Reference
+	private SynonymSetIndexHelper _synonymSetIndexHelper;
+
+	@Reference
 	private SynonymSetToDocumentTranslator _synonymSetToDocumentTranslator;
 
 }

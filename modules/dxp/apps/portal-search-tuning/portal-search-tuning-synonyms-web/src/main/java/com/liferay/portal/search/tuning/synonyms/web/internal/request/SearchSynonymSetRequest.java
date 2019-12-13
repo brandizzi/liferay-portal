@@ -23,13 +23,13 @@ import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 import com.liferay.portal.search.hits.SearchHits;
-import com.liferay.portal.search.query.BooleanQuery;
 import com.liferay.portal.search.query.Queries;
+import com.liferay.portal.search.query.Query;
 import com.liferay.portal.search.sort.Sort;
 import com.liferay.portal.search.sort.SortOrder;
 import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetFields;
-import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexDefinition;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexHelper;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,7 +45,8 @@ public class SearchSynonymSetRequest {
 	public SearchSynonymSetRequest(
 		HttpServletRequest httpServletRequest, String index, Queries queries,
 		Sorts sorts, SearchContainer searchContainer,
-		SearchEngineAdapter searchEngineAdapter) {
+		SearchEngineAdapter searchEngineAdapter,
+		SynonymSetIndexHelper synonymSetIndexHelper) {
 
 		_httpServletRequest = httpServletRequest;
 		_index = index;
@@ -54,13 +55,15 @@ public class SearchSynonymSetRequest {
 		_searchContext = SearchContextFactory.getInstance(httpServletRequest);
 		_searchContainer = searchContainer;
 		_searchEngineAdapter = searchEngineAdapter;
+		_synonymSetIndexHelper = synonymSetIndexHelper;
 	}
 
 	public SearchSynonymSetResponse search() {
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
 
 		searchSearchRequest.setFetchSource(true);
-		searchSearchRequest.setIndexNames(SynonymSetIndexDefinition.INDEX_NAME);
+		searchSearchRequest.setIndexNames(
+			_synonymSetIndexHelper.getSynonynSetIndexName(_index));
 		searchSearchRequest.setQuery(_getQuery());
 		searchSearchRequest.setSize(_searchContainer.getDelta());
 		searchSearchRequest.setSorts(_getSorts());
@@ -80,21 +83,14 @@ public class SearchSynonymSetRequest {
 		return searchRankingResponse;
 	}
 
-	private BooleanQuery _getQuery() {
-		BooleanQuery booleanQuery = _queries.booleanQuery();
-
-		if (!Validator.isBlank(_index)) {
-			booleanQuery.addFilterQueryClauses(_queries.match("index", _index));
-		}
-
+	private Query _getQuery() {
 		String keywords = _searchContext.getKeywords();
 
 		if (!Validator.isBlank(keywords)) {
-			booleanQuery.addMustQueryClauses(
-				_queries.match(SynonymSetFields.SYNONYMS, keywords));
+			return _queries.match(SynonymSetFields.SYNONYMS, keywords);
 		}
 
-		return booleanQuery;
+		return _queries.matchAll();
 	}
 
 	private Collection<Sort> _getSorts() {
@@ -120,5 +116,6 @@ public class SearchSynonymSetRequest {
 	private final SearchContext _searchContext;
 	private final SearchEngineAdapter _searchEngineAdapter;
 	private final Sorts _sorts;
+	private final SynonymSetIndexHelper _synonymSetIndexHelper;
 
 }

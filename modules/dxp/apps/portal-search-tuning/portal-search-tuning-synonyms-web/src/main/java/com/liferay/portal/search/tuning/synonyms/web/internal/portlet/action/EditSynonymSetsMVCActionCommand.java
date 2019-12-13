@@ -51,8 +51,7 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		String indexName = _indexNameBuilder.getIndexName(
-			portal.getCompanyId(actionRequest));
+		String indexName = getIndexName(actionRequest);
 
 		updateSynonymSetIndex(
 			indexName, ParamUtil.getString(actionRequest, "synonymSet"),
@@ -63,13 +62,19 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		sendRedirect(actionRequest, actionResponse);
 	}
 
+	protected String getIndexName(ActionRequest actionRequest) {
+		return _indexNameBuilder.getIndexName(
+			portal.getCompanyId(actionRequest));
+	}
+
 	protected Optional<SynonymSet> getSynonymSetOptional(
 		ActionRequest actionRequest) {
 
 		return Optional.ofNullable(
 			ParamUtil.getString(actionRequest, "synonymSetId", null)
 		).flatMap(
-			_synonymSetIndexReader::fetchOptional
+			id -> _synonymSetIndexReader.fetchOptional(
+				getIndexName(actionRequest), id)
 		);
 	}
 
@@ -80,20 +85,16 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		SynonymSet.SynonymSetBuilder synonymSetBuilder =
 			new SynonymSet.SynonymSetBuilder();
 
-		synonymSetBuilder.index(
-			indexName
-		).synonyms(
-			synonyms
-		);
+		synonymSetBuilder.synonyms(synonyms);
 
 		synonymSetOptional.ifPresent(
-			synonymSet1 -> synonymSetBuilder.id(synonymSet1.getId()));
+			synonymSet -> synonymSetBuilder.id(synonymSet.getId()));
 
 		if (synonymSetOptional.isPresent()) {
-			_synonymSetIndexWriter.update(synonymSetBuilder.build());
+			_synonymSetIndexWriter.update(indexName, synonymSetBuilder.build());
 		}
 		else {
-			_synonymSetIndexWriter.create(synonymSetBuilder.build());
+			_synonymSetIndexWriter.create(indexName, synonymSetBuilder.build());
 		}
 	}
 

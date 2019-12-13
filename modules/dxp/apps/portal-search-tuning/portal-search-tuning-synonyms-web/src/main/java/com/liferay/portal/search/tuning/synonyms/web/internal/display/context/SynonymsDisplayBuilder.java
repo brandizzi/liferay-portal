@@ -32,6 +32,7 @@ import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.DocumentToSynonymSetTranslator;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexHelper;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.request.SearchSynonymSetRequest;
 import com.liferay.portal.search.tuning.synonyms.web.internal.request.SearchSynonymSetResponse;
@@ -62,6 +63,7 @@ public class SynonymsDisplayBuilder {
 		Queries queries, RenderRequest renderRequest,
 		RenderResponse renderResponse, SearchEngineAdapter searchEngineAdapter,
 		Sorts sorts, SynonymIndexer synonymIndexer,
+		SynonymSetIndexHelper synonymSetIndexHelper,
 		SynonymSetIndexReader synonymSetIndexReader) {
 
 		_documentToSynonymSetTranslator = documentToSynonymSetTranslator;
@@ -75,6 +77,7 @@ public class SynonymsDisplayBuilder {
 		_searchEngineAdapter = searchEngineAdapter;
 		_sorts = sorts;
 		_synonymIndexer = synonymIndexer;
+		_synonymSetIndexHelper = synonymSetIndexHelper;
 		_synonymSetIndexReader = synonymSetIndexReader;
 
 		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
@@ -132,7 +135,8 @@ public class SynonymsDisplayBuilder {
 				_httpServletRequest,
 				_indexNameBuilder.getIndexName(
 					_portal.getCompanyId(_renderRequest)),
-				_queries, _sorts, searchContainer, _searchEngineAdapter);
+				_queries, _sorts, searchContainer, _searchEngineAdapter,
+				_synonymSetIndexHelper);
 
 		SearchSynonymSetResponse searchSynonymSetResponse =
 			searchSynonymSetRequest.search();
@@ -286,6 +290,7 @@ public class SynonymsDisplayBuilder {
 	private final SearchEngineAdapter _searchEngineAdapter;
 	private final Sorts _sorts;
 	private final SynonymIndexer _synonymIndexer;
+	private final SynonymSetIndexHelper _synonymSetIndexHelper;
 	private final SynonymSetIndexReader _synonymSetIndexReader;
 	private final ThemeDisplay _themeDisplay;
 

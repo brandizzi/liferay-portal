@@ -17,12 +17,12 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.index;
 /**
  * @author Adam Brandizzi
  */
-public class SynonymSetFields {
+public interface SynonymSetIndexHelper {
 
-	public static final String SYNONYMS = "synonyms";
+	public void createSynonymSetIndex(String suffix);
 
-	public static final String SYNONYMS_KEYWORD = "synonyms.keyword";
+	public String getSynonynSetIndexName(String suffix);
 
-	public static final String UID = "uid";
+	boolean isSynonymSetIndexReady(String suffix);
 
 }

@@ -21,16 +21,11 @@ public class SynonymSet {
 
 	public SynonymSet(SynonymSet synonymSet) {
 		_id = synonymSet._id;
-		_index = synonymSet._index;
 		_synonyms = synonymSet._synonyms;
 	}
 
 	public String getId() {
 		return _id;
-	}
-
-	public String getIndex() {
-		return _index;
 	}
 
 	public String getSynonyms() {
@@ -57,12 +52,6 @@ public class SynonymSet {
 			return this;
 		}
 
-		public SynonymSetBuilder index(String index) {
-			_synonymSet._index = index;
-
-			return this;
-		}
-
 		public SynonymSetBuilder synonyms(String synonyms) {
 			_synonymSet._synonyms = synonyms;
 
@@ -77,7 +66,6 @@ public class SynonymSet {
 	}
 
 	private String _id;
-	private String _index;
 	private String _synonyms;
 
 }

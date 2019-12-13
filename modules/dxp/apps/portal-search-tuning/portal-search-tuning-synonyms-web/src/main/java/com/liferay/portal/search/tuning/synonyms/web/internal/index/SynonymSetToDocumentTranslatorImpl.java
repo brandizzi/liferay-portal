@@ -31,8 +31,6 @@ public class SynonymSetToDocumentTranslatorImpl
 	public Document translate(SynonymSet synonymSet) {
 		return _documentBuilderFactory.builder(
 		).setString(
-			SynonymSetFields.INDEX, synonymSet.getIndex()
-		).setString(
 			SynonymSetFields.SYNONYMS, synonymSet.getSynonyms()
 		).setString(
 			SynonymSetFields.UID, synonymSet.getId()
