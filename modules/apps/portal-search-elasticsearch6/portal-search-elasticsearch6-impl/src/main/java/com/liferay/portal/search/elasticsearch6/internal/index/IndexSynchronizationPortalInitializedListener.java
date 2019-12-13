@@ -45,7 +45,8 @@ public class IndexSynchronizationPortalInitializedListener {
 	@Reference(
 		cardinality = ReferenceCardinality.MULTIPLE,
 		policy = ReferencePolicy.DYNAMIC,
-		policyOption = ReferencePolicyOption.GREEDY
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(" + IndexDefinition.PROPERTY_KEY_CARDINALITY + "=" + IndexDefinition.CARDINALITY_SINGLETON + ")"
 	)
 	public void addIndexDefinition(
 		IndexDefinition indexDefinition, Map<String, Object> properties) {

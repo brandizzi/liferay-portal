@@ -24,6 +24,7 @@ import org.osgi.service.component.annotations.Component;
 @Component(
 	immediate = true,
 	property = {
+		IndexDefinition.PROPERTY_KEY_CARDINALITY + "=" + IndexDefinition.CARDINALITY_COMPANY_INDEX,
 		IndexDefinition.PROPERTY_KEY_INDEX_NAME + "=" + SynonymSetIndexDefinition.INDEX_NAME,
 		IndexDefinition.PROPERTY_KEY_INDEX_SETTINGS_RESOURCE_NAME + "=" + SynonymSetIndexDefinition.INDEX_SETTINGS_RESOURCE_NAME
 	},

@@ -19,6 +19,13 @@ package com.liferay.portal.search.spi.index;
  */
 public interface IndexDefinition {
 
+	public static final String CARDINALITY_COMPANY_INDEX =
+		"cardinality.company.index";
+
+	public static final String CARDINALITY_SINGLETON = "cardinality.singleton";
+
+	public static final String PROPERTY_KEY_CARDINALITY = "cardinality";
+
 	public static final String PROPERTY_KEY_INDEX_NAME = "index.name";
 
 	public static final String PROPERTY_KEY_INDEX_SETTINGS_RESOURCE_NAME =

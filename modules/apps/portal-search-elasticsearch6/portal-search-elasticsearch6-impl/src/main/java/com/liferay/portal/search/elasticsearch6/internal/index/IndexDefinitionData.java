@@ -28,6 +28,8 @@ public class IndexDefinitionData {
 	public IndexDefinitionData(
 		IndexDefinition indexDefinition, Map<String, Object> properties) {
 
+		_cardinality = _getCardinality(
+			properties.get(IndexDefinition.PROPERTY_KEY_CARDINALITY));
 		_index = _getIndexName(
 			properties.get(IndexDefinition.PROPERTY_KEY_INDEX_NAME));
 		_source = _getSource(
@@ -36,12 +38,20 @@ public class IndexDefinitionData {
 				IndexDefinition.PROPERTY_KEY_INDEX_SETTINGS_RESOURCE_NAME));
 	}
 
+	public String getCaridinality() {
+		return _cardinality;
+	}
+
 	public String getIndex() {
 		return _index;
 	}
 
 	public String getSource() {
 		return _source;
+	}
+
+	private static String _getCardinality(Object property) {
+		return String.valueOf(Objects.requireNonNull(property));
 	}
 
 	private static String _getIndexName(Object property) {
@@ -56,6 +66,7 @@ public class IndexDefinitionData {
 		return StringUtil.read(indexDefinition.getClass(), resourceName);
 	}
 
+	private final String _cardinality;
 	private final String _index;
 	private final String _source;
 
