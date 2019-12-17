@@ -20,11 +20,9 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.language.Language;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.hits.SearchHits;
 import com.liferay.portal.search.index.IndexNameBuilder;
@@ -32,11 +30,9 @@ import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.DocumentToSynonymSetTranslator;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
-import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.request.SearchSynonymSetRequest;
 import com.liferay.portal.search.tuning.synonyms.web.internal.request.SearchSynonymSetResponse;
-import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,9 +58,7 @@ public class SynonymsDisplayBuilder {
 		IndexNameBuilder indexNameBuilder, Language language, Portal portal,
 		Queries queries, RenderRequest renderRequest,
 		RenderResponse renderResponse, SearchEngineAdapter searchEngineAdapter,
-		Sorts sorts, SynonymIndexer synonymIndexer,
-		SynonymSetIndexNameBuilder synonymSetIndexNameBuilder,
-		SynonymSetIndexReader synonymSetIndexReader) {
+		Sorts sorts, SynonymSetIndexNameBuilder synonymSetIndexNameBuilder) {
 
 		_documentToSynonymSetTranslator = documentToSynonymSetTranslator;
 		_httpServletRequest = httpServletRequest;
@@ -76,12 +70,7 @@ public class SynonymsDisplayBuilder {
 		_renderResponse = renderResponse;
 		_searchEngineAdapter = searchEngineAdapter;
 		_sorts = sorts;
-		_synonymIndexer = synonymIndexer;
 		_synonymSetIndexNameBuilder = synonymSetIndexNameBuilder;
-		_synonymSetIndexReader = synonymSetIndexReader;
-
-		_themeDisplay = (ThemeDisplay)_httpServletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
 	}
 
 	public SynonymsDisplayContext build() {
@@ -288,9 +277,6 @@ public class SynonymsDisplayBuilder {
 	private final RenderResponse _renderResponse;
 	private final SearchEngineAdapter _searchEngineAdapter;
 	private final Sorts _sorts;
-	private final SynonymIndexer _synonymIndexer;
 	private final SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
-	private final SynonymSetIndexReader _synonymSetIndexReader;
-	private final ThemeDisplay _themeDisplay;
 
 }
