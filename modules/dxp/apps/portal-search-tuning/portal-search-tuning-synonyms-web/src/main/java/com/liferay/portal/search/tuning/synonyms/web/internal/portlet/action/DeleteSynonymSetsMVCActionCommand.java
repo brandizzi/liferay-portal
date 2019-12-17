@@ -16,18 +16,15 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.portlet.action;
 
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
-import com.liferay.portal.search.tuning.synonyms.web.internal.filter.name.SynonymSetFilterNameHolder;
+import com.liferay.portal.search.tuning.synonyms.web.internal.filter.SynonymSetFilterIndexSynchronizer;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
-import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,14 +49,6 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
-	protected void deleteSynonymSetsFromIndex(
-		List<SynonymSet> deletedSynonymSets, String companyIndexName) {
-
-		for (SynonymSet synonymSet : deletedSynonymSets) {
-			_synonymSetIndexWriter.remove(companyIndexName, synonymSet.getId());
-		}
-	}
-
 	@Override
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
@@ -68,52 +57,21 @@ public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		String companyIndexName = _indexNameBuilder.getIndexName(
 			portal.getCompanyId(actionRequest));
 
-		String[] synonymSetIds = ParamUtil.getStringValues(
-			actionRequest, "rowIds");
+		removeSynonymSets(
+			companyIndexName,
+			getDeletedSynonymSets(actionRequest, companyIndexName));
 
-		List<SynonymSet> deletedSynonymSets = getDeletedSynonymSets(
-			companyIndexName, synonymSetIds);
+		_synonymSetFilterIndexSynchronizer.copyIndexToFilters(companyIndexName);
 
-		List<String> deletedSynonyms = getDeletedSynonymsArray(
-			deletedSynonymSets);
-
-		for (String filterName : _synonymSetFilterNameHolder.getFilterNames()) {
-			String[] synonymSets = _synonymIndexer.getSynonymSets(
-				companyIndexName, filterName);
-
-			for (String synonymToBeDeleted : deletedSynonyms) {
-				synonymSets = _removeSynonym(synonymSets, synonymToBeDeleted);
-			}
-
-			_synonymIndexer.updateSynonymSets(
-				companyIndexName, filterName, synonymSets);
-		}
-
-		deleteSynonymSetsFromIndex(deletedSynonymSets, companyIndexName);
-
-		String redirect = ParamUtil.getString(actionRequest, "redirect");
-
-		sendRedirect(actionRequest, actionResponse, redirect);
-	}
-
-	protected List<String> getDeletedSynonymsArray(
-		List<SynonymSet> deletedSynonymSets) {
-
-		Stream<SynonymSet> stream = deletedSynonymSets.stream();
-
-		return stream.map(
-			SynonymSet::getSynonyms
-		).collect(
-			Collectors.toList()
-		);
+		sendRedirect(actionRequest, actionResponse);
 	}
 
 	protected List<SynonymSet> getDeletedSynonymSets(
-		String companyIndexName, String[] synonymSetIds) {
+		ActionRequest actionRequest, String companyIndexName) {
 
-		Stream<String> stream = Arrays.stream(synonymSetIds);
-
-		return stream.map(
+		return Stream.of(
+			ParamUtil.getStringValues(actionRequest, "rowIds")
+		).map(
 			id -> _synonymSetIndexReader.fetchOptional(companyIndexName, id)
 		).filter(
 			Optional::isPresent
@@ -124,27 +82,23 @@ public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		);
 	}
 
+	protected void removeSynonymSets(
+		String companyIndexName, List<SynonymSet> deletedSynonymSets) {
+
+		for (SynonymSet synonymSet : deletedSynonymSets) {
+			_synonymSetIndexWriter.remove(companyIndexName, synonymSet.getId());
+		}
+	}
+
 	@Reference
 	protected Portal portal;
-
-	private String[] _removeSynonym(
-		String[] synonymSets, String synonymToBeDeleted) {
-
-		if (ArrayUtil.contains(synonymSets, synonymToBeDeleted, true)) {
-			synonymSets = ArrayUtil.remove(synonymSets, synonymToBeDeleted);
-		}
-
-		return synonymSets;
-	}
 
 	@Reference
 	private IndexNameBuilder _indexNameBuilder;
 
 	@Reference
-	private SynonymIndexer _synonymIndexer;
-
-	@Reference
-	private SynonymSetFilterNameHolder _synonymSetFilterNameHolder;
+	private SynonymSetFilterIndexSynchronizer
+		_synonymSetFilterIndexSynchronizer;
 
 	@Reference
 	private SynonymSetIndexReader _synonymSetIndexReader;
