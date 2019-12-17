@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.service.CompanyService;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.filter.SynonymSetFilterIndexSynchronizer;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexCreator;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -55,13 +56,17 @@ public class SynonymSetIndexCreationBundleActivator {
 	}
 
 	protected void createSynonymSetIndex(String companyIndexName) {
-		_synonymSetIndexCreator.create(companyIndexName);
+		_synonymSetIndexCreator.create(
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+				companyIndexName));
 
 		_synonymSetFilterIndexSynchronizer.copyFiltersToIndex(companyIndexName);
 	}
 
 	protected boolean hasNoSynonymSetIndex(String companyIndexName) {
-		return !_synonymSetIndexCreator.isExists(companyIndexName);
+		return !_synonymSetIndexCreator.isExists(
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+				companyIndexName));
 	}
 
 	@Reference
@@ -76,5 +81,8 @@ public class SynonymSetIndexCreationBundleActivator {
 
 	@Reference
 	private SynonymSetIndexCreator _synonymSetIndexCreator;
+
+	@Reference
+	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 
 }

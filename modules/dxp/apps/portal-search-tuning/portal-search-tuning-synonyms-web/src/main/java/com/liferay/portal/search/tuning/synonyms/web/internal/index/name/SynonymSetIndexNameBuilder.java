@@ -19,6 +19,6 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.index.name;
  */
 public interface SynonymSetIndexNameBuilder {
 
-	public String getSynonymSetIndexName(String companyIndexName);
+	public SynonymSetIndexName getSynonymSetIndexName(String companyIndexName);
 
 }

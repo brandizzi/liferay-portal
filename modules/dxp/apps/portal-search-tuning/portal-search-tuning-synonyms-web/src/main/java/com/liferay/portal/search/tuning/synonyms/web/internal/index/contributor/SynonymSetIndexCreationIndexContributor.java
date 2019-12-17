@@ -16,6 +16,8 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.index.contributor
 
 import com.liferay.portal.search.spi.model.index.contributor.IndexContributor;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexCreator;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -29,14 +31,21 @@ public class SynonymSetIndexCreationIndexContributor
 
 	@Override
 	public void onAfterCreate(String companyIndexName) {
-		if (_synonymSetIndexCreator.isExists(companyIndexName)) {
+		SynonymSetIndexName synonymSetIndexName =
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+				companyIndexName);
+
+		if (_synonymSetIndexCreator.isExists(synonymSetIndexName)) {
 			return;
 		}
 
-		_synonymSetIndexCreator.create(companyIndexName);
+		_synonymSetIndexCreator.create(synonymSetIndexName);
 	}
 
 	@Reference
 	private SynonymSetIndexCreator _synonymSetIndexCreator;
+
+	@Reference
+	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 
 }

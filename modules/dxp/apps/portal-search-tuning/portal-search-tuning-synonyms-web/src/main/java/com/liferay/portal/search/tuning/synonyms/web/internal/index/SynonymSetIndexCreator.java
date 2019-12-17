@@ -14,13 +14,15 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.index;
 
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
+
 /**
  * @author Adam Brandizzi
  */
 public interface SynonymSetIndexCreator {
 
-	public void create(String companyIndexName);
+	public void create(SynonymSetIndexName synonymSetIndexName);
 
-	public boolean isExists(String companyIndexName);
+	public boolean isExists(SynonymSetIndexName synonymSetIndexName);
 
 }

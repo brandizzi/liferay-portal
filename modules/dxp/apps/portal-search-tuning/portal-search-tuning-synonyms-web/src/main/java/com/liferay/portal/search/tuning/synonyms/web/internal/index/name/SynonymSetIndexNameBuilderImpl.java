@@ -26,11 +26,28 @@ public class SynonymSetIndexNameBuilderImpl
 	implements SynonymSetIndexNameBuilder {
 
 	@Override
-	public String getSynonymSetIndexName(String companyIndexName) {
-		return INDEX_NAME_PREFIX + StringPool.MINUS + companyIndexName;
+	public SynonymSetIndexName getSynonymSetIndexName(String companyIndexName) {
+		return new SynonymSetIndexNameImpl(
+			INDEX_NAME_PREFIX + StringPool.MINUS + companyIndexName);
 	}
 
 	protected static final String INDEX_NAME_PREFIX =
 		"liferay-search-tuning-synonyms";
+
+	private static class SynonymSetIndexNameImpl
+		implements SynonymSetIndexName {
+
+		public SynonymSetIndexNameImpl(String indexName) {
+			_indexName = indexName;
+		}
+
+		@Override
+		public String getIndexName() {
+			return _indexName;
+		}
+
+		private final String _indexName;
+
+	}
 
 }

@@ -18,7 +18,7 @@ import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.document.DeleteDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentResponse;
-import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -30,10 +30,11 @@ import org.osgi.service.component.annotations.Reference;
 public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 
 	@Override
-	public String create(String companyIndexName, SynonymSet synonymSet) {
+	public String create(
+		SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet) {
+
 		IndexDocumentRequest documentRequest = new IndexDocumentRequest(
-			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
-				companyIndexName),
+			synonymSetIndexName.getIndexName(),
 			_synonymSetToDocumentTranslator.translate(synonymSet));
 
 		documentRequest.setRefresh(true);
@@ -45,11 +46,9 @@ public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 	}
 
 	@Override
-	public void remove(String companyIndexName, String id) {
+	public void remove(SynonymSetIndexName synonymSetIndexName, String id) {
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
-				companyIndexName),
-			id);
+			synonymSetIndexName.getIndexName(), id);
 
 		deleteDocumentRequest.setRefresh(true);
 
@@ -57,11 +56,11 @@ public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 	}
 
 	@Override
-	public void update(String companyIndexName, SynonymSet synonymSet) {
+	public void update(
+		SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet) {
+
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
-			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
-				companyIndexName),
-			synonymSet.getId(),
+			synonymSetIndexName.getIndexName(), synonymSet.getId(),
 			_synonymSetToDocumentTranslator.translate(synonymSet));
 
 		indexDocumentRequest.setRefresh(true);
@@ -71,9 +70,6 @@ public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 
 	@Reference
 	private SearchEngineAdapter _searchEngineAdapter;
-
-	@Reference
-	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 
 	@Reference
 	private SynonymSetToDocumentTranslator _synonymSetToDocumentTranslator;
