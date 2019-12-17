@@ -24,6 +24,8 @@ import com.liferay.portal.search.tuning.synonyms.web.internal.filter.SynonymSetF
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
 import java.util.Optional;
 
@@ -54,9 +56,14 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		String companyIndexName = _indexNameBuilder.getIndexName(
 			portal.getCompanyId(actionRequest));
 
+		SynonymSetIndexName synonymSetIndexName =
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+				companyIndexName);
+
 		updateSynonymSetIndex(
-			companyIndexName, ParamUtil.getString(actionRequest, "synonymSet"),
-			getSynonymSetOptional(companyIndexName, actionRequest));
+			synonymSetIndexName,
+			ParamUtil.getString(actionRequest, "synonymSet"),
+			getSynonymSetOptional(synonymSetIndexName, actionRequest));
 
 		_synonymSetFilterIndexSynchronizer.copyIndexToFilters(companyIndexName);
 
@@ -64,17 +71,17 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 	}
 
 	protected Optional<SynonymSet> getSynonymSetOptional(
-		String companyIndexName, ActionRequest actionRequest) {
+		SynonymSetIndexName synonymSetIndexName, ActionRequest actionRequest) {
 
 		return Optional.ofNullable(
 			ParamUtil.getString(actionRequest, "synonymSetId", null)
 		).flatMap(
-			id -> _synonymSetIndexReader.fetchOptional(companyIndexName, id)
+			id -> _synonymSetIndexReader.fetchOptional(synonymSetIndexName, id)
 		);
 	}
 
 	protected void updateSynonymSetIndex(
-		String companyIndexName, String synonyms,
+		SynonymSetIndexName synonymSetIndexName, String synonyms,
 		Optional<SynonymSet> synonymSetOptional) {
 
 		SynonymSet.SynonymSetBuilder synonymSetBuilder =
@@ -87,11 +94,11 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
 		if (synonymSetOptional.isPresent()) {
 			_synonymSetIndexWriter.update(
-				companyIndexName, synonymSetBuilder.build());
+				synonymSetIndexName, synonymSetBuilder.build());
 		}
 		else {
 			_synonymSetIndexWriter.create(
-				companyIndexName, synonymSetBuilder.build());
+				synonymSetIndexName, synonymSetBuilder.build());
 		}
 	}
 
@@ -104,6 +111,9 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 	@Reference
 	private SynonymSetFilterIndexSynchronizer
 		_synonymSetFilterIndexSynchronizer;
+
+	@Reference
+	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 
 	@Reference
 	private SynonymSetIndexReader _synonymSetIndexReader;

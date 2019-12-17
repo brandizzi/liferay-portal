@@ -20,6 +20,7 @@ import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
 import com.liferay.portal.search.tuning.synonyms.web.internal.display.context.EditSynonymSetsDisplayBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
@@ -49,7 +50,8 @@ public class EditSynonymSetsMVCRenderCommand implements MVCRenderCommand {
 		EditSynonymSetsDisplayBuilder editSynonymSetsDisplayBuilder =
 			new EditSynonymSetsDisplayBuilder(
 				_portal.getHttpServletRequest(renderRequest), _indexNameBuilder,
-				_portal, renderRequest, renderResponse, _synonymSetIndexReader);
+				_portal, renderRequest, renderResponse,
+				_synonymSetIndexNameBuilder, _synonymSetIndexReader);
 
 		renderRequest.setAttribute(
 			SynonymsPortletKeys.EDIT_SYNONYM_SET_DISPLAY_CONTEXT,
@@ -63,6 +65,9 @@ public class EditSynonymSetsMVCRenderCommand implements MVCRenderCommand {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 
 	@Reference
 	private SynonymSetIndexReader _synonymSetIndexReader;

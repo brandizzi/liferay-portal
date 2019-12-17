@@ -23,7 +23,7 @@ import com.liferay.portal.search.engine.adapter.document.GetDocumentResponse;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 import com.liferay.portal.search.query.Queries;
-import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,22 +39,20 @@ public class SynonymSetIndexReaderImpl implements SynonymSetIndexReader {
 
 	@Override
 	public Optional<SynonymSet> fetchOptional(
-		String companyIndexName, String id) {
+		SynonymSetIndexName synonymSetIndexName, String id) {
 
 		return _getDocumentOptional(
-			companyIndexName, id
+			synonymSetIndexName, id
 		).map(
 			document -> translate(document, id)
 		);
 	}
 
 	@Override
-	public List<SynonymSet> search(String companyIndexName) {
+	public List<SynonymSet> search(SynonymSetIndexName synonymSetIndexName) {
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
 
-		searchSearchRequest.setIndexNames(
-			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
-				companyIndexName));
+		searchSearchRequest.setIndexNames(synonymSetIndexName.getIndexName());
 
 		SearchSearchResponse searchSearchResponse =
 			_searchEngineAdapter.execute(searchSearchRequest);
@@ -75,16 +73,14 @@ public class SynonymSetIndexReaderImpl implements SynonymSetIndexReader {
 	}
 
 	private Optional<Document> _getDocumentOptional(
-		String companyIndexName, String id) {
+		SynonymSetIndexName synonymSetIndexName, String id) {
 
 		if (Validator.isNull(id)) {
 			return Optional.empty();
 		}
 
 		GetDocumentRequest getDocumentRequest = new GetDocumentRequest(
-			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
-				companyIndexName),
-			id);
+			synonymSetIndexName.getIndexName(), id);
 
 		getDocumentRequest.setFetchSource(true);
 		getDocumentRequest.setFetchSourceInclude(StringPool.STAR);
@@ -107,8 +103,5 @@ public class SynonymSetIndexReaderImpl implements SynonymSetIndexReader {
 
 	@Reference
 	private SearchEngineAdapter _searchEngineAdapter;
-
-	@Reference
-	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 
 }

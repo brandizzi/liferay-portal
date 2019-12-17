@@ -12,21 +12,13 @@
  *
  */
 
-package com.liferay.portal.search.tuning.synonyms.web.internal.index;
-
-import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
+package com.liferay.portal.search.tuning.synonyms.web.internal.index.name;
 
 /**
  * @author Adam Brandizzi
  */
-public interface SynonymSetIndexWriter {
+public interface SynonymSetIndexName {
 
-	public String create(
-		SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet);
-
-	public void remove(SynonymSetIndexName synonymSetIndexName, String uid);
-
-	public void update(
-		SynonymSetIndexName synonymSetIndexName, SynonymSet synonymSet);
+	public String getIndexName();
 
 }

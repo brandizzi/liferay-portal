@@ -30,6 +30,7 @@ import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.DocumentToSynonymSetTranslator;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.request.SearchSynonymSetRequest;
 import com.liferay.portal.search.tuning.synonyms.web.internal.request.SearchSynonymSetResponse;
@@ -121,10 +122,9 @@ public class SynonymsDisplayBuilder {
 
 		SearchSynonymSetRequest searchSynonymSetRequest =
 			new SearchSynonymSetRequest(
-				_indexNameBuilder.getIndexName(
-					_portal.getCompanyId(_renderRequest)),
-				_httpServletRequest, _queries, _sorts, searchContainer,
-				_searchEngineAdapter, _synonymSetIndexNameBuilder);
+				buildSynonymSetIndexName(), _httpServletRequest, _queries,
+				_sorts, searchContainer, _searchEngineAdapter,
+				_synonymSetIndexNameBuilder);
 
 		SearchSynonymSetResponse searchSynonymSetResponse =
 			searchSynonymSetRequest.search();
@@ -212,6 +212,12 @@ public class SynonymsDisplayBuilder {
 					});
 			}
 		};
+	}
+
+	protected SynonymSetIndexName buildSynonymSetIndexName() {
+		return _synonymSetIndexNameBuilder.getSynonymSetIndexName(
+			_indexNameBuilder.getIndexName(
+				_portal.getCompanyId(_renderRequest)));
 	}
 
 	protected CreationMenu getCreationMenu() {
