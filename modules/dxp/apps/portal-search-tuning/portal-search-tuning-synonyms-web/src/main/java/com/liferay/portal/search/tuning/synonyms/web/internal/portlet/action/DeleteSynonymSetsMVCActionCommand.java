@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
+import com.liferay.portal.search.tuning.synonyms.web.internal.filter.name.SynonymSetFilterNameHolder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
@@ -75,7 +76,7 @@ public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		List<String> deletedSynonyms = getDeletedSynonymsArray(
 			deletedSynonymSets);
 
-		for (String filterName : _FILTER_NAMES) {
+		for (String filterName : _synonymSetFilterNameHolder.getFilterNames()) {
 			String[] synonymSets = _synonymIndexer.getSynonymSets(
 				companyId, filterName);
 
@@ -134,15 +135,14 @@ public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		return synonymSets;
 	}
 
-	private static final String[] _FILTER_NAMES = {
-		"liferay_filter_synonym_en", "liferay_filter_synonym_es"
-	};
-
 	@Reference
 	private IndexNameBuilder _indexNameBuilder;
 
 	@Reference
 	private SynonymIndexer _synonymIndexer;
+
+	@Reference
+	private SynonymSetFilterNameHolder _synonymSetFilterNameHolder;
 
 	@Reference
 	private SynonymSetIndexReader _synonymSetIndexReader;
