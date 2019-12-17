@@ -12,15 +12,15 @@
  *
  */
 
-package com.liferay.portal.search.tuning.synonyms.web.internal.index;
+package com.liferay.portal.search.tuning.synonyms.web.internal.filter;
 
 /**
  * @author Adam Brandizzi
  */
-public interface SynonymSetFilterHelper {
+public interface SynonymSetFilterIndexSynchronizer {
 
-	public void updateFilters(long companyId);
+	public void copyFiltersToIndex(String companyIndexName);
 
-	public void updateFilters(String indexName);
+	public void copyIndexToFilters(String companyIndexName);
 
 }
