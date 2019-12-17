@@ -1,0 +1,70 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * The contents of this file are subject to the terms of the Liferay Enterprise
+ * Subscription License ("License"). You may not use this file except in
+ * compliance with the License. You can obtain a copy of the License by
+ * contacting Liferay, Inc. See the License for the specific language governing
+ * permissions and limitations under the License, including but not limited to
+ * distribution rights of the Software.
+ *
+ *
+ *
+ */
+
+package com.liferay.portal.search.tuning.synonyms.web.internal.index;
+
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
+import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexResponse;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
+/**
+ * @author Adam Brandizzi
+ */
+@Component(service = SynonymSetIndexCreator.class)
+public class SynonymSetIndexCreatorImpl implements SynonymSetIndexCreator {
+
+	@Override
+	public void create(String companyIndexName) {
+		CreateIndexRequest createIndexRequest = new CreateIndexRequest(
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+				companyIndexName));
+
+		createIndexRequest.setSource(readIndexSettings());
+
+		_searchEngineAdapter.execute(createIndexRequest);
+	}
+
+	@Override
+	public boolean isExists(String companyIndexName) {
+		IndicesExistsIndexRequest indicesExistsIndexRequest =
+			new IndicesExistsIndexRequest(
+				_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+					companyIndexName));
+
+		IndicesExistsIndexResponse indicesExistsIndexResponse =
+			_searchEngineAdapter.execute(indicesExistsIndexRequest);
+
+		return indicesExistsIndexResponse.isExists();
+	}
+
+	protected String readIndexSettings() {
+		return StringUtil.read(getClass(), INDEX_SETTINGS_RESOURCE_NAME);
+	}
+
+	protected static final String INDEX_SETTINGS_RESOURCE_NAME =
+		"/META-INF/search/liferay-search-tuning-synonyms-index.json";
+
+	@Reference
+	private SearchEngineAdapter _searchEngineAdapter;
+
+	@Reference
+	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
+
+}
