@@ -20,8 +20,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
+import com.liferay.portal.search.tuning.synonyms.web.internal.filter.SynonymSetFilterIndexSynchronizer;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
-import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetFilterHelper;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
 
@@ -58,7 +58,7 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 			companyIndexName, ParamUtil.getString(actionRequest, "synonymSet"),
 			getSynonymSetOptional(companyIndexName, actionRequest));
 
-		_synonymSetFilterHelper.copyIndexToFilters(companyIndexName);
+		_synonymSetFilterIndexSynchronizer.copyIndexToFilters(companyIndexName);
 
 		sendRedirect(actionRequest, actionResponse);
 	}
@@ -102,7 +102,8 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 	private IndexNameBuilder _indexNameBuilder;
 
 	@Reference
-	private SynonymSetFilterHelper _synonymSetFilterHelper;
+	private SynonymSetFilterIndexSynchronizer
+		_synonymSetFilterIndexSynchronizer;
 
 	@Reference
 	private SynonymSetIndexReader _synonymSetIndexReader;
