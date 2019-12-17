@@ -12,17 +12,14 @@
  *
  */
 
-package com.liferay.portal.search.tuning.synonyms.web.internal.index;
+package com.liferay.portal.search.tuning.synonyms.web.internal.filter;
 
 /**
  * @author Adam Brandizzi
  */
-public class SynonymSetFields {
+public interface SynonymSetFilterWriter {
 
-	public static final String SYNONYMS = "synonyms";
-
-	public static final String SYNONYMS_KEYWORD = "synonyms.keyword";
-
-	public static final String UID = "uid";
+	public void updateSynonymSets(
+		String companyIndexName, String filterName, String[] synonymSets);
 
 }

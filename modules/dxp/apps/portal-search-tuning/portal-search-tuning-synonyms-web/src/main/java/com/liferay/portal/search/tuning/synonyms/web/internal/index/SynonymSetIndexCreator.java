@@ -14,15 +14,17 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.index;
 
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
+
 /**
  * @author Adam Brandizzi
  */
-public class SynonymSetFields {
+public interface SynonymSetIndexCreator {
 
-	public static final String SYNONYMS = "synonyms";
+	public void create(SynonymSetIndexName synonymSetIndexName);
 
-	public static final String SYNONYMS_KEYWORD = "synonyms.keyword";
+	public void delete(SynonymSetIndexName synonymSetIndexName);
 
-	public static final String UID = "uid";
+	public boolean isExists(SynonymSetIndexName synonymSetIndexName);
 
 }

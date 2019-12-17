@@ -12,17 +12,15 @@
  *
  */
 
-package com.liferay.portal.search.tuning.synonyms.web.internal.index;
+package com.liferay.portal.search.tuning.synonyms.web.internal.filter;
 
 /**
  * @author Adam Brandizzi
  */
-public class SynonymSetFields {
+public interface SynonymSetFilterIndexSynchronizer {
 
-	public static final String SYNONYMS = "synonyms";
+	public void copyFiltersToIndex(String companyIndexName);
 
-	public static final String SYNONYMS_KEYWORD = "synonyms.keyword";
-
-	public static final String UID = "uid";
+	public void copyIndexToFilters(String companyIndexName);
 
 }
