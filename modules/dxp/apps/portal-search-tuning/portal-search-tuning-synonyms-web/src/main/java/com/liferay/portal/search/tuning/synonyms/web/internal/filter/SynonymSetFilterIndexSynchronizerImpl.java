@@ -19,7 +19,6 @@ import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
-import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -44,8 +43,8 @@ public class SynonymSetFilterIndexSynchronizerImpl
 	}
 
 	@Override
-	public void copyIndexToFilters(String indexName) {
-		updateFilters(indexName, getSynonyms(indexName));
+	public void copyIndexToFilters(String companyIndexName) {
+		updateFilters(companyIndexName, getSynonyms(companyIndexName));
 	}
 
 	protected void addSynonymSetToIndex(
@@ -64,7 +63,7 @@ public class SynonymSetFilterIndexSynchronizerImpl
 		LinkedHashSet<String> synonyms = Stream.of(
 			_synonymSetFilterNameHolder.getFilterNames()
 		).map(
-			filterName -> _synonymIndexer.getSynonymSets(
+			filterName -> _synonymSetFilterReader.getSynonymSets(
 				companyIndexName, filterName)
 		).flatMap(
 			Stream::of
@@ -75,8 +74,9 @@ public class SynonymSetFilterIndexSynchronizerImpl
 		return synonyms.toArray(new String[0]);
 	}
 
-	protected String[] getSynonyms(String indexName) {
-		List<SynonymSet> synonymSets = _synonymSetIndexReader.search(indexName);
+	protected String[] getSynonyms(String companyIndexName) {
+		List<SynonymSet> synonymSets = _synonymSetIndexReader.search(
+			companyIndexName);
 
 		Stream<SynonymSet> stream = synonymSets.stream();
 
@@ -87,17 +87,21 @@ public class SynonymSetFilterIndexSynchronizerImpl
 		);
 	}
 
-	protected void updateFilters(String indexName, String[] synonyms) {
+	protected void updateFilters(String companyIndexName, String[] synonyms) {
 		for (String filterName : _synonymSetFilterNameHolder.getFilterNames()) {
-			_synonymIndexer.updateSynonymSets(indexName, filterName, synonyms);
+			_synonymSetFilterWriter.updateSynonymSets(
+				companyIndexName, filterName, synonyms);
 		}
 	}
 
 	@Reference
-	private SynonymIndexer _synonymIndexer;
+	private SynonymSetFilterNameHolder _synonymSetFilterNameHolder;
 
 	@Reference
-	private SynonymSetFilterNameHolder _synonymSetFilterNameHolder;
+	private SynonymSetFilterReader _synonymSetFilterReader;
+
+	@Reference
+	private SynonymSetFilterWriter _synonymSetFilterWriter;
 
 	@Reference
 	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
