@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +41,7 @@ public class EditSynonymSetsDisplayBuilder {
 		HttpServletRequest httpServletRequest,
 		IndexNameBuilder indexNameBuilder, Portal portal,
 		RenderRequest renderRequest, RenderResponse renderResponse,
+		SynonymSetIndexNameBuilder synonymSetIndexNameBuilder,
 		SynonymSetIndexReader synonymSetIndexReader) {
 
 		_httpServletRequest = httpServletRequest;
@@ -46,6 +49,7 @@ public class EditSynonymSetsDisplayBuilder {
 		_portal = portal;
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
+		_synonymSetIndexNameBuilder = synonymSetIndexNameBuilder;
 		_synonymSetIndexReader = synonymSetIndexReader;
 	}
 
@@ -85,10 +89,13 @@ public class EditSynonymSetsDisplayBuilder {
 	}
 
 	private Optional<SynonymSet> _getSynonymSetOptional(String indexName) {
+		SynonymSetIndexName synonymSetIndexName =
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(indexName);
+
 		return Optional.ofNullable(
 			ParamUtil.getString(_renderRequest, "synonymSetId", null)
 		).flatMap(
-			id -> _synonymSetIndexReader.fetchOptional(indexName, id)
+			id -> _synonymSetIndexReader.fetchOptional(synonymSetIndexName, id)
 		);
 	}
 
@@ -151,6 +158,7 @@ public class EditSynonymSetsDisplayBuilder {
 	private final Portal _portal;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
+	private final SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 	private final SynonymSetIndexReader _synonymSetIndexReader;
 	private Optional<SynonymSet> _synonymSetOptional;
 

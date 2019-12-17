@@ -19,7 +19,7 @@ import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexResponse;
-import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -31,10 +31,9 @@ import org.osgi.service.component.annotations.Reference;
 public class SynonymSetIndexCreatorImpl implements SynonymSetIndexCreator {
 
 	@Override
-	public void create(String companyIndexName) {
+	public void create(SynonymSetIndexName synonymSetIndexName) {
 		CreateIndexRequest createIndexRequest = new CreateIndexRequest(
-			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
-				companyIndexName));
+			synonymSetIndexName.getIndexName());
 
 		createIndexRequest.setSource(readIndexSettings());
 
@@ -42,11 +41,9 @@ public class SynonymSetIndexCreatorImpl implements SynonymSetIndexCreator {
 	}
 
 	@Override
-	public boolean isExists(String companyIndexName) {
+	public boolean isExists(SynonymSetIndexName synonymSetIndexName) {
 		IndicesExistsIndexRequest indicesExistsIndexRequest =
-			new IndicesExistsIndexRequest(
-				_synonymSetIndexNameBuilder.getSynonymSetIndexName(
-					companyIndexName));
+			new IndicesExistsIndexRequest(synonymSetIndexName.getIndexName());
 
 		IndicesExistsIndexResponse indicesExistsIndexResponse =
 			_searchEngineAdapter.execute(indicesExistsIndexRequest);
@@ -63,8 +60,5 @@ public class SynonymSetIndexCreatorImpl implements SynonymSetIndexCreator {
 
 	@Reference
 	private SearchEngineAdapter _searchEngineAdapter;
-
-	@Reference
-	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 
 }

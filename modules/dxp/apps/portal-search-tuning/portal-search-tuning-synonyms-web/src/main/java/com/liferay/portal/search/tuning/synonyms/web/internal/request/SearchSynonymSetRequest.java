@@ -29,6 +29,7 @@ import com.liferay.portal.search.sort.Sort;
 import com.liferay.portal.search.sort.SortOrder;
 import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetFields;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
 import java.util.Arrays;
@@ -43,12 +44,13 @@ import javax.servlet.http.HttpServletRequest;
 public class SearchSynonymSetRequest {
 
 	public SearchSynonymSetRequest(
-		String companyIndexName, HttpServletRequest httpServletRequest,
-		Queries queries, Sorts sorts, SearchContainer searchContainer,
+		SynonymSetIndexName synonymSetIndexName,
+		HttpServletRequest httpServletRequest, Queries queries, Sorts sorts,
+		SearchContainer searchContainer,
 		SearchEngineAdapter searchEngineAdapter,
 		SynonymSetIndexNameBuilder synonymSetIndexNameBuilder) {
 
-		_companyIndexName = companyIndexName;
+		_synonymSetIndexName = synonymSetIndexName;
 		_httpServletRequest = httpServletRequest;
 		_queries = queries;
 		_sorts = sorts;
@@ -62,9 +64,7 @@ public class SearchSynonymSetRequest {
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
 
 		searchSearchRequest.setFetchSource(true);
-		searchSearchRequest.setIndexNames(
-			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
-				_companyIndexName));
+		searchSearchRequest.setIndexNames(_synonymSetIndexName.getIndexName());
 		searchSearchRequest.setQuery(_getQuery());
 		searchSearchRequest.setSize(_searchContainer.getDelta());
 		searchSearchRequest.setSorts(_getSorts());
@@ -110,13 +110,13 @@ public class SearchSynonymSetRequest {
 		return Arrays.asList(_sorts.field(orderByCol, sortOrder));
 	}
 
-	private final String _companyIndexName;
 	private final HttpServletRequest _httpServletRequest;
 	private final Queries _queries;
 	private final SearchContainer _searchContainer;
 	private final SearchContext _searchContext;
 	private final SearchEngineAdapter _searchEngineAdapter;
 	private final Sorts _sorts;
+	private final SynonymSetIndexName _synonymSetIndexName;
 	private final SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 
 }

@@ -18,6 +18,7 @@ import com.liferay.portal.search.tuning.synonyms.web.internal.filter.name.Synony
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
 import java.util.LinkedHashSet;
@@ -37,18 +38,26 @@ public class SynonymSetFilterIndexSynchronizerImpl
 
 	@Override
 	public void copyFiltersToIndex(String companyIndexName) {
-		for (String synonyms : getAllSynonyms(companyIndexName)) {
-			addSynonymSetToIndex(companyIndexName, synonyms);
+		SynonymSetIndexName synonymSetIndexName =
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+				companyIndexName);
+
+		for (String synonyms : getSynonymsFromFilters(companyIndexName)) {
+			addSynonymSetToIndex(synonymSetIndexName, synonyms);
 		}
 	}
 
 	@Override
 	public void copyIndexToFilters(String companyIndexName) {
-		updateFilters(companyIndexName, getSynonyms(companyIndexName));
+		updateFilters(
+			companyIndexName,
+			getSynonymFromIndex(
+				_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+					companyIndexName)));
 	}
 
 	protected void addSynonymSetToIndex(
-		String companyIndexName, String synonyms) {
+		SynonymSetIndexName synonymSetIndexName, String synonyms) {
 
 		SynonymSet.SynonymSetBuilder synonymSetBuilder =
 			new SynonymSet.SynonymSetBuilder();
@@ -56,10 +65,25 @@ public class SynonymSetFilterIndexSynchronizerImpl
 		synonymSetBuilder.synonyms(synonyms);
 
 		_synonymSetIndexWriter.create(
-			companyIndexName, synonymSetBuilder.build());
+			synonymSetIndexName, synonymSetBuilder.build());
 	}
 
-	protected String[] getAllSynonyms(String companyIndexName) {
+	protected String[] getSynonymFromIndex(
+		SynonymSetIndexName synonymSetIndexName) {
+
+		List<SynonymSet> synonymSets = _synonymSetIndexReader.search(
+			synonymSetIndexName);
+
+		Stream<SynonymSet> stream = synonymSets.stream();
+
+		return stream.map(
+			SynonymSet::getSynonyms
+		).toArray(
+			String[]::new
+		);
+	}
+
+	protected String[] getSynonymsFromFilters(String companyIndexName) {
 		LinkedHashSet<String> synonyms = Stream.of(
 			_synonymSetFilterNameHolder.getFilterNames()
 		).map(
@@ -72,19 +96,6 @@ public class SynonymSetFilterIndexSynchronizerImpl
 		);
 
 		return synonyms.toArray(new String[0]);
-	}
-
-	protected String[] getSynonyms(String companyIndexName) {
-		List<SynonymSet> synonymSets = _synonymSetIndexReader.search(
-			companyIndexName);
-
-		Stream<SynonymSet> stream = synonymSets.stream();
-
-		return stream.map(
-			SynonymSet::getSynonyms
-		).toArray(
-			String[]::new
-		);
 	}
 
 	protected void updateFilters(String companyIndexName, String[] synonyms) {
