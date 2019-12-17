@@ -18,12 +18,14 @@ import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
+import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
 import com.liferay.portal.search.tuning.synonyms.web.internal.display.context.SynonymsDisplayBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.DocumentToSynonymSetTranslator;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
 
 import java.io.IOException;
@@ -69,10 +71,10 @@ public class SynonymsPortlet extends MVCPortlet {
 		SynonymsDisplayBuilder synonymsDisplayBuilder =
 			new SynonymsDisplayBuilder(
 				_documentToSynonymSetTranslator,
-				_portal.getHttpServletRequest(renderRequest), _language,
-				_portal, _queries, renderRequest, renderResponse,
+				_portal.getHttpServletRequest(renderRequest), _indexNameBuilder,
+				_language, _portal, _queries, renderRequest, renderResponse,
 				_searchEngineAdapter, _sorts, _synonymIndexer,
-				_synonymSetIndexReader);
+				_synonymSetIndexNameBuilder, _synonymSetIndexReader);
 
 		renderRequest.setAttribute(
 			SynonymsPortletKeys.SYNONYMS_DISPLAY_CONTEXT,
@@ -83,6 +85,9 @@ public class SynonymsPortlet extends MVCPortlet {
 
 	@Reference
 	private DocumentToSynonymSetTranslator _documentToSynonymSetTranslator;
+
+	@Reference
+	private IndexNameBuilder _indexNameBuilder;
 
 	@Reference
 	private Language _language;
@@ -101,6 +106,9 @@ public class SynonymsPortlet extends MVCPortlet {
 
 	@Reference
 	private SynonymIndexer _synonymIndexer;
+
+	@Reference
+	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 
 	@Reference
 	private SynonymSetIndexReader _synonymSetIndexReader;

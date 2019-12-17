@@ -19,10 +19,10 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.index;
  */
 public interface SynonymSetIndexWriter {
 
-	public String create(SynonymSet synonymSet);
+	public String create(String companyIndexName, SynonymSet synonymSet);
 
-	public void remove(String uid);
+	public void remove(String companyIndexName, String uid);
 
-	public void update(SynonymSet synonymSetq);
+	public void update(String companyIndexName, SynonymSet synonymSet);
 
 }

@@ -22,8 +22,9 @@ import java.util.Optional;
  */
 public interface SynonymSetIndexReader {
 
-	public Optional<SynonymSet> fetchOptional(String id);
+	public Optional<SynonymSet> fetchOptional(
+		String companyIndexName, String id);
 
-	public List<SynonymSet> searchByIndexName(String indexName);
+	public List<SynonymSet> search(String companyIndexName);
 
 }
