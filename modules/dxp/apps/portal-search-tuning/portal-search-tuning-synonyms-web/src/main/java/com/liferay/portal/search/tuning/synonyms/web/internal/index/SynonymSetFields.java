@@ -19,8 +19,6 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.index;
  */
 public class SynonymSetFields {
 
-	public static final String INDEX = "index";
-
 	public static final String SYNONYMS = "synonyms";
 
 	public static final String SYNONYMS_KEYWORD = "synonyms.keyword";
