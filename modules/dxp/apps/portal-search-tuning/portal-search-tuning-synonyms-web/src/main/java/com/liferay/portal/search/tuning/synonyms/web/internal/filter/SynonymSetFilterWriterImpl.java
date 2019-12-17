@@ -12,21 +12,14 @@
  *
  */
 
-package com.liferay.portal.search.tuning.synonyms.web.internal.synonym;
+package com.liferay.portal.search.tuning.synonyms.web.internal.filter;
 
-import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactory;
-import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.index.CloseIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.GetIndexIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.GetIndexIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.OpenIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.UpdateIndexSettingsIndexRequest;
-import com.liferay.portal.search.index.IndexNameBuilder;
-
-import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -34,56 +27,18 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Adam Brandizzi
  */
-@Component(immediate = true, service = SynonymIndexer.class)
-public class SynonymIndexerImpl implements SynonymIndexer {
-
-	@Override
-	public String[] getSynonymSets(long companyId, String filterName) {
-		return getSynonymSets(
-			indexNameBuilder.getIndexName(companyId), filterName);
-	}
-
-	@Override
-	public String[] getSynonymSets(String indexName, String filterName) {
-		GetIndexIndexRequest getIndexIndexRequest = new GetIndexIndexRequest(
-			indexName);
-
-		GetIndexIndexResponse getIndexIndexResponse =
-			searchEngineAdapter.execute(getIndexIndexRequest);
-
-		Map<String, String> settings = getIndexIndexResponse.getSettings();
-
-		JSONObject jsonObject;
-
-		try {
-			jsonObject = jsonFactory.createJSONObject(settings.get(indexName));
-		}
-		catch (JSONException jsone) {
-			throw new RuntimeException(jsone);
-		}
-
-		return JSONUtil.toStringArray(
-			jsonObject.getJSONArray(
-				"index.analysis.filter." + filterName + ".synonyms"));
-	}
+@Component(immediate = true, service = SynonymSetFilterWriter.class)
+public class SynonymSetFilterWriterImpl implements SynonymSetFilterWriter {
 
 	@Override
 	public void updateSynonymSets(
-		long companyId, String filterName, String[] synonymSets) {
+		String companyIndexName, String filterName, String[] synonymSets) {
 
-		updateSynonymSets(
-			indexNameBuilder.getIndexName(companyId), filterName, synonymSets);
-	}
-
-	@Override
-	public void updateSynonymSets(
-		String indexName, String filterName, String[] synonymSets) {
-
-		closeIndex(indexName);
+		closeIndex(companyIndexName);
 
 		try {
 			UpdateIndexSettingsIndexRequest updateIndexSettingsIndexRequest =
-				new UpdateIndexSettingsIndexRequest(indexName);
+				new UpdateIndexSettingsIndexRequest(companyIndexName);
 
 			String settings = buildSettings(filterName, synonymSets);
 
@@ -92,7 +47,7 @@ public class SynonymIndexerImpl implements SynonymIndexer {
 			searchEngineAdapter.execute(updateIndexSettingsIndexRequest);
 		}
 		finally {
-			openIndex(indexName);
+			openIndex(companyIndexName);
 		}
 	}
 
@@ -124,9 +79,6 @@ public class SynonymIndexerImpl implements SynonymIndexer {
 
 		searchEngineAdapter.execute(openIndexRequest);
 	}
-
-	@Reference
-	protected IndexNameBuilder indexNameBuilder;
 
 	@Reference
 	protected JSONFactory jsonFactory;
