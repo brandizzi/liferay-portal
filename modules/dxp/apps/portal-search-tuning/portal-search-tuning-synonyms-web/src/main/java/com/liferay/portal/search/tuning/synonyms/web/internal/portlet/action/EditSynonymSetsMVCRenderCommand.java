@@ -48,8 +48,8 @@ public class EditSynonymSetsMVCRenderCommand implements MVCRenderCommand {
 
 		EditSynonymSetsDisplayBuilder editSynonymSetsDisplayBuilder =
 			new EditSynonymSetsDisplayBuilder(
-				_portal.getHttpServletRequest(renderRequest), renderRequest,
-				renderResponse, _synonymSetIndexReader);
+				_portal.getHttpServletRequest(renderRequest), _indexNameBuilder,
+				_portal, renderRequest, renderResponse, _synonymSetIndexReader);
 
 		renderRequest.setAttribute(
 			SynonymsPortletKeys.EDIT_SYNONYM_SET_DISPLAY_CONTEXT,

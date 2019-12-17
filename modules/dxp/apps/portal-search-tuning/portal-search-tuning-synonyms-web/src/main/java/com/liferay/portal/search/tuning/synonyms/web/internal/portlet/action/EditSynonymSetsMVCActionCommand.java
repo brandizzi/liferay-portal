@@ -51,49 +51,47 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		String indexName = _indexNameBuilder.getIndexName(
+		String companyIndexName = _indexNameBuilder.getIndexName(
 			portal.getCompanyId(actionRequest));
 
 		updateSynonymSetIndex(
-			indexName, ParamUtil.getString(actionRequest, "synonymSet"),
-			getSynonymSetOptional(actionRequest));
+			companyIndexName, ParamUtil.getString(actionRequest, "synonymSet"),
+			getSynonymSetOptional(companyIndexName, actionRequest));
 
-		_synonymSetFilterHelper.updateFilters(indexName);
+		_synonymSetFilterHelper.copyIndexToFilters(companyIndexName);
 
 		sendRedirect(actionRequest, actionResponse);
 	}
 
 	protected Optional<SynonymSet> getSynonymSetOptional(
-		ActionRequest actionRequest) {
+		String companyIndexName, ActionRequest actionRequest) {
 
 		return Optional.ofNullable(
 			ParamUtil.getString(actionRequest, "synonymSetId", null)
 		).flatMap(
-			_synonymSetIndexReader::fetchOptional
+			id -> _synonymSetIndexReader.fetchOptional(companyIndexName, id)
 		);
 	}
 
 	protected void updateSynonymSetIndex(
-		String indexName, String synonyms,
+		String companyIndexName, String synonyms,
 		Optional<SynonymSet> synonymSetOptional) {
 
 		SynonymSet.SynonymSetBuilder synonymSetBuilder =
 			new SynonymSet.SynonymSetBuilder();
 
-		synonymSetBuilder.index(
-			indexName
-		).synonyms(
-			synonyms
-		);
+		synonymSetBuilder.synonyms(synonyms);
 
 		synonymSetOptional.ifPresent(
-			synonymSet1 -> synonymSetBuilder.id(synonymSet1.getId()));
+			synonymSet -> synonymSetBuilder.id(synonymSet.getId()));
 
 		if (synonymSetOptional.isPresent()) {
-			_synonymSetIndexWriter.update(synonymSetBuilder.build());
+			_synonymSetIndexWriter.update(
+				companyIndexName, synonymSetBuilder.build());
 		}
 		else {
-			_synonymSetIndexWriter.create(synonymSetBuilder.build());
+			_synonymSetIndexWriter.create(
+				companyIndexName, synonymSetBuilder.build());
 		}
 	}
 

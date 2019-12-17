@@ -53,10 +53,10 @@ import org.osgi.service.component.annotations.Reference;
 public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
 	protected void deleteSynonymSetsFromIndex(
-		List<SynonymSet> deletedSynonymSets, String indexName) {
+		List<SynonymSet> deletedSynonymSets, String companyIndexName) {
 
 		for (SynonymSet synonymSet : deletedSynonymSets) {
-			_synonymSetIndexWriter.remove(synonymSet.getId());
+			_synonymSetIndexWriter.remove(companyIndexName, synonymSet.getId());
 		}
 	}
 
@@ -65,31 +65,31 @@ public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long companyId = portal.getCompanyId(actionRequest);
+		String companyIndexName = _indexNameBuilder.getIndexName(
+			portal.getCompanyId(actionRequest));
 
 		String[] synonymSetIds = ParamUtil.getStringValues(
 			actionRequest, "rowIds");
 
 		List<SynonymSet> deletedSynonymSets = getDeletedSynonymSets(
-			synonymSetIds);
+			companyIndexName, synonymSetIds);
 
 		List<String> deletedSynonyms = getDeletedSynonymsArray(
 			deletedSynonymSets);
 
 		for (String filterName : _synonymSetFilterNameHolder.getFilterNames()) {
 			String[] synonymSets = _synonymIndexer.getSynonymSets(
-				companyId, filterName);
+				companyIndexName, filterName);
 
 			for (String synonymToBeDeleted : deletedSynonyms) {
 				synonymSets = _removeSynonym(synonymSets, synonymToBeDeleted);
 			}
 
 			_synonymIndexer.updateSynonymSets(
-				companyId, filterName, synonymSets);
+				companyIndexName, filterName, synonymSets);
 		}
 
-		deleteSynonymSetsFromIndex(
-			deletedSynonymSets, _indexNameBuilder.getIndexName(companyId));
+		deleteSynonymSetsFromIndex(deletedSynonymSets, companyIndexName);
 
 		String redirect = ParamUtil.getString(actionRequest, "redirect");
 
@@ -108,11 +108,13 @@ public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		);
 	}
 
-	protected List<SynonymSet> getDeletedSynonymSets(String[] synonymSetIds) {
+	protected List<SynonymSet> getDeletedSynonymSets(
+		String companyIndexName, String[] synonymSetIds) {
+
 		Stream<String> stream = Arrays.stream(synonymSetIds);
 
 		return stream.map(
-			_synonymSetIndexReader::fetchOptional
+			id -> _synonymSetIndexReader.fetchOptional(companyIndexName, id)
 		).filter(
 			Optional::isPresent
 		).map(

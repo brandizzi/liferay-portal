@@ -18,6 +18,7 @@ import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.document.DeleteDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentResponse;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -29,9 +30,10 @@ import org.osgi.service.component.annotations.Reference;
 public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 
 	@Override
-	public String create(SynonymSet synonymSet) {
+	public String create(String companyIndexName, SynonymSet synonymSet) {
 		IndexDocumentRequest documentRequest = new IndexDocumentRequest(
-			SynonymSetIndexDefinition.INDEX_NAME,
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+				companyIndexName),
 			_synonymSetToDocumentTranslator.translate(synonymSet));
 
 		documentRequest.setRefresh(true);
@@ -43,9 +45,11 @@ public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 	}
 
 	@Override
-	public void remove(String id) {
+	public void remove(String companyIndexName, String id) {
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
-			SynonymSetIndexDefinition.INDEX_NAME, id);
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+				companyIndexName),
+			id);
 
 		deleteDocumentRequest.setRefresh(true);
 
@@ -53,31 +57,25 @@ public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 	}
 
 	@Override
-	public void update(SynonymSet ranking) {
+	public void update(String companyIndexName, SynonymSet synonymSet) {
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
-			SynonymSetIndexDefinition.INDEX_NAME, ranking.getId(),
-			_synonymSetToDocumentTranslator.translate(ranking));
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+				companyIndexName),
+			synonymSet.getId(),
+			_synonymSetToDocumentTranslator.translate(synonymSet));
 
 		indexDocumentRequest.setRefresh(true);
 
 		_searchEngineAdapter.execute(indexDocumentRequest);
 	}
 
-	@Reference(unbind = "-")
-	protected void setSearchEngineAdapter(
-		SearchEngineAdapter searchEngineAdapter) {
-
-		_searchEngineAdapter = searchEngineAdapter;
-	}
-
-	@Reference(unbind = "-")
-	protected void setSynonymSetToDocumentTranslator(
-		SynonymSetToDocumentTranslator synonymSetToDocumentTranslator) {
-
-		_synonymSetToDocumentTranslator = synonymSetToDocumentTranslator;
-	}
-
+	@Reference
 	private SearchEngineAdapter _searchEngineAdapter;
+
+	@Reference
+	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
+
+	@Reference
 	private SynonymSetToDocumentTranslator _synonymSetToDocumentTranslator;
 
 }
