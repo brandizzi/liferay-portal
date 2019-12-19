@@ -87,6 +87,8 @@ public class CompanyIndexFactory implements IndexFactory {
 			return;
 		}
 
+		executeIndexContributorsBeforeRemove(indexName);
+
 		DeleteIndexRequestBuilder deleteIndexRequestBuilder =
 			indicesAdminClient.prepareDelete(indexName);
 
@@ -182,7 +184,22 @@ public class CompanyIndexFactory implements IndexFactory {
 			_log.error(
 				StringBundler.concat(
 					"Unable to apply contributor ", indexContributor,
-					"to index ", indexName),
+					" when creating index ", indexName),
+				t);
+		}
+	}
+
+	protected void executeIndexContributorBeforeRemove(
+		IndexContributor indexContributor, String indexName) {
+
+		try {
+			indexContributor.onBeforeRemove(indexName);
+		}
+		catch (Throwable t) {
+			_log.error(
+				StringBundler.concat(
+					"Unable to apply contributor ", indexContributor,
+					" when removing index ", indexName),
 				t);
 		}
 	}
@@ -190,6 +207,12 @@ public class CompanyIndexFactory implements IndexFactory {
 	protected void executeIndexContributorsAfterCreate(String indexName) {
 		for (IndexContributor indexContributor : _indexContributors) {
 			executeIndexContributorAfterCreate(indexContributor, indexName);
+		}
+	}
+
+	protected void executeIndexContributorsBeforeRemove(String indexName) {
+		for (IndexContributor indexContributor : _indexContributors) {
+			executeIndexContributorBeforeRemove(indexContributor, indexName);
 		}
 	}
 
