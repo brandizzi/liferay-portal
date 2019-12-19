@@ -42,6 +42,19 @@ public class SynonymSetIndexCreationIndexContributor
 		_synonymSetIndexCreator.create(synonymSetIndexName);
 	}
 
+	@Override
+	public void onBeforeRemove(String companyIndexName) {
+		SynonymSetIndexName synonymSetIndexName =
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+				companyIndexName);
+
+		if (!_synonymSetIndexCreator.isExists(synonymSetIndexName)) {
+			return;
+		}
+
+		_synonymSetIndexCreator.delete(synonymSetIndexName);
+	}
+
 	@Reference
 	private SynonymSetIndexCreator _synonymSetIndexCreator;
 

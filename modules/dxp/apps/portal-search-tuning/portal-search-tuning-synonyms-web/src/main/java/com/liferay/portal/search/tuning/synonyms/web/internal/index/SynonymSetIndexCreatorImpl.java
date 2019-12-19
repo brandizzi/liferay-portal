@@ -17,6 +17,7 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.index;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexResponse;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
@@ -38,6 +39,14 @@ public class SynonymSetIndexCreatorImpl implements SynonymSetIndexCreator {
 		createIndexRequest.setSource(readIndexSettings());
 
 		_searchEngineAdapter.execute(createIndexRequest);
+	}
+
+	@Override
+	public void delete(SynonymSetIndexName synonymSetIndexName) {
+		DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(
+			synonymSetIndexName.getIndexName());
+
+		_searchEngineAdapter.execute(deleteIndexRequest);
 	}
 
 	@Override
