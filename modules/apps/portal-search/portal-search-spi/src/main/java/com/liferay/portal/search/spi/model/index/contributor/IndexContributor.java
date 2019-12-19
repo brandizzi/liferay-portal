@@ -19,6 +19,10 @@ package com.liferay.portal.search.spi.model.index.contributor;
  */
 public interface IndexContributor {
 
-	public void onAfterCreate(String indexName);
+	public default void onAfterCreate(String indexName) {
+	}
+
+	public default void onBeforeRemove(String indexName) {
+	}
 
 }
