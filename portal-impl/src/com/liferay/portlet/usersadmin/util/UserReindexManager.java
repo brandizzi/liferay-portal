@@ -100,8 +100,8 @@ public class UserReindexManager {
 					if (_log.isDebugEnabled()) {
 						_log.debug(
 							StringBundler.concat(
-								"Ignoring indexer request", i,
-								" due to flag set in another thread ",
+								"Ignoring indexer request ", i,
+								" due to flag set in another thread: ",
 								userIndexerRequest));
 					}
 
