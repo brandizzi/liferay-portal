@@ -33,8 +33,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequestBuilder;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.action.admin.indices.get.GetIndexResponse;
 import org.elasticsearch.client.AdminClient;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.cluster.metadata.MappingMetaData;
 import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.settings.Settings;
@@ -180,20 +183,48 @@ public class CompanyIndexFactoryTest {
 
 	@Test
 	public void testIndexContributors() throws Exception {
+		CompanyIndexFactoryFixture companyIndexFactoryFixture =
+			new CompanyIndexFactoryFixture(_elasticsearchFixture, "other");
+
 		addIndexContributor(
-			indexName -> indexOneDocument(
-				"contributedField", "contributed value"));
+			new IndexContributor() {
+
+				@Override
+				public void onAfterCreate(String indexName) {
+					companyIndexFactoryFixture.createIndices();
+				}
+
+				@Override
+				public void onBeforeRemove(String indexName) {
+					companyIndexFactoryFixture.deleteIndices();
+				}
+
+			});
 
 		createIndices();
 
-		_singleFieldFixture.assertSearch("contributed", "contributed value");
+		assertHasIndex(companyIndexFactoryFixture.getIndexName());
+
+		deleteIndices();
+
+		assertNoIndex(companyIndexFactoryFixture.getIndexName());
 	}
 
 	@Test
 	public void testIndexContributorsThrowsException() throws Exception {
 		addIndexContributor(
-			indexName -> {
-				throw new RuntimeException();
+			new IndexContributor() {
+
+				@Override
+				public void onAfterCreate(String indexName) {
+					throw new RuntimeException();
+				}
+
+				@Override
+				public void onBeforeRemove(String indexName) {
+					throw new RuntimeException();
+				}
+
 			});
 
 		createIndices();
@@ -365,6 +396,11 @@ public class CompanyIndexFactoryTest {
 			_elasticsearchFixture.getIndicesAdminClient());
 	}
 
+	protected void assertHasIndex(String indexName) {
+		Assert.assertTrue(
+			"Index " + indexName + " does not exist", hasIndex(indexName));
+	}
+
 	protected void assertIndicesExist(String... indexNames) {
 		GetIndexResponse getIndexResponse = _elasticsearchFixture.getIndex(
 			_companyIndexFactoryFixture.getIndexName());
@@ -386,6 +422,11 @@ public class CompanyIndexFactoryTest {
 		assertAnalyzer(field, null);
 	}
 
+	protected void assertNoIndex(String indexName) {
+		Assert.assertFalse(
+			"Index " + indexName + " exists", hasIndex(indexName));
+	}
+
 	protected void assertType(String field, String type) throws Exception {
 		FieldMappingAssert.assertType(
 			type, field, LiferayTypeMappingsConstants.LIFERAY_DOCUMENT_TYPE,
@@ -393,10 +434,22 @@ public class CompanyIndexFactoryTest {
 			_elasticsearchFixture.getIndicesAdminClient());
 	}
 
-	protected void createIndices() throws Exception {
+	protected void createIndex(long companyId) {
 		AdminClient adminClient = _elasticsearchFixture.getAdminClient();
 
-		_companyIndexFactory.createIndices(
+		_companyIndexFactory.createIndices(adminClient, companyId);
+	}
+
+	protected void createIndices() throws Exception {
+		long companyId = RandomTestUtil.randomLong();
+
+		createIndex(companyId);
+	}
+
+	protected void deleteIndices() {
+		AdminClient adminClient = _elasticsearchFixture.getAdminClient();
+
+		_companyIndexFactory.deleteIndices(
 			adminClient, RandomTestUtil.randomLong());
 	}
 
@@ -410,6 +463,20 @@ public class CompanyIndexFactoryTest {
 			getIndexResponse.getSettings();
 
 		return immutableOpenMap.get(name);
+	}
+
+	protected boolean hasIndex(String indexName) {
+		AdminClient adminClient = _elasticsearchFixture.getAdminClient();
+
+		IndicesAdminClient indicesAdminClient = adminClient.indices();
+
+		IndicesExistsRequestBuilder indicesExistsRequestBuilder =
+			indicesAdminClient.prepareExists(indexName);
+
+		IndicesExistsResponse indicesExistsResponse =
+			indicesExistsRequestBuilder.get();
+
+		return indicesExistsResponse.isExists();
 	}
 
 	protected void indexOneDocument(String field) {
