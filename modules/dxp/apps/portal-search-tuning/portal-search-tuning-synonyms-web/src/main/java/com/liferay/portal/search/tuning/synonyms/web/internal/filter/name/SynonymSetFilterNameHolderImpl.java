@@ -12,15 +12,23 @@
  *
  */
 
-package com.liferay.portal.search.tuning.synonyms.web.internal.index;
+package com.liferay.portal.search.tuning.synonyms.web.internal.filter.name;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Adam Brandizzi
  */
-public interface SynonymSetFilterHelper {
+@Component(service = SynonymSetFilterNameHolder.class)
+public class SynonymSetFilterNameHolderImpl
+	implements SynonymSetFilterNameHolder {
 
-	public void updateFilters(long companyId);
+	public String[] getFilterNames() {
+		return _FILTER_NAMES;
+	}
 
-	public void updateFilters(String indexName);
+	private static final String[] _FILTER_NAMES = {
+		"liferay_filter_synonym_en", "liferay_filter_synonym_es"
+	};
 
 }
