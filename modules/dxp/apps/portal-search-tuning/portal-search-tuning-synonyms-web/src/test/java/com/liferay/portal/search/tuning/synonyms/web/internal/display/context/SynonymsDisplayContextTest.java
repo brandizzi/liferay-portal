@@ -20,7 +20,13 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.search.tuning.synonyms.web.internal.synonym.SynonymIndexer;
+import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
+import com.liferay.portal.search.index.IndexNameBuilder;
+import com.liferay.portal.search.query.Queries;
+import com.liferay.portal.search.sort.Sorts;
+import com.liferay.portal.search.tuning.synonyms.web.internal.filter.SynonymSetFilterReader;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.DocumentToSynonymSetTranslator;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
 import javax.portlet.ActionURL;
 import javax.portlet.RenderRequest;
@@ -47,8 +53,8 @@ public class SynonymsDisplayContextTest {
 
 	public void mockSynonymSets(String... synonymSets) {
 		Mockito.when(
-			_synonymIndexer.getSynonymSets(
-				Matchers.anyLong(), Matchers.anyString())
+			_synonymSetFilterReader.getSynonymSets(
+				Matchers.anyString(), Matchers.anyString())
 		).thenReturn(
 			synonymSets
 		);
@@ -91,9 +97,10 @@ public class SynonymsDisplayContextTest {
 
 		SynonymsDisplayBuilder synonymsDisplayBuilder =
 			new SynonymsDisplayBuilder(
-				null, _httpServletRequest, _language, _portal, null,
-				_renderRequest, _renderResponse, null, null, _synonymIndexer,
-				null);
+				_documentToSynonymSetTranslator, _httpServletRequest,
+				_indexNameBuilder, _language, _portal, _queries, _renderRequest,
+				_renderResponse, _searchEngineAdapter, _sorts,
+				_synonymSetIndexNameBuilder);
 
 		SynonymsDisplayContext synonymsDisplayContext =
 			synonymsDisplayBuilder.build();
@@ -107,9 +114,10 @@ public class SynonymsDisplayContextTest {
 
 		SynonymsDisplayBuilder synonymsDisplayBuilder =
 			new SynonymsDisplayBuilder(
-				null, _httpServletRequest, _language, _portal, null,
-				_renderRequest, _renderResponse, null, null, _synonymIndexer,
-				null);
+				_documentToSynonymSetTranslator, _httpServletRequest,
+				_indexNameBuilder, _language, _portal, _queries, _renderRequest,
+				_renderResponse, _searchEngineAdapter, _sorts,
+				_synonymSetIndexNameBuilder);
 
 		SynonymsDisplayContext synonymsDisplayContext =
 			synonymsDisplayBuilder.build();
@@ -121,7 +129,13 @@ public class SynonymsDisplayContextTest {
 	private ActionURL _actionURL;
 
 	@Mock
+	private DocumentToSynonymSetTranslator _documentToSynonymSetTranslator;
+
+	@Mock
 	private HttpServletRequest _httpServletRequest;
+
+	@Mock
+	private IndexNameBuilder _indexNameBuilder;
 
 	@Mock
 	private Language _language;
@@ -133,6 +147,9 @@ public class SynonymsDisplayContextTest {
 	private Props _props;
 
 	@Mock
+	private Queries _queries;
+
+	@Mock
 	private RenderRequest _renderRequest;
 
 	@Mock
@@ -142,7 +159,16 @@ public class SynonymsDisplayContextTest {
 	private RenderURL _renderURL;
 
 	@Mock
-	private SynonymIndexer _synonymIndexer;
+	private SearchEngineAdapter _searchEngineAdapter;
+
+	@Mock
+	private Sorts _sorts;
+
+	@Mock
+	private SynonymSetFilterReader _synonymSetFilterReader;
+
+	@Mock
+	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 
 	@Mock
 	private ThemeDisplay _themeDisplay;
