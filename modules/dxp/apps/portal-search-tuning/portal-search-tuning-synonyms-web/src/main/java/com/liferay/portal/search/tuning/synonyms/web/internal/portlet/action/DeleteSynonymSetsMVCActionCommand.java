@@ -18,11 +18,14 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
-import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetFilterHelper;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
+import com.liferay.portal.search.tuning.synonyms.web.internal.synchronizer.IndexToFilterSynchronizer;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,21 +56,29 @@ public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		removeSynonymSets(getDeletedSynonymSets(actionRequest));
-
-		_synonymSetFilterHelper.updateFilters(
+		String companyIndexName = _indexNameBuilder.getIndexName(
 			_portal.getCompanyId(actionRequest));
+
+		SynonymSetIndexName synonymSetIndexName =
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
+				companyIndexName);
+
+		removeSynonymSets(
+			synonymSetIndexName,
+			getDeletedSynonymSets(actionRequest, synonymSetIndexName));
+
+		_indexToFilterSynchronizer.copyToFilter(companyIndexName);
 
 		sendRedirect(actionRequest, actionResponse);
 	}
 
 	protected List<SynonymSet> getDeletedSynonymSets(
-		ActionRequest actionRequest) {
+		ActionRequest actionRequest, SynonymSetIndexName synonymSetIndexName) {
 
 		return Stream.of(
 			ParamUtil.getStringValues(actionRequest, "rowIds")
 		).map(
-			_synonymSetIndexReader::fetchOptional
+			id -> _synonymSetIndexReader.fetchOptional(synonymSetIndexName, id)
 		).filter(
 			Optional::isPresent
 		).map(
@@ -77,17 +88,26 @@ public class DeleteSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		);
 	}
 
-	protected void removeSynonymSets(List<SynonymSet> synonymSets) {
+	protected void removeSynonymSets(
+		SynonymSetIndexName synonymSetIndexName, List<SynonymSet> synonymSets) {
+
 		for (SynonymSet synonymSet : synonymSets) {
-			_synonymSetIndexWriter.remove(synonymSet.getId());
+			_synonymSetIndexWriter.remove(
+				synonymSetIndexName, synonymSet.getId());
 		}
 	}
+
+	@Reference
+	private IndexNameBuilder _indexNameBuilder;
+
+	@Reference
+	private IndexToFilterSynchronizer _indexToFilterSynchronizer;
 
 	@Reference
 	private Portal _portal;
 
 	@Reference
-	private SynonymSetFilterHelper _synonymSetFilterHelper;
+	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 
 	@Reference
 	private SynonymSetIndexReader _synonymSetIndexReader;
