@@ -12,21 +12,13 @@
  *
  */
 
-package com.liferay.portal.search.tuning.synonyms.web.internal.synonym;
+package com.liferay.portal.search.tuning.synonyms.web.internal.filter;
 
 /**
  * @author Adam Brandizzi
  */
-public interface SynonymIndexer {
+public interface SynonymSetFilterReader {
 
-	public String[] getSynonymSets(long companyId, String filterName);
-
-	public String[] getSynonymSets(String indexName, String filterName);
-
-	public void updateSynonymSets(
-		long companyId, String filterName, String[] synonymSets);
-
-	public void updateSynonymSets(
-		String indexName, String filterName, String[] synonymSets);
+	public String[] getSynonymSets(String companyIndexName, String filterName);
 
 }
