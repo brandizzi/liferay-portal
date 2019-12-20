@@ -127,7 +127,7 @@ import com.liferay.portal.theme.ThemeLoader;
 import com.liferay.portal.theme.ThemeLoaderFactory;
 import com.liferay.portal.util.PropsUtil;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.usersadmin.util.UserReindexManager;
+import com.liferay.portlet.usersadmin.reindexer.UserReindexerUtil;
 import com.liferay.util.dao.orm.CustomSQLUtil;
 
 import java.io.File;
@@ -4654,7 +4654,7 @@ public class GroupLocalServiceImpl extends GroupLocalServiceBaseImpl {
 	protected void reindex(long companyId, long[] userIds)
 		throws PortalException {
 
-		UserReindexManager.INSTANCE.reindex(userIds);
+		UserReindexerUtil.reindex(userIds);
 	}
 
 	protected void reindexUsersInOrganization(long organizationId)
