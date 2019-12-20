@@ -17,8 +17,12 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.display.context;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
 import java.util.Map;
 import java.util.Optional;
@@ -34,13 +38,18 @@ import javax.servlet.http.HttpServletRequest;
 public class EditSynonymSetsDisplayBuilder {
 
 	public EditSynonymSetsDisplayBuilder(
-		HttpServletRequest httpServletRequest, RenderRequest renderRequest,
-		RenderResponse renderResponse,
+		HttpServletRequest httpServletRequest,
+		IndexNameBuilder indexNameBuilder, Portal portal,
+		RenderRequest renderRequest, RenderResponse renderResponse,
+		SynonymSetIndexNameBuilder synonymSetIndexNameBuilder,
 		SynonymSetIndexReader synonymSetIndexReader) {
 
 		_httpServletRequest = httpServletRequest;
+		_indexNameBuilder = indexNameBuilder;
+		_portal = portal;
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
+		_synonymSetIndexNameBuilder = synonymSetIndexNameBuilder;
 		_synonymSetIndexReader = synonymSetIndexReader;
 	}
 
@@ -48,7 +57,9 @@ public class EditSynonymSetsDisplayBuilder {
 		EditSynonymSetsDisplayContext editSynonymSetsDisplayContext =
 			new EditSynonymSetsDisplayContext();
 
-		_synonymSetOptional = _getSynonymSetOptional();
+		_synonymSetOptional = _getSynonymSetOptional(
+			_indexNameBuilder.getIndexName(
+				_portal.getCompanyId(_renderRequest)));
 
 		_setBackURL(editSynonymSetsDisplayContext);
 		_setData(editSynonymSetsDisplayContext);
@@ -77,11 +88,14 @@ public class EditSynonymSetsDisplayBuilder {
 		return ParamUtil.getString(_httpServletRequest, "redirect");
 	}
 
-	private Optional<SynonymSet> _getSynonymSetOptional() {
+	private Optional<SynonymSet> _getSynonymSetOptional(String indexName) {
+		SynonymSetIndexName synonymSetIndexName =
+			_synonymSetIndexNameBuilder.getSynonymSetIndexName(indexName);
+
 		return Optional.ofNullable(
 			ParamUtil.getString(_renderRequest, "synonymSetId", null)
 		).flatMap(
-			_synonymSetIndexReader::fetchOptional
+			id -> _synonymSetIndexReader.fetchOptional(synonymSetIndexName, id)
 		);
 	}
 
@@ -140,8 +154,11 @@ public class EditSynonymSetsDisplayBuilder {
 	}
 
 	private final HttpServletRequest _httpServletRequest;
+	private final IndexNameBuilder _indexNameBuilder;
+	private final Portal _portal;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
+	private final SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 	private final SynonymSetIndexReader _synonymSetIndexReader;
 	private Optional<SynonymSet> _synonymSetOptional;
 
