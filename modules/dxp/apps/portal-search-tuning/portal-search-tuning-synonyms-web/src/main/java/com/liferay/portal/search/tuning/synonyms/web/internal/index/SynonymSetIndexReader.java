@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.tuning.synonyms.web.internal.index;
 
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +24,9 @@ import java.util.Optional;
  */
 public interface SynonymSetIndexReader {
 
-	public Optional<SynonymSet> fetchOptional(String id);
+	public Optional<SynonymSet> fetchOptional(
+		SynonymSetIndexName synonymSetIndexName, String id);
 
-	public List<SynonymSet> searchByIndexName(String indexName);
+	public List<SynonymSet> search(SynonymSetIndexName synonymSetIndexName);
 
 }
