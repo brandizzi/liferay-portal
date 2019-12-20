@@ -152,7 +152,7 @@ import com.liferay.portal.security.pwd.RegExpToolkit;
 import com.liferay.portal.service.base.UserLocalServiceBaseImpl;
 import com.liferay.portal.util.PrefsPropsUtil;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.usersadmin.util.UserReindexManager;
+import com.liferay.portlet.usersadmin.reindexer.UserReindexerUtil;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
 import com.liferay.registry.dependency.ServiceDependencyListener;
@@ -6127,19 +6127,19 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	}
 
 	protected void reindex(final List<User> users) throws SearchException {
-		UserReindexManager.INSTANCE.reindex(users);
+		UserReindexerUtil.reindex(users);
 	}
 
 	protected void reindex(long userId) throws SearchException {
-		UserReindexManager.INSTANCE.reindex(userId);
+		UserReindexerUtil.reindex(userId);
 	}
 
 	protected void reindex(long[] userIds) throws SearchException {
-		UserReindexManager.INSTANCE.reindex(userIds);
+		UserReindexerUtil.reindex(userIds);
 	}
 
 	protected void reindex(final User user) throws SearchException {
-		UserReindexManager.INSTANCE.reindex(user);
+		UserReindexerUtil.reindex(user);
 	}
 
 	protected User resetFailedLoginAttempts(User user) {
