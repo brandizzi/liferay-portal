@@ -62,7 +62,7 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.service.base.UserGroupLocalServiceBaseImpl;
 import com.liferay.portal.service.persistence.constants.UserGroupFinderConstants;
 import com.liferay.portal.util.PropsValues;
-import com.liferay.portlet.usersadmin.util.UserReindexManager;
+import com.liferay.portlet.usersadmin.reindexer.UserReindexerUtil;
 import com.liferay.users.admin.kernel.util.UsersAdminUtil;
 
 import java.io.File;
@@ -889,7 +889,7 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 
 		userPersistence.setUserGroups(userId, userGroupIds);
 
-		UserReindexManager.INSTANCE.reindex(userId);
+		UserReindexerUtil.reindex(userId);
 	}
 
 	/**
@@ -1203,7 +1203,7 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 	protected void reindex(long companyId, long[] userIds)
 		throws PortalException {
 
-		UserReindexManager.INSTANCE.reindex(userIds);
+		UserReindexerUtil.reindex(userIds);
 	}
 
 	protected void reindexUsers(List<UserGroup> userGroups)
