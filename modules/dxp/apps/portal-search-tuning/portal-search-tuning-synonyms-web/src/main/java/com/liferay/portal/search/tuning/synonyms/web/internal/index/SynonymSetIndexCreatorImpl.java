@@ -60,6 +60,13 @@ public class SynonymSetIndexCreatorImpl implements SynonymSetIndexCreator {
 		return indicesExistsIndexResponse.isExists();
 	}
 
+	@Reference(unbind = "-")
+	public void setSearchEngineAdapter(
+		SearchEngineAdapter searchEngineAdapter) {
+
+		_searchEngineAdapter = searchEngineAdapter;
+	}
+
 	protected String readIndexSettings() {
 		return StringUtil.read(getClass(), INDEX_SETTINGS_RESOURCE_NAME);
 	}
@@ -67,7 +74,6 @@ public class SynonymSetIndexCreatorImpl implements SynonymSetIndexCreator {
 	protected static final String INDEX_SETTINGS_RESOURCE_NAME =
 		"/META-INF/search/liferay-search-tuning-synonyms-index.json";
 
-	@Reference
 	private SearchEngineAdapter _searchEngineAdapter;
 
 }
