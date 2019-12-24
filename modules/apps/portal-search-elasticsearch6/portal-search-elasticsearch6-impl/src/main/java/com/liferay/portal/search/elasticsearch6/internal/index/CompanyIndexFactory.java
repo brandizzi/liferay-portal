@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch6.configuration.ElasticsearchConfiguration;
+import com.liferay.portal.search.elasticsearch6.internal.index.contributor.IndexContributorReceiver;
 import com.liferay.portal.search.elasticsearch6.internal.settings.SettingsBuilder;
 import com.liferay.portal.search.elasticsearch6.internal.util.LogUtil;
 import com.liferay.portal.search.elasticsearch6.internal.util.ResourceUtil;
@@ -60,9 +61,16 @@ import org.osgi.service.component.annotations.ReferencePolicyOption;
  */
 @Component(
 	configurationPid = "com.liferay.portal.search.elasticsearch6.configuration.ElasticsearchConfiguration",
-	immediate = true, service = IndexFactory.class
+	immediate = true,
+	service = {IndexContributorReceiver.class, IndexFactory.class}
 )
-public class CompanyIndexFactory implements IndexFactory {
+public class CompanyIndexFactory
+	implements IndexContributorReceiver, IndexFactory {
+
+	@Override
+	public void addIndexContributor(IndexContributor indexContributor) {
+		_indexContributors.add(indexContributor);
+	}
 
 	@Override
 	public void createIndices(AdminClient adminClient, long companyId) {
@@ -97,6 +105,11 @@ public class CompanyIndexFactory implements IndexFactory {
 		LogUtil.logActionResponse(_log, actionResponse);
 	}
 
+	@Override
+	public void removeIndexContributor(IndexContributor indexContributor) {
+		_indexContributors.remove(indexContributor);
+	}
+
 	@Activate
 	@Modified
 	protected void activate(Map<String, Object> properties) {
@@ -114,15 +127,6 @@ public class CompanyIndexFactory implements IndexFactory {
 			elasticsearchConfiguration.indexNumberOfShards());
 		setOverrideTypeMappings(
 			elasticsearchConfiguration.overrideTypeMappings());
-	}
-
-	@Reference(
-		cardinality = ReferenceCardinality.MULTIPLE,
-		policy = ReferencePolicy.DYNAMIC,
-		policyOption = ReferencePolicyOption.GREEDY
-	)
-	protected void addIndexContributor(IndexContributor indexContributor) {
-		_indexContributors.add(indexContributor);
 	}
 
 	@Reference(
@@ -304,10 +308,6 @@ public class CompanyIndexFactory implements IndexFactory {
 			indexSettingsContributor.contribute(
 				indexName, liferayDocumentTypeFactory);
 		}
-	}
-
-	protected void removeIndexContributor(IndexContributor indexContributor) {
-		_indexContributors.remove(indexContributor);
 	}
 
 	protected void removeIndexSettingsContributor(

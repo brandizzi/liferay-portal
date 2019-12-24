@@ -36,8 +36,6 @@ public class DocumentToSynonymSetTranslatorImpl
 		return builder(
 		).id(
 			id
-		).index(
-			document.getString("index")
 		).synonyms(
 			document.getString(SynonymSetFields.SYNONYMS)
 		).build();
