@@ -72,13 +72,13 @@ for (AssetRendererFactory<?> assetRendererFactory : assetEntriesSearchFacet.getA
 		form.addEventListener('submit', function(event) {
 			event.preventDefault();
 
-			Liferay.Util.postForm(form, {
-				data: {
-					<%= assetEntriesSearchFacet.getClassName() + "assetTypes" %>: Liferay.Util.listSelect(
-						currentAssetTypes
-					)
-				}
-			});
+			var data = {};
+
+			data[
+				'<%= assetEntriesSearchFacet.getClassName() + "assetTypes" %>'
+			] = Liferay.Util.listSelect(currentAssetTypes);
+
+			Liferay.Util.postForm(form, {data: data});
 		});
 	}
 </script>
