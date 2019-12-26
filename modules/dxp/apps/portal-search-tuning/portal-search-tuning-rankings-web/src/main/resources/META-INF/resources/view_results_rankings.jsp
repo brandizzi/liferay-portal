@@ -24,10 +24,10 @@ taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.portal.kernel.util.Constants" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
-page import="com.liferay.portal.search.tuning.rankings.web.internal.constants.ResultRankingsConstants" %><%@
-page import="com.liferay.portal.search.tuning.rankings.web.internal.constants.ResultRankingsPortletKeys" %><%@
-page import="com.liferay.portal.search.tuning.rankings.web.internal.display.context.RankingEntryDisplayContext" %><%@
-page import="com.liferay.portal.search.tuning.rankings.web.internal.display.context.RankingPortletDisplayContext" %>
+page import="com.liferay.portal.search.tuning.synonyms.RankingEntryDisplayContext" %><%@
+page import="com.liferay.portal.search.tuning.synonyms.RankingPortletDisplayContext" %><%@
+page import="com.liferay.portal.search.tuning.synonyms.ResultRankingsConstants" %><%@
+page import="com.liferay.portal.search.tuning.synonyms.ResultRankingsPortletKeys" %>
 
 <liferay-frontend:defineObjects />
 

@@ -1,0 +1,10 @@
+Bundle-Name: Liferay Portal Search Tuning Synonyms API
+Bundle-SymbolicName: com.liferay.portal.search.tuning.synonyms.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.portal.search.tuning.web.synonyms,\
+	com.liferay.portal.search.tuning.web.synonyms.document,\
+	com.liferay.portal.search.tuning.web.synonyms.filter,\
+	com.liferay.portal.search.tuning.web.synonyms.filter.name,\
+	com.liferay.portal.search.tuning.web.synonyms.index,\
+	com.liferay.portal.search.tuning.web.synonyms.index.name

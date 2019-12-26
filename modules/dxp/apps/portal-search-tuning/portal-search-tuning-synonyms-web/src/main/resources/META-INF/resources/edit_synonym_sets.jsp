@@ -21,8 +21,8 @@ taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
 taglib uri="http://liferay.com/tld/react" prefix="react" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %>
 
-<%@ page import="com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys" %><%@
-page import="com.liferay.portal.search.tuning.synonyms.web.internal.display.context.EditSynonymSetsDisplayContext" %>
+<%@ page import="com.liferay.portal.search.tuning.synonyms.EditSynonymSetsDisplayContext" %><%@
+page import="com.liferay.portal.search.tuning.synonyms.SynonymsPortletKeys" %>
 
 <liferay-frontend:defineObjects />
 

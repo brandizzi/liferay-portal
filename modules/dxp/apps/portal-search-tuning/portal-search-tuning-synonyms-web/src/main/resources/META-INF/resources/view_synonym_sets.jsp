@@ -23,8 +23,8 @@ taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
 <%@ page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
-page import="com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys" %><%@
-page import="com.liferay.portal.search.tuning.synonyms.web.internal.display.context.SynonymsDisplayContext" %>
+page import="com.liferay.portal.search.tuning.synonyms.SynonymsDisplayContext" %><%@
+page import="com.liferay.portal.search.tuning.synonyms.SynonymsPortletKeys" %>
 
 <liferay-frontend:defineObjects />
 
