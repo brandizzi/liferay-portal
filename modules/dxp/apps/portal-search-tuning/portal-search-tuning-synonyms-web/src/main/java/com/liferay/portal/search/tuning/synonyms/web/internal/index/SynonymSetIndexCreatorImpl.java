@@ -18,8 +18,6 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexResponse;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
 
 import org.osgi.service.component.annotations.Component;
@@ -47,17 +45,6 @@ public class SynonymSetIndexCreatorImpl implements SynonymSetIndexCreator {
 			synonymSetIndexName.getIndexName());
 
 		_searchEngineAdapter.execute(deleteIndexRequest);
-	}
-
-	@Override
-	public boolean isExists(SynonymSetIndexName synonymSetIndexName) {
-		IndicesExistsIndexRequest indicesExistsIndexRequest =
-			new IndicesExistsIndexRequest(synonymSetIndexName.getIndexName());
-
-		IndicesExistsIndexResponse indicesExistsIndexResponse =
-			_searchEngineAdapter.execute(indicesExistsIndexRequest);
-
-		return indicesExistsIndexResponse.isExists();
 	}
 
 	protected String readIndexSettings() {

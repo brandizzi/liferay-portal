@@ -92,6 +92,10 @@ public class EditSynonymSetsDisplayBuilder {
 		SynonymSetIndexName synonymSetIndexName =
 			_synonymSetIndexNameBuilder.getSynonymSetIndexName(indexName);
 
+		if (!_synonymSetIndexReader.isExists(synonymSetIndexName)) {
+			return Optional.empty();
+		}
+
 		return Optional.ofNullable(
 			ParamUtil.getString(_renderRequest, "synonymSetId", null)
 		).flatMap(
