@@ -30,7 +30,6 @@ import com.liferay.portal.search.sort.SortOrder;
 import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetFields;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
-import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,8 +46,7 @@ public class SearchSynonymSetRequest {
 		SynonymSetIndexName synonymSetIndexName,
 		HttpServletRequest httpServletRequest, Queries queries, Sorts sorts,
 		SearchContainer searchContainer,
-		SearchEngineAdapter searchEngineAdapter,
-		SynonymSetIndexNameBuilder synonymSetIndexNameBuilder) {
+		SearchEngineAdapter searchEngineAdapter) {
 
 		_synonymSetIndexName = synonymSetIndexName;
 		_httpServletRequest = httpServletRequest;
@@ -57,7 +55,6 @@ public class SearchSynonymSetRequest {
 		_searchContext = SearchContextFactory.getInstance(httpServletRequest);
 		_searchContainer = searchContainer;
 		_searchEngineAdapter = searchEngineAdapter;
-		_synonymSetIndexNameBuilder = synonymSetIndexNameBuilder;
 	}
 
 	public SearchSynonymSetResponse search() {
@@ -117,6 +114,5 @@ public class SearchSynonymSetRequest {
 	private final SearchEngineAdapter _searchEngineAdapter;
 	private final Sorts _sorts;
 	private final SynonymSetIndexName _synonymSetIndexName;
-	private final SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
 
 }

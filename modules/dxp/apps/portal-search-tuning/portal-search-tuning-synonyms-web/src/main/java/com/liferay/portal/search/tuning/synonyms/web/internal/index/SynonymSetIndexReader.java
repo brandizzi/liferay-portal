@@ -27,6 +27,8 @@ public interface SynonymSetIndexReader {
 	public Optional<SynonymSet> fetchOptional(
 		SynonymSetIndexName synonymSetIndexName, String id);
 
+	public boolean isExists(SynonymSetIndexName synonymSetIndexName);
+
 	public List<SynonymSet> search(SynonymSetIndexName synonymSetIndexName);
 
 }
