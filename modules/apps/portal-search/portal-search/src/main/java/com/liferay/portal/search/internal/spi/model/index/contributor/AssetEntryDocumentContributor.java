@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.internal.spi.model.index.contributor;
 
-import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetEntry;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.asset.kernel.service.AssetEntryLocalService;
@@ -25,6 +24,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocalizationUtil;
+import com.liferay.portal.search.internal.AssetRendererFactoryLookup;
 import com.liferay.view.count.service.ViewCountEntryLocalService;
 
 import java.util.Date;
@@ -43,7 +43,7 @@ public class AssetEntryDocumentContributor implements DocumentContributor {
 		String className = document.get(Field.ENTRY_CLASS_NAME);
 
 		AssetRendererFactory<?> assetRendererFactory =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(
+			_assetRendererFactoryLookup.getAssetRendererFactoryByClassName(
 				className);
 
 		if ((assetRendererFactory == null) ||
@@ -103,6 +103,9 @@ public class AssetEntryDocumentContributor implements DocumentContributor {
 
 	@Reference
 	private AssetEntryLocalService _assetEntryLocalService;
+
+	@Reference
+	private AssetRendererFactoryLookup _assetRendererFactoryLookup;
 
 	@Reference
 	private ClassNameLocalService _classNameLocalService;
