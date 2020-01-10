@@ -30,11 +30,13 @@ import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.DocumentToSynonymSetTranslator;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.request.SearchSynonymSetRequest;
 import com.liferay.portal.search.tuning.synonyms.web.internal.request.SearchSynonymSetResponse;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -59,7 +61,8 @@ public class SynonymsDisplayBuilder {
 		IndexNameBuilder indexNameBuilder, Language language, Portal portal,
 		Queries queries, RenderRequest renderRequest,
 		RenderResponse renderResponse, SearchEngineAdapter searchEngineAdapter,
-		Sorts sorts, SynonymSetIndexNameBuilder synonymSetIndexNameBuilder) {
+		Sorts sorts, SynonymSetIndexReader synonymSetIndexReader,
+		SynonymSetIndexNameBuilder synonymSetIndexNameBuilder) {
 
 		_documentToSynonymSetTranslator = documentToSynonymSetTranslator;
 		_httpServletRequest = httpServletRequest;
@@ -71,6 +74,7 @@ public class SynonymsDisplayBuilder {
 		_renderResponse = renderResponse;
 		_searchEngineAdapter = searchEngineAdapter;
 		_sorts = sorts;
+		_synonymSetIndexReader = synonymSetIndexReader;
 		_synonymSetIndexNameBuilder = synonymSetIndexNameBuilder;
 	}
 
@@ -120,21 +124,28 @@ public class SynonymsDisplayBuilder {
 		searchContainer.setRowChecker(
 			new EmptyOnClickRowChecker(_renderResponse));
 
-		SearchSynonymSetRequest searchSynonymSetRequest =
-			new SearchSynonymSetRequest(
-				buildSynonymSetIndexName(), _httpServletRequest, _queries,
-				_sorts, searchContainer, _searchEngineAdapter,
-				_synonymSetIndexNameBuilder);
+		SynonymSetIndexName synonymSetIndexName = buildSynonymSetIndexName();
 
-		SearchSynonymSetResponse searchSynonymSetResponse =
-			searchSynonymSetRequest.search();
+		if (_synonymSetIndexReader.isExists(synonymSetIndexName)) {
+			SearchSynonymSetRequest searchSynonymSetRequest =
+				new SearchSynonymSetRequest(
+					synonymSetIndexName, _httpServletRequest, _queries, _sorts,
+					searchContainer, _searchEngineAdapter);
 
-		searchContainer.setResults(
-			buildSynonymSetDisplayContexts(
-				searchSynonymSetResponse.getSearchHits()));
+			SearchSynonymSetResponse searchSynonymSetResponse =
+				searchSynonymSetRequest.search();
+
+			searchContainer.setResults(
+				buildSynonymSetDisplayContexts(
+					searchSynonymSetResponse.getSearchHits()));
+			searchContainer.setTotal(searchSynonymSetResponse.getTotalHits());
+		}
+		else {
+			searchContainer.setResults(Collections.emptyList());
+			searchContainer.setTotal(0);
+		}
 
 		searchContainer.setSearch(true);
-		searchContainer.setTotal(searchSynonymSetResponse.getTotalHits());
 
 		return searchContainer;
 	}
@@ -284,5 +295,6 @@ public class SynonymsDisplayBuilder {
 	private final SearchEngineAdapter _searchEngineAdapter;
 	private final Sorts _sorts;
 	private final SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
+	private final SynonymSetIndexReader _synonymSetIndexReader;
 
 }
