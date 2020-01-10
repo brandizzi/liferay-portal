@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSet;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexCreator;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexWriter;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
@@ -48,6 +49,14 @@ import org.osgi.service.component.annotations.Reference;
 )
 public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
+	protected void createSynonymSetIndex(
+		SynonymSetIndexName synonymSetIndexName) {
+
+		if (!_synonymSetIndexReader.isExists(synonymSetIndexName)) {
+			_synonymSetIndexCreator.create(synonymSetIndexName);
+		}
+	}
+
 	@Override
 	protected void doProcessAction(
 			ActionRequest actionRequest, ActionResponse actionResponse)
@@ -59,6 +68,8 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 		SynonymSetIndexName synonymSetIndexName =
 			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
 				companyIndexName);
+
+		createSynonymSetIndex(synonymSetIndexName);
 
 		updateSynonymSetIndex(
 			synonymSetIndexName,
@@ -110,6 +121,9 @@ public class EditSynonymSetsMVCActionCommand extends BaseMVCActionCommand {
 
 	@Reference
 	private IndexToFilterSynchronizer _indexToFilterSynchronizer;
+
+	@Reference
+	private SynonymSetIndexCreator _synonymSetIndexCreator;
 
 	@Reference
 	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
