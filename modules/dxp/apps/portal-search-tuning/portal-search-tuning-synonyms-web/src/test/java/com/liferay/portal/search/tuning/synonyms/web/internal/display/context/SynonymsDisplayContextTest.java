@@ -26,7 +26,6 @@ import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.synonyms.web.internal.filter.SynonymSetFilterReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.DocumentToSynonymSetTranslator;
-import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
 import javax.portlet.ActionURL;
@@ -101,7 +100,7 @@ public class SynonymsDisplayContextTest {
 				_documentToSynonymSetTranslator, _httpServletRequest,
 				_indexNameBuilder, _language, _portal, _queries, _renderRequest,
 				_renderResponse, _searchEngineAdapter, _sorts,
-				_synonymSetIndexNameBuilder, _synonymSetIndexReader);
+				_synonymSetIndexNameBuilder);
 
 		SynonymsDisplayContext synonymsDisplayContext =
 			synonymsDisplayBuilder.build();
@@ -118,7 +117,7 @@ public class SynonymsDisplayContextTest {
 				_documentToSynonymSetTranslator, _httpServletRequest,
 				_indexNameBuilder, _language, _portal, _queries, _renderRequest,
 				_renderResponse, _searchEngineAdapter, _sorts,
-				_synonymSetIndexNameBuilder, _synonymSetIndexReader);
+				_synonymSetIndexNameBuilder);
 
 		SynonymsDisplayContext synonymsDisplayContext =
 			synonymsDisplayBuilder.build();
@@ -170,9 +169,6 @@ public class SynonymsDisplayContextTest {
 
 	@Mock
 	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
-
-	@Mock
-	private SynonymSetIndexReader _synonymSetIndexReader;
 
 	@Mock
 	private ThemeDisplay _themeDisplay;
