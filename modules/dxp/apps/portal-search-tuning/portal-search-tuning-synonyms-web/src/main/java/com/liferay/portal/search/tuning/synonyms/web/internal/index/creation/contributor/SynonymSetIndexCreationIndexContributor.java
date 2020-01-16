@@ -16,6 +16,7 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.index.creation.co
 
 import com.liferay.portal.search.spi.model.index.contributor.IndexContributor;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexCreator;
+import com.liferay.portal.search.tuning.synonyms.web.internal.index.SynonymSetIndexReader;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexName;
 import com.liferay.portal.search.tuning.synonyms.web.internal.index.name.SynonymSetIndexNameBuilder;
 
@@ -35,7 +36,7 @@ public class SynonymSetIndexCreationIndexContributor
 			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
 				companyIndexName);
 
-		if (_synonymSetIndexCreator.isExists(synonymSetIndexName)) {
+		if (_synonymSetIndexReader.isExists(synonymSetIndexName)) {
 			return;
 		}
 
@@ -48,7 +49,7 @@ public class SynonymSetIndexCreationIndexContributor
 			_synonymSetIndexNameBuilder.getSynonymSetIndexName(
 				companyIndexName);
 
-		if (!_synonymSetIndexCreator.isExists(synonymSetIndexName)) {
+		if (!_synonymSetIndexReader.isExists(synonymSetIndexName)) {
 			return;
 		}
 
@@ -60,5 +61,8 @@ public class SynonymSetIndexCreationIndexContributor
 
 	@Reference
 	private SynonymSetIndexNameBuilder _synonymSetIndexNameBuilder;
+
+	@Reference
+	private SynonymSetIndexReader _synonymSetIndexReader;
 
 }
