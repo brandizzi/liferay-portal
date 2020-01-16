@@ -123,8 +123,7 @@ public class SynonymsDisplayBuilder {
 		SearchSynonymSetRequest searchSynonymSetRequest =
 			new SearchSynonymSetRequest(
 				buildSynonymSetIndexName(), _httpServletRequest, _queries,
-				_sorts, searchContainer, _searchEngineAdapter,
-				_synonymSetIndexNameBuilder);
+				_sorts, searchContainer, _searchEngineAdapter);
 
 		SearchSynonymSetResponse searchSynonymSetResponse =
 			searchSynonymSetRequest.search();
