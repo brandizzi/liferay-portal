@@ -37,8 +37,10 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
+import com.liferay.portal.kernel.trash.TrashHandler;
 import com.liferay.portal.kernel.util.ObjectValuePair;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.trash.exception.RestoreEntryException;
 import com.liferay.trash.exception.TrashEntryException;
@@ -349,6 +351,19 @@ public class MBThreadTrashHandlerTest
 	}
 
 	@Override
+	protected TrashHandler getTrashHandler(String className) {
+		if (className.equals(MBThread.class.getName())) {
+			return _mbThreadTrashHandler;
+		}
+
+		if (className.equals(MBCategory.class.getName())) {
+			return _mbCategoryTrashHandler;
+		}
+
+		return null;
+	}
+
+	@Override
 	protected String getUniqueTitle(BaseModel<?> baseModel) {
 		return null;
 	}
@@ -380,6 +395,16 @@ public class MBThreadTrashHandlerTest
 	}
 
 	private static final String _SUBJECT = "Subject";
+
+	@Inject(
+		filter = "model.class.name=com.liferay.message.boards.model.MBCategory"
+	)
+	private static TrashHandler _mbCategoryTrashHandler;
+
+	@Inject(
+		filter = "model.class.name=com.liferay.message.boards.model.MBThread"
+	)
+	private static TrashHandler _mbThreadTrashHandler;
 
 	private final WhenIsAssetable _whenIsAssetable =
 		new DefaultWhenIsAssetable();
