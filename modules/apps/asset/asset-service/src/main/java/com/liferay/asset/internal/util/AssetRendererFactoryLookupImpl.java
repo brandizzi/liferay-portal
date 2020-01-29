@@ -58,7 +58,7 @@ public class AssetRendererFactoryLookupImpl
 				className);
 
 		if ((assetRendererFactory != null) ||
-			!_isIndexOnStartupWithDelayEnabled() ||
+			!_isIndexOnStartupEnabled() ||
 			_isAssetRendererFactoryInitialized(className)) {
 
 			return assetRendererFactory;
@@ -88,7 +88,7 @@ public class AssetRendererFactoryLookupImpl
 				(Class<?>)AssetRendererFactory.class,
 			new AssetRendererFactoryServiceTrackerCustomizer());
 
-		_activated = Instant.now();
+		_activationInstant = Instant.now();
 	}
 
 	@Deactivate
@@ -98,7 +98,7 @@ public class AssetRendererFactoryLookupImpl
 		_serviceTracker = null;
 	}
 
-	private static boolean _isIndexOnStartupWithDelayEnabled() {
+	private static boolean _isIndexOnStartupEnabled() {
 		if (_INDEX_ON_STARTUP && (_INDEX_ON_STARTUP_DELAY > 0)) {
 			return true;
 		}
@@ -110,12 +110,10 @@ public class AssetRendererFactoryLookupImpl
 		return _initializedAssetRendererFactories.contains(className);
 	}
 
-	private long _secondsElapsedSinceActivated() {
-		Instant now = Instant.now();
+	private long _getElapsedSeconds() {
+		Duration duration = Duration.between(_activationInstant, Instant.now());
 
-		Duration elapsedDuration = Duration.between(_activated, now);
-
-		return elapsedDuration.getSeconds();
+		return duration.getSeconds();
 	}
 
 	private void _waitAssetRendererFactoryLoaded(String className) {
@@ -124,7 +122,7 @@ public class AssetRendererFactoryLookupImpl
 				className, key -> new CountDownLatch(1));
 
 		long secondsToWait = Math.max(
-			0, _INDEX_ON_STARTUP_DELAY - _secondsElapsedSinceActivated());
+			0, _INDEX_ON_STARTUP_DELAY - _getElapsedSeconds());
 
 		try {
 			countDownLatch.await(secondsToWait, TimeUnit.SECONDS);
@@ -147,7 +145,7 @@ public class AssetRendererFactoryLookupImpl
 	private static final Log _log = LogFactoryUtil.getLog(
 		AssetRendererFactoryLookupImpl.class);
 
-	private Instant _activated;
+	private Instant _activationInstant;
 	private final Map<String, CountDownLatch>
 		_assetRenderFactoriesCountDownLatchMap = new ConcurrentHashMap<>();
 	private BundleContext _bundleContext;
