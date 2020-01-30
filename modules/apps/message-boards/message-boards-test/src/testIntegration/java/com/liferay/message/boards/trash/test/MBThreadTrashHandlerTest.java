@@ -352,7 +352,15 @@ public class MBThreadTrashHandlerTest
 
 	@Override
 	protected TrashHandler getTrashHandler(String className) {
-		return _trashHandler;
+		if (className.equals(MBThread.class.getName())) {
+			return _mbThreadTrashHandler;
+		}
+
+		if (className.equals(MBCategory.class.getName())) {
+			return _mbCategoryTrashHandler;
+		}
+
+		return null;
 	}
 
 	@Override
@@ -389,9 +397,14 @@ public class MBThreadTrashHandlerTest
 	private static final String _SUBJECT = "Subject";
 
 	@Inject(
+		filter = "model.class.name=com.liferay.message.boards.model.MBCategory"
+	)
+	private static TrashHandler _mbCategoryTrashHandler;
+
+	@Inject(
 		filter = "model.class.name=com.liferay.message.boards.model.MBThread"
 	)
-	private static TrashHandler _trashHandler;
+	private static TrashHandler _mbThreadTrashHandler;
 
 	private final WhenIsAssetable _whenIsAssetable =
 		new DefaultWhenIsAssetable();
