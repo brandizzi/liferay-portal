@@ -58,7 +58,7 @@ public class AssetRendererFactoryLookupImpl
 				className);
 
 		if ((assetRendererFactory != null) ||
-			!_isIndexOnStartupEnabled() ||
+			!_isIndexOnStartupDelayEnabled() ||
 			_isAssetRendererFactoryInitialized(className)) {
 
 			return assetRendererFactory;
@@ -98,7 +98,7 @@ public class AssetRendererFactoryLookupImpl
 		_serviceTracker = null;
 	}
 
-	private static boolean _isIndexOnStartupEnabled() {
+	private static boolean _isIndexOnStartupDelayEnabled() {
 		if (_INDEX_ON_STARTUP && (_INDEX_ON_STARTUP_DELAY > 0)) {
 			return true;
 		}
@@ -106,14 +106,14 @@ public class AssetRendererFactoryLookupImpl
 		return false;
 	}
 
-	private boolean _isAssetRendererFactoryInitialized(String className) {
-		return _initializedAssetRendererFactories.contains(className);
-	}
-
 	private long _getElapsedSeconds() {
 		Duration duration = Duration.between(_activationInstant, Instant.now());
 
 		return duration.getSeconds();
+	}
+
+	private boolean _isAssetRendererFactoryInitialized(String className) {
+		return _initializedAssetRendererFactories.contains(className);
 	}
 
 	private void _waitAssetRendererFactoryLoaded(String className) {
