@@ -59,6 +59,10 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true, service = {})
 public class RankingIndexUtil {
 
+	public static void createRankingIndex(String rankingIndexName) {
+		_rankingIndexUtil.createRankingIndex1(rankingIndexName);
+	}
+
 	public static String getRankingIndexName() {
 		return _rankingIndexUtil.getRankingIndexName(
 			RankingIndexDefinition.INDEX_NAME);
@@ -75,10 +79,12 @@ public class RankingIndexUtil {
 				return;
 			}
 
-			if (_rankingIndexUtil.addDocuments(
-					_rankingIndexUtil.getRankingIndexName(indexName),
-					documents)) {
+			String rankingIndexName = _rankingIndexUtil.getRankingIndexName(
+				indexName);
 
+			createRankingIndex(rankingIndexName);
+
+			if (_rankingIndexUtil.addDocuments(rankingIndexName, documents)) {
 				_rankingIndexUtil.deleteIndex(indexName);
 			}
 		}
@@ -130,6 +136,14 @@ public class RankingIndexUtil {
 		return createIndexResponse.isAcknowledged();
 	}
 
+	protected void createRankingIndex1(String rankingIndexName) {
+		if (isIndicesExists(rankingIndexName)) {
+			return;
+		}
+
+		createIndex(rankingIndexName);
+	}
+
 	protected boolean deleteIndex(String... indexNames) {
 		DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(
 			indexNames);
@@ -167,14 +181,6 @@ public class RankingIndexUtil {
 		String rankingIndexName =
 			_indexNameBuilder.getIndexName(0) + "-" +
 				rankingIndexDefinitionName;
-
-		if (isIndicesExists(rankingIndexName)) {
-			return rankingIndexName;
-		}
-		
-		if (!createIndex(rankingIndexName)) {
-			rankingIndexName = rankingIndexDefinitionName;
-		}
 
 		return rankingIndexName;
 	}

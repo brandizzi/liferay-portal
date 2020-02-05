@@ -47,8 +47,11 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
 
-		searchSearchRequest.setIndexNames(
-			RankingIndexUtil.getRankingIndexName());
+		String rankingIndexName = RankingIndexUtil.getRankingIndexName();
+
+		RankingIndexUtil.createRankingIndex(rankingIndexName);
+
+		searchSearchRequest.setIndexNames(rankingIndexName);
 		searchSearchRequest.setQuery(getQueryStringQuery(queryString));
 		searchSearchRequest.setSize(1);
 
@@ -117,8 +120,12 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 	}
 
 	private Document _getDocument(String id) {
+		String rankingIndexName = RankingIndexUtil.getRankingIndexName();
+
+		RankingIndexUtil.createRankingIndex(rankingIndexName);
+
 		GetDocumentRequest getDocumentRequest = new GetDocumentRequest(
-			RankingIndexUtil.getRankingIndexName(), id);
+			rankingIndexName, id);
 
 		getDocumentRequest.setFetchSource(true);
 		getDocumentRequest.setFetchSourceInclude(StringPool.STAR);
