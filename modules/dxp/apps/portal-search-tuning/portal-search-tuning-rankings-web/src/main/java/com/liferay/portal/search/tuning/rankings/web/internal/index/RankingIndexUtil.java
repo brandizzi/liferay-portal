@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.tuning.rankings.web.internal.index;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -59,7 +60,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true, service = {})
 public class RankingIndexUtil {
 
-	public static String getRankingIndexName() {
+	public static String getRankingIndexName(long companyId) {
 		return _rankingIndexUtil.getRankingIndexName(
 			RankingIndexDefinition.INDEX_NAME);
 	}
@@ -163,17 +164,16 @@ public class RankingIndexUtil {
 		);
 	}
 
-	protected String getRankingIndexName(String rankingIndexDefinitionName) {
+	protected String getRankingIndexName(long companyId) {
 		String rankingIndexName =
-			_indexNameBuilder.getIndexName(0) + "-" +
-				rankingIndexDefinitionName;
+			INDEX_NAME_PREFIX + StringPool.MINUS + _indexNameBuilder.getIndexName(companyId);
 
 		if (isIndicesExists(rankingIndexName)) {
 			return rankingIndexName;
 		}
-		
+
 		if (!createIndex(rankingIndexName)) {
-			rankingIndexName = rankingIndexDefinitionName;
+			rankingIndexName = INDEX_NAME_PREFIX;
 		}
 
 		return rankingIndexName;
@@ -235,6 +235,8 @@ public class RankingIndexUtil {
 
 		return successed;
 	}
+	
+	protected static final String INDEX_NAME_PREFIX = "liferay-search-tuning-rankings";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		RankingIndexUtil.class);
