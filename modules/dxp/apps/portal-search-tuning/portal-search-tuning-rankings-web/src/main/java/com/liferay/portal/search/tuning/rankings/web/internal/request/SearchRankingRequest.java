@@ -29,6 +29,7 @@ import com.liferay.portal.search.sort.SortOrder;
 import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingFields;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,13 +42,15 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class SearchRankingRequest {
 
+	private RankingIndexName _rankingIndexName;
 	public SearchRankingRequest(
-		HttpServletRequest httpServletRequest, Queries queries, Sorts sorts,
+		HttpServletRequest httpServletRequest, Queries queries,RankingIndexName rankingIndexName,  Sorts sorts,
 		SearchContainer searchContainer,
 		SearchEngineAdapter searchEngineAdapter) {
 
 		_httpServletRequest = httpServletRequest;
 		_queries = queries;
+		_rankingIndexName = rankingIndexName;
 		_sorts = sorts;
 		_searchContext = SearchContextFactory.getInstance(httpServletRequest);
 		_searchContainer = searchContainer;
@@ -68,8 +71,7 @@ public class SearchRankingRequest {
 		}
 
 		searchSearchRequest.setFetchSource(true);
-		searchSearchRequest.setIndexNames(
-			RankingIndexUtil.getRankingIndexName());
+		searchSearchRequest.setIndexNames(_rankingIndexName.getIndexName());
 		searchSearchRequest.setSize(_searchContainer.getDelta());
 		searchSearchRequest.setSorts(_getSorts());
 		searchSearchRequest.setStart(_searchContainer.getStart());

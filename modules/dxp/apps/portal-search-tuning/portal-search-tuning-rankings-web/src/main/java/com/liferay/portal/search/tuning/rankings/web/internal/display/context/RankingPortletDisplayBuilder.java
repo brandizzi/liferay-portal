@@ -36,6 +36,7 @@ import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.DocumentToRankingTranslator;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingFields;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameFactory;
 import com.liferay.portal.search.tuning.rankings.web.internal.request.SearchRankingRequest;
 import com.liferay.portal.search.tuning.rankings.web.internal.request.SearchRankingResponse;
 
@@ -55,18 +56,20 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RankingPortletDisplayBuilder {
 
+	private RankingIndexNameFactory _rankingIndexNameFactory;
 	public RankingPortletDisplayBuilder(
 		DocumentToRankingTranslator documentToRankingTranslator,
 		HttpServletRequest httpServletRequest, Language language,
-		Queries queries, Sorts sorts, RenderRequest renderRequest,
-		RenderResponse renderResponse, SearchEngineAdapter searchEngineAdapter,
-		SearchEngineInformation searchEngineInformation) {
+		Queries queries, RankingIndexNameFactory rankingIndexNameFactory, RenderRequest renderRequest, RenderResponse renderResponse,
+		SearchEngineAdapter searchEngineAdapter, SearchEngineInformation searchEngineInformation,
+		Sorts sorts) {
 
 		_documentToRankingTranslator = documentToRankingTranslator;
 		_httpServletRequest = httpServletRequest;
 		_language = language;
 		_queries = queries;
 		_sorts = sorts;
+		_rankingIndexNameFactory = rankingIndexNameFactory;
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
 		_searchEngineAdapter = searchEngineAdapter;
@@ -368,7 +371,7 @@ public class RankingPortletDisplayBuilder {
 			getSearchContainer(getKeywords());
 
 		SearchRankingRequest searchRankingRequest = new SearchRankingRequest(
-			_httpServletRequest, _queries, _sorts, searchContainer,
+			_httpServletRequest, _queries, _rankingIndexNameFactory.getRankingIndexName(companyIndexName), _sorts, searchContainer,
 			_searchEngineAdapter);
 
 		SearchRankingResponse searchRankingResponse =
