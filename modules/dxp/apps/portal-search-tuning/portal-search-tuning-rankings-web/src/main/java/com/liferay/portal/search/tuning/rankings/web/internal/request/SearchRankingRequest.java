@@ -68,8 +68,12 @@ public class SearchRankingRequest {
 		}
 
 		searchSearchRequest.setFetchSource(true);
-		searchSearchRequest.setIndexNames(
-			RankingIndexUtil.getRankingIndexName());
+
+		String rankingIndexName = RankingIndexUtil.getRankingIndexName();
+
+		RankingIndexUtil.createRankingIndex(rankingIndexName);
+
+		searchSearchRequest.setIndexNames(rankingIndexName);
 		searchSearchRequest.setSize(_searchContainer.getDelta());
 		searchSearchRequest.setSorts(_getSorts());
 		searchSearchRequest.setStart(_searchContainer.getStart());
