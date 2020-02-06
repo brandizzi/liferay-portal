@@ -39,6 +39,7 @@ import com.liferay.portal.search.tuning.rankings.web.internal.exception.Duplicat
 import com.liferay.portal.search.tuning.rankings.web.internal.index.DuplicateQueryStringsDetector;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexWriter;
 
 import java.io.IOException;
@@ -224,9 +225,12 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 		_guardDuplicateQueryStrings(editRankingMVCActionRequest, ranking);
 
-		String id = rankingIndexWriter.create(ranking);
+		String rankingIndexName = getRankingIndexName();
 
-		Optional<Ranking> optional = rankingIndexReader.fetchOptional(id);
+		String id = rankingIndexWriter.create(rankingIndexName, ranking);
+
+		Optional<Ranking> optional = rankingIndexReader.fetchOptional(
+			rankingIndexName, id);
 
 		return optional.get();
 	}
@@ -249,7 +253,8 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 			rankingBuilder.inactive(inactive);
 
-			rankingIndexWriter.update(rankingBuilder.build());
+			rankingIndexWriter.update(
+				getRankingIndexName(), rankingBuilder.build());
 		}
 	}
 
@@ -261,7 +266,8 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, editRankingMVCActionRequest);
 
 		for (String deleteResultsRankingUid : deleteResultsRankingUids) {
-			rankingIndexWriter.remove(deleteResultsRankingUid);
+			rankingIndexWriter.remove(
+				getRankingIndexName(), deleteResultsRankingUid);
 		}
 	}
 
@@ -271,7 +277,13 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 		String id = editRankingMVCActionRequest.getResultsRankingUid();
 
-		Optional<Ranking> optional = rankingIndexReader.fetchOptional(id);
+		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
+			indexNameBuilder.getIndexName(portal.getCompanyId(actionRequest)));
+
+		RankingIndexUtil.createRankingIndex(rankingIndexName);
+
+		Optional<Ranking> optional = rankingIndexReader.fetchOptional(
+			rankingIndexName, id);
 
 		if (!optional.isPresent()) {
 			return;
@@ -317,7 +329,8 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 			rankingBuilder.pins(null);
 		}
 
-		rankingIndexWriter.update(rankingBuilder.build());
+		rankingIndexWriter.update(
+			getRankingIndexName(), rankingBuilder.build());
 	}
 
 	protected String getIndexName(
@@ -335,6 +348,15 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 		}
 
 		return index;
+	}
+
+	protected String getRankingIndexName() {
+		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
+			indexNameBuilder.getIndexName(_companyId));
+
+		RankingIndexUtil.createRankingIndex(rankingIndexName);
+
+		return rankingIndexName;
 	}
 
 	protected String getSaveAndContinueRedirect(
@@ -432,7 +454,7 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 			duplicateQueryStringsDetector.detect(
 				duplicateQueryStringsDetector.builder(
 				).index(
-					_getIndexName(ranking)
+					getRankingIndexName()
 				).queryStrings(
 					queryStrings
 				).unlessRankingId(
@@ -471,16 +493,6 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 		return index;
 	}
 
-	private String _getIndexName(Ranking ranking) {
-		String index = ranking.getIndex();
-
-		if (Validator.isBlank(index)) {
-			index = indexNameBuilder.getIndexName(_companyId);
-		}
-
-		return index;
-	}
-
 	private String _getNameForUpdate(
 		String oldName,
 		EditRankingMVCActionRequest editRankingMVCActionRequest) {
@@ -508,9 +520,14 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 		String[] resultRankingsUids = _getResultsRankingUids(
 			actionRequest, editRankingMVCActionRequest);
 
+		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
+			indexNameBuilder.getIndexName(portal.getCompanyId(actionRequest)));
+
+		RankingIndexUtil.createRankingIndex(rankingIndexName);
+
 		for (String resultRankingsUid : resultRankingsUids) {
 			Optional<Ranking> optional = rankingIndexReader.fetchOptional(
-				resultRankingsUid);
+				rankingIndexName, resultRankingsUid);
 
 			if (optional.isPresent()) {
 				Ranking ranking = optional.get();

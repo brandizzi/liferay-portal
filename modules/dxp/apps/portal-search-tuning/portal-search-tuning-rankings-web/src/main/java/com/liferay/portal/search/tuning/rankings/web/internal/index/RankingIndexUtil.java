@@ -37,7 +37,6 @@ import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 import com.liferay.portal.search.hits.SearchHit;
 import com.liferay.portal.search.hits.SearchHits;
-import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.tuning.rankings.web.internal.background.task.RankingIndexRenameBackgroundTaskExecutor;
 
@@ -63,9 +62,8 @@ public class RankingIndexUtil {
 		_rankingIndexUtil.createRankingIndex1(rankingIndexName);
 	}
 
-	public static String getRankingIndexName() {
-		return _rankingIndexUtil.getRankingIndexName(
-			RankingIndexDefinition.INDEX_NAME);
+	public static String getRankingIndexName(String companyIndexName) {
+		return _rankingIndexUtil.getRankingIndexName1(companyIndexName);
 	}
 
 	public static void renameRankingIndexName(String indexName) {
@@ -79,7 +77,7 @@ public class RankingIndexUtil {
 				return;
 			}
 
-			String rankingIndexName = _rankingIndexUtil.getRankingIndexName(
+			String rankingIndexName = _rankingIndexUtil.getRankingIndexName1(
 				indexName);
 
 			createRankingIndex(rankingIndexName);
@@ -177,12 +175,8 @@ public class RankingIndexUtil {
 		);
 	}
 
-	protected String getRankingIndexName(String rankingIndexDefinitionName) {
-		String rankingIndexName =
-			_indexNameBuilder.getIndexName(0) + "-" +
-				rankingIndexDefinitionName;
-
-		return rankingIndexName;
+	protected String getRankingIndexName1(String companyIndexName) {
+		return companyIndexName + "-" + RankingIndexDefinition.INDEX_NAME;
 	}
 
 	protected boolean isIndicesExists(String... indexNames) {
@@ -200,11 +194,6 @@ public class RankingIndexUtil {
 		BackgroundTaskManager backgroundTaskManager) {
 
 		_backgroundTaskManager = backgroundTaskManager;
-	}
-
-	@Reference(unbind = "-")
-	protected void setIndexNameBuilder(IndexNameBuilder indexNameBuilder) {
-		_indexNameBuilder = indexNameBuilder;
 	}
 
 	@Reference(unbind = "-")
@@ -248,7 +237,6 @@ public class RankingIndexUtil {
 	private static RankingIndexUtil _rankingIndexUtil;
 
 	private BackgroundTaskManager _backgroundTaskManager;
-	private IndexNameBuilder _indexNameBuilder;
 	private Queries _queries;
 	private SearchEngineAdapter _searchEngineAdapter;
 

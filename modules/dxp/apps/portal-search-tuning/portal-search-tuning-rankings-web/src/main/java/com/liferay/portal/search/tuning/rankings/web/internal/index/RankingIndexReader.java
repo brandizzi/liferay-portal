@@ -21,8 +21,9 @@ import java.util.Optional;
  */
 public interface RankingIndexReader {
 
-	public Optional<Ranking> fetchByQueryStringOptional(String queryString);
+	public Optional<Ranking> fetchByQueryStringOptional(
+		String rankingIndexName, String queryString);
 
-	public Optional<Ranking> fetchOptional(String id);
+	public Optional<Ranking> fetchOptional(String rankingIndexName, String id);
 
 }

@@ -31,6 +31,7 @@ import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.tuning.rankings.web.internal.constants.ResultRankingsPortletKeys;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.DuplicateQueryStringsDetector;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
 
 import java.io.IOException;
 
@@ -160,10 +161,14 @@ public class ValidateRankingMVCResourceCommand implements MVCResourceCommand {
 
 		List<String> aliases = _getAliases(validateRankingMVCResourceRequest);
 
+		String rankingIndexName = RankingIndexUtil.getRankingIndexName(index);
+
+		RankingIndexUtil.createRankingIndex(rankingIndexName);
+
 		return duplicateQueryStringsDetector.detect(
 			duplicateQueryStringsDetector.builder(
 			).index(
-				index
+				rankingIndexName
 			).queryStrings(
 				aliases
 			).unlessRankingId(
