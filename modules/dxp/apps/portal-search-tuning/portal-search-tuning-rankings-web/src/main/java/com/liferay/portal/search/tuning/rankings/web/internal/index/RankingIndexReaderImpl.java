@@ -40,16 +40,14 @@ import org.osgi.service.component.annotations.Reference;
 public class RankingIndexReaderImpl implements RankingIndexReader {
 
 	@Override
-	public Optional<Ranking> fetchByQueryStringOptional(String queryString) {
+	public Optional<Ranking> fetchByQueryStringOptional(
+		String rankingIndexName, String queryString) {
+
 		if (Validator.isBlank(queryString)) {
 			return Optional.empty();
 		}
 
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
-
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName();
-
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
 
 		searchSearchRequest.setIndexNames(rankingIndexName);
 		searchSearchRequest.setQuery(getQueryStringQuery(queryString));
@@ -58,20 +56,20 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 		SearchSearchResponse searchSearchResponse =
 			_searchEngineAdapter.execute(searchSearchRequest);
 
-		return getFirstRankingOptional(searchSearchResponse);
+		return getFirstRankingOptional(rankingIndexName, searchSearchResponse);
 	}
 
 	@Override
-	public Optional<Ranking> fetchOptional(String id) {
+	public Optional<Ranking> fetchOptional(String rankingIndexName, String id) {
 		return Optional.ofNullable(
-			_getDocument(id)
+			_getDocument(rankingIndexName, id)
 		).map(
 			document -> translate(document, id)
 		);
 	}
 
 	protected Optional<Ranking> getFirstRankingOptional(
-		SearchSearchResponse searchSearchResponse) {
+		String rankingIndexName, SearchSearchResponse searchSearchResponse) {
 
 		if (searchSearchResponse.getCount() == 0) {
 			return Optional.empty();
@@ -79,7 +77,7 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 
 		SearchHit searchHit = getFirstSearchHit(searchSearchResponse);
 
-		return fetchOptional(searchHit.getId());
+		return fetchOptional(rankingIndexName, searchHit.getId());
 	}
 
 	protected SearchHit getFirstSearchHit(
@@ -119,11 +117,7 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 		return _documentToRankingTranslator.translate(document, id);
 	}
 
-	private Document _getDocument(String id) {
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName();
-
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
-
+	private Document _getDocument(String rankingIndexName, String id) {
 		GetDocumentRequest getDocumentRequest = new GetDocumentRequest(
 			rankingIndexName, id);
 
