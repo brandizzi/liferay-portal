@@ -29,11 +29,7 @@ import org.osgi.service.component.annotations.Reference;
 public class RankingIndexWriterImpl implements RankingIndexWriter {
 
 	@Override
-	public String create(Ranking ranking) {
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName();
-
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
-
+	public String create(String rankingIndexName, Ranking ranking) {
 		IndexDocumentResponse indexDocumentResponse =
 			_searchEngineAdapter.execute(
 				new IndexDocumentRequest(
@@ -44,11 +40,7 @@ public class RankingIndexWriterImpl implements RankingIndexWriter {
 	}
 
 	@Override
-	public void remove(String id) {
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName();
-
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
-
+	public void remove(String rankingIndexName, String id) {
 		DeleteDocumentRequest deleteDocumentRequest = new DeleteDocumentRequest(
 			rankingIndexName, id);
 
@@ -58,11 +50,7 @@ public class RankingIndexWriterImpl implements RankingIndexWriter {
 	}
 
 	@Override
-	public void update(Ranking ranking) {
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName();
-
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
-
+	public void update(String rankingIndexName, Ranking ranking) {
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
 			rankingIndexName, ranking.getId(),
 			_rankingToDocumentTranslator.translate(ranking));

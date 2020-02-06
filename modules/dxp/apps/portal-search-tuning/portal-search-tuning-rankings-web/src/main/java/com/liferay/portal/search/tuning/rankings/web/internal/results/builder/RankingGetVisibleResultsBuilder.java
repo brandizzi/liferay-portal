@@ -49,7 +49,7 @@ public class RankingGetVisibleResultsBuilder {
 	public RankingGetVisibleResultsBuilder(
 		ComplexQueryPartBuilderFactory complexQueryPartBuilderFactory,
 		DLAppLocalService dlAppLocalService,
-		FastDateFormatFactory fastDateFormatFactory,
+		FastDateFormatFactory fastDateFormatFactory, String rankingIndexName,
 		RankingIndexReader rankingIndexReader,
 		RankingSearchRequestHelper rankingSearchRequestHelper,
 		ResourceActions resourceActions, ResourceRequest resourceRequest,
@@ -59,6 +59,7 @@ public class RankingGetVisibleResultsBuilder {
 		_complexQueryPartBuilderFactory = complexQueryPartBuilderFactory;
 		_dlAppLocalService = dlAppLocalService;
 		_fastDateFormatFactory = fastDateFormatFactory;
+		_rankingIndexName = rankingIndexName;
 		_rankingIndexReader = rankingIndexReader;
 		_rankingSearchRequestHelper = rankingSearchRequestHelper;
 		_resourceActions = resourceActions;
@@ -70,7 +71,7 @@ public class RankingGetVisibleResultsBuilder {
 
 	public JSONObject build() {
 		Optional<Ranking> optional = _rankingIndexReader.fetchOptional(
-			_rankingId);
+			_rankingIndexName, _rankingId);
 
 		if (!optional.isPresent()) {
 			return JSONUtil.put(
@@ -193,6 +194,7 @@ public class RankingGetVisibleResultsBuilder {
 	private final Queries _queries;
 	private String _queryString;
 	private String _rankingId;
+	private final String _rankingIndexName;
 	private final RankingIndexReader _rankingIndexReader;
 	private final RankingSearchRequestHelper _rankingSearchRequestHelper;
 	private final ResourceActions _resourceActions;

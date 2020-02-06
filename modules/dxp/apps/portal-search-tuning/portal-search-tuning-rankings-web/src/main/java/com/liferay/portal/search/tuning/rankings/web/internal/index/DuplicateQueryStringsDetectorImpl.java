@@ -59,14 +59,10 @@ public class DuplicateQueryStringsDetectorImpl
 			return Collections.emptyList();
 		}
 
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName();
-
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
-
 		SearchSearchResponse searchSearchResponse = searchEngineAdapter.execute(
 			new SearchSearchRequest() {
 				{
-					setIndexNames(rankingIndexName);
+					setIndexNames(criteria.getIndex());
 					setQuery(getCriteriaQuery(criteria));
 					setScoreEnabled(false);
 				}
