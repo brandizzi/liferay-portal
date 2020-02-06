@@ -48,13 +48,14 @@ public class RankingGetHiddenResultsBuilder {
 	public RankingGetHiddenResultsBuilder(
 		DLAppLocalService dlAppLocalService,
 		FastDateFormatFactory fastDateFormatFactory, Queries queries,
-		RankingIndexReader rankingIndexReader, ResourceActions resourceActions,
-		ResourceRequest resourceRequest,
+		String rankingIndexName, RankingIndexReader rankingIndexReader,
+		ResourceActions resourceActions, ResourceRequest resourceRequest,
 		SearchEngineAdapter searchEngineAdapter) {
 
 		_dlAppLocalService = dlAppLocalService;
 		_fastDateFormatFactory = fastDateFormatFactory;
 		_queries = queries;
+		_rankingIndexName = rankingIndexName;
 		_rankingIndexReader = rankingIndexReader;
 		_resourceActions = resourceActions;
 		_resourceRequest = resourceRequest;
@@ -63,7 +64,7 @@ public class RankingGetHiddenResultsBuilder {
 
 	public JSONObject build() {
 		Optional<Ranking> optional = _rankingIndexReader.fetchOptional(
-			_rankingId);
+			_rankingIndexName, _rankingId);
 
 		if (!optional.isPresent()) {
 			return JSONUtil.put(
@@ -173,6 +174,7 @@ public class RankingGetHiddenResultsBuilder {
 	private int _from;
 	private final Queries _queries;
 	private String _rankingId;
+	private final String _rankingIndexName;
 	private final RankingIndexReader _rankingIndexReader;
 	private final ResourceActions _resourceActions;
 	private final ResourceRequest _resourceRequest;
