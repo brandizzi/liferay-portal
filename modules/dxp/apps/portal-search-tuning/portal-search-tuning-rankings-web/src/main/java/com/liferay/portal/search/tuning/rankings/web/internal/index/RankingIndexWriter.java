@@ -19,10 +19,10 @@ package com.liferay.portal.search.tuning.rankings.web.internal.index;
  */
 public interface RankingIndexWriter {
 
-	public String create(Ranking ranking);
+	public String create(String rankingIndexName, Ranking ranking);
 
-	public void remove(String uid);
+	public void remove(String rankingIndexName, String uid);
 
-	public void update(Ranking ranking);
+	public void update(String rankingIndexName, Ranking ranking);
 
 }

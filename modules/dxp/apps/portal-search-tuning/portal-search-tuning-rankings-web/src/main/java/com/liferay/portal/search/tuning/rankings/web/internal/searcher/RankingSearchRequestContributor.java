@@ -16,12 +16,15 @@ package com.liferay.portal.search.tuning.rankings.web.internal.searcher;
 
 import com.liferay.portal.kernel.search.SearchEngine;
 import com.liferay.portal.kernel.search.SearchEngineHelper;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
+import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.searcher.SearchRequest;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
 import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.spi.searcher.SearchRequestContributor;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
 
 import java.util.Optional;
 
@@ -45,9 +48,14 @@ public class RankingSearchRequestContributor
 			return searchRequest;
 		}
 
+		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
+			indexNameBuilder.getIndexName(CompanyThreadLocal.getCompanyId()));
+
+		RankingIndexUtil.createRankingIndex(rankingIndexName);
+
 		Optional<Ranking> optional =
 			rankingIndexReader.fetchByQueryStringOptional(
-				searchRequest.getQueryString());
+				rankingIndexName, searchRequest.getQueryString());
 
 		return optional.map(
 			ranking -> contribute(searchRequest, ranking)
@@ -75,6 +83,9 @@ public class RankingSearchRequestContributor
 
 		return vendor.equals(engine);
 	}
+
+	@Reference
+	protected IndexNameBuilder indexNameBuilder;
 
 	@Reference
 	protected RankingIndexReader rankingIndexReader;
