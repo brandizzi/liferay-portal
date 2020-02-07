@@ -20,6 +20,8 @@ import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.document.GetDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.GetDocumentResponse;
+import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexRequest;
+import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexResponse;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 import com.liferay.portal.search.hits.SearchHit;
@@ -66,6 +68,17 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 		).map(
 			document -> translate(document, id)
 		);
+	}
+
+	@Override
+	public boolean isExists(String rankingIndexName) {
+		IndicesExistsIndexRequest indicesExistsIndexRequest =
+			new IndicesExistsIndexRequest(rankingIndexName);
+
+		IndicesExistsIndexResponse indicesExistsIndexResponse =
+			_searchEngineAdapter.execute(indicesExistsIndexRequest);
+
+		return indicesExistsIndexResponse.isExists();
 	}
 
 	protected Optional<Ranking> getFirstRankingOptional(
