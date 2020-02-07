@@ -14,18 +14,13 @@
 
 package com.liferay.portal.search.tuning.rankings.web.internal.index;
 
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.document.BulkDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.BulkDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
-import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.CreateIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexResponse;
-import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.IndicesExistsIndexResponse;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 import com.liferay.portal.search.hits.SearchHit;
@@ -127,18 +122,9 @@ public class RankingIndexUtil {
 	}
 
 	protected boolean createIndex(String indexName) {
-		String mappingSource = StringUtil.read(
-			getClass(), RankingIndexDefinition.INDEX_SETTINGS_RESOURCE_NAME);
+		_rankingIndexCreator.create(indexName);
 
-		CreateIndexRequest createIndexRequest = new CreateIndexRequest(
-			indexName);
-
-		createIndexRequest.setSource(mappingSource);
-
-		CreateIndexResponse createIndexResponse = _searchEngineAdapter.execute(
-			createIndexRequest);
-
-		return createIndexResponse.isAcknowledged();
+		return true;
 	}
 
 	protected void createRankingIndex1(String rankingIndexName) {
@@ -187,13 +173,13 @@ public class RankingIndexUtil {
 	}
 
 	protected boolean isIndicesExists(String... indexNames) {
-		IndicesExistsIndexRequest indicesExistsIndexRequest =
-			new IndicesExistsIndexRequest(indexNames);
-
-		IndicesExistsIndexResponse indicesExistsIndexResponse =
-			_searchEngineAdapter.execute(indicesExistsIndexRequest);
-
-		return indicesExistsIndexResponse.isExists();
+		return Stream.of(
+			indexNames
+		).map(
+			_rankingIndexReader::isExists
+		).reduce(
+			true, Boolean::logicalAnd
+		);
 	}
 
 	@Reference(unbind = "-")
@@ -211,6 +197,13 @@ public class RankingIndexUtil {
 	private static RankingIndexUtil _rankingIndexUtil;
 
 	private Queries _queries;
+
+	@Reference
+	private RankingIndexCreator _rankingIndexCreator;
+
+	@Reference
+	private RankingIndexReader _rankingIndexReader;
+
 	private SearchEngineAdapter _searchEngineAdapter;
 
 }
