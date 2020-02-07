@@ -14,13 +14,6 @@
 
 package com.liferay.portal.search.tuning.rankings.web.internal.index;
 
-import com.liferay.portal.kernel.backgroundtask.BackgroundTaskManager;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.CompanyConstants;
-import com.liferay.portal.kernel.model.UserConstants;
-import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
@@ -38,11 +31,7 @@ import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 import com.liferay.portal.search.hits.SearchHit;
 import com.liferay.portal.search.hits.SearchHits;
 import com.liferay.portal.search.query.Queries;
-import com.liferay.portal.search.tuning.rankings.web.internal.background.task.RankingIndexRenameBackgroundTaskExecutor;
 
-import java.io.Serializable;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,7 +44,7 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Wade Cao
  */
-@Component(immediate = true, service = {})
+@Component(immediate = true, service = RankingIndexUtil.class)
 public class RankingIndexUtil {
 
 	public static void createRankingIndex(String rankingIndexName) {
@@ -106,8 +95,6 @@ public class RankingIndexUtil {
 	@Activate
 	protected void activate() {
 		_rankingIndexUtil = this;
-
-		_addBackgroundTask();
 	}
 
 	protected boolean addDocuments(String indexName, List<Document> documents) {
@@ -210,13 +197,6 @@ public class RankingIndexUtil {
 	}
 
 	@Reference(unbind = "-")
-	protected void setBackgroundTaskManager(
-		BackgroundTaskManager backgroundTaskManager) {
-
-		_backgroundTaskManager = backgroundTaskManager;
-	}
-
-	@Reference(unbind = "-")
 	protected void setQueries(Queries queries) {
 		_queries = queries;
 	}
@@ -228,35 +208,8 @@ public class RankingIndexUtil {
 		_searchEngineAdapter = searchEngineAdapter;
 	}
 
-	private boolean _addBackgroundTask() {
-		boolean successed = true;
-
-		Map<String, Serializable> taskContextMap = new HashMap<>();
-
-		taskContextMap.put("indexName", RankingIndexDefinition.INDEX_NAME);
-
-		String jobName = "RankingIndexRename";
-
-		try {
-			_backgroundTaskManager.addBackgroundTask(
-				UserConstants.USER_ID_DEFAULT, CompanyConstants.SYSTEM, jobName,
-				RankingIndexRenameBackgroundTaskExecutor.class.getName(),
-				taskContextMap, new ServiceContext());
-		}
-		catch (PortalException pe) {
-			_log.error("Unable to schedule the job for " + jobName, pe);
-			successed = false;
-		}
-
-		return successed;
-	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		RankingIndexUtil.class);
-
 	private static RankingIndexUtil _rankingIndexUtil;
 
-	private BackgroundTaskManager _backgroundTaskManager;
 	private Queries _queries;
 	private SearchEngineAdapter _searchEngineAdapter;
 
