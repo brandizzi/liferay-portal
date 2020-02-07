@@ -77,15 +77,30 @@ public class RankingIndexUtil {
 				return;
 			}
 
-			String rankingIndexName = _rankingIndexUtil.getRankingIndexName1(
-				indexName);
+			Boolean succeeded = groupDocumentByIndex(
+				documents
+			).entrySet(
+			).stream(
+			).map(
+				entry -> _rankingIndexUtil.addDocuments(
+					entry.getKey(), entry.getValue())
+			).reduce(
+				true, Boolean::logicalAnd
+			);
 
-			createRankingIndex(rankingIndexName);
-
-			if (_rankingIndexUtil.addDocuments(rankingIndexName, documents)) {
+			if (succeeded) {
 				_rankingIndexUtil.deleteIndex(indexName);
 			}
 		}
+	}
+
+	protected static Map<String, List<Document>> groupDocumentByIndex(
+		List<Document> documents) {
+
+		return documents.stream(
+		).collect(
+			Collectors.groupingBy(document -> document.getString("index"))
+		);
 	}
 
 	@Activate
@@ -98,12 +113,17 @@ public class RankingIndexUtil {
 	protected boolean addDocuments(String indexName, List<Document> documents) {
 		boolean successed = true;
 
+		String rankingIndexName = _rankingIndexUtil.getRankingIndexName1(
+			indexName);
+
+		createRankingIndex(rankingIndexName);
+
 		BulkDocumentRequest bulkDocumentRequest = new BulkDocumentRequest();
 
 		documents.forEach(
 			document -> {
 				IndexDocumentRequest indexDocumentRequest =
-					new IndexDocumentRequest(indexName, document);
+					new IndexDocumentRequest(rankingIndexName, document);
 
 				bulkDocumentRequest.addBulkableDocumentRequest(
 					indexDocumentRequest);
