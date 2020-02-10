@@ -21,10 +21,6 @@ import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
 import com.liferay.portal.kernel.backgroundtask.display.BackgroundTaskDisplay;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
 
-import java.io.Serializable;
-
-import java.util.Map;
-
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -47,12 +43,7 @@ public class RankingIndexRenameBackgroundTaskExecutor
 	public BackgroundTaskResult execute(BackgroundTask backgroundTask)
 		throws Exception {
 
-		Map<String, Serializable> taskContextMap =
-			backgroundTask.getTaskContextMap();
-
-		String indexName = (String)taskContextMap.get("indexName");
-
-		RankingIndexUtil.renameRankingIndexName(indexName);
+		RankingIndexUtil.renameRankingIndexName();
 
 		return BackgroundTaskResult.SUCCESS;
 	}

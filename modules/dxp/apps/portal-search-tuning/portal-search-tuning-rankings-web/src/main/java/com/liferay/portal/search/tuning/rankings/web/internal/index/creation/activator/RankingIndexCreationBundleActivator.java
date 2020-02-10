@@ -22,13 +22,9 @@ import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.UserConstants;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.search.tuning.rankings.web.internal.background.task.RankingIndexRenameBackgroundTaskExecutor;
-import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexDefinition;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
 
-import java.io.Serializable;
-
 import java.util.HashMap;
-import java.util.Map;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -49,20 +45,15 @@ public class RankingIndexCreationBundleActivator {
 	}
 
 	private void _addBackgroundTask() {
-		Map<String, Serializable> taskContextMap = new HashMap<>();
-
-		taskContextMap.put("indexName", RankingIndexDefinition.INDEX_NAME);
-
-		String jobName = "RankingIndexRename";
-
 		try {
 			_backgroundTaskManager.addBackgroundTask(
-				UserConstants.USER_ID_DEFAULT, CompanyConstants.SYSTEM, jobName,
+				UserConstants.USER_ID_DEFAULT, CompanyConstants.SYSTEM,
+				"RankingIndexRename",
 				RankingIndexRenameBackgroundTaskExecutor.class.getName(),
-				taskContextMap, new ServiceContext());
+				new HashMap<>(), new ServiceContext());
 		}
 		catch (PortalException pe) {
-			_log.error("Unable to schedule the job for " + jobName, pe);
+			_log.error("Unable to schedule the job for RankingIndexRename", pe);
 		}
 	}
 
