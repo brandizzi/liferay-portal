@@ -50,13 +50,16 @@ public class RankingIndexUtil {
 		return _rankingIndexUtil.getRankingIndexName1(companyIndexName);
 	}
 
-	public static void renameRankingIndexName(String indexName) {
-		if (_rankingIndexUtil.isIndicesExists(indexName)) {
+	public static void renameRankingIndexName() {
+		if (_rankingIndexUtil.isIndicesExists(
+				RankingIndexDefinition.INDEX_NAME)) {
+
 			List<Document> documents = _rankingIndexUtil.getDocuments(
-				indexName);
+				RankingIndexDefinition.INDEX_NAME);
 
 			if (documents.isEmpty()) {
-				_rankingIndexUtil.deleteIndex(indexName);
+				_rankingIndexUtil.deleteIndex(
+					RankingIndexDefinition.INDEX_NAME);
 
 				return;
 			}
@@ -73,7 +76,8 @@ public class RankingIndexUtil {
 			);
 
 			if (succeeded) {
-				_rankingIndexUtil.deleteIndex(indexName);
+				_rankingIndexUtil.deleteIndex(
+					RankingIndexDefinition.INDEX_NAME);
 			}
 		}
 	}
