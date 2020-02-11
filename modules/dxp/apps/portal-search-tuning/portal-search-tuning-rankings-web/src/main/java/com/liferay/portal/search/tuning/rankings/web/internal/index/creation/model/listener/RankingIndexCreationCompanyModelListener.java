@@ -21,7 +21,7 @@ import com.liferay.portal.search.engine.SearchEngineInformation;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexCreator;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
-import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 
 import java.util.Objects;
 
@@ -46,8 +46,7 @@ public class RankingIndexCreationCompanyModelListener
 			return;
 		}
 
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
-			getCompanyIndexName(company));
+		String rankingIndexName = getRankingIndexName(company);
 
 		if (_rankingIndexReader.isExists(rankingIndexName)) {
 			return;
@@ -64,8 +63,7 @@ public class RankingIndexCreationCompanyModelListener
 			return;
 		}
 
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
-			getCompanyIndexName(company));
+		String rankingIndexName = getRankingIndexName(company);
 
 		if (!_rankingIndexReader.isExists(rankingIndexName)) {
 			return;
@@ -78,11 +76,19 @@ public class RankingIndexCreationCompanyModelListener
 		return _indexNameBuilder.getIndexName(company.getCompanyId());
 	}
 
+	protected String getRankingIndexName(Company company) {
+		return _rankingIndexNameBuilder.getRankingIndexName(
+			getCompanyIndexName(company));
+	}
+
 	@Reference
 	private IndexNameBuilder _indexNameBuilder;
 
 	@Reference
 	private RankingIndexCreator _rankingIndexCreator;
+
+	@Reference
+	private RankingIndexNameBuilder _rankingIndexNameBuilder;
 
 	@Reference
 	private RankingIndexReader _rankingIndexReader;

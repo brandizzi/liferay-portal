@@ -12,30 +12,25 @@
  *
  */
 
-package com.liferay.portal.search.tuning.rankings.web.internal.index;
+package com.liferay.portal.search.tuning.rankings.web.internal.index.name;
 
-import org.osgi.service.component.annotations.Activate;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexDefinition;
+
 import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Wade Cao
+ * @author Adam Brandizzi
  */
-@Component(immediate = true, service = RankingIndexUtil.class)
-public class RankingIndexUtil {
+@Component(service = RankingIndexNameBuilder.class)
+public class RankingIndexNameBuilderImpl implements RankingIndexNameBuilder {
 
-	public static String getRankingIndexName(String companyIndexName) {
-		return _rankingIndexUtil.getRankingIndexName1(companyIndexName);
-	}
-
-	@Activate
-	protected void activate() {
-		_rankingIndexUtil = this;
-	}
-
-	protected String getRankingIndexName1(String companyIndexName) {
+	@Override
+	public String getRankingIndexName(String companyIndexName) {
 		return companyIndexName + "-" + RankingIndexDefinition.INDEX_NAME;
 	}
 
-	private static RankingIndexUtil _rankingIndexUtil;
+	protected static final String INDEX_NAME_PREFIX =
+		"liferay-search-tuning-synonyms";
 
 }
