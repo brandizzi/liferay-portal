@@ -14,21 +14,14 @@
 
 package com.liferay.portal.search.tuning.rankings.web.internal.index;
 
-import java.util.stream.Stream;
-
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Wade Cao
  */
 @Component(immediate = true, service = RankingIndexUtil.class)
 public class RankingIndexUtil {
-
-	public static void createRankingIndex(String rankingIndexName) {
-		_rankingIndexUtil.createRankingIndex1(rankingIndexName);
-	}
 
 	public static String getRankingIndexName(String companyIndexName) {
 		return _rankingIndexUtil.getRankingIndexName1(companyIndexName);
@@ -39,40 +32,10 @@ public class RankingIndexUtil {
 		_rankingIndexUtil = this;
 	}
 
-	protected boolean createIndex(String indexName) {
-		_rankingIndexCreator.create(indexName);
-
-		return true;
-	}
-
-	protected void createRankingIndex1(String rankingIndexName) {
-		if (isIndicesExists(rankingIndexName)) {
-			return;
-		}
-
-		createIndex(rankingIndexName);
-	}
-
 	protected String getRankingIndexName1(String companyIndexName) {
 		return companyIndexName + "-" + RankingIndexDefinition.INDEX_NAME;
 	}
 
-	protected boolean isIndicesExists(String... indexNames) {
-		return Stream.of(
-			indexNames
-		).map(
-			_rankingIndexReader::isExists
-		).reduce(
-			true, Boolean::logicalAnd
-		);
-	}
-
 	private static RankingIndexUtil _rankingIndexUtil;
-
-	@Reference
-	private RankingIndexCreator _rankingIndexCreator;
-
-	@Reference
-	private RankingIndexReader _rankingIndexReader;
 
 }
