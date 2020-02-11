@@ -30,7 +30,6 @@ import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexCreator;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexDefinition;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
-import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 
 import java.util.List;
@@ -72,7 +71,7 @@ public class SingleIndexToMultipleIndexImporterImpl
 	protected boolean addDocuments(String indexName, List<Document> documents) {
 		boolean successed = true;
 
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
+		String rankingIndexName = _rankingIndexNameBuilder.getRankingIndexName(
 			indexName);
 
 		BulkDocumentRequest bulkDocumentRequest = new BulkDocumentRequest();
@@ -106,7 +105,7 @@ public class SingleIndexToMultipleIndexImporterImpl
 		).map(
 			_indexNameBuilder::getIndexName
 		).map(
-			RankingIndexUtil::getRankingIndexName
+			_rankingIndexNameBuilder::getRankingIndexName
 		).filter(
 			rankingIndexName -> !_rankingIndexReader.isExists(rankingIndexName)
 		).forEach(
@@ -171,10 +170,10 @@ public class SingleIndexToMultipleIndexImporterImpl
 	private RankingIndexCreator _rankingIndexCreator;
 
 	@Reference
-	private RankingIndexReader _rankingIndexReader;
+	private RankingIndexNameBuilder _rankingIndexNameBuilder;
 
 	@Reference
-	private RankingIndexNameBuilder _rankinngIndexNameBuilder;
+	private RankingIndexReader _rankingIndexReader;
 
 	@Reference
 	private SearchEngineAdapter _searchEngineAdapter;
