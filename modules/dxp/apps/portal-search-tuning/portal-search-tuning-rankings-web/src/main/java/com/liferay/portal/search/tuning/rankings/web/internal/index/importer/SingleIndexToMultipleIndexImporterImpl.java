@@ -33,6 +33,7 @@ import com.liferay.portal.search.tuning.rankings.web.internal.index.name.Ranking
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -61,10 +62,10 @@ public class SingleIndexToMultipleIndexImporterImpl
 	protected static Map<String, List<Document>> groupDocumentByIndex(
 		List<Document> documents) {
 
-		return documents.stream(
-		).collect(
-			Collectors.groupingBy(document -> document.getString("index"))
-		);
+		Stream<Document> stream = documents.stream();
+
+		return stream.collect(
+			Collectors.groupingBy(document -> document.getString("index")));
 	}
 
 	protected boolean addDocuments(String indexName, List<Document> documents) {
@@ -144,11 +145,15 @@ public class SingleIndexToMultipleIndexImporterImpl
 			return true;
 		}
 
-		return groupDocumentByIndex(
-			documents
-		).entrySet(
-		).stream(
-		).map(
+		Map<String, List<Document>> documentsMap = groupDocumentByIndex(
+			documents);
+
+		Set<Map.Entry<String, List<Document>>> entrySet =
+			documentsMap.entrySet();
+
+		Stream<Map.Entry<String, List<Document>>> stream = entrySet.stream();
+
+		return stream.map(
 			entry -> addDocuments(entry.getKey(), entry.getValue())
 		).reduce(
 			true, Boolean::logicalAnd
