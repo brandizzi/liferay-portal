@@ -51,8 +51,10 @@ public class RankingIndexCreationBundleActivator {
 				RankingIndexRenameBackgroundTaskExecutor.class.getName(),
 				new HashMap<>(), new ServiceContext());
 		}
-		catch (PortalException pe) {
-			_log.error("Unable to schedule the job for RankingIndexRename", pe);
+		catch (PortalException portalException) {
+			_log.error(
+				"Unable to schedule the job for RankingIndexRename",
+				portalException);
 		}
 	}
 
