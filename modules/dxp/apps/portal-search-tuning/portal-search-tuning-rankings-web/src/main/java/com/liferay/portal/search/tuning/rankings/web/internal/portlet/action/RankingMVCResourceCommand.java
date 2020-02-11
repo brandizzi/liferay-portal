@@ -87,13 +87,11 @@ public class RankingMVCResourceCommand implements MVCResourceCommand {
 	}
 
 	protected JSONObject getHiddenResults(ResourceRequest resourceRequest) {
-		String rankingIndexName = getRankingIndexName(resourceRequest);
-
 		RankingGetHiddenResultsBuilder rankingGetHiddenResultsBuilder =
 			new RankingGetHiddenResultsBuilder(
 				dlAppLocalService, fastDateFormatFactory, queries,
-				rankingIndexName, rankingIndexReader, resourceActions,
-				resourceRequest, searchEngineAdapter);
+				getRankingIndexName(resourceRequest), rankingIndexReader,
+				resourceActions, resourceRequest, searchEngineAdapter);
 
 		RankingMVCResourceRequest rankingMVCResourceRequest =
 			new RankingMVCResourceRequest(resourceRequest);
@@ -153,14 +151,13 @@ public class RankingMVCResourceCommand implements MVCResourceCommand {
 	}
 
 	protected JSONObject getVisibleResults(ResourceRequest resourceRequest) {
-		String rankingIndexName = getRankingIndexName(resourceRequest);
-
 		RankingGetVisibleResultsBuilder rankingGetVisibleResultsBuilder =
 			new RankingGetVisibleResultsBuilder(
 				complexQueryPartBuilderFactory, dlAppLocalService,
-				fastDateFormatFactory, rankingIndexName, rankingIndexReader,
-				rankingSearchRequestHelper, resourceActions, resourceRequest,
-				queries, searcher, searchRequestBuilderFactory);
+				fastDateFormatFactory, getRankingIndexName(resourceRequest),
+				rankingIndexReader, rankingSearchRequestHelper, resourceActions,
+				resourceRequest, queries, searcher,
+				searchRequestBuilderFactory);
 
 		RankingMVCResourceRequest rankingMVCResourceRequest =
 			new RankingMVCResourceRequest(resourceRequest);
