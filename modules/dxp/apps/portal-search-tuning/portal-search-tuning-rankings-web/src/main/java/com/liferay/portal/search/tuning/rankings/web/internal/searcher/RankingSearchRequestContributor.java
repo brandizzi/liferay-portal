@@ -24,7 +24,7 @@ import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.spi.searcher.SearchRequestContributor;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
-import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 
 import java.util.Optional;
 
@@ -48,7 +48,7 @@ public class RankingSearchRequestContributor
 			return searchRequest;
 		}
 
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
+		String rankingIndexName = rankingIndexNameBuilder.getRankingIndexName(
 			indexNameBuilder.getIndexName(CompanyThreadLocal.getCompanyId()));
 
 		Optional<Ranking> optional =
@@ -84,6 +84,9 @@ public class RankingSearchRequestContributor
 
 	@Reference
 	protected IndexNameBuilder indexNameBuilder;
+
+	@Reference
+	protected RankingIndexNameBuilder rankingIndexNameBuilder;
 
 	@Reference
 	protected RankingIndexReader rankingIndexReader;

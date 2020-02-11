@@ -27,6 +27,7 @@ import com.liferay.portal.search.tuning.rankings.web.internal.constants.ResultRa
 import com.liferay.portal.search.tuning.rankings.web.internal.display.context.RankingPortletDisplayBuilder;
 import com.liferay.portal.search.tuning.rankings.web.internal.display.context.RankingPortletDisplayContext;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.DocumentToRankingTranslator;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 
 import java.io.IOException;
 
@@ -73,8 +74,9 @@ public class ResultRankingsPortlet extends MVCPortlet {
 			new RankingPortletDisplayBuilder(
 				documentToRankingTranslator,
 				portal.getHttpServletRequest(renderRequest), indexNameBuilder,
-				language, portal, queries, sorts, renderRequest, renderResponse,
-				searchEngineAdapter, _searchEngineInformation
+				language, portal, queries, rankingIndexNameBuilder, sorts,
+				renderRequest, renderResponse, searchEngineAdapter,
+				_searchEngineInformation
 			).build();
 
 		renderRequest.setAttribute(
@@ -98,6 +100,9 @@ public class ResultRankingsPortlet extends MVCPortlet {
 
 	@Reference
 	protected Queries queries;
+
+	@Reference
+	protected RankingIndexNameBuilder rankingIndexNameBuilder;
 
 	@Reference
 	protected SearchEngineAdapter searchEngineAdapter;
