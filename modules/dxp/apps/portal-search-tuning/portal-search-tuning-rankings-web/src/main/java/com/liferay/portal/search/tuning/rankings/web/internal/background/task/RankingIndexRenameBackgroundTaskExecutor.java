@@ -19,9 +19,10 @@ import com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskResult;
 import com.liferay.portal.kernel.backgroundtask.BaseBackgroundTaskExecutor;
 import com.liferay.portal.kernel.backgroundtask.display.BackgroundTaskDisplay;
-import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.importer.SingleIndexToMultipleIndexImporter;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Wade Cao
@@ -43,7 +44,7 @@ public class RankingIndexRenameBackgroundTaskExecutor
 	public BackgroundTaskResult execute(BackgroundTask backgroundTask)
 		throws Exception {
 
-		RankingIndexUtil.renameRankingIndexName();
+		_singleIndexToMultipleIndexImporter.importRankings();
 
 		return BackgroundTaskResult.SUCCESS;
 	}
@@ -54,5 +55,9 @@ public class RankingIndexRenameBackgroundTaskExecutor
 
 		return null;
 	}
+
+	@Reference
+	private SingleIndexToMultipleIndexImporter
+		_singleIndexToMultipleIndexImporter;
 
 }
