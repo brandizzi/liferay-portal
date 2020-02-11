@@ -52,11 +52,6 @@ public class RankingIndexCreatorImpl implements RankingIndexCreator {
 		_searchEngineAdapter.execute(deleteIndexRequest);
 	}
 
-	protected String readIndexSettings() {
-		return StringUtil.read(
-			getClass(), RankingIndexDefinition.INDEX_SETTINGS_RESOURCE_NAME);
-	}
-
 	@Reference
 	private SearchEngineAdapter _searchEngineAdapter;
 
