@@ -30,6 +30,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
+ * @author Wade Cao
  * @author Adam Brandizzi
  */
 @Component(
