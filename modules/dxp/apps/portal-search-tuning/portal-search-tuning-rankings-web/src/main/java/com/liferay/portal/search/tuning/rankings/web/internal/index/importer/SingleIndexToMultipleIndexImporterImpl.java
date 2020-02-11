@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.tuning.rankings.web.internal.index.importer;
 
+import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.service.CompanyService;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.document.BulkDocumentRequest;
@@ -23,11 +25,13 @@ import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 import com.liferay.portal.search.hits.SearchHit;
 import com.liferay.portal.search.hits.SearchHits;
+import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexCreator;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexDefinition;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -47,26 +51,9 @@ public class SingleIndexToMultipleIndexImporterImpl
 	@Override
 	public void importRankings() {
 		if (_rankingIndexReader.isExists(RankingIndexDefinition.INDEX_NAME)) {
-			List<Document> documents = getDocuments(
-				RankingIndexDefinition.INDEX_NAME);
+			createRankingIndices();
 
-			if (documents.isEmpty()) {
-				_rankingIndexCreator.delete(RankingIndexDefinition.INDEX_NAME);
-
-				return;
-			}
-
-			Boolean succeeded = groupDocumentByIndex(
-				documents
-			).entrySet(
-			).stream(
-			).map(
-				entry -> addDocuments(entry.getKey(), entry.getValue())
-			).reduce(
-				true, Boolean::logicalAnd
-			);
-
-			if (succeeded) {
+			if (importDocuments()) {
 				_rankingIndexCreator.delete(RankingIndexDefinition.INDEX_NAME);
 			}
 		}
@@ -87,10 +74,6 @@ public class SingleIndexToMultipleIndexImporterImpl
 		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
 			indexName);
 
-		if (!_rankingIndexReader.isExists(rankingIndexName)) {
-			_rankingIndexCreator.create(rankingIndexName);
-		}
-
 		BulkDocumentRequest bulkDocumentRequest = new BulkDocumentRequest();
 
 		documents.forEach(
@@ -110,6 +93,24 @@ public class SingleIndexToMultipleIndexImporterImpl
 		}
 
 		return successed;
+	}
+
+	protected void createRankingIndices() {
+		List<Company> companies = _companyService.getCompanies();
+
+		Stream<Company> stream = companies.stream();
+
+		stream.map(
+			Company::getCompanyId
+		).map(
+			_indexNameBuilder::getIndexName
+		).map(
+			RankingIndexUtil::getRankingIndexName
+		).filter(
+			rankingIndexName -> !_rankingIndexReader.isExists(rankingIndexName)
+		).forEach(
+			_rankingIndexCreator::create
+		);
 	}
 
 	protected List<Document> getDocuments(String indexName) {
@@ -135,6 +136,33 @@ public class SingleIndexToMultipleIndexImporterImpl
 		);
 	}
 
+	protected boolean importDocuments() {
+		List<Document> documents = getDocuments(
+			RankingIndexDefinition.INDEX_NAME);
+
+		if (documents.isEmpty()) {
+			_rankingIndexCreator.delete(RankingIndexDefinition.INDEX_NAME);
+
+			return true;
+		}
+
+		return groupDocumentByIndex(
+			documents
+		).entrySet(
+		).stream(
+		).map(
+			entry -> addDocuments(entry.getKey(), entry.getValue())
+		).reduce(
+			true, Boolean::logicalAnd
+		);
+	}
+
+	@Reference
+	private CompanyService _companyService;
+
+	@Reference
+	private IndexNameBuilder _indexNameBuilder;
+
 	@Reference
 	private Queries _queries;
 
@@ -143,6 +171,9 @@ public class SingleIndexToMultipleIndexImporterImpl
 
 	@Reference
 	private RankingIndexReader _rankingIndexReader;
+
+	@Reference
+	private RankingIndexNameBuilder _rankinngIndexNameBuilder;
 
 	@Reference
 	private SearchEngineAdapter _searchEngineAdapter;
