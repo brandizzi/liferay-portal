@@ -39,8 +39,8 @@ import com.liferay.portal.search.tuning.rankings.web.internal.exception.Duplicat
 import com.liferay.portal.search.tuning.rankings.web.internal.index.DuplicateQueryStringsDetector;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
-import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexWriter;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 
 import java.io.IOException;
 
@@ -276,7 +276,7 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 		String id = editRankingMVCActionRequest.getResultsRankingUid();
 
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
+		String rankingIndexName = rankingIndexNameBuilder.getRankingIndexName(
 			indexNameBuilder.getIndexName(portal.getCompanyId(actionRequest)));
 
 		Optional<Ranking> optional = rankingIndexReader.fetchOptional(
@@ -336,7 +336,7 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 	}
 
 	protected String getRankingIndexName() {
-		return RankingIndexUtil.getRankingIndexName(
+		return rankingIndexNameBuilder.getRankingIndexName(
 			indexNameBuilder.getIndexName(_companyId));
 	}
 
@@ -402,6 +402,9 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 	@Reference
 	protected Portal portal;
+
+	@Reference
+	protected RankingIndexNameBuilder rankingIndexNameBuilder;
 
 	@Reference
 	protected RankingIndexReader rankingIndexReader;

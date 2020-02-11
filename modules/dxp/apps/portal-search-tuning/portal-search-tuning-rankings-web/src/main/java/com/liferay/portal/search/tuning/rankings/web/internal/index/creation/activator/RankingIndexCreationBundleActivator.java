@@ -22,7 +22,6 @@ import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.UserConstants;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.search.tuning.rankings.web.internal.background.task.RankingIndexRenameBackgroundTaskExecutor;
-import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
 
 import java.util.HashMap;
 
@@ -62,8 +61,5 @@ public class RankingIndexCreationBundleActivator {
 
 	@Reference
 	private BackgroundTaskManager _backgroundTaskManager;
-
-	@Reference
-	private RankingIndexUtil _rankingIndexUtil;
 
 }
