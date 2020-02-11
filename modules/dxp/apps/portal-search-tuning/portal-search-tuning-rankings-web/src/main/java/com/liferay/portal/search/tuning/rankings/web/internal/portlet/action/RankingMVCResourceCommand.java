@@ -126,13 +126,9 @@ public class RankingMVCResourceCommand implements MVCResourceCommand {
 	}
 
 	protected String getRankingIndexName(ResourceRequest resourceRequest) {
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
+		return RankingIndexUtil.getRankingIndexName(
 			indexNameBuilder.getIndexName(
 				portal.getCompanyId(resourceRequest)));
-
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
-
-		return rankingIndexName;
 	}
 
 	protected JSONObject getSearchResults(ResourceRequest resourceRequest) {

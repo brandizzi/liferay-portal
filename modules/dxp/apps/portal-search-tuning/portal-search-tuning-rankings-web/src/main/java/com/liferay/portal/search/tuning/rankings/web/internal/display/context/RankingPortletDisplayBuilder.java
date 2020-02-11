@@ -377,8 +377,6 @@ public class RankingPortletDisplayBuilder {
 			_indexNameBuilder.getIndexName(
 				_portal.getCompanyId(_httpServletRequest)));
 
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
-
 		SearchRankingRequest searchRankingRequest = new SearchRankingRequest(
 			_httpServletRequest, _queries, rankingIndexName, _sorts,
 			searchContainer, _searchEngineAdapter);

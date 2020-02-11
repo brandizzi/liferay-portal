@@ -51,8 +51,6 @@ public class RankingSearchRequestContributor
 		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
 			indexNameBuilder.getIndexName(CompanyThreadLocal.getCompanyId()));
 
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
-
 		Optional<Ranking> optional =
 			rankingIndexReader.fetchByQueryStringOptional(
 				rankingIndexName, searchRequest.getQueryString());
