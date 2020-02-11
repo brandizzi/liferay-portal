@@ -38,7 +38,7 @@ import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.DocumentToRankingTranslator;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingFields;
-import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexUtil;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 import com.liferay.portal.search.tuning.rankings.web.internal.request.SearchRankingRequest;
 import com.liferay.portal.search.tuning.rankings.web.internal.request.SearchRankingResponse;
 
@@ -62,8 +62,9 @@ public class RankingPortletDisplayBuilder {
 		DocumentToRankingTranslator documentToRankingTranslator,
 		HttpServletRequest httpServletRequest,
 		IndexNameBuilder indexNameBuilder, Language language, Portal portal,
-		Queries queries, Sorts sorts, RenderRequest renderRequest,
-		RenderResponse renderResponse, SearchEngineAdapter searchEngineAdapter,
+		Queries queries, RankingIndexNameBuilder rankingIndexNameBuilder,
+		Sorts sorts, RenderRequest renderRequest, RenderResponse renderResponse,
+		SearchEngineAdapter searchEngineAdapter,
 		SearchEngineInformation searchEngineInformation) {
 
 		_documentToRankingTranslator = documentToRankingTranslator;
@@ -72,6 +73,7 @@ public class RankingPortletDisplayBuilder {
 		_language = language;
 		_portal = portal;
 		_queries = queries;
+		_rankingIndexNameBuilder = rankingIndexNameBuilder;
 		_sorts = sorts;
 		_renderRequest = renderRequest;
 		_renderResponse = renderResponse;
@@ -119,6 +121,12 @@ public class RankingPortletDisplayBuilder {
 			new RankingEntryDisplayContextBuilder(ranking);
 
 		return rankingEntryDisplayContextBuilder.build();
+	}
+
+	protected String buildRankingIndexName() {
+		return _rankingIndexNameBuilder.getRankingIndexName(
+			_indexNameBuilder.getIndexName(
+				_portal.getCompanyId(_httpServletRequest)));
 	}
 
 	protected List<DropdownItem> getActionDropdownItems() {
@@ -373,9 +381,7 @@ public class RankingPortletDisplayBuilder {
 		SearchContainer<RankingEntryDisplayContext> searchContainer =
 			getSearchContainer(getKeywords());
 
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
-			_indexNameBuilder.getIndexName(
-				_portal.getCompanyId(_httpServletRequest)));
+		String rankingIndexName = buildRankingIndexName();
 
 		SearchRankingRequest searchRankingRequest = new SearchRankingRequest(
 			_httpServletRequest, _queries, rankingIndexName, _sorts,
@@ -404,6 +410,7 @@ public class RankingPortletDisplayBuilder {
 	private final Language _language;
 	private final Portal _portal;
 	private final Queries _queries;
+	private final RankingIndexNameBuilder _rankingIndexNameBuilder;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;
 	private final SearchEngineAdapter _searchEngineAdapter;
