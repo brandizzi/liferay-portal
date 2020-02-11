@@ -163,8 +163,6 @@ public class ValidateRankingMVCResourceCommand implements MVCResourceCommand {
 
 		String rankingIndexName = RankingIndexUtil.getRankingIndexName(index);
 
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
-
 		return duplicateQueryStringsDetector.detect(
 			duplicateQueryStringsDetector.builder(
 			).index(

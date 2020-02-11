@@ -280,8 +280,6 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
 			indexNameBuilder.getIndexName(portal.getCompanyId(actionRequest)));
 
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
-
 		Optional<Ranking> optional = rankingIndexReader.fetchOptional(
 			rankingIndexName, id);
 
@@ -351,12 +349,8 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 	}
 
 	protected String getRankingIndexName() {
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
+		return RankingIndexUtil.getRankingIndexName(
 			indexNameBuilder.getIndexName(_companyId));
-
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
-
-		return rankingIndexName;
 	}
 
 	protected String getSaveAndContinueRedirect(
@@ -520,10 +514,7 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 		String[] resultRankingsUids = _getResultsRankingUids(
 			actionRequest, editRankingMVCActionRequest);
 
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName(
-			indexNameBuilder.getIndexName(portal.getCompanyId(actionRequest)));
-
-		RankingIndexUtil.createRankingIndex(rankingIndexName);
+		String rankingIndexName = getRankingIndexName();
 
 		for (String resultRankingsUid : resultRankingsUids) {
 			Optional<Ranking> optional = rankingIndexReader.fetchOptional(
