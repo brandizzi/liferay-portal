@@ -15,7 +15,6 @@
 package com.liferay.portal.search.tuning.rankings.web.internal.index.name;
 
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexDefinition;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -28,8 +27,10 @@ public class RankingIndexNameBuilderImpl implements RankingIndexNameBuilder {
 
 	@Override
 	public String getRankingIndexName(String companyIndexName) {
-		return RankingIndexDefinition.INDEX_NAME + StringPool.MINUS +
-			companyIndexName;
+		return INDEX_NAME_PREFIX + StringPool.MINUS + companyIndexName;
 	}
+
+	protected static final String INDEX_NAME_PREFIX =
+		"liferay-search-tuning-rankings";
 
 }
