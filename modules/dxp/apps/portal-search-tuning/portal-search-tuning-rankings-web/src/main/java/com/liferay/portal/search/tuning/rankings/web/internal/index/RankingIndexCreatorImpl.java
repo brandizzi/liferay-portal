@@ -17,7 +17,6 @@ package com.liferay.portal.search.tuning.rankings.web.internal.index;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.CreateIndexResponse;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
 
 import org.osgi.service.component.annotations.Component;
@@ -40,8 +39,7 @@ public class RankingIndexCreatorImpl implements RankingIndexCreator {
 
 		createIndexRequest.setSource(mappingSource);
 
-		CreateIndexResponse createIndexResponse = _searchEngineAdapter.execute(
-			createIndexRequest);
+		_searchEngineAdapter.execute(createIndexRequest);
 	}
 
 	@Override
