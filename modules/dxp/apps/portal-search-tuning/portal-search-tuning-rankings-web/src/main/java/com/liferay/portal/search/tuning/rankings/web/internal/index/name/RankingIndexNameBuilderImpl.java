@@ -30,7 +30,4 @@ public class RankingIndexNameBuilderImpl implements RankingIndexNameBuilder {
 		return companyIndexName + "-" + RankingIndexDefinition.INDEX_NAME;
 	}
 
-	protected static final String INDEX_NAME_PREFIX =
-		"liferay-search-tuning-synonyms";
-
 }
