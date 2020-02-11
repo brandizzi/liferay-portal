@@ -28,7 +28,6 @@ import com.liferay.portal.search.hits.SearchHits;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexCreator;
-import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexDefinition;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 
@@ -50,11 +49,11 @@ public class SingleIndexToMultipleIndexImporterImpl
 
 	@Override
 	public void importRankings() {
-		if (_rankingIndexReader.isExists(RankingIndexDefinition.INDEX_NAME)) {
+		if (_rankingIndexReader.isExists(SINGLE_INDEX_NAME)) {
 			createRankingIndices();
 
 			if (importDocuments()) {
-				_rankingIndexCreator.delete(RankingIndexDefinition.INDEX_NAME);
+				_rankingIndexCreator.delete(SINGLE_INDEX_NAME);
 			}
 		}
 	}
@@ -137,11 +136,10 @@ public class SingleIndexToMultipleIndexImporterImpl
 	}
 
 	protected boolean importDocuments() {
-		List<Document> documents = getDocuments(
-			RankingIndexDefinition.INDEX_NAME);
+		List<Document> documents = getDocuments(SINGLE_INDEX_NAME);
 
 		if (documents.isEmpty()) {
-			_rankingIndexCreator.delete(RankingIndexDefinition.INDEX_NAME);
+			_rankingIndexCreator.delete(SINGLE_INDEX_NAME);
 
 			return true;
 		}
@@ -156,6 +154,9 @@ public class SingleIndexToMultipleIndexImporterImpl
 			true, Boolean::logicalAnd
 		);
 	}
+
+	protected static final String SINGLE_INDEX_NAME =
+		"liferay-search-tuning-rankings";
 
 	@Reference
 	private CompanyService _companyService;
