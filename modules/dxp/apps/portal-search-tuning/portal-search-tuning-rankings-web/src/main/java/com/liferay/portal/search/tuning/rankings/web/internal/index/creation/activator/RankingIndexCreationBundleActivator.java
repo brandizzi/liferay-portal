@@ -64,4 +64,8 @@ public class RankingIndexCreationBundleActivator {
 	@Reference
 	private BackgroundTaskManager _backgroundTaskManager;
 
+	@Reference
+	private RankingIndexRenameBackgroundTaskExecutor
+		_rankingIndexRenameBackgroundTaskExecutor;
+
 }
