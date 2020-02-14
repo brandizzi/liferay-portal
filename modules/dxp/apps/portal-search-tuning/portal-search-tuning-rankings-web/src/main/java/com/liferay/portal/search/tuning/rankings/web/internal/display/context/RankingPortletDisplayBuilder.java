@@ -38,6 +38,7 @@ import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.DocumentToRankingTranslator;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingFields;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 import com.liferay.portal.search.tuning.rankings.web.internal.request.SearchRankingRequest;
 import com.liferay.portal.search.tuning.rankings.web.internal.request.SearchRankingResponse;
@@ -123,7 +124,7 @@ public class RankingPortletDisplayBuilder {
 		return rankingEntryDisplayContextBuilder.build();
 	}
 
-	protected String buildRankingIndexName() {
+	protected RankingIndexName buildRankingIndexName() {
 		return _rankingIndexNameBuilder.getRankingIndexName(
 			_indexNameBuilder.getIndexName(
 				_portal.getCompanyId(_httpServletRequest)));
@@ -381,10 +382,8 @@ public class RankingPortletDisplayBuilder {
 		SearchContainer<RankingEntryDisplayContext> searchContainer =
 			getSearchContainer(getKeywords());
 
-		String rankingIndexName = buildRankingIndexName();
-
 		SearchRankingRequest searchRankingRequest = new SearchRankingRequest(
-			_httpServletRequest, _queries, rankingIndexName, _sorts,
+			_httpServletRequest, _queries, buildRankingIndexName(), _sorts,
 			searchContainer, _searchEngineAdapter);
 
 		SearchRankingResponse searchRankingResponse =

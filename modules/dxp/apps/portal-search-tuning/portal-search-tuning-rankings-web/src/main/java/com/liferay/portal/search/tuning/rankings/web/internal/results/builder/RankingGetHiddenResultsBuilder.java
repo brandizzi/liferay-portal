@@ -32,6 +32,7 @@ import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.query.Query;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,8 +49,9 @@ public class RankingGetHiddenResultsBuilder {
 	public RankingGetHiddenResultsBuilder(
 		DLAppLocalService dlAppLocalService,
 		FastDateFormatFactory fastDateFormatFactory, Queries queries,
-		String rankingIndexName, RankingIndexReader rankingIndexReader,
-		ResourceActions resourceActions, ResourceRequest resourceRequest,
+		RankingIndexName rankingIndexName,
+		RankingIndexReader rankingIndexReader, ResourceActions resourceActions,
+		ResourceRequest resourceRequest,
 		SearchEngineAdapter searchEngineAdapter) {
 
 		_dlAppLocalService = dlAppLocalService;
@@ -174,7 +176,7 @@ public class RankingGetHiddenResultsBuilder {
 	private int _from;
 	private final Queries _queries;
 	private String _rankingId;
-	private final String _rankingIndexName;
+	private final RankingIndexName _rankingIndexName;
 	private final RankingIndexReader _rankingIndexReader;
 	private final ResourceActions _resourceActions;
 	private final ResourceRequest _resourceRequest;
