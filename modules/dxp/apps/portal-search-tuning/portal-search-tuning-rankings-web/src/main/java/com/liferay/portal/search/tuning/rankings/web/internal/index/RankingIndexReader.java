@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.tuning.rankings.web.internal.index;
 
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
+
 import java.util.Optional;
 
 /**
@@ -22,10 +24,11 @@ import java.util.Optional;
 public interface RankingIndexReader {
 
 	public Optional<Ranking> fetchByQueryStringOptional(
-		String rankingIndexName, String queryString);
+		RankingIndexName rankingIndexName, String queryString);
 
-	public Optional<Ranking> fetchOptional(String rankingIndexName, String id);
+	public Optional<Ranking> fetchOptional(
+		RankingIndexName rankingIndexName, String id);
 
-	public boolean isExists(String rankingIndexName);
+	public boolean isExists(RankingIndexName rankingIndexName);
 
 }

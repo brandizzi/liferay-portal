@@ -26,11 +26,27 @@ import org.osgi.service.component.annotations.Component;
 public class RankingIndexNameBuilderImpl implements RankingIndexNameBuilder {
 
 	@Override
-	public String getRankingIndexName(String companyIndexName) {
-		return companyIndexName + StringPool.MINUS + INDEX_NAME_SUFFIX;
+	public RankingIndexName getRankingIndexName(String companyIndexName) {
+		return new RankingIndexNameImpl(
+			companyIndexName + StringPool.MINUS + INDEX_NAME_SUFFIX);
 	}
 
 	protected static final String INDEX_NAME_SUFFIX =
 		"liferay-search-tuning-rankings";
+
+	protected class RankingIndexNameImpl implements RankingIndexName {
+
+		public RankingIndexNameImpl(String indexName) {
+			_indexName = indexName;
+		}
+
+		@Override
+		public String getIndexName() {
+			return _indexName;
+		}
+
+		private final String _indexName;
+
+	}
 
 }

@@ -33,6 +33,7 @@ import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.searcher.Searcher;
 import com.liferay.portal.search.tuning.rankings.web.internal.constants.ResultRankingsPortletKeys;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 import com.liferay.portal.search.tuning.rankings.web.internal.results.builder.RankingGetHiddenResultsBuilder;
 import com.liferay.portal.search.tuning.rankings.web.internal.results.builder.RankingGetSearchResultsBuilder;
@@ -123,7 +124,9 @@ public class RankingMVCResourceCommand implements MVCResourceCommand {
 		return null;
 	}
 
-	protected String getRankingIndexName(ResourceRequest resourceRequest) {
+	protected RankingIndexName getRankingIndexName(
+		ResourceRequest resourceRequest) {
+
 		return rankingIndexNameBuilder.getRankingIndexName(
 			indexNameBuilder.getIndexName(
 				portal.getCompanyId(resourceRequest)));
