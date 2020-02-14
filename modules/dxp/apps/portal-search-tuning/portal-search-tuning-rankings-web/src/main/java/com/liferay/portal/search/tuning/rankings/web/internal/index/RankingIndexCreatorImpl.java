@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -30,12 +31,12 @@ import org.osgi.service.component.annotations.Reference;
 public class RankingIndexCreatorImpl implements RankingIndexCreator {
 
 	@Override
-	public void create(String rankingIndexName) {
+	public void create(RankingIndexName rankingIndexName) {
 		String mappingSource = StringUtil.read(
 			getClass(), _INDEX_SETTINGS_RESOURCE_NAME);
 
 		CreateIndexRequest createIndexRequest = new CreateIndexRequest(
-			rankingIndexName);
+			rankingIndexName.getIndexName());
 
 		createIndexRequest.setSource(mappingSource);
 
@@ -43,9 +44,9 @@ public class RankingIndexCreatorImpl implements RankingIndexCreator {
 	}
 
 	@Override
-	public void delete(String rankingIndexName) {
+	public void delete(RankingIndexName rankingIndexName) {
 		DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(
-			rankingIndexName);
+			rankingIndexName.getIndexName());
 
 		_searchEngineAdapter.execute(deleteIndexRequest);
 	}
