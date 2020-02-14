@@ -28,6 +28,7 @@ import com.liferay.portal.search.hits.SearchHit;
 import com.liferay.portal.search.hits.SearchHits;
 import com.liferay.portal.search.query.BooleanQuery;
 import com.liferay.portal.search.query.Queries;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +44,7 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 
 	@Override
 	public Optional<Ranking> fetchByQueryStringOptional(
-		String rankingIndexName, String queryString) {
+		RankingIndexName rankingIndexName, String queryString) {
 
 		if (Validator.isBlank(queryString)) {
 			return Optional.empty();
@@ -51,7 +52,7 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
 
-		searchSearchRequest.setIndexNames(rankingIndexName);
+		searchSearchRequest.setIndexNames(rankingIndexName.getIndexName());
 		searchSearchRequest.setQuery(getQueryStringQuery(queryString));
 		searchSearchRequest.setSize(1);
 
@@ -62,7 +63,9 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 	}
 
 	@Override
-	public Optional<Ranking> fetchOptional(String rankingIndexName, String id) {
+	public Optional<Ranking> fetchOptional(
+		RankingIndexName rankingIndexName, String id) {
+
 		return Optional.ofNullable(
 			_getDocument(rankingIndexName, id)
 		).map(
@@ -71,9 +74,9 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 	}
 
 	@Override
-	public boolean isExists(String rankingIndexName) {
+	public boolean isExists(RankingIndexName rankingIndexName) {
 		IndicesExistsIndexRequest indicesExistsIndexRequest =
-			new IndicesExistsIndexRequest(rankingIndexName);
+			new IndicesExistsIndexRequest(rankingIndexName.getIndexName());
 
 		IndicesExistsIndexResponse indicesExistsIndexResponse =
 			_searchEngineAdapter.execute(indicesExistsIndexRequest);
@@ -82,7 +85,8 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 	}
 
 	protected Optional<Ranking> getFirstRankingOptional(
-		String rankingIndexName, SearchSearchResponse searchSearchResponse) {
+		RankingIndexName rankingIndexName,
+		SearchSearchResponse searchSearchResponse) {
 
 		if (searchSearchResponse.getCount() == 0) {
 			return Optional.empty();
@@ -130,9 +134,11 @@ public class RankingIndexReaderImpl implements RankingIndexReader {
 		return _documentToRankingTranslator.translate(document, id);
 	}
 
-	private Document _getDocument(String rankingIndexName, String id) {
+	private Document _getDocument(
+		RankingIndexName rankingIndexName, String id) {
+
 		GetDocumentRequest getDocumentRequest = new GetDocumentRequest(
-			rankingIndexName, id);
+			rankingIndexName.getIndexName(), id);
 
 		getDocumentRequest.setFetchSource(true);
 		getDocumentRequest.setFetchSourceInclude(StringPool.STAR);

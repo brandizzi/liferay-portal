@@ -24,6 +24,7 @@ import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.spi.searcher.SearchRequestContributor;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 
 import java.util.Optional;
@@ -48,8 +49,10 @@ public class RankingSearchRequestContributor
 			return searchRequest;
 		}
 
-		String rankingIndexName = rankingIndexNameBuilder.getRankingIndexName(
-			indexNameBuilder.getIndexName(CompanyThreadLocal.getCompanyId()));
+		RankingIndexName rankingIndexName =
+			rankingIndexNameBuilder.getRankingIndexName(
+				indexNameBuilder.getIndexName(
+					CompanyThreadLocal.getCompanyId()));
 
 		Optional<Ranking> optional =
 			rankingIndexReader.fetchByQueryStringOptional(

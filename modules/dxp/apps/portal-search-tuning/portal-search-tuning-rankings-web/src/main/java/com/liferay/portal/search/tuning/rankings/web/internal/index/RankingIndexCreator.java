@@ -14,13 +14,15 @@
 
 package com.liferay.portal.search.tuning.rankings.web.internal.index;
 
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
+
 /**
  * @author Adam Brandizzi
  */
 public interface RankingIndexCreator {
 
-	public void create(String rankingIndexName);
+	public void create(RankingIndexName rankingIndexName);
 
-	public void delete(String rankingIndexName);
+	public void delete(RankingIndexName rankingIndexName);
 
 }

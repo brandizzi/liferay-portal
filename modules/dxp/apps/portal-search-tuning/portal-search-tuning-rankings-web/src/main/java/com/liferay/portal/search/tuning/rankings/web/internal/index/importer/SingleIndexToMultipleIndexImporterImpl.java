@@ -29,6 +29,7 @@ import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.query.Queries;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexCreator;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 
 import java.util.List;
@@ -71,15 +72,16 @@ public class SingleIndexToMultipleIndexImporterImpl
 	protected boolean addDocuments(String indexName, List<Document> documents) {
 		boolean successed = true;
 
-		String rankingIndexName = _rankingIndexNameBuilder.getRankingIndexName(
-			indexName);
+		RankingIndexName rankingIndexName =
+			_rankingIndexNameBuilder.getRankingIndexName(indexName);
 
 		BulkDocumentRequest bulkDocumentRequest = new BulkDocumentRequest();
 
 		documents.forEach(
 			document -> {
 				IndexDocumentRequest indexDocumentRequest =
-					new IndexDocumentRequest(rankingIndexName, document);
+					new IndexDocumentRequest(
+						rankingIndexName.getIndexName(), document);
 
 				bulkDocumentRequest.addBulkableDocumentRequest(
 					indexDocumentRequest);
@@ -113,10 +115,10 @@ public class SingleIndexToMultipleIndexImporterImpl
 		);
 	}
 
-	protected List<Document> getDocuments(String indexName) {
+	protected List<Document> getDocuments(RankingIndexName singleIndexName) {
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
 
-		searchSearchRequest.setIndexNames(indexName);
+		searchSearchRequest.setIndexNames(singleIndexName.getIndexName());
 		searchSearchRequest.setQuery(_queries.matchAll());
 		searchSearchRequest.setFetchSource(true);
 
@@ -160,8 +162,15 @@ public class SingleIndexToMultipleIndexImporterImpl
 		);
 	}
 
-	protected static final String SINGLE_INDEX_NAME =
-		"liferay-search-tuning-rankings";
+	protected static final RankingIndexName SINGLE_INDEX_NAME =
+		new RankingIndexName() {
+
+			@Override
+			public String getIndexName() {
+				return "liferay-search-tuning-rankings";
+			}
+
+		};
 
 	@Reference
 	private CompanyService _companyService;
