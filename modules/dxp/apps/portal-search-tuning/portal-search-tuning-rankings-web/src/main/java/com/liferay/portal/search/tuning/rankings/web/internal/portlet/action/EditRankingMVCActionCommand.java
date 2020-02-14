@@ -40,6 +40,7 @@ import com.liferay.portal.search.tuning.rankings.web.internal.index.DuplicateQue
 import com.liferay.portal.search.tuning.rankings.web.internal.index.Ranking;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexWriter;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 
 import java.io.IOException;
@@ -224,7 +225,7 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 		_guardDuplicateQueryStrings(editRankingMVCActionRequest, ranking);
 
-		String rankingIndexName = getRankingIndexName();
+		RankingIndexName rankingIndexName = getRankingIndexName();
 
 		String id = rankingIndexWriter.create(rankingIndexName, ranking);
 
@@ -276,8 +277,10 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 		String id = editRankingMVCActionRequest.getResultsRankingUid();
 
-		String rankingIndexName = rankingIndexNameBuilder.getRankingIndexName(
-			indexNameBuilder.getIndexName(portal.getCompanyId(actionRequest)));
+		RankingIndexName rankingIndexName =
+			rankingIndexNameBuilder.getRankingIndexName(
+				indexNameBuilder.getIndexName(
+					portal.getCompanyId(actionRequest)));
 
 		Optional<Ranking> optional = rankingIndexReader.fetchOptional(
 			rankingIndexName, id);
@@ -335,9 +338,9 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 			portal.getCompanyId(actionRequest));
 	}
 
-	protected String getRankingIndexName() {
+	protected RankingIndexName getRankingIndexName() {
 		return rankingIndexNameBuilder.getRankingIndexName(
-			indexNameBuilder.getIndexName(_companyId));
+			getCompanyIndexName());
 	}
 
 	protected String getSaveAndContinueRedirect(
@@ -438,9 +441,11 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 			duplicateQueryStringsDetector.detect(
 				duplicateQueryStringsDetector.builder(
 				).index(
-					getRankingIndexName()
+					getCompanyIndexName()
 				).queryStrings(
 					queryStrings
+				).rankingIndexName(
+					getRankingIndexName()
 				).unlessRankingId(
 					ranking.getId()
 				).build());
@@ -492,7 +497,7 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 		String[] resultRankingsUids = _getResultsRankingUids(
 			actionRequest, editRankingMVCActionRequest);
 
-		String rankingIndexName = getRankingIndexName();
+		RankingIndexName rankingIndexName = getRankingIndexName();
 
 		for (String resultRankingsUid : resultRankingsUids) {
 			Optional<Ranking> optional = rankingIndexReader.fetchOptional(
@@ -594,6 +599,10 @@ public class EditRankingMVCActionCommand extends BaseMVCActionCommand {
 
 	private String _stripUpdateSpecial(String string) {
 		return string.substring(_UPDATE_SPECIAL.length());
+	}
+
+	private String getCompanyIndexName() {
+		return indexNameBuilder.getIndexName(_companyId);
 	}
 
 	private static final String _UPDATE_SPECIAL = StringPool.GREATER_THAN;
