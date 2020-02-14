@@ -31,6 +31,7 @@ import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
 import com.liferay.portal.search.tuning.rankings.web.internal.constants.ResultRankingsPortletKeys;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.DuplicateQueryStringsDetector;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 
 import java.io.IOException;
@@ -159,8 +160,6 @@ public class ValidateRankingMVCResourceCommand implements MVCResourceCommand {
 		ResourceRequest resourceRequest,
 		ValidateRankingMVCResourceRequest validateRankingMVCResourceRequest) {
 
-		String index = _getIndexName(resourceRequest);
-
 		List<String> aliases = _getAliases(validateRankingMVCResourceRequest);
 
 		Collection<String> queryStrings = Stream.concat(
@@ -174,15 +173,14 @@ public class ValidateRankingMVCResourceCommand implements MVCResourceCommand {
 			Collectors.toList()
 		);
 
-		String rankingIndexName = RankingIndexUtil.getRankingIndexName(index);
-
 		return duplicateQueryStringsDetector.detect(
 			duplicateQueryStringsDetector.builder(
 			).index(
-				_getRankingIndexName(
-					resourceRequest, validateRankingMVCResourceRequest)
+				_getIndexName(resourceRequest)
 			).queryStrings(
 				queryStrings
+			).rankingIndexName(
+				_getRankingIndexName(resourceRequest)
 			).unlessRankingId(
 				validateRankingMVCResourceRequest.getResultsRankingUid()
 			).build());
@@ -193,12 +191,11 @@ public class ValidateRankingMVCResourceCommand implements MVCResourceCommand {
 			portal.getCompanyId(resourceRequest));
 	}
 
-	private String _getRankingIndexName(
-		ResourceRequest resourceRequest,
-		ValidateRankingMVCResourceRequest validateRankingMVCResourceRequest) {
+	private RankingIndexName _getRankingIndexName(
+		ResourceRequest resourceRequest) {
 
 		return rankingIndexNameBuilder.getRankingIndexName(
-			_getIndexName(resourceRequest, validateRankingMVCResourceRequest));
+			_getIndexName(resourceRequest));
 	}
 
 	private boolean _isUpdateSpecial(String string) {
