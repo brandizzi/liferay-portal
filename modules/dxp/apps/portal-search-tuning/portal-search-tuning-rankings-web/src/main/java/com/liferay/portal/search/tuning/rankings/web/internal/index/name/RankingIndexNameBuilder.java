@@ -12,19 +12,13 @@
  *
  */
 
-package com.liferay.portal.search.tuning.rankings.web.internal.index;
-
-import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
+package com.liferay.portal.search.tuning.rankings.web.internal.index.name;
 
 /**
- * @author André de Oliveira
+ * @author Adam Brandizzi
  */
-public interface RankingIndexWriter {
+public interface RankingIndexNameBuilder {
 
-	public String create(RankingIndexName rankingIndexName, Ranking ranking);
-
-	public void remove(RankingIndexName rankingIndexName, String uid);
-
-	public void update(RankingIndexName rankingIndexName, Ranking ranking);
+	public RankingIndexName getRankingIndexName(String companyIndexName);
 
 }

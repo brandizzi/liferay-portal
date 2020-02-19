@@ -16,19 +16,13 @@ package com.liferay.portal.search.tuning.rankings.web.internal.index;
 
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 
-import java.util.Optional;
-
 /**
- * @author André de Oliveira
+ * @author Adam Brandizzi
  */
-public interface RankingIndexReader {
+public interface RankingIndexCreator {
 
-	public Optional<Ranking> fetchByQueryStringOptional(
-		RankingIndexName rankingIndexName, String queryString);
+	public void create(RankingIndexName rankingIndexName);
 
-	public Optional<Ranking> fetchOptional(
-		RankingIndexName rankingIndexName, String id);
-
-	public boolean isExists(RankingIndexName rankingIndexName);
+	public void delete(RankingIndexName rankingIndexName);
 
 }
