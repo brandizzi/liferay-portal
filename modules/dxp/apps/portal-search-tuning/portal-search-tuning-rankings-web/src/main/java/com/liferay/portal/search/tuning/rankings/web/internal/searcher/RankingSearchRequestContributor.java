@@ -48,10 +48,15 @@ public class RankingSearchRequestContributor
 			return searchRequest;
 		}
 
+		RankingIndexName rankingIndexName = getRankingIndexName(searchRequest);
+
+		if (!rankingIndexReader.isExists(rankingIndexName)) {
+			return searchRequest;
+		}
+
 		Optional<Ranking> optional =
 			rankingIndexReader.fetchByQueryStringOptional(
-				getRankingIndexName(searchRequest),
-				searchRequest.getQueryString());
+				rankingIndexName, searchRequest.getQueryString());
 
 		return optional.map(
 			ranking -> contribute(searchRequest, ranking)
