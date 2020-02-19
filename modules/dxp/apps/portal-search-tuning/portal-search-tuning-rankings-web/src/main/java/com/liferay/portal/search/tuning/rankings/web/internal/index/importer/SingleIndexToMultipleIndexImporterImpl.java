@@ -14,12 +14,10 @@
 
 package com.liferay.portal.search.tuning.rankings.web.internal.index.importer;
 
-import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.service.CompanyService;
 import com.liferay.portal.search.document.Document;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.document.BulkDocumentRequest;
-import com.liferay.portal.search.engine.adapter.document.BulkDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
@@ -27,14 +25,13 @@ import com.liferay.portal.search.hits.SearchHit;
 import com.liferay.portal.search.hits.SearchHits;
 import com.liferay.portal.search.index.IndexNameBuilder;
 import com.liferay.portal.search.query.Queries;
+import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingFields;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexCreator;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.RankingIndexReader;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexName;
 import com.liferay.portal.search.tuning.rankings.web.internal.index.name.RankingIndexNameBuilder;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,30 +47,32 @@ public class SingleIndexToMultipleIndexImporterImpl
 	implements SingleIndexToMultipleIndexImporter {
 
 	@Override
-	public void importRankings() {
-		if (_rankingIndexReader.isExists(SINGLE_INDEX_NAME)) {
-			createRankingIndices();
-
-			if (importDocuments()) {
-				_rankingIndexCreator.delete(SINGLE_INDEX_NAME);
-			}
+	public void importRankings(String companyIndexName) {
+		if (!_rankingIndexReader.isExists(SINGLE_INDEX_NAME)) {
+			return;
 		}
-	}
-
-	protected static Map<String, List<Document>> groupDocumentByIndex(
-		List<Document> documents) {
-
-		Stream<Document> stream = documents.stream();
-
-		return stream.collect(
-			Collectors.groupingBy(document -> document.getString("index")));
-	}
-
-	protected boolean addDocuments(String indexName, List<Document> documents) {
-		boolean successed = true;
 
 		RankingIndexName rankingIndexName =
-			_rankingIndexNameBuilder.getRankingIndexName(indexName);
+			_rankingIndexNameBuilder.getRankingIndexName(companyIndexName);
+
+		if (!_rankingIndexReader.isExists(rankingIndexName)) {
+			_rankingIndexCreator.create(rankingIndexName);
+		}
+
+		_rankingIndexCreator.create(rankingIndexName);
+
+		List<Document> documents = getDocuments(
+			SINGLE_INDEX_NAME, companyIndexName);
+
+		if (documents.isEmpty()) {
+			return;
+		}
+
+		addDocuments(rankingIndexName, documents);
+	}
+
+	protected void addDocuments(
+		RankingIndexName rankingIndexName, List<Document> documents) {
 
 		BulkDocumentRequest bulkDocumentRequest = new BulkDocumentRequest();
 
@@ -87,39 +86,17 @@ public class SingleIndexToMultipleIndexImporterImpl
 					indexDocumentRequest);
 			});
 
-		BulkDocumentResponse bulkDocumentResponse =
-			_searchEngineAdapter.execute(bulkDocumentRequest);
-
-		if (bulkDocumentResponse.hasErrors()) {
-			successed = false;
-		}
-
-		return successed;
+		_searchEngineAdapter.execute(bulkDocumentRequest);
 	}
 
-	protected void createRankingIndices() {
-		List<Company> companies = _companyService.getCompanies();
+	protected List<Document> getDocuments(
+		RankingIndexName rankingIndexName, String companyIndexName) {
 
-		Stream<Company> stream = companies.stream();
-
-		stream.map(
-			Company::getCompanyId
-		).map(
-			_indexNameBuilder::getIndexName
-		).map(
-			_rankingIndexNameBuilder::getRankingIndexName
-		).filter(
-			rankingIndexName -> !_rankingIndexReader.isExists(rankingIndexName)
-		).forEach(
-			_rankingIndexCreator::create
-		);
-	}
-
-	protected List<Document> getDocuments(RankingIndexName singleIndexName) {
 		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
 
-		searchSearchRequest.setIndexNames(singleIndexName.getIndexName());
-		searchSearchRequest.setQuery(_queries.matchAll());
+		searchSearchRequest.setIndexNames(rankingIndexName.getIndexName());
+		searchSearchRequest.setQuery(
+			_queries.match(RankingFields.INDEX, companyIndexName));
 		searchSearchRequest.setFetchSource(true);
 
 		SearchSearchResponse searchSearchResponse =
@@ -135,30 +112,6 @@ public class SingleIndexToMultipleIndexImporterImpl
 			SearchHit::getDocument
 		).collect(
 			Collectors.toList()
-		);
-	}
-
-	protected boolean importDocuments() {
-		List<Document> documents = getDocuments(SINGLE_INDEX_NAME);
-
-		if (documents.isEmpty()) {
-			_rankingIndexCreator.delete(SINGLE_INDEX_NAME);
-
-			return true;
-		}
-
-		Map<String, List<Document>> documentsMap = groupDocumentByIndex(
-			documents);
-
-		Set<Map.Entry<String, List<Document>>> entrySet =
-			documentsMap.entrySet();
-
-		Stream<Map.Entry<String, List<Document>>> stream = entrySet.stream();
-
-		return stream.map(
-			entry -> addDocuments(entry.getKey(), entry.getValue())
-		).reduce(
-			true, Boolean::logicalAnd
 		);
 	}
 
