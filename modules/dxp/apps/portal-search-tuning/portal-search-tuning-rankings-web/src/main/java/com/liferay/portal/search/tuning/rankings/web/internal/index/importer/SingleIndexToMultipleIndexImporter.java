@@ -19,6 +19,6 @@ package com.liferay.portal.search.tuning.rankings.web.internal.index.importer;
  */
 public interface SingleIndexToMultipleIndexImporter {
 
-	public void importRankings();
+	public void importRankings(String companyIndexName);
 
 }
