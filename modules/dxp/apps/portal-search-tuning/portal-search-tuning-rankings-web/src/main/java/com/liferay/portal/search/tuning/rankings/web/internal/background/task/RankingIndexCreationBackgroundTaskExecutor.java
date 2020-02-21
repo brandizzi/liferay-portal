@@ -29,13 +29,13 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = "background.task.executor.class.name=com.liferay.portal.search.tuning.rankings.web.internal.background.task.RankingIndexRenameBackgroundTaskExecutor",
+	property = "background.task.executor.class.name=com.liferay.portal.search.tuning.rankings.web.internal.background.task.RankingIndexCreationBackgroundTaskExecutor",
 	service = {
 		BackgroundTaskExecutor.class,
-		RankingIndexRenameBackgroundTaskExecutor.class
+		RankingIndexCreationBackgroundTaskExecutor.class
 	}
 )
-public class RankingIndexRenameBackgroundTaskExecutor
+public class RankingIndexCreationBackgroundTaskExecutor
 	extends BaseBackgroundTaskExecutor {
 
 	@Override

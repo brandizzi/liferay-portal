@@ -21,7 +21,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.UserConstants;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.search.tuning.rankings.web.internal.background.task.RankingIndexRenameBackgroundTaskExecutor;
+import com.liferay.portal.kernel.uuid.PortalUUID;
+import com.liferay.portal.search.tuning.rankings.web.internal.background.task.RankingIndexCreationBackgroundTaskExecutor;
 
 import java.util.HashMap;
 
@@ -47,8 +48,8 @@ public class RankingIndexCreationBundleActivator {
 		try {
 			_backgroundTaskManager.addBackgroundTask(
 				UserConstants.USER_ID_DEFAULT, CompanyConstants.SYSTEM,
-				"RankingIndexRename",
-				RankingIndexRenameBackgroundTaskExecutor.class.getName(),
+				"createRankingIndex-" + _portalUUID.generate(),
+				RankingIndexCreationBackgroundTaskExecutor.class.getName(),
 				new HashMap<>(), new ServiceContext());
 		}
 		catch (PortalException portalException) {
@@ -65,7 +66,10 @@ public class RankingIndexCreationBundleActivator {
 	private BackgroundTaskManager _backgroundTaskManager;
 
 	@Reference
-	private RankingIndexRenameBackgroundTaskExecutor
+	private PortalUUID _portalUUID;
+
+	@Reference
+	private RankingIndexCreationBackgroundTaskExecutor
 		_rankingIndexRenameBackgroundTaskExecutor;
 
 }
