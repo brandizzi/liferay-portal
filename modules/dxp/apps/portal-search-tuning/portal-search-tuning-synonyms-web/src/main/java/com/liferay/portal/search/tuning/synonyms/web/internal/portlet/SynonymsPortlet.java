@@ -97,7 +97,7 @@ public class SynonymsPortlet extends MVCPortlet {
 	@Reference
 	private Queries _queries;
 
-	@Reference
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	private SearchEngineAdapter _searchEngineAdapter;
 
 	@Reference

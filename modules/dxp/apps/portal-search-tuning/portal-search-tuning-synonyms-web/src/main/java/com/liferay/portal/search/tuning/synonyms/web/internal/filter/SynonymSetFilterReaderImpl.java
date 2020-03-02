@@ -61,7 +61,7 @@ public class SynonymSetFilterReaderImpl implements SynonymSetFilterReader {
 	@Reference
 	protected JSONFactory jsonFactory;
 
-	@Reference
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected SearchEngineAdapter searchEngineAdapter;
 
 }

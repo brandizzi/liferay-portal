@@ -68,7 +68,7 @@ public class SynonymSetIndexWriterImpl implements SynonymSetIndexWriter {
 		_searchEngineAdapter.execute(indexDocumentRequest);
 	}
 
-	@Reference
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	private SearchEngineAdapter _searchEngineAdapter;
 
 	@Reference

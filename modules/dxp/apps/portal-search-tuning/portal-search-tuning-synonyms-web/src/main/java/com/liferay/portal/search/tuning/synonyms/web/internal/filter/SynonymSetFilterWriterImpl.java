@@ -83,7 +83,7 @@ public class SynonymSetFilterWriterImpl implements SynonymSetFilterWriter {
 	@Reference
 	protected JSONFactory jsonFactory;
 
-	@Reference
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	protected SearchEngineAdapter searchEngineAdapter;
 
 }

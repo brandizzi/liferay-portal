@@ -54,7 +54,7 @@ public class SynonymSetIndexCreatorImpl implements SynonymSetIndexCreator {
 	protected static final String INDEX_SETTINGS_RESOURCE_NAME =
 		"/META-INF/search/liferay-search-tuning-synonyms-index.json";
 
-	@Reference
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	private SearchEngineAdapter _searchEngineAdapter;
 
 }

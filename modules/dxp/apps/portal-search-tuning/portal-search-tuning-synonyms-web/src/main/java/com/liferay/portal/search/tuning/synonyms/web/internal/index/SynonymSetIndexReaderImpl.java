@@ -114,7 +114,7 @@ public class SynonymSetIndexReaderImpl implements SynonymSetIndexReader {
 	@Reference
 	private Queries _queries;
 
-	@Reference
+	@Reference(target = "(search.engine.impl=Elasticsearch)")
 	private SearchEngineAdapter _searchEngineAdapter;
 
 }
