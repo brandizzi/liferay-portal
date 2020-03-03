@@ -16,9 +16,15 @@ package com.liferay.portal.search.tuning.synonyms.web.internal.application.list;
 
 import com.liferay.application.list.BasePanelApp;
 import com.liferay.application.list.PanelApp;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.search.engine.SearchEngineInformation;
 import com.liferay.portal.search.tuning.synonyms.web.internal.constants.SynonymsPortletKeys;
 import com.liferay.portal.search.tuning.web.application.list.constants.SearchTuningPanelCategoryKeys;
+
+import java.util.Objects;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -42,6 +48,17 @@ public class SynonymsPanelApp extends BasePanelApp {
 	}
 
 	@Override
+	public boolean isShow(PermissionChecker permissionChecker, Group group)
+		throws PortalException {
+
+		if (Objects.equals(searchEngineInformation.getVendorString(), "Solr")) {
+			return false;
+		}
+
+		return super.isShow(permissionChecker, group);
+	}
+
+	@Override
 	@Reference(
 		target = "(javax.portlet.name=" + SynonymsPortletKeys.SYNONYMS + ")",
 		unbind = "-"
@@ -49,5 +66,8 @@ public class SynonymsPanelApp extends BasePanelApp {
 	public void setPortlet(Portlet portlet) {
 		super.setPortlet(portlet);
 	}
+
+	@Reference
+	protected SearchEngineInformation searchEngineInformation;
 
 }
