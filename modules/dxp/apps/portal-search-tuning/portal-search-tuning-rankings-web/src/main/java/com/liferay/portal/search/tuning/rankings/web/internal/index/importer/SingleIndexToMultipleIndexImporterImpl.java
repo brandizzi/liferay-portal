@@ -51,13 +51,9 @@ public class SingleIndexToMultipleIndexImporterImpl
 
 	@Override
 	public void importRankings() {
-		if (_rankingIndexReader.isExists(SINGLE_INDEX_NAME)) {
-			createRankingIndices();
+		createRankingIndices();
 
-			if (importDocuments()) {
-				_rankingIndexCreator.delete(SINGLE_INDEX_NAME);
-			}
-		}
+		importDocuments();
 	}
 
 	protected static Map<String, List<Document>> groupDocumentByIndex(
@@ -138,13 +134,15 @@ public class SingleIndexToMultipleIndexImporterImpl
 		);
 	}
 
-	protected boolean importDocuments() {
+	protected void importDocuments() {
+		if (!_rankingIndexReader.isExists(SINGLE_INDEX_NAME)) {
+			return;
+		}
+
 		List<Document> documents = getDocuments(SINGLE_INDEX_NAME);
 
 		if (documents.isEmpty()) {
-			_rankingIndexCreator.delete(SINGLE_INDEX_NAME);
-
-			return true;
+			return;
 		}
 
 		Map<String, List<Document>> documentsMap = groupDocumentByIndex(
@@ -155,11 +153,15 @@ public class SingleIndexToMultipleIndexImporterImpl
 
 		Stream<Map.Entry<String, List<Document>>> stream = entrySet.stream();
 
-		return stream.map(
+		boolean success = stream.map(
 			entry -> addDocuments(entry.getKey(), entry.getValue())
 		).reduce(
 			true, Boolean::logicalAnd
 		);
+
+		if (success) {
+			_rankingIndexCreator.delete(SINGLE_INDEX_NAME);
+		}
 	}
 
 	protected static final RankingIndexName SINGLE_INDEX_NAME =
