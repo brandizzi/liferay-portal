@@ -505,6 +505,10 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 			ReindexBackgroundTaskConstants.COMPANY_IDS, companyIds);
 
 		try {
+			if (_log.isInfoEnabled()) {
+				_log.info("BG task for full reindexing registered");
+			}
+
 			return _backgroundTaskManager.addBackgroundTask(
 				userId, CompanyConstants.SYSTEM, jobName,
 				ReindexPortalBackgroundTaskExecutor.class.getName(),
@@ -538,6 +542,11 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 			ReindexBackgroundTaskConstants.COMPANY_IDS, companyIds);
 
 		try {
+			if (_log.isInfoEnabled()) {
+				_log.info(
+					"BG task for " + className + " reindexing registered");
+			}
+
 			return _backgroundTaskManager.addBackgroundTask(
 				userId, CompanyConstants.SYSTEM, jobName,
 				ReindexSingleIndexerBackgroundTaskExecutor.class.getName(),

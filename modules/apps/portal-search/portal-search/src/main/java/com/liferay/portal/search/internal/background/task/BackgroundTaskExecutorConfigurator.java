@@ -16,6 +16,8 @@ package com.liferay.portal.search.internal.background.task;
 
 import com.liferay.petra.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.search.ccr.CrossClusterReplicationHelper;
 import com.liferay.portal.search.index.IndexNameBuilder;
@@ -46,11 +48,19 @@ public class BackgroundTaskExecutorConfigurator {
 				bundleContext, _crossClusterReplicationHelper,
 				_indexNameBuilder, _portalExecutorManager);
 
+		if (_log.isInfoEnabled()) {
+			_log.info("Registering reindexing background tasks");
+		}
+
 		registerBackgroundTaskExecutor(
 			bundleContext, reindexPortalBackgroundTaskExecutor);
 
 		registerBackgroundTaskExecutor(
 			bundleContext, _reindexSingleIndexerBackgroundTaskExecutor);
+
+		if (_log.isInfoEnabled()) {
+			_log.info("Registering reindexing background tasks DONE");
+		}
 	}
 
 	@Deactivate
@@ -79,6 +89,9 @@ public class BackgroundTaskExecutorConfigurator {
 
 		_serviceRegistrations.add(serviceRegistration);
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		BackgroundTaskExecutorConfigurator.class);
 
 	@Reference(
 		cardinality = ReferenceCardinality.OPTIONAL,
