@@ -16,6 +16,8 @@ package com.liferay.portal.search.internal.background.task;
 
 import com.liferay.petra.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 
 import java.util.Dictionary;
@@ -41,11 +43,15 @@ public class BackgroundTaskExecutorConfigurator {
 			new ReindexPortalBackgroundTaskExecutor(
 				bundleContext, _portalExecutorManager);
 
+		_log.error("Registering reindexing background tasks");
+
 		registerBackgroundTaskExecutor(
 			bundleContext, reindexPortalBackgroundTaskExecutor);
 
 		registerBackgroundTaskExecutor(
 			bundleContext, _reindexSingleIndexerBackgroundTaskExecutor);
+
+		_log.error("Registering reindexing background tasks DONE");
 	}
 
 	@Deactivate
@@ -74,6 +80,9 @@ public class BackgroundTaskExecutorConfigurator {
 
 		_serviceRegistrations.add(serviceRegistration);
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		BackgroundTaskExecutorConfigurator.class);
 
 	@Reference
 	private PortalExecutorManager _portalExecutorManager;
