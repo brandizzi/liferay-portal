@@ -41,11 +41,15 @@ public class BackgroundTaskExecutorConfigurator {
 			new ReindexPortalBackgroundTaskExecutor(
 				bundleContext, _portalExecutorManager);
 
+		System.out.println("Registering reindexing background tasks");
+
 		registerBackgroundTaskExecutor(
 			bundleContext, reindexPortalBackgroundTaskExecutor);
 
 		registerBackgroundTaskExecutor(
 			bundleContext, _reindexSingleIndexerBackgroundTaskExecutor);
+
+		System.out.println("Registering reindexing background tasks DONE");
 	}
 
 	@Deactivate
