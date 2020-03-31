@@ -2,15 +2,19 @@
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+	<category name="com.liferay.portal.search.internal.IndexWriterHelperImpl">
+		<priority value="INFO" />
+	</category>
+
 	<category name="com.liferay.portal.search.internal.IndexerRegistryImpl">
 		<priority value="WARN" />
 	</category>
 
-	<category name="com.liferay.portal.search.internal.index.contributor.helper.ModelIndexerWriterDocumentHelperImpl">
-		<priority value="WARN" />
+	<category name="com.liferay.portal.search.internal.background.task.BackgroundTaskExecutorConfigurator">
+		<priority value="INFO" />
 	</category>
 
-	<category name="com.liferay.portal.search.internal.indexer.IndexerWriterImpl">
+	<category name="com.liferay.portal.search.internal.index.contributor.helper.ModelIndexerWriterDocumentHelperImpl">
 		<priority value="WARN" />
 	</category>
 </log4j:configuration>
