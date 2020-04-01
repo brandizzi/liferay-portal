@@ -18,6 +18,10 @@ import com.liferay.petra.executor.PortalExecutorManager;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.IndexWriterHelper;
+import com.liferay.portal.kernel.search.IndexerRegistry;
+import com.liferay.portal.kernel.search.SearchEngineHelper;
+import com.liferay.portal.kernel.search.background.task.ReindexStatusMessageSender;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.search.ccr.CrossClusterReplicationHelper;
 import com.liferay.portal.search.index.IndexNameBuilder;
@@ -55,8 +59,13 @@ public class BackgroundTaskExecutorConfigurator {
 		registerBackgroundTaskExecutor(
 			bundleContext, reindexPortalBackgroundTaskExecutor);
 
+		BackgroundTaskExecutor reindexSingleIndexerBackgroundTaskExecutor =
+			new ReindexSingleIndexerBackgroundTaskExecutor(
+				_indexerRegistry, _indexWriterHelper,
+				_reindexStatusMessageSender, _searchEngineHelper);
+
 		registerBackgroundTaskExecutor(
-			bundleContext, _reindexSingleIndexerBackgroundTaskExecutor);
+			bundleContext, reindexSingleIndexerBackgroundTaskExecutor);
 
 		if (_log.isInfoEnabled()) {
 			_log.info("Registering reindexing background tasks DONE");
@@ -100,14 +109,22 @@ public class BackgroundTaskExecutorConfigurator {
 	private CrossClusterReplicationHelper _crossClusterReplicationHelper;
 
 	@Reference
+	private IndexerRegistry _indexerRegistry;
+
+	@Reference
 	private IndexNameBuilder _indexNameBuilder;
+
+	@Reference
+	private IndexWriterHelper _indexWriterHelper;
 
 	@Reference
 	private PortalExecutorManager _portalExecutorManager;
 
 	@Reference
-	private ReindexSingleIndexerBackgroundTaskExecutor
-		_reindexSingleIndexerBackgroundTaskExecutor;
+	private ReindexStatusMessageSender _reindexStatusMessageSender;
+
+	@Reference
+	private SearchEngineHelper _searchEngineHelper;
 
 	private final Set<ServiceRegistration<BackgroundTaskExecutor>>
 		_serviceRegistrations = new HashSet<>();
