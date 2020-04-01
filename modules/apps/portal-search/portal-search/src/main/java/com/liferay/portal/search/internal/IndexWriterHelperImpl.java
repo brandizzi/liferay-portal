@@ -707,6 +707,10 @@ public class IndexWriterHelperImpl implements IndexWriterHelper {
 	private IndexStatusManager _indexStatusManager;
 
 	@Reference
+	private ReindexSingleIndexerBackgroundTaskExecutor
+		_reindexSingleIndexerBackgroundTaskExecutor;
+
+	@Reference
 	private SearchEngineHelper _searchEngineHelper;
 
 	@Reference
