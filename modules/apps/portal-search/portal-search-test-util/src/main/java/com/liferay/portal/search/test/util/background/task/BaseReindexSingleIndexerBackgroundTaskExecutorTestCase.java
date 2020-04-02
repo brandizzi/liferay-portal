@@ -89,14 +89,9 @@ public abstract class BaseReindexSingleIndexerBackgroundTaskExecutorTestCase {
 	protected ReindexSingleIndexerBackgroundTaskExecutor
 		getReindexSingleIndexerBackgroundTaskExecutor() {
 
-		return new ReindexSingleIndexerBackgroundTaskExecutor() {
-			{
-				indexerRegistry = _indexerRegistry;
-				indexWriterHelper = _indexWriterHelper;
-				reindexStatusMessageSender = _reindexStatusMessageSender;
-				searchEngineHelper = _searchEngineHelper;
-			}
-		};
+		return new ReindexSingleIndexerBackgroundTaskExecutor(
+				_indexerRegistry, _indexWriterHelper,
+				_reindexStatusMessageSender, _searchEngineHelper);
 	}
 
 	protected abstract SearchEngineFixture getSearchEngineFixture();
