@@ -31,6 +31,7 @@ import com.liferay.portal.search.elasticsearch7.configuration.OperationMode;
 import com.liferay.portal.search.elasticsearch7.internal.ElasticsearchSearchEngine;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchConnection;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchConnectionManager;
+import com.liferay.portal.search.elasticsearch7.internal.util.JSONUtil;
 import com.liferay.portal.search.engine.ConnectionInformation;
 import com.liferay.portal.search.engine.ConnectionInformationBuilder;
 import com.liferay.portal.search.engine.ConnectionInformationBuilderFactory;
@@ -49,7 +50,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -418,7 +418,7 @@ public class ElasticsearchSearchEngineInformation
 
 		JSONObject nodesJSONObject = responseJSONObject.getJSONObject("nodes");
 
-		Set<String> nodes = nodesJSONObject.keySet();
+		Iterable<String> nodes = JSONUtil.getKeysIterable(nodesJSONObject);
 
 		List<NodeInformation> nodeInformationList = new ArrayList<>();
 
