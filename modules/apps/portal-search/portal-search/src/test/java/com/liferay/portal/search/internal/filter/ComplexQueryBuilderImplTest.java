@@ -53,7 +53,7 @@ public class ComplexQueryBuilderImplTest {
 			new ComplexQueryBuilderImpl(_queries, _scripts);
 
 		Query query = _getQuery(
-			complexQueryBuilderImpl, "whatever", "[now/d now+1d/d[");
+			complexQueryBuilderImpl, "date_range", "[now/d now+1d/d[");
 
 		Assert.assertTrue(query instanceof DateRangeTermQuery);
 	}
@@ -84,7 +84,7 @@ public class ComplexQueryBuilderImplTest {
 		ComplexQueryBuilderImpl complexQueryBuilderImpl =
 			new ComplexQueryBuilderImpl(_queries, _scripts);
 
-		Query query = _getQuery(complexQueryBuilderImpl, "whatever", "]10 20]");
+		Query query = _getQuery(complexQueryBuilderImpl, "range", "]10 20]");
 
 		Assert.assertTrue(query instanceof RangeTermQuery);
 	}
