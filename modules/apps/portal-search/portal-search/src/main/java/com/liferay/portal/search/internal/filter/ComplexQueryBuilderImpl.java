@@ -209,6 +209,21 @@ public class ComplexQueryBuilderImpl implements ComplexQueryBuilder {
 				return _queries.booleanQuery();
 			}
 
+			if (Objects.equals(type, "date_range")) {
+				RangeTermQueryValue rangeTermQueryValue = buildRangeQuery(
+					value);
+
+				if (rangeTermQueryValue == null) {
+					return null;
+				}
+
+				return _queries.dateRangeTerm(
+					field, rangeTermQueryValue.isIncludesLower(),
+					rangeTermQueryValue.isIncludesUpper(),
+					rangeTermQueryValue.getLowerBound(),
+					rangeTermQueryValue.getUpperBound());
+			}
+
 			if (Objects.equals(type, "exists")) {
 				return _queries.exists(field);
 			}
@@ -274,6 +289,21 @@ public class ComplexQueryBuilderImpl implements ComplexQueryBuilder {
 				}
 
 				return stringQuery;
+			}
+
+			if (Objects.equals(type, "range")) {
+				RangeTermQueryValue rangeTermQueryValue = buildRangeQuery(
+					value);
+
+				if (rangeTermQueryValue == null) {
+					return null;
+				}
+
+				return _queries.rangeTerm(
+					field, rangeTermQueryValue.isIncludesLower(),
+					rangeTermQueryValue.isIncludesUpper(),
+					rangeTermQueryValue.getLowerBound(),
+					rangeTermQueryValue.getUpperBound());
 			}
 
 			if (Objects.equals(type, "regexp")) {
@@ -381,19 +411,13 @@ public class ComplexQueryBuilderImpl implements ComplexQueryBuilder {
 				return complexQueryPart.getQuery();
 			}
 
-			Query query = null;
-
 			String type = GetterUtil.getString(complexQueryPart.getType());
 
 			String field = GetterUtil.getString(complexQueryPart.getField());
 
 			String value = GetterUtil.getString(complexQueryPart.getValue());
 
-			query = buildRangeQuery(field, value);
-
-			if (query == null) {
-				query = buildQuery(type, field, value);
-			}
+			Query query = buildQuery(type, field, value);
 
 			if (query == null) {
 				return null;
