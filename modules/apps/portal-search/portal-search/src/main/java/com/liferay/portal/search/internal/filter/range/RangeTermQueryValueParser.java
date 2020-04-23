@@ -38,6 +38,8 @@ public class RangeTermQueryValueParser {
 			rangeTermQueryValueBuilder.includesUpper(true);
 		}
 
+		value = value.substring(1, value.length() - 1);
+
 		String[] rangeParts = value.split(StringPool.SPACE);
 
 		rangeTermQueryValueBuilder.lowerBound(rangeParts[0]);
