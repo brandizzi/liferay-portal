@@ -79,6 +79,71 @@ public class ComplexQueryBuilderImpl implements ComplexQueryBuilder {
 		return this;
 	}
 
+	protected class RangeTermQueryValue {
+
+		public RangeTermQueryValue() {
+		}
+
+		public RangeTermQueryValue(RangeTermQueryValue rangeTermQueryValue) {
+			_includesLower = rangeTermQueryValue._includesLower;
+			_includesUpper = rangeTermQueryValue._includesUpper;
+			_lowerBound = rangeTermQueryValue._lowerBound;
+			_upperBound = rangeTermQueryValue._upperBound;
+		}
+
+		public String getLowerBound() {
+			return _lowerBound;
+		}
+
+		public String getUpperBound() {
+			return _upperBound;
+		}
+
+		public boolean isIncludesLower() {
+			return _includesLower;
+		}
+
+		public boolean isIncludesUpper() {
+			return _includesUpper;
+		}
+
+		private boolean _includesLower;
+		private boolean _includesUpper;
+		private String _lowerBound;
+		private String _upperBound;
+
+	}
+
+	protected class RangeTermQueryValueBuilder {
+
+		public RangeTermQueryValueBuilder() {
+			_rangeTermQueryValue = new RangeTermQueryValue();
+		}
+
+		public RangeTermQueryValue build() {
+			return new RangeTermQueryValue(_rangeTermQueryValue);
+		}
+
+		public void includesLower(boolean includesLower) {
+			_rangeTermQueryValue._includesLower = includesLower;
+		}
+
+		public void includesUpper(boolean includesUpper) {
+			_rangeTermQueryValue._includesUpper = includesUpper;
+		}
+
+		public void lowerBound(String lowerBound) {
+			_rangeTermQueryValue._lowerBound = lowerBound;
+		}
+
+		public void upperBound(String upperBound) {
+			_rangeTermQueryValue._upperBound = upperBound;
+		}
+
+		private final RangeTermQueryValue _rangeTermQueryValue;
+
+	}
+
 	private BooleanQuery _getRootBooleanQuery() {
 		if (_booleanQuery != null) {
 			return _booleanQuery;
