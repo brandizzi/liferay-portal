@@ -1,0 +1,63 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
+package com.liferay.portal.search.internal.filter.range;
+
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.util.Validator;
+
+/**
+ * @author Adam Brandizzi
+ */
+public class RangeTermQueryValueParser {
+
+	public RangeTermQueryValue parse(String value) {
+		if (!_isRangePattern(value)) {
+			return null;
+		}
+
+		RangeTermQueryValue.Builder rangeTermQueryValueBuilder =
+			new RangeTermQueryValue.Builder();
+
+		if (value.startsWith(StringPool.OPEN_BRACKET)) {
+			rangeTermQueryValueBuilder.includesLower(true);
+		}
+
+		if (value.endsWith(StringPool.CLOSE_BRACKET)) {
+			rangeTermQueryValueBuilder.includesUpper(true);
+		}
+
+		String[] rangeParts = value.split(StringPool.SPACE);
+
+		rangeTermQueryValueBuilder.lowerBound(rangeParts[0]);
+		rangeTermQueryValueBuilder.upperBound(
+			rangeParts[rangeParts.length - 1]);
+
+		return rangeTermQueryValueBuilder.build();
+	}
+
+	private boolean _isRangePattern(String value) {
+		if (!Validator.isBlank(value) &&
+			(value.startsWith(StringPool.OPEN_BRACKET) ||
+			 value.startsWith(StringPool.CLOSE_BRACKET)) &&
+			(value.endsWith(StringPool.OPEN_BRACKET) ||
+			 value.endsWith(StringPool.CLOSE_BRACKET))) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+}

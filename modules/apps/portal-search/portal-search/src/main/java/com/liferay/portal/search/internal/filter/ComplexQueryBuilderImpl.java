@@ -14,12 +14,12 @@
 
 package com.liferay.portal.search.internal.filter;
 
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.filter.ComplexQueryBuilder;
 import com.liferay.portal.search.filter.ComplexQueryPart;
 import com.liferay.portal.search.internal.filter.range.RangeTermQueryValue;
+import com.liferay.portal.search.internal.filter.range.RangeTermQueryValueParser;
 import com.liferay.portal.search.internal.util.SearchStringUtil;
 import com.liferay.portal.search.query.BooleanQuery;
 import com.liferay.portal.search.query.Queries;
@@ -146,8 +146,8 @@ public class ComplexQueryBuilderImpl implements ComplexQueryBuilder {
 			}
 
 			if (Objects.equals(type, "date_range")) {
-				RangeTermQueryValue rangeTermQueryValue = buildRangeQuery(
-					value);
+				RangeTermQueryValue rangeTermQueryValue =
+					_rangeTermQueryParser.parse(value);
 
 				if (rangeTermQueryValue == null) {
 					return null;
@@ -228,8 +228,8 @@ public class ComplexQueryBuilderImpl implements ComplexQueryBuilder {
 			}
 
 			if (Objects.equals(type, "range")) {
-				RangeTermQueryValue rangeTermQueryValue = buildRangeQuery(
-					value);
+				RangeTermQueryValue rangeTermQueryValue =
+					_rangeTermQueryParser.parse(value);
 
 				if (rangeTermQueryValue == null) {
 					return null;
@@ -290,31 +290,6 @@ public class ComplexQueryBuilderImpl implements ComplexQueryBuilder {
 			}
 
 			return null;
-		}
-
-		protected RangeTermQueryValue buildRangeQuery(String value) {
-			if (!_isRangePattern(value)) {
-				return null;
-			}
-
-			RangeTermQueryValue.Builder rangeTermQueryValueBuilder =
-				new RangeTermQueryValue.Builder();
-
-			if (value.startsWith(StringPool.OPEN_BRACKET)) {
-				rangeTermQueryValueBuilder.includesLower(true);
-			}
-
-			if (value.endsWith(StringPool.CLOSE_BRACKET)) {
-				rangeTermQueryValueBuilder.includesUpper(true);
-			}
-
-			String[] rangeParts = value.split(StringPool.SPACE);
-
-			rangeTermQueryValueBuilder.lowerBound(rangeParts[0]);
-			rangeTermQueryValueBuilder.upperBound(
-				rangeParts[rangeParts.length - 1]);
-
-			return rangeTermQueryValueBuilder.build();
 		}
 
 		protected Query getNamedQuery(String name) {
@@ -390,21 +365,10 @@ public class ComplexQueryBuilderImpl implements ComplexQueryBuilder {
 			return query;
 		}
 
-		private boolean _isRangePattern(String value) {
-			if (!Validator.isBlank(value) &&
-				(value.startsWith(StringPool.OPEN_BRACKET) ||
-				 value.startsWith(StringPool.CLOSE_BRACKET)) &&
-				(value.endsWith(StringPool.OPEN_BRACKET) ||
-				 value.endsWith(StringPool.CLOSE_BRACKET))) {
-
-				return true;
-			}
-
-			return false;
-		}
-
 		private final Map<String, ComplexQueryPart> _complexQueryPartsMap;
 		private final Map<String, Query> _queriesMap = new HashMap<>();
+		private final RangeTermQueryValueParser _rangeTermQueryParser =
+			new RangeTermQueryValueParser();
 		private final BooleanQuery _rootBooleanQuery;
 
 	}
