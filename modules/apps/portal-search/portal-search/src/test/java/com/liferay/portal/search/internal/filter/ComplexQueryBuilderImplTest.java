@@ -89,7 +89,29 @@ public class ComplexQueryBuilderImplTest {
 		Assert.assertTrue(query instanceof RangeTermQuery);
 	}
 
-	private Query _getQuery(
+	@Test
+	public void testInvalidType() {
+		ComplexQueryBuilderImpl complexQueryBuilderImpl =
+			new ComplexQueryBuilderImpl(_queries, _scripts);
+
+		List<Query> queries = _getQueries(
+			complexQueryBuilderImpl, "whatever", "[now/d now+1d/d[");
+
+		Assert.assertTrue(queries.isEmpty());
+	}
+
+	@Test
+	public void testInvalidType2() {
+		ComplexQueryBuilderImpl complexQueryBuilderImpl =
+			new ComplexQueryBuilderImpl(_queries, _scripts);
+
+		List<Query> queries = _getQueries(
+			complexQueryBuilderImpl, "whatever", "]10 20]");
+
+		Assert.assertTrue(queries.isEmpty());
+	}
+
+	private List<Query> _getQueries(
 		ComplexQueryBuilderImpl complexQueryBuilderImpl, String type,
 		String value) {
 
@@ -124,7 +146,14 @@ public class ComplexQueryBuilderImplTest {
 			}
 		).build();
 
-		List<Query> queries = booleanQuery.getFilterQueryClauses();
+		return booleanQuery.getFilterQueryClauses();
+	}
+
+	private Query _getQuery(
+		ComplexQueryBuilderImpl complexQueryBuilderImpl, String type,
+		String value) {
+
+		List<Query> queries = _getQueries(complexQueryBuilderImpl, type, value);
 
 		return queries.get(0);
 	}
