@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.filter.ComplexQueryBuilder;
 import com.liferay.portal.search.filter.ComplexQueryPart;
+import com.liferay.portal.search.internal.filter.range.RangeTermQueryValue;
 import com.liferay.portal.search.internal.util.SearchStringUtil;
 import com.liferay.portal.search.query.BooleanQuery;
 import com.liferay.portal.search.query.Queries;
@@ -77,71 +78,6 @@ public class ComplexQueryBuilderImpl implements ComplexQueryBuilder {
 		_booleanQuery = booleanQuery;
 
 		return this;
-	}
-
-	protected class RangeTermQueryValue {
-
-		public RangeTermQueryValue() {
-		}
-
-		public RangeTermQueryValue(RangeTermQueryValue rangeTermQueryValue) {
-			_includesLower = rangeTermQueryValue._includesLower;
-			_includesUpper = rangeTermQueryValue._includesUpper;
-			_lowerBound = rangeTermQueryValue._lowerBound;
-			_upperBound = rangeTermQueryValue._upperBound;
-		}
-
-		public String getLowerBound() {
-			return _lowerBound;
-		}
-
-		public String getUpperBound() {
-			return _upperBound;
-		}
-
-		public boolean isIncludesLower() {
-			return _includesLower;
-		}
-
-		public boolean isIncludesUpper() {
-			return _includesUpper;
-		}
-
-		private boolean _includesLower;
-		private boolean _includesUpper;
-		private String _lowerBound;
-		private String _upperBound;
-
-	}
-
-	protected class RangeTermQueryValueBuilder {
-
-		public RangeTermQueryValueBuilder() {
-			_rangeTermQueryValue = new RangeTermQueryValue();
-		}
-
-		public RangeTermQueryValue build() {
-			return new RangeTermQueryValue(_rangeTermQueryValue);
-		}
-
-		public void includesLower(boolean includesLower) {
-			_rangeTermQueryValue._includesLower = includesLower;
-		}
-
-		public void includesUpper(boolean includesUpper) {
-			_rangeTermQueryValue._includesUpper = includesUpper;
-		}
-
-		public void lowerBound(String lowerBound) {
-			_rangeTermQueryValue._lowerBound = lowerBound;
-		}
-
-		public void upperBound(String upperBound) {
-			_rangeTermQueryValue._upperBound = upperBound;
-		}
-
-		private final RangeTermQueryValue _rangeTermQueryValue;
-
 	}
 
 	private BooleanQuery _getRootBooleanQuery() {
@@ -361,8 +297,8 @@ public class ComplexQueryBuilderImpl implements ComplexQueryBuilder {
 				return null;
 			}
 
-			RangeTermQueryValueBuilder rangeTermQueryValueBuilder =
-				new RangeTermQueryValueBuilder();
+			RangeTermQueryValue.Builder rangeTermQueryValueBuilder =
+				new RangeTermQueryValue.Builder();
 
 			if (value.startsWith(StringPool.OPEN_BRACKET)) {
 				rangeTermQueryValueBuilder.includesLower(true);
