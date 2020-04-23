@@ -59,6 +59,17 @@ public class ComplexQueryBuilderImplTest {
 	}
 
 	@Test
+	public void testFilterDateRangeTermQueryInvalidValue() {
+		ComplexQueryBuilderImpl complexQueryBuilderImpl =
+			new ComplexQueryBuilderImpl(_queries, _scripts);
+
+		List<Query> queries = _getQueries(
+			complexQueryBuilderImpl, "date_range", "now/d now+1d/d[");
+
+		Assert.assertTrue(queries.isEmpty());
+	}
+
+	@Test
 	public void testFilterFuzzyQuery() {
 		ComplexQueryBuilderImpl complexQueryBuilderImpl =
 			new ComplexQueryBuilderImpl(_queries, _scripts);
@@ -87,6 +98,17 @@ public class ComplexQueryBuilderImplTest {
 		Query query = _getQuery(complexQueryBuilderImpl, "range", "]10 20]");
 
 		Assert.assertTrue(query instanceof RangeTermQuery);
+	}
+
+	@Test
+	public void testFilterRangeTermQueryInvalidValue() {
+		ComplexQueryBuilderImpl complexQueryBuilderImpl =
+			new ComplexQueryBuilderImpl(_queries, _scripts);
+
+		List<Query> queries = _getQueries(
+			complexQueryBuilderImpl, "range", "10 20]");
+
+		Assert.assertTrue(queries.isEmpty());
 	}
 
 	@Test
