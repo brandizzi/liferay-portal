@@ -326,48 +326,29 @@ public class ComplexQueryBuilderImpl implements ComplexQueryBuilder {
 			return null;
 		}
 
-		protected Query buildRangeQuery(String field, String value) {
-			Query query = null;
-
+		protected RangeTermQueryValue buildRangeQuery(String value) {
 			if (!_isRangePattern(value)) {
-				return query;
+				return null;
 			}
 
-			boolean includesLower = false;
-			boolean includesUpper = false;
-			boolean dateRange = false;
+			RangeTermQueryValueBuilder rangeTermQueryValueBuilder =
+				new RangeTermQueryValueBuilder();
 
 			if (value.startsWith(StringPool.OPEN_BRACKET)) {
-				includesLower = true;
+				rangeTermQueryValueBuilder.includesLower(true);
 			}
 
 			if (value.endsWith(StringPool.CLOSE_BRACKET)) {
-				includesUpper = true;
-			}
-
-			value = value.substring(1, value.length() - 1);
-
-			if (value.indexOf("now") >= 0) {
-				dateRange = true;
+				rangeTermQueryValueBuilder.includesUpper(true);
 			}
 
 			String[] rangeParts = value.split(StringPool.SPACE);
 
-			String lowerBound = rangeParts[0];
-			String upperBound = rangeParts[rangeParts.length - 1];
+			rangeTermQueryValueBuilder.lowerBound(rangeParts[0]);
+			rangeTermQueryValueBuilder.upperBound(
+				rangeParts[rangeParts.length - 1]);
 
-			if (dateRange) {
-				query = _queries.dateRangeTerm(
-					field, includesLower, includesUpper, lowerBound,
-					upperBound);
-			}
-			else {
-				query = _queries.rangeTerm(
-					field, includesLower, includesUpper, lowerBound,
-					upperBound);
-			}
-
-			return query;
+			return rangeTermQueryValueBuilder.build();
 		}
 
 		protected Query getNamedQuery(String name) {
@@ -450,7 +431,7 @@ public class ComplexQueryBuilderImpl implements ComplexQueryBuilder {
 		}
 
 		private boolean _isRangePattern(String value) {
-			if ((value != null) &&
+			if (!Validator.isBlank(value) &&
 				(value.startsWith(StringPool.OPEN_BRACKET) ||
 				 value.startsWith(StringPool.CLOSE_BRACKET)) &&
 				(value.endsWith(StringPool.OPEN_BRACKET) ||
