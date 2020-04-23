@@ -15,7 +15,9 @@
 package com.liferay.portal.search.internal.filter.range;
 
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.util.Validator;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Adam Brandizzi
@@ -23,43 +25,45 @@ import com.liferay.portal.kernel.util.Validator;
 public class RangeTermQueryValueParser {
 
 	public RangeTermQueryValue parse(String value) {
-		if (!_isRangePattern(value)) {
+		Matcher matcher = _pattern.matcher(value);
+
+		if (!matcher.matches()) {
 			return null;
 		}
 
 		RangeTermQueryValue.Builder rangeTermQueryValueBuilder =
 			new RangeTermQueryValue.Builder();
 
-		if (value.startsWith(StringPool.OPEN_BRACKET)) {
-			rangeTermQueryValueBuilder.includesLower(true);
-		}
-
-		if (value.endsWith(StringPool.CLOSE_BRACKET)) {
-			rangeTermQueryValueBuilder.includesUpper(true);
-		}
-
-		value = value.substring(1, value.length() - 1);
-
-		String[] rangeParts = value.split(StringPool.SPACE);
-
-		rangeTermQueryValueBuilder.lowerBound(rangeParts[0]);
-		rangeTermQueryValueBuilder.upperBound(
-			rangeParts[rangeParts.length - 1]);
+		rangeTermQueryValueBuilder.includesLower(isIncludesLower(matcher));
+		rangeTermQueryValueBuilder.includesUpper(isIncludesUpper(matcher));
+		rangeTermQueryValueBuilder.lowerBound(matcher.group("lowerBound"));
+		rangeTermQueryValueBuilder.upperBound(matcher.group("upperBound"));
 
 		return rangeTermQueryValueBuilder.build();
 	}
 
-	private boolean _isRangePattern(String value) {
-		if (!Validator.isBlank(value) &&
-			(value.startsWith(StringPool.OPEN_BRACKET) ||
-			 value.startsWith(StringPool.CLOSE_BRACKET)) &&
-			(value.endsWith(StringPool.OPEN_BRACKET) ||
-			 value.endsWith(StringPool.CLOSE_BRACKET))) {
+	protected boolean isIncludesLower(Matcher matcher) {
+		String lowerBracket = matcher.group("lowerBracket");
 
+		if (lowerBracket.equals(StringPool.OPEN_BRACKET)) {
 			return true;
 		}
 
 		return false;
 	}
+
+	protected boolean isIncludesUpper(Matcher matcher) {
+		String upperBracket = matcher.group("upperBracket");
+
+		if (upperBracket.equals(StringPool.CLOSE_BRACKET)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	private static final Pattern _pattern = Pattern.compile(
+		"\\s*(?<lowerBracket>[\\]\\[])(?<lowerBound>\\S+)\\s+" +
+			"(?<upperBound>\\S+)(?<upperBracket>[\\]\\[])\\s*");
 
 }
