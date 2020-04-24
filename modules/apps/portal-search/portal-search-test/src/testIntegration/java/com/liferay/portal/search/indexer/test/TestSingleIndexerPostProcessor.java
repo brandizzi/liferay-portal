@@ -33,7 +33,8 @@ import org.osgi.service.component.annotations.Component;
 	property = "indexer.class.name=com.liferay.portal.kernel.model.Organization",
 	service = IndexerPostProcessor.class
 )
-public class TestSingleIndexerPostProcessor implements IndexerPostProcessor {
+public class TestSingleIndexerPostProcessor
+	extends BaseTestIndexerPostProcessor {
 
 	@Override
 	public void postProcessContextBooleanFilter(
