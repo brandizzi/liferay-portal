@@ -17,9 +17,13 @@ package com.liferay.bookmarks.search.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.bookmarks.model.BookmarksEntry;
 import com.liferay.bookmarks.model.BookmarksFolder;
+import com.liferay.bookmarks.service.BookmarksEntryLocalService;
+import com.liferay.bookmarks.service.BookmarksFolderService;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.rule.SynchronousDestinationTestRule;
@@ -28,11 +32,15 @@ import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
+import com.liferay.portal.search.searcher.Searcher;
 import com.liferay.portal.search.test.util.FieldValuesAssert;
-import com.liferay.portal.search.test.util.IndexerFixture;
 import com.liferay.portal.search.test.util.SearchTestRule;
+import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+import com.liferay.users.admin.test.util.search.GroupBlueprint;
+import com.liferay.users.admin.test.util.search.GroupSearchFixture;
 import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
 import java.util.List;
@@ -40,6 +48,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -62,13 +71,32 @@ public class BookmarksEntryMultiLanguageSearchTest {
 
 	@Before
 	public void setUp() throws Exception {
-		setUpUserSearchFixture();
+		Assert.assertEquals(
+			MODEL_INDEXER_CLASS.getName(), indexer.getClassName());
 
-		setUpBookmarksEntryFixture();
+		GroupSearchFixture groupSearchFixture = new GroupSearchFixture();
 
-		setUpBookmarksEntryIndexerFixture();
+		Group group = groupSearchFixture.addGroup(new GroupBlueprint());
+
+		UserSearchFixture userSearchFixture = new UserSearchFixture(
+			userLocalService, groupSearchFixture, null, null);
+
+		userSearchFixture.setUp();
+
+		User user = userSearchFixture.addUser(
+			RandomTestUtil.randomString(), group);
+
+		BookmarksFixture bookmarksFixture = new BookmarksFixture(
+			bookmarksEntryLocalService, bookmarksFolderService, group, user);
+
+		_bookmarksEntries = bookmarksFixture.getBookmarksEntries();
+		_bookmarksFixture = bookmarksFixture;
+		_bookmarksFolders = bookmarksFixture.getBookmarksFolders();
 
 		_defaultLocale = LocaleThreadLocal.getDefaultLocale();
+		_group = group;
+		_groups = groupSearchFixture.getGroups();
+		_users = userSearchFixture.getUsers();
 	}
 
 	@After
@@ -84,7 +112,7 @@ public class BookmarksEntryMultiLanguageSearchTest {
 
 		String keyWords = "你好";
 
-		bookmarksFixture.createBookmarksEntry(keyWords);
+		_bookmarksFixture.createBookmarksEntry(keyWords);
 
 		Map<String, String> map = HashMapBuilder.put(
 			_PREFIX, keyWords
@@ -103,7 +131,7 @@ public class BookmarksEntryMultiLanguageSearchTest {
 
 		String keyWords = StringUtil.toLowerCase(RandomTestUtil.randomString());
 
-		bookmarksFixture.createBookmarksEntry(keyWords);
+		_bookmarksFixture.createBookmarksEntry(keyWords);
 
 		Map<String, String> map = HashMapBuilder.put(
 			_PREFIX, keyWords
@@ -122,7 +150,7 @@ public class BookmarksEntryMultiLanguageSearchTest {
 
 		String keyWords = "東京";
 
-		bookmarksFixture.createBookmarksEntry(keyWords);
+		_bookmarksFixture.createBookmarksEntry(keyWords);
 
 		Map<String, String> map = HashMapBuilder.put(
 			_PREFIX, keyWords
@@ -140,54 +168,59 @@ public class BookmarksEntryMultiLanguageSearchTest {
 		String prefix, Locale locale, Map<String, String> map,
 		String searchTerm) {
 
-		Document document = bookmarksEntryIndexerFixture.searchOnlyOne(
-			searchTerm, locale);
-
-		FieldValuesAssert.assertFieldValues(map, prefix, document, searchTerm);
+		FieldValuesAssert.assertFieldValues(
+			map, name -> name.startsWith(prefix),
+			searcher.search(
+				searchRequestBuilderFactory.builder(
+				).companyId(
+					_group.getCompanyId()
+				).fields(
+					StringPool.STAR
+				).groupIds(
+					_group.getGroupId()
+				).locale(
+					locale
+				).modelIndexerClasses(
+					MODEL_INDEXER_CLASS
+				).queryString(
+					searchTerm
+				).build()));
 	}
 
 	protected void setTestLocale(Locale locale) throws Exception {
-		bookmarksFixture.updateDisplaySettings(locale);
+		_bookmarksFixture.updateDisplaySettings(locale);
 
 		LocaleThreadLocal.setDefaultLocale(locale);
 	}
 
-	protected void setUpBookmarksEntryFixture() {
-		bookmarksFixture = new BookmarksFixture(_group, _user);
+	protected static final Class<?> MODEL_INDEXER_CLASS = BookmarksEntry.class;
 
-		_bookmarksEntries = bookmarksFixture.getBookmarksEntries();
+	@Inject
+	protected BookmarksEntryLocalService bookmarksEntryLocalService;
 
-		_bookmarksFolders = bookmarksFixture.getBookmarksFolders();
-	}
+	@Inject
+	protected BookmarksFolderService bookmarksFolderService;
 
-	protected void setUpBookmarksEntryIndexerFixture() {
-		bookmarksEntryIndexerFixture = new IndexerFixture<>(
-			BookmarksEntry.class);
-	}
+	@Inject(
+		filter = "indexer.class.name=com.liferay.bookmarks.model.BookmarksEntry"
+	)
+	protected Indexer<BookmarksEntry> indexer;
 
-	protected void setUpUserSearchFixture() throws Exception {
-		userSearchFixture = new UserSearchFixture();
+	@Inject
+	protected Searcher searcher;
 
-		userSearchFixture.setUp();
+	@Inject
+	protected SearchRequestBuilderFactory searchRequestBuilderFactory;
 
-		_group = userSearchFixture.addGroup();
-
-		_groups = userSearchFixture.getGroups();
-
-		_user = userSearchFixture.addUser(
-			RandomTestUtil.randomString(), _group);
-
-		_users = userSearchFixture.getUsers();
-	}
-
-	protected IndexerFixture<BookmarksEntry> bookmarksEntryIndexerFixture;
-	protected BookmarksFixture bookmarksFixture;
-	protected UserSearchFixture userSearchFixture;
+	@Inject
+	protected UserLocalService userLocalService;
 
 	private static final String _PREFIX = "title";
 
 	@DeleteAfterTestRun
 	private List<BookmarksEntry> _bookmarksEntries;
+
+	private BookmarksFixture _bookmarksFixture;
 
 	@DeleteAfterTestRun
 	private List<BookmarksFolder> _bookmarksFolders;
@@ -197,8 +230,6 @@ public class BookmarksEntryMultiLanguageSearchTest {
 
 	@DeleteAfterTestRun
 	private List<Group> _groups;
-
-	private User _user;
 
 	@DeleteAfterTestRun
 	private List<User> _users;

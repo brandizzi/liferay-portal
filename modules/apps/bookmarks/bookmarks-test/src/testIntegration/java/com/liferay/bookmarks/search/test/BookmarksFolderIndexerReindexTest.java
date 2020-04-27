@@ -16,6 +16,8 @@ package com.liferay.bookmarks.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.bookmarks.model.BookmarksFolder;
+import com.liferay.bookmarks.service.BookmarksEntryLocalService;
+import com.liferay.bookmarks.service.BookmarksFolderService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
@@ -44,6 +46,7 @@ import com.liferay.users.admin.test.util.search.UserSearchFixture;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -68,6 +71,9 @@ public class BookmarksFolderIndexerReindexTest {
 
 	@Before
 	public void setUp() throws Exception {
+		Assert.assertEquals(
+			MODEL_INDEXER_CLASS.getName(), indexer.getClassName());
+
 		GroupSearchFixture groupSearchFixture = new GroupSearchFixture();
 
 		Group group = groupSearchFixture.addGroup(new GroupBlueprint());
@@ -80,7 +86,8 @@ public class BookmarksFolderIndexerReindexTest {
 		User user = userSearchFixture.addUser(
 			RandomTestUtil.randomString(), group);
 
-		BookmarksFixture bookmarksFixture = new BookmarksFixture(group, user);
+		BookmarksFixture bookmarksFixture = new BookmarksFixture(
+			bookmarksEntryLocalService, bookmarksFolderService, group, user);
 
 		_group = group;
 
@@ -151,6 +158,14 @@ public class BookmarksFolderIndexerReindexTest {
 				searchTerm
 			).build());
 	}
+
+	protected static final Class<?> MODEL_INDEXER_CLASS = BookmarksFolder.class;
+
+	@Inject
+	protected BookmarksEntryLocalService bookmarksEntryLocalService;
+
+	@Inject
+	protected BookmarksFolderService bookmarksFolderService;
 
 	@Inject(
 		filter = "indexer.class.name=com.liferay.bookmarks.model.BookmarksFolder"
