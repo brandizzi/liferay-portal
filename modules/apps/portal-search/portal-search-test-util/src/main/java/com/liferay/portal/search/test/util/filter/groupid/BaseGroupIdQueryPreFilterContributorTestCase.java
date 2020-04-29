@@ -15,6 +15,7 @@
 package com.liferay.portal.search.test.util.filter.groupid;
 
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.search.BooleanClause;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
@@ -25,7 +26,9 @@ import com.liferay.portal.search.test.util.DocumentsAssert;
 import com.liferay.portal.search.test.util.indexing.BaseIndexingTestCase;
 
 import java.util.Arrays;
+import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,6 +57,43 @@ public abstract class BaseGroupIdQueryPreFilterContributorTestCase
 		).getGroupIds(
 			Mockito.anyLong(), Mockito.eq(false)
 		);
+	}
+
+	@Test
+	public void testNoEmptyClauses() throws Exception {
+		Group group = Mockito.mock(Group.class);
+
+		long groupId = 11111;
+
+		Mockito.doReturn(
+			group
+		).when(
+			groupLocalService
+		).getGroup(
+			groupId
+		);
+
+		Mockito.doReturn(
+			false
+		).when(
+			groupLocalService
+		).isLiveGroupActive(
+			group
+		);
+
+		assertSearch(
+			indexingTestHelper -> indexingTestHelper.define(
+				searchContext -> {
+					searchContext.setGroupIds(new long[] {groupId});
+
+					BooleanFilter booleanFilter = (BooleanFilter)createFilter(
+						searchContext);
+
+					assertEmptyClauses(booleanFilter.getMustBooleanClauses());
+					assertEmptyClauses(
+						booleanFilter.getMustNotBooleanClauses());
+					assertEmptyClauses(booleanFilter.getShouldBooleanClauses());
+				}));
 	}
 
 	@Test
@@ -102,6 +142,10 @@ public abstract class BaseGroupIdQueryPreFilterContributorTestCase
 					document.addKeyword(Field.SCOPE_GROUP_ID, groupId);
 				});
 		}
+	}
+
+	protected void assertEmptyClauses(List<BooleanClause<Filter>> clauses) {
+		Assert.assertEquals(clauses.toString(), 0, clauses.size());
 	}
 
 	protected void assertSearch(long scopeGroupId, String expected) {
