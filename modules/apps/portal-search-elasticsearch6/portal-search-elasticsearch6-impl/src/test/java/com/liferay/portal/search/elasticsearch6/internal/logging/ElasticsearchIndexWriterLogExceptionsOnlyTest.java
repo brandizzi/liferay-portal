@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.search.IndexWriter;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.search.elasticsearch6.internal.ElasticsearchIndexWriter;
 import com.liferay.portal.search.elasticsearch6.internal.LiferayElasticsearchIndexingFixtureFactory;
 import com.liferay.portal.search.elasticsearch6.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch6.internal.search.engine.adapter.document.BulkDocumentRequestExecutorImpl;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -42,6 +44,14 @@ import org.junit.Test;
  */
 public class ElasticsearchIndexWriterLogExceptionsOnlyTest
 	extends BaseIndexingTestCase {
+
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
+
+		expectedLogTestRule.configure(
+			ElasticsearchIndexWriter.class, Level.WARNING);
+	}
 
 	@Test
 	public void testAddDocument() throws Exception {
