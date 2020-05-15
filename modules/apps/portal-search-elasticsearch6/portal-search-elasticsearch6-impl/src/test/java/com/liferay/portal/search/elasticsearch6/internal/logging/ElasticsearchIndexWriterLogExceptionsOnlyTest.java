@@ -46,6 +46,7 @@ public class ElasticsearchIndexWriterLogExceptionsOnlyTest
 	extends BaseIndexingTestCase {
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 
@@ -127,6 +128,26 @@ public class ElasticsearchIndexWriterLogExceptionsOnlyTest
 
 	@Test
 	public void testDeleteDocument() {
+		expectedLogTestRule.expectNoMessage("no such index");
+
+		SearchContext searchContext = new SearchContext();
+
+		searchContext.setCompanyId(1);
+
+		IndexWriter indexWriter = getIndexWriter();
+
+		try {
+			indexWriter.deleteDocument(searchContext, "1");
+		}
+		catch (SearchException searchException) {
+		}
+	}
+
+	@Test
+	public void testDeleteDocumentInfoLevel() {
+		expectedLogTestRule.configure(
+			ElasticsearchIndexWriter.class, Level.INFO);
+
 		expectedLogTestRule.expectMessage("no such index");
 
 		SearchContext searchContext = new SearchContext();
