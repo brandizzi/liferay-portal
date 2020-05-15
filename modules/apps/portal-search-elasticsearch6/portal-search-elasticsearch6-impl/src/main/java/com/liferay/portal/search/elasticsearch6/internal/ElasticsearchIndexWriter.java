@@ -47,8 +47,6 @@ import com.liferay.portal.search.index.IndexNameBuilder;
 import java.util.Collection;
 import java.util.Map;
 
-import org.elasticsearch.index.IndexNotFoundException;
-
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -168,15 +166,13 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(deleteDocumentRequest);
 		}
 		catch (RuntimeException runtimeException) {
-			if (_logExceptionsOnly) {
-				if (isIndexNotFound(runtimeException)) {
-					if (_log.isInfoEnabled()) {
-						_log.info(runtimeException, runtimeException);
-					}
+			if (isIndexNotFound(runtimeException)) {
+				if (_log.isInfoEnabled()) {
+					_log.info(runtimeException, runtimeException);
 				}
-				else {
-					_log.error(runtimeException, runtimeException);
-				}
+			}
+			else if (_logExceptionsOnly) {
+				_log.error(runtimeException, runtimeException);
 			}
 			else {
 				throw runtimeException;
@@ -433,7 +429,9 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 	}
 
 	protected boolean isIndexNotFound(RuntimeException runtimeException) {
-		if (runtimeException instanceof IndexNotFoundException) {
+		String message = runtimeException.getMessage();
+
+		if (message.contains("no such index")) {
 			return true;
 		}
 
