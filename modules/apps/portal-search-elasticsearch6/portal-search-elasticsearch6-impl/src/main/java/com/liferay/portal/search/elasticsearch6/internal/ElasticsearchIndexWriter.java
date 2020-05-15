@@ -167,7 +167,16 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		}
 		catch (RuntimeException runtimeException) {
 			if (_logExceptionsOnly) {
-				_log.error(runtimeException, runtimeException);
+				String message = runtimeException.getMessage();
+
+				if (message.contains("no such index")) {
+					if (_log.isInfoEnabled()) {
+						_log.info(runtimeException, runtimeException);
+					}
+				}
+				else {
+					_log.error(runtimeException, runtimeException);
+				}
 			}
 			else {
 				throw runtimeException;
