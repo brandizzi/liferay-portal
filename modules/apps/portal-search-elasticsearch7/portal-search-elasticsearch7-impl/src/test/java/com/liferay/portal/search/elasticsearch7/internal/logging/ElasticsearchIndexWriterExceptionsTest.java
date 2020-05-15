@@ -20,15 +20,20 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriter;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.search.elasticsearch7.internal.ElasticsearchIndexWriter;
 import com.liferay.portal.search.elasticsearch7.internal.LiferayElasticsearchIndexingFixtureFactory;
 import com.liferay.portal.search.test.util.indexing.BaseIndexingTestCase;
 import com.liferay.portal.search.test.util.indexing.DocumentCreationHelpers;
 import com.liferay.portal.search.test.util.indexing.IndexingFixture;
+import com.liferay.portal.search.test.util.logging.ExpectedLogTestRule;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import org.elasticsearch.ElasticsearchStatusException;
+
+import org.hamcrest.CoreMatchers;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -95,9 +100,11 @@ public class ElasticsearchIndexWriterExceptionsTest
 
 	@Test
 	public void testDeleteDocument() {
-		expectedException.expect(ElasticsearchStatusException.class);
-		expectedException.expectMessage(
-			"type=index_not_found_exception, reason=no such index");
+		expectedLogTestRule.configure(
+			ElasticsearchIndexWriter.class, Level.INFO);
+
+		expectedLogTestRule.expectMessage(
+			CoreMatchers.containsString("no such index"));
 
 		SearchContext searchContext = new SearchContext();
 
@@ -240,6 +247,9 @@ public class ElasticsearchIndexWriterExceptionsTest
 
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
+
+	@Rule
+	public ExpectedLogTestRule expectedLogTestRule = ExpectedLogTestRule.none();
 
 	@Override
 	protected IndexingFixture createIndexingFixture() {
