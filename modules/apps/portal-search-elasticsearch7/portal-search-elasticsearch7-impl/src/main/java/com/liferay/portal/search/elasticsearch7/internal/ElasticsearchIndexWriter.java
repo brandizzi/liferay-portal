@@ -168,15 +168,13 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(deleteDocumentRequest);
 		}
 		catch (RuntimeException runtimeException) {
-			if (_logExceptionsOnly) {
-				if (isIndexNotFound(runtimeException)) {
-					if (_log.isInfoEnabled()) {
-						_log.info(runtimeException, runtimeException);
-					}
+			if (isIndexNotFound(runtimeException)) {
+				if (_log.isInfoEnabled()) {
+					_log.info(runtimeException, runtimeException);
 				}
-				else {
-					_log.error(runtimeException, runtimeException);
-				}
+			}
+			else if (_logExceptionsOnly) {
+				_log.error(runtimeException, runtimeException);
 			}
 			else {
 				throw runtimeException;
