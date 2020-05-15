@@ -94,6 +94,14 @@ public class ExpectedLogTestRule implements TestRule {
 		expectMessage(CoreMatchers.containsString(substring));
 	}
 
+	public void expectNoMessage(Matcher<String> matcher) {
+		expect(CoreMatchers.not(LogOutputMatcher.hasMessage(matcher)));
+	}
+
+	public void expectNoMessage(String substring) {
+		expectNoMessage(CoreMatchers.containsString(substring));
+	}
+
 	public void verify() {
 		if (_captureHandler == null) {
 			return;
