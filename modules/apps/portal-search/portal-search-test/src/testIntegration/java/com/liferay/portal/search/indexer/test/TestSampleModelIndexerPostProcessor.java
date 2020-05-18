@@ -34,7 +34,7 @@ import org.osgi.service.component.annotations.Component;
 	service = IndexerPostProcessor.class
 )
 public class TestSampleModelIndexerPostProcessor
-	implements IndexerPostProcessor {
+	extends BaseTestIndexerPostProcessor {
 
 	@Override
 	public void postProcessContextBooleanFilter(

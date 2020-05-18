@@ -21,13 +21,13 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.search.elasticsearch7.internal.util.JSONUtil;
 
 import java.io.InputStream;
 
 import java.net.URL;
 
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.http.util.EntityUtils;
 
@@ -117,7 +117,7 @@ public class EmbeddedElasticsearchConnectionHttpTest {
 
 		JSONObject nodesJSONObject = responseJSONObject.getJSONObject("nodes");
 
-		Set<String> nodes = nodesJSONObject.keySet();
+		Iterable<String> nodes = JSONUtil.getKeysIterable(nodesJSONObject);
 
 		for (String node : nodes) {
 			JSONObject nodeJSONObject = nodesJSONObject.getJSONObject(node);

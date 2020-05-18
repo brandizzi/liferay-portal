@@ -18,10 +18,18 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 
+import com.liferay.portal.kernel.json.JSONObject;
+
+import java.util.Iterator;
+
 /**
  * @author Bryan Engler
  */
 public class JSONUtil {
+
+	public static Iterable<String> getKeysIterable(JSONObject jsonObject) {
+		return new IteratorWrapperIterable<>(jsonObject.keys());
+	}
 
 	public static String getPrettyPrintedJSONString(Object object) {
 		GsonBuilder gsonBuilder = new GsonBuilder();
@@ -33,6 +41,21 @@ public class JSONUtil {
 		JsonParser jsonParser = new JsonParser();
 
 		return gson.toJson(jsonParser.parse(object.toString()));
+	}
+
+	private static class IteratorWrapperIterable<T> implements Iterable<T> {
+
+		public IteratorWrapperIterable(Iterator<T> iterator) {
+			_iterator = iterator;
+		}
+
+		@Override
+		public Iterator<T> iterator() {
+			return _iterator;
+		}
+
+		private final Iterator<T> _iterator;
+
 	}
 
 }

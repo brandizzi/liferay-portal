@@ -12,23 +12,27 @@
  * details.
  */
 
-package com.liferay.portal.search.buffer;
+package com.liferay.portal.search.internal.background.task;
 
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.search.indexer.IndexerWrapper;
+import com.liferay.petra.lang.SafeClosable;
+import com.liferay.portal.kernel.backgroundtask.BackgroundTaskThreadLocal;
 
 /**
- * @author Michael C. Han
+ * @author Adam Brandizzi
  */
-public class NoAutoCommitIndexer<T> extends IndexerWrapper<T> {
+public class BackgroundTaskClosable implements SafeClosable {
 
-	public NoAutoCommitIndexer(Indexer<T> indexer) {
-		super(indexer);
+	public BackgroundTaskClosable(long backgroundTaskId) {
+		_safeClosable =
+			BackgroundTaskThreadLocal.setBackgroundTaskIdWithSafeClosable(
+				backgroundTaskId);
 	}
 
 	@Override
-	public boolean isCommitImmediately() {
-		return false;
+	public void close() {
+		_safeClosable.close();
 	}
+
+	private final SafeClosable _safeClosable;
 
 }

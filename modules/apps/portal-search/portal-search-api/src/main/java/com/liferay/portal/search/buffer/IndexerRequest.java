@@ -15,7 +15,6 @@
 package com.liferay.portal.search.buffer;
 
 import com.liferay.petra.lang.HashUtil;
-import com.liferay.petra.lang.SafeClosable;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.messaging.proxy.ProxyModeThreadLocal;
 import com.liferay.portal.kernel.model.ClassedModel;
@@ -84,8 +83,8 @@ public class IndexerRequest {
 	}
 
 	public void execute() throws Exception {
-		try (SafeClosable safeClosable =
-				ProxyModeThreadLocal.setWithSafeClosable(_forceSync)) {
+		try (IndexerRequestClosable indexerRequestCloseable =
+				new IndexerRequestClosable(_forceSync)) {
 
 			Class<?>[] parameterTypes = _method.getParameterTypes();
 

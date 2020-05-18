@@ -12,23 +12,21 @@
  * details.
  */
 
-package com.liferay.portal.search.buffer;
+package com.liferay.portal.search.elasticsearch6.internal;
 
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.search.indexer.IndexerWrapper;
+import com.liferay.portal.kernel.search.BaseSearchEngineConfigurator;
 
 /**
- * @author Michael C. Han
+ * @author Adam Brandizzi
  */
-public class NoAutoCommitIndexer<T> extends IndexerWrapper<T> {
-
-	public NoAutoCommitIndexer(Indexer<T> indexer) {
-		super(indexer);
-	}
+public abstract class BaseElasticsearchEngineConfigurator
+	extends BaseSearchEngineConfigurator {
 
 	@Override
-	public boolean isCommitImmediately() {
-		return false;
+	protected ClassLoader getOperatingClassLoader() {
+		Class<?> clazz = getClass();
+
+		return clazz.getClassLoader();
 	}
 
 }

@@ -12,23 +12,13 @@
  * details.
  */
 
-package com.liferay.portal.search.buffer;
+package com.liferay.portal.search.indexer.test;
 
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.search.indexer.IndexerWrapper;
+import com.liferay.portal.kernel.search.IndexerPostProcessor;
 
 /**
- * @author Michael C. Han
+ * @author Adam Brandizzi
  */
-public class NoAutoCommitIndexer<T> extends IndexerWrapper<T> {
-
-	public NoAutoCommitIndexer(Indexer<T> indexer) {
-		super(indexer);
-	}
-
-	@Override
-	public boolean isCommitImmediately() {
-		return false;
-	}
-
+public abstract class BaseTestIndexerPostProcessor
+	implements IndexerPostProcessor {
 }

@@ -14,21 +14,23 @@
 
 package com.liferay.portal.search.buffer;
 
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.search.indexer.IndexerWrapper;
+import com.liferay.petra.lang.SafeClosable;
+import com.liferay.portal.kernel.messaging.proxy.ProxyModeThreadLocal;
 
 /**
- * @author Michael C. Han
+ * @author Adam Brandizzi
  */
-public class NoAutoCommitIndexer<T> extends IndexerWrapper<T> {
+public class IndexerRequestClosable implements SafeClosable {
 
-	public NoAutoCommitIndexer(Indexer<T> indexer) {
-		super(indexer);
+	public IndexerRequestClosable(boolean forceSync) {
+		_safeClosable = ProxyModeThreadLocal.setWithSafeClosable(forceSync);
 	}
 
 	@Override
-	public boolean isCommitImmediately() {
-		return false;
+	public void close() {
+		_safeClosable.close();
 	}
+
+	private final SafeClosable _safeClosable;
 
 }

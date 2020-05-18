@@ -17,7 +17,6 @@ package com.liferay.portal.search.internal;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.petra.executor.PortalExecutorManager;
-import com.liferay.petra.lang.SafeClosable;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskThreadLocal;
 import com.liferay.portal.kernel.log.Log;
@@ -29,6 +28,7 @@ import com.liferay.portal.kernel.search.SearchEngineHelperUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.search.ccr.CrossClusterReplicationHelper;
 import com.liferay.portal.search.index.IndexNameBuilder;
+import com.liferay.portal.search.internal.background.task.BackgroundTaskClosable;
 import com.liferay.portal.util.PropsValues;
 
 import java.util.ArrayList;
@@ -148,9 +148,9 @@ public class SearchEngineInitializer implements Runnable {
 
 						@Override
 						public Void call() throws Exception {
-							try (SafeClosable safeClosable =
-									BackgroundTaskThreadLocal.
-										setBackgroundTaskIdWithSafeClosable(
+							try (BackgroundTaskClosable
+									backgroundTaskCloseable =
+										new BackgroundTaskClosable(
 											backgroundTaskId)) {
 
 								reindex(indexer);
