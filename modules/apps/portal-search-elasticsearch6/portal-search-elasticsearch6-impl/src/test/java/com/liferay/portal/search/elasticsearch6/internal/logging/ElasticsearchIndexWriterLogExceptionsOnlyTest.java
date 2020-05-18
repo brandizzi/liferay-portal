@@ -46,6 +46,7 @@ public class ElasticsearchIndexWriterLogExceptionsOnlyTest
 	extends BaseIndexingTestCase {
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 
