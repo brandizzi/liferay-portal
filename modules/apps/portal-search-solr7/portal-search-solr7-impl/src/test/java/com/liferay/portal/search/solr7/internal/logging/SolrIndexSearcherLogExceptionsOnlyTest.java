@@ -19,12 +19,14 @@ import com.liferay.portal.kernel.search.Query;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.search.generic.TermQueryImpl;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.search.solr7.internal.SolrIndexSearcher;
 import com.liferay.portal.search.solr7.internal.SolrIndexingFixture;
 import com.liferay.portal.search.test.util.indexing.BaseIndexingTestCase;
 import com.liferay.portal.search.test.util.indexing.IndexingFixture;
 import com.liferay.portal.search.test.util.logging.ExpectedLogTestRule;
 
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,7 +52,8 @@ public class SolrIndexSearcherLogExceptionsOnlyTest
 	}
 
 	@Rule
-	public ExpectedLogTestRule expectedLogTestRule = ExpectedLogTestRule.none();
+	public ExpectedLogTestRule expectedLogTestRule = ExpectedLogTestRule.with(
+		SolrIndexSearcher.class, Level.WARNING);
 
 	@Override
 	protected IndexingFixture createIndexingFixture() throws Exception {
