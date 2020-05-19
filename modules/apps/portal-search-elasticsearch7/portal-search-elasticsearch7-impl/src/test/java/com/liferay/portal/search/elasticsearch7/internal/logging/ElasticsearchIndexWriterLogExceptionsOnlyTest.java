@@ -20,8 +20,9 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.IndexWriter;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.search.elasticsearch7.internal.ElasticsearchIndexWriter;
 import com.liferay.portal.search.elasticsearch7.internal.LiferayElasticsearchIndexingFixtureFactory;
+import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchConnectionFixture;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.document.BulkDocumentRequestExecutorImpl;
 import com.liferay.portal.search.test.util.indexing.BaseIndexingTestCase;
@@ -30,10 +31,11 @@ import com.liferay.portal.search.test.util.indexing.IndexingFixture;
 import com.liferay.portal.search.test.util.logging.ExpectedLogTestRule;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -42,6 +44,16 @@ import org.junit.Test;
  */
 public class ElasticsearchIndexWriterLogExceptionsOnlyTest
 	extends BaseIndexingTestCase {
+
+	@Override
+	@Before
+	@Override
+	public void setUp() throws Exception {
+		super.setUp();
+
+		expectedLogTestRule.configure(
+			ElasticsearchIndexWriter.class, Level.WARNING);
+	}
 
 	@Test
 	public void testAddDocument() throws Exception {
@@ -117,6 +129,26 @@ public class ElasticsearchIndexWriterLogExceptionsOnlyTest
 
 	@Test
 	public void testDeleteDocument() {
+		expectedLogTestRule.expectNoMessage("no such index");
+
+		SearchContext searchContext = new SearchContext();
+
+		searchContext.setCompanyId(1);
+
+		IndexWriter indexWriter = getIndexWriter();
+
+		try {
+			indexWriter.deleteDocument(searchContext, "1");
+		}
+		catch (SearchException searchException) {
+		}
+	}
+
+	@Test
+	public void testDeleteDocumentInfoLevel() {
+		expectedLogTestRule.configure(
+			ElasticsearchIndexWriter.class, Level.INFO);
+
 		expectedLogTestRule.expectMessage("no such index");
 
 		SearchContext searchContext = new SearchContext();
@@ -346,22 +378,22 @@ public class ElasticsearchIndexWriterLogExceptionsOnlyTest
 	@Rule
 	public ExpectedLogTestRule expectedLogTestRule = ExpectedLogTestRule.none();
 
-	protected ElasticsearchFixture createElasticsearchFixture() {
-		Map<String, Object> elasticsearchConfigurationProperties =
-			HashMapBuilder.<String, Object>put(
-				"logExceptionsOnly", true
-			).build();
+	protected ElasticsearchConnectionFixture
+		createElasticsearchConnectionFixture() {
 
-		return new ElasticsearchFixture(
-			ElasticsearchIndexWriterLogExceptionsOnlyTest.class.getSimpleName(),
-			elasticsearchConfigurationProperties);
+		return ElasticsearchConnectionFixture.builder(
+		).clusterName(
+			ElasticsearchIndexWriterLogExceptionsOnlyTest.class.getSimpleName()
+		).elasticsearchConfigurationProperties(
+			Collections.singletonMap("logExceptionsOnly", true)
+		).build();
 	}
 
 	@Override
 	protected IndexingFixture createIndexingFixture() {
 		return LiferayElasticsearchIndexingFixtureFactory.builder(
 		).elasticsearchFixture(
-			createElasticsearchFixture()
+			new ElasticsearchFixture(createElasticsearchConnectionFixture())
 		).build();
 	}
 

@@ -16,12 +16,13 @@ package com.liferay.bookmarks.search.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.bookmarks.model.BookmarksFolder;
+import com.liferay.bookmarks.service.BookmarksEntryLocalService;
+import com.liferay.bookmarks.service.BookmarksFolderService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistry;
 import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
@@ -46,6 +47,7 @@ import com.liferay.users.admin.test.util.search.UserSearchFixture;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -70,6 +72,9 @@ public class BookmarksFolderIndexerIndexedFieldsTest {
 
 	@Before
 	public void setUp() throws Exception {
+		Assert.assertEquals(
+			MODEL_INDEXER_CLASS.getName(), indexer.getClassName());
+
 		GroupSearchFixture groupSearchFixture = new GroupSearchFixture();
 
 		Group group = groupSearchFixture.addGroup(new GroupBlueprint());
@@ -82,7 +87,8 @@ public class BookmarksFolderIndexerIndexedFieldsTest {
 		User user = userSearchFixture.addUser(
 			RandomTestUtil.randomString(), group);
 
-		BookmarksFixture bookmarksFixture = new BookmarksFixture(group, user);
+		BookmarksFixture bookmarksFixture = new BookmarksFixture(
+			bookmarksEntryLocalService, bookmarksFolderService, group, user);
 
 		_bookmarksFixture = bookmarksFixture;
 		_bookmarksFolders = bookmarksFixture.getBookmarksFolders();
@@ -130,13 +136,18 @@ public class BookmarksFolderIndexerIndexedFieldsTest {
 				).build()));
 	}
 
+	protected static final Class<?> MODEL_INDEXER_CLASS = BookmarksFolder.class;
+
+	@Inject
+	protected BookmarksEntryLocalService bookmarksEntryLocalService;
+
+	@Inject
+	protected BookmarksFolderService bookmarksFolderService;
+
 	@Inject(
 		filter = "indexer.class.name=com.liferay.bookmarks.model.BookmarksFolder"
 	)
 	protected Indexer<BookmarksFolder> indexer;
-
-	@Inject
-	protected IndexerRegistry indexerRegistry;
 
 	@Inject
 	protected ResourcePermissionLocalService resourcePermissionLocalService;
