@@ -434,8 +434,12 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		String className = clazz.getName();
 
 		if (className.contains("IndexNotFoundException")) {
+			_log.error("Is index not found on delete:", runtimeException);
+
 			return true;
 		}
+
+		_log.error("Is not index not found on delete:", runtimeException);
 
 		return false;
 	}
