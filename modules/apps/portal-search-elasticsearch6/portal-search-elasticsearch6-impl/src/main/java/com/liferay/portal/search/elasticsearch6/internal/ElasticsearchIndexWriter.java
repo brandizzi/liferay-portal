@@ -432,8 +432,12 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 
 	protected boolean isIndexNotFound(RuntimeException runtimeException) {
 		if (runtimeException instanceof IndexNotFoundException) {
+			_log.error("Is index not found on delete:", runtimeException);
+
 			return true;
 		}
+
+		_log.error("Is not index not found on delete:", runtimeException);
 
 		return false;
 	}
