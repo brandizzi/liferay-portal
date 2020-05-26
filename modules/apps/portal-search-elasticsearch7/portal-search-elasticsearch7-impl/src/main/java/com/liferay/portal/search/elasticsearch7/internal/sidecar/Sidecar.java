@@ -26,7 +26,6 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration;
@@ -244,9 +243,17 @@ public class Sidecar {
 	}
 
 	protected String getHttpPort() {
-		return GetterUtil.getString(
-			_httpPort,
-			String.valueOf(_elasticsearchConfiguration.embeddedHttpPort()));
+		if (!Validator.isBlank(_httpPort)) {
+			return _httpPort;
+		}
+
+		if (!Validator.isBlank(_elasticsearchConfiguration.sidecarHttpPort())) {
+			return _elasticsearchConfiguration.sidecarHttpPort();
+		}
+
+		int embeddedHttpPort = _elasticsearchConfiguration.embeddedHttpPort();
+
+		return embeddedHttpPort + StringPool.DASH + embeddedHttpPort;
 	}
 
 	protected String getLogProperties() {
