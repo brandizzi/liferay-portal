@@ -254,7 +254,7 @@ public class Sidecar {
 	protected String getHttpPort() {
 		return GetterUtil.getString(
 			_httpPort,
-			String.valueOf(_elasticsearchConfiguration.embeddedHttpPort()));
+			String.valueOf(_elasticsearchConfiguration.sidecarHttpPort()));
 	}
 
 	protected String getLogProperties() {
