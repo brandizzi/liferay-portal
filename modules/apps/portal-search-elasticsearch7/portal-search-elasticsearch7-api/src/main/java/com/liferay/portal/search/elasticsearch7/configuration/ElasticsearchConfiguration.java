@@ -105,11 +105,18 @@ public interface ElasticsearchConfiguration {
 	)
 	public boolean bootstrapMlockAll();
 
+	@Deprecated
 	@Meta.AD(
 		deflt = "9201", description = "embedded-http-port-help",
 		name = "embedded-http-port", required = false
 	)
 	public int embeddedHttpPort();
+
+	@Meta.AD(
+		deflt = "9200-9300", description = "sidecar-http-port-help",
+		name = "embedded-http-port", required = false
+	)
+	public String sidecarHttpPort();
 
 	@Meta.AD(
 		deflt = "9300-9400",
