@@ -112,6 +112,12 @@ public interface ElasticsearchConfiguration {
 	public int embeddedHttpPort();
 
 	@Meta.AD(
+		deflt = "9200-9300", description = "sidecar-http-port-help",
+		name = "embedded-http-port", required = false
+	)
+	public String sidecarHttpPort();
+
+	@Meta.AD(
 		deflt = "9300-9400",
 		description = "discovery-zen-ping-unicast-hosts-port-help",
 		name = "discovery-zen-ping-unicast-hosts-port", required = false
