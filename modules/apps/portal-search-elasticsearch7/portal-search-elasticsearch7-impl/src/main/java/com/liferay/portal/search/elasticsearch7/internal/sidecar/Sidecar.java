@@ -76,24 +76,16 @@ public class Sidecar {
 		ProcessExecutorPaths processExecutorPaths,
 		Collection<SettingsContributor> settingsContributors) {
 
-		Path workPath = elasticsearchInstancePaths.getWorkPath();
-
-		workPath = workPath.toAbsolutePath();
-
-		Path dataHomePath = workPath.resolve("data/elasticsearch7");
-
-		Path homePath = elasticsearchInstancePaths.getHomePath();
-
 		_clusterSettingsContext = clusterSettingsContext;
-		_dataHomePath = dataHomePath;
+		_dataHomePath = elasticsearchInstancePaths.getDataPath();
 		_elasticsearchConfiguration = elasticsearchConfiguration;
 		_elasticsearchInstancePaths = elasticsearchInstancePaths;
 		_httpPort = httpPort;
-		_indicesPath = dataHomePath.resolve("indices");
+		_indicesPath = elasticsearchInstancePaths.getIndicesPath();
 		_processExecutor = processExecutor;
 		_processExecutorPaths = processExecutorPaths;
 		_settingsContributors = settingsContributors;
-		_sidecarHomePath = homePath.toAbsolutePath();
+		_sidecarHomePath = elasticsearchInstancePaths.getHomePath();
 	}
 
 	public String getNetworkHostAddress() {

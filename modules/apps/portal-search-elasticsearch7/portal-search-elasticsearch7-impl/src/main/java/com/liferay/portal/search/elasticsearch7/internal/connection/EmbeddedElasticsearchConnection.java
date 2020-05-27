@@ -30,7 +30,6 @@ import com.liferay.portal.search.elasticsearch7.settings.SettingsContributor;
 
 import java.io.IOException;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.util.Map;
@@ -238,6 +237,15 @@ public class EmbeddedElasticsearchConnection
 		return elasticsearchConfiguration.clusterName();
 	}
 
+	protected ElasticsearchInstancePaths getElasticsearchInstancePaths() {
+		ElasticsearchInstancePathsBuilder elasticsearchInstancePathsBuilder =
+			new ElasticsearchInstancePathsBuilder();
+
+		return elasticsearchInstancePathsBuilder.workPath(
+			Paths.get(props.get(PropsKeys.LIFERAY_HOME))
+		).build();
+	}
+
 	protected String getHttpPort() {
 		return GetterUtil.getString(
 			_httpPort,
@@ -323,7 +331,7 @@ public class EmbeddedElasticsearchConnection
 		).elasticsearchConfiguration(
 			elasticsearchConfiguration
 		).elasticsearchInstancePaths(
-			new EmbeddedElasticsearchInstancePaths()
+			getElasticsearchInstancePaths()
 		).httpPort(
 			getHttpPort()
 		).localBindInetAddressSupplier(
@@ -400,20 +408,5 @@ public class EmbeddedElasticsearchConnection
 	private Node _node;
 	private final Set<SettingsContributor> _settingsContributors =
 		new ConcurrentSkipListSet<>();
-
-	private class EmbeddedElasticsearchInstancePaths
-		implements ElasticsearchInstancePaths {
-
-		@Override
-		public Path getHomePath() {
-			return null;
-		}
-
-		@Override
-		public Path getWorkPath() {
-			return Paths.get(props.get(PropsKeys.LIFERAY_HOME));
-		}
-
-	}
 
 }
