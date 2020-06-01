@@ -25,7 +25,7 @@ import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch7.internal.cluster.ClusterSettingsContext;
-import com.liferay.portal.search.elasticsearch7.internal.util.LogUtil;
+import com.liferay.portal.search.elasticsearch7.internal.util.SearchLogHelperUtil;
 import com.liferay.portal.search.elasticsearch7.settings.SettingsContributor;
 
 import io.netty.buffer.ByteBufUtil;
@@ -224,7 +224,7 @@ public class EmbeddedElasticsearchConnection
 
 	@Override
 	protected RestHighLevelClient createRestHighLevelClient() {
-		LogUtil.setRestClientLoggerLevel(
+		SearchLogHelperUtil.setRestClientLoggerLevel(
 			elasticsearchConfiguration.restClientLoggerLevel());
 
 		startNode();
