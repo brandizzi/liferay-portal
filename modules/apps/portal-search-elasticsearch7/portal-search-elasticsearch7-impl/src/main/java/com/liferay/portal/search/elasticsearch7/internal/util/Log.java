@@ -20,32 +20,17 @@ import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.action.bulk.BulkResponse;
 
 /**
- * @author Michael C. Han
+ * @author Adam Brandizzi
  */
-public class LogUtil {
+public interface Log {
 
-	public static void logActionResponse(
-		com.liferay.portal.kernel.log.Log log, ActionResponse actionResponse) {
+	public void logActionResponse(
+		com.liferay.portal.kernel.log.Log log, ActionResponse actionResponse);
 
-		_log.logActionResponse(log, actionResponse);
-	}
+	public void logActionResponse(
+		com.liferay.portal.kernel.log.Log log, BulkResponse bulkResponse);
 
-	public static void logActionResponse(
-		com.liferay.portal.kernel.log.Log log, BulkResponse bulkResponse) {
-
-		_log.logActionResponse(log, bulkResponse);
-	}
-
-	public static void setLog(Log log) {
-		_log = log;
-	}
-
-	public static void setRestClientLoggerLevel(
-		RESTClientLoggerLevel restClientLoggerLevel) {
-
-		_log.setRestClientLoggerLevel(restClientLoggerLevel);
-	}
-
-	private static Log _log = new LogImpl();
+	public void setRestClientLoggerLevel(
+		RESTClientLoggerLevel restClientLoggerLevel);
 
 }
