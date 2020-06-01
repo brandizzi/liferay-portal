@@ -113,7 +113,8 @@ public class SidecarElasticsearchConnectionManager {
 						clusterableSidecar, null);
 
 				elasticsearchConnection = new SidecarElasticsearchConnection(
-					clusterableSidecar);
+					clusterableSidecar,
+					elasticsearchConfiguration.restClientLoggerLevel());
 			}
 			else {
 				elasticsearchConnection = new SidecarElasticsearchConnection(
@@ -121,7 +122,8 @@ public class SidecarElasticsearchConnectionManager {
 						_clusterSettingsContext, elasticsearchConfiguration,
 						elasticsearchInstancePaths, null, _processExecutor,
 						new ProcessExecutorPathsImpl(_props),
-						_settingsContributors));
+						_settingsContributors),
+					elasticsearchConfiguration.restClientLoggerLevel());
 			}
 		}
 		else {
