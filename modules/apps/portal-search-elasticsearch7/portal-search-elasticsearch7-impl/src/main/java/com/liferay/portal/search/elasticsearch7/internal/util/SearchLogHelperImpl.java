@@ -31,13 +31,12 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.common.io.stream.OutputStreamStreamOutput;
 
 /**
- * @author Michael C. Han
+ * @author Adam Brandizzi
  */
-public class LogUtil {
+public class SearchLogHelperImpl implements SearchLogHelper {
 
-	public static void logActionResponse(
-		Log log, ActionResponse actionResponse) {
-
+	@Override
+	public void logActionResponse(Log log, ActionResponse actionResponse) {
 		if (!log.isInfoEnabled()) {
 			return;
 		}
@@ -58,7 +57,8 @@ public class LogUtil {
 		log.info(string.trim());
 	}
 
-	public static void logActionResponse(Log log, BulkResponse bulkResponse) {
+	@Override
+	public void logActionResponse(Log log, BulkResponse bulkResponse) {
 		if (bulkResponse.hasFailures()) {
 			log.error(bulkResponse.buildFailureMessage());
 		}
@@ -66,7 +66,8 @@ public class LogUtil {
 		logActionResponse(log, (ActionResponse)bulkResponse);
 	}
 
-	public static void setRestClientLoggerLevel(
+	@Override
+	public void setRestClientLoggerLevel(
 		RESTClientLoggerLevel restClientLoggerLevel) {
 
 		org.apache.commons.logging.Log log = LogFactory.getLog(
