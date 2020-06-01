@@ -267,6 +267,7 @@ public class ElasticsearchConnectionFixture
 				_elasticsearchConfigurationProperties);
 
 		return new SidecarElasticsearchConnection(
+			elasticsearchConfiguration.restClientLoggerLevel(),
 			new Sidecar(
 				getClusterSettingsContext(), elasticsearchConfiguration,
 				createElasticsearchInstancePaths(), "9200-9300",
