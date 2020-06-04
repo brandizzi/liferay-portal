@@ -22,15 +22,12 @@ import com.liferay.portal.kernel.cluster.ClusterMasterExecutor;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.module.framework.service.IdentifiableOSGiService;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.kernel.util.Props;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.ProxyFactory;
 import com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration;
 import com.liferay.portal.search.elasticsearch7.internal.cluster.ClusterSettingsContext;
-import com.liferay.portal.search.elasticsearch7.internal.sidecar.ClusterableSidecar;
 import com.liferay.portal.search.elasticsearch7.internal.sidecar.ProcessExecutorPathsImpl;
 import com.liferay.portal.search.elasticsearch7.internal.sidecar.Sidecar;
 import com.liferay.portal.search.elasticsearch7.settings.SettingsContributor;
@@ -118,33 +115,12 @@ public class SidecarElasticsearchConnectionManager {
 			ElasticsearchInstancePaths elasticsearchInstancePaths =
 				getElasticsearchInstancePaths(elasticsearchConfiguration);
 
-			if (_clusterExecutor.isEnabled() && PortalRunMode.isTestMode()) {
-				ClusterableSidecar clusterableSidecar = new ClusterableSidecar(
-					_clusterExecutor, _clusterMasterExecutor,
+			elasticsearchConnection = new SidecarElasticsearchConnection(
+				new Sidecar(
 					_clusterSettingsContext, elasticsearchConfiguration,
-					elasticsearchInstancePaths, _jsonFactory, _processExecutor,
+					elasticsearchInstancePaths, null, _processExecutor,
 					new ProcessExecutorPathsImpl(_props),
-					_settingsContributors);
-
-				_clusterableSidecarsOSGiServiceserviceRegistration =
-					bundleContext.registerService(
-						new String[] {
-							ClusterableSidecar.class.getName(),
-							IdentifiableOSGiService.class.getName()
-						},
-						clusterableSidecar, null);
-
-				elasticsearchConnection = new SidecarElasticsearchConnection(
-					clusterableSidecar);
-			}
-			else {
-				elasticsearchConnection = new SidecarElasticsearchConnection(
-					new Sidecar(
-						_clusterSettingsContext, elasticsearchConfiguration,
-						elasticsearchInstancePaths, null, _processExecutor,
-						new ProcessExecutorPathsImpl(_props),
-						_settingsContributors));
-			}
+					_settingsContributors));
 		}
 		else {
 			elasticsearchConnection = ProxyFactory.newDummyInstance(
