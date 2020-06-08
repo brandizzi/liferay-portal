@@ -1,5 +1,4 @@
-@component-name = "portal-clustering"
-@ignore = "true"
+@component-name = "portal-search-ee"
 definition {
 
 	property app.server.bundles.size = "1";
