@@ -1,10 +1,10 @@
 @component-name = "portal-clustering"
-@ignore = "true"
 definition {
 
 	property app.server.bundles.size = "1";
 	property cluster.enabled = "true";
 	property portal.release = "true";
+	property portal.suite.search.engine = "elasticsearch7";
 	property portal.upstream = "true";
 	property remote.elasticsearch.enabled = "false";
 	property test.assert.warning.exceptions = "true";
@@ -74,8 +74,7 @@ definition {
 
 		SearchPortlets.searchEmbedded(searchTerm = "WC WebContent Title");
 
-		SearchResultPortlet.viewSearchResults(
-			searchAssetSummary = "WC WebContent Content",
+		SearchResultPortlet.viewSearchResultNotPresent(
 			searchAssetTitle = "WC WebContent Title",
 			searchAssetType = "Web Content Article");
 
@@ -98,8 +97,7 @@ definition {
 
 		SearchPortlets.searchEmbedded(searchTerm = "WC WebContent Title");
 
-		SearchResultPortlet.viewSearchResults(
-			searchAssetSummary = "WC WebContent Content",
+		SearchResultPortlet.viewSearchResultNotPresent(
 			searchAssetTitle = "WC WebContent Title",
 			searchAssetType = "Web Content Article");
 
@@ -116,11 +114,11 @@ definition {
 		Clustering.viewClusterStatusInConsole();
 
 		Clustering.viewTextPresentOnSpecificNode(
-			expectedText = "Sidecar ${sidecarNode1Name} is at 127.0.0.1:9201",
+			expectedText = "Sidecar Elasticsearch ${sidecarNode1Name} is at 127.0.0.1:9201",
 			nodePort = "8080");
 
 		Clustering.viewTextPresentOnSpecificNode(
-			expectedText = "Sidecar ${sidecarNode2Name} is at 127.0.0.1:9202",
+			expectedText = "Sidecar Elasticsearch ${sidecarNode2Name} is at 127.0.0.1:9202",
 			nodePort = "9080");
 
 		Clustering.viewSidecarInfoViaSidecarURL(
@@ -136,7 +134,7 @@ definition {
 			url = "http://127.0.0.1:9201/_cluster/health?pretty");
 
 		Clustering.viewSidecarInfoViaSidecarURL(
-			sidecarInfo = '''"number_of_nodes" : 2''',
+			sidecarInfo = '''"number_of_nodes" : 1''',
 			url = "http://127.0.0.1:9201/_cluster/health?pretty");
 
 		User.loginPG(
