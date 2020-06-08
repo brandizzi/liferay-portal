@@ -1,4 +1,4 @@
-@component-name = "portal-clustering"
+@component-name = "portal-search-ee"
 @ignore = "true"
 definition {
 
