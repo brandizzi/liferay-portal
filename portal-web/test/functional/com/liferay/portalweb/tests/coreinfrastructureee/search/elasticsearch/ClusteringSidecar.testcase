@@ -1,10 +1,10 @@
-@component-name = "portal-clustering"
+@component-name = "portal-search-ee"
 definition {
 
 	property app.server.bundles.size = "1";
 	property cluster.enabled = "true";
 	property portal.release = "true";
-	property portal.suite.search.engine = "elasticsearch7";
+	property portal.suite.search.engine = "brandizzi";
 	property portal.upstream = "quarantine";
 	property remote.elasticsearch.enabled = "false";
 	property test.assert.warning.exceptions = "true";
