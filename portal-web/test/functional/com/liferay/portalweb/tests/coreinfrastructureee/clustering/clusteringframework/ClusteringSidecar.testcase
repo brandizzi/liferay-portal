@@ -116,11 +116,11 @@ definition {
 		Clustering.viewClusterStatusInConsole();
 
 		Clustering.viewTextPresentOnSpecificNode(
-			expectedText = "Sidecar ${sidecarNode1Name} is at 127.0.0.1:9201",
+			expectedText = "Sidecar Elasticsearch ${sidecarNode1Name} is at 127.0.0.1:9200",
 			nodePort = "8080");
 
 		Clustering.viewTextPresentOnSpecificNode(
-			expectedText = "Sidecar ${sidecarNode2Name} is at 127.0.0.1:9202",
+			expectedText = "Sidecar Elasticsearch ${sidecarNode2Name} is at 127.0.0.1:9201",
 			nodePort = "9080");
 
 		Clustering.viewSidecarInfoViaSidecarURL(
