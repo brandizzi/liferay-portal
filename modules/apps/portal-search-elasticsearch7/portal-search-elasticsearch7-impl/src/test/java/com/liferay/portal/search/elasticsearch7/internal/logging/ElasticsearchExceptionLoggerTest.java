@@ -17,15 +17,9 @@ package com.liferay.portal.search.elasticsearch7.internal.logging;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.SearchException;
-import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.search.test.util.logging.ExpectedLogTestRule;
 
 import java.util.logging.Level;
-
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.rest.RestStatus;
-
-import org.hamcrest.CoreMatchers;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -44,80 +38,7 @@ public class ElasticsearchExceptionLoggerTest {
 	}
 
 	@Test
-	public void testDeleteDocumentFailureIndexNotFoundElasticsearchStatusExceptionLogExceptionsOnlyFalse()
-		throws Throwable {
-
-		expectedLogTestRule.expectMessage(
-			CoreMatchers.not(
-				CoreMatchers.containsString(
-					ElasticsearchExceptionLogger.
-						INDEX_NOT_FOUND_EXCEPTION_MESSAGE)));
-
-		ElasticsearchExceptionLogger elasticsearchExceptionLogger =
-			new ElasticsearchExceptionLogger(_log, false);
-
-		elasticsearchExceptionLogger.logOrThrowOnDeleteDocumentFailure(
-			new ElasticsearchStatusException(
-				ElasticsearchExceptionLogger.INDEX_NOT_FOUND_EXCEPTION_MESSAGE,
-				RandomTestUtil.randomEnum(RestStatus.class)));
-	}
-
-	@Test
-	public void testDeleteDocumentFailureIndexNotFoundElasticsearchStatusExceptionLogExceptionsOnlyFalseInfoLevel()
-		throws Throwable {
-
-		expectedLogTestRule.configure(
-			ElasticsearchExceptionLoggerTest.class, Level.INFO);
-		expectedLogTestRule.expectMessage(
-			ElasticsearchExceptionLogger.INDEX_NOT_FOUND_EXCEPTION_MESSAGE);
-
-		ElasticsearchExceptionLogger elasticsearchExceptionLogger =
-			new ElasticsearchExceptionLogger(_log, false);
-
-		elasticsearchExceptionLogger.logOrThrowOnDeleteDocumentFailure(
-			new ElasticsearchStatusException(
-				ElasticsearchExceptionLogger.INDEX_NOT_FOUND_EXCEPTION_MESSAGE,
-				RandomTestUtil.randomEnum(RestStatus.class)));
-	}
-
-	@Test
-	public void testDeleteDocumentFailureIndexNotFoundElasticsearchStatusExceptionLogExceptionsOnlyTrue()
-		throws Throwable {
-
-		expectedLogTestRule.configure(
-			ElasticsearchExceptionLoggerTest.class, Level.INFO);
-		expectedLogTestRule.expectMessage(
-			ElasticsearchExceptionLogger.INDEX_NOT_FOUND_EXCEPTION_MESSAGE);
-
-		ElasticsearchExceptionLogger elasticsearchExceptionLogger =
-			new ElasticsearchExceptionLogger(_log, true);
-
-		elasticsearchExceptionLogger.logOrThrowOnDeleteDocumentFailure(
-			new ElasticsearchStatusException(
-				ElasticsearchExceptionLogger.INDEX_NOT_FOUND_EXCEPTION_MESSAGE,
-				RandomTestUtil.randomEnum(RestStatus.class)));
-	}
-
-	@Test
-	public void testDeleteDocumentFailureIndexNotFoundElasticsearchStatusExceptionLogExceptionsOnlyTrueInfoLevel()
-		throws Throwable {
-
-		expectedLogTestRule.configure(
-			ElasticsearchExceptionLoggerTest.class, Level.INFO);
-		expectedLogTestRule.expectMessage(
-			ElasticsearchExceptionLogger.INDEX_NOT_FOUND_EXCEPTION_MESSAGE);
-
-		ElasticsearchExceptionLogger elasticsearchExceptionLogger =
-			new ElasticsearchExceptionLogger(_log, true);
-
-		elasticsearchExceptionLogger.logOrThrowOnDeleteDocumentFailure(
-			new ElasticsearchStatusException(
-				ElasticsearchExceptionLogger.INDEX_NOT_FOUND_EXCEPTION_MESSAGE,
-				RandomTestUtil.randomEnum(RestStatus.class)));
-	}
-
-	@Test
-	public void testDeleteDocumentFailureIndexNotFoundLogExceptionsOnlyFalse()
+	public void testDeleteIndexNotFoundLogExceptionsOnlyFalse()
 		throws Throwable {
 
 		expectedLogTestRule.configure(
@@ -135,7 +56,7 @@ public class ElasticsearchExceptionLoggerTest {
 	}
 
 	@Test
-	public void testDeleteDocumentFailureIndexNotFoundLogExceptionsOnlyTrue()
+	public void testDeleteIndexNotFoundLogExceptionsOnlyTrue()
 		throws Throwable {
 
 		expectedLogTestRule.configure(
@@ -153,9 +74,7 @@ public class ElasticsearchExceptionLoggerTest {
 	}
 
 	@Test
-	public void testDeleteDocumentFailureLogExceptionsOnlyFalse()
-		throws Throwable {
-
+	public void testDeleteLogExceptionsOnlyFalse() throws Throwable {
 		expectedException.expect(SearchException.class);
 		expectedException.expectMessage(
 			"deletion failed and results in exception");
@@ -168,9 +87,7 @@ public class ElasticsearchExceptionLoggerTest {
 	}
 
 	@Test
-	public void testDeleteDocumentFailureLogExceptionsOnlyTrue()
-		throws Throwable {
-
+	public void testDeleteLogExceptionsOnlyTrue() throws Throwable {
 		expectedLogTestRule.expectMessage("deletion failed is only logged");
 
 		ElasticsearchExceptionLogger elasticsearchExceptionLogger =
