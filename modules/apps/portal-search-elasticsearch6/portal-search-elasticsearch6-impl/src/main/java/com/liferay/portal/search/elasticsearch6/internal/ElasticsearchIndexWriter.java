@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.search.generic.MatchAllQuery;
 import com.liferay.portal.kernel.search.suggest.SpellCheckIndexWriter;
 import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.search.elasticsearch6.configuration.ElasticsearchConfiguration;
+import com.liferay.portal.search.elasticsearch6.internal.logging.ElasticsearchExceptionHandler;
 import com.liferay.portal.search.elasticsearch6.internal.util.DocumentTypes;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.document.BulkDocumentRequest;
@@ -166,17 +167,8 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(deleteDocumentRequest);
 		}
 		catch (RuntimeException runtimeException) {
-			if (isIndexNotFound(runtimeException)) {
-				if (_log.isInfoEnabled()) {
-					_log.info(runtimeException, runtimeException);
-				}
-			}
-			else if (_logExceptionsOnly) {
-				_log.error(runtimeException, runtimeException);
-			}
-			else {
-				throw runtimeException;
-			}
+			_elasticsearchExceptionHandler.handleDeleteDocumentException(
+				runtimeException);
 		}
 	}
 
@@ -426,16 +418,9 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			ElasticsearchConfiguration.class, properties);
 
 		_logExceptionsOnly = _elasticsearchConfiguration.logExceptionsOnly();
-	}
 
-	protected boolean isIndexNotFound(RuntimeException runtimeException) {
-		String message = runtimeException.getMessage();
-
-		if (message.contains("no such index")) {
-			return true;
-		}
-
-		return false;
+		_elasticsearchExceptionHandler = new ElasticsearchExceptionHandler(
+			_log, _logExceptionsOnly);
 	}
 
 	@Reference(unbind = "-")
@@ -454,6 +439,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		ElasticsearchIndexWriter.class);
 
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
+	private ElasticsearchExceptionHandler _elasticsearchExceptionHandler;
 	private IndexNameBuilder _indexNameBuilder;
 	private boolean _logExceptionsOnly;
 	private SearchEngineAdapter _searchEngineAdapter;
