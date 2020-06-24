@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.search.generic.MatchAllQuery;
 import com.liferay.portal.kernel.search.suggest.SpellCheckIndexWriter;
 import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConfiguration;
+import com.liferay.portal.search.elasticsearch7.internal.logging.ElasticsearchExceptionLogger;
 import com.liferay.portal.search.elasticsearch7.internal.util.DocumentTypes;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.document.BulkDocumentRequest;
@@ -46,8 +47,6 @@ import com.liferay.portal.search.index.IndexNameBuilder;
 
 import java.util.Collection;
 import java.util.Map;
-
-import org.elasticsearch.ElasticsearchStatusException;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -168,17 +167,8 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			_searchEngineAdapter.execute(deleteDocumentRequest);
 		}
 		catch (RuntimeException runtimeException) {
-			if (isIndexNotFound(runtimeException)) {
-				if (_log.isInfoEnabled()) {
-					_log.info(runtimeException, runtimeException);
-				}
-			}
-			else if (_logExceptionsOnly) {
-				_log.error(runtimeException, runtimeException);
-			}
-			else {
-				throw runtimeException;
-			}
+			_elasticsearchExceptionLogger.logOrThrowOnDeleteDocumentFailure(
+				runtimeException);
 		}
 	}
 
@@ -428,18 +418,9 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 			ElasticsearchConfiguration.class, properties);
 
 		_logExceptionsOnly = _elasticsearchConfiguration.logExceptionsOnly();
-	}
 
-	protected boolean isIndexNotFound(RuntimeException runtimeException) {
-		if (runtimeException instanceof ElasticsearchStatusException) {
-			String message = runtimeException.getMessage();
-
-			if (message.contains("type=index_not_found_exception")) {
-				return true;
-			}
-		}
-
-		return false;
+		_elasticsearchExceptionLogger = new ElasticsearchExceptionLogger(
+			_log, _logExceptionsOnly);
 	}
 
 	@Reference(unbind = "-")
@@ -458,6 +439,7 @@ public class ElasticsearchIndexWriter extends BaseIndexWriter {
 		ElasticsearchIndexWriter.class);
 
 	private volatile ElasticsearchConfiguration _elasticsearchConfiguration;
+	private ElasticsearchExceptionLogger _elasticsearchExceptionLogger;
 	private IndexNameBuilder _indexNameBuilder;
 	private boolean _logExceptionsOnly;
 	private SearchEngineAdapter _searchEngineAdapter;
