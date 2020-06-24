@@ -16,8 +16,6 @@ package com.liferay.portal.search.elasticsearch7.internal.logging;
 
 import com.liferay.portal.kernel.log.Log;
 
-import org.elasticsearch.ElasticsearchStatusException;
-
 /**
  * @author Adam Brandizzi
  */
@@ -36,11 +34,8 @@ public class ElasticsearchExceptionHandler {
 				_log.info(t, t);
 			}
 		}
-		else if (_logExceptionsOnly) {
-			_log.error(t, t);
-		}
 		else {
-			throw t;
+			logOrThrow(t);
 		}
 	}
 
@@ -57,12 +52,10 @@ public class ElasticsearchExceptionHandler {
 	}
 
 	protected boolean isIndexNotFound(Throwable throwable) {
-		if (throwable instanceof ElasticsearchStatusException) {
-			String message = throwable.getMessage();
+		String message = throwable.getMessage();
 
-			if (message.contains(INDEX_NOT_FOUND_EXCEPTION_MESSAGE)) {
-				return true;
-			}
+		if (message.contains(INDEX_NOT_FOUND_EXCEPTION_MESSAGE)) {
+			return true;
 		}
 
 		return false;
