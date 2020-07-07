@@ -18,6 +18,7 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.portal.kernel.backgroundtask.BackgroundTaskExecutor;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.CompanyTestUtil;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
@@ -111,17 +112,15 @@ public class RankingIndexCreationBackgroundTaskExecutorTest {
 
 		deleteIndex(rankingsIndexNames);
 
+		_companies.addAll(companies);
+
 		return companies;
 	}
 
 	protected Company createCompanyWithoutRankingsIndex() throws Exception {
-		Company company = CompanyTestUtil.addCompany();
+		List<Company> companies = createCompaniesWithoutRankingsIndices(1);
 
-		String rankingsIndexName = getRankingsIndexName(company.getCompanyId());
-
-		deleteIndex(rankingsIndexName);
-
-		return company;
+		return companies.get(0);
 	}
 
 	protected void deleteIndex(String... rankingsIndexNames) {
@@ -145,6 +144,9 @@ public class RankingIndexCreationBackgroundTaskExecutorTest {
 
 		return indicesExistsIndexResponse.isExists();
 	}
+
+	@DeleteAfterTestRun
+	private final List<Company> _companies = new ArrayList<>();
 
 	@Inject
 	private IndexNameBuilder _indexNameBuilder;
