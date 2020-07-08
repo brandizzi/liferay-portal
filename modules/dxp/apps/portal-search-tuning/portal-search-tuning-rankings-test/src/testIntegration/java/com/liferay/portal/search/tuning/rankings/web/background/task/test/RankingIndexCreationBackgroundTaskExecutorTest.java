@@ -74,7 +74,7 @@ public class RankingIndexCreationBackgroundTaskExecutorTest {
 	public void testRankingIndexCreationBackgroundTaskExecutorCreatesIndices()
 		throws Exception {
 
-		List<Company> companies = createCompaniesWithoutRankingsIndices(5);
+		List<Company> companies = createCompaniesWithoutRankingsIndices(50);
 
 		_rankingIndexCreationBackgroundTaskExecutor.execute(null);
 
