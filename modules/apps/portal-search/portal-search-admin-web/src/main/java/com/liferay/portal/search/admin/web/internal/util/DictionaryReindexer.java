@@ -15,6 +15,7 @@
 package com.liferay.portal.search.admin.web.internal.util;
 
 import com.liferay.portal.instances.service.PortalInstancesLocalService;
+import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.search.IndexWriterHelper;
 import com.liferay.portal.kernel.search.SearchException;
 
@@ -32,12 +33,18 @@ public class DictionaryReindexer {
 	}
 
 	public void reindexDictionaries() throws SearchException {
+		reindexDictionaries(CompanyConstants.SYSTEM);
+
 		long[] companyIds = _portalInstancesLocalService.getCompanyIds();
 
 		for (long companyId : companyIds) {
-			_indexWriterHelper.indexQuerySuggestionDictionaries(companyId);
-			_indexWriterHelper.indexSpellCheckerDictionaries(companyId);
+			reindexDictionaries(companyId);
 		}
+	}
+
+	protected void reindexDictionaries(long companyId) throws SearchException {
+		_indexWriterHelper.indexQuerySuggestionDictionaries(companyId);
+		_indexWriterHelper.indexSpellCheckerDictionaries(companyId);
 	}
 
 	private final IndexWriterHelper _indexWriterHelper;
