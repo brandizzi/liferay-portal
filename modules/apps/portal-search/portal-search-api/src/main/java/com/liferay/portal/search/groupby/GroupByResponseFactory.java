@@ -14,7 +14,7 @@
 
 package com.liferay.portal.search.groupby;
 
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Bryan Engler

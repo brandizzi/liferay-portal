@@ -14,7 +14,7 @@
 
 package com.liferay.portal.search.engine.adapter.search;
 
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Michael C. Han
@@ -30,5 +30,8 @@ public interface SearchRequestExecutor {
 
 	public SearchSearchResponse executeSearchRequest(
 		SearchSearchRequest searchSearchRequest);
+
+	public SuggestSearchResponse executeSearchRequest(
+		SuggestSearchRequest suggestSearchRequest);
 
 }

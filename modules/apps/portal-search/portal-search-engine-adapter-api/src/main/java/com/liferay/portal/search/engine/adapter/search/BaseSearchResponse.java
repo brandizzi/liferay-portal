@@ -14,15 +14,33 @@
 
 package com.liferay.portal.search.engine.adapter.search;
 
-import aQute.bnd.annotation.ProviderType;
+import com.liferay.portal.search.aggregation.AggregationResult;
+import com.liferay.portal.search.stats.StatsResponse;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Michael C. Han
  */
 @ProviderType
 public abstract class BaseSearchResponse implements SearchResponse {
+
+	public void addAggregationResult(AggregationResult aggregationResult) {
+		_aggregationResultsMap.put(
+			aggregationResult.getName(), aggregationResult);
+	}
+
+	public void addStatsResponse(StatsResponse statsResponse) {
+		_statsResponseMap.put(statsResponse.getField(), statsResponse);
+	}
+
+	public Map<String, AggregationResult> getAggregationResultsMap() {
+		return Collections.unmodifiableMap(_aggregationResultsMap);
+	}
 
 	public long getCount() {
 		return _count;
@@ -38,6 +56,14 @@ public abstract class BaseSearchResponse implements SearchResponse {
 
 	public String getSearchRequestString() {
 		return _searchRequestString;
+	}
+
+	public String getSearchResponseString() {
+		return _searchResponseString;
+	}
+
+	public Map<String, StatsResponse> getStatsResponseMap() {
+		return Collections.unmodifiableMap(_statsResponseMap);
 	}
 
 	public boolean isTerminatedEarly() {
@@ -64,6 +90,10 @@ public abstract class BaseSearchResponse implements SearchResponse {
 		_searchRequestString = searchRequestString;
 	}
 
+	public void setSearchResponseString(String searchResponseString) {
+		_searchResponseString = searchResponseString;
+	}
+
 	public void setTerminatedEarly(boolean terminatedEarly) {
 		_terminatedEarly = terminatedEarly;
 	}
@@ -72,10 +102,15 @@ public abstract class BaseSearchResponse implements SearchResponse {
 		_timedOut = timedOut;
 	}
 
+	private final Map<String, AggregationResult> _aggregationResultsMap =
+		new LinkedHashMap<>();
 	private long _count;
 	private Map<String, String> _executionProfile;
 	private long _executionTime;
 	private String _searchRequestString;
+	private String _searchResponseString;
+	private final Map<String, StatsResponse> _statsResponseMap =
+		new LinkedHashMap<>();
 	private boolean _terminatedEarly;
 	private boolean _timedOut;
 

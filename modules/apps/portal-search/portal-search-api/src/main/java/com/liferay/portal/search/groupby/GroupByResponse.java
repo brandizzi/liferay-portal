@@ -14,11 +14,11 @@
 
 package com.liferay.portal.search.groupby;
 
-import aQute.bnd.annotation.ProviderType;
-
 import com.liferay.portal.kernel.search.Hits;
 
 import java.util.Map;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Bryan Engler

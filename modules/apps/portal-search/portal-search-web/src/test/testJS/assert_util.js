@@ -1,30 +1,39 @@
-AUI().use(
-	'aui',
-	function(A) {
-		Liferay.Test = Liferay.Test || {};
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
 
-		var includes = function(array, value) {
-			return array.indexOf(value) != -1;
-		};
+AUI().use('aui', A => {
+	Liferay.Test = Liferay.Test || {};
 
-		var assertSameItems = function(expected, actual) {
-			var message = 'Expected [' + expected + ']; got [' + actual + ']';
+	var includes = function(array, value) {
+		return array.indexOf(value) != -1;
+	};
 
-			assert.equal(expected.length, actual.length, message);
+	var assertSameItems = function(expected, actual) {
+		var message = 'Expected [' + expected + ']; got [' + actual + ']';
 
-			expected.forEach(
-				function(item) {
-					assert(includes(actual, item), message);
-				}
-			);
-		};
+		assert.equal(expected.length, actual.length, message);
 
-		Liferay.Test.assertSameItems = assertSameItems;
+		expected.forEach(item => {
+			assert(includes(actual, item), message);
+		});
+	};
 
-		var assertEmpty = function(array) {
-			assert.equal(0, array.length);
-		};
+	Liferay.Test.assertSameItems = assertSameItems;
 
-		Liferay.Test.assertEmpty = assertEmpty;
-	}
-);
+	var assertEmpty = function(array) {
+		assert.equal(0, array.length);
+	};
+
+	Liferay.Test.assertEmpty = assertEmpty;
+});

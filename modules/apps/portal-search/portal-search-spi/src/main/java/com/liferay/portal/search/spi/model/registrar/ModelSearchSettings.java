@@ -14,7 +14,7 @@
 
 package com.liferay.portal.search.spi.model.registrar;
 
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author André de Oliveira
@@ -33,6 +33,8 @@ public interface ModelSearchSettings {
 	public String getSearchEngineId();
 
 	public boolean isCommitImmediately();
+
+	public boolean isSearchResultPermissionFilterSuppressed();
 
 	public boolean isSelectAllLocales();
 

@@ -14,10 +14,11 @@
 
 package com.liferay.portal.search.configuration;
 
-import aQute.bnd.annotation.ProviderType;
 import aQute.bnd.annotation.metatype.Meta;
 
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Michael C. Han
@@ -32,7 +33,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 public interface QueryPreProcessConfiguration {
 
 	@Meta.AD(
-		deflt = "emailAddress|license|path|screenName|tag|treePath|userName",
+		deflt = "emailAddress|license|path|properties|screenName|tag|treePath|userName",
 		name = "field-name-patterns", required = false
 	)
 	public String[] fieldNamePatterns();

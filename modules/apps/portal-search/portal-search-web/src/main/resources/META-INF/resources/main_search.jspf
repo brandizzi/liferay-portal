@@ -50,12 +50,17 @@ Hits hits = searchDisplayContext.getHits();
 
 							facetValue.siblings().removeClass('active');
 
-							var searchFacet = facetValue.parentsUntil('.search-layout', '.search-facet');
+							var searchFacet = facetValue.parentsUntil(
+								'.search-layout',
+								'.search-facet'
+							);
 
 							var form = $(document.<portlet:namespace />fm);
 
 							var field = form.fm(searchFacet.data('facetfieldname'));
-							var fieldSelection = form.fm(searchFacet.data('facetfieldname') + 'selection');
+							var fieldSelection = form.fm(
+								searchFacet.data('facetfieldname') + 'selection'
+							);
 
 							if (field.length) {
 								field.val(term.data('value'));

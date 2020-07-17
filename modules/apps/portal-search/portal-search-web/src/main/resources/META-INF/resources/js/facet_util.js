@@ -1,8 +1,22 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 AUI.add(
 	'liferay-search-facet-util',
-	function(A) {
+	A => {
 		var FacetUtil = {
-			addURLParameter: function(key, value, parameterArray) {
+			addURLParameter(key, value, parameterArray) {
 				key = encodeURIComponent(key);
 				value = encodeURIComponent(value);
 
@@ -11,7 +25,7 @@ AUI.add(
 				return parameterArray;
 			},
 
-			changeSelection: function(event) {
+			changeSelection(event) {
 				var form = event.currentTarget.form;
 
 				if (!form) {
@@ -22,18 +36,16 @@ AUI.add(
 
 				var formCheckboxes = $('#' + form.id + ' input.facet-term');
 
-				formCheckboxes.each(
-					function(index, value) {
-						if (value.checked) {
-							selections.push(value.getAttribute('data-term-id'));
-						}
+				formCheckboxes.each((index, value) => {
+					if (value.checked) {
+						selections.push(value.getAttribute('data-term-id'));
 					}
-				);
+				});
 
 				FacetUtil.selectTerms(form, selections);
 			},
 
-			clearSelections: function(event) {
+			clearSelections(event) {
 				var form = $(event.currentTarget).closest('form')[0];
 
 				if (!form) {
@@ -45,33 +57,37 @@ AUI.add(
 				FacetUtil.selectTerms(form, selections);
 			},
 
-			removeURLParameters: function(key, parameterArray) {
+			removeURLParameters(key, parameterArray) {
 				key = encodeURIComponent(key);
 
-				var newParameters = parameterArray.filter(
-					function(item) {
-						var itemSplit = item.split('=');
+				var newParameters = parameterArray.filter(item => {
+					var itemSplit = item.split('=');
 
-						if (itemSplit && (itemSplit[0] === key)) {
-							return false;
-						}
-
-						return true;
+					if (itemSplit && itemSplit[0] === key) {
+						return false;
 					}
-				);
+
+					return true;
+				});
 
 				return newParameters;
 			},
 
-			selectTerms: function(form, selections) {
-				var formParameterName = $('#' + form.id + ' input.facet-parameter-name');
+			selectTerms(form, selections) {
+				var formParameterName = $(
+					'#' + form.id + ' input.facet-parameter-name'
+				);
 
 				var key = formParameterName[0].value;
 
-				document.location.search = FacetUtil.updateQueryString(key, selections, document.location.search);
+				document.location.search = FacetUtil.updateQueryString(
+					key,
+					selections,
+					document.location.search
+				);
 			},
 
-			setURLParameter: function(url, name, value) {
+			setURLParameter(url, name, value) {
 				var parts = url.split('?');
 
 				var address = parts[0];
@@ -82,24 +98,33 @@ AUI.add(
 					queryString = '';
 				}
 
-				queryString = Liferay.Search.FacetUtil.updateQueryString(name, [value], queryString);
+				queryString = Liferay.Search.FacetUtil.updateQueryString(
+					name,
+					[value],
+					queryString
+				);
 
 				return address + '?' + queryString;
 			},
 
-			setURLParameters: function(key, values, parameterArray) {
-				var newParameters = FacetUtil.removeURLParameters(key, parameterArray);
-
-				values.forEach(
-					function(item) {
-						newParameters = FacetUtil.addURLParameter(key, item, newParameters);
-					}
+			setURLParameters(key, values, parameterArray) {
+				var newParameters = FacetUtil.removeURLParameters(
+					key,
+					parameterArray
 				);
+
+				values.forEach(item => {
+					newParameters = FacetUtil.addURLParameter(
+						key,
+						item,
+						newParameters
+					);
+				});
 
 				return newParameters;
 			},
 
-			updateQueryString: function(key, selections, queryString) {
+			updateQueryString(key, selections, queryString) {
 				var search = queryString;
 
 				var hasQuestionMark = false;
@@ -112,13 +137,15 @@ AUI.add(
 					search = search.substr(1);
 				}
 
-				var parameterArray = search.split('&').filter(
-					function(item) {
-						return item.trim() !== '';
-					}
-				);
+				var parameterArray = search.split('&').filter(item => {
+					return item.trim() !== '';
+				});
 
-				var newParameters = FacetUtil.setURLParameters(key, selections, parameterArray);
+				var newParameters = FacetUtil.setURLParameters(
+					key,
+					selections,
+					parameterArray
+				);
 
 				search = newParameters.join('&');
 

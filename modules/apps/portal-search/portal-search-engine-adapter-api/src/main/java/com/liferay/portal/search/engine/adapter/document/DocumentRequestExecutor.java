@@ -14,7 +14,7 @@
 
 package com.liferay.portal.search.engine.adapter.document;
 
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Dylan Rebelak
@@ -30,6 +30,9 @@ public interface DocumentRequestExecutor {
 
 	public DeleteDocumentResponse executeDocumentRequest(
 		DeleteDocumentRequest deleteDocumentRequest);
+
+	public GetDocumentResponse executeDocumentRequest(
+		GetDocumentRequest getDocumentRequest);
 
 	public IndexDocumentResponse executeDocumentRequest(
 		IndexDocumentRequest indexDocumentRequest);

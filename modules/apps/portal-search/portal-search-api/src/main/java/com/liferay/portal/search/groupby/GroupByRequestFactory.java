@@ -14,7 +14,7 @@
 
 package com.liferay.portal.search.groupby;
 
-import aQute.bnd.annotation.ProviderType;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Bryan Engler
@@ -22,14 +22,6 @@ import aQute.bnd.annotation.ProviderType;
 @ProviderType
 public interface GroupByRequestFactory {
 
-	/**
-	 * Provides a GroupByRequest object based off a GroupBy object.
-	 *
-	 * @param groupBy the GroupBy object to be converted
-	 * @return the converted GroupByRequest object
-	 *
-	 * @review
-	 */
 	public GroupByRequest getGroupByRequest(String field);
 
 }

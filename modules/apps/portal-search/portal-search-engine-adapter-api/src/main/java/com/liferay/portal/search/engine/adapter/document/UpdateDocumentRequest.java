@@ -14,7 +14,7 @@
 
 package com.liferay.portal.search.engine.adapter.document;
 
-import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.search.document.Document;
 
 import java.util.function.Consumer;
 
@@ -25,12 +25,29 @@ public class UpdateDocumentRequest
 	implements BulkableDocumentRequest<UpdateDocumentRequest>,
 			   DocumentRequest<UpdateDocumentResponse> {
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by
+	 *             UpdateDocumentRequest.UpdateDocumentRequest(String, String,
+	 *             Document)
+	 */
+	@Deprecated
+	public UpdateDocumentRequest(
+		String indexName, String uid,
+		com.liferay.portal.kernel.search.Document document) {
+
+		_indexName = indexName;
+		_uid = uid;
+		_document = null;
+		_legacyDocument = document;
+	}
+
 	public UpdateDocumentRequest(
 		String indexName, String uid, Document document) {
 
 		_indexName = indexName;
 		_uid = uid;
 		_document = document;
+		_legacyDocument = null;
 	}
 
 	@Override
@@ -47,6 +64,14 @@ public class UpdateDocumentRequest
 
 	public Document getDocument() {
 		return _document;
+	}
+
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by getDocument
+	 */
+	@Deprecated
+	public com.liferay.portal.kernel.search.Document getDocument71() {
+		return _legacyDocument;
 	}
 
 	public String getIndexName() {
@@ -75,6 +100,7 @@ public class UpdateDocumentRequest
 
 	private final Document _document;
 	private final String _indexName;
+	private final com.liferay.portal.kernel.search.Document _legacyDocument;
 	private boolean _refresh;
 	private String _type;
 	private final String _uid;

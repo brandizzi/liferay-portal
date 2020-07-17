@@ -79,14 +79,13 @@ TypeFacetPortletPreferences typeFacetPortletPreferences = new com.liferay.portal
 <aui:script>
 	var form = AUI.$(document.<portlet:namespace />fm);
 
-	$('#<portlet:namespace />fm').on(
-		'submit',
-		function(event) {
-			event.preventDefault();
+	$('#<portlet:namespace />fm').on('submit', function(event) {
+		event.preventDefault();
 
-			form.fm('<%= PortletPreferencesJspUtil.getInputName(TypeFacetPortletPreferences.PREFERENCE_KEY_ASSET_TYPES) %>').val(Liferay.Util.listSelect(form.fm('currentAssetTypes')));
+		form.fm(
+			'<%= PortletPreferencesJspUtil.getInputName(TypeFacetPortletPreferences.PREFERENCE_KEY_ASSET_TYPES) %>'
+		).val(Liferay.Util.listSelect(form.fm('currentAssetTypes')));
 
-			submitForm(form);
-		}
-	);
+		submitForm(form);
+	});
 </aui:script>

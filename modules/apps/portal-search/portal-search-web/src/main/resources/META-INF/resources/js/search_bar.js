@@ -1,6 +1,20 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 AUI.add(
 	'liferay-search-bar',
-	function(A) {
+	A => {
 		var SearchBar = function(form) {
 			var instance = this;
 
@@ -14,8 +28,7 @@ AUI.add(
 
 			if (emptySearchInput.val() === 'true') {
 				instance.emptySearchEnabled = true;
-			}
-			else {
+			} else {
 				instance.emptySearchEnabled = false;
 			}
 
@@ -33,7 +46,7 @@ AUI.add(
 		};
 
 		A.mix(SearchBar.prototype, {
-			getKeywords: function() {
+			getKeywords() {
 				var instance = this;
 
 				var keywords = instance.keywordsInput.val();
@@ -41,7 +54,7 @@ AUI.add(
 				return keywords.replace(/^\s+|\s+$/, '');
 			},
 
-			isSubmitEnabled: function() {
+			isSubmitEnabled() {
 				var instance = this;
 
 				return (
@@ -49,7 +62,7 @@ AUI.add(
 				);
 			},
 
-			search: function() {
+			search() {
 				var instance = this;
 
 				if (instance.isSubmitEnabled()) {
@@ -63,7 +76,7 @@ AUI.add(
 				}
 			},
 
-			updateQueryString: function(queryString) {
+			updateQueryString(queryString) {
 				var instance = this;
 
 				var searchParams = new URLSearchParams(queryString);
@@ -74,7 +87,6 @@ AUI.add(
 				);
 				searchParams.delete('p_p_id');
 				searchParams.delete('p_p_state');
-
 
 				if (instance.scopeSelect) {
 					searchParams.set(
@@ -96,7 +108,7 @@ AUI.add(
 				return '?' + searchParams.toString();
 			},
 
-			_onSubmit: function(event) {
+			_onSubmit(event) {
 				var instance = this;
 
 				event.stopPropagation();

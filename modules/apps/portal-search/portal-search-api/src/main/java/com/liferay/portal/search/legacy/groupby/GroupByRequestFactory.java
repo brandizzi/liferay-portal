@@ -14,10 +14,10 @@
 
 package com.liferay.portal.search.legacy.groupby;
 
-import aQute.bnd.annotation.ProviderType;
-
 import com.liferay.portal.kernel.search.GroupBy;
 import com.liferay.portal.search.groupby.GroupByRequest;
+
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Bryan Engler

@@ -64,14 +64,11 @@ String format = ParamUtil.getString(request, SearchPortletParameterNames.FORMAT)
 </aui:form>
 
 <aui:script sandbox="<%= true %>">
-	$('#<portlet:namespace />keywords').on(
-		'keydown',
-		function(event) {
-			if (event.keyCode === 13) {
-				<portlet:namespace />search();
-			}
+	$('#<portlet:namespace />keywords').on('keydown', function(event) {
+		if (event.keyCode === 13) {
+			<portlet:namespace />search();
 		}
-	);
+	});
 </aui:script>
 
 <aui:script>
@@ -81,7 +78,9 @@ String format = ParamUtil.getString(request, SearchPortletParameterNames.FORMAT)
 			<portlet:param name="groupId" value="<%= String.valueOf(groupId) %>" />
 		</portlet:resourceURL>
 
-		window.external.AddSearchProvider('<%= openSearchDescriptionXMLURL.toString() %>');
+		window.external.AddSearchProvider(
+			'<%= openSearchDescriptionXMLURL.toString() %>'
+		);
 	}
 
 	window.<portlet:namespace />search = function() {
@@ -96,7 +95,7 @@ String format = ParamUtil.getString(request, SearchPortletParameterNames.FORMAT)
 		if (keywords != '') {
 			submitForm(form);
 		}
-	}
+	};
 </aui:script>
 
 <%
