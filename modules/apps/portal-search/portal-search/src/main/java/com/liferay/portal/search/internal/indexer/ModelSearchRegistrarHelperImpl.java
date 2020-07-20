@@ -110,6 +110,14 @@ public class ModelSearchRegistrarHelperImpl
 		}
 
 		@Override
+		public void setSearchResultPermissionFilterSuppressed(
+			boolean searchResultPermissionFilterSuppressed) {
+
+			_modelSearchSettingsImpl.setSearchResultPermissionFilterSuppressed(
+				searchResultPermissionFilterSuppressed);
+		}
+
+		@Override
 		public void setSelectAllLocales(boolean selectAllLocales) {
 			_modelSearchSettingsImpl.setSelectAllLocales(selectAllLocales);
 		}
