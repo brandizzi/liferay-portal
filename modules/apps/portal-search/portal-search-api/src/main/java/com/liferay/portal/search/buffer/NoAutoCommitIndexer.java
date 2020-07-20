@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Objects;
 
 import javax.portlet.PortletRequest;
@@ -71,6 +72,16 @@ public class NoAutoCommitIndexer<T> implements Indexer<T> {
 		return _indexer.getClassName();
 	}
 
+	/**
+	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
+	 *             #getSearchClassNames}
+	 */
+	@Deprecated
+	@Override
+	public String[] getClassNames() {
+		return _indexer.getClassNames();
+	}
+
 	@Override
 	public Document getDocument(T object) throws SearchException {
 		return _indexer.getDocument(object);
@@ -96,6 +107,15 @@ public class NoAutoCommitIndexer<T> implements Indexer<T> {
 		return _indexer.getIndexerPostProcessors();
 	}
 
+	/**
+	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link #getClassName}
+	 */
+	@Deprecated
+	@Override
+	public String getPortletId() {
+		return _indexer.getPortletId();
+	}
+
 	@Override
 	public String[] getSearchClassNames() {
 		return _indexer.getSearchClassNames();
@@ -114,6 +134,19 @@ public class NoAutoCommitIndexer<T> implements Indexer<T> {
 	@Override
 	public String getSortField(String orderByCol, int sortType) {
 		return _indexer.getSortField(orderByCol, sortType);
+	}
+
+	/**
+	 * @deprecated As of Wilberforce (7.0.x), replaced by {@link
+	 *             #getSummary(Document, String, PortletRequest,
+	 *             PortletResponse)}
+	 */
+	@Deprecated
+	@Override
+	public Summary getSummary(Document document, Locale locale, String snippet)
+		throws SearchException {
+
+		return _indexer.getSummary(document, locale, snippet);
 	}
 
 	@Override
