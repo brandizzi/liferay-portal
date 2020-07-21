@@ -107,23 +107,23 @@ public class SearchSearchRequest
 		return _selectedFieldNames;
 	}
 
-	public Integer getSize() {
+	public int getSize() {
 		return _size;
-	}
-
-	public List<Sort> getSorts() {
-		return Collections.unmodifiableList(_sorts);
 	}
 
 	/**
 	 * @deprecated As of Mueller (7.2.x), replaced by Sort
 	 */
 	@Deprecated
-	public com.liferay.portal.kernel.search.Sort[] getSorts71() {
+	public com.liferay.portal.kernel.search.Sort[] getSorts() {
 		return _legacySorts;
 	}
 
-	public Integer getStart() {
+	public List<Sort> getSorts72() {
+		return Collections.unmodifiableList(_sorts);
+	}
+
+	public int getStart() {
 		return _start;
 	}
 
@@ -242,6 +242,10 @@ public class SearchSearchRequest
 		_selectedFieldNames = selectedFieldNames;
 	}
 
+	public void setSize(int size) {
+		_size = size;
+	}
+
 	public void setSize(Integer size) {
 		_size = size;
 	}
@@ -256,6 +260,10 @@ public class SearchSearchRequest
 	@Deprecated
 	public void setSorts(com.liferay.portal.kernel.search.Sort[] sorts) {
 		_legacySorts = sorts;
+	}
+
+	public void setStart(int start) {
+		_start = start;
 	}
 
 	public void setStart(Integer start) {
@@ -292,9 +300,9 @@ public class SearchSearchRequest
 	private String _preference;
 	private Boolean _scoreEnabled;
 	private String[] _selectedFieldNames;
-	private Integer _size;
+	private int _size;
 	private List<Sort> _sorts = new ArrayList<>();
-	private Integer _start;
+	private int _start;
 	private Map<String, Stats> _stats;
 	private Boolean _version;
 

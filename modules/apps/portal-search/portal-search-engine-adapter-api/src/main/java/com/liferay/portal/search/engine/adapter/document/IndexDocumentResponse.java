@@ -19,6 +19,16 @@ package com.liferay.portal.search.engine.adapter.document;
  */
 public class IndexDocumentResponse implements DocumentResponse {
 
+	/**
+	 * @deprecated As of Mueller (7.2.x), replaced by
+	 *             {@link #IndexDocumentResponse(int, String)}
+	 */
+	@Deprecated
+	public IndexDocumentResponse(int status) {
+		_status = status;
+		_uid = null;
+	}
+
 	public IndexDocumentResponse(int status, String uid) {
 		_status = status;
 		_uid = uid;

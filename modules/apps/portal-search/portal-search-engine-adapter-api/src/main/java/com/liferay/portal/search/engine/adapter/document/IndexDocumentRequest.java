@@ -77,16 +77,16 @@ public class IndexDocumentRequest
 		return documentRequestExecutor.executeDocumentRequest(this);
 	}
 
-	public Document getDocument() {
-		return _document;
-	}
-
 	/**
 	 * @deprecated As of Mueller (7.2.x), replaced by getDocument
 	 */
 	@Deprecated
-	public com.liferay.portal.kernel.search.Document getDocument71() {
+	public com.liferay.portal.kernel.search.Document getDocument() {
 		return _legacyDocument;
+	}
+
+	public Document getDocument72() {
+		return _document;
 	}
 
 	public String getIndexName() {

@@ -14,20 +14,21 @@
 
 package com.liferay.portal.search.engine.adapter.document;
 
-import org.osgi.annotation.versioning.ProviderType;
-
 /**
  * @author Michael C. Han
  */
-@ProviderType
-public interface BulkableDocumentRequestTranslator {
+public interface BulkableDocumentRequestTranslator<R, S, T, U> {
 
-	public <T> T translate(DeleteDocumentRequest deleteDocumentRequest);
+	public R translate(
+		DeleteDocumentRequest deleteDocumentRequest,
+		U searchEngineAdapterRequest);
 
-	public <T> T translate(GetDocumentRequest getDocumentRequest);
+	public S translate(
+		IndexDocumentRequest indexDocumentRequest,
+		U searchEngineAdapterRequest);
 
-	public <T> T translate(IndexDocumentRequest indexDocumentRequest);
-
-	public <T> T translate(UpdateDocumentRequest updateDocumentRequest);
+	public T translate(
+		UpdateDocumentRequest updateDocumentRequest,
+		U searchEngineAdapterRequest);
 
 }
