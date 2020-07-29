@@ -162,7 +162,7 @@ public class ElasticsearchBulkableDocumentRequestTranslatorTest {
 		createElasticsearchBulkableDocumentRequestTranslator(
 			ElasticsearchDocumentFactory elasticsearchDocumentFactory) {
 
-		return new ElasticsearchBulkableDocumentRequestTranslator() {
+		return new ElasticsearchBulkableDocumentRequestTranslatorImpl() {
 			{
 				setElasticsearchDocumentFactory(elasticsearchDocumentFactory);
 			}
