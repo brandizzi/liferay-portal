@@ -48,7 +48,9 @@ import org.elasticsearch.common.xcontent.XContentType;
 /**
  * @author André de Oliveira
  */
-public class LiferayDocumentTypeFactory implements TypeMappingsHelper {
+public class LiferayDocumentTypeFactory
+	implements com.liferay.portal.search.spi.settings.TypeMappingsHelper,
+			   TypeMappingsHelper {
 
 	public LiferayDocumentTypeFactory(
 		IndicesClient indicesClient, JSONFactory jsonFactory) {
