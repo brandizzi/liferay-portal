@@ -151,10 +151,7 @@ public class ProductMenuAppDeployer extends BaseAppDeployer {
 		AppBuilderApp appBuilderApp, String appName, String portletName) {
 
 		return deployPortlet(
-			new AppPortlet(
-				appBuilderApp, appBuilderAppPortletTabServiceTrackerMap,
-				"productMenu", appName,
-				appPortletMVCResourceCommandServiceTrackerMap, portletName),
+			new AppPortlet(appBuilderApp, "productMenu", appName, portletName),
 			Collections.emptyMap());
 	}
 

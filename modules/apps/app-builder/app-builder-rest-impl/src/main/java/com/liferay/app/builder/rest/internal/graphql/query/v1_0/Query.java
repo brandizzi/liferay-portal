@@ -148,6 +148,7 @@ public class Query {
 
 		public AppPage(Page appPage) {
 			actions = appPage.getActions();
+
 			items = appPage.getItems();
 			lastPage = appPage.getLastPage();
 			page = appPage.getPage();

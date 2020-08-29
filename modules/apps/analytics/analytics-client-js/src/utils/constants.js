@@ -20,6 +20,12 @@ export const FLUSH_INTERVAL = 2000;
 
 export const QUEUE_STORAGE_LIMIT = 512;
 
+//Queue priority
+
+export const QUEUE_PRIORITY_DEFAULT = 1;
+
+export const QUEUE_PRIORITY_IDENTITY = 10;
+
 // Local Storage keys
 
 export const STORAGE_KEY_CONTEXTS = 'ac_client_context';
@@ -29,6 +35,8 @@ export const STORAGE_KEY_EVENTS = 'ac_client_batch';
 export const STORAGE_KEY_IDENTITY = 'ac_client_identity';
 
 export const STORAGE_KEY_MESSAGES = 'ac_message_queue';
+
+export const STORAGE_KEY_MESSAGE_IDENTITY = 'ac_message_queue_identity';
 
 export const STORAGE_KEY_USER_ID = 'ac_client_user_id';
 

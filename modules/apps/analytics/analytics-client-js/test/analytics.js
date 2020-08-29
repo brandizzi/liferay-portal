@@ -21,7 +21,7 @@ import {
 	STORAGE_KEY_USER_ID,
 } from '../src/utils/constants';
 import {getItem} from '../src/utils/storage';
-import {sendDummyEvents} from './helpers';
+import {sendDummyEvents, wait} from './helpers';
 
 const ANALYTICS_IDENTITY = {email: 'foo@bar.com'};
 const ENDPOINT_URL = 'https://ac-server.io';
@@ -29,6 +29,7 @@ const FLUSH_INTERVAL = 100;
 const INITIAL_CONFIG = {
 	channelId: '4321',
 	dataSourceId: '1234',
+	delay: FLUSH_INTERVAL,
 	endpointUrl: ENDPOINT_URL,
 };
 
@@ -106,6 +107,8 @@ describe('Analytics', () => {
 
 		await Analytics.setIdentity(ANALYTICS_IDENTITY);
 
+		await wait(FLUSH_INTERVAL);
+
 		fetchMock.restore();
 		fetchMock.mock(/identity$/, () => {
 			identityCalled += 1;
@@ -116,6 +119,8 @@ describe('Analytics', () => {
 		await Analytics.setIdentity({
 			email: 'john@liferay.com',
 		});
+
+		await wait(FLUSH_INTERVAL);
 
 		expect(identityCalled).toBe(1);
 	});
@@ -136,7 +141,7 @@ describe('Analytics', () => {
 		fetchMock.mock(/identity$/, () => {
 			identityCalled += 1;
 
-			return '';
+			return 200;
 		});
 
 		await Analytics.setIdentity(ANALYTICS_IDENTITY);

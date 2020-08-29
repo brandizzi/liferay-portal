@@ -775,6 +775,7 @@ public class Query {
 
 		public CalendarPage(Page calendarPage) {
 			actions = calendarPage.getActions();
+
 			items = calendarPage.getItems();
 			lastPage = calendarPage.getLastPage();
 			page = calendarPage.getPage();
@@ -807,6 +808,7 @@ public class Query {
 
 		public HistogramMetricPage(Page histogramMetricPage) {
 			actions = histogramMetricPage.getActions();
+
 			items = histogramMetricPage.getItems();
 			lastPage = histogramMetricPage.getLastPage();
 			page = histogramMetricPage.getPage();
@@ -839,6 +841,7 @@ public class Query {
 
 		public IndexPage(Page indexPage) {
 			actions = indexPage.getActions();
+
 			items = indexPage.getItems();
 			lastPage = indexPage.getLastPage();
 			page = indexPage.getPage();
@@ -871,6 +874,7 @@ public class Query {
 
 		public InstancePage(Page instancePage) {
 			actions = instancePage.getActions();
+
 			items = instancePage.getItems();
 			lastPage = instancePage.getLastPage();
 			page = instancePage.getPage();
@@ -903,6 +907,7 @@ public class Query {
 
 		public NodePage(Page nodePage) {
 			actions = nodePage.getActions();
+
 			items = nodePage.getItems();
 			lastPage = nodePage.getLastPage();
 			page = nodePage.getPage();
@@ -935,6 +940,7 @@ public class Query {
 
 		public NodeMetricPage(Page nodeMetricPage) {
 			actions = nodeMetricPage.getActions();
+
 			items = nodeMetricPage.getItems();
 			lastPage = nodeMetricPage.getLastPage();
 			page = nodeMetricPage.getPage();
@@ -967,6 +973,7 @@ public class Query {
 
 		public ProcessPage(Page processPage) {
 			actions = processPage.getActions();
+
 			items = processPage.getItems();
 			lastPage = processPage.getLastPage();
 			page = processPage.getPage();
@@ -999,6 +1006,7 @@ public class Query {
 
 		public ProcessMetricPage(Page processMetricPage) {
 			actions = processMetricPage.getActions();
+
 			items = processMetricPage.getItems();
 			lastPage = processMetricPage.getLastPage();
 			page = processMetricPage.getPage();
@@ -1031,6 +1039,7 @@ public class Query {
 
 		public ReindexStatusPage(Page reindexStatusPage) {
 			actions = reindexStatusPage.getActions();
+
 			items = reindexStatusPage.getItems();
 			lastPage = reindexStatusPage.getLastPage();
 			page = reindexStatusPage.getPage();
@@ -1063,6 +1072,7 @@ public class Query {
 
 		public RolePage(Page rolePage) {
 			actions = rolePage.getActions();
+
 			items = rolePage.getItems();
 			lastPage = rolePage.getLastPage();
 			page = rolePage.getPage();
@@ -1095,6 +1105,7 @@ public class Query {
 
 		public SLAPage(Page slaPage) {
 			actions = slaPage.getActions();
+
 			items = slaPage.getItems();
 			lastPage = slaPage.getLastPage();
 			page = slaPage.getPage();
@@ -1127,6 +1138,7 @@ public class Query {
 
 		public TaskPage(Page taskPage) {
 			actions = taskPage.getActions();
+
 			items = taskPage.getItems();
 			lastPage = taskPage.getLastPage();
 			page = taskPage.getPage();
@@ -1159,6 +1171,7 @@ public class Query {
 
 		public TimeRangePage(Page timeRangePage) {
 			actions = timeRangePage.getActions();
+
 			items = timeRangePage.getItems();
 			lastPage = timeRangePage.getLastPage();
 			page = timeRangePage.getPage();

@@ -12,6 +12,7 @@
  * details.
  */
 
+import ClayIcon from '@clayui/icon';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -32,12 +33,14 @@ export const ContainerStylesPanel = ({item}) => {
 	);
 	const segmentsExperienceId = useSelector(selectSegmentsExperienceId);
 
-	const {commonStyles} = config;
+	const {availableViewportSizes, commonStyles} = config;
 
 	const containerConfig = getResponsiveConfig(
 		item.config,
 		selectedViewportSize
 	);
+
+	const viewportSize = availableViewportSizes[selectedViewportSize];
 
 	const onCustomStyleValueSelect = (name, value) => {
 		const itemConfig = {[name]: value};
@@ -79,28 +82,37 @@ export const ContainerStylesPanel = ({item}) => {
 
 	return (
 		<>
-			<div className="page-editor__page-structure__section__custom-styles">
-				<SelectField
-					field={{
-						label: Liferay.Language.get('container-width'),
-						name: 'widthType',
-						typeOptions: {
-							validValues: [
-								{
-									label: Liferay.Language.get('fluid'),
-									value: 'fluid',
-								},
-								{
-									label: Liferay.Language.get('fixed-width'),
-									value: 'fixed',
-								},
-							],
-						},
-					}}
-					onValueSelect={onCustomStyleValueSelect}
-					value={item.config.widthType}
-				/>
-			</div>
+			<p className="page-editor__row-styles-panel__viewport-label">
+				<ClayIcon className="mr-2" symbol={viewportSize.icon} />
+				{viewportSize.label}
+			</p>
+
+			{selectedViewportSize === VIEWPORT_SIZES.desktop && (
+				<div className="page-editor__page-structure__section__custom-styles">
+					<SelectField
+						field={{
+							label: Liferay.Language.get('container-width'),
+							name: 'widthType',
+							typeOptions: {
+								validValues: [
+									{
+										label: Liferay.Language.get('fluid'),
+										value: 'fluid',
+									},
+									{
+										label: Liferay.Language.get(
+											'fixed-width'
+										),
+										value: 'fixed',
+									},
+								],
+							},
+						}}
+						onValueSelect={onCustomStyleValueSelect}
+						value={item.config.widthType}
+					/>
+				</div>
+			)}
 
 			<div className="page-editor__container-styles-panel__common-styles">
 				{commonStyles.map((fieldSet, index) => {

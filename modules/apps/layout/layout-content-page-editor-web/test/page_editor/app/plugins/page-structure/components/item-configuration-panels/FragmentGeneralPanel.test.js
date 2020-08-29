@@ -20,6 +20,7 @@ import {FREEMARKER_FRAGMENT_ENTRY_PROCESSOR} from '../../../../../../../src/main
 import '@testing-library/jest-dom/extend-expect';
 import {cleanup, fireEvent, render} from '@testing-library/react';
 
+import {VIEWPORT_SIZES} from '../../../../../../../src/main/resources/META-INF/resources/page_editor/app/config/constants/viewportSizes';
 import {config} from '../../../../../../../src/main/resources/META-INF/resources/page_editor/app/config/index';
 import FragmentService from '../../../../../../../src/main/resources/META-INF/resources/page_editor/app/services/FragmentService';
 import {StoreAPIContextProvider} from '../../../../../../../src/main/resources/META-INF/resources/page_editor/app/store/index';
@@ -28,7 +29,13 @@ import {FragmentGeneralPanel} from '../../../../../../../src/main/resources/META
 jest.mock(
 	'../../../../../../../src/main/resources/META-INF/resources/page_editor/app/config',
 	() => ({
-		config: {},
+		config: {
+			availableViewportSizes: {
+				desktop: {label: 'Desktop', sizeId: 'desktop'},
+				mobile: {label: 'Mobile', sizeId: 'mobile'},
+				tablet: {label: 'Tablet', sizeId: 'tablet'},
+			},
+		},
 	})
 );
 
@@ -108,6 +115,7 @@ const renderGeneralPanel = ({
 	const state = {
 		fragmentEntryLinks: {[FRAGMENT_ENTRY_LINK_ID]: fragmentEntryLink},
 		segmentsExperienceId,
+		selectedViewportSize: VIEWPORT_SIZES.desktop,
 	};
 
 	return render(

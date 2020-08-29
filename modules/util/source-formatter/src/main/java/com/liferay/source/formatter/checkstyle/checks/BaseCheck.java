@@ -151,6 +151,19 @@ public abstract class BaseCheck extends AbstractCheck {
 			true);
 	}
 
+	protected List<DetailAST> getDependentIdentDetailASTList(
+		DetailAST variableDefinitionDetailAST, int lineNumber) {
+
+		List<Variable> variables = _getVariables(variableDefinitionDetailAST);
+
+		List<DetailAST> dependentIdentDetailASTList = new ArrayList<>();
+
+		return _addDependentIdentDetailASTList(
+			dependentIdentDetailASTList,
+			variableDefinitionDetailAST.getNextSibling(), variables,
+			lineNumber);
+	}
+
 	protected int getEndLineNumber(DetailAST detailAST) {
 		int endLineNumber = detailAST.getLineNo();
 
@@ -901,6 +914,54 @@ public abstract class BaseCheck extends AbstractCheck {
 		TokenTypes.POST_INC, TokenTypes.UNARY_MINUS, TokenTypes.UNARY_PLUS
 	};
 
+	private List<DetailAST> _addDependentIdentDetailASTList(
+		List<DetailAST> dependentIdentDetailASTList, DetailAST detailAST,
+		List<Variable> variables, int lineNumber) {
+
+		if (detailAST == null) {
+			return dependentIdentDetailASTList;
+		}
+
+		int count = dependentIdentDetailASTList.size();
+
+		List<DetailAST> identDetailASTList = getAllChildTokens(
+			detailAST, true, TokenTypes.IDENT);
+
+		for (DetailAST identDetailAST : identDetailASTList) {
+			if (_isMethodNameDetailAST(identDetailAST) ||
+				dependentIdentDetailASTList.contains(identDetailAST)) {
+
+				continue;
+			}
+
+			String name = identDetailAST.getText();
+
+			for (Variable variable : variables) {
+				if (!name.equals(variable.getName())) {
+					continue;
+				}
+
+				if (_hasPossibleValueChangeOperation(identDetailAST) ||
+					variable.hasPossibleValueChangeOperation()) {
+
+					dependentIdentDetailASTList.add(identDetailAST);
+
+					break;
+				}
+			}
+
+			if ((detailAST.getLineNo() < lineNumber) &&
+				(count != dependentIdentDetailASTList.size())) {
+
+				variables.addAll(_getVariables(detailAST));
+			}
+		}
+
+		return _addDependentIdentDetailASTList(
+			dependentIdentDetailASTList, detailAST.getNextSibling(), variables,
+			lineNumber);
+	}
+
 	private List<String> _getJSPImportNames(String directoryName) {
 		if (_jspImportNamesMap.containsKey(directoryName)) {
 			return _jspImportNamesMap.get(directoryName);
@@ -944,6 +1005,132 @@ public abstract class BaseCheck extends AbstractCheck {
 		return nameDetailAST.getText();
 	}
 
+	private List<Variable> _getVariables(DetailAST detailAST) {
+		List<Variable> variables = new ArrayList<>();
+
+		List<DetailAST> identDetailASTList = getAllChildTokens(
+			detailAST, true, TokenTypes.IDENT);
+
+		for (DetailAST identDetailAST : identDetailASTList) {
+			if (_isMethodNameDetailAST(identDetailAST)) {
+				continue;
+			}
+
+			String name = identDetailAST.getText();
+
+			if (!Character.isUpperCase(name.charAt(0))) {
+				variables.add(
+					new Variable(
+						name,
+						_hasPossibleValueChangeOperation(identDetailAST)));
+			}
+		}
+
+		return variables;
+	}
+
+	private boolean _hasPossibleValueChangeOperation(DetailAST identDetailAST) {
+		DetailAST parentDetailAST = identDetailAST.getParent();
+
+		if (parentDetailAST.getType() == TokenTypes.DOT) {
+			DetailAST grandParentDetailAST = parentDetailAST.getParent();
+
+			if (grandParentDetailAST.getType() == TokenTypes.METHOD_CALL) {
+				DetailAST nextSiblingDetailAST =
+					identDetailAST.getNextSibling();
+
+				if (nextSiblingDetailAST == null) {
+					return false;
+				}
+
+				String methodName = nextSiblingDetailAST.getText();
+
+				if (methodName.matches("(get|is)[A-Z].*")) {
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+		while (true) {
+			if ((parentDetailAST.getType() != TokenTypes.DOT) &&
+				(parentDetailAST.getType() != TokenTypes.EXPR)) {
+
+				break;
+			}
+
+			parentDetailAST = parentDetailAST.getParent();
+		}
+
+		if (parentDetailAST.getType() == TokenTypes.ELIST) {
+			String typeName = getVariableTypeName(
+				identDetailAST, identDetailAST.getText(), false);
+
+			if (typeName.equals("ActionRequest") ||
+				typeName.equals("HttpServletRequest") ||
+				typeName.equals("RenderRequest") ||
+				typeName.equals("ResourceRequest") ||
+				typeName.endsWith("PortletRequest")) {
+
+				String methodName = getMethodName(parentDetailAST.getParent());
+
+				// We can assume variable of these types are not modified when
+				// passed as parameter, except when the name starts with 'set'
+				// or equals 'getCompanyId' (value changes in
+				// PortalInstances.getCompanyId)
+
+				if ((methodName != null) &&
+					(methodName.equals("getCompanyId") ||
+					 methodName.startsWith("_set") ||
+					 methodName.startsWith("set"))) {
+
+					return true;
+				}
+
+				return false;
+			}
+
+			return true;
+		}
+
+		if (ArrayUtil.contains(
+				ASSIGNMENT_OPERATOR_TOKEN_TYPES, parentDetailAST.getType()) ||
+			(parentDetailAST.getType() == TokenTypes.DEC) ||
+			(parentDetailAST.getType() == TokenTypes.ELIST) ||
+			(parentDetailAST.getType() == TokenTypes.INC) ||
+			(parentDetailAST.getType() == TokenTypes.POST_DEC) ||
+			(parentDetailAST.getType() == TokenTypes.POST_INC) ||
+			(parentDetailAST.getType() == TokenTypes.VARIABLE_DEF)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean _isMethodNameDetailAST(DetailAST identDetailAST) {
+		DetailAST parentDetailAST = identDetailAST.getParent();
+
+		if (parentDetailAST.getType() == TokenTypes.METHOD_CALL) {
+			return true;
+		}
+
+		if (parentDetailAST.getType() != TokenTypes.DOT) {
+			return false;
+		}
+
+		parentDetailAST = parentDetailAST.getParent();
+
+		if ((parentDetailAST.getType() == TokenTypes.METHOD_CALL) &&
+			(identDetailAST.getNextSibling() == null)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	private JSONObject _attributesJSONObject = new JSONObjectImpl();
 	private final Map<String, String> _attributeValueMap =
 		new ConcurrentHashMap<>();
@@ -954,5 +1141,25 @@ public abstract class BaseCheck extends AbstractCheck {
 		new ConcurrentHashMap<>();
 	private final Map<String, List<String>> _jspImportNamesMap =
 		new HashMap<>();
+
+	private class Variable {
+
+		public Variable(String name, boolean hasPossibleValueChangeOperation) {
+			_name = name;
+			_hasPossibleValueChangeOperation = hasPossibleValueChangeOperation;
+		}
+
+		public String getName() {
+			return _name;
+		}
+
+		public boolean hasPossibleValueChangeOperation() {
+			return _hasPossibleValueChangeOperation;
+		}
+
+		private final boolean _hasPossibleValueChangeOperation;
+		private final String _name;
+
+	}
 
 }

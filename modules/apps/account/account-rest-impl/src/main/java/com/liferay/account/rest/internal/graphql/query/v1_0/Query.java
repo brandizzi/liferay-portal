@@ -392,6 +392,7 @@ public class Query {
 
 		public AccountPage(Page accountPage) {
 			actions = accountPage.getActions();
+
 			items = accountPage.getItems();
 			lastPage = accountPage.getLastPage();
 			page = accountPage.getPage();
@@ -424,6 +425,7 @@ public class Query {
 
 		public AccountRolePage(Page accountRolePage) {
 			actions = accountRolePage.getActions();
+
 			items = accountRolePage.getItems();
 			lastPage = accountRolePage.getLastPage();
 			page = accountRolePage.getPage();
@@ -456,6 +458,7 @@ public class Query {
 
 		public AccountUserPage(Page accountUserPage) {
 			actions = accountUserPage.getActions();
+
 			items = accountUserPage.getItems();
 			lastPage = accountUserPage.getLastPage();
 			page = accountUserPage.getPage();

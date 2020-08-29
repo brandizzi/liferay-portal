@@ -560,7 +560,7 @@ definition {
 	@description = "This is a test for LPS-86845. A user can preview a draft or pending status Web Content article through the 'View Usages' screen."
 	@priority = "5"
 	test PreviewDraftWebContentInWCD {
-		property portal.acceptance = "true";
+		property portal.acceptance = "quarantine";
 
 		task ("Add a Web Content article") {
 			JSONWebcontent.addWebContent(
@@ -905,9 +905,12 @@ definition {
 
 		WebContent.addNullCP(webContentContent = "WC WebContent Content");
 
+		SelectFrame.selectFrameNoLoading(
+			key_fieldLabel = "content",
+			locator1 = "CKEditor#BODY_FIELD_IFRAME_WEB_CONTENT_ARTICLE");
+
 		AssertTextEquals(
-			key_editor = "content",
-			locator1 = "AlloyEditor#EDITOR",
+			locator1 = "CKEditor#BODY",
 			value1 = "WC WebContent Content");
 	}
 
@@ -992,7 +995,7 @@ definition {
 	@description = "This is a test for LPS-88500. At any given time, a user can view all the places a web content article is displayed through a Web Content Display widget or an Asset Publisher widget with manual selection."
 	@priority = "5"
 	test ViewWebContentArticleUsages {
-		property portal.acceptance = "true";
+		property portal.acceptance = "quarantine";
 
 		task ("Add a Web Content article") {
 			JSONWebcontent.addWebContent(

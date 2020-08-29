@@ -255,7 +255,7 @@ definition {
 		}
 
 		task ("Assert add the third Row in column 1 of the first Row") {
-			DragAndDrop.javaScriptDragAndDropObjectToBottomOfNestedObject(
+			DragAndDrop.javaScriptDragAndDropObjectBelowTallNestedObject(
 				key_collectionName = "Layout Elements",
 				key_columnNumber = "1",
 				key_fragmentName = "Grid",
@@ -432,7 +432,7 @@ definition {
 		}
 	}
 
-	@description = "This is a test for LPS-91000 and LPS-95002. User can edit number of columns a section has as well as padding options."
+	@description = "This is a test for LPS-91000, LPS-95002 and LPS-115224. User can edit number of columns a section has as well as padding options. The Fixed Width of Container should work in view mode."
 	@priority = "5"
 	test ChangeLayoutElementProperties {
 		property portal.acceptance = "true";
@@ -483,14 +483,6 @@ definition {
 				spaceBetweenColumns = "false");
 		}
 
-		task ("Edit the Container's properties") {
-			PageEditor.editLayoutContainer(
-				containerWidth = "Fixed Width",
-				paddingBottom = "4",
-				paddingTop = "2",
-				panel = "Styles");
-		}
-
 		task ("Assert the Row has exactly 3 columns and no space between columns") {
 			PageEditor.viewGridStyle(
 				columnCount = "3",
@@ -498,12 +490,66 @@ definition {
 				spaceBetweenColumns = "false");
 		}
 
+		task ("Edit the Container's properties") {
+			PageEditor.editLayoutContainer(
+				backgroundColor = "287D3C",
+				containerWidth = "Fixed Width",
+				paddingBottom = "4",
+				paddingTop = "2",
+				panel = "Styles");
+		}
+
+		task ("Assert the Margin Left and Margin Right fields are disabled") {
+			AssertNotEditable(
+				key_borderBottom = "Margin",
+				key_fieldLabel = "Left",
+				locator1 = "Select#BORDER_BOTTOM_SELECT_FIELD");
+
+			AssertNotEditable(
+				key_borderBottom = "Margin",
+				key_fieldLabel = "Right",
+				locator1 = "Select#BORDER_BOTTOM_SELECT_FIELD");
+		}
+
 		task ("Assert the Container has Fixed Width, padding bottom 4 and padding top 2") {
 			PageEditor.viewContainerStyle(
+				backgroundColor = "success",
 				containerWidth = "Fixed Width",
 				paddingBottom = "4",
 				paddingTop = "2",
 				position = "1");
+		}
+
+		task ("Assert Fixed Width of Container works in view mode") {
+			PageEditor.clickPublish();
+
+			ContentPagesNavigator.openViewContentPage(
+				pageName = "Test Content Page Name",
+				siteName = "Test Site Name");
+
+			var screenWidth	= selenium.getElementWidth("//body");
+
+			var containerWidth	= selenium.getElementWidth("//div[contains(@class,'container')][contains(@class,'pb-4 pt-2')]");
+
+			TestUtils.assertNotEquals(
+				actual = "${containerWidth}",
+				expected = "${screenWidth}");
+
+			AssertVisible(locator1 = "//div[contains(@class,'container')][contains(@class,'pb-4 pt-2')]");
+
+			AssertCssValue(
+				locator1 = "//div[contains(@class,'container')][contains(@class,'pb-4 pt-2')]",
+				locator2 = "background-color",
+				value1 = "rgba(40, 125, 60, 1)");
+
+			AssertCssValue(
+				locator1 = "//div[contains(@class,'container')][contains(@class,'pb-4 pt-2')]",
+				locator2 = "max-width",
+				value1 = "${containerWidth}px");
+
+			AssertElementNotPresent(locator1 = "//div[contains(@class,'container')][contains(@class,'ml-0')]");
+
+			AssertElementNotPresent(locator1 = "//div[contains(@class,'container')][contains(@class,'mr-0')]");
 		}
 	}
 
@@ -1456,7 +1502,7 @@ definition {
 
 		task ("Configure the Container") {
 			PageEditor.editLayoutContainer(
-				backgroundColor = "success",
+				backgroundColor = "287D3C",
 				panel = "Styles");
 
 			PageEditor.viewContainerStyle(
@@ -1467,7 +1513,7 @@ definition {
 		task ("Configure the Heading") {
 			PageEditor.gotoStyle(fragmentName = "Heading");
 
-			PageEditor.configureFragment(textColor = "white");
+			PageEditor.configureFragment(textColor = "FFFFFF");
 
 			PageEditor.viewFragmentStyle(
 				fragmentName = "heading",
@@ -1482,7 +1528,7 @@ definition {
 				position = "2");
 
 			AssertElementPresent(
-				key_elementHeader = "//div[contains(@class,'page-editor__topper__bar') and contains(.,'Heading')]//following-sibling::div[contains(@class,'page-editor__topper__content')]/div[contains(@class,'text-white')]",
+				key_elementHeader = "//div[contains(@class,'page-editor__topper__bar') and contains(.,'Heading')]/following-sibling::div[contains(@class,'page-editor__topper__content')]//div[contains(@style,'color: var(--white)')]",
 				key_position = "2",
 				locator1 = "PageEditor#CONTAINER_CONTAINER_NESTED_ELEMENT");
 		}

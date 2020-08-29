@@ -843,6 +843,59 @@ have a common solution for both Alloy Editor and CKEditor.
 
 ---------------------------------------
 
+### Removed classNameId related methods from DDM Persistence classes
+- **Date:** 2020-Aug-18
+- **JIRA Ticket:** [LPS-108525](https://issues.liferay.com/browse/LPS-108525)
+
+### What changed?
+
+The `countByClassNameId`, `findByClassNameId`, `removeByClassNameId` methods were removed from the following classes:
+
+`com.liferay.dynamic.data.mapping.service.persistence.DDMStructureLinkPersistence`
+`com.liferay.dynamic.data.mapping.service.persistence.DDMStructureLinkUtil`
+`com.liferay.dynamic.data.mapping.service.persistence.DDMStructurePersistence`
+`com.liferay.dynamic.data.mapping.service.persistence.DDMStructureUtil`
+`com.liferay.dynamic.data.mapping.service.persistence.DDMTemplateLinkPersistence`
+`com.liferay.dynamic.data.mapping.service.persistence.DDMTemplateLinkUtil`
+
+### Who is affected
+
+This affects anyone who uses one of these methods.
+
+### How should I update my code?
+
+You can use the other finder and counter methods existing in the class instead
+of the removed methods.
+
+#### Why was this change made?
+
+These methods were removed as part of the solution for
+https://issues.liferay.com/browse/LPS-108525.
+
+---------------------------------------
+
+### Removed com.liferay.dynamic.data.mapping.util.BaseDDMDisplay Method
+- **Date:** 2020-Aug-18
+- **JIRA Ticket:** [LPS-103549](https://issues.liferay.com/browse/LPS-103549)
+
+### What changed?
+
+The `isShowAddStructureButton` method was removed.
+
+### Who is affected
+
+This affects anyone who uses one of these methods.
+
+### How should I update my code?
+
+You can use `isShowAddButton(Group scopeGroup)` method instead of this method.
+
+#### Why was this change made?
+
+This method was removed as part of a clean up refactor. See more in
+https://issues.liferay.com/browse/LPS-103549.
+
+---------------------------------------
 ### Moving lexicon icons path
 - **Date:** 2020-Aug-17
 - **JIRA Ticket:** [LPS-115812](https://issues.liferay.com/browse/LPS-115812)

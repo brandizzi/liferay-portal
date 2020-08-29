@@ -183,6 +183,10 @@ class Sidebar extends Component {
 						field.fieldName == 'rows'
 							? readOnlyFieldName
 							: false,
+					localizedValue:
+						field.fieldName == 'predefinedValue'
+							? field.localizedValue[editingLanguageId]
+							: field.localizedValue,
 					readOnly:
 						field.fieldName == 'name' ? readOnlyFieldName : false,
 				};
@@ -1086,7 +1090,6 @@ class Sidebar extends Component {
 					<a
 						aria-controls="sidebarLightDetails"
 						class={style}
-						data-toggle="liferay-tab"
 						href="javascript:;"
 						role="tab"
 					>

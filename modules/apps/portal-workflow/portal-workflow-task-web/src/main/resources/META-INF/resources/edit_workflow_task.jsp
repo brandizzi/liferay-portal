@@ -162,13 +162,15 @@ renderResponse.setTitle(headerTitle);
 						markupView="lexicon"
 						title="<%= workflowTaskDisplayContext.getPreviewOfTitle(workflowTask) %>"
 					>
-						<div class="locale-actions">
-							<liferay-ui:language
-								formAction="<%= currentURL %>"
-								languageId="<%= languageId %>"
-								languageIds="<%= assetRenderer.getAvailableLanguageIds() %>"
-							/>
-						</div>
+						<c:if test="<%= assetRenderer.isLocalizable() %>">
+							<div class="locale-actions">
+								<liferay-ui:language
+									formAction="<%= currentURL %>"
+									languageId="<%= languageId %>"
+									languageIds="<%= assetRenderer.getAvailableLanguageIds() %>"
+								/>
+							</div>
+						</c:if>
 
 						<div class="task-content-actions">
 							<liferay-ui:icon-list>
@@ -257,6 +259,18 @@ renderResponse.setTitle(headerTitle);
 							assetRenderer="<%= assetRenderer %>"
 							template="<%= AssetRenderer.TEMPLATE_ABSTRACT %>"
 						/>
+
+						<c:if test="<%= assetEntry != null %>">
+							<h4 class="task-content-author">
+								<liferay-ui:message key="author" />
+							</h4>
+
+							<liferay-asset:asset-metadata
+								className="<%= assetEntry.getClassName() %>"
+								classPK="<%= assetEntry.getClassPK() %>"
+								metadataFields='<%= new String[] {"author", "categories", "tags"} %>'
+							/>
+						</c:if>
 					</liferay-ui:panel>
 
 					<c:if test="<%= assetEntry != null %>">

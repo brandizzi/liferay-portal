@@ -12,6 +12,18 @@ import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
+
+<#assign
+	javaMethodSignatures = freeMarkerTool.getGraphQLJavaMethodSignatures(configYAML, "query", openAPIYAML)
+
+	generateAggregationFunction = freeMarkerTool.containsAggregationFunction(javaMethodSignatures)
+/>
+
+<#if generateAggregationFunction>
+	import com.liferay.portal.vulcan.aggregation.Aggregation;
+	import com.liferay.portal.vulcan.aggregation.Facet;
+</#if>
+
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLTypeExtension;
@@ -20,6 +32,7 @@ import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
@@ -43,8 +56,6 @@ import org.osgi.service.component.ComponentServiceObjects;
 public class Query {
 
 	<#assign
-		javaMethodSignatures = freeMarkerTool.getGraphQLJavaMethodSignatures(configYAML, "query", openAPIYAML)
-
 		schemaNames = freeMarkerTool.getGraphQLSchemaNames(javaMethodSignatures)
 	/>
 
@@ -136,6 +147,11 @@ public class Query {
 
 			public ${schemaName}Page(Page ${freeMarkerTool.getSchemaVarName(schemaName)}Page) {
 				actions = ${freeMarkerTool.getSchemaVarName(schemaName)}Page.getActions();
+
+				<#if generateAggregationFunction>
+					facets = ${freeMarkerTool.getSchemaVarName(schemaName)}Page.getFacets();
+				</#if>
+
 				items = ${freeMarkerTool.getSchemaVarName(schemaName)}Page.getItems();
 				lastPage = ${freeMarkerTool.getSchemaVarName(schemaName)}Page.getLastPage();
 				page = ${freeMarkerTool.getSchemaVarName(schemaName)}Page.getPage();
@@ -145,6 +161,11 @@ public class Query {
 
 			@GraphQLField
 			protected Map<String, Map> actions;
+
+			<#if generateAggregationFunction>
+				@GraphQLField
+				protected List<Facet> facets;
+			</#if>
 
 			@GraphQLField
 			protected java.util.Collection<${schemaName}> items;
@@ -224,6 +245,11 @@ public class Query {
 	</#list>
 
 	private AcceptLanguage _acceptLanguage;
+
+	<#if generateAggregationFunction>
+		private BiFunction<Object, List<String>, Aggregation> _aggregationBiFunction;
+	</#if>
+
 	private com.liferay.portal.kernel.model.Company _company;
 	private BiFunction<Object, String, Filter> _filterBiFunction;
 	private GroupLocalService _groupLocalService;

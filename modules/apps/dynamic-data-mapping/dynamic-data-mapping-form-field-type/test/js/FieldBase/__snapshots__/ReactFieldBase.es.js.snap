@@ -3,21 +3,28 @@
 exports[`ReactFieldBase does not render the label if showLabel is false 1`] = `
 <div>
   <div
+    aria-labelledby="undefined_fieldDetails"
     class="form-group hide"
-  />
+    tabindex="0"
+  >
+    
+  </div>
 </div>
 `;
 
 exports[`ReactFieldBase renders the FieldBase with contentRenderer 1`] = `
 <div>
   <div
+    aria-labelledby="undefined_fieldDetails"
     class="form-group hide"
+    tabindex="0"
   >
     <div>
       <h1>
         Foo bar
       </h1>
     </div>
+    
   </div>
 </div>
 `;
@@ -25,12 +32,23 @@ exports[`ReactFieldBase renders the FieldBase with contentRenderer 1`] = `
 exports[`ReactFieldBase renders the FieldBase with help text 1`] = `
 <div>
   <div
+    aria-labelledby="undefined_fieldDetails"
     class="form-group hide"
+    tabindex="0"
   >
     <span
+      aria-hidden="true"
       class="form-text"
     >
       Type something!
+    </span>
+    <span
+      aria-hidden="false"
+      hidden=""
+      id="undefined_fieldDetails"
+    >
+      Type something!
+      <br />
     </span>
   </div>
 </div>
@@ -39,8 +57,12 @@ exports[`ReactFieldBase renders the FieldBase with help text 1`] = `
 exports[`ReactFieldBase renders the FieldBase with id 1`] = `
 <div>
   <div
+    aria-labelledby="undefined_fieldDetails"
     class="form-group hide"
-  />
+    tabindex="0"
+  >
+    
+  </div>
 </div>
 `;
 
@@ -49,11 +71,21 @@ exports[`ReactFieldBase renders the FieldBase with label 1`] = `
   <div
     class="form-group hide"
   >
-    <p
+    <label
+      aria-labelledby="undefined_fieldDetails"
       class="ddm-label"
+      tabindex="0"
     >
       Text
-    </p>
+    </label>
+    <span
+      aria-hidden="false"
+      hidden=""
+      id="undefined_fieldDetails"
+    >
+      Text
+      <br />
+    </span>
   </div>
 </div>
 `;
@@ -63,8 +95,10 @@ exports[`ReactFieldBase renders the FieldBase with required 1`] = `
   <div
     class="form-group hide"
   >
-    <p
+    <label
+      aria-labelledby="undefined_fieldDetails"
       class="ddm-label"
+      tabindex="0"
     >
       <span
         class="reference-mark"
@@ -78,7 +112,16 @@ exports[`ReactFieldBase renders the FieldBase with required 1`] = `
           />
         </svg>
       </span>
-    </p>
+    </label>
+    <span
+      aria-hidden="false"
+      hidden=""
+      id="undefined_fieldDetails"
+    >
+      undefined
+      <br />
+      required
+    </span>
   </div>
 </div>
 `;
@@ -86,7 +129,11 @@ exports[`ReactFieldBase renders the FieldBase with required 1`] = `
 exports[`ReactFieldBase renders the default markup 1`] = `
 <div>
   <div
+    aria-labelledby="undefined_fieldDetails"
     class="form-group hide"
-  />
+    tabindex="0"
+  >
+    
+  </div>
 </div>
 `;

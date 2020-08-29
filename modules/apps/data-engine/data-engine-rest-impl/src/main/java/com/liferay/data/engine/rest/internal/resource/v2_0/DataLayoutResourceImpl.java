@@ -24,7 +24,7 @@ import com.liferay.data.engine.rest.dto.v2_0.DataLayoutRenderingContext;
 import com.liferay.data.engine.rest.internal.content.type.DataDefinitionContentTypeTracker;
 import com.liferay.data.engine.rest.internal.dto.v2_0.util.DataDefinitionUtil;
 import com.liferay.data.engine.rest.internal.dto.v2_0.util.DataLayoutUtil;
-import com.liferay.data.engine.rest.internal.dto.v2_0.util.DataRecordValuesUtil;
+import com.liferay.data.engine.rest.internal.dto.v2_0.util.MapToDDMFormValuesConverterUtil;
 import com.liferay.data.engine.rest.internal.odata.entity.v2_0.DataLayoutEntityModel;
 import com.liferay.data.engine.rest.internal.security.permission.resource.DataDefinitionModelResourcePermission;
 import com.liferay.data.engine.rest.resource.exception.DataLayoutValidationException;
@@ -49,7 +49,9 @@ import com.liferay.dynamic.data.mapping.util.comparator.StructureLayoutModifiedD
 import com.liferay.dynamic.data.mapping.util.comparator.StructureLayoutNameComparator;
 import com.liferay.dynamic.data.mapping.validator.DDMFormLayoutValidationException;
 import com.liferay.dynamic.data.mapping.validator.DDMFormLayoutValidator;
+import com.liferay.dynamic.data.mapping.validator.DDMFormValidationException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Sort;
@@ -234,7 +236,7 @@ public class DataLayoutResourceImpl
 		ddmFormRenderingContext.setContainerId(
 			dataLayoutRenderingContext.getContainerId());
 		ddmFormRenderingContext.setDDMFormValues(
-			DataRecordValuesUtil.toDDMFormValues(
+			MapToDDMFormValuesConverterUtil.toDDMFormValues(
 				dataLayoutRenderingContext.getDataRecordValues(), ddmForm,
 				null));
 		ddmFormRenderingContext.setHttpServletRequest(
@@ -268,7 +270,7 @@ public class DataLayoutResourceImpl
 		ddmFormTemplateContext.remove("fieldTypes");
 
 		return Response.ok(
-			ddmFormTemplateContext
+			JSONFactoryUtil.looseSerializeDeep(ddmFormTemplateContext)
 		).build();
 	}
 
@@ -514,6 +516,20 @@ public class DataLayoutResourceImpl
 			ddmFormLayoutValidationException.getCause());
 	}
 
+	private DataLayoutValidationException _toDataLayoutValidationException(
+		DDMFormValidationException ddmFormValidationException) {
+
+		if (ddmFormValidationException instanceof
+				DDMFormValidationException.MustSetValidFormRuleExpression) {
+
+			return new DataLayoutValidationException.
+				MustSetValidRuleExpression();
+		}
+
+		return new DataLayoutValidationException(
+			ddmFormValidationException.getCause());
+	}
+
 	private OrderByComparator<DDMStructureLayout> _toOrderByComparator(
 		Sort sort) {
 
@@ -574,6 +590,9 @@ public class DataLayoutResourceImpl
 
 			throw _toDataLayoutValidationException(
 				ddmFormLayoutValidationException);
+		}
+		catch (DDMFormValidationException ddmFormValidationException) {
+			throw _toDataLayoutValidationException(ddmFormValidationException);
 		}
 		catch (Exception exception) {
 			throw new DataLayoutValidationException(exception);

@@ -63,11 +63,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
+import org.osgi.annotation.versioning.ProviderType;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Rachael Koestartyo
  */
+@ProviderType
 public abstract class BaseEntityModelListener<T extends BaseModel<T>>
 	extends BaseModelListener<T> implements EntityModelListener<T> {
 
@@ -153,7 +155,10 @@ public abstract class BaseEntityModelListener<T extends BaseModel<T>>
 			return;
 		}
 
-		addAnalyticsMessage("add", getAttributeNames(), model);
+		ShardedModel shardedModel = (ShardedModel)model;
+
+		addAnalyticsMessage(
+			"add", getAttributeNames(shardedModel.getCompanyId()), model);
 	}
 
 	@Override
@@ -186,16 +191,20 @@ public abstract class BaseEntityModelListener<T extends BaseModel<T>>
 			return;
 		}
 
+		ShardedModel shardedModel = (ShardedModel)model;
+
 		try {
 			List<String> modifiedAttributeNames = _getModifiedAttributeNames(
-				getAttributeNames(), model,
+				getAttributeNames(shardedModel.getCompanyId()), model,
 				getModel((long)model.getPrimaryKeyObj()));
 
 			if (modifiedAttributeNames.isEmpty()) {
 				return;
 			}
 
-			addAnalyticsMessage("update", getAttributeNames(), model);
+			addAnalyticsMessage(
+				"update", getAttributeNames(shardedModel.getCompanyId()),
+				model);
 		}
 		catch (Exception exception) {
 			throw new ModelListenerException(exception);
@@ -214,7 +223,7 @@ public abstract class BaseEntityModelListener<T extends BaseModel<T>>
 		actionableDynamicQuery.setCompanyId(companyId);
 		actionableDynamicQuery.setPerformActionMethod(
 			(T model) -> addAnalyticsMessage(
-				"add", getAttributeNames(), model));
+				"add", getAttributeNames(companyId), model));
 
 		actionableDynamicQuery.performActions();
 	}
@@ -231,8 +240,35 @@ public abstract class BaseEntityModelListener<T extends BaseModel<T>>
 
 	protected abstract String getPrimaryKeyName();
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getUserAttributeNames(long)}
+	 */
+	@Deprecated
 	protected List<String> getUserAttributeNames() {
-		return _userAttributeNames;
+		return null;
+	}
+
+	protected List<String> getUserAttributeNames(long companyId) {
+		AnalyticsConfiguration analyticsConfiguration =
+			analyticsConfigurationTracker.getAnalyticsConfiguration(companyId);
+
+		if (ArrayUtil.isEmpty(analyticsConfiguration.syncedUserFieldNames())) {
+			return _userAttributeNames;
+		}
+
+		List<String> attributeNames = new ArrayList<>();
+
+		attributeNames.add("expando");
+
+		for (String name : _userAttributeNames) {
+			if (ArrayUtil.contains(
+					analyticsConfiguration.syncedUserFieldNames(), name)) {
+
+				attributeNames.add(name);
+			}
+		}
+
+		return attributeNames;
 	}
 
 	protected boolean isCustomField(String className, long tableId) {
@@ -333,10 +369,29 @@ public abstract class BaseEntityModelListener<T extends BaseModel<T>>
 
 		for (String includeAttributeName : includeAttributeNames) {
 			if (includeAttributeName.equals("expando")) {
-				jsonObject.put(
-					"expando",
-					AnalyticsExpandoBridgeUtil.getAttributes(
-						baseModel.getExpandoBridge()));
+				if (StringUtil.equals(
+						baseModel.getModelClassName(), User.class.getName())) {
+
+					ShardedModel shardedModel = (ShardedModel)baseModel;
+
+					AnalyticsConfiguration analyticsConfiguration =
+						analyticsConfigurationTracker.getAnalyticsConfiguration(
+							shardedModel.getCompanyId());
+
+					jsonObject.put(
+						"expando",
+						AnalyticsExpandoBridgeUtil.getAttributes(
+							baseModel.getExpandoBridge(),
+							Arrays.asList(
+								analyticsConfiguration.
+									syncedUserFieldNames())));
+				}
+				else {
+					jsonObject.put(
+						"expando",
+						AnalyticsExpandoBridgeUtil.getAttributes(
+							baseModel.getExpandoBridge(), null));
+				}
 
 				continue;
 			}

@@ -392,7 +392,9 @@ jdbc.counter.connectionProperties=oracle.jdbc.ReadTimeout=0;oracle.net.CONNECT_T
 
 					propertyValue = project.getProperty(sb.toString());
 
-					project.setProperty(propertyName, propertyValue);
+					if (propertyValue != null) {
+						project.setProperty(propertyName, propertyValue);
+					}
 				]]>
 			</beanshell>
 		</sequential>
@@ -766,7 +768,9 @@ jdbc.counter.connectionProperties=oracle.jdbc.ReadTimeout=0;oracle.net.CONNECT_T
 
 					propertyValue = project.getProperty(sb.toString());
 
-					project.setProperty(propertyName, propertyValue);
+					if (propertyValue != null) {
+						project.setProperty(propertyName, propertyValue);
+					}
 				]]>
 			</beanshell>
 		</sequential>
@@ -1101,6 +1105,7 @@ jdbc.counter.connectionProperties=oracle.jdbc.ReadTimeout=0;oracle.net.CONNECT_T
 
 	<macrodef name="get-test-url">
 		<sequential>
+			<get-operating-system-property property.name="operating.system.docker.image" />
 			<get-testcase-property property.name="analytics.cloud.enabled" />
 			<get-testcase-property property.name="testcase.url" />
 
@@ -1124,15 +1129,7 @@ jdbc.counter.connectionProperties=oracle.jdbc.ReadTimeout=0;oracle.net.CONNECT_T
 					</then>
 				</elseif>
 				<elseif>
-					<and>
-						<not>
-							<and>
-								<equals arg1="${operating.system.type}" arg2="centos" />
-								<equals arg1="${operating.system.centos.version}" arg2="7" />
-							</and>
-						</not>
-						<equals arg1="${env.DOCKER_ENABLED}" arg2="true" />
-					</and>
+					<isset property="operating.system.docker.image" />
 					<then>
 						<get-operating-system-property property.name="operating.system.host" />
 
@@ -4281,128 +4278,68 @@ org.apache.catalina.startup.ClassLoaderFactory.level=INFO]]>
 
 					<get-java-jdk-home type="${java.jdk.bundle.type}" version="${java.jdk.bundle.version}" />
 
-					<if>
-						<equals arg1="${test.ant.launched.by.selenium}" arg2="true" />
-						<then>
-							<parallel>
-								<if>
-									<istrue value="${test.docker.environment}" />
-									<then>
-										<echo>docker run -d -p ${test.app.server.leading.port.number}080:${test.app.server.leading.port.number}080 -v ${app.server.parent.dir}:${app.server.parent.dir} --cidfile=docker.process.pid --network=@{docker.network.name} openjdk:8-alpine ${app.server.bin.dir}/${app.server.start.executable} ${app.server.start.executable.arg.line}</echo>
+					<get-testcase-property property.name="ext.plugins.includes" />
 
-										<parallel>
-											<exec executable="docker">
-												<arg line="run -d" />
-												<arg line="-p ${test.app.server.leading.port.number}080:${test.app.server.leading.port.number}080" />
-												<arg value="-v" />
-												<arg value="${app.server.parent.dir}:${app.server.parent.dir}" />
-												<arg value="--cidfile=docker.process.pid" />
-												<arg value="--network=@{docker.network.name}" />
-												<arg value="openjdk:8u191-jdk-alpine3.8" />
-												<arg value="${app.server.bin.dir}/${app.server.start.executable}" />
-												<arg value="${app.server.start.executable.arg.line}" />
-											</exec>
-										</parallel>
-									</then>
-									<elseif>
-										<and>
-											<not>
-												<and>
-													<equals arg1="${operating.system.type}" arg2="centos" />
-													<equals arg1="${operating.system.centos.version}" arg2="7" />
-												</and>
-											</not>
-											<equals arg1="${env.DOCKER_ENABLED}" arg2="true" />
-										</and>
-										<then>
-											<sequential>
-												<get-operating-system-property property.name="operating.system.host" />
+					<get-operating-system-property property.name="operating.system.docker.image" />
 
-												<docker-execute container="${operating.system.host}">
-													chmod +x ${test.app.server.bin.dir}/${app.server.start.executable}
+					<parallel>
+						<if>
+							<not>
+								<isset property="ext.plugins.includes" />
+							</not>
+							<then>
+								<sequential>
+									<wait-for-app-server app.server.bin.dir="@{app.server.bin.dir}" app.server.bundle.index="@{app.server.bundle.index}" />
+								</sequential>
+							</then>
+						</if>
 
-													${test.app.server.bin.dir}/${app.server.start.executable} ${app.server.start.executable.arg.line}
-												</docker-execute>
-											</sequential>
-										</then>
-									</elseif>
-									<else>
-										<exec dir="${test.app.server.bin.dir}" executable="${app.server.start.executable}" outputproperty="app.server.log" resolveexecutable="true">
-											<arg line="${app.server.start.executable.arg.line}" />
-											<env key="JAVA_HOME" path="${java.jdk.home}" />
-										</exec>
-									</else>
-								</if>
+						<daemons>
+							<if>
+								<istrue value="${test.docker.environment}" />
+								<then>
+									<echo>docker run -d -p ${test.app.server.leading.port.number}080:${test.app.server.leading.port.number}080 -v ${app.server.parent.dir}:${app.server.parent.dir} --cidfile=docker.process.pid --network=@{docker.network.name} openjdk:8-alpine ${app.server.bin.dir}/${app.server.start.executable} ${app.server.start.executable.arg.line}</echo>
 
-								<wait-for-app-server app.server.bin.dir="@{app.server.bin.dir}" app.server.bundle.index="@{app.server.bundle.index}" />
-							</parallel>
-						</then>
-						<else>
-							<get-testcase-property property.name="ext.plugins.includes" />
-
-							<parallel>
-								<if>
-									<not>
-										<isset property="ext.plugins.includes" />
-									</not>
+									<exec executable="docker">
+										<arg line="run -d" />
+										<arg line="-p ${test.app.server.leading.port.number}080:${test.app.server.leading.port.number}080" />
+										<arg value="-v" />
+										<arg value="${app.server.parent.dir}:${app.server.parent.dir}" />
+										<arg value="--cidfile=docker.process.pid" />
+										<arg value="--network=@{docker.network.name}" />
+										<arg value="openjdk:8u191-jdk-alpine3.8" />
+										<arg value="${app.server.bin.dir}/${app.server.start.executable}" />
+										<arg value="${app.server.start.executable.arg.line}" />
+									</exec>
+								</then>
+								<elseif>
+									<isset property="operating.system.docker.image" />
 									<then>
 										<sequential>
-											<wait-for-app-server app.server.bin.dir="@{app.server.bin.dir}" app.server.bundle.index="@{app.server.bundle.index}" />
+											<get-operating-system-property property.name="operating.system.host" />
+
+											<docker-execute container="${operating.system.host}">
+												chmod +x ${test.app.server.bin.dir}/${app.server.start.executable}
+
+												${test.app.server.bin.dir}/${app.server.start.executable} ${app.server.start.executable.arg.line}
+											</docker-execute>
 										</sequential>
 									</then>
-								</if>
+								</elseif>
+								<else>
+									<beanshell>
+										<![CDATA[
+											import com.liferay.jenkins.results.parser.AppServer;
 
-								<daemons>
-									<if>
-										<istrue value="${test.docker.environment}" />
-										<then>
-											<echo>docker run -d -p ${test.app.server.leading.port.number}080:${test.app.server.leading.port.number}080 -v ${app.server.parent.dir}:${app.server.parent.dir} --cidfile=docker.process.pid --network=@{docker.network.name} openjdk:8-alpine ${app.server.bin.dir}/${app.server.start.executable} ${app.server.start.executable.arg.line}</echo>
+											AppServer appServer = new AppServer(project);
 
-											<exec executable="docker">
-												<arg line="run -d" />
-												<arg line="-p ${test.app.server.leading.port.number}080:${test.app.server.leading.port.number}080" />
-												<arg value="-v" />
-												<arg value="${app.server.parent.dir}:${app.server.parent.dir}" />
-												<arg value="--cidfile=docker.process.pid" />
-												<arg value="--network=@{docker.network.name}" />
-												<arg value="openjdk:8u191-jdk-alpine3.8" />
-												<arg value="${app.server.bin.dir}/${app.server.start.executable}" />
-												<arg value="${app.server.start.executable.arg.line}" />
-											</exec>
-										</then>
-										<elseif>
-											<and>
-												<not>
-													<and>
-														<equals arg1="${operating.system.type}" arg2="centos" />
-														<equals arg1="${operating.system.centos.version}" arg2="7" />
-													</and>
-												</not>
-												<equals arg1="${env.DOCKER_ENABLED}" arg2="true" />
-											</and>
-											<then>
-												<sequential>
-													<get-operating-system-property property.name="operating.system.host" />
-
-													<docker-execute container="${operating.system.host}">
-														chmod +x ${test.app.server.bin.dir}/${app.server.start.executable}
-
-														${test.app.server.bin.dir}/${app.server.start.executable} ${app.server.start.executable.arg.line}
-													</docker-execute>
-												</sequential>
-											</then>
-										</elseif>
-										<else>
-											<exec dir="${test.app.server.bin.dir}" executable="${app.server.start.executable}" failonerror="true" output="app.server.log" resolveexecutable="true">
-												<arg line="${app.server.start.executable.arg.line}" />
-												<env key="JAVA_HOME" path="${java.jdk.home}" />
-											</exec>
-										</else>
-									</if>
-								</daemons>
-							</parallel>
-						</else>
-					</if>
+											appServer.startService();
+										]]>
+									</beanshell>
+								</else>
+							</if>
+						</daemons>
+					</parallel>
 				</then>
 			</if>
 		</sequential>
@@ -5441,6 +5378,7 @@ war.path=${app.server.portal.dir}/</echo>
 
 			<local name="app.server.waiting.url" />
 
+			<get-operating-system-property property.name="operating.system.docker.image" />
 			<get-testcase-property property.name="portal.context" />
 
 			<if>
@@ -5449,15 +5387,7 @@ war.path=${app.server.portal.dir}/</echo>
 					<property name="app.server.waiting.url" value="http://localhost:${test.app.server.leading.port.number}080/${portal.context}/web/guest" />
 				</then>
 				<elseif>
-					<and>
-						<not>
-							<and>
-								<equals arg1="${operating.system.type}" arg2="centos" />
-								<equals arg1="${operating.system.centos.version}" arg2="7" />
-							</and>
-						</not>
-						<equals arg1="${env.DOCKER_ENABLED}" arg2="true" />
-					</and>
+					<isset property="operating.system.docker.image" />
 					<then>
 						<get-operating-system-property property.name="operating.system.host" />
 
@@ -6586,6 +6516,32 @@ go</echo>
 		</if>
 
 		<delete dir="/tmp/sprite" />
+	</target>
+
+	<target name="deploy-analytics-cloud-demo-data-creator">
+		<if>
+			<equals arg1="${functional.test.type}" arg2="analytics-cloud" />
+			<then>
+				<mirrors-get
+					dest="${app.server.parent.dir}/osgi/modules/com.liferay.analytics.demo.data.creator.api.jar"
+					src="${baseline.jar.url}/com/liferay/com.liferay.analytics.demo.data.creator.api/${analytics.cloud.faro.data.creator.api}/com.liferay.analytics.demo.data.creator.api-${analytics.cloud.faro.data.creator.api}.jar"
+				/>
+
+				<mirrors-get
+					dest="${app.server.parent.dir}/osgi/modules/com.liferay.analytics.demo.data.creator.impl.jar"
+					src="${baseline.jar.url}/com/liferay/com.liferay.analytics.demo.data.creator.impl/${analytics.cloud.faro.data.creator.impl}/com.liferay.analytics.demo.data.creator.impl-${analytics.cloud.faro.data.creator.impl}.jar"
+				/>
+
+				<property location="${analytics.cloud.faro.data.csv}" name="analytics.cloud.faro.data.csv.file.path" />
+
+				<echo file="${app.server.parent.dir}/osgi/modules/com.liferay.analytics.demo.data.creator.configuration.AnalyticsDemoDataCreatorConfiguration.config">
+pathToUsersCSV=${analytics.cloud.faro.data.csv.file.path}
+virtualHostname=localhost
+				</echo>
+
+				<print-file file.name="${app.server.parent.dir}/osgi/modules/com.liferay.analytics.demo.data.creator.configuration.AnalyticsDemoDataCreatorConfiguration.config" />
+			</then>
+		</if>
 	</target>
 
 	<target name="deploy-dependency-jars">
@@ -9187,16 +9143,10 @@ auto.deploy.dest.dir=C:/WINDOWS/system32/config/systemprofile/liferay/websphere-
 		<antcall target="prepare-selenium-sharepoint-properties" />
 		<antcall target="prepare-selenium-testcase-properties" />
 
+		<get-operating-system-property property.name="operating.system.docker.image" />
+
 		<if>
-			<and>
-				<not>
-					<and>
-						<equals arg1="${operating.system.type}" arg2="centos" />
-						<equals arg1="${operating.system.centos.version}" arg2="7" />
-					</and>
-				</not>
-				<equals arg1="${env.DOCKER_ENABLED}" arg2="true" />
-			</and>
+			<isset property="operating.system.docker.image" />
 			<then>
 				<get-operating-system-property property.name="operating.system.host.alias" />
 
@@ -10869,28 +10819,33 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 				<equals arg1="${app.server.type}" arg2="websphere" />
 			</or>
 			<then>
-				<get
+				<mirrors-get
 					dest="${liferay.home}"
+					skipChecksum="true"
 					src="${elasticsearch.sidecar.analysis-icu.zip.url}"
 				/>
 
-				<get
+				<mirrors-get
 					dest="${liferay.home}"
+					skipChecksum="true"
 					src="${elasticsearch.sidecar.analysis-kuromoji.zip.url}"
 				/>
 
-				<get
+				<mirrors-get
 					dest="${liferay.home}"
+					skipChecksum="true"
 					src="${elasticsearch.sidecar.analysis-smartcn.zip.url}"
 				/>
 
-				<get
+				<mirrors-get
 					dest="${liferay.home}"
+					skipChecksum="true"
 					src="${elasticsearch.sidecar.analysis-stempel.zip.url}"
 				/>
 
-				<get
+				<mirrors-get
 					dest="${liferay.home}"
+					skipChecksum="true"
 					src="${elasticsearch.sidecar.no.jdk.tar.url}"
 				/>
 			</then>
@@ -11055,13 +11010,10 @@ cluster.link.bind.addr["cluster-link-udp"]=127.0.0.1</echo>
 					<param name="keep.hypersonicdb" value="true" />
 				</antcall>
 
+				<get-database-property property.name="database.docker.image" />
+
 				<if>
-					<and>
-						<equals arg1="${env.DOCKER_ENABLED}" arg2="true" />
-						<not>
-							<equals arg1="${database.type}" arg2="hypersonic" />
-						</not>
-					</and>
+					<isset property="database.docker.image" />
 					<then>
 						<get-database-property property.name="database.host" />
 						<get-database-property property.name="database.password" />
@@ -11391,8 +11343,10 @@ cluster.link.bind.addr["cluster-link-udp"]=127.0.0.1</echo>
 			src="${portal.legacy.dir}/${portal.version}/data-archive/${data.archive.type}-${database.type}.zip"
 		/>
 
+		<get-database-property property.name="database.docker.image" />
+
 		<if>
-			<equals arg1="${env.DOCKER_ENABLED}" arg2="true" />
+			<isset property="database.docker.image" />
 			<then>
 				<get-database-property property.name="database.host" />
 				<get-database-property property.name="database.password" />
@@ -12678,6 +12632,15 @@ module.framework.properties.blacklist.portal.profile.names=${blacklist.portal.pr
 			</then>
 		</if>
 
+		<get-testcase-property property.name="liferay.faces" />
+
+		<if>
+			<equals arg1="${liferay.faces}" arg2="true" />
+			<then>
+				<ant antfile="build-test-jsf.xml" target="run-jsf-tests" />
+			</then>
+		</if>
+
 		<get-testcase-property property.name="openam.enabled" />
 
 		<if>
@@ -12762,6 +12725,13 @@ module.framework.properties.blacklist.portal.profile.names=${blacklist.portal.pr
 		<antcall target="hot-deploy-osgi-apps" />
 
 		<antcall target="deploy-osgi-modules" />
+
+		<if>
+			<equals arg1="${functional.test.type}" arg2="analytics-cloud" />
+			<then>
+				<antcall target="deploy-analytics-cloud-demo-data-creator" />
+			</then>
+		</if>
 
 		<antcall target="deploy-specified-plugins">
 			<param name="test.class" value="${test.class}" />

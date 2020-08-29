@@ -17,40 +17,30 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-function Author({authorName, authorPortraitURL, authorUserId}) {
-	const stickerColor = parseInt(authorUserId, 10) % 10;
-
+function Author({author: {authorId, name, url}}) {
 	return (
 		<div className="text-secondary">
 			<ClaySticker
 				className={classnames('c-mr-2 sticker-user-icon', {
-					[`user-icon-color-${stickerColor}`]: !authorPortraitURL,
+					[`user-icon-color-${parseInt(authorId, 10) % 10}`]: !url,
 				})}
 				shape="circle"
 				size="sm"
 			>
-				{authorPortraitURL ? (
-					<img
-						alt={`${authorName}.`}
-						className="sticker-img"
-						src={authorPortraitURL}
-					/>
+				{url ? (
+					<img alt={`${name}.`} className="sticker-img" src={url} />
 				) : (
 					<ClayIcon symbol="user" />
 				)}
 			</ClaySticker>
-			{Liferay.Util.sub(
-				Liferay.Language.get('authored-by-x'),
-				authorName
-			)}
+			{Liferay.Util.sub(Liferay.Language.get('authored-by-x'), name)}
 		</div>
 	);
 }
 
 function BasicInformation({
-	authorName,
-	authorPortraitURL,
-	authorUserId,
+	author,
+	canonicalURL,
 	languageTag,
 	publishDate,
 	title,
@@ -59,7 +49,7 @@ function BasicInformation({
 		day: 'numeric',
 		month: 'long',
 		year: 'numeric',
-	}).format(publishDate);
+	}).format(new Date(publishDate));
 
 	return (
 		<div className="sidebar-section">
@@ -79,6 +69,22 @@ function BasicInformation({
 
 			<ClayLayout.ContentRow>
 				<ClayLayout.ContentCol expand>
+					<ClayTooltipProvider>
+						<span
+							className="text-truncate-inline"
+							data-tooltip-align="top"
+							title={canonicalURL}
+						>
+							<span className="c-mb-2 c-mt-1 text-secondary text-truncate text-truncate-reverse">
+								{canonicalURL}
+							</span>
+						</span>
+					</ClayTooltipProvider>
+				</ClayLayout.ContentCol>
+			</ClayLayout.ContentRow>
+
+			<ClayLayout.ContentRow>
+				<ClayLayout.ContentCol expand>
 					<p className="text-secondary">
 						{Liferay.Util.sub(
 							Liferay.Language.get('published-on-x'),
@@ -90,11 +96,7 @@ function BasicInformation({
 
 			<ClayLayout.ContentRow>
 				<ClayLayout.ContentCol expand>
-					<Author
-						authorName={authorName}
-						authorPortraitURL={authorPortraitURL}
-						authorUserId={authorUserId}
-					/>
+					<Author author={author} />
 				</ClayLayout.ContentCol>
 			</ClayLayout.ContentRow>
 		</div>
@@ -102,16 +104,14 @@ function BasicInformation({
 }
 
 Author.propTypes = {
-	authorName: PropTypes.string.isRequired,
-	authorPortraitURL: PropTypes.string.isRequired,
-	authorUserId: PropTypes.string.isRequired,
+	author: PropTypes.object.isRequired,
 };
 
 BasicInformation.propTypes = {
-	authorName: PropTypes.string.isRequired,
-	authorPortraitURL: PropTypes.string.isRequired,
-	authorUserId: PropTypes.string.isRequired,
-	publishDate: PropTypes.number.isRequired,
+	author: PropTypes.object.isRequired,
+	canonicalURL: PropTypes.string.isRequired,
+	languageTag: PropTypes.string.isRequired,
+	publishDate: PropTypes.string.isRequired,
 	title: PropTypes.string.isRequired,
 };
 

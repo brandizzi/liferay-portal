@@ -20,6 +20,7 @@ import com.liferay.data.engine.rest.dto.v2_0.DataRecord;
 import com.liferay.data.engine.rest.internal.content.type.DataDefinitionContentTypeTracker;
 import com.liferay.data.engine.rest.internal.odata.entity.v2_0.DataRecordEntityModel;
 import com.liferay.data.engine.rest.internal.security.permission.resource.DataRecordCollectionModelResourcePermission;
+import com.liferay.data.engine.rest.internal.security.permission.resource.DataRecordModelResourcePermission;
 import com.liferay.data.engine.rest.internal.storage.DataRecordExporter;
 import com.liferay.data.engine.rest.internal.storage.DataStorageTracker;
 import com.liferay.data.engine.rest.resource.v2_0.DataRecordResource;
@@ -60,6 +61,12 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.odata.entity.EntityField;
 import com.liferay.portal.odata.entity.EntityModel;
 import com.liferay.portal.odata.entity.StringEntityField;
+import com.liferay.portal.search.legacy.searcher.SearchRequestBuilderFactory;
+import com.liferay.portal.search.query.Queries;
+import com.liferay.portal.search.sort.FieldSort;
+import com.liferay.portal.search.sort.NestedSort;
+import com.liferay.portal.search.sort.SortOrder;
+import com.liferay.portal.search.sort.Sorts;
 import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 import com.liferay.portal.vulcan.resource.EntityModelResource;
@@ -90,11 +97,11 @@ public class DataRecordResourceImpl
 
 	@Override
 	public void deleteDataRecord(Long dataRecordId) throws Exception {
-		DDLRecord ddlRecord = _ddlRecordLocalService.getDDLRecord(dataRecordId);
+		_dataRecordModelResourcePermission.check(
+			PermissionThreadLocal.getPermissionChecker(), dataRecordId,
+			DataActionKeys.DELETE_DATA_RECORD);
 
-		_dataRecordCollectionModelResourcePermission.check(
-			PermissionThreadLocal.getPermissionChecker(),
-			ddlRecord.getRecordSetId(), DataActionKeys.DELETE_DATA_RECORD);
+		DDLRecord ddlRecord = _ddlRecordLocalService.getDDLRecord(dataRecordId);
 
 		DDLRecordSet ddlRecordSet = ddlRecord.getRecordSet();
 
@@ -124,13 +131,11 @@ public class DataRecordResourceImpl
 
 	@Override
 	public DataRecord getDataRecord(Long dataRecordId) throws Exception {
-		DDLRecord ddlRecord = _ddlRecordLocalService.getDDLRecord(dataRecordId);
+		_dataRecordModelResourcePermission.check(
+			PermissionThreadLocal.getPermissionChecker(), dataRecordId,
+			DataActionKeys.VIEW_DATA_RECORD);
 
-		_dataRecordCollectionModelResourcePermission.check(
-			PermissionThreadLocal.getPermissionChecker(),
-			ddlRecord.getRecordSetId(), DataActionKeys.VIEW_DATA_RECORD);
-
-		return _toDataRecord(ddlRecord);
+		return _toDataRecord(_ddlRecordLocalService.getDDLRecord(dataRecordId));
 	}
 
 	@Override
@@ -191,6 +196,14 @@ public class DataRecordResourceImpl
 			queryConfig -> queryConfig.setSelectedFieldNames(
 				Field.ENTRY_CLASS_PK),
 			searchContext -> {
+				if (sorts != null) {
+					_searchRequestBuilderFactory.builder(
+						searchContext
+					).sorts(
+						_getFieldSorts(sorts)
+					);
+				}
+
 				searchContext.setAttribute(
 					Field.STATUS, WorkflowConstants.STATUS_ANY);
 				searchContext.setAttribute(
@@ -200,7 +213,7 @@ public class DataRecordResourceImpl
 				searchContext.setCompanyId(contextCompany.getCompanyId());
 				searchContext.setUserId(0);
 			},
-			sorts,
+			null,
 			document -> _toDataRecord(
 				_ddlRecordLocalService.fetchRecord(
 					GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK)))));
@@ -238,7 +251,7 @@ public class DataRecordResourceImpl
 				entityFields.add(
 					new StringEntityField(
 						fieldName,
-						locale -> _getSortableIndexFieldName(
+						locale -> _getIndexFieldName(
 							ddmStructure.getStructureId(), fieldName, locale)));
 			}
 		}
@@ -299,13 +312,13 @@ public class DataRecordResourceImpl
 	public DataRecord putDataRecord(Long dataRecordId, DataRecord dataRecord)
 		throws Exception {
 
+		_dataRecordModelResourcePermission.check(
+			PermissionThreadLocal.getPermissionChecker(), dataRecordId,
+			DataActionKeys.UPDATE_DATA_RECORD);
+
 		DDLRecord ddlRecord = _ddlRecordLocalService.getRecord(dataRecordId);
 
 		DDLRecordSet ddlRecordSet = ddlRecord.getRecordSet();
-
-		_dataRecordCollectionModelResourcePermission.check(
-			PermissionThreadLocal.getPermissionChecker(),
-			ddlRecordSet.getRecordSetId(), DataActionKeys.UPDATE_DATA_RECORD);
 
 		dataRecord.setDataRecordCollectionId(ddlRecordSet.getRecordSetId());
 
@@ -368,12 +381,21 @@ public class DataRecordResourceImpl
 			for (String value : JSONUtil.toStringArray(jsonArray)) {
 				DDMStructure ddmStructure = ddlRecordSet.getDDMStructure();
 
-				String indexFieldName = _getIndexFieldName(
-					ddmStructure.getStructureId(), fieldName,
-					contextAcceptLanguage.getPreferredLocale());
+				String fieldType = ddmStructure.getFieldType(fieldName);
 
-				fieldBooleanFilter.addTerm(
-					indexFieldName, value, BooleanClauseOccur.SHOULD);
+				if (fieldType.equals("select")) {
+					value = StringBundler.concat(
+						StringPool.OPEN_BRACKET, value,
+						StringPool.CLOSE_BRACKET);
+				}
+
+				fieldBooleanFilter.add(
+					_ddmIndexer.createFieldValueQueryFilter(
+						_getIndexFieldName(
+							ddmStructure.getStructureId(), fieldName,
+							contextAcceptLanguage.getPreferredLocale()),
+						value, contextAcceptLanguage.getPreferredLocale()),
+					BooleanClauseOccur.SHOULD);
 			}
 
 			booleanFilter.add(fieldBooleanFilter, BooleanClauseOccur.MUST);
@@ -410,24 +432,53 @@ public class DataRecordResourceImpl
 		return ddlRecordSet.getRecordSetId();
 	}
 
+	private FieldSort[] _getFieldSorts(Sort[] sorts) {
+		List<FieldSort> fieldSorts = new ArrayList<>();
+
+		for (Sort sort : sorts) {
+			FieldSort fieldSort = _sorts.field(
+				_getSortableFieldName(sort.getFieldName()));
+
+			if (sort.isReverse()) {
+				fieldSort.setSortOrder(SortOrder.DESC);
+			}
+
+			NestedSort nestedSort = _sorts.nested(DDMIndexer.DDM_FIELD_ARRAY);
+
+			nestedSort.setFilterQuery(
+				_queries.term(
+					StringBundler.concat(
+						DDMIndexer.DDM_FIELD_ARRAY, StringPool.PERIOD,
+						DDMIndexer.DDM_FIELD_NAME),
+					sort.getFieldName()));
+
+			fieldSort.setNestedSort(nestedSort);
+
+			fieldSorts.add(fieldSort);
+		}
+
+		return fieldSorts.toArray(new FieldSort[0]);
+	}
+
 	private String _getIndexFieldName(
 		long ddmStructureId, String fieldName, Locale locale) {
 
 		return _ddmIndexer.encodeName(ddmStructureId, fieldName, locale);
 	}
 
-	private String _getSortableIndexFieldName(
-		long ddmStructureId, String fieldName, Locale locale) {
+	private String _getSortableFieldName(String fieldName) {
+		StringBundler sb = new StringBundler(5);
 
-		StringBundler sb = new StringBundler(
-			_getIndexFieldName(ddmStructureId, fieldName, locale));
-
+		sb.append(DDMIndexer.DDM_FIELD_ARRAY);
+		sb.append(StringPool.PERIOD);
+		sb.append(
+			_ddmIndexer.getValueFieldName(
+				fieldName.split(DDMIndexer.DDM_FIELD_SEPARATOR)[1],
+				contextAcceptLanguage.getPreferredLocale()));
 		sb.append(StringPool.UNDERLINE);
 		sb.append("String");
-		sb.append(StringPool.UNDERLINE);
-		sb.append(Field.SORTABLE_FIELD_SUFFIX);
 
-		return sb.toString();
+		return Field.getSortableFieldName(sb.toString());
 	}
 
 	private DataRecord _toDataRecord(DDLRecord ddlRecord) throws Exception {
@@ -460,6 +511,10 @@ public class DataRecordResourceImpl
 		_dataRecordCollectionModelResourcePermission;
 
 	@Reference
+	private DataRecordModelResourcePermission
+		_dataRecordModelResourcePermission;
+
+	@Reference
 	private DataStorageTracker _dataStorageTracker;
 
 	@Reference
@@ -488,6 +543,15 @@ public class DataRecordResourceImpl
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private Queries _queries;
+
+	@Reference
+	private SearchRequestBuilderFactory _searchRequestBuilderFactory;
+
+	@Reference
+	private Sorts _sorts;
 
 	@Reference
 	private SPIDDMFormRuleConverter _spiDDMFormRuleConverter;

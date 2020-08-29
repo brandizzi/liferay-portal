@@ -34,7 +34,8 @@ import com.liferay.fragment.service.FragmentEntryLinkLocalServiceUtil;
 import com.liferay.fragment.service.FragmentEntryServiceUtil;
 import com.liferay.fragment.util.comparator.FragmentCollectionContributorNameComparator;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
-import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
+import com.liferay.frontend.token.definition.FrontendTokenDefinition;
+import com.liferay.frontend.token.definition.FrontendTokenDefinitionRegistry;
 import com.liferay.info.item.InfoItemServiceTracker;
 import com.liferay.info.item.provider.InfoItemFormProvider;
 import com.liferay.info.list.provider.item.selector.criterion.InfoListProviderItemSelectorCriterion;
@@ -60,6 +61,7 @@ import com.liferay.layout.content.page.editor.web.internal.constants.ContentPage
 import com.liferay.layout.content.page.editor.web.internal.util.ContentUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.FragmentEntryLinkItemSelectorUtil;
 import com.liferay.layout.content.page.editor.web.internal.util.layout.structure.LayoutStructureUtil;
+import com.liferay.layout.display.page.LayoutDisplayPageObjectProvider;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalServiceUtil;
@@ -90,6 +92,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletApp;
 import com.liferay.portal.kernel.model.PortletCategory;
@@ -106,6 +109,7 @@ import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
+import com.liferay.portal.kernel.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletItemLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalServiceUtil;
@@ -140,6 +144,7 @@ import com.liferay.portal.util.WebAppPool;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.style.book.model.StyleBookEntry;
 import com.liferay.style.book.service.StyleBookEntryLocalServiceUtil;
+import com.liferay.style.book.util.DefaultStyleBookEntryUtil;
 import com.liferay.style.book.util.comparator.StyleBookEntryNameComparator;
 
 import java.util.ArrayList;
@@ -149,6 +154,7 @@ import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -191,6 +197,7 @@ public class ContentPageEditorDisplayContext {
 		FragmentEntryConfigurationParser fragmentEntryConfigurationParser,
 		FragmentRendererController fragmentRendererController,
 		FragmentRendererTracker fragmentRendererTracker,
+		FrontendTokenDefinitionRegistry frontendTokenDefinitionRegistry,
 		HttpServletRequest httpServletRequest,
 		InfoItemServiceTracker infoItemServiceTracker,
 		ItemSelector itemSelector,
@@ -206,6 +213,7 @@ public class ContentPageEditorDisplayContext {
 		_fragmentEntryConfigurationParser = fragmentEntryConfigurationParser;
 		_fragmentRendererController = fragmentRendererController;
 		_fragmentRendererTracker = fragmentRendererTracker;
+		_frontendTokenDefinitionRegistry = frontendTokenDefinitionRegistry;
 		_itemSelector = itemSelector;
 		_pageEditorConfiguration = pageEditorConfiguration;
 		_renderResponse = renderResponse;
@@ -282,7 +290,16 @@ public class ContentPageEditorDisplayContext {
 				LocaleUtil.toLanguageId(themeDisplay.getSiteDefaultLocale())
 			).put(
 				"defaultStyleBookEntryName",
-				() -> _getDefaultStyleBookEntryName()
+				() -> {
+					StyleBookEntry defaultStyleBookEntry =
+						_getDefaultStyleBookEntry();
+
+					if (defaultStyleBookEntry != null) {
+						return defaultStyleBookEntry.getName();
+					}
+
+					return null;
+				}
 			).put(
 				"deleteFragmentEntryLinkCommentURL",
 				getFragmentEntryActionURL(
@@ -313,6 +330,8 @@ public class ContentPageEditorDisplayContext {
 				"editFragmentEntryLinkURL",
 				getFragmentEntryActionURL(
 					"/content_layout/edit_fragment_entry_link")
+			).put(
+				"frontendTokens", _getFrontendTokens()
 			).put(
 				"getAvailableListItemRenderersURL",
 				getResourceURL(
@@ -854,35 +873,16 @@ public class ContentPageEditorDisplayContext {
 		return _defaultConfigurations;
 	}
 
-	private String _getDefaultStyleBookEntryName() {
-		StyleBookEntry styleBookEntry = null;
-
-		Layout layout = themeDisplay.getLayout();
-
-		if (layout.getStyleBookEntryId() > 0) {
-			styleBookEntry = StyleBookEntryLocalServiceUtil.fetchStyleBookEntry(
-				layout.getStyleBookEntryId());
+	private StyleBookEntry _getDefaultStyleBookEntry() {
+		if (_defaultStyleBookEntry != null) {
+			return _defaultStyleBookEntry;
 		}
 
-		if ((styleBookEntry == null) && (layout.getMasterLayoutPlid() > 0)) {
-			Layout masterLayout = LayoutLocalServiceUtil.fetchLayout(
-				layout.getMasterLayoutPlid());
+		_defaultStyleBookEntry =
+			DefaultStyleBookEntryUtil.getDefaultStyleBookEntry(
+				themeDisplay.getLayout());
 
-			styleBookEntry = StyleBookEntryLocalServiceUtil.fetchStyleBookEntry(
-				masterLayout.getStyleBookEntryId());
-		}
-
-		if (styleBookEntry == null) {
-			styleBookEntry =
-				StyleBookEntryLocalServiceUtil.fetchDefaultStyleBookEntry(
-					layout.getGroupId());
-		}
-
-		if (styleBookEntry != null) {
-			return styleBookEntry.getName();
-		}
-
-		return null;
+		return _defaultStyleBookEntry;
 	}
 
 	private String _getDiscardDraftURL() {
@@ -1380,9 +1380,12 @@ public class ContentPageEditorDisplayContext {
 						fragmentEntryLink.getFragmentEntryId());
 
 				if (fragmentEntry == null) {
-					fragmentEntry =
-						_fragmentCollectionContributorTracker.getFragmentEntry(
-							fragmentEntryLink.getRendererKey());
+					Map<String, FragmentEntry> fragmentEntries =
+						_fragmentCollectionContributorTracker.
+							getFragmentEntries(themeDisplay.getLocale());
+
+					fragmentEntry = fragmentEntries.get(
+						fragmentEntryLink.getRendererKey());
 				}
 
 				Map<String, Object> fragmentEntryLinkMap =
@@ -1450,6 +1453,77 @@ public class ContentPageEditorDisplayContext {
 		_fragmentEntryLinks = fragmentEntryLinksMap;
 
 		return _fragmentEntryLinks;
+	}
+
+	private Map<String, Map<String, Object>> _getFrontendTokens()
+		throws Exception {
+
+		LayoutSet layoutSet = LayoutSetLocalServiceUtil.fetchLayoutSet(
+			themeDisplay.getSiteGroupId(), false);
+
+		FrontendTokenDefinition frontendTokenDefinition =
+			_frontendTokenDefinitionRegistry.getFrontendTokenDefinition(
+				layoutSet.getThemeId());
+
+		if (frontendTokenDefinition == null) {
+			return Collections.emptyMap();
+		}
+
+		JSONObject frontendTokenValuesJSONObject =
+			_getFrontendTokenValuesJSONObject();
+
+		Map<String, Map<String, Object>> frontendTokens = new LinkedHashMap<>();
+
+		JSONObject frontendTokenDefinitionJSONObject =
+			JSONFactoryUtil.createJSONObject(
+				frontendTokenDefinition.getJSON(themeDisplay.getLocale()));
+
+		JSONArray frontendTokenCategoriesJSONArray =
+			frontendTokenDefinitionJSONObject.getJSONArray(
+				"frontendTokenCategories");
+
+		Iterator<JSONObject> frontendTokenCategoriesIterator =
+			frontendTokenCategoriesJSONArray.iterator();
+
+		frontendTokenCategoriesIterator.forEachRemaining(
+			frontendTokenCategoryJSONObject -> {
+				JSONArray frontendTokenSetsJSONArray =
+					frontendTokenCategoryJSONObject.getJSONArray(
+						"frontendTokenSets");
+
+				Iterator<JSONObject> frontendTokenSetsIterator =
+					frontendTokenSetsJSONArray.iterator();
+
+				frontendTokenSetsIterator.forEachRemaining(
+					frontendTokenSetJSONObject -> {
+						JSONArray frontendTokensJSONArray =
+							frontendTokenSetJSONObject.getJSONArray(
+								"frontendTokens");
+
+						Iterator<JSONObject> frontendTokensIterator =
+							frontendTokensJSONArray.iterator();
+
+						frontendTokensIterator.forEachRemaining(
+							frontendTokenJSONObject ->
+								_processFrontendTokenJSONObject(
+									frontendTokenJSONObject,
+									frontendTokenValuesJSONObject,
+									frontendTokens));
+					});
+			});
+
+		return frontendTokens;
+	}
+
+	private JSONObject _getFrontendTokenValuesJSONObject() throws Exception {
+		StyleBookEntry styleBookEntry = _getDefaultStyleBookEntry();
+
+		if (styleBookEntry != null) {
+			return JSONFactoryUtil.createJSONObject(
+				styleBookEntry.getFrontendTokensValues());
+		}
+
+		return JSONFactoryUtil.createJSONObject();
 	}
 
 	private ItemSelectorCriterion _getImageItemSelectorCriterion() {
@@ -1635,21 +1709,25 @@ public class ContentPageEditorDisplayContext {
 	private Set<Map<String, Object>> _getMappedInfoItems() throws Exception {
 		Set<Map<String, Object>> mappedInfoItems = new HashSet<>();
 
-		Set<InfoDisplayObjectProvider<?>> infoDisplayObjectProviders =
-			ContentUtil.getMappedInfoDisplayObjectProviders(
-				getGroupId(), themeDisplay.getPlid());
+		Set<LayoutDisplayPageObjectProvider<?>>
+			layoutDisplayPageObjectProviders =
+				ContentUtil.getMappedLayoutDisplayPageObjectProviders(
+					getGroupId(), themeDisplay.getPlid());
 
-		for (InfoDisplayObjectProvider<?> infoDisplayObjectProvider :
-				infoDisplayObjectProviders) {
+		for (LayoutDisplayPageObjectProvider<?>
+				layoutDisplayPageObjectProvider :
+					layoutDisplayPageObjectProviders) {
 
 			mappedInfoItems.add(
 				HashMapBuilder.<String, Object>put(
-					"classNameId", infoDisplayObjectProvider.getClassNameId()
+					"classNameId",
+					layoutDisplayPageObjectProvider.getClassNameId()
 				).put(
-					"classPK", infoDisplayObjectProvider.getClassPK()
+					"classPK", layoutDisplayPageObjectProvider.getClassPK()
 				).put(
 					"title",
-					infoDisplayObjectProvider.getTitle(themeDisplay.getLocale())
+					layoutDisplayPageObjectProvider.getTitle(
+						themeDisplay.getLocale())
 				).build());
 		}
 
@@ -2144,6 +2222,52 @@ public class ContentPageEditorDisplayContext {
 		return false;
 	}
 
+	private void _processFrontendTokenJSONObject(
+		JSONObject frontendTokenJSONObject,
+		JSONObject frontendTokenValuesJSONObject,
+		Map<String, Map<String, Object>> frontendTokens) {
+
+		String name = frontendTokenJSONObject.getString("name");
+
+		JSONObject valueJSONObject =
+			frontendTokenValuesJSONObject.getJSONObject(name);
+
+		String value = StringPool.BLANK;
+
+		if (valueJSONObject != null) {
+			value = valueJSONObject.getString("value");
+		}
+		else {
+			value = frontendTokenJSONObject.getString("defaultValue");
+		}
+
+		JSONArray mappingsJSONArray = frontendTokenJSONObject.getJSONArray(
+			"mappings");
+		String cssVariable = StringPool.BLANK;
+
+		for (int l = 0; l < mappingsJSONArray.length(); l++) {
+			JSONObject mapping = mappingsJSONArray.getJSONObject(l);
+
+			if (Objects.equals(mapping.getString("type"), "cssVariable")) {
+				cssVariable = mapping.getString("value");
+			}
+		}
+
+		frontendTokens.put(
+			name,
+			HashMapBuilder.<String, Object>put(
+				"cssVariable", cssVariable
+			).put(
+				"editorType", frontendTokenJSONObject.get("editorType")
+			).put(
+				"label", frontendTokenJSONObject.get("label")
+			).put(
+				"name", name
+			).put(
+				"value", value
+			).build());
+	}
+
 	private static final String[] _UNSUPPORTED_PORTLETS_NAMES = {
 		"com_liferay_nested_portlets_web_portlet_NestedPortletsPortlet"
 	};
@@ -2156,6 +2280,7 @@ public class ContentPageEditorDisplayContext {
 	private final List<ContentPageEditorSidebarPanel>
 		_contentPageEditorSidebarPanels;
 	private Map<String, Object> _defaultConfigurations;
+	private StyleBookEntry _defaultStyleBookEntry;
 	private final FFLayoutContentPageEditorConfiguration
 		_ffLayoutContentPageEditorConfiguration;
 	private final FragmentCollectionContributorTracker
@@ -2166,6 +2291,8 @@ public class ContentPageEditorDisplayContext {
 	private Map<String, Object> _fragmentEntryLinks;
 	private final FragmentRendererController _fragmentRendererController;
 	private final FragmentRendererTracker _fragmentRendererTracker;
+	private final FrontendTokenDefinitionRegistry
+		_frontendTokenDefinitionRegistry;
 	private Long _groupId;
 	private ItemSelectorCriterion _imageItemSelectorCriterion;
 	private final ItemSelector _itemSelector;

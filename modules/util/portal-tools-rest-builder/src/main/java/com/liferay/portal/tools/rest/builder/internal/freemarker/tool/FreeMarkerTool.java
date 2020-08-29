@@ -62,6 +62,25 @@ public class FreeMarkerTool {
 		return _freeMarkerTool;
 	}
 
+	public boolean containsAggregationFunction(
+		List<JavaMethodSignature> javaMethodSignatures) {
+
+		for (JavaMethodSignature javaMethodSignature : javaMethodSignatures) {
+			for (JavaMethodParameter javaMethodParameter :
+					javaMethodSignature.getJavaMethodParameters()) {
+
+				if (StringUtil.equals(
+						javaMethodParameter.getParameterType(),
+						"com.liferay.portal.vulcan.aggregation.Aggregation")) {
+
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
 	public boolean containsJavaMethodSignature(
 		List<JavaMethodSignature> javaMethodSignatures, String text) {
 
@@ -140,8 +159,10 @@ public class FreeMarkerTool {
 		parameter = StringUtil.replace(
 			parameter, "com.liferay.portal.kernel.search.Sort[] sorts",
 			"String sortString");
-		parameter = StringUtil.removeSubstring(
-			parameter, "com.liferay.portal.vulcan.aggregation.");
+		parameter = StringUtil.replace(
+			parameter,
+			"com.liferay.portal.vulcan.aggregation.Aggregation aggregation",
+			"List<String> aggregations");
 		parameter = StringUtil.replace(
 			parameter,
 			"com.liferay.portal.vulcan.multipart.MultipartBody multipartBody",
@@ -225,6 +246,10 @@ public class FreeMarkerTool {
 
 		String arguments = OpenAPIParserUtil.getArguments(javaMethodParameters);
 
+		arguments = StringUtil.replace(
+			arguments, "aggregation",
+			"_aggregationBiFunction.apply(" + schemaVarName +
+				"Resource, aggregations)");
 		arguments = StringUtil.replace(
 			arguments, "assetLibraryId", "Long.valueOf(assetLibraryId)");
 		arguments = StringUtil.replace(
@@ -315,14 +340,18 @@ public class FreeMarkerTool {
 			"@GraphQLName(\"assetLibraryId\") java.lang.Long assetLibraryId",
 			"@GraphQLName(\"assetLibraryId\") @NotEmpty String assetLibraryId");
 		parameters = StringUtil.replace(
+			parameters, "@GraphQLName(\"siteId\") java.lang.Long siteId",
+			"@GraphQLName(\"siteKey\") @NotEmpty String siteKey");
+		parameters = StringUtil.replace(
 			parameters, "com.liferay.portal.kernel.search.filter.Filter filter",
 			"String filterString");
 		parameters = StringUtil.replace(
 			parameters, "com.liferay.portal.kernel.search.Sort[] sorts",
 			"String sortsString");
 		parameters = StringUtil.replace(
-			parameters, "@GraphQLName(\"siteId\") java.lang.Long siteId",
-			"@GraphQLName(\"siteKey\") @NotEmpty String siteKey");
+			parameters,
+			"com.liferay.portal.vulcan.aggregation.Aggregation aggregation",
+			"List<String> aggregations");
 
 		return parameters;
 	}

@@ -21,11 +21,9 @@ AnalyticsReportsDisplayContext analyticsReportsDisplayContext = (AnalyticsReport
 %>
 
 <c:choose>
-	<c:when test="<%= AnalyticsReportsUtil.isAnalyticsSynced(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId()) %>">
+	<c:when test="<%= analyticsReportsDisplayContext.isAnalyticsSynced() %>">
 		<div id="<portlet:namespace />-analytics-reports-root">
-			<div class="inline-item my-5 p-5 w-100">
-				<span aria-hidden="true" class="loading-animation"></span>
-			</div>
+			<span aria-hidden="true" class="loading-animation loading-animation-sm"></span>
 
 			<react:component
 				module="js/AnalyticsReportsApp"
@@ -35,7 +33,7 @@ AnalyticsReportsDisplayContext analyticsReportsDisplayContext = (AnalyticsReport
 	</c:when>
 	<c:otherwise>
 		<div id="<portlet:namespace />-analytics-reports-root">
-			<div class="pt-5 text-center">
+			<div class="p-3 pt-5 text-center">
 				<liferay-ui:icon
 					alt="connect-to-liferay-analytics-cloud"
 					src='<%= PortalUtil.getPathContext(request) + "/assets/ac-icon.svg" %>'

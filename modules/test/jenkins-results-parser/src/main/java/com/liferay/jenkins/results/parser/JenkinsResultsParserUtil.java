@@ -2686,6 +2686,28 @@ public class JenkinsResultsParserUtil {
 		}
 	}
 
+	public static String toByteCountString(long byteCount) {
+		long gigabyteCount = byteCount / _BYTES_GIGA;
+
+		if (gigabyteCount > 0) {
+			return gigabyteCount + " GB";
+		}
+
+		long megabyteCount = byteCount / _BYTES_MEGA;
+
+		if (megabyteCount > 0) {
+			return megabyteCount + " MB";
+		}
+
+		long kilobyteCount = byteCount / _BYTES_KILO;
+
+		if (kilobyteCount > 0) {
+			return kilobyteCount + " KB";
+		}
+
+		return byteCount + " B";
+	}
+
 	public static String toDateString(Date date, String timeZoneName) {
 		return toDateString(date, "MMM dd, yyyy h:mm:ss a z", timeZoneName);
 	}
@@ -3756,6 +3778,12 @@ public class JenkinsResultsParserUtil {
 
 		return true;
 	}
+
+	private static final long _BYTES_GIGA = 1024 * 1024 * 1024;
+
+	private static final long _BYTES_KILO = 1024;
+
+	private static final long _BYTES_MEGA = 1024 * 1024;
 
 	private static final String _DIST_PORTAL_BUNDLE_FILE_NAMES_DEFAULT =
 		"git-hash,liferay-portal-bundle-tomcat.tar.gz," +

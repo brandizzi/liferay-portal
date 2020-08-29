@@ -159,8 +159,18 @@
 			padding-left: 0;
 			text-align: center;
 
-			&.alloy-editor-placeholder:empty:not(:focus) {
+			&.alloy-editor-placeholder.ae-placeholder:not(:focus):not(.form-control) {
 				border-left-width: 0;
+			}
+
+			&.alloy-editor-placeholder:before {
+				border-color: inherit;
+				border-left: 2px solid;
+				display: inline-block;
+				margin: 0 auto;
+				padding-left: 0.5rem;
+				text-align: center;
+				width: auto;
 			}
 		}
 
@@ -316,15 +326,6 @@
 
 	.widget-metadata.categories {
 		margin-bottom: 1.25rem;
-	}
-
-	.widget-mode-card {
-		.card-footer {
-			padding: 0;
-		}
-		.widget-resume {
-			margin-bottom: 0.75rem;
-		}
 	}
 
 	.widget-mode-detail {

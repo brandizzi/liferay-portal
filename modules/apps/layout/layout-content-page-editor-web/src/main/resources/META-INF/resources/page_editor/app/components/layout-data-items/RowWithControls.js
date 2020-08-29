@@ -21,7 +21,7 @@ import {
 	LayoutDataPropTypes,
 	getLayoutDataItemPropTypes,
 } from '../../../prop-types/index';
-import selectCanUpdatePageStructure from '../../selectors/selectCanUpdatePageStructure';
+import selectCanUpdateItemConfiguration from '../../selectors/selectCanUpdateItemConfiguration';
 import {useSelector} from '../../store/index';
 import {getResponsiveConfig} from '../../utils/getResponsiveConfig';
 import {ResizeContextProvider} from '../ResizeContext';
@@ -35,8 +35,8 @@ const RowWithControls = React.forwardRef(
 		const [updatedLayoutData, setUpdatedLayoutData] = useState(null);
 		const [customRow, setCustomRow] = useState(false);
 
-		const canUpdatePageStructure = useSelector(
-			selectCanUpdatePageStructure
+		const canUpdateItemConfiguration = useSelector(
+			selectCanUpdateItemConfiguration
 		);
 
 		const selectedViewportSize = useSelector(
@@ -49,9 +49,9 @@ const RowWithControls = React.forwardRef(
 		);
 
 		const [setRef, itemElement] = useSetRef(ref);
-		const {verticalAlignment} = rowResponsiveConfig;
+		const {modulesPerRow, verticalAlignment} = rowResponsiveConfig;
 
-		const {maxWidth, minWidth, width} = item.config.styles;
+		const {height, maxWidth, minWidth, width} = item.config.styles;
 
 		const style = {};
 
@@ -70,7 +70,14 @@ const RowWithControls = React.forwardRef(
 					className={classNames({
 						'align-bottom': verticalAlignment === 'bottom',
 						'align-middle': verticalAlignment === 'middle',
-						'page-editor__row': canUpdatePageStructure,
+						empty:
+							item.config.numberOfColumns === modulesPerRow &&
+							!item.children.some(
+								(childId) =>
+									layoutData.items[childId].children.length
+							) &&
+							!height,
+						'page-editor__row': canUpdateItemConfiguration,
 						'page-editor__row-overlay-grid': resizing,
 					})}
 					item={item}

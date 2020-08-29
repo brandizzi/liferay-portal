@@ -274,29 +274,10 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public void checkSystemRoles(long companyId) throws PortalException {
-		String companyIdHexString = StringUtil.toHexString(companyId);
+		Map<String, Role> companyRolesMap = new HashMap<>();
 
-		List<Role> roles = null;
-
-		try {
-			roles = roleFinder.findBySystem(companyId);
-		}
-		catch (Exception exception) {
-
-			// LPS-34324
-
-			runSQL("alter table Role_ add uuid_ VARCHAR(75) null");
-			runSQL("alter table Role_ add userId LONG");
-			runSQL("alter table Role_ add userName VARCHAR(75) null");
-			runSQL("alter table Role_ add createDate DATE null");
-			runSQL("alter table Role_ add modifiedDate DATE null");
-
-			roles = roleFinder.findBySystem(companyId);
-		}
-
-		for (Role role : roles) {
-			_systemRolesMap.put(
-				companyIdHexString.concat(role.getName()), role);
+		for (Role role : rolePersistence.findByCompanyId(companyId)) {
+			companyRolesMap.put(role.getName(), role);
 		}
 
 		// Regular roles
@@ -316,7 +297,8 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 
 			int type = RoleConstants.TYPE_REGULAR;
 
-			checkSystemRole(companyId, name, descriptionMap, type);
+			checkSystemRole(
+				companyRolesMap, companyId, name, descriptionMap, type);
 		}
 
 		// Organization roles
@@ -337,7 +319,8 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 
 			int type = RoleConstants.TYPE_ORGANIZATION;
 
-			checkSystemRole(companyId, name, descriptionMap, type);
+			checkSystemRole(
+				companyRolesMap, companyId, name, descriptionMap, type);
 		}
 
 		// Site roles
@@ -357,7 +340,8 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 
 			int type = RoleConstants.TYPE_SITE;
 
-			checkSystemRole(companyId, name, descriptionMap, type);
+			checkSystemRole(
+				companyRolesMap, companyId, name, descriptionMap, type);
 		}
 
 		String[] allSystemRoles = ArrayUtil.append(
@@ -582,17 +566,8 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 	 *         with the name could not be found in the company
 	 */
 	@Override
-	@Transactional(enabled = false)
 	public Role fetchRole(long companyId, String name) {
-		String companyIdHexString = StringUtil.toHexString(companyId);
-
-		Role role = _systemRolesMap.get(companyIdHexString.concat(name));
-
-		if (role != null) {
-			return role;
-		}
-
-		return roleLocalService.loadFetchRole(companyId, name);
+		return rolePersistence.fetchByC_N(companyId, name);
 	}
 
 	@Override
@@ -814,17 +789,8 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 	 * @return the role with the name
 	 */
 	@Override
-	@Transactional(enabled = false)
 	public Role getRole(long companyId, String name) throws PortalException {
-		String companyIdHexString = StringUtil.toHexString(companyId);
-
-		Role role = _systemRolesMap.get(companyIdHexString.concat(name));
-
-		if (role != null) {
-			return role;
-		}
-
-		return roleLocalService.loadGetRole(companyId, name);
+		return rolePersistence.findByC_N(companyId, name);
 	}
 
 	/**
@@ -1229,7 +1195,10 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 	 * @param  name the role's name (optionally <code>null</code>)
 	 * @return the role with the name, or <code>null</code> if a role with the
 	 *         name could not be found in the company
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #fetchRole(long, String)}
 	 */
+	@Deprecated
 	@Override
 	public Role loadFetchRole(long companyId, String name) {
 		return rolePersistence.fetchByC_N(companyId, name);
@@ -1241,7 +1210,10 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 	 * @param  companyId the primary key of the company
 	 * @param  name the role's name
 	 * @return the role with the name in the company
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getRole(long, String)}
 	 */
+	@Deprecated
 	@Override
 	public Role loadGetRole(long companyId, String name)
 		throws PortalException {
@@ -1571,15 +1543,11 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 	}
 
 	protected void checkSystemRole(
-			long companyId, String name, Map<Locale, String> descriptionMap,
-			int type)
+			Map<String, Role> companyRolesMap, long companyId, String name,
+			Map<Locale, String> descriptionMap, int type)
 		throws PortalException {
 
-		String companyIdHexString = StringUtil.toHexString(companyId);
-
-		String key = companyIdHexString.concat(name);
-
-		Role role = _systemRolesMap.get(key);
+		Role role = companyRolesMap.get(name);
 
 		try {
 			if (role == null) {
@@ -1620,8 +1588,6 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 				initPersonalControlPanelPortletsPermissions(role);
 			}
 		}
-
-		_systemRolesMap.put(key, role);
 	}
 
 	protected String[] getDefaultControlPanelPortlets() {
@@ -1773,7 +1739,5 @@ public class RoleLocalServiceImpl extends RoleLocalServiceBaseImpl {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		RoleLocalServiceImpl.class);
-
-	private final Map<String, Role> _systemRolesMap = new HashMap<>();
 
 }

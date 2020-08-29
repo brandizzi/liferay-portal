@@ -53,7 +53,9 @@ definition {
 	}
 
 	macro duplicateField {
-		Click(locator1 = "Form#SIDEBAR_ELLIPSIS");
+		while (IsElementNotPresent(locator1 = "Form#SIDEBAR_MENUITEM_DUPLICATE_FIELD")) {
+			Click(locator1 = "Form#SIDEBAR_ELLIPSIS");
+		}
 
 		AssertClick(
 			locator1 = "Form#SIDEBAR_MENUITEM_DUPLICATE_FIELD",
@@ -398,8 +400,8 @@ definition {
 	macro selectGridRadioOption {
 		var key_categoryColumnName = "${categoryColumnName}";
 		var key_optionRowName = "${optionRowName}";
-		var optionNumber = ${optionNumber} - 1;
-		var key_optionNumber = "grid_${optionNumber}_${optionNumber}";
+		var optionNumber = ${optionNumber};
+		var key_optionNumber = "Row: Option ${optionNumber}, Column: Category ${optionNumber}";
 		var key_fieldName = "${fieldName}";
 
 		Click.clickNoWaitForVisible(locator1 = "FormFields#GRID_RADIO_OPTIONS");

@@ -18,9 +18,7 @@ import uuidv4 from 'uuid/v4';
 import MessageQueue from './messageQueue';
 import {
 	FLUSH_INTERVAL,
-	LIMIT_FAILED_ATTEMPTS,
 	QUEUE_STORAGE_LIMIT,
-	REQUEST_TIMEOUT,
 	STORAGE_KEY_CONTEXTS,
 	STORAGE_KEY_MESSAGES,
 } from './utils/constants';
@@ -120,8 +118,6 @@ class EventQueue {
 		if (this.flushInterval) {
 			clearInterval(this.flushInterval);
 		}
-
-		this._messageQueue.dispose();
 	}
 
 	/**
@@ -261,18 +257,11 @@ class EventQueue {
 			config: {endpointUrl},
 		} = this.analyticsInstance;
 
-		const messageQueue = new MessageQueue(this.keys.messageQueue, {
-			maxRetries: LIMIT_FAILED_ATTEMPTS,
-			processFn: (item, done) => {
-				return client
-					.sendWithTimeout({
-						payload: item,
-						timeout: REQUEST_TIMEOUT,
-						url: endpointUrl,
-					})
-					.then(() => done(true))
-					.catch(() => done(false));
-			},
+		const messageQueue = new MessageQueue(this.keys.messageQueue);
+
+		client.addQueue(messageQueue, {
+			endpointUrl,
+			name: this.keys.messageQueue,
 		});
 
 		this._messageQueue = messageQueue;

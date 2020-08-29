@@ -14,8 +14,10 @@
 
 package com.liferay.analytics.settings.web.internal.portlet.action;
 
+import com.liferay.analytics.settings.web.internal.display.context.FieldDisplayContext;
 import com.liferay.configuration.admin.constants.ConfigurationAdminPortletKeys;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import java.util.Dictionary;
@@ -42,10 +44,14 @@ public class EditSyncedContactsFieldsMVCActionCommand
 		ActionRequest actionRequest,
 		Dictionary<String, Object> configurationProperties) {
 
-		String[] syncedContactFieldNames = ParamUtil.getStringValues(
-			actionRequest, "syncedContactFieldNames");
-		String[] syncedUserFieldNames = ParamUtil.getStringValues(
-			actionRequest, "syncedUserFieldNames");
+		String[] syncedContactFieldNames = ArrayUtil.append(
+			FieldDisplayContext.REQUIRED_CONTACT_FIELD_NAMES,
+			ParamUtil.getStringValues(
+				actionRequest, "syncedContactFieldNames"));
+
+		String[] syncedUserFieldNames = ArrayUtil.append(
+			FieldDisplayContext.REQUIRED_USER_FIELD_NAMES,
+			ParamUtil.getStringValues(actionRequest, "syncedUserFieldNames"));
 
 		configurationProperties.put(
 			"syncedContactFieldNames", syncedContactFieldNames);

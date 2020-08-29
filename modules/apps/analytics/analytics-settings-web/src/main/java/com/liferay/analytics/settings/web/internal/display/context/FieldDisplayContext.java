@@ -19,14 +19,20 @@ import com.liferay.analytics.settings.web.internal.constants.AnalyticsSettingsWe
 import com.liferay.analytics.settings.web.internal.model.Field;
 import com.liferay.analytics.settings.web.internal.search.FieldChecker;
 import com.liferay.analytics.settings.web.internal.search.FieldSearch;
+import com.liferay.analytics.settings.web.internal.user.AnalyticsUsersManager;
+import com.liferay.expando.kernel.model.ExpandoColumn;
+import com.liferay.expando.kernel.model.ExpandoColumnConstants;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.TreeMapBuilder;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -36,6 +42,14 @@ import javax.portlet.RenderResponse;
  * @author Rachael Koestartyo
  */
 public class FieldDisplayContext {
+
+	public static final String[] REQUIRED_CONTACT_FIELD_NAMES = {
+		"classPK", "contactId", "createDate", "emailAddress", "modifiedDate"
+	};
+
+	public static final String[] REQUIRED_USER_FIELD_NAMES = {
+		"createDate", "emailAddress", "modifiedDate", "userId", "uuid"
+	};
 
 	public FieldDisplayContext(
 		String mvcRenderCommandName, RenderRequest renderRequest,
@@ -48,6 +62,14 @@ public class FieldDisplayContext {
 		_analyticsConfiguration =
 			(AnalyticsConfiguration)renderRequest.getAttribute(
 				AnalyticsSettingsWebKeys.ANALYTICS_CONFIGURATION);
+		_analyticsUsersManager =
+			(AnalyticsUsersManager)renderRequest.getAttribute(
+				AnalyticsSettingsWebKeys.ANALYTICS_USERS_MANAGER);
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)_renderRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		_companyId = themeDisplay.getCompanyId();
 	}
 
 	public FieldSearch getFieldSearch() {
@@ -60,7 +82,7 @@ public class FieldDisplayContext {
 				_mvcRenderCommandName,
 				"/analytics_settings/edit_synced_contacts_fields")) {
 
-			for (String fieldName : _requiredContactFieldNames) {
+			for (String fieldName : REQUIRED_CONTACT_FIELD_NAMES) {
 				fields.add(
 					new Field(
 						"Default Field", _contactFieldNames.get(fieldName),
@@ -70,7 +92,9 @@ public class FieldDisplayContext {
 			for (Map.Entry<String, String> entry :
 					_contactFieldNames.entrySet()) {
 
-				if (_requiredContactFieldNames.contains(entry.getKey())) {
+				if (ArrayUtil.contains(
+						REQUIRED_CONTACT_FIELD_NAMES, entry.getKey())) {
+
 					continue;
 				}
 
@@ -82,17 +106,18 @@ public class FieldDisplayContext {
 			fieldSearch.setRowChecker(
 				new FieldChecker(
 					_mvcRenderCommandName, _renderResponse,
-					SetUtil.fromList(_requiredContactFieldNames),
+					SetUtil.fromArray(REQUIRED_CONTACT_FIELD_NAMES),
 					SetUtil.fromArray(
 						_analyticsConfiguration.syncedContactFieldNames())));
 			fieldSearch.setTotal(
-				_contactFieldNames.size() - _requiredContactFieldNames.size());
+				_contactFieldNames.size() -
+					REQUIRED_CONTACT_FIELD_NAMES.length);
 		}
 		else if (StringUtil.equalsIgnoreCase(
 					_mvcRenderCommandName,
 					"/analytics_settings/edit_synced_users_fields")) {
 
-			for (String fieldName : _requiredUserFieldNames) {
+			for (String fieldName : REQUIRED_USER_FIELD_NAMES) {
 				fields.add(
 					new Field(
 						"Default Field", _userFieldNames.get(fieldName),
@@ -100,7 +125,9 @@ public class FieldDisplayContext {
 			}
 
 			for (Map.Entry<String, String> entry : _userFieldNames.entrySet()) {
-				if (_requiredUserFieldNames.contains(entry.getKey())) {
+				if (ArrayUtil.contains(
+						REQUIRED_USER_FIELD_NAMES, entry.getKey())) {
+
 					continue;
 				}
 
@@ -109,14 +136,26 @@ public class FieldDisplayContext {
 						"Default Field", entry.getValue(), entry.getKey()));
 			}
 
+			Map<String, String> userCustomFieldNames =
+				_getUserCustomFieldNames();
+
+			for (Map.Entry<String, String> entry :
+					userCustomFieldNames.entrySet()) {
+
+				fields.add(
+					new Field(
+						"Custom Field", entry.getValue(), entry.getKey()));
+			}
+
 			fieldSearch.setRowChecker(
 				new FieldChecker(
 					_mvcRenderCommandName, _renderResponse,
-					SetUtil.fromList(_requiredUserFieldNames),
+					SetUtil.fromArray(REQUIRED_USER_FIELD_NAMES),
 					SetUtil.fromArray(
 						_analyticsConfiguration.syncedUserFieldNames())));
 			fieldSearch.setTotal(
-				_userFieldNames.size() - _requiredUserFieldNames.size());
+				_userFieldNames.size() + userCustomFieldNames.size() -
+					REQUIRED_USER_FIELD_NAMES.length);
 		}
 
 		fieldSearch.setResults(fields);
@@ -134,6 +173,58 @@ public class FieldDisplayContext {
 		portletURL.setParameter("mvcRenderCommandName", _mvcRenderCommandName);
 
 		return portletURL;
+	}
+
+	private String _getDataType(int type) {
+		if ((type == ExpandoColumnConstants.BOOLEAN) ||
+			(type == ExpandoColumnConstants.BOOLEAN_ARRAY)) {
+
+			return "Boolean";
+		}
+		else if ((type == ExpandoColumnConstants.DATE) ||
+				 (type == ExpandoColumnConstants.DATE_ARRAY)) {
+
+			return "Date";
+		}
+		else if ((type == ExpandoColumnConstants.DOUBLE) ||
+				 (type == ExpandoColumnConstants.DOUBLE_ARRAY) ||
+				 (type == ExpandoColumnConstants.FLOAT) ||
+				 (type == ExpandoColumnConstants.FLOAT_ARRAY)) {
+
+			return "Decimal";
+		}
+		else if ((type == ExpandoColumnConstants.INTEGER) ||
+				 (type == ExpandoColumnConstants.INTEGER_ARRAY)) {
+
+			return "Integer";
+		}
+		else if ((type == ExpandoColumnConstants.LONG) ||
+				 (type == ExpandoColumnConstants.LONG_ARRAY)) {
+
+			return "Long";
+		}
+		else if ((type == ExpandoColumnConstants.NUMBER) ||
+				 (type == ExpandoColumnConstants.NUMBER_ARRAY) ||
+				 (type == ExpandoColumnConstants.SHORT) ||
+				 (type == ExpandoColumnConstants.SHORT_ARRAY)) {
+
+			return "Number";
+		}
+
+		return "String";
+	}
+
+	private Map<String, String> _getUserCustomFieldNames() {
+		Map<String, String> userCustomFieldNames = new TreeMap<>();
+
+		for (ExpandoColumn expandoColumn :
+				_analyticsUsersManager.getUserExpandoColumns(_companyId)) {
+
+			userCustomFieldNames.put(
+				expandoColumn.getName(), _getDataType(expandoColumn.getType()));
+		}
+
+		return userCustomFieldNames;
 	}
 
 	private static final Map<String, String> _contactFieldNames =
@@ -190,12 +281,6 @@ public class FieldDisplayContext {
 		).put(
 			"twitterSn", "String"
 		).build();
-	private static final List<String> _requiredContactFieldNames =
-		Arrays.asList(
-			"classPK", "contactId", "createDate", "emailAddress",
-			"modifiedDate");
-	private static final List<String> _requiredUserFieldNames = Arrays.asList(
-		"createDate", "emailAddress", "modifiedDate", "userId", "uuid");
 	private static final Map<String, String> _userFieldNames =
 		TreeMapBuilder.put(
 			"agreedToTermsOfUse", "Boolean"
@@ -252,6 +337,8 @@ public class FieldDisplayContext {
 		).build();
 
 	private final AnalyticsConfiguration _analyticsConfiguration;
+	private final AnalyticsUsersManager _analyticsUsersManager;
+	private final long _companyId;
 	private final String _mvcRenderCommandName;
 	private final RenderRequest _renderRequest;
 	private final RenderResponse _renderResponse;

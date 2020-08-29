@@ -14,11 +14,7 @@ import {createMemoryHistory} from 'history';
 import React from 'react';
 import {HashRouter} from 'react-router-dom';
 
-export default ({
-	children,
-	appContext = {},
-	history = createMemoryHistory(),
-}) => {
+export default ({appContext, children, history = createMemoryHistory()}) => {
 	return (
 		<AppContextProvider {...appContext}>
 			<div className="tools-control-group">

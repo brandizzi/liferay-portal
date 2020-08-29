@@ -87,7 +87,7 @@ ItemSelectorRepositoryEntryManagementToolbarDisplayContext itemSelectorRepositor
 	long folderId = ParamUtil.getLong(request, "folderId");
 
 	if (showBreadcrumb && !showSearchInfo) {
-		ItemSelectorRepositoryEntryBrowserUtil.addPortletBreadcrumbEntries(folderId, displayStyle, request, liferayPortletResponse, PortletURLUtil.clone(portletURL, liferayPortletResponse));
+		ItemSelectorRepositoryEntryBrowserUtil.addPortletBreadcrumbEntries(folderId, displayStyle, request, liferayPortletRequest, liferayPortletResponse, PortletURLUtil.clone(portletURL, liferayPortletResponse));
 	%>
 
 		<liferay-ui:breadcrumb
@@ -232,9 +232,7 @@ ItemSelectorRepositoryEntryManagementToolbarDisplayContext itemSelectorRepositor
 						}
 
 						if (folder != null) {
-							PortletURL viewFolderURL = PortletURLUtil.clone(portletURL, liferayPortletResponse);
-
-							viewFolderURL.setParameter("folderId", String.valueOf(folder.getFolderId()));
+							PortletURL viewFolderURL = EntryURLUtil.getFolderPortletURL(folder, liferayPortletRequest, liferayPortletResponse, portletURL);
 						%>
 
 							<liferay-ui:search-container-column-text
@@ -317,9 +315,7 @@ ItemSelectorRepositoryEntryManagementToolbarDisplayContext itemSelectorRepositor
 								row.setCssClass("entry-card lfr-asset-folder");
 
 								if (folder != null) {
-									PortletURL viewFolderURL = PortletURLUtil.clone(portletURL, liferayPortletResponse);
-
-									viewFolderURL.setParameter("folderId", String.valueOf(folder.getFolderId()));
+									PortletURL viewFolderURL = EntryURLUtil.getFolderPortletURL(folder, liferayPortletRequest, liferayPortletResponse, portletURL);
 								%>
 
 									<liferay-ui:search-container-column-text
@@ -464,9 +460,7 @@ ItemSelectorRepositoryEntryManagementToolbarDisplayContext itemSelectorRepositor
 
 								<%
 								if (folder != null) {
-									PortletURL viewFolderURL = PortletURLUtil.clone(portletURL, liferayPortletResponse);
-
-									viewFolderURL.setParameter("folderId", String.valueOf(folder.getFolderId()));
+									PortletURL viewFolderURL = EntryURLUtil.getFolderPortletURL(folder, liferayPortletRequest, liferayPortletResponse, portletURL);
 								%>
 
 									<liferay-ui:search-container-column-icon

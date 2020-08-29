@@ -310,12 +310,13 @@ class DataLayoutBuilder extends React.Component {
 		const {
 			editingLanguageId = themeDisplay.getDefaultLanguageId(),
 		} = this.props;
+		const {defaultLanguageId, name} = dataDefinition;
 
 		return {
 			description: dataDefinition.description[editingLanguageId],
 			id: dataDefinition.id,
 			localizedDescription: dataDefinition.description,
-			localizedTitle: dataDefinition.name,
+			localizedTitle: name,
 			pages: dataLayout.dataLayoutPages.map((dataLayoutPage) => ({
 				rows: dataLayoutPage.dataLayoutRows.map((dataLayoutRow) => ({
 					columns: dataLayoutRow.dataLayoutColumns.map(
@@ -328,7 +329,7 @@ class DataLayoutBuilder extends React.Component {
 					),
 				})),
 			})),
-			title: dataDefinition.name[editingLanguageId],
+			title: name[editingLanguageId] || name[defaultLanguageId],
 		};
 	}
 
@@ -517,17 +518,20 @@ class DataLayoutBuilder extends React.Component {
 			availableLanguageIds,
 		});
 
+		const props = {
+			availableLanguageIds,
+			defaultLanguageId,
+			editingLanguageId,
+		};
+
 		layoutProvider.props = {
 			...layoutProvider.props,
-			availableLanguageIds,
-			editingLanguageId,
+			...props,
 		};
 
 		this.formBuilderWithLayoutProvider.props.layoutProviderProps = {
 			...this.formBuilderWithLayoutProvider.props.layoutProviderProps,
-			availableLanguageIds,
-			defaultLanguageId,
-			editingLanguageId,
+			...props,
 		};
 
 		this.formBuilderWithLayoutProvider.props.layoutProviderProps = this.formBuilderWithLayoutProvider.props.layoutProviderProps; // eslint-disable-line

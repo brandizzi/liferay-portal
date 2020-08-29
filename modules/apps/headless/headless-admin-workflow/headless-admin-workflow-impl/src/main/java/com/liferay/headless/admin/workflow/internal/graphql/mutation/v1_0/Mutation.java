@@ -24,11 +24,13 @@ import com.liferay.headless.admin.workflow.dto.v1_0.WorkflowTaskAssignToRole;
 import com.liferay.headless.admin.workflow.dto.v1_0.WorkflowTaskAssignToUser;
 import com.liferay.headless.admin.workflow.dto.v1_0.WorkflowTaskAssignableUsers;
 import com.liferay.headless.admin.workflow.dto.v1_0.WorkflowTaskIds;
+import com.liferay.headless.admin.workflow.dto.v1_0.WorkflowTaskTransitions;
 import com.liferay.headless.admin.workflow.dto.v1_0.WorkflowTasksBulkSelection;
 import com.liferay.headless.admin.workflow.resource.v1_0.WorkflowDefinitionResource;
 import com.liferay.headless.admin.workflow.resource.v1_0.WorkflowInstanceResource;
 import com.liferay.headless.admin.workflow.resource.v1_0.WorkflowTaskAssignableUsersResource;
 import com.liferay.headless.admin.workflow.resource.v1_0.WorkflowTaskResource;
+import com.liferay.headless.admin.workflow.resource.v1_0.WorkflowTaskTransitionsResource;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.search.Sort;
@@ -89,6 +91,15 @@ public class Mutation {
 
 		_workflowTaskAssignableUsersResourceComponentServiceObjects =
 			workflowTaskAssignableUsersResourceComponentServiceObjects;
+	}
+
+	public static void
+		setWorkflowTaskTransitionsResourceComponentServiceObjects(
+			ComponentServiceObjects<WorkflowTaskTransitionsResource>
+				workflowTaskTransitionsResourceComponentServiceObjects) {
+
+		_workflowTaskTransitionsResourceComponentServiceObjects =
+			workflowTaskTransitionsResourceComponentServiceObjects;
 	}
 
 	@GraphQLField
@@ -352,6 +363,19 @@ public class Mutation {
 					postWorkflowTaskAssignableUser(workflowTaskIds));
 	}
 
+	@GraphQLField
+	public WorkflowTaskTransitions createWorkflowTaskTransition(
+			@GraphQLName("workflowTaskIds") WorkflowTaskIds workflowTaskIds)
+		throws Exception {
+
+		return _applyComponentServiceObjects(
+			_workflowTaskTransitionsResourceComponentServiceObjects,
+			this::_populateResourceContext,
+			workflowTaskTransitionsResource ->
+				workflowTaskTransitionsResource.postWorkflowTaskTransition(
+					workflowTaskIds));
+	}
+
 	private <T, R, E1 extends Throwable, E2 extends Throwable> R
 			_applyComponentServiceObjects(
 				ComponentServiceObjects<T> componentServiceObjects,
@@ -457,6 +481,24 @@ public class Mutation {
 			_roleLocalService);
 	}
 
+	private void _populateResourceContext(
+			WorkflowTaskTransitionsResource workflowTaskTransitionsResource)
+		throws Exception {
+
+		workflowTaskTransitionsResource.setContextAcceptLanguage(
+			_acceptLanguage);
+		workflowTaskTransitionsResource.setContextCompany(_company);
+		workflowTaskTransitionsResource.setContextHttpServletRequest(
+			_httpServletRequest);
+		workflowTaskTransitionsResource.setContextHttpServletResponse(
+			_httpServletResponse);
+		workflowTaskTransitionsResource.setContextUriInfo(_uriInfo);
+		workflowTaskTransitionsResource.setContextUser(_user);
+		workflowTaskTransitionsResource.setGroupLocalService(
+			_groupLocalService);
+		workflowTaskTransitionsResource.setRoleLocalService(_roleLocalService);
+	}
+
 	private static ComponentServiceObjects<WorkflowDefinitionResource>
 		_workflowDefinitionResourceComponentServiceObjects;
 	private static ComponentServiceObjects<WorkflowInstanceResource>
@@ -465,6 +507,8 @@ public class Mutation {
 		_workflowTaskResourceComponentServiceObjects;
 	private static ComponentServiceObjects<WorkflowTaskAssignableUsersResource>
 		_workflowTaskAssignableUsersResourceComponentServiceObjects;
+	private static ComponentServiceObjects<WorkflowTaskTransitionsResource>
+		_workflowTaskTransitionsResourceComponentServiceObjects;
 
 	private AcceptLanguage _acceptLanguage;
 	private com.liferay.portal.kernel.model.Company _company;

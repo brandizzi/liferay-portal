@@ -20,7 +20,10 @@ definition {
 		}
 
 		if (isSet(webContentContent)) {
-			AlloyEditor.addContent(content = "${webContentContent}");
+			Type.typeCKEditorWaitForCKEditor(
+				key_fieldLabel = "content",
+				locator1 = "CKEditor#BODY_FIELD_WEB_CONTENT_ARTICLE",
+				value1 = "${webContentContent}");
 		}
 
 		if (isSet(viewableBy)) {
@@ -116,7 +119,10 @@ definition {
 	macro addFailWithoutRequiredCategoryAssetTypeCP {
 		PortletEntry.inputTitle(title = "Web Content Title");
 
-		AlloyEditor.addContent(content = "Web Content Content");
+		Type.typeCKEditorWaitForCKEditor(
+			key_fieldLabel = "content",
+			locator1 = "CKEditor#BODY_FIELD_WEB_CONTENT_ARTICLE",
+			value1 = "Web Content Content");
 
 		AssertClick(
 			locator1 = "Button#PUBLISH",
@@ -176,7 +182,10 @@ definition {
 		AssertElementNotPresent(locator1 = "TextInput#REQUIRED_ALERT");
 
 		if (isSet(webContentContent)) {
-			AlloyEditor.addContent(content = "${webContentContent}");
+			Type.typeCKEditorWaitForCKEditor(
+				key_fieldLabel = "content",
+				locator1 = "CKEditor#BODY_FIELD_WEB_CONTENT_ARTICLE",
+				value1 = "${webContentContent}");
 		}
 
 		AssertClick(
@@ -346,7 +355,7 @@ definition {
 			webContentContent = "${webContentContent}",
 			webContentTitle = "${webContentTitle}");
 
-		ItemSelector.gotoItemSelectorViaAlloyEditor();
+		ItemSelector.gotoItemSelectorViaCKEditor();
 
 		SelectFrame(locator1 = "IFrame#METADATA_SETS_IFRAME");
 
@@ -545,21 +554,17 @@ definition {
 		}
 
 		if (isSet(webContentHTML)) {
-			Type.typeEditor(
-				key_fieldName = "HTML",
-				locator1 = "DDMField#HTML",
+			Type.typeCKEditorWaitForCKEditor(
+				key_fieldLabel = "HTML",
+				locator1 = "CKEditor#BODY_FIELD_WEB_CONTENT_ARTICLE",
 				value1 = "${webContentHTML}");
 		}
 
 		if (isSet(webContentSourceHTML)) {
-			Click(
-				key_editor = "HTML",
-				locator1 = "AlloyEditor#EDITOR");
+			Click(locator1 = "CKEditor#TOOLBAR_SOURCE_BUTTON");
 
-			Click(locator1 = "Button#EDITOR_SWITCH");
-
-			Type.typeAceEditor(
-				locator1 = "TextArea#ACE_EDITOR",
+			Type(
+				locator1 = "CKEditor#BODY_FIELD_SOURCE_ON_2",
 				value1 = "${webContentSourceHTML}");
 		}
 
@@ -819,9 +824,7 @@ definition {
 
 		RecycleBin.emptyCP();
 
-		ProductMenu.gotoPortlet(
-			category = "Content &amp; Data",
-			portlet = "Web Content");
+		WebContentNavigator.openWebContentAdmin(siteURLKey = "${siteURLKey}");
 
 		AssertTextNotPresent(value1 = "${webContentTitle}");
 	}
@@ -867,7 +870,10 @@ definition {
 		WebContent.addCP(webContentTitle = "${webContentTitleEdit}");
 
 		if (isSet(webContentContentEdit)) {
-			AlloyEditor.addContent(content = "${webContentContentEdit}");
+			Type.typeCKEditorWaitForCKEditor(
+				key_fieldLabel = "content",
+				locator1 = "CKEditor#BODY_FIELD_WEB_CONTENT_ARTICLE",
+				value1 = "${webContentContentEdit}");
 		}
 
 		if (isSet(webContentSelectWCFile)) {
@@ -1016,7 +1022,10 @@ definition {
 		WebContent.addCP(webContentTitle = "");
 
 		if (isSet(webContentContent)) {
-			AlloyEditor.addContent(content = "${webContentContent}");
+			Type.typeCKEditorWaitForCKEditor(
+				key_fieldLabel = "content",
+				locator1 = "CKEditor#BODY_FIELD_WEB_CONTENT_ARTICLE",
+				value1 = "${webContentContent}");
 		}
 
 		AssertClick(
@@ -1036,7 +1045,10 @@ definition {
 				value1 = "${webContentText}");
 		}
 		else {
-			AlloyEditor.addContent(content = "${webContentContentEdit}");
+			Type.typeCKEditorWaitForCKEditor(
+				key_fieldLabel = "content",
+				locator1 = "CKEditor#BODY_FIELD_WEB_CONTENT_ARTICLE",
+				value1 = "${webContentContentEdit}");
 		}
 
 		Click(
@@ -1073,7 +1085,10 @@ definition {
 		WebContent.addCP(webContentTitle = "${webContentTitleEdit}");
 
 		if (isSet(webContentContentEdit)) {
-			AlloyEditor.addContent(content = "${webContentContentEdit}");
+			Type.typeCKEditorWaitForCKEditor(
+				key_fieldLabel = "content",
+				locator1 = "CKEditor#BODY_FIELD_WEB_CONTENT_ARTICLE",
+				value1 = "${webContentContentEdit}");
 		}
 
 		if (isSet(webContentSelectWCFile)) {
@@ -1670,9 +1685,12 @@ definition {
 		}
 
 		if (isSet(webContentHTML)) {
-			AssertTextEquals.assertPartialText(
-				key_editor = "HTML",
-				locator1 = "AlloyEditor#EDITOR",
+			SelectFrame.selectFrameNoLoading(
+				key_fieldLabel = "HTML",
+				locator1 = "CKEditor#BODY_FIELD_IFRAME_WEB_CONTENT_ARTICLE");
+
+			AssertTextEquals(
+				locator1 = "CKEditor#BODY",
 				value1 = "${webContentHTML}");
 
 			SelectFrame(value1 = "relative=top");
@@ -2060,9 +2078,12 @@ definition {
 			locator1 = "TextInput#TITLE",
 			value1 = "${webContentTitle}");
 
+		SelectFrame.selectFrameNoLoading(
+			key_fieldLabel = "content",
+			locator1 = "CKEditor#BODY_FIELD_IFRAME_WEB_CONTENT_ARTICLE");
+
 		AssertTextEquals(
-			key_editor = "content",
-			locator1 = "AlloyEditor#EDITOR",
+			locator1 = "CKEditor#BODY",
 			value1 = "${webContentContent}");
 
 		SelectFrameTop();
@@ -2142,9 +2163,12 @@ definition {
 			locator1 = "TextInput#TITLE",
 			value1 = "${webContentTitle}");
 
+		SelectFrame.selectFrameNoLoading(
+			key_fieldLabel = "content",
+			locator1 = "CKEditor#BODY_FIELD_IFRAME_WEB_CONTENT_ARTICLE");
+
 		AssertTextEquals(
-			key_editor = "content",
-			locator1 = "AlloyEditor#EDITOR",
+			locator1 = "CKEditor#BODY",
 			value1 = "${webContentContent}");
 
 		SelectFrameTop();
@@ -2282,9 +2306,12 @@ definition {
 			locator1 = "TextInput#TITLE",
 			value1 = "${webContentTitle}");
 
+		SelectFrame.selectFrameNoLoading(
+			key_fieldLabel = "content",
+			locator1 = "CKEditor#BODY_FIELD_IFRAME_WEB_CONTENT_ARTICLE");
+
 		AssertTextEquals(
-			key_editor = "content",
-			locator1 = "AlloyEditor#EDITOR",
+			locator1 = "CKEditor#BODY",
 			value1 = "${webContentContent}");
 
 		SelectFrameTop();
@@ -2312,10 +2339,15 @@ definition {
 			locator1 = "TextInput#TITLE",
 			value1 = "${webContentTitle}");
 
+		SelectFrame.selectFrameNoLoading(
+			key_fieldLabel = "content",
+			locator1 = "CKEditor#BODY_FIELD_IFRAME_WEB_CONTENT_ARTICLE");
+
 		AssertTextEquals(
-			key_editor = "content",
-			locator1 = "AlloyEditor#EDITOR",
+			locator1 = "CKEditor#BODY",
 			value1 = "${webContentContent}");
+
+		SelectFrameTop();
 	}
 
 }

@@ -98,12 +98,11 @@ definition {
 		Form.save();
 	}
 
-	@ignore = "true"
 	@priority = "5"
 	test AddElementSetsWithTranslation {
 		property test.name.skip.portal.instance = "Forms#AddElementSetsWithTranslation";
 		property testray.component.names = "Training";
-		property portal.acceptance = "true";
+		property portal.acceptance = "quarantine";
 
 		Navigator.openURL();
 
@@ -164,17 +163,13 @@ definition {
 
 		FormsAdminNavigator.gotoEditField(fieldName = "Text Field Required");
 
-		Form.editElementSetFieldLabel(
-			fieldName = "TextFieldRequired",
-			fieldValue = "表格文本");
+		Form.editElementSetFieldLabel(fieldValue = "表格文本");
 
 		Form.closeSidebar();
 
 		FormsAdminNavigator.gotoEditField(fieldName = "Select Repeatable");
 
-		Form.editElementSetFieldLabel(
-			fieldName = "SelectRepeatable",
-			fieldValue = "表单选择");
+		Form.editElementSetFieldLabel(fieldValue = "表单选择");
 
 		Form.closeSidebar();
 
@@ -204,11 +199,17 @@ definition {
 
 		FormsAdminNavigator.gotoEditField(fieldName = "Text Field Required");
 
-		FormFields.editFieldName(fieldValue = "FirstTextField");
+		Form.gotoAdvancedTab();
+
+		var textFieldRequiredName1 = FormFields.getFieldName();
+
+		Form.closeSidebar();
+
+		FormsAdminNavigator.gotoEditField(fieldName = "Select Repeatable");
 
 		Form.gotoAdvancedTab();
 
-		var fieldName1 = FormFields.getFieldName();
+		var selectRepeatableName1 = FormFields.getFieldName();
 
 		Form.closeSidebar();
 
@@ -216,15 +217,15 @@ definition {
 
 		FormFields.viewTextLabel(
 			fieldLabel = "表格文本",
-			fieldName = "${fieldName1}");
+			fieldName = "${textFieldRequiredName1}");
 
 		FormFields.viewSelectLabel(
 			fieldLabel = "表单选择",
-			fieldName = "SelectRepeatable");
+			fieldName = "${selectRepeatableName1}");
 
 		FormFields.viewRequiredAsterisk();
 
-		FormsAdminNavigator.gotoEditField(fieldName = "SelectRepeatable");
+		FormsAdminNavigator.gotoEditField(fieldName = "${selectRepeatableName1}");
 
 		Form.gotoAdvancedTab();
 
@@ -238,11 +239,23 @@ definition {
 			elementSetTitle = "Element Set 1",
 			fieldPositionNumber = "4");
 
-		FormsAdminNavigator.gotoEditField(fieldName = "TextFieldRequired");
+		FormsAdminNavigator.gotoEditField(
+			fieldName = "Text Field Required",
+			fieldPositionNumber = "2");
 
 		Form.gotoAdvancedTab();
 
-		var fieldName2 = FormFields.getFieldName();
+		var textFieldRequiredName2 = FormFields.getFieldName();
+
+		Form.closeSidebar();
+
+		FormsAdminNavigator.gotoEditField(
+			fieldName = "Select Repeatable",
+			fieldPositionNumber = "2");
+
+		Form.gotoAdvancedTab();
+
+		var selectRepeatableName2 = FormFields.getFieldName();
 
 		Form.closeSidebar();
 
@@ -254,19 +267,19 @@ definition {
 
 		FormFields.viewTextLabel(
 			fieldLabel = "Text Field Required",
-			fieldName = "${fieldName1}");
+			fieldName = "${textFieldRequiredName1}");
 
 		FormFields.viewSelectLabel(
 			fieldLabel = "Select Repeatable",
-			fieldName = "SelectRepeatable");
+			fieldName = "${selectRepeatableName1}");
 
 		FormFields.viewTextLabel(
 			fieldLabel = "Text Field Required",
-			fieldName = "${fieldName2}");
+			fieldName = "${textFieldRequiredName2}");
 
 		FormFields.viewSelectLabel(
 			fieldLabel = "Select Repeatable",
-			fieldName = "SelectRepeatable1");
+			fieldName = "${selectRepeatableName2}");
 
 		FormFields.viewRequiredAsterisk();
 
@@ -274,28 +287,28 @@ definition {
 
 		FormFields.viewTextLabel(
 			fieldLabel = "表格文本",
-			fieldName = "${fieldName1}");
+			fieldName = "${textFieldRequiredName1}");
 
 		FormFields.viewSelectLabel(
 			fieldLabel = "表单选择",
-			fieldName = "SelectRepeatable");
+			fieldName = "${selectRepeatableName1}");
 
 		FormFields.viewTextLabel(
 			fieldLabel = "表格文本",
-			fieldName = "${fieldName2}");
+			fieldName = "${textFieldRequiredName2}");
 
 		FormFields.viewSelectLabel(
 			fieldLabel = "表单选择",
-			fieldName = "SelectRepeatable1");
+			fieldName = "${selectRepeatableName2}");
 
 		FormFields.viewRequiredAsterisk();
 
 		FormFields.editText(
-			fieldName = "${fieldName1}",
+			fieldName = "${textFieldRequiredName1}",
 			fieldValue = "文本输入中文");
 
 		FormFields.editText(
-			fieldName = "${fieldName2}",
+			fieldName = "${textFieldRequiredName2}",
 			fieldValue = "文本再次输入中文");
 
 		FormPortlet.submitLocalizedSuccessfully(buttonName = "提交");
@@ -316,19 +329,35 @@ definition {
 			elementSetTitle = "Element Set 1",
 			fieldPositionNumber = "1");
 
+		FormsAdminNavigator.gotoEditField(fieldName = "Text Field Required");
+
+		Form.gotoAdvancedTab();
+
+		var textFieldRequiredName3 = FormFields.getFieldName();
+
+		Form.closeSidebar();
+
+		FormsAdminNavigator.gotoEditField(fieldName = "Select Repeatable");
+
+		Form.gotoAdvancedTab();
+
+		var selectRepeatableName3 = FormFields.getFieldName();
+
+		Form.closeSidebar();
+
 		Form.addTranslation(localizedLanguage = "Chinese (China)");
 
 		FormFields.viewTextLabel(
 			fieldLabel = "表格文本",
-			fieldName = "TextFieldRequired");
+			fieldName = "${textFieldRequiredName3}");
 
 		FormFields.viewSelectLabel(
 			fieldLabel = "表单选择",
-			fieldName = "SelectRepeatable");
+			fieldName = "${selectRepeatableName3}");
 
 		FormFields.viewRequiredAsterisk();
 
-		FormsAdminNavigator.gotoEditField(fieldName = "SelectRepeatable");
+		FormsAdminNavigator.gotoEditField(fieldName = "表单选择");
 
 		Form.gotoAdvancedTab();
 
@@ -559,6 +588,7 @@ definition {
 	test AddFormWithDuplicateTextFields {
 		property test.name.skip.portal.instance = "Forms#AddFormWithDuplicateTextFields";
 		property portal.acceptance = "quarantine";
+
 		Navigator.openURL();
 
 		ProductMenu.gotoPortlet(
@@ -577,13 +607,21 @@ definition {
 
 		FormFields.duplicateField();
 
-		FormFields.viewFieldName(fieldName = "CopyOfTextField");
+		Form.gotoAdvancedTab();
+
+		var textFieldName = FormFields.getFieldName();
+
+		Form.gotoBasicTab();
+
+		FormFields.viewTextLabel(
+			fieldLabel = "Copy of Text Field",
+			fieldName = "${textFieldName}");
 
 		Form.editFieldLabelMetal(fieldValue = "My New Text Field");
 
 		FormFields.viewTextLabel(
 			fieldLabel = "My New Text Field",
-			fieldName = "MyNewTextField");
+			fieldName = "${textFieldName}");
 
 		Form.closeSidebar();
 
@@ -1097,10 +1135,11 @@ definition {
 	}
 
 	@description = "This is a use case for LPS-98073."
-	@ignore = "true"
 	@priority = "5"
 	test CreateReadUpdateDeleteImageField {
+		property portal.acceptance = "quarantine";
 		property test.name.skip.portal.instance = "Forms#SubmitFormWithRequiredImageField";
+
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
 			portlet = "Forms");
@@ -1137,11 +1176,7 @@ definition {
 			locator1 = "FormFields#FIELD_HELPER_EDIT",
 			value1 = "Help Text");
 
-		Form.gotoPropertiesTab();
-
-		Type.clickAtType(
-			locator1 = "FormFields#FIELD_NAME_EDIT",
-			value1 = "Image Field Name");
+		Form.gotoAdvancedTab();
 
 		Click(locator1 = "FormFields#UPLOAD_PREDEFINED_VALUE");
 
@@ -1317,6 +1352,10 @@ definition {
 
 		Form.editFieldLabelMetal(fieldValue = "Text Field Page 1");
 
+		Form.gotoAdvancedTab();
+
+		var textFieldPage1Name = FormFields.getFieldName();
+
 		Form.closeSidebar();
 
 		Form.addPage(formAddNewPageNumber = "1");
@@ -1343,7 +1382,7 @@ definition {
 
 		FormFields.viewTextField(
 			fieldLabel = "Text Field Page 1",
-			fieldName = "TextFieldPage1");
+			fieldName = "${textFieldPage1Name}");
 	}
 
 	@description = "This is a use case for LPS-74997."
@@ -1509,11 +1548,10 @@ definition {
 			rowNumber = "3");
 	}
 
-	@ignore = "true"
 	@priority = "4"
 	test EditAllFormFieldNames {
 		property test.name.skip.portal.instance = "Forms#EditAllFormFieldNames";
-		property portal.acceptance = "true";
+		property portal.acceptance = "quarantine";
 
 		Navigator.openURL();
 
@@ -1960,7 +1998,7 @@ definition {
 	@priority = "4"
 	test EditTranslatedGridField {
 		property test.name.skip.portal.instance = "Forms#EditTranslatedGridField";
-		property portal.acceptance = "true";
+		property portal.acceptance = "quarantine";
 
 		Navigator.openURL();
 
@@ -3801,6 +3839,8 @@ definition {
 	@priority = "5"
 	test SubmitFormWithRequiredImageField {
 		property test.name.skip.portal.instance = "Forms#SubmitFormWithRequiredImageField";
+		property portal.acceptance = "quarantine";
+
 		ProductMenu.gotoPortlet(
 			category = "Content &amp; Data",
 			portlet = "Forms");
@@ -3827,13 +3867,14 @@ definition {
 			locator1 = "FormFields#FIELD_HELPER_EDIT",
 			value1 = "help");
 
-		Form.gotoPropertiesTab();
+		Form.gotoAdvancedTab();
 
 		FormFields.enableSwitcher(fieldName = "Repeatable");
 
 		Form.publishForm();
 
 		Form.assertFormWasPublished();
+
 		ProductMenu.gotoPortlet(
 			category = "Site Builder",
 			portlet = "Pages");
@@ -4552,11 +4593,10 @@ definition {
 	}
 
 	@description = "This is a use case for LPS-64305."
-	@ignore = "true"
 	@priority = "4"
 	test ViewDefaultFieldNamesWithPunctuationCharacters {
 		property test.name.skip.portal.instance = "Forms#ViewDefaultFieldNamesWithPunctuationCharacters";
-		property portal.acceptance = "true";
+		property portal.acceptance = "quarantine";
 
 		Navigator.openURL();
 
@@ -4572,21 +4612,21 @@ definition {
 
 		Form.addTextField(fieldPositionNumber = "1");
 
-		Form.editFieldLabelMetal(
-			fieldName = "Text",
-			fieldValue = ",-+!@#$%^*()=.?/;:{}[]\|");
+		Form.editFieldLabelMetal(fieldValue = ",-+!@#$%^*()=.?/;:{}[]\|");
 
-		FormFields.editFieldName(fieldValue = "_,-+!@#$%^*()=.?/;:{}[]\|");
+		Form.gotoAdvancedTab();
+
+		var textFieldName1 = FormFields.getFieldName();
 
 		Form.closeSidebar();
 
 		Form.addTextField(fieldPositionNumber = "2");
 
-		Form.editFieldLabelMetal(
-			fieldName = "JumpSheExclaimed",
-			fieldValue = "Jump, She exclaimed!");
+		Form.editFieldLabelMetal(fieldValue = "Jump, She exclaimed!");
 
-		FormFields.editFieldName(fieldValue = "Jump, She exclaimed!");
+		Form.gotoAdvancedTab();
+
+		var textFieldName2 = FormFields.getFieldName();
 
 		Form.closeSidebar();
 
@@ -4598,18 +4638,18 @@ definition {
 
 		FormFields.viewTextField(
 			fieldLabel = ",-+!@#$%^*()=.?/;:{}[]\|",
-			fieldName = "_");
+			fieldName = "${textFieldName1}");
 
 		FormFields.viewTextField(
 			fieldLabel = "Jump, She exclaimed!",
-			fieldName = "JumpSheexclaimed");
+			fieldName = "${textFieldName2}");
 
 		FormFields.editText(
-			fieldName = "_",
+			fieldName = "${textFieldName1}",
 			fieldValue = "1,2,3.");
 
 		FormFields.editText(
-			fieldName = "JumpSheexclaimed",
+			fieldName = "${textFieldName2}",
 			fieldValue = ",-+!@#$%^*()=.?/;:{}[]\|");
 
 		FormPortlet.submitSuccessfully();

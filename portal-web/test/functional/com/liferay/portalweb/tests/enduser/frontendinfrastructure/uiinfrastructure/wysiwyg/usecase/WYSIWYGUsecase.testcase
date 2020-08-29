@@ -181,13 +181,7 @@ definition {
 
 		PortletEntry.inputTitle(title = "Web Content Title");
 
-		Click.pauseClickAt(
-			key_editor = "content",
-			locator1 = "AlloyEditor#EDITOR");
-
-		Click(locator1 = "AlloyEditor#CONTENT_ADD_BUTTON");
-
-		Click.clickNoMouseOver(locator1 = "AlloyEditor#CONTENT_ADD_MENUBAR_IMAGE");
+		ItemSelector.gotoItemSelectorViaCKEditor();
 
 		ItemSelector.addFromURL(
 			imageSourceURL = "https://raw.githubusercontent.com/liferay/liferay-portal/master/portal-web/test/functional/com/liferay/portalweb/dependencies/Document_1.jpg",
@@ -200,28 +194,6 @@ definition {
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		AssertElementPresent(locator1 = "//img[contains(@src,'Document_1.jpg')]");
-	}
-
-	@description = "This is a use case for LPS-61676."
-	@priority = "4"
-	test RemoveAppliedStylingInAlloyEditor {
-		Navigator.openURL();
-
-		ProductMenu.gotoPortlet(
-			category = "Content &amp; Data",
-			portlet = "Web Content");
-
-		WebContentNavigator.gotoAddCP();
-
-		AlloyEditor.addContent(content = "This is a sentence");
-
-		AlloyEditor.toggleStylingInAlloyEditor(boldContent = "This is a sentence");
-
-		AlloyEditor.viewStylingInAlloyEditor(boldContent = "This is a sentence");
-
-		AlloyEditor.toggleStylingInAlloyEditor(boldContent = "This is a sentence");
-
-		AlloyEditor.viewNoStylingInAlloyEditor(boldContent = "This is a sentence");
 	}
 
 	@priority = "4"

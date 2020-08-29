@@ -207,31 +207,24 @@ public class WorkflowTaskPermissionCheckerTest extends PowerMockito {
 	}
 
 	@Test
-	public void testNotContentReviewerWithNoAssetViewPermissionHasNoPermission() {
-		long[] permissionCheckerRoleIds = randomPermissionCheckerRoleIds();
-
-		mockAssetRendererHasViewPermission(false);
-
-		Assert.assertFalse(
-			_workflowTaskPermissionChecker.hasPermission(
-				RandomTestUtil.randomLong(),
-				mockWorkflowTask(
-					Role.class.getName(), permissionCheckerRoleIds[0]),
-				mockPermissionChecker(
-					RandomTestUtil.randomLong(), permissionCheckerRoleIds,
-					false, false, false)));
-	}
-
-	@Test
-	public void testNotContentReviewerWithoutAssetViewPermissionHasNoPermission() {
-
-		// Checks permission on completed workflow task
-
+	public void testNotContentReviewerWithoutAssetViewPermissionHasNoPermissionOnCompletedTask() {
 		mockAssetRendererHasViewPermission(false);
 
 		Assert.assertFalse(
 			_workflowTaskPermissionChecker.hasPermission(
 				RandomTestUtil.randomLong(), mockCompletedWorkflowTask(),
+				mockPermissionChecker(
+					RandomTestUtil.randomLong(), new long[0], false, false,
+					false)));
+	}
+
+	@Test
+	public void testNotContentReviewerWithoutAssetViewPermissionHasNoPermissionOnPendingTask() {
+		mockAssetRendererHasViewPermission(false);
+
+		Assert.assertFalse(
+			_workflowTaskPermissionChecker.hasPermission(
+				RandomTestUtil.randomLong(), mockWorkflowTask(),
 				mockPermissionChecker(
 					RandomTestUtil.randomLong(), new long[0], false, false,
 					false)));

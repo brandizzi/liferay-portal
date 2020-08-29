@@ -488,6 +488,23 @@ public class FragmentCompositionLocalServiceUtil {
 
 	public static com.liferay.fragment.model.FragmentComposition
 			updateFragmentComposition(
+				long userId, long fragmentCompositionId,
+				long fragmentCollectionId, String name, String description,
+				String data, long previewFileEntryId, int status)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return getService().updateFragmentComposition(
+			userId, fragmentCompositionId, fragmentCollectionId, name,
+			description, data, previewFileEntryId, status);
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 #updateFragmentComposition(long, long, long, String, String, String, long, int)}
+	 */
+	@Deprecated
+	public static com.liferay.fragment.model.FragmentComposition
+			updateFragmentComposition(
 				long userId, long fragmentCompositionId, String name,
 				String description, String data, long previewFileEntryId,
 				int status)

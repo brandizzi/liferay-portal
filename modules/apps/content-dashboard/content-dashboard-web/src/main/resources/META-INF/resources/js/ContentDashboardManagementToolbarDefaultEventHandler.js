@@ -17,36 +17,32 @@ import {
 	ItemSelectorDialog,
 	addParams,
 	navigate,
-	openModal,
+	openSelectionModal,
 } from 'frontend-js-web';
 
 class ContentDashboardManagementToolbarDefaultEventHandler extends DefaultEventHandler {
 	selectAuthor(itemData) {
-		const itemSelectorDialog = new ItemSelectorDialog({
+		openSelectionModal({
 			buttonAddLabel: Liferay.Language.get('select'),
-			eventName: this.ns('selectedAuthorItem'),
+			multiple: true,
+			onSelect: (selectedItem) => {
+				if (selectedItem) {
+					var redirectURL = itemData.redirectURL;
+
+					selectedItem.forEach((item) => {
+						redirectURL = addParams(
+							this.namespace + 'authorIds=' + item.id,
+							redirectURL
+						);
+					});
+
+					navigate(redirectURL);
+				}
+			},
+			selectEventName: this.ns('selectedAuthorItem'),
 			title: itemData.dialogTitle,
 			url: itemData.selectAuthorURL,
 		});
-
-		itemSelectorDialog.on('selectedItemChange', (event) => {
-			const selectedItem = event.selectedItem;
-
-			if (selectedItem) {
-				var redirectURL = itemData.redirectURL;
-
-				selectedItem.forEach((item) => {
-					redirectURL = addParams(
-						this.namespace + 'authorIds=' + item.id,
-						redirectURL
-					);
-				});
-
-				navigate(redirectURL);
-			}
-		});
-
-		itemSelectorDialog.open();
 	}
 
 	selectAssetCategory(itemData) {
@@ -84,67 +80,59 @@ class ContentDashboardManagementToolbarDefaultEventHandler extends DefaultEventH
 	}
 
 	selectAssetTag(itemData) {
-		const itemSelectorDialog = new ItemSelectorDialog({
+		openSelectionModal({
 			buttonAddLabel: Liferay.Language.get('select'),
-			eventName: this.ns('selectedAssetTag'),
+			multiple: true,
+			onSelect: (selectedItem) => {
+				if (selectedItem) {
+					const assetTags = selectedItem['items'].split(',');
+
+					var redirectURL = itemData.redirectURL;
+
+					assetTags.forEach((assetTag) => {
+						redirectURL = addParams(
+							this.namespace + 'assetTagId=' + assetTag,
+							redirectURL
+						);
+					});
+
+					navigate(redirectURL);
+				}
+			},
+			selectEventName: this.ns('selectedAssetTag'),
 			title: itemData.dialogTitle,
 			url: itemData.selectTagURL,
 		});
-
-		itemSelectorDialog.on('selectedItemChange', (event) => {
-			const selectedItem = event.selectedItem;
-
-			if (selectedItem) {
-				const assetTags = selectedItem['items'].split(',');
-
-				var redirectURL = itemData.redirectURL;
-
-				assetTags.forEach((assetTag) => {
-					redirectURL = addParams(
-						this.namespace + 'assetTagId=' + assetTag,
-						redirectURL
-					);
-				});
-
-				navigate(redirectURL);
-			}
-		});
-
-		itemSelectorDialog.open();
 	}
 
 	selectContentDashboardItemType(itemData) {
-		const itemSelectorDialog = new ItemSelectorDialog({
+		openSelectionModal({
 			buttonAddLabel: Liferay.Language.get('select'),
-			eventName: this.ns('selectedContentDashboardItemTypeItem'),
+			multiple: true,
+			onSelect: (selectedItem) => {
+				if (selectedItem) {
+					var redirectURL = itemData.redirectURL;
+
+					selectedItem.forEach((item) => {
+						redirectURL = addParams(
+							this.namespace +
+								'contentDashboardItemTypePayload=' +
+								JSON.stringify(item),
+							redirectURL
+						);
+					});
+
+					navigate(redirectURL);
+				}
+			},
+			selectEventName: this.ns('selectedContentDashboardItemTypeItem'),
 			title: itemData.dialogTitle,
 			url: itemData.selectContentDashboardItemTypeURL,
 		});
-
-		itemSelectorDialog.on('selectedItemChange', (event) => {
-			const selectedItem = event.selectedItem;
-
-			if (selectedItem) {
-				var redirectURL = itemData.redirectURL;
-
-				selectedItem.forEach((item) => {
-					redirectURL = addParams(
-						this.namespace +
-							'contentDashboardItemTypePayload=' +
-							JSON.stringify(item),
-						redirectURL
-					);
-				});
-
-				navigate(redirectURL);
-			}
-		});
-
-		itemSelectorDialog.open();
 	}
 
 	selectScope(itemData) {
-		openModal({
+		openSelectionModal({
 			id: this.ns('selectedScopeIdItem'),
 			onSelect: (selectedItem) => {
 				navigate(

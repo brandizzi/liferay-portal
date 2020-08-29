@@ -114,7 +114,7 @@ public abstract class StyledLayoutStructureItem extends LayoutStructureItem {
 		return GetterUtil.getString(_getStyleProperty("fontWeight"));
 	}
 
-	public String getHeightCssClass() {
+	public String getHeight() {
 		return GetterUtil.getString(_getStyleProperty("height"));
 	}
 
@@ -229,7 +229,7 @@ public abstract class StyledLayoutStructureItem extends LayoutStructureItem {
 		return _getColorCssClass("textColor");
 	}
 
-	public String getWidthCssClass() {
+	public String getWidth() {
 		return GetterUtil.getString(_getStyleProperty("width"));
 	}
 

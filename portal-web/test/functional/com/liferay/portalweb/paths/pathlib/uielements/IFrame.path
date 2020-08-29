@@ -50,7 +50,7 @@
 </tr>
 <tr>
 	<td>ASSET_LIST_DIALOG</td>
-	<td>//iframe[contains(@class,'dialog-iframe-node') and contains(@id,'selectAssetList_iframe')]</td>
+	<td>//iframe[contains(@id,'selectAssetList_iframe')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -71,6 +71,11 @@
 <tr>
 	<td>EDIT_ASSET</td>
 	<td>//iframe[contains(@id,'editAsset_iframe_')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>ELASTICSEARCH_MONITORING</td>
+	<td>//iframe[contains(@id,'MonitoringPortlet')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -121,6 +126,11 @@
 <tr>
 	<td>MODAL_BODY</td>
 	<td>//div[contains(@class,'modal-body')]/iframe</td>
+	<td></td>
+</tr>
+<tr>
+	<td>MODAL_ANY</td>
+	<td>//iframe[contains(@title,'${key_title}')]</td>
 	<td></td>
 </tr>
 <tr>
@@ -194,6 +204,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>SELECT_PUBLICATION</td>
+	<td>//iframe[contains(@id,'selectChangeList_iframe')]</td>
+	<td></td>
+</tr>
+<tr>
 	<td>SELECT_REGULAR_ROLE</td>
 	<td>//iframe[contains(@id,'selectRegularRole_iframe_')]</td>
 	<td></td>
@@ -231,11 +246,6 @@
 <tr>
 	<td>WEB_APPLICATION</td>
 	<td>//iframe[contains(@id,'WebApplicationFrame')]</td>
-	<td></td>
-</tr>
-<tr>
-	<td>XPACK_MONITORING</td>
-	<td>//iframe[contains(@id,'XPackMonitoringPortlet')]</td>
 	<td></td>
 </tr>
 </tbody>

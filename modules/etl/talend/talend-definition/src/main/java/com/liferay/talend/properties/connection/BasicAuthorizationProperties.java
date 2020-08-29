@@ -62,7 +62,7 @@ public class BasicAuthorizationProperties extends PropertiesImpl {
 
 	@Override
 	public void setupProperties() {
-		password.setValue(UIKeys.LIFERAY_DEFAULT_PASSWORD);
+		password.setValue("");
 		userId.setValue(UIKeys.LIFERAY_DEFAULT_USER_ID);
 
 		if (_logger.isTraceEnabled()) {

@@ -81,6 +81,11 @@ public class ToggleControlsProductNavigationControlMenuEntry
 	}
 
 	@Override
+	public String getIconCssClass(HttpServletRequest httpServletRequest) {
+		return "icon-monospaced";
+	}
+
+	@Override
 	public String getLabel(Locale locale) {
 		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
 			"content.Language", locale, getClass());

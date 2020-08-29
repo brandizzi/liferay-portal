@@ -14,6 +14,7 @@
 
 package com.liferay.headless.admin.workflow.client.resource.v1_0;
 
+import com.liferay.headless.admin.workflow.client.dto.v1_0.WorkflowTaskIds;
 import com.liferay.headless.admin.workflow.client.dto.v1_0.WorkflowTaskTransitions;
 import com.liferay.headless.admin.workflow.client.http.HttpInvoker;
 import com.liferay.headless.admin.workflow.client.problem.Problem;
@@ -37,12 +38,12 @@ public interface WorkflowTaskTransitionsResource {
 		return new Builder();
 	}
 
-	public WorkflowTaskTransitions getWorkflowTaskTransition(
-			Long[] workflowTaskIds)
+	public WorkflowTaskTransitions postWorkflowTaskTransition(
+			WorkflowTaskIds workflowTaskIds)
 		throws Exception;
 
-	public HttpInvoker.HttpResponse getWorkflowTaskTransitionHttpResponse(
-			Long[] workflowTaskIds)
+	public HttpInvoker.HttpResponse postWorkflowTaskTransitionHttpResponse(
+			WorkflowTaskIds workflowTaskIds)
 		throws Exception;
 
 	public static class Builder {
@@ -101,12 +102,12 @@ public interface WorkflowTaskTransitionsResource {
 	public static class WorkflowTaskTransitionsResourceImpl
 		implements WorkflowTaskTransitionsResource {
 
-		public WorkflowTaskTransitions getWorkflowTaskTransition(
-				Long[] workflowTaskIds)
+		public WorkflowTaskTransitions postWorkflowTaskTransition(
+				WorkflowTaskIds workflowTaskIds)
 			throws Exception {
 
 			HttpInvoker.HttpResponse httpResponse =
-				getWorkflowTaskTransitionHttpResponse(workflowTaskIds);
+				postWorkflowTaskTransitionHttpResponse(workflowTaskIds);
 
 			String content = httpResponse.getContent();
 
@@ -129,11 +130,13 @@ public interface WorkflowTaskTransitionsResource {
 			}
 		}
 
-		public HttpInvoker.HttpResponse getWorkflowTaskTransitionHttpResponse(
-				Long[] workflowTaskIds)
+		public HttpInvoker.HttpResponse postWorkflowTaskTransitionHttpResponse(
+				WorkflowTaskIds workflowTaskIds)
 			throws Exception {
 
 			HttpInvoker httpInvoker = HttpInvoker.newHttpInvoker();
+
+			httpInvoker.body(workflowTaskIds.toString(), "application/json");
 
 			if (_builder._locale != null) {
 				httpInvoker.header(
@@ -152,14 +155,7 @@ public interface WorkflowTaskTransitionsResource {
 				httpInvoker.parameter(entry.getKey(), entry.getValue());
 			}
 
-			httpInvoker.httpMethod(HttpInvoker.HttpMethod.GET);
-
-			if (workflowTaskIds != null) {
-				for (int i = 0; i < workflowTaskIds.length; i++) {
-					httpInvoker.parameter(
-						"workflowTaskIds", String.valueOf(workflowTaskIds[i]));
-				}
-			}
+			httpInvoker.httpMethod(HttpInvoker.HttpMethod.POST);
 
 			httpInvoker.path(
 				_builder._scheme + "://" + _builder._host + ":" +

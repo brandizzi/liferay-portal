@@ -53,6 +53,8 @@ public class ServletDataImpl implements ServletData {
 			_workflowTaskResourceComponentServiceObjects);
 		Mutation.setWorkflowTaskAssignableUsersResourceComponentServiceObjects(
 			_workflowTaskAssignableUsersResourceComponentServiceObjects);
+		Mutation.setWorkflowTaskTransitionsResourceComponentServiceObjects(
+			_workflowTaskTransitionsResourceComponentServiceObjects);
 
 		Query.setAssigneeResourceComponentServiceObjects(
 			_assigneeResourceComponentServiceObjects);
@@ -66,8 +68,6 @@ public class ServletDataImpl implements ServletData {
 			_workflowLogResourceComponentServiceObjects);
 		Query.setWorkflowTaskResourceComponentServiceObjects(
 			_workflowTaskResourceComponentServiceObjects);
-		Query.setWorkflowTaskTransitionsResourceComponentServiceObjects(
-			_workflowTaskTransitionsResourceComponentServiceObjects);
 	}
 
 	@Override
@@ -102,6 +102,10 @@ public class ServletDataImpl implements ServletData {
 		_workflowTaskAssignableUsersResourceComponentServiceObjects;
 
 	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
+	private ComponentServiceObjects<WorkflowTaskTransitionsResource>
+		_workflowTaskTransitionsResourceComponentServiceObjects;
+
+	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
 	private ComponentServiceObjects<AssigneeResource>
 		_assigneeResourceComponentServiceObjects;
 
@@ -112,9 +116,5 @@ public class ServletDataImpl implements ServletData {
 	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
 	private ComponentServiceObjects<WorkflowLogResource>
 		_workflowLogResourceComponentServiceObjects;
-
-	@Reference(scope = ReferenceScope.PROTOTYPE_REQUIRED)
-	private ComponentServiceObjects<WorkflowTaskTransitionsResource>
-		_workflowTaskTransitionsResourceComponentServiceObjects;
 
 }

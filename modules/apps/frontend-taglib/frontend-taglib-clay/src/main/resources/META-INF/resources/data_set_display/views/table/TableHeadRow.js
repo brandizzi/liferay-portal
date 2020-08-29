@@ -20,6 +20,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {useContext, useEffect, useState} from 'react';
 
+import {AppContext} from '../../AppContext';
 import DataSetDisplayContext from '../../DataSetDisplayContext';
 import Checkbox from '../../data_renderers/CheckboxRenderer';
 import persistVisibleFieldNames from '../../thunks/persistVisibleFieldNames';
@@ -27,11 +28,22 @@ import ViewsContext from '../ViewsContext';
 
 const FieldsSelectorDropdown = ({fields}) => {
 	const {id} = useContext(DataSetDisplayContext);
+	const {appURL, portletId} = useContext(AppContext);
 	const [{visibleFieldNames}, dispatch] = useContext(ViewsContext);
 
 	const [active, setActive] = useState(false);
 	const [filteredFields, setFilteredFields] = useState(fields);
 	const [query, setQuery] = useState('');
+
+	const selectedFieldNames = Object.keys(visibleFieldNames).length
+		? visibleFieldNames
+		: fields.reduce(
+				(selectedFieldNames, field) => ({
+					...selectedFieldNames,
+					[field.fieldName]: true,
+				}),
+				{}
+		  );
 
 	useEffect(() => {
 		setFilteredFields(
@@ -68,10 +80,12 @@ const FieldsSelectorDropdown = ({fields}) => {
 							onClick={() => {
 								dispatch(
 									persistVisibleFieldNames({
+										appURL,
 										id,
+										portletId,
 										visibleFieldNames: {
-											...visibleFieldNames,
-											[fieldName]: !visibleFieldNames[
+											...selectedFieldNames,
+											[fieldName]: !selectedFieldNames[
 												fieldName
 											],
 										},
@@ -79,7 +93,7 @@ const FieldsSelectorDropdown = ({fields}) => {
 								);
 							}}
 						>
-							{visibleFieldNames[fieldName] && (
+							{selectedFieldNames[fieldName] && (
 								<ClayIcon symbol="check" />
 							)}
 							{label}

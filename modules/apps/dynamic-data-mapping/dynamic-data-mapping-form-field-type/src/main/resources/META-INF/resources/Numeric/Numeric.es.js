@@ -54,6 +54,12 @@ const Numeric = ({
 	const inputRef = useRef(null);
 
 	useEffect(() => {
+		if (initialValue) {
+			setValue(initialValue);
+		}
+	}, [initialValue, setValue]);
+
+	useEffect(() => {
 		let maskInstance = null;
 
 		if (inputRef.current) {
@@ -89,7 +95,6 @@ const Numeric = ({
 	return (
 		<ClayInput
 			{...otherProps}
-			aria-label="numeric"
 			disabled={disabled}
 			onChange={(event) => {
 				const {value: newValue} = event.target;
@@ -129,7 +134,7 @@ const Main = ({
 		<Numeric
 			dataType={dataType}
 			disabled={readOnly}
-			id={id}
+			id={id ? id : name}
 			name={name}
 			onBlur={onBlur}
 			onChange={onChange}

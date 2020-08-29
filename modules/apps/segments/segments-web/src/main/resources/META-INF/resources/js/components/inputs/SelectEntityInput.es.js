@@ -13,7 +13,7 @@
  */
 
 import ClayButton from '@clayui/button';
-import {ItemSelectorDialog} from 'frontend-js-web';
+import {openSelectionModal} from 'frontend-js-web';
 import propTypes from 'prop-types';
 import React from 'react';
 
@@ -43,47 +43,36 @@ class SelectEntityInput extends React.Component {
 		} = this.props;
 
 		if (multiple) {
-			const itemSelectorDialog = new ItemSelectorDialog({
+			openSelectionModal({
 				buttonAddLabel: Liferay.Language.get('select'),
-				eventName: id,
+				multiple: true,
+				onSelect: (selectedItems) => {
+					if (selectedItems) {
+						const selectedValues = selectedItems.map((item) => ({
+							displayValue: item.name,
+							value: item.id,
+						}));
+
+						onChange(selectedValues);
+					}
+				},
+				selectEventName: id,
 				title,
 				url: uri,
 			});
-
-			itemSelectorDialog.open();
-
-			itemSelectorDialog.on('selectedItemChange', (event) => {
-				const selectedItems = event.selectedItem;
-
-				if (selectedItems) {
-					const selectedValues = selectedItems.map((item) => ({
-						displayValue: item.name,
-						value: item.id,
-					}));
-
-					onChange(selectedValues);
-				}
-			});
 		}
 		else {
-			Liferay.Util.selectEntity(
-				{
-					dialog: {
-						constrain: true,
-						destroyOnHide: true,
-						modal: true,
-					},
-					id,
-					title,
-					uri,
-				},
-				(event) => {
+			openSelectionModal({
+				onSelect: (event) => {
 					onChange({
 						displayValue: event.entityname,
 						value: event.entityid,
 					});
-				}
-			);
+				},
+				selectEventName: id,
+				title,
+				url: uri,
+			});
 		}
 	};
 

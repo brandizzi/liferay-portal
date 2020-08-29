@@ -409,20 +409,17 @@ definition {
 			locator1 = "Button#SELECT",
 			value1 = "Select");
 
-		SelectFrame(value1 = "relative=top");
-
 		if (isSet(kbFolderName)) {
-			SelectFrame(locator1 = "KnowledgeBaseSelectParent#SELECT_PARENT_DISPLAY_IFRAME");
+			SelectFrame.selectFrameNoLoading(locator1 = "IFrame#MODAL_BODY");
 
 			AssertClick(
 				key_kbFolderName = "${kbFolderName}",
 				locator1 = "KnowledgeBaseSelectParent#FOLDER_TITLE_LINK",
 				value1 = "${kbFolderName}");
-
-			SelectFrame(value1 = "relative=top");
 		}
-
-		SelectFrame(locator1 = "KnowledgeBaseSelectParent#SELECT_PARENT_DISPLAY_IFRAME");
+		else {
+			SelectFrame.selectFrameNoLoading(locator1 = "IFrame#MODAL_BODY");
+		}
 
 		Click(
 			key_kbArticleTitle = "${kbArticleTitle}",
@@ -485,9 +482,7 @@ definition {
 			locator1 = "Button#SELECT",
 			value1 = "Select");
 
-		SelectFrame(value1 = "relative=top");
-
-		SelectFrame(locator1 = "KnowledgeBaseSelectParent#SELECT_PARENT_DISPLAY_IFRAME");
+		SelectFrame.selectFrameNoLoading(locator1 = "IFrame#MODAL_BODY");
 
 		AssertClick(
 			key_kbFolderName = "${kbFolderName}",
@@ -918,7 +913,7 @@ definition {
 	}
 
 	macro selectParentArticleCP {
-		SelectFrame(locator1 = "KnowledgeBaseSelectParent#IFRAME");
+		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		Click(
 			key_kbArticleTitle = "${kbArticleTitle}",
@@ -937,7 +932,7 @@ definition {
 	}
 
 	macro selectParentViaKBDisplayPG {
-		SelectFrame(locator1 = "KnowledgeBaseSelectParent#IFRAME");
+		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		Click(
 			key_kbArticleTitle = "${kbArticleTitle}",
@@ -968,9 +963,7 @@ definition {
 			locator1 = "Button#SELECT",
 			value1 = "Select");
 
-		SelectFrame(value1 = "relative=top");
-
-		SelectFrame(locator1 = "KnowledgeBaseSelectParent#SELECT_PARENT_DISPLAY_IFRAME");
+		SelectFrame.selectFrameNoLoading(locator1 = "IFrame#MODAL_BODY");
 
 		AssertClick(
 			key_kbArticleTitle = "${kbArticleTitle}",

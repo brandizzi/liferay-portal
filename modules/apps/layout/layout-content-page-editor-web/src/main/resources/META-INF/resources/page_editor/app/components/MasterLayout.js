@@ -12,25 +12,19 @@
  * details.
  */
 
-import {useIsMounted} from 'frontend-js-react-web';
-import {debounce} from 'frontend-js-web';
 import {closest} from 'metal-dom';
 import PropTypes from 'prop-types';
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 
 import {
 	LayoutDataPropTypes,
 	getLayoutDataItemPropTypes,
 } from '../../prop-types/index';
 import {LAYOUT_DATA_ITEM_TYPES} from '../config/constants/layoutDataItemTypes';
-import {config} from '../config/index';
 import {useSelector} from '../store/index';
-import {useGetFieldValue} from './CollectionItemContext';
 import {useSelectItem} from './Controls';
 import Layout from './Layout';
-import UnsafeHTML from './UnsafeHTML';
-import getAllEditables from './fragment-content/getAllEditables';
-import resolveEditableValue from './fragment-content/resolveEditableValue';
+import FragmentContent from './fragment-content/FragmentContent';
 import {Collection, Column, Container, Row} from './layout-data-items/index';
 
 const LAYOUT_DATA_ITEMS = {
@@ -111,16 +105,9 @@ function CollectionItem({children}) {
 	return <div>{children}</div>;
 }
 
-const FragmentContent = React.memo(function FragmentContent({
-	content: defaultContent,
-	editableValues,
-	languageId,
-}) {
+function Fragment({item}) {
 	const ref = useRef(null);
-	const isMounted = useIsMounted();
-	const [content, setContent] = useState(defaultContent);
 	const selectItem = useSelectItem();
-	const getFieldValue = useGetFieldValue();
 
 	useEffect(() => {
 		const element = ref.current;
@@ -147,47 +134,6 @@ const FragmentContent = React.memo(function FragmentContent({
 			element.removeEventListener('click', handler);
 		};
 	});
-
-	useEffect(() => {
-		let element = document.createElement('div');
-		element.innerHTML = content;
-
-		const updateContent = debounce(() => {
-			if (isMounted() && element) {
-				setContent(element.innerHTML);
-			}
-		}, 50);
-
-		getAllEditables(element).forEach((editable) => {
-			resolveEditableValue(
-				editableValues,
-				editable.editableId,
-				editable.editableValueNamespace,
-				languageId,
-				null,
-				getFieldValue
-			).then(([value, editableConfig]) => {
-				editable.processor.render(
-					editable.element,
-					value,
-					editableConfig
-				);
-			});
-		});
-
-		updateContent();
-
-		return () => {
-			element = null;
-		};
-	}, [
-		defaultContent,
-		content,
-		isMounted,
-		editableValues,
-		languageId,
-		getFieldValue,
-	]);
 
 	const fragmentEntryLinks = useSelector((state) => state.fragmentEntryLinks);
 	const masterLayoutData = useSelector(
@@ -222,32 +168,12 @@ const FragmentContent = React.memo(function FragmentContent({
 	);
 
 	return (
-		<UnsafeHTML
-			className="page-editor__fragment-content page-editor__fragment-content--master"
-			contentRef={ref}
-			getPortals={getPortals}
-			markup={content}
-		/>
-	);
-});
-
-FragmentContent.propTypes = {
-	content: PropTypes.string.isRequired,
-	editableValues: PropTypes.object.isRequired,
-	languageId: PropTypes.string,
-};
-
-function Fragment({fragmentEntryLinks, item}) {
-	const fragmentEntryLink =
-		fragmentEntryLinks[item.config.fragmentEntryLinkId];
-
-	const languageId = useSelector((state) => state.languageId);
-
-	return (
 		<FragmentContent
-			content={fragmentEntryLink.content}
-			editableValues={fragmentEntryLink.editableValues}
-			languageId={languageId || config.defaultLanguageId}
+			className="page-editor__fragment-content--master"
+			elementRef={ref}
+			fragmentEntryLinkId={item.config.fragmentEntryLinkId}
+			getPortals={getPortals}
+			item={item}
 		/>
 	);
 }

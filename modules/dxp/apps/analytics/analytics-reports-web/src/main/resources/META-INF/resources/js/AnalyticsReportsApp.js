@@ -9,73 +9,151 @@
  * distribution rights of the Software.
  */
 
-import React from 'react';
+import ClayAlert from '@clayui/alert';
+import ClayLoadingIndicator from '@clayui/loading-indicator';
+import {useIsMounted} from 'frontend-js-react-web';
+import {fetch} from 'frontend-js-web';
+import React, {useCallback, useEffect, useReducer} from 'react';
 
 import Navigation from './components/Navigation';
 import ConnectionContext from './context/ConnectionContext';
 import {StoreContextProvider} from './context/store';
-import APIService from './utils/APIService';
 
 import '../css/analytics-reports-app.scss';
 
-export default function ({context, props}) {
-	const {languageTag, namespace, page} = context;
-	const {defaultTimeRange, defaultTimeSpanKey, timeSpans} = context;
-	const {validAnalyticsConnection} = context;
+const dataReducer = (state, action) => {
+	switch (action.type) {
+		case 'LOAD_DATA':
+			return {
+				...state,
+				loading: true,
+			};
 
-	const {
-		authorName,
-		authorPortraitURL,
-		authorUserId,
-		publishDate,
-		title,
-	} = props;
-	const {trafficSources} = props;
+		case 'SET_ERROR':
+			return {
+				...state,
+				error: action.error,
+				loading: false,
+			};
 
-	const {
-		getAnalyticsReportsHistoricalReadsURL,
-		getAnalyticsReportsHistoricalViewsURL,
-		getAnalyticsReportsTotalReadsURL,
-		getAnalyticsReportsTotalViewsURL,
-	} = context.endpoints;
+		case 'SET_DATA':
+			return {
+				data: {
+					...action.data,
+					publishedToday:
+						new Date().toDateString() ===
+						new Date(action.data?.publishDate).toDateString(),
+				},
+				error: action.data?.error,
+				loading: false,
+			};
 
-	const api = APIService({
-		endpoints: {
-			getAnalyticsReportsHistoricalReadsURL,
-			getAnalyticsReportsHistoricalViewsURL,
-			getAnalyticsReportsTotalReadsURL,
-			getAnalyticsReportsTotalViewsURL,
+		default:
+			return initialState;
+	}
+};
+
+const initialState = {
+	data: null,
+	error: null,
+	loading: false,
+};
+
+export default function ({context}) {
+	const {analyticsReportsDataURL} = context;
+
+	const isMounted = useIsMounted();
+
+	const [state, dispatch] = useReducer(dataReducer, initialState);
+
+	const getData = (fetchURL, timeSpanKey, timeSpanOffset) => {
+		safeDispatch({type: 'LOAD_DATA'});
+
+		const body =
+			!timeSpanOffset && !!timeSpanKey
+				? {timeSpanKey, timeSpanOffset}
+				: {};
+
+		fetch(fetchURL, {
+			body,
+			method: 'POST',
+		})
+			.then((response) =>
+				response.json().then((data) =>
+					safeDispatch({
+						data: data.context,
+						type: 'SET_DATA',
+					})
+				)
+			)
+			.catch(() => {
+				safeDispatch({
+					error: Liferay.Language.get('an-unexpected-error-occurred'),
+					type: 'SET_ERROR',
+				});
+			});
+	};
+
+	const safeDispatch = (action) => {
+		if (isMounted()) {
+			dispatch(action);
+		}
+	};
+
+	useEffect(() => {
+		getData(analyticsReportsDataURL);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [analyticsReportsDataURL]);
+
+	const handleSelectedLanguageClick = useCallback(
+		(url, timeSpanOffset, timeSpanOption) => {
+			getData(url, timeSpanOffset, timeSpanOption);
 		},
-		namespace,
-		page,
-	});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[]
+	);
 
-	const publishedToday =
-		new Date().toDateString() === new Date(publishDate).toDateString();
-
-	return (
-		<ConnectionContext.Provider
-			value={{
-				validAnalyticsConnection,
-			}}
-		>
-			<StoreContextProvider value={{publishedToday}}>
-				<div className="analytics-reports-app">
-					<Navigation
-						api={api}
-						authorName={authorName}
-						authorPortraitURL={authorPortraitURL}
-						authorUserId={authorUserId}
-						defaultTimeRange={defaultTimeRange}
-						defaultTimeSpanKey={defaultTimeSpanKey}
-						languageTag={languageTag}
-						pagePublishDate={publishDate}
-						pageTitle={title}
-						timeSpanOptions={timeSpans}
-						trafficSources={trafficSources}
-					/>
-				</div>
-			</StoreContextProvider>
-		</ConnectionContext.Provider>
+	return state.loading ? (
+		<ClayLoadingIndicator small />
+	) : state.error ? (
+		<ClayAlert displayType="danger" variant="stripe">
+			{state.error}
+		</ClayAlert>
+	) : (
+		state.data && (
+			<ConnectionContext.Provider
+				value={{
+					validAnalyticsConnection:
+						state.data.validAnalyticsConnection,
+				}}
+			>
+				<StoreContextProvider
+					value={{
+						publishedToday: state.data.publishedToday,
+					}}
+				>
+					<div className="analytics-reports-app">
+						<Navigation
+							author={state.data.author}
+							canonicalURL={state.data.canonicalURL}
+							endpoints={state.data.endpoints}
+							languageTag={state.data.languageTag}
+							namespace={state.data.namespace}
+							onSelectedLanguageClick={
+								handleSelectedLanguageClick
+							}
+							page={state.data.page}
+							pagePublishDate={state.data.publishDate}
+							pageTitle={state.data.title}
+							timeRange={state.data.timeRange}
+							timeSpanKey={state.data.timeSpanKey}
+							timeSpanOptions={state.data.timeSpans}
+							trafficSources={state.data.trafficSources}
+							viewURLs={state.data.viewURLs}
+						/>
+					</div>
+				</StoreContextProvider>
+			</ConnectionContext.Provider>
+		)
 	);
 }

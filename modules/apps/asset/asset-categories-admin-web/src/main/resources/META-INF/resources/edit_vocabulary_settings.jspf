@@ -164,6 +164,8 @@ if (vocabulary != null) {
 			if (select) {
 				select.ancestor('.subtype-select').show();
 			}
+
+			autoFields.save(form);
 		},
 		'.vocabulary-asset-type-select'
 	);

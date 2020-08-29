@@ -71,7 +71,11 @@ public class ContainerStyledLayoutStructureItem
 	public JSONObject getItemConfigJSONObject() {
 		JSONObject jsonObject = super.getItemConfigJSONObject();
 
-		return jsonObject.put("widthType", _widthType);
+		return jsonObject.put(
+			"link", _linkJSONObject
+		).put(
+			"widthType", _widthType
+		);
 	}
 
 	@Override
@@ -256,6 +260,10 @@ public class ContainerStyledLayoutStructureItem
 	@Override
 	public void updateItemConfig(JSONObject itemConfigJSONObject) {
 		super.updateItemConfig(itemConfigJSONObject);
+
+		if (itemConfigJSONObject.has("link")) {
+			setLinkJSONObject(itemConfigJSONObject.getJSONObject("link"));
+		}
 
 		if (itemConfigJSONObject.has("widthType") ||
 			itemConfigJSONObject.has("type")) {

@@ -243,7 +243,7 @@ definition {
 
 		JSONCategory.addVocabulary(
 			groupName = "Test Site Name",
-			title = "Topic");
+			title = "Vocabulary Name");
 
 		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
@@ -260,25 +260,25 @@ definition {
 		JSONCategory.addCategory(
 			groupName = "Test Site Name",
 			title = "Category Name",
-			vocabularyName = "Topic");
+			vocabularyName = "Vocabulary Name");
 
 		JSONCategory.addSubcategory(
 			groupName = "Test Site Name",
 			parentCategoryName = "Category Name",
 			title = "Subcategory Name",
-			vocabularyName = "Topic");
+			vocabularyName = "Vocabulary Name");
 
 		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
 
-		Navigator.gotoNavNested(navNested = "Topic");
+		Navigator.gotoNavNested(navNested = "Vocabulary Name");
 
 		Category.viewPath(
 			categoryName = "Category Name",
-			path = "Topic &gt; Category Name");
+			path = "Vocabulary Name &gt; Category Name");
 
 		Category.viewPath(
 			categoryName = "Subcategory Name",
-			path = "Topic &gt; Category Name &gt; Subcategory Name");
+			path = "Vocabulary Name &gt; Category Name &gt; Subcategory Name");
 	}
 
 	@priority = "3"
@@ -399,7 +399,11 @@ definition {
 			required = "true",
 			rowNumber = "2");
 
-		Button.clickSave();
+		Button.clickNoError(button = "Save");
+
+		AssertConfirm.assertPartialConfirmation(value1 = "Are you sure you want to create this vocabulary with public visibility?");
+
+		Alert.viewSuccessMessage();
 
 		JSONCategory.addCategory(
 			groupName = "Test Site Name",
@@ -834,6 +838,7 @@ definition {
 	@priority = "5"
 	test ImportLAR {
 		property portal.acceptance = "true";
+		property portal.upstream = "quarantine";
 		property testray.component.names = "Training";
 
 		JSONGroup.addGroup(groupName = "Site Name 2");
@@ -851,9 +856,7 @@ definition {
 
 		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
 
-		LAR.importPortlet(
-			larFileName = "Moon-Rocks-Unit-Category-Hierarchy.lar",
-			uploadFrom = "dependencies");
+		LAR.importPortlet(larFileName = "Moon-Rocks-Unit-Category-Hierarchy.lar");
 	}
 
 	@priority = "3"
@@ -1347,7 +1350,7 @@ definition {
 
 		JSONCategory.addVocabulary(
 			groupName = "Test Site Name",
-			title = "Topic");
+			title = "Vocabulary Name");
 
 		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
@@ -1365,26 +1368,26 @@ definition {
 
 		Category.addCP(
 			categoryName = "Category Name",
-			vocabularyName = "Topic");
+			vocabularyName = "Vocabulary Name");
 
 		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
 
 		Subcategory.addCP(
 			categoryName = "Category Name",
 			subcategoryName = "Subcategory Name",
-			vocabularyName = "Topic");
+			vocabularyName = "Vocabulary Name");
 
 		Category.openCategoriesAdmin(siteURLKey = "test-site-name");
 
-		Navigator.gotoNavNested(navNested = "Topic");
+		Navigator.gotoNavNested(navNested = "Vocabulary Name");
 
 		Category.viewPath(
 			categoryName = "Category Name",
-			path = "Topic &gt; Category Name");
+			path = "Vocabulary Name &gt; Category Name");
 
 		Category.viewPath(
 			categoryName = "Subcategory Name",
-			path = "Topic &gt; Category Name &gt; Subcategory Name");
+			path = "Vocabulary Name &gt; Category Name &gt; Subcategory Name");
 	}
 
 	@priority = "3"

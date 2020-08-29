@@ -115,6 +115,9 @@ export default (state, action) => {
 						readOnly: true,
 					})
 				);
+				currentStep.errors.formViews = {
+					...previousStep.errors.formViews,
+				};
 			}
 
 			previousStep.appWorkflowTransitions.forEach((action) => {

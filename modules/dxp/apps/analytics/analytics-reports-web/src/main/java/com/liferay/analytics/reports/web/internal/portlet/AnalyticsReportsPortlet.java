@@ -14,29 +14,19 @@
 
 package com.liferay.analytics.reports.web.internal.portlet;
 
-import com.liferay.analytics.reports.info.item.AnalyticsReportsInfoItem;
-import com.liferay.analytics.reports.info.item.AnalyticsReportsInfoItemTracker;
 import com.liferay.analytics.reports.web.internal.constants.AnalyticsReportsPortletKeys;
 import com.liferay.analytics.reports.web.internal.constants.AnalyticsReportsWebKeys;
-import com.liferay.analytics.reports.web.internal.data.provider.AnalyticsReportsDataProvider;
 import com.liferay.analytics.reports.web.internal.display.context.AnalyticsReportsDisplayContext;
-import com.liferay.analytics.reports.web.internal.info.display.contributor.util.InfoDisplayContributorUtil;
-import com.liferay.analytics.reports.web.internal.layout.seo.CanonicalURLProvider;
-import com.liferay.asset.display.page.portlet.AssetDisplayPageFriendlyURLProvider;
-import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
-import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
-import com.liferay.layout.seo.kernel.LayoutSEOLinkManager;
-import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.analytics.reports.web.internal.info.display.contributor.util.LayoutDisplayPageProviderUtil;
+import com.liferay.layout.display.page.LayoutDisplayPageObjectProvider;
+import com.liferay.layout.display.page.LayoutDisplayPageProviderTracker;
 import com.liferay.portal.kernel.language.Language;
-import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
@@ -93,94 +83,33 @@ public class AnalyticsReportsPortlet extends MVCPortlet {
 			return;
 		}
 
-		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
-			InfoDisplayContributorUtil.getInfoDisplayObjectProvider(
-				httpServletRequest, _infoDisplayContributorTracker, _portal);
-
-		AnalyticsReportsInfoItem<Object> analyticsReportsInfoItem = null;
-		Object analyticsReportsInfoItemObject = null;
-
-		if (infoDisplayObjectProvider != null) {
-			analyticsReportsInfoItem =
-				(AnalyticsReportsInfoItem<Object>)
-					_analyticsReportsInfoItemTracker.
-						getAnalyticsReportsInfoItem(
-							_portal.getClassName(
-								infoDisplayObjectProvider.getClassNameId()));
-			analyticsReportsInfoItemObject =
-				infoDisplayObjectProvider.getDisplayObject();
-		}
+		LayoutDisplayPageObjectProvider<?> layoutDisplayPageObjectProvider =
+			LayoutDisplayPageProviderUtil.getLayoutDisplayPageObjectProvider(
+				httpServletRequest, _layoutDisplayPageProviderTracker, _portal);
 
 		ThemeDisplay themeDisplay =
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		if ((analyticsReportsInfoItem == null) ||
-			(analyticsReportsInfoItemObject == null)) {
-
-			analyticsReportsInfoItem =
-				(AnalyticsReportsInfoItem<Object>)
-					_analyticsReportsInfoItemTracker.
-						getAnalyticsReportsInfoItem(Layout.class.getName());
-
-			analyticsReportsInfoItemObject = themeDisplay.getLayout();
-		}
-
-		String canonicalURL = null;
-
-		CanonicalURLProvider canonicalURLProvider = new CanonicalURLProvider(
-			_assetDisplayPageFriendlyURLProvider,
-			_portal.getHttpServletRequest(renderRequest),
-			infoDisplayObjectProvider, _language, _layoutSEOLinkManager,
-			_portal);
-
-		try {
-			canonicalURL = canonicalURLProvider.getCanonicalURL();
-		}
-		catch (PortalException portalException) {
-			throw new PortletException(portalException);
-		}
-
 		renderRequest.setAttribute(
 			AnalyticsReportsWebKeys.ANALYTICS_REPORTS_DISPLAY_CONTEXT,
 			new AnalyticsReportsDisplayContext(
-				new AnalyticsReportsDataProvider(_http),
-				analyticsReportsInfoItem, analyticsReportsInfoItemObject,
-				canonicalURL, infoDisplayObjectProvider, _portal, renderRequest,
-				renderResponse,
-				ResourceBundleUtil.getBundle(
-					"content.Language", themeDisplay.getLocale(), getClass()),
-				themeDisplay,
-				_userLocalService.fetchUser(
-					analyticsReportsInfoItem.getAuthorUserId(
-						analyticsReportsInfoItemObject))));
+				layoutDisplayPageObjectProvider, renderRequest, renderResponse,
+				themeDisplay));
 
 		super.doDispatch(renderRequest, renderResponse);
 	}
 
 	@Reference
-	private AnalyticsReportsInfoItemTracker _analyticsReportsInfoItemTracker;
-
-	@Reference
-	private AssetDisplayPageFriendlyURLProvider
-		_assetDisplayPageFriendlyURLProvider;
-
-	@Reference
 	private Http _http;
-
-	@Reference
-	private InfoDisplayContributorTracker _infoDisplayContributorTracker;
 
 	@Reference
 	private Language _language;
 
 	@Reference
-	private LayoutSEOLinkManager _layoutSEOLinkManager;
+	private LayoutDisplayPageProviderTracker _layoutDisplayPageProviderTracker;
 
 	@Reference
 	private Portal _portal;
-
-	@Reference
-	private UserLocalService _userLocalService;
 
 }

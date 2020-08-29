@@ -166,11 +166,13 @@ definition {
 
 		PagesFinder.viewPageNameInPagesFinder(pageName = "Content Collection Page Name");
 
+		WaitForLiferayEvent.initializeLiferayEventLog();
+
 		PagesFinder.gotoPageEllipsisItem(
 			item = "View Collection Items",
 			pageName = "Content Collection Page Name");
 
-		SelectFrame.selectFrameNoLoading(locator1 = "IFrame#MODAL_BODY");
+		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		for (var tableHeader : list "Title,Type,Author,Modified Date,Create Date") {
 			AssertElementPresent(
@@ -198,7 +200,7 @@ definition {
 			menuItem = "View Collection Items",
 			pageName = "Content Collection Page Name");
 
-		SelectFrame.selectFrameNoLoading(locator1 = "IFrame#MODAL_BODY");
+		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		for (var tableHeader : list "Title,Type,Author,Modified Date,Create Date") {
 			AssertElementPresent(

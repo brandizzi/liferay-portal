@@ -29,38 +29,97 @@ class ChangeTrackingChangesView extends React.Component {
 		super(props);
 
 		const {
+			activeCTCollection,
 			changes,
 			contextView,
+			ctCollectionId,
 			discardURL,
 			models,
 			renderCTEntryURL,
 			renderDiffURL,
 			rootDisplayClasses,
+			saveSessionStateURL,
+			sessionState,
+			siteNames,
 			spritemap,
 			typeNames,
 			userInfo,
 		} = props;
 
+		this.activeCTCollection = activeCTCollection;
 		this.changes = changes;
 		this.contextView = contextView;
+		this.ctCollectionId = ctCollectionId;
 		this.discardURL = discardURL;
 		this.models = models;
 		this.renderCTEntryURL = renderCTEntryURL;
 		this.renderDiffURL = renderDiffURL;
 		this.rootDisplayClasses = rootDisplayClasses;
+		this.saveSessionStateURL = saveSessionStateURL;
+		this.sessionState = sessionState;
+		this.siteNames = siteNames;
 		this.spritemap = spritemap;
 		this.typeNames = typeNames;
 		this.userInfo = userInfo;
+
+		this.globalSiteName = Liferay.Language.get('global');
 
 		const keys = Object.keys(this.models);
 
 		for (let i = 0; i < keys.length; i++) {
 			const model = this.models[keys[i]];
 
-			if (!model.typeName) {
-				model.typeName = this.typeNames[
-					model.modelClassNameId.toString()
-				];
+			if (model.groupId) {
+				model.siteName = this.siteNames[model.groupId.toString()];
+			}
+			else {
+				model.siteName = this.globalSiteName;
+			}
+
+			model.typeName = this.typeNames[model.modelClassNameId.toString()];
+
+			if (model.ctEntryId) {
+				model.userName = this.userInfo[
+					model.userId.toString()
+				].userName;
+
+				let key;
+
+				if (model.siteName === this.globalSiteName) {
+					if (model.changeType === 'added') {
+						key = Liferay.Language.get('x-added-a-x-x-ago');
+					}
+					else if (model.changeType === 'deleted') {
+						key = Liferay.Language.get('x-deleted-a-x-x-ago');
+					}
+					else {
+						key = Liferay.Language.get('x-modified-a-x-x-ago');
+					}
+
+					model.description = this._format(key, [
+						model.userName,
+						model.typeName,
+						model.timeDescription,
+					]);
+				}
+				else {
+					if (model.changeType === 'added') {
+						key = Liferay.Language.get('x-added-a-x-in-x-x-ago');
+					}
+					else if (model.changeType === 'deleted') {
+						key = Liferay.Language.get('x-deleted-a-x-in-x-x-ago');
+					}
+					else {
+						key = Liferay.Language.get('x-modified-a-x-in-x-x-ago');
+					}
+
+					model.description = this._format(key, [
+						model.userName,
+						model.typeName,
+						model.siteName,
+						model.timeDescription,
+					]);
+				}
 			}
 		}
 
@@ -84,28 +143,144 @@ class ChangeTrackingChangesView extends React.Component {
 			rootDisplayClassInfo.hideable = hideable;
 		}
 
-		const node = this._getNode('everything', 0, 'changes');
+		let filterClass = 'everything';
+		let nodeId = 0;
+		let showHideable = false;
+		let viewType = 'changes';
+
+		if (
+			this.activeCTCollection &&
+			this.sessionState &&
+			this.sessionState.ctCollectionId &&
+			this.sessionState.ctCollectionId === this.ctCollectionId
+		) {
+			filterClass = this.sessionState.filterClass;
+			showHideable = this.sessionState.showHideable;
+			viewType = this.sessionState.viewType;
+
+			if (
+				filterClass !== 'everything' &&
+				!this.contextView[filterClass]
+			) {
+				filterClass = 'everything';
+			}
+			else if (
+				viewType === 'changes' &&
+				this.sessionState.path.length > 0
+			) {
+				const modelClassNameId = this.sessionState.path[0]
+					.modelClassNameId;
+				const modelClassPK = this.sessionState.path[0].modelClassPK;
+
+				for (let i = 0; i < this.changes.length; i++) {
+					const modelKey = this.changes[i];
+
+					const model = this.models[modelKey.toString()];
+
+					if (
+						modelClassNameId === model.modelClassNameId &&
+						modelClassPK === model.modelClassPK
+					) {
+						nodeId = modelKey;
+					}
+				}
+			}
+			else if (viewType === 'context') {
+				let contextNode = this.contextView.everything;
+
+				if (filterClass !== 'everything') {
+					contextNode = this.contextView[filterClass];
+				}
+
+				for (let i = 0; i < this.sessionState.path.length; i++) {
+					if (!contextNode.children) {
+						break;
+					}
+
+					const sessionNode = this.sessionState.path[i];
+
+					for (let j = 0; j < contextNode.children.length; j++) {
+						const child = contextNode.children[j];
+
+						const model = this.models[child.modelKey.toString()];
+
+						if (
+							model.modelClassNameId ===
+								sessionNode.modelClassNameId &&
+							model.modelClassPK === sessionNode.modelClassPK
+						) {
+							if (filterClass !== 'everything' && i === 0) {
+								const stack = [this.contextView.everything];
+
+								while (stack.length > 0) {
+									const element = stack.pop();
+
+									if (element.nodeId === child.nodeId) {
+										contextNode = element;
+
+										break;
+									}
+									else if (!element.children) {
+										continue;
+									}
+
+									for (
+										let i = 0;
+										i < element.children.length;
+										i++
+									) {
+										stack.push(element.children[i]);
+									}
+								}
+							}
+							else {
+								contextNode = child;
+							}
+
+							nodeId = contextNode.nodeId;
+
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		const node = this._getNode(filterClass, nodeId, viewType);
+
+		const breadcrumbItems = this._getBreadcrumbItems(
+			node,
+			filterClass,
+			nodeId,
+			viewType
+		);
 
 		this.state = {
 			ascending: true,
-			breadcrumbItems: this._getBreadcrumbItems(
-				node,
-				'everything',
-				0,
-				'changes'
-			),
-			children: this._filterHideableNodes(node.children, false),
+			breadcrumbItems,
+			children: this._filterHideableNodes(node.children, showHideable),
 			column: 'title',
 			delta: 20,
 			dropdown: '',
-			filterClass: 'everything',
+			filterClass,
 			node,
 			page: 1,
 			renderInnerHTML: null,
-			showHideable: false,
+			showHideable,
 			sortDirectionClass: 'order-arrow-down-active',
-			viewType: 'changes',
+			viewType,
 		};
+
+		this._updateRenderContent(node);
+
+		this._updateSessionState(
+			breadcrumbItems,
+			filterClass,
+			showHideable,
+			viewType
+		);
+
+		this._saveSessionState();
 	}
 
 	_clone(json) {
@@ -123,10 +298,32 @@ class ChangeTrackingChangesView extends React.Component {
 	_filterDisplayNodes(nodes) {
 		const ascending = this.state.ascending;
 
-		if (this._getColumn() === 'title') {
+		if (this._getColumn() === 'site') {
 			nodes.sort((a, b) => {
-				const titleA = a.title;
-				const titleB = b.title;
+				if (
+					a.siteName < b.siteName ||
+					(a.siteName === this.globalSiteName &&
+						b.siteName !== this.globalSiteName)
+				) {
+					if (ascending) {
+						return -1;
+					}
+
+					return 1;
+				}
+
+				if (
+					a.siteName > b.siteName ||
+					(a.siteName !== this.globalSiteName &&
+						b.siteName === this.globalSiteName)
+				) {
+					if (ascending) {
+						return 1;
+					}
+
+					return -1;
+				}
+
 				const typeNameA = a.typeName.toUpperCase();
 				const typeNameB = b.typeName.toUpperCase();
 
@@ -138,7 +335,31 @@ class ChangeTrackingChangesView extends React.Component {
 					return 1;
 				}
 
-				if (titleA < titleB) {
+				if (a.title < b.title) {
+					return -1;
+				}
+
+				if (a.title > b.title) {
+					return 1;
+				}
+
+				return 0;
+			});
+		}
+		else if (this._getColumn() === 'title') {
+			nodes.sort((a, b) => {
+				const typeNameA = a.typeName.toUpperCase();
+				const typeNameB = b.typeName.toUpperCase();
+
+				if (typeNameA < typeNameB) {
+					return -1;
+				}
+
+				if (typeNameA > typeNameB) {
+					return 1;
+				}
+
+				if (a.title < b.title) {
 					if (ascending) {
 						return -1;
 					}
@@ -146,12 +367,52 @@ class ChangeTrackingChangesView extends React.Component {
 					return 1;
 				}
 
-				if (titleA > titleB) {
+				if (a.title > b.title) {
 					if (ascending) {
 						return 1;
 					}
 
 					return -1;
+				}
+
+				return 0;
+			});
+		}
+		else if (this._getColumn() === 'user') {
+			nodes.sort((a, b) => {
+				if (a.userName < b.userName) {
+					if (ascending) {
+						return -1;
+					}
+
+					return 1;
+				}
+
+				if (a.userName > b.userName) {
+					if (ascending) {
+						return 1;
+					}
+
+					return -1;
+				}
+
+				const typeNameA = a.typeName.toUpperCase();
+				const typeNameB = b.typeName.toUpperCase();
+
+				if (typeNameA < typeNameB) {
+					return -1;
+				}
+
+				if (typeNameA > typeNameB) {
+					return 1;
+				}
+
+				if (a.title < b.title) {
+					return -1;
+				}
+
+				if (a.title > b.title) {
+					return 1;
 				}
 
 				return 0;
@@ -240,6 +501,30 @@ class ChangeTrackingChangesView extends React.Component {
 		return filterNodes;
 	}
 
+	_format(key, args) {
+		const SPLIT_REGEX = /({\d+})/g;
+
+		const keyArray = key
+			.split(SPLIT_REGEX)
+			.filter((val) => val.length !== 0);
+
+		for (let i = 0; i < args.length; i++) {
+			const arg = args[i];
+
+			const indexKey = `{${i}}`;
+
+			let argIndex = keyArray.indexOf(indexKey);
+
+			while (argIndex >= 0) {
+				keyArray.splice(argIndex, 1, arg);
+
+				argIndex = keyArray.indexOf(indexKey);
+			}
+		}
+
+		return keyArray.join('');
+	}
+
 	_getBreadcrumbItems(node, filterClass, nodeId, viewType) {
 		if (viewType === 'changes') {
 			if (nodeId === 0) {
@@ -262,6 +547,8 @@ class ChangeTrackingChangesView extends React.Component {
 				{
 					active: true,
 					label: node.title,
+					modelClassNameId: node.modelClassNameId,
+					modelClassPK: node.modelClassPK,
 				},
 			];
 		}
@@ -336,6 +623,8 @@ class ChangeTrackingChangesView extends React.Component {
 
 			breadcrumbItems.push({
 				label: parent.title,
+				modelClassNameId: parent.modelClassNameId,
+				modelClassPK: parent.modelClassPK,
 				onClick: () =>
 					this._handleNavigationUpdate({
 						filterClass,
@@ -347,6 +636,8 @@ class ChangeTrackingChangesView extends React.Component {
 		breadcrumbItems.push({
 			active: true,
 			label: node.title,
+			modelClassNameId: node.modelClassNameId,
+			modelClassPK: node.modelClassPK,
 		});
 
 		return breadcrumbItems;
@@ -367,6 +658,46 @@ class ChangeTrackingChangesView extends React.Component {
 		portletURL.setParameter('modelClassPK', node.modelClassPK);
 
 		return portletURL.toString();
+	}
+
+	_getDropdown(node) {
+		let dropdownItems = node.dropdownItems;
+
+		if (!dropdownItems) {
+			dropdownItems = [];
+		}
+		else {
+			dropdownItems = dropdownItems.slice(0);
+		}
+
+		if (this.activeCTCollection) {
+			dropdownItems.push({
+				href: this._getDiscardURL(node),
+				label: Liferay.Language.get('discard'),
+			});
+		}
+
+		if (dropdownItems.length === 0) {
+			return;
+		}
+
+		return (
+			<div className="autofit-col">
+				<ClayDropDownWithItems
+					alignmentPosition={Align.BottomLeft}
+					items={dropdownItems}
+					spritemap={this.spritemap}
+					trigger={
+						<ClayButtonWithIcon
+							displayType="unstyled"
+							small
+							spritemap={this.spritemap}
+							symbol="ellipsis-v"
+						/>
+					}
+				/>
+			</div>
+		);
 	}
 
 	_getModels(nodes) {
@@ -438,6 +769,7 @@ class ChangeTrackingChangesView extends React.Component {
 				);
 
 				entry.children = this._getModels(element.children);
+				entry.nodeId = nodeId;
 				entry.parents = element.parents;
 
 				return entry;
@@ -455,6 +787,8 @@ class ChangeTrackingChangesView extends React.Component {
 					const model = this.models[element.modelKey.toString()];
 
 					parents.push({
+						modelClassNameId: model.modelClassNameId,
+						modelClassPK: model.modelClassPK,
 						nodeId: element.nodeId,
 						title: model.title,
 						typeName: model.typeName,
@@ -536,15 +870,28 @@ class ChangeTrackingChangesView extends React.Component {
 		return (
 			<ClayTable.Head>
 				<ClayTable.Row>
-					<ClayTable.Cell headingCell style={{width: '5%'}}>
+					<ClayTable.Cell
+						headingCell
+						style={{minWidth: '5%', whiteSpace: 'nowrap'}}
+					>
 						{Liferay.Language.get('user')}
 					</ClayTable.Cell>
 
-					<ClayTable.Cell headingCell style={{width: '80%'}}>
+					<ClayTable.Cell
+						headingCell
+						style={{minWidth: '5%', whiteSpace: 'nowrap'}}
+					>
+						{Liferay.Language.get('site')}
+					</ClayTable.Cell>
+
+					<ClayTable.Cell headingCell style={{width: '65%'}}>
 						{Liferay.Language.get('change')}
 					</ClayTable.Cell>
 
-					<ClayTable.Cell headingCell style={{width: '15%'}}>
+					<ClayTable.Cell
+						headingCell
+						style={{minWidth: '5%', whiteSpace: 'nowrap'}}
+					>
 						{Liferay.Language.get('last-modified')}
 					</ClayTable.Cell>
 				</ClayTable.Row>
@@ -570,7 +917,7 @@ class ChangeTrackingChangesView extends React.Component {
 				rows.push(
 					<ClayTable.Row divider>
 						<ClayTable.Cell
-							colSpan={this.state.viewType === 'changes' ? 3 : 1}
+							colSpan={this.state.viewType === 'changes' ? 4 : 1}
 						>
 							{node.typeName}
 						</ClayTable.Cell>
@@ -588,7 +935,7 @@ class ChangeTrackingChangesView extends React.Component {
 						<ClayTable.Cell>
 							<span
 								className="lfr-portal-tooltip"
-								title={this._getUserName(node)}
+								title={node.userName}
 							>
 								<span className="rounded-circle sticker sticker-primary">
 									<span className="sticker-overlay">
@@ -613,7 +960,7 @@ class ChangeTrackingChangesView extends React.Component {
 						<ClayTable.Cell>
 							<span
 								className="lfr-portal-tooltip"
-								title={this._getUserName(node)}
+								title={node.userName}
 							>
 								<span className={userPortraitCss}>
 									<span className="inline-item">
@@ -628,6 +975,8 @@ class ChangeTrackingChangesView extends React.Component {
 						</ClayTable.Cell>
 					);
 				}
+
+				cells.push(<ClayTable.Cell>{node.siteName}</ClayTable.Cell>);
 			}
 
 			let descriptionMarkup = '';
@@ -659,7 +1008,11 @@ class ChangeTrackingChangesView extends React.Component {
 
 			if (this.state.viewType === 'changes') {
 				cells.push(
-					<ClayTable.Cell>{node.timeDescription}</ClayTable.Cell>
+					<ClayTable.Cell>
+						{this._format(Liferay.Language.get('x-ago'), [
+							node.timeDescription,
+						])}
+					</ClayTable.Cell>
 				);
 			}
 
@@ -667,10 +1020,6 @@ class ChangeTrackingChangesView extends React.Component {
 		}
 
 		return rows;
-	}
-
-	_getUserName(node) {
-		return this.userInfo[node.userId.toString()].userName;
 	}
 
 	_getViewTypes() {
@@ -695,6 +1044,7 @@ class ChangeTrackingChangesView extends React.Component {
 				label: Liferay.Language.get('context'),
 				onClick: () =>
 					this._handleNavigationUpdate({
+						filterClass: 'everything',
 						nodeId: 0,
 						viewType: 'context',
 					}),
@@ -703,7 +1053,10 @@ class ChangeTrackingChangesView extends React.Component {
 		];
 
 		return (
-			<ClayManagementToolbar.Item expand>
+			<ClayManagementToolbar.Item
+				className="lfr-portal-tooltip"
+				title={Liferay.Language.get('display-style')}
+			>
 				<ClayDropDownWithItems
 					alignmentPosition={Align.BottomLeft}
 					items={items}
@@ -767,13 +1120,15 @@ class ChangeTrackingChangesView extends React.Component {
 
 		const node = this._getNode(filterClass, nodeId, viewType);
 
+		const breadcrumbItems = this._getBreadcrumbItems(
+			node,
+			filterClass,
+			nodeId,
+			viewType
+		);
+
 		this.setState({
-			breadcrumbItems: this._getBreadcrumbItems(
-				node,
-				filterClass,
-				nodeId,
-				viewType
-			),
+			breadcrumbItems,
 			children: this._filterHideableNodes(node.children, showHideable),
 			dropdown: '',
 			filterClass,
@@ -784,21 +1139,16 @@ class ChangeTrackingChangesView extends React.Component {
 			viewType,
 		});
 
-		AUI().use('liferay-portlet-url', () => {
-			this._setDropdown(node);
-		});
+		this._updateRenderContent(node);
 
-		if (nodeId > 0) {
-			AUI().use('liferay-portlet-url', () => {
-				fetch(this._getRenderURL(node))
-					.then((response) => response.text())
-					.then((text) => {
-						this.setState({
-							renderInnerHTML: {__html: text},
-						});
-					});
-			});
-		}
+		this._updateSessionState(
+			breadcrumbItems,
+			filterClass,
+			showHideable,
+			viewType
+		);
+
+		this._saveSessionState();
 	}
 
 	_handlePageChange(page) {
@@ -808,6 +1158,10 @@ class ChangeTrackingChangesView extends React.Component {
 	}
 
 	_handleShowHideableToggle(showHideable) {
+		this.sessionState.showHideable = showHideable;
+
+		this._saveSessionState();
+
 		if (!showHideable) {
 			if (
 				this.state.viewType === 'context' &&
@@ -890,19 +1244,33 @@ class ChangeTrackingChangesView extends React.Component {
 	}
 
 	_renderManagementToolbar() {
-		const items = [
-			{
-				active: this._getColumn() === 'title',
-				label: Liferay.Language.get('title'),
-				onClick: () => this._handleSortColumnChange('title'),
-			},
-		];
+		const items = [];
 
 		if (this.state.viewType === 'changes') {
 			items.push({
 				active: this._getColumn() === 'modifiedDate',
 				label: Liferay.Language.get('modified-date'),
 				onClick: () => this._handleSortColumnChange('modifiedDate'),
+			});
+
+			items.push({
+				active: this._getColumn() === 'site',
+				label: Liferay.Language.get('site'),
+				onClick: () => this._handleSortColumnChange('site'),
+			});
+		}
+
+		items.push({
+			active: this._getColumn() === 'title',
+			label: Liferay.Language.get('title'),
+			onClick: () => this._handleSortColumnChange('title'),
+		});
+
+		if (this.state.viewType === 'changes') {
+			items.push({
+				active: this._getColumn() === 'user',
+				label: Liferay.Language.get('user'),
+				onClick: () => this._handleSortColumnChange('user'),
 			});
 		}
 
@@ -950,7 +1318,10 @@ class ChangeTrackingChangesView extends React.Component {
 						/>
 					</ClayManagementToolbar.Item>
 
-					<ClayManagementToolbar.Item>
+					<ClayManagementToolbar.Item
+						className="lfr-portal-tooltip"
+						title={Liferay.Language.get('reverse-sort-direction')}
+					>
 						<ClayButton
 							className={this.state.sortDirectionClass}
 							displayType="unstyled"
@@ -1066,40 +1437,64 @@ class ChangeTrackingChangesView extends React.Component {
 		);
 	}
 
-	_setDropdown(node) {
-		let dropdownItems = node.dropdownItems;
-
-		if (!dropdownItems) {
-			dropdownItems = [];
-		}
-		else {
-			dropdownItems = dropdownItems.slice(0);
+	_saveSessionState() {
+		if (!this.activeCTCollection) {
+			return;
 		}
 
-		dropdownItems.push({
-			href: this._getDiscardURL(node),
-			label: Liferay.Language.get('discard'),
+		fetch(this.saveSessionStateURL, {
+			body: JSON.stringify(this.sessionState),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			method: 'POST',
 		});
+	}
 
-		this.setState({
-			dropdown: (
-				<div className="autofit-col">
-					<ClayDropDownWithItems
-						alignmentPosition={Align.BottomLeft}
-						items={dropdownItems}
-						spritemap={this.spritemap}
-						trigger={
-							<ClayButtonWithIcon
-								displayType="unstyled"
-								small
-								spritemap={this.spritemap}
-								symbol="ellipsis-v"
-							/>
-						}
-					/>
-				</div>
-			),
+	_updateRenderContent(node) {
+		if (!node.modelClassNameId) {
+			return;
+		}
+
+		AUI().use('liferay-portlet-url', () => {
+			fetch(this._getRenderURL(node))
+				.then((response) => response.text())
+				.then((text) => {
+					this.setState({
+						dropdown: this._getDropdown(node),
+						renderInnerHTML: {__html: text},
+					});
+				});
 		});
+	}
+
+	_updateSessionState(breadcrumbItems, filterClass, showHideable, viewType) {
+		if (!this.activeCTCollection) {
+			return;
+		}
+
+		const path = [];
+
+		if (breadcrumbItems) {
+			for (let i = 0; i < breadcrumbItems.length; i++) {
+				const breadcrumbItem = breadcrumbItems[i];
+
+				if (breadcrumbItem.modelClassNameId) {
+					path.push({
+						modelClassNameId: breadcrumbItem.modelClassNameId,
+						modelClassPK: breadcrumbItem.modelClassPK,
+					});
+				}
+			}
+		}
+
+		this.sessionState = {
+			ctCollectionId: this.ctCollectionId,
+			filterClass,
+			path,
+			showHideable,
+			viewType,
+		};
 	}
 
 	render() {

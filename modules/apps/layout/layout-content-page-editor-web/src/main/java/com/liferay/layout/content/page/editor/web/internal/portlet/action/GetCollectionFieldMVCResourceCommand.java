@@ -48,6 +48,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCResourceCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -90,6 +91,9 @@ public class GetCollectionFieldMVCResourceCommand
 		ThemeDisplay themeDisplay = (ThemeDisplay)resourceRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		String languageId = ParamUtil.getString(
+			resourceRequest, "languageId", themeDisplay.getLanguageId());
+
 		String layoutObjectReference = ParamUtil.getString(
 			resourceRequest, "layoutObjectReference");
 		String listStyle = ParamUtil.getString(resourceRequest, "listStyle");
@@ -104,9 +108,9 @@ public class GetCollectionFieldMVCResourceCommand
 		try {
 			jsonObject = _getCollectionFieldsJSONObject(
 				_portal.getHttpServletRequest(resourceRequest),
-				_portal.getHttpServletResponse(resourceResponse),
+				_portal.getHttpServletResponse(resourceResponse), languageId,
 				layoutObjectReference, listStyle, listItemStyle, templateKey,
-				themeDisplay.getLocale(), segmentsExperienceId, size);
+				segmentsExperienceId, size);
 		}
 		catch (Exception exception) {
 			_log.error("Unable to get collection field", exception);
@@ -123,10 +127,10 @@ public class GetCollectionFieldMVCResourceCommand
 
 	private JSONObject _getCollectionFieldsJSONObject(
 			HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse,
+			HttpServletResponse httpServletResponse, String languageId,
 			String layoutObjectReference, String listStyle,
-			String listItemStyle, String templateKey, Locale locale,
-			long segmentsExperienceId, int size)
+			String listItemStyle, String templateKey, long segmentsExperienceId,
+			int size)
 		throws PortalException {
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
@@ -193,7 +197,8 @@ public class GetCollectionFieldMVCResourceCommand
 				for (Object object : list) {
 					jsonArray.put(
 						_getDisplayObjectJSONObject(
-							infoItemFieldValuesProvider, object, locale));
+							infoItemFieldValuesProvider, object,
+							LocaleUtil.fromLanguageId(languageId)));
 				}
 
 				InfoListRenderer<Object> infoListRenderer =

@@ -26,13 +26,15 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.portlet.asset.util.AssetVocabularySettingsHelper;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -71,6 +73,18 @@ public class AddDefaultAssetVocabulariesPortalInstanceLifecycleListener
 
 		User defaultUser = company.getDefaultUser();
 
+		Map<Locale, String> titleMap = new HashMap<>();
+
+		for (Locale locale :
+				LanguageUtil.getCompanyAvailableLocales(
+					company.getCompanyId())) {
+
+			titleMap.put(
+				locale,
+				LanguageUtil.get(
+					ResourceBundleUtil.getBundle(locale, getClass()), name));
+		}
+
 		AssetVocabularySettingsHelper assetVocabularySettingsHelper =
 			new AssetVocabularySettingsHelper();
 
@@ -86,15 +100,9 @@ public class AddDefaultAssetVocabulariesPortalInstanceLifecycleListener
 
 		_assetVocabularyLocalService.addVocabulary(
 			defaultUser.getUserId(), company.getGroupId(), name,
-			StringPool.BLANK,
-			Collections.singletonMap(
-				LocaleUtil.getSiteDefault(),
-				LanguageUtil.get(
-					ResourceBundleUtil.getBundle(
-						LocaleUtil.getSiteDefault(), getClass()),
-					name)),
-			Collections.emptyMap(), assetVocabularySettingsHelper.toString(),
-			visibilityType, serviceContext);
+			StringPool.BLANK, titleMap, Collections.emptyMap(),
+			assetVocabularySettingsHelper.toString(), visibilityType,
+			serviceContext);
 	}
 
 	@Reference

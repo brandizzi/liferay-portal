@@ -138,6 +138,8 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 
 	const dispatch = useDispatch();
 
+	const languageId = useSelector((state) => state.languageId);
+
 	const segmentsExperienceId = useSelector(
 		(state) => state.segmentsExperienceId
 	);
@@ -148,6 +150,7 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 		if (collectionConfig.collection) {
 			CollectionService.getCollectionField({
 				collection: collectionConfig.collection,
+				languageId,
 				listItemStyle: collectionConfig.listItemStyle || null,
 				listStyle: collectionConfig.listStyle,
 				onNetworkStatus: dispatch,
@@ -173,6 +176,7 @@ const Collection = React.forwardRef(({children, item}, ref) => {
 		collectionConfig.numberOfItems,
 		collectionConfig.templateKey,
 		dispatch,
+		languageId,
 		segmentsExperienceId,
 	]);
 

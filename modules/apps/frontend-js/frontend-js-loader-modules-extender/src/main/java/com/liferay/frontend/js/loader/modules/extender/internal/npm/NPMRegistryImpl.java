@@ -29,6 +29,7 @@ import com.liferay.frontend.js.loader.modules.extender.npm.JSPackageDependency;
 import com.liferay.frontend.js.loader.modules.extender.npm.JavaScriptAwarePortalWebResources;
 import com.liferay.frontend.js.loader.modules.extender.npm.ModuleNameUtil;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistryUpdate;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.osgi.util.ServiceTrackerFactory;
@@ -91,6 +92,10 @@ public class NPMRegistryImpl implements NPMRegistry {
 	@Deprecated
 	@Override
 	public void addJSBundleTracker(JSBundleTracker jsBundleTracker) {
+	}
+
+	public void finishUpdate(NPMRegistryUpdate npmRegistryUpdate) {
+		_refreshJSModuleCaches(null);
 	}
 
 	@Override
@@ -267,6 +272,11 @@ public class NPMRegistryImpl implements NPMRegistry {
 		return jsPackage;
 	}
 
+	@Override
+	public NPMRegistryUpdate update() {
+		return new NPMRegistryUpdateImpl(this);
+	}
+
 	@Activate
 	protected void activate(
 		BundleContext bundleContext, Map<String, Object> properties) {
@@ -434,6 +444,12 @@ public class NPMRegistryImpl implements NPMRegistry {
 	}
 
 	private void _refreshJSModuleCaches(Collection<JSBundle> jsBundles) {
+		if (jsBundles == null) {
+			Map<Bundle, JSBundle> tracked = _bundleTracker.getTracked();
+
+			jsBundles = tracked.values();
+		}
+
 		_dependencyJSPackages.clear();
 
 		Map<String, JSModule> jsModules = new HashMap<>();
@@ -587,9 +603,7 @@ public class NPMRegistryImpl implements NPMRegistry {
 			Bundle bundle, BundleEvent bundleEvent, JSBundle jsBundle) {
 
 			if (!_activationThreadLocal.get()) {
-				Map<Bundle, JSBundle> tracked = _bundleTracker.getTracked();
-
-				_refreshJSModuleCaches(tracked.values());
+				_refreshJSModuleCaches(null);
 			}
 		}
 

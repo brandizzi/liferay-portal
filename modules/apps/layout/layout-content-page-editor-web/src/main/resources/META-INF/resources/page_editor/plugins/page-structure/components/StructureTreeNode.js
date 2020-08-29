@@ -29,9 +29,25 @@ import {
 import {fromControlsId} from '../../../app/components/layout-data-items/Collection';
 import {ITEM_ACTIVATION_ORIGINS} from '../../../app/config/constants/itemActivationOrigins';
 import {ITEM_TYPES} from '../../../app/config/constants/itemTypes';
+import {LAYOUT_DATA_ITEM_TYPES} from '../../../app/config/constants/layoutDataItemTypes';
 import selectCanUpdatePageStructure from '../../../app/selectors/selectCanUpdatePageStructure';
+import selectSegmentsExperienceId from '../../../app/selectors/selectSegmentsExperienceId';
 import {useDispatch, useSelector} from '../../../app/store/index';
 import deleteItem from '../../../app/thunks/deleteItem';
+import moveItem from '../../../app/thunks/moveItem';
+import checkAllowedChild from '../../../app/utils/dragAndDrop/checkAllowedChild';
+import {DRAG_DROP_TARGET_TYPE} from '../../../app/utils/dragAndDrop/constants/dragDropTargetType';
+import {TARGET_POSITION} from '../../../app/utils/dragAndDrop/constants/targetPosition';
+import getTargetPosition from '../../../app/utils/dragAndDrop/getTargetPosition';
+import itemIsAncestor from '../../../app/utils/dragAndDrop/itemIsAncestor';
+import toControlsId from '../../../app/utils/dragAndDrop/toControlsId';
+import {
+	initialDragDrop,
+	useDragItem,
+	useDropTarget,
+} from '../../../app/utils/dragAndDrop/useDragAndDrop';
+
+const HOVER_EXPAND_DELAY = 1000;
 
 const nodeIsHovered = (nodeId, hoveredItemId) =>
 	nodeId === fromControlsId(hoveredItemId);
@@ -42,13 +58,44 @@ export default function StructureTreeNode({node}) {
 	const activationOrigin = useActivationOrigin();
 	const activeItemId = useActiveItemId();
 	const canUpdatePageStructure = useSelector(selectCanUpdatePageStructure);
+	const dispatch = useDispatch();
 	const hoverItem = useHoverItem();
 	const hoveredItemId = useHoveredItemId();
+	const segmentsExperienceId = useSelector(selectSegmentsExperienceId);
+
 	const nodeRef = useRef();
 	const selectItem = useSelectItem();
 	const toControlsId = useToControlsId();
 
 	const isActive = node.activable && nodeIsSelected(node.id, activeItemId);
+
+	const item = {
+		children: node.children,
+		icon: node.icon,
+		itemId: node.id,
+		name: node.name,
+		origin: ITEM_ACTIVATION_ORIGINS.structureTree,
+		parentId: node.parentItemId,
+		type: node.type || node.itemType,
+	};
+
+	const {isOverTarget, targetPosition, targetRef} = useDropTarget(
+		item,
+		computeHover
+	);
+
+	const {handlerRef, isDraggingSource} = useDragItem(
+		item,
+		(parentItemId, position) =>
+			dispatch(
+				moveItem({
+					itemId: node.id,
+					parentItemId,
+					position,
+					segmentsExperienceId,
+				})
+			)
+	);
 
 	useEffect(() => {
 		if (
@@ -64,13 +111,34 @@ export default function StructureTreeNode({node}) {
 		}
 	}, [activationOrigin, isActive]);
 
+	useEffect(() => {
+		let timeoutId = null;
+
+		if (isOverTarget) {
+			timeoutId = setTimeout(() => {
+				node.onHoverNode(node.id);
+			}, HOVER_EXPAND_DELAY);
+		}
+
+		return () => {
+			clearTimeout(timeoutId);
+		};
+	}, [isOverTarget, node]);
+
 	return (
 		<div
 			aria-selected={isActive}
 			className={classNames('page-editor__page-structure__tree-node', {
+				'drag-over-bottom':
+					isOverTarget && targetPosition === TARGET_POSITION.BOTTOM,
+				'drag-over-middle':
+					isOverTarget && targetPosition === TARGET_POSITION.MIDDLE,
+				'drag-over-top':
+					isOverTarget && targetPosition === TARGET_POSITION.TOP,
+				dragged: isDraggingSource,
+				'page-editor__page-structure__tree-node--activable':
+					node.activable && node.itemType !== ITEM_TYPES.editable,
 				'page-editor__page-structure__tree-node--active': isActive,
-				'page-editor__page-structure__tree-node--bold':
-					node.activable && node.type !== ITEM_TYPES.editable,
 				'page-editor__page-structure__tree-node--hovered': nodeIsHovered(
 					node.id,
 					hoveredItemId
@@ -79,15 +147,24 @@ export default function StructureTreeNode({node}) {
 			onMouseLeave={(event) => {
 				event.stopPropagation();
 
+				if (isDraggingSource) {
+					return;
+				}
+
 				if (nodeIsHovered(node.id, hoveredItemId)) {
 					hoverItem(null);
 				}
 			}}
 			onMouseOver={(event) => {
 				event.stopPropagation();
+
+				if (isDraggingSource) {
+					return;
+				}
+
 				hoverItem(node.id);
 			}}
-			ref={nodeRef}
+			ref={targetRef}
 		>
 			<ClayButton
 				aria-label={Liferay.Util.sub(Liferay.Language.get('select-x'), [
@@ -102,12 +179,13 @@ export default function StructureTreeNode({node}) {
 
 					if (node.activable) {
 						selectItem(toControlsId(node.id), {
-							itemType: node.type,
+							itemType: node.itemType,
 							origin: ITEM_ACTIVATION_ORIGINS.structureTree,
 						});
 					}
 				}}
 				onDoubleClick={(event) => event.stopPropagation()}
+				ref={node.draggable ? handlerRef : nodeRef}
 			/>
 
 			<NameLabel
@@ -187,3 +265,180 @@ const RemoveButton = ({node, visible}) => {
 		</ClayButton>
 	);
 };
+
+function computeHover({
+	dispatch,
+	layoutDataRef,
+	monitor,
+	siblingItem = null,
+	sourceItem,
+	targetItem,
+	targetRefs,
+}) {
+
+	// Not dragging over direct child
+	// We do not want to alter state here,
+	// as dnd generate extra hover events when
+	// items are being dragged over nested children
+
+	if (!monitor.isOver({shallow: true})) {
+		return;
+	}
+
+	// Dragging over itself or a descendant
+
+	if (itemIsAncestor(sourceItem, targetItem, layoutDataRef)) {
+		return dispatch({
+			...initialDragDrop.state,
+			type: DRAG_DROP_TARGET_TYPE.DRAGGING_TO_ITSELF,
+		});
+	}
+
+	// Apparently valid drag, calculate vertical position and
+	// nesting validation
+
+	const [
+		targetPositionWithMiddle,
+		targetPositionWithoutMiddle,
+		elevation,
+	] = getItemPosition(
+		siblingItem || targetItem,
+		monitor,
+		layoutDataRef,
+		targetRefs
+	);
+
+	// Drop inside target
+
+	const validDropInsideTarget = (() => {
+		const targetIsColumn =
+			targetItem.type === LAYOUT_DATA_ITEM_TYPES.column;
+		const targetIsFragment =
+			targetItem.type === LAYOUT_DATA_ITEM_TYPES.fragment;
+		const targetIsContainer =
+			targetItem.type === LAYOUT_DATA_ITEM_TYPES.container;
+		const targetIsEmpty =
+			layoutDataRef.current.items[targetItem.itemId]?.children.length ===
+			0;
+		const targetIsParent = sourceItem.parentId === targetItem.itemId;
+
+		return (
+			targetPositionWithMiddle === TARGET_POSITION.MIDDLE &&
+			(targetIsEmpty || targetIsColumn || targetIsContainer) &&
+			!targetIsFragment &&
+			!targetIsParent
+		);
+	})();
+
+	if (!siblingItem && validDropInsideTarget) {
+		return dispatch({
+			dropItem: sourceItem,
+			dropTargetItem: targetItem,
+			droppable: checkAllowedChild(sourceItem, targetItem, layoutDataRef),
+			elevate: null,
+			targetPositionWithMiddle,
+			targetPositionWithoutMiddle,
+			type: DRAG_DROP_TARGET_TYPE.INSIDE,
+		});
+	}
+
+	// Valid elevation:
+	// - dropItem should be child of dropTargetItem
+	// - dropItem should be sibling of siblingItem
+
+	if (
+		siblingItem &&
+		checkAllowedChild(sourceItem, targetItem, layoutDataRef)
+	) {
+		return dispatch({
+			dropItem: sourceItem,
+			dropTargetItem: siblingItem,
+			droppable: true,
+			elevate: true,
+			targetPositionWithMiddle,
+			targetPositionWithoutMiddle,
+			type: DRAG_DROP_TARGET_TYPE.ELEVATE,
+		});
+	}
+
+	// Try to elevate to a valid ancestor
+
+	if (elevation) {
+		const getElevatedTargetItem = (target) => {
+			const parent = layoutDataRef.current.items[target.parentId]
+				? {
+						...layoutDataRef.current.items[target.parentId],
+						collectionItemIndex: target.collectionItemIndex,
+				  }
+				: null;
+
+			if (parent) {
+				const [targetPosition] = getItemPosition(
+					target,
+					monitor,
+					layoutDataRef,
+					targetRefs
+				);
+
+				const [parentPosition] = getItemPosition(
+					parent,
+					monitor,
+					layoutDataRef,
+					targetRefs
+				);
+
+				if (
+					(targetPosition === targetPositionWithMiddle ||
+						parentPosition === targetPositionWithMiddle) &&
+					checkAllowedChild(sourceItem, parent, layoutDataRef)
+				) {
+					return [parent, target];
+				}
+			}
+
+			return [null, null];
+		};
+
+		const [elevatedTargetItem, siblingItem] = getElevatedTargetItem(
+			targetItem
+		);
+
+		if (elevatedTargetItem && elevatedTargetItem !== targetItem) {
+			return computeHover({
+				dispatch,
+				layoutDataRef,
+				monitor,
+				siblingItem,
+				sourceItem,
+				targetItem: elevatedTargetItem,
+				targetRefs,
+			});
+		}
+	}
+}
+
+const ELEVATION_BORDER_SIZE = 5;
+
+function getItemPosition(item, monitor, layoutDataRef, targetRefs) {
+	const targetRef = targetRefs.get(toControlsId(layoutDataRef, item));
+
+	if (!targetRef || !targetRef.current) {
+		return [null, null];
+	}
+
+	const clientOffsetY = monitor.getClientOffset().y;
+	const hoverBoundingRect = targetRef.current.getBoundingClientRect();
+
+	const [
+		targetPositionWithMiddle,
+		targetPositionWithoutMiddle,
+	] = getTargetPosition(
+		clientOffsetY,
+		hoverBoundingRect,
+		ELEVATION_BORDER_SIZE
+	);
+
+	const elevation = targetPositionWithMiddle !== TARGET_POSITION.MIDDLE;
+
+	return [targetPositionWithMiddle, targetPositionWithoutMiddle, elevation];
+}

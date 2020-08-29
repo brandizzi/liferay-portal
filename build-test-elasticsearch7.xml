@@ -72,7 +72,7 @@ xpack.security.transport.ssl.verification_mode: certificate</echo>
 		<sequential>
 			<echo append="true" file="${elastic.kibana.dir}/config/kibana.yml">${line.separator}elasticsearch.hosts: "http://localhost:9200"
 pid.file: ${elastic.kibana.dir}/bin/pid-kibana
-server.basePath: "/o/portal-search-elasticsearch-xpack-monitoring/xpack-monitoring-proxy"
+server.basePath: "/o/portal-search-elasticsearch-monitoring/monitoring-proxy"
 server.rewriteBasePath: false</echo>
 		</sequential>
 	</macrodef>
@@ -126,7 +126,7 @@ xpack.ml.enabled: false</echo>
 				replace="\\\\="
 			/>
 
-			<echo append="true" file="${liferay.home}/osgi/configs/com.liferay.portal.search.elasticsearch6.xpack.monitoring.web.internal.configuration.XPackMonitoringConfiguration.config">kibanaPassword="${osgi.config.elastic.user.password}"
+			<echo append="true" file="${liferay.home}/osgi/configs/com.liferay.portal.search.elasticsearch.monitoring.web.internal.configuration.MonitoringConfiguration.config">kibanaPassword="${osgi.config.elastic.user.password}"
 kibanaURL="https://localhost:5601"
 proxyServletLogEnable="true"</echo>
 
@@ -719,6 +719,16 @@ ${line.separator}CATALINA_OPTS="${CATALINA_OPTS} -Djavax.net.ssl.trustStore=${el
 					</then>
 				</elseif>
 			</if>
+
+			<chmod
+				maxparallel="10"
+				perm="a+rwx"
+				type="both"
+			>
+				<fileset
+					dir="${elastic.kibana.dir}"
+				/>
+			</chmod>
 		</sequential>
 	</macrodef>
 
@@ -970,6 +980,16 @@ xpack.monitoring.collection.enabled: true</echo>
 					dir="${elasticsearch.dir}"
 				/>
 			</copy>
+
+			<chmod
+				maxparallel="10"
+				perm="a+rwx"
+				type="both"
+			>
+				<fileset
+					dir="${elasticsearch.dir}-${elasticsearch.node.number}"
+				/>
+			</chmod>
 		</antelope:repeat>
 
 		<delete dir="${elasticsearch.dir}" />
@@ -1328,16 +1348,6 @@ xpack.monitoring.collection.enabled: true</echo>
 					result="elasticsearch.node.number"
 				/>
 
-				<chmod
-					maxparallel="10"
-					perm="a+rwx"
-					type="both"
-				>
-					<fileset
-						dir="${elasticsearch.dir}-${elasticsearch.node.number}"
-					/>
-				</chmod>
-
 				<if>
 					<os family="mac" />
 					<then>
@@ -1375,23 +1385,6 @@ xpack.monitoring.collection.enabled: true</echo>
 		<lstopwatch action="start" name="start.kibana" />
 
 		<unzip-kibana />
-
-		<chmod
-			maxparallel="10"
-			perm="a+x"
-			type="both"
-		>
-			<fileset
-				dir="${elastic.kibana.dir}/bin"
-			>
-				<include name="**" />
-			</fileset>
-			<fileset
-				dir="${elastic.kibana.dir}/node"
-			>
-				<include name="**" />
-			</fileset>
-		</chmod>
 
 		<get-testcase-property property.name="elastic.xpack.enabled" />
 

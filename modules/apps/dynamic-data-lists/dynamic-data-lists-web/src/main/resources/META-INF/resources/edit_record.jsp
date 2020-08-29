@@ -56,7 +56,7 @@ else if (Validator.isNull(defaultLanguageId)) {
 
 String languageId = ParamUtil.getString(request, "languageId", defaultLanguageId);
 
-Locale defaultEditLocale = null;
+Locale defaultEditLocale = LocaleUtil.fromLanguageId(ddmStructure.getDefaultLanguageId());
 
 if (ddmFormValues != null) {
 	defaultEditLocale = ddmFormValues.getDefaultLocale();

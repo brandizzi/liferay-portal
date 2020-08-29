@@ -62,7 +62,6 @@ export default ({
 		},
 		{
 			key: 'id',
-			sortable: true,
 			value: Liferay.Language.get('id'),
 		},
 	];

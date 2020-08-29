@@ -10,6 +10,12 @@ body.has-control-menu .fieldset-modal {
 		.field-type .dropdown-action {
 			display: none;
 		}
+
+		.component-tbar {
+			.container-fluid {
+				margin-top: 4px;
+			}
+		}
 	}
 
 	.multi-panel-sidebar-content {

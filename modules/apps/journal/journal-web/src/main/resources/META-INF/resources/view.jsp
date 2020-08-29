@@ -31,12 +31,6 @@ else if (journalDisplayContext.isCommentsTabSelected()) {
 else {
 	journalManagementToolbarDisplayContext = new JournalManagementToolbarDisplayContext(request, liferayPortletRequest, liferayPortletResponse, journalDisplayContext, trashHelper);
 }
-
-String title = journalDisplayContext.getFolderTitle();
-
-if (Validator.isNotNull(title)) {
-	renderResponse.setTitle(journalDisplayContext.getFolderTitle());
-}
 %>
 
 <portlet:actionURL name="/journal/restore_trash_entries" var="restoreTrashEntriesURL" />

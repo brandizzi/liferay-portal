@@ -12,6 +12,7 @@
  * details.
  */
 
+import ClayIcon from '@clayui/icon';
 import PropTypes from 'prop-types';
 import React, {useCallback} from 'react';
 
@@ -34,7 +35,7 @@ import {FieldSet} from './FieldSet';
 export const FragmentStylesPanel = ({item}) => {
 	const dispatch = useDispatch();
 
-	const {commonStyles} = config;
+	const {availableViewportSizes, commonStyles} = config;
 
 	const fragmentEntryLink = useSelectorCallback(
 		(state) => state.fragmentEntryLinks[item.config.fragmentEntryLinkId],
@@ -45,6 +46,8 @@ export const FragmentStylesPanel = ({item}) => {
 	const selectedViewportSize = useSelector(
 		(state) => state.selectedViewportSize
 	);
+
+	const viewportSize = availableViewportSizes[selectedViewportSize];
 
 	const onCustomStyleValueSelect = useCallback(
 		(name, value) => {
@@ -96,10 +99,17 @@ export const FragmentStylesPanel = ({item}) => {
 
 	return (
 		<>
-			<CustomStyles
-				fragmentEntryLink={fragmentEntryLink}
-				onValueSelect={onCustomStyleValueSelect}
-			/>
+			<p className="page-editor__row-styles-panel__viewport-label">
+				<ClayIcon className="mr-2" symbol={viewportSize.icon} />
+				{viewportSize.label}
+			</p>
+
+			{selectedViewportSize === VIEWPORT_SIZES.desktop && (
+				<CustomStyles
+					fragmentEntryLink={fragmentEntryLink}
+					onValueSelect={onCustomStyleValueSelect}
+				/>
+			)}
 
 			<CommonStyles
 				commonStyles={commonStyles}
@@ -169,7 +179,7 @@ const CommonStyles = ({commonStyles, itemConfig, onValueSelect}) => {
 
 CommonStyles.propTypes = {
 	commonStyles: PropTypes.array.isRequired,
-	item: PropTypes.object.isRequired,
+	itemConfig: PropTypes.object.isRequired,
 	onValueSelect: PropTypes.func.isRequired,
 };
 

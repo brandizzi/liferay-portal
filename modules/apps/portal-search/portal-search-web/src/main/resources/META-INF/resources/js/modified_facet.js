@@ -171,6 +171,17 @@ AUI.add(
 					parameterArray
 				);
 
+				var startParameterNameElement = document.getElementById(
+					instance.namespace + 'start-parameter-name'
+				);
+
+				if (startParameterNameElement) {
+					parameterArray = FacetUtil.removeURLParameters(
+						startParameterNameElement.value,
+						parameterArray
+					);
+				}
+
 				parameterArray = FacetUtil.addURLParameter(
 					paramFrom,
 					modifiedFromParameter,

@@ -1,0 +1,99 @@
+@component-name = "core-infrastructure"
+definition {
+
+	property liferay.faces = "true";
+	property portal.release = "true";
+	property portal.upstream = "true";
+	property testray.main.component.name = "Liferay Faces";
+
+	setUp {
+		TestCase.setUpPortalInstance();
+
+		User.firstLoginPG();
+
+		JSONLayout.addPublicLayout(
+			groupName = "Guest",
+			layoutName = "Portal Showcase");
+
+		ProductMenu.gotoPortlet(
+			category = "Site Builder",
+			portlet = "Pages");
+
+		SitePages.configurePage(
+			columnName = "1 Column",
+			pageName = "Portal Showcase",
+			privacy = "Public Pages",
+			sitePageType = "Widget Page");
+
+		Navigator.openWithAppendToBaseURL(urlAppend = "web/guest/portal-showcase");
+
+		Portlet.addPG(portletName = "Portal Showcase");
+
+		Navigator.openWithAppendToBaseURL(urlAppend = "web/guest/portal-showcase");
+	}
+
+	tearDown {
+		var testPortalInstance = PropsUtil.get("test.portal.instance");
+
+		if ("${testPortalInstance}" == "true") {
+			PortalInstances.tearDownCP();
+		}
+		else {
+			User.logoutPG();
+		}
+	}
+
+	@priority = "5"
+	test InputRichTextSmoke {
+
+		Navigator.openWithAppendToBaseURL(urlAppend = "web/guest/portal-showcase/-/portal-tag/portal/inputrichtext/general");
+
+		AssertElementPresent(locator1 = "PortalShowcase#CHECKED_RENDERED_CHECKBOX");
+
+		// InputRichTextHidden
+
+		PortalShowcase.checkText(
+			boldClose = "</strong>",
+			boldOpen = "<strong>",
+			italicClose = "</em>",
+			italicOpen = "<em>",
+			usecase = "Hidden");
+
+		// InputRichTextGeneral
+
+		PortalShowcase.checkText(
+			boldClose = "</strong>",
+			boldOpen = "<strong>",
+			italicClose = "</em>",
+			italicOpen = "<em>",
+			usecase = "General");
+
+		// InputRichTextBBCode
+
+		PortalShowcase.checkText(
+			boldClose = "[/b]",
+			boldOpen = "[b]",
+			italicClose = "[/i]",
+			italicOpen = "[i]",
+			usecase = "BBCode");
+
+		// InputRichTextCreole
+
+		PortalShowcase.checkText(
+			boldClose = "**",
+			boldOpen = "**",
+			italicClose = "//",
+			italicOpen = "//",
+			usecase = "Creole");
+
+		// InputRichTextInstantAjax
+
+		PortalShowcase.checkText(
+			boldClose = "</strong>",
+			boldOpen = "<strong>",
+			italicClose = "</em>",
+			italicOpen = "<em>",
+			usecase = "Instant Ajax");
+	}
+
+}

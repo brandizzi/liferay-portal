@@ -12,6 +12,8 @@
  * details.
  */
 
+import {sub} from 'dynamic-data-mapping-form-field-type/util/strings.es';
+
 import {EVENT_TYPES} from '../actions/eventTypes.es';
 import {PagesVisitor} from '../util/visitors.es';
 
@@ -29,23 +31,44 @@ export default (state, action) => {
 			const {newPages, pageIndex} = action.payload;
 			const visitor = new PagesVisitor(newPages ?? state.pages);
 
+			let firstInvalidFieldLabel = null;
+
+			const pages = visitor.mapFields(
+				(
+					field,
+					fieldIndex,
+					columnIndex,
+					rowIndex,
+					currentPageIndex
+				) => {
+					const displayErrors = currentPageIndex === pageIndex;
+
+					if (
+						displayErrors &&
+						field.errorMessage !== undefined &&
+						field.errorMessage !== '' &&
+						!field.valid &&
+						firstInvalidFieldLabel == null
+					) {
+						firstInvalidFieldLabel = field.label;
+					}
+
+					return {
+						...field,
+						displayErrors,
+					};
+				},
+				true,
+				true
+			);
+
 			return {
-				pages: visitor.mapFields(
-					(
-						field,
-						fieldIndex,
-						columnIndex,
-						rowIndex,
-						currentPageIndex
-					) => {
-						return {
-							...field,
-							displayErrors: currentPageIndex === pageIndex,
-						};
-					},
-					true,
-					true
+				forceAriaUpdate: Date.now(),
+				invalidFormMessage: sub(
+					Liferay.Language.get('this-form-is-invalid-check-field-x'),
+					[firstInvalidFieldLabel]
 				),
+				pages,
 			};
 		}
 		default:

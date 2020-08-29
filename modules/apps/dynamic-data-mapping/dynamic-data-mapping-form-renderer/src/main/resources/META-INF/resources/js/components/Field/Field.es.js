@@ -37,7 +37,7 @@ import {ParentFieldContext} from './ParentFieldContext.es';
 const getModule = (fieldTypes, fieldType) => {
 	const field = fieldTypes.find((field) => field.name === fieldType);
 
-	return field.javaScriptModule;
+	return field;
 };
 
 const load = (fieldModule) => {
@@ -137,7 +137,12 @@ const FieldLazy = ({
 }) => {
 	const focusDurationRef = useRef({end: null, start: null});
 
-	const ComponentLazy = useLazy()(getModule(fieldTypes, field.type));
+	const {configuration = {}, javaScriptModule} = getModule(
+		fieldTypes,
+		field.type
+	);
+
+	const ComponentLazy = useLazy()(javaScriptModule);
 
 	return (
 		<ComponentLazy
@@ -155,6 +160,7 @@ const FieldLazy = ({
 			visible
 			{...field}
 			{...otherProps}
+			{...configuration}
 		/>
 	);
 };

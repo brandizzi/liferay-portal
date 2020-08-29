@@ -39,8 +39,10 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.translation.info.field.TranslationInfoFieldChecker;
 import com.liferay.translation.model.TranslationEntry;
+import com.liferay.translation.service.TranslationEntryLocalServiceUtil;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -66,23 +68,30 @@ public class JournalTranslateDisplayContext {
 
 		_liferayPortletResponse = liferayPortletResponse;
 
+		_article = ActionUtil.getArticle(liferayPortletRequest);
+
 		_httpServletRequest = PortalUtil.getHttpServletRequest(
 			liferayPortletRequest);
 
-		_article = ActionUtil.getArticle(liferayPortletRequest);
 		_infoForm = (InfoForm)_httpServletRequest.getAttribute(
 			InfoForm.class.getName());
-		_infoItemFieldValues =
-			(InfoItemFieldValues)_httpServletRequest.getAttribute(
-				InfoItemFieldValues.class.getName());
+
 		_journalEditArticleDisplayContext =
 			new JournalEditArticleDisplayContext(
 				_httpServletRequest, liferayPortletResponse, _article);
+
+		_sourceInfoItemFieldValues =
+			(InfoItemFieldValues)_httpServletRequest.getAttribute(
+				JournalWebConstants.SOURCE_INFO_ITEM_FIELD_VALUES);
 
 		_sourceLanguageId = (String)_httpServletRequest.getAttribute(
 			JournalWebConstants.SOURCE_LANGUAGE_ID);
 
 		_sourceLocale = LocaleUtil.fromLanguageId(_sourceLanguageId);
+
+		_targetInfoItemFieldValues =
+			(InfoItemFieldValues)_httpServletRequest.getAttribute(
+				JournalWebConstants.TARGET_INFO_ITEM_FIELD_VALUES);
 
 		_targetLanguageId = (String)_httpServletRequest.getAttribute(
 			JournalWebConstants.TARGET_LANGUAGE_ID);
@@ -167,7 +176,16 @@ public class JournalTranslateDisplayContext {
 	}
 
 	public String getSaveButtonLabel() {
-		return _journalEditArticleDisplayContext.getSaveButtonLabel();
+		TranslationEntry translationEntry = _getTranslationEntry();
+
+		if ((translationEntry == null) || translationEntry.isApproved() ||
+			translationEntry.isDraft() || translationEntry.isExpired() ||
+			translationEntry.isScheduled()) {
+
+			return "save-as-draft";
+		}
+
+		return "save";
 	}
 
 	public String getSourceLanguageId() {
@@ -178,9 +196,9 @@ public class JournalTranslateDisplayContext {
 		return _sourceLocale;
 	}
 
-	public String getStringValue(InfoField infoField, Locale locale) {
+	public String getSourceStringValue(InfoField infoField, Locale locale) {
 		InfoFieldValue<Object> infoFieldValue =
-			_infoItemFieldValues.getInfoFieldValue(infoField.getName());
+			_sourceInfoItemFieldValues.getInfoFieldValue(infoField.getName());
 
 		if (infoFieldValue != null) {
 			return GetterUtil.getString(infoFieldValue.getValue(locale));
@@ -195,6 +213,17 @@ public class JournalTranslateDisplayContext {
 
 	public Locale getTargetLocale() {
 		return _targetLocale;
+	}
+
+	public String getTargetStringValue(InfoField infoField, Locale locale) {
+		InfoFieldValue<Object> infoFieldValue =
+			_targetInfoItemFieldValues.getInfoFieldValue(infoField.getName());
+
+		if (infoFieldValue != null) {
+			return GetterUtil.getString(infoFieldValue.getValue(locale));
+		}
+
+		return null;
 	}
 
 	public String getTitle() {
@@ -233,22 +262,75 @@ public class JournalTranslateDisplayContext {
 		return portletURL;
 	}
 
-	public boolean isPending() throws PortalException {
-		return _journalEditArticleDisplayContext.isPending();
+	public boolean hasTranslationPermission() {
+		if (_isAvailableTargetLanguageIdsEmpty()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean isPublishButtonDisabled() throws PortalException {
+		if (_isAvailableTargetLanguageIdsEmpty()) {
+			return true;
+		}
+
+		TranslationEntry translationEntry = _getTranslationEntry();
+
+		if ((translationEntry != null) &&
+			(translationEntry.getStatus() !=
+				WorkflowConstants.STATUS_APPROVED) &&
+			(translationEntry.getStatus() != WorkflowConstants.STATUS_DRAFT)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean isSaveButtonDisabled() throws PortalException {
+		return _isAvailableTargetLanguageIdsEmpty();
+	}
+
+	private TranslationEntry _getTranslationEntry() {
+		if (_translationEntry != null) {
+			return _translationEntry;
+		}
+
+		_translationEntry =
+			TranslationEntryLocalServiceUtil.fetchTranslationEntry(
+				JournalArticle.class.getName(), _article.getResourcePrimKey(),
+				_targetLanguageId);
+
+		return _translationEntry;
+	}
+
+	private boolean _isAvailableTargetLanguageIdsEmpty() {
+		List<String> availableTargetLanguageIds =
+			(List<String>)_httpServletRequest.getAttribute(
+				JournalWebConstants.AVAILABLE_TARGET_LANGUAGE_IDS);
+
+		if (availableTargetLanguageIds.isEmpty()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private final JournalArticle _article;
 	private final HttpServletRequest _httpServletRequest;
 	private final InfoForm _infoForm;
-	private final InfoItemFieldValues _infoItemFieldValues;
 	private final JournalEditArticleDisplayContext
 		_journalEditArticleDisplayContext;
 	private final LiferayPortletResponse _liferayPortletResponse;
+	private final InfoItemFieldValues _sourceInfoItemFieldValues;
 	private final String _sourceLanguageId;
 	private final Locale _sourceLocale;
+	private final InfoItemFieldValues _targetInfoItemFieldValues;
 	private final String _targetLanguageId;
 	private final Locale _targetLocale;
 	private final ThemeDisplay _themeDisplay;
+	private TranslationEntry _translationEntry;
 	private final TranslationInfoFieldChecker _translationInfoFieldChecker;
 
 }

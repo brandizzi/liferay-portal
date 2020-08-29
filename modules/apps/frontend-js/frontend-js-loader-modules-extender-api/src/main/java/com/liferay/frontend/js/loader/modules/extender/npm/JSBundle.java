@@ -18,11 +18,14 @@ import java.net.URL;
 
 import java.util.Collection;
 
+import org.osgi.annotation.versioning.ProviderType;
+
 /**
  * Represents an OSGi bundle containing NPM packages and modules.
  *
  * @author Iván Zaera
  */
+@ProviderType
 public interface JSBundle extends JSBundleObject {
 
 	/**
@@ -35,8 +38,10 @@ public interface JSBundle extends JSBundleObject {
 	/**
 	 * Returns the {@link URL} of an OSGi bundle's resource.
 	 *
+	 * @deprecated As of Athanasius (7.3.x), with no direct replacement
 	 * @return the URL of an OSGi bundle's resource
 	 */
+	@Deprecated
 	public URL getResourceURL(String location);
 
 	/**

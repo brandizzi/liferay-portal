@@ -60,7 +60,8 @@ const Text = ({capitalize = false, children = '', lowercase = false}) => (
 export default function RuleItem({rule, toggleRulesEditorVisibility}) {
 	const {actions, conditions, logicalOperator, name: ruleName} = rule;
 	const [{dataDefinition}, dispatch] = useContext(AppContext);
-	const name = getLocalizedValue(dataDefinition.defaultLanguageId, ruleName);
+	const {defaultLanguageId} = dataDefinition;
+	const name = getLocalizedValue(defaultLanguageId, ruleName);
 
 	const dropDownActions = [
 		{
@@ -123,10 +124,13 @@ export default function RuleItem({rule, toggleRulesEditorVisibility}) {
 						);
 
 						if (parent) {
-							return getOptionLabel(
+							const optionLabel = getOptionLabel(
 								parent.customProperties?.options,
-								lastValue
+								lastValue,
+								defaultLanguageId
 							);
+
+							return optionLabel || lastValue;
 						}
 
 						return lastValue;

@@ -6,7 +6,7 @@ import org.gradle.util.GUtil
 
 buildscript {
 	dependencies {
-		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.defaults", version: "latest.release"
+		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.defaults", version: "6.1.358"
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.maven.plugin.builder", version: "1.2.3"
 		classpath group: "de.undercouch", name: "gradle-download-task", version: "3.3.0"
 		classpath group: "gradle.plugin.org.ysb33r.gradle", name: "gradletest", version: "1.1"
@@ -69,25 +69,25 @@ dependencies {
 				String portalVersion = matcher.group("portalVersion")
 
 				if (portalVersion.startsWith("6.1")) {
-					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-ee-6.1.x", version: "20200811-b06bc2b7"
+					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-ee-6.1.x", version: "20200824-057caac"
 				}
 				else if (portalVersion.startsWith("6.2")) {
-					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-ee-6.2.x", version: "20200811-cf2fff7"
+					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-ee-6.2.x", version: "20200824-6aa56070"
 				}
 				else if (portalVersion.startsWith("7.0")) {
-					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-7.0.x", version: "20200811-4662f52"
+					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-7.0.x", version: "20200824-b1b39de"
 				}
 				else if (portalVersion.startsWith("7.1")) {
-					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-7.1.x", version: "20200811-375c6d0"
+					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-7.1.x", version: "20200824-16a6140"
 				}
 				else if (portalVersion.startsWith("7.2")) {
-					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-7.2.x", version: "20200811-c4860d03"
+					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-7.2.x", version: "20200824-e6abd1a"
 				}
 				else if (portalVersion.startsWith("7.3")) {
-					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-7.3.x", version: "20200811-cdc353a"
+					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-master", version: "20200824-fae5c40"
 				}
 				else if (portalVersion.startsWith("7.4")) {
-					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-master", version: "20200811-cdc353a"
+					poshiRunnerResources group: "com.liferay.poshi.runner.resources", name: "portal-master", version: "20200824-fae5c40"
 				}
 			}
 		}
@@ -102,7 +102,19 @@ dependencies {
 }
 
 poshiRunnerResources {
-	baseNameDir "portal", "test/functional/com/liferay/portalweb"
+	baseName "portal"
+
+	dirs = ["test/functional/com/liferay/portalweb"]
+
+	Properties testProperties = GUtil.loadProperties(file("../test.properties"))
+
+	String testSubrepoDirs = testProperties.getProperty("test.subrepo.dirs")
+
+	if ((testSubrepoDirs != null) && !testSubrepoDirs.isEmpty()) {
+		testSubrepoDirs = testSubrepoDirs.replace("\${project.dir}", "..");
+
+		dirs.addAll(testSubrepoDirs.split(","))
+	}
 }
 
 repositories {

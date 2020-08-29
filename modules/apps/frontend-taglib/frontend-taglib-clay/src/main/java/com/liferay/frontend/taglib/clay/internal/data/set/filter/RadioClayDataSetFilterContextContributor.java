@@ -17,12 +17,12 @@ package com.liferay.frontend.taglib.clay.internal.data.set.filter;
 import com.liferay.frontend.taglib.clay.data.set.filter.BaseRadioClayDataSetFilter;
 import com.liferay.frontend.taglib.clay.data.set.filter.ClayDataSetFilter;
 import com.liferay.frontend.taglib.clay.data.set.filter.ClayDataSetFilterContextContributor;
+import com.liferay.frontend.taglib.clay.data.set.filter.RadioClayDataSetFilterItem;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
-import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 
 import java.util.Collections;
@@ -63,18 +63,19 @@ public class RadioClayDataSetFilterContextContributor
 		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
 			"content.Language", locale, getClass());
 
-		List<KeyValuePair> keyValuePairs =
-			baseRadioClayDataSetFilter.getKeyValuePairs(locale);
+		List<RadioClayDataSetFilterItem> radioClayDataSetFilterItems =
+			baseRadioClayDataSetFilter.getRadioClayDataSetFilterItems(locale);
 
-		for (KeyValuePair keyValuePair : keyValuePairs) {
-			String label = LanguageUtil.get(
-				resourceBundle, keyValuePair.getKey());
+		for (RadioClayDataSetFilterItem radioClayDataSetFilterItem :
+				radioClayDataSetFilterItems) {
 
 			jsonArray.put(
 				JSONUtil.put(
-					"label", label
+					"label",
+					LanguageUtil.get(
+						resourceBundle, radioClayDataSetFilterItem.getLabel())
 				).put(
-					"value", keyValuePair.getValue()
+					"value", radioClayDataSetFilterItem.getValue()
 				));
 		}
 

@@ -22,7 +22,8 @@ import groovy.lang.Closure;
 
 import java.io.File;
 
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
@@ -72,7 +73,7 @@ public class PoshiRunnerResourcesPlugin implements Plugin<Project> {
 	}
 
 	private Jar _addArtifactPoshiRunnerResources(
-		Project project, final File dir, String baseName, String appendix,
+		Project project, final Set<File> dirs, String baseName, String appendix,
 		String rootDirName, String version) {
 
 		Jar jar = GradleUtil.addTask(
@@ -87,20 +88,19 @@ public class PoshiRunnerResourcesPlugin implements Plugin<Project> {
 
 					@SuppressWarnings("unused")
 					public void doCall(CopySpec copySpec) {
-						copySpec.from(dir);
+						copySpec.from(dirs);
 					}
 
 				});
 		}
 		else {
-			jar.from(dir);
+			jar.from(dirs);
 		}
 
 		jar.setAppendix(appendix);
 		jar.setBaseName(baseName);
 		jar.setDescription(
-			"Assembles a jar archive containing the Poshi Runner resources " +
-				"in '" + project.relativePath(dir) + "'.");
+			"Assembles a jar archive containing the Poshi Runner resources.");
 		jar.setVersion(version);
 
 		ArtifactHandler artifactHandler = project.getArtifacts();
@@ -115,19 +115,18 @@ public class PoshiRunnerResourcesPlugin implements Plugin<Project> {
 		PoshiRunnerResourcesExtension poshiRunnerResourcesExtension) {
 
 		String appendix = poshiRunnerResourcesExtension.getArtifactAppendix();
+		String baseName = poshiRunnerResourcesExtension.getBaseName();
 		String rootDirName = poshiRunnerResourcesExtension.getRootDirName();
 		String version = poshiRunnerResourcesExtension.getArtifactVersion();
 
-		Map<Object, Object> baseNameDirs =
-			poshiRunnerResourcesExtension.getBaseNameDirs();
+		Set<File> dirs = new HashSet<>();
 
-		for (Map.Entry<Object, Object> entry : baseNameDirs.entrySet()) {
-			String baseName = GradleUtil.toString(entry.getKey());
-			File dir = GradleUtil.toFile(project, entry.getValue());
-
-			_addArtifactPoshiRunnerResources(
-				project, dir, baseName, appendix, rootDirName, version);
+		for (Object dir : poshiRunnerResourcesExtension.getDirs()) {
+			dirs.add(GradleUtil.toFile(project, dir));
 		}
+
+		_addArtifactPoshiRunnerResources(
+			project, dirs, baseName, appendix, rootDirName, version);
 	}
 
 	private Configuration _addConfigurationPoshiRunnerResources(

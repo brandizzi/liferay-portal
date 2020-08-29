@@ -61,7 +61,7 @@
 		height: calc(100% - #{$controlMenuHeight});
 	}
 
-	.sidebar {
+	.content-dashboard.sidebar {
 		top: $controlMenuHeight;
 	}
 }
@@ -70,25 +70,26 @@
 	height: 100%;
 }
 
-.sidebar {
+.content-dashboard.sidebar {
 	bottom: 0;
 	height: auto;
 	left: 100%;
 	position: fixed;
+	transition: transform 0.5s ease;
 	width: $sidebarWidth;
 	z-index: $zindex-dropdown - 1;
-}
 
-.sidebar-body {
-	padding-top: 0;
-}
+	.sidebar-body {
+		padding-top: 0;
 
-.sidebar-body > .sidebar-section {
-	margin-bottom: 16px;
+		& > .sidebar-section {
+			margin-bottom: 16px;
+		}
+	}
 }
 
 .sidebar-open {
-	.sidebar {
+	.content-dashboard.sidebar {
 		transform: translateX(-100%);
 		will-change: transform;
 	}
@@ -102,6 +103,6 @@
 	transition: padding-right 0.5s ease;
 }
 
-.sidebar {
-	transition: transform 0.5s ease;
+.text-truncate-reverse {
+	direction: rtl;
 }

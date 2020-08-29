@@ -1333,17 +1333,16 @@ paths:
                         ""
             tags: ["WorkflowTask"]
     "/workflow-tasks/next-transitions":
-        get:
-            operationId: getWorkflowTaskTransition
-            parameters:
-                - in: query
-                  name: workflowTaskIds
-                  required: true
-                  schema:
-                      items:
-                          format: int64
-                          type: integer
-                      type: array
+        post:
+            operationId: postWorkflowTaskTransition
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/WorkflowTaskIds"
+                    application/xml:
+                        schema:
+                            $ref: "#/components/schemas/WorkflowTaskIds"
             responses:
                 200:
                     content:

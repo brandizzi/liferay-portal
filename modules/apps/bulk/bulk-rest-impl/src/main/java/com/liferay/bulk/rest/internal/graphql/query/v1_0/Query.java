@@ -72,6 +72,7 @@ public class Query {
 
 		public StatusPage(Page statusPage) {
 			actions = statusPage.getActions();
+
 			items = statusPage.getItems();
 			lastPage = statusPage.getLastPage();
 			page = statusPage.getPage();

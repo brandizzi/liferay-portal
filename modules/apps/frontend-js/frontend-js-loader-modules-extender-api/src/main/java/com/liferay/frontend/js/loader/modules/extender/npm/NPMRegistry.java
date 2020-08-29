@@ -58,4 +58,6 @@ public interface NPMRegistry {
 	public JSPackage resolveJSPackageDependency(
 		JSPackageDependency jsPackageDependency);
 
+	public NPMRegistryUpdate update();
+
 }

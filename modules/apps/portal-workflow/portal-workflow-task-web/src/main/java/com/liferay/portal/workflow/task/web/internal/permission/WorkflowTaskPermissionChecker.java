@@ -89,13 +89,6 @@ public class WorkflowTaskPermissionChecker {
 			return true;
 		}
 
-		if (!hasAssetViewPermission(workflowTask, permissionChecker) &&
-			!permissionChecker.isContentReviewer(
-				permissionChecker.getCompanyId(), groupId)) {
-
-			return false;
-		}
-
 		long[] roleIds = getRoleIds(groupId, permissionChecker);
 
 		for (WorkflowTaskAssignee workflowTaskAssignee :
@@ -108,6 +101,13 @@ public class WorkflowTaskPermissionChecker {
 
 				return true;
 			}
+		}
+
+		if (!hasAssetViewPermission(workflowTask, permissionChecker) &&
+			!permissionChecker.isContentReviewer(
+				permissionChecker.getCompanyId(), groupId)) {
+
+			return false;
 		}
 
 		return false;

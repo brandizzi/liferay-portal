@@ -21,14 +21,12 @@ import com.liferay.headless.admin.workflow.dto.v1_0.WorkflowInstance;
 import com.liferay.headless.admin.workflow.dto.v1_0.WorkflowLog;
 import com.liferay.headless.admin.workflow.dto.v1_0.WorkflowTask;
 import com.liferay.headless.admin.workflow.dto.v1_0.WorkflowTaskAssignToUser;
-import com.liferay.headless.admin.workflow.dto.v1_0.WorkflowTaskTransitions;
 import com.liferay.headless.admin.workflow.resource.v1_0.AssigneeResource;
 import com.liferay.headless.admin.workflow.resource.v1_0.TransitionResource;
 import com.liferay.headless.admin.workflow.resource.v1_0.WorkflowDefinitionResource;
 import com.liferay.headless.admin.workflow.resource.v1_0.WorkflowInstanceResource;
 import com.liferay.headless.admin.workflow.resource.v1_0.WorkflowLogResource;
 import com.liferay.headless.admin.workflow.resource.v1_0.WorkflowTaskResource;
-import com.liferay.headless.admin.workflow.resource.v1_0.WorkflowTaskTransitionsResource;
 import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.portal.kernel.search.Sort;
@@ -107,15 +105,6 @@ public class Query {
 
 		_workflowTaskResourceComponentServiceObjects =
 			workflowTaskResourceComponentServiceObjects;
-	}
-
-	public static void
-		setWorkflowTaskTransitionsResourceComponentServiceObjects(
-			ComponentServiceObjects<WorkflowTaskTransitionsResource>
-				workflowTaskTransitionsResourceComponentServiceObjects) {
-
-		_workflowTaskTransitionsResourceComponentServiceObjects =
-			workflowTaskTransitionsResourceComponentServiceObjects;
 	}
 
 	/**
@@ -536,24 +525,6 @@ public class Query {
 					workflowTaskId));
 	}
 
-	/**
-	 * Invoke this method with the command line:
-	 *
-	 * curl -H 'Content-Type: text/plain; charset=utf-8' -X 'POST' 'http://localhost:8080/o/graphql' -d $'{"query": "query {workflowTaskTransition(workflowTaskIds: ___){workflowTaskTransitions}}"}' -u 'test@liferay.com:test'
-	 */
-	@GraphQLField
-	public WorkflowTaskTransitions workflowTaskTransition(
-			@GraphQLName("workflowTaskIds") Long[] workflowTaskIds)
-		throws Exception {
-
-		return _applyComponentServiceObjects(
-			_workflowTaskTransitionsResourceComponentServiceObjects,
-			this::_populateResourceContext,
-			workflowTaskTransitionsResource ->
-				workflowTaskTransitionsResource.getWorkflowTaskTransition(
-					workflowTaskIds));
-	}
-
 	@GraphQLTypeExtension(WorkflowInstance.class)
 	public class GetWorkflowInstanceWorkflowTasksPageTypeExtension {
 
@@ -856,6 +827,7 @@ public class Query {
 
 		public AssigneePage(Page assigneePage) {
 			actions = assigneePage.getActions();
+
 			items = assigneePage.getItems();
 			lastPage = assigneePage.getLastPage();
 			page = assigneePage.getPage();
@@ -888,6 +860,7 @@ public class Query {
 
 		public TransitionPage(Page transitionPage) {
 			actions = transitionPage.getActions();
+
 			items = transitionPage.getItems();
 			lastPage = transitionPage.getLastPage();
 			page = transitionPage.getPage();
@@ -920,6 +893,7 @@ public class Query {
 
 		public WorkflowDefinitionPage(Page workflowDefinitionPage) {
 			actions = workflowDefinitionPage.getActions();
+
 			items = workflowDefinitionPage.getItems();
 			lastPage = workflowDefinitionPage.getLastPage();
 			page = workflowDefinitionPage.getPage();
@@ -952,6 +926,7 @@ public class Query {
 
 		public WorkflowInstancePage(Page workflowInstancePage) {
 			actions = workflowInstancePage.getActions();
+
 			items = workflowInstancePage.getItems();
 			lastPage = workflowInstancePage.getLastPage();
 			page = workflowInstancePage.getPage();
@@ -984,6 +959,7 @@ public class Query {
 
 		public WorkflowLogPage(Page workflowLogPage) {
 			actions = workflowLogPage.getActions();
+
 			items = workflowLogPage.getItems();
 			lastPage = workflowLogPage.getLastPage();
 			page = workflowLogPage.getPage();
@@ -1016,6 +992,7 @@ public class Query {
 
 		public WorkflowTaskPage(Page workflowTaskPage) {
 			actions = workflowTaskPage.getActions();
+
 			items = workflowTaskPage.getItems();
 			lastPage = workflowTaskPage.getLastPage();
 			page = workflowTaskPage.getPage();
@@ -1028,38 +1005,6 @@ public class Query {
 
 		@GraphQLField
 		protected java.util.Collection<WorkflowTask> items;
-
-		@GraphQLField
-		protected long lastPage;
-
-		@GraphQLField
-		protected long page;
-
-		@GraphQLField
-		protected long pageSize;
-
-		@GraphQLField
-		protected long totalCount;
-
-	}
-
-	@GraphQLName("WorkflowTaskTransitionsPage")
-	public class WorkflowTaskTransitionsPage {
-
-		public WorkflowTaskTransitionsPage(Page workflowTaskTransitionsPage) {
-			actions = workflowTaskTransitionsPage.getActions();
-			items = workflowTaskTransitionsPage.getItems();
-			lastPage = workflowTaskTransitionsPage.getLastPage();
-			page = workflowTaskTransitionsPage.getPage();
-			pageSize = workflowTaskTransitionsPage.getPageSize();
-			totalCount = workflowTaskTransitionsPage.getTotalCount();
-		}
-
-		@GraphQLField
-		protected Map<String, Map> actions;
-
-		@GraphQLField
-		protected java.util.Collection<WorkflowTaskTransitions> items;
 
 		@GraphQLField
 		protected long lastPage;
@@ -1181,24 +1126,6 @@ public class Query {
 		workflowTaskResource.setRoleLocalService(_roleLocalService);
 	}
 
-	private void _populateResourceContext(
-			WorkflowTaskTransitionsResource workflowTaskTransitionsResource)
-		throws Exception {
-
-		workflowTaskTransitionsResource.setContextAcceptLanguage(
-			_acceptLanguage);
-		workflowTaskTransitionsResource.setContextCompany(_company);
-		workflowTaskTransitionsResource.setContextHttpServletRequest(
-			_httpServletRequest);
-		workflowTaskTransitionsResource.setContextHttpServletResponse(
-			_httpServletResponse);
-		workflowTaskTransitionsResource.setContextUriInfo(_uriInfo);
-		workflowTaskTransitionsResource.setContextUser(_user);
-		workflowTaskTransitionsResource.setGroupLocalService(
-			_groupLocalService);
-		workflowTaskTransitionsResource.setRoleLocalService(_roleLocalService);
-	}
-
 	private static ComponentServiceObjects<AssigneeResource>
 		_assigneeResourceComponentServiceObjects;
 	private static ComponentServiceObjects<TransitionResource>
@@ -1211,8 +1138,6 @@ public class Query {
 		_workflowLogResourceComponentServiceObjects;
 	private static ComponentServiceObjects<WorkflowTaskResource>
 		_workflowTaskResourceComponentServiceObjects;
-	private static ComponentServiceObjects<WorkflowTaskTransitionsResource>
-		_workflowTaskTransitionsResourceComponentServiceObjects;
 
 	private AcceptLanguage _acceptLanguage;
 	private com.liferay.portal.kernel.model.Company _company;

@@ -21,9 +21,10 @@ import com.liferay.analytics.reports.web.internal.util.AnalyticsReportsUtil;
 import com.liferay.asset.display.page.util.AssetDisplayPageUtil;
 import com.liferay.content.dashboard.item.action.ContentDashboardItemAction;
 import com.liferay.content.dashboard.item.action.exception.ContentDashboardItemActionException;
-import com.liferay.info.display.contributor.InfoDisplayContributor;
-import com.liferay.info.display.contributor.InfoDisplayContributorTracker;
-import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
+import com.liferay.info.item.InfoItemReference;
+import com.liferay.layout.display.page.LayoutDisplayPageObjectProvider;
+import com.liferay.layout.display.page.LayoutDisplayPageProvider;
+import com.liferay.layout.display.page.LayoutDisplayPageProviderTracker;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.PortletURLFactory;
@@ -60,10 +61,15 @@ public class AnalyticsReportsContentDashboardItemActionProviderImpl
 				return null;
 			}
 
+			LayoutDisplayPageObjectProvider<?> layoutDisplayPageObjectProvider =
+				_getLayoutDisplayPageObjectProvider(className, classPK);
+
 			return new AnalyticsReportsContentDashboardItemAction(
 				_resourceBundleLoader,
 				AnalyticsReportsUtil.getAnalyticsReportsPanelURL(
-					_portal.getClassNameId(className), classPK,
+					layoutDisplayPageObjectProvider.getClassNameId(),
+					layoutDisplayPageObjectProvider.getClassPK(),
+					layoutDisplayPageObjectProvider.getGroupId(),
 					httpServletRequest, _portal, _portletURLFactory));
 		}
 		catch (PortalException | WindowStateException exception) {
@@ -77,19 +83,23 @@ public class AnalyticsReportsContentDashboardItemActionProviderImpl
 			HttpServletRequest httpServletRequest)
 		throws PortalException {
 
-		InfoDisplayContributor<?> infoDisplayContributor =
-			_infoDisplayContributorTracker.getInfoDisplayContributor(className);
+		LayoutDisplayPageObjectProvider<?> layoutDisplayPageObjectProvider =
+			_getLayoutDisplayPageObjectProvider(className, classPK);
 
-		if (infoDisplayContributor == null) {
+		if ((layoutDisplayPageObjectProvider == null) ||
+			(layoutDisplayPageObjectProvider.getDisplayObject() == null)) {
+
 			return false;
 		}
 
-		InfoDisplayObjectProvider<?> infoDisplayObjectProvider =
-			infoDisplayContributor.getInfoDisplayObjectProvider(classPK);
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			AssetDisplayPageUtil.getAssetDisplayPageLayoutPageTemplateEntry(
+				layoutDisplayPageObjectProvider.getGroupId(),
+				layoutDisplayPageObjectProvider.getClassNameId(),
+				layoutDisplayPageObjectProvider.getClassPK(),
+				layoutDisplayPageObjectProvider.getClassTypeId());
 
-		if ((infoDisplayObjectProvider == null) ||
-			(infoDisplayObjectProvider.getDisplayObject() == null)) {
-
+		if (layoutPageTemplateEntry == null) {
 			return false;
 		}
 
@@ -97,22 +107,12 @@ public class AnalyticsReportsContentDashboardItemActionProviderImpl
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		LayoutPageTemplateEntry layoutPageTemplateEntry =
-			AssetDisplayPageUtil.getAssetDisplayPageLayoutPageTemplateEntry(
-				themeDisplay.getScopeGroupId(),
-				infoDisplayObjectProvider.getClassNameId(),
-				infoDisplayObjectProvider.getClassPK(),
-				infoDisplayObjectProvider.getClassTypeId());
-
-		if (layoutPageTemplateEntry == null) {
-			return false;
-		}
-
 		if (AnalyticsReportsUtil.isShowAnalyticsReportsPanel(
 				_analyticsReportsInfoItemTracker, themeDisplay.getCompanyId(),
-				httpServletRequest, infoDisplayObjectProvider,
+				httpServletRequest,
 				_layoutLocalService.fetchLayout(
 					layoutPageTemplateEntry.getPlid()),
+				layoutDisplayPageObjectProvider,
 				themeDisplay.getPermissionChecker(), _portal)) {
 
 			return true;
@@ -121,11 +121,26 @@ public class AnalyticsReportsContentDashboardItemActionProviderImpl
 		return false;
 	}
 
+	private LayoutDisplayPageObjectProvider<?>
+		_getLayoutDisplayPageObjectProvider(String className, long classPK) {
+
+		LayoutDisplayPageProvider<?> layoutDisplayPageProvider =
+			_layoutDisplayPageProviderTracker.
+				getLayoutDisplayPageProviderByClassName(className);
+
+		if (layoutDisplayPageProvider == null) {
+			return null;
+		}
+
+		return layoutDisplayPageProvider.getLayoutDisplayPageObjectProvider(
+			new InfoItemReference(className, classPK));
+	}
+
 	@Reference
 	private AnalyticsReportsInfoItemTracker _analyticsReportsInfoItemTracker;
 
 	@Reference
-	private InfoDisplayContributorTracker _infoDisplayContributorTracker;
+	private LayoutDisplayPageProviderTracker _layoutDisplayPageProviderTracker;
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;

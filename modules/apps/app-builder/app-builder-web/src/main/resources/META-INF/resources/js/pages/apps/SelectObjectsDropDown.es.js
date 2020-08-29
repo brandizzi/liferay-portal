@@ -15,8 +15,10 @@
 import ClayButton from '@clayui/button';
 import ClayIcon from '@clayui/icon';
 import ClayLabel from '@clayui/label';
-import React, {useEffect, useState} from 'react';
+import ClayLink from '@clayui/link';
+import React, {useContext, useEffect, useState} from 'react';
 
+import {AppContext} from '../../AppContext.es';
 import {getItem} from '../../utils/client.es';
 import {getLocalizedValue} from '../../utils/lang.es';
 import DropDownWithSearch from './DropDownWithSearch.es';
@@ -35,6 +37,7 @@ export function getDataObjects() {
 }
 
 export default ({defaultValue, label, onSelect, selectedValue, visible}) => {
+	const {objectsPortletURL} = useContext(AppContext);
 	const [state, setState] = useState({
 		error: null,
 		isLoading: true,
@@ -73,6 +76,20 @@ export default ({defaultValue, label, onSelect, selectedValue, visible}) => {
 			});
 	};
 
+	const getMessageWithNewObjectLink = (message) => (
+		<>
+			<span className="d-block">{message}</span>
+
+			<ClayLink
+				href={`${objectsPortletURL}#/?showCustomObjectPopover=1`}
+				target="_blank"
+			>
+				{Liferay.Language.get('create-new-object')}{' '}
+				<ClayIcon fontSize="10px" symbol="shortcut" />
+			</ClayLink>
+		</>
+	);
+
 	useEffect(() => {
 		doFetch();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -80,7 +97,9 @@ export default ({defaultValue, label, onSelect, selectedValue, visible}) => {
 
 	const stateProps = {
 		emptyProps: {
-			label: Liferay.Language.get('there-are-no-objects-yet'),
+			label: getMessageWithNewObjectLink(
+				Liferay.Language.get('there-are-no-objects-yet')
+			),
 		},
 		errorProps: {
 			children: (
@@ -106,22 +125,29 @@ export default ({defaultValue, label, onSelect, selectedValue, visible}) => {
 		},
 	};
 
-	const ItemWithLabel = ({name, type}) => (
-		<>
-			<span className="float-left text-left text-truncate w70">
-				{name || label}
-			</span>
+	const ItemWithLabel = ({name, type}) => {
+		const itemName = name || label;
 
-			{type && (
-				<ClayLabel
-					className="dropdown-button-asset float-right"
-					displayType={labelProps[type].displayType}
+		return (
+			<>
+				<span
+					className="float-left text-left text-truncate w50"
+					title={itemName}
 				>
-					{labelProps[type].label}
-				</ClayLabel>
-			)}
-		</>
-	);
+					{itemName}
+				</span>
+
+				{type && (
+					<ClayLabel
+						className="dropdown-button-asset float-right"
+						displayType={labelProps[type].displayType}
+					>
+						{labelProps[type].label}
+					</ClayLabel>
+				)}
+			</>
+		);
+	};
 
 	return (
 		<>
@@ -147,8 +173,10 @@ export default ({defaultValue, label, onSelect, selectedValue, visible}) => {
 				visible={visible}
 			>
 				<DropDownWithSearch.Items
-					emptyResultMessage={Liferay.Language.get(
-						'no-objects-found-with-this-name-try-searching-again-with-a-different-name'
+					emptyResultMessage={getMessageWithNewObjectLink(
+						Liferay.Language.get(
+							'there-were-no-objects-found-with-this-name'
+						)
 					)}
 					items={items}
 					onSelect={onSelect}

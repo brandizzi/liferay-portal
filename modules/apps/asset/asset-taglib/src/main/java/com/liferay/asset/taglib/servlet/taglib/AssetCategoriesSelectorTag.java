@@ -18,6 +18,7 @@ import com.liferay.asset.categories.configuration.AssetCategoriesCompanyConfigur
 import com.liferay.asset.kernel.model.AssetCategory;
 import com.liferay.asset.kernel.model.AssetCategoryConstants;
 import com.liferay.asset.kernel.model.AssetVocabulary;
+import com.liferay.asset.kernel.model.AssetVocabularyConstants;
 import com.liferay.asset.kernel.service.AssetCategoryServiceUtil;
 import com.liferay.asset.kernel.service.AssetVocabularyServiceUtil;
 import com.liferay.asset.taglib.internal.servlet.ServletContextUtil;
@@ -81,6 +82,10 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 
 	public String getId() {
 		return _id;
+	}
+
+	public int[] getVisibilityTypes() {
+		return _visibilityTypes;
 	}
 
 	public boolean isIgnoreRequestValue() {
@@ -152,6 +157,10 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 		_singleSelect = singleSelect;
 	}
 
+	public void setVisibilityTypes(int[] visibilityTypes) {
+		_visibilityTypes = visibilityTypes;
+	}
+
 	@Override
 	protected void cleanUp() {
 		super.cleanUp();
@@ -168,6 +177,7 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 		_showOnlyRequiredVocabularies = false;
 		_showRequiredLabel = true;
 		_singleSelect = false;
+		_visibilityTypes = _VISIBILITY_TYPES;
 	}
 
 	protected List<String[]> getCategoryIdsTitles() {
@@ -307,6 +317,12 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 
 		for (int i = 0; i < vocabularies.size(); i++) {
 			AssetVocabulary vocabulary = vocabularies.get(i);
+
+			if (!ArrayUtil.contains(
+					getVisibilityTypes(), vocabulary.getVisibilityType())) {
+
+				continue;
+			}
 
 			String selectedCategoryIds = categoryIdsTitles.get(i)[0];
 
@@ -462,6 +478,11 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 
 	private static final String _PAGE = "/asset_categories_selector/page.jsp";
 
+	private static final int[] _VISIBILITY_TYPES = {
+		AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL,
+		AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC
+	};
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		AssetCategoriesSelectorTag.class);
 
@@ -477,5 +498,6 @@ public class AssetCategoriesSelectorTag extends IncludeTag {
 	private boolean _showOnlyRequiredVocabularies;
 	private boolean _showRequiredLabel = true;
 	private boolean _singleSelect;
+	private int[] _visibilityTypes = _VISIBILITY_TYPES;
 
 }

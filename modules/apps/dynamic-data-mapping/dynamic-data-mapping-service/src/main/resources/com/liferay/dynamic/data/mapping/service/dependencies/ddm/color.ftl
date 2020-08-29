@@ -31,4 +31,6 @@
 			value=fieldRawValue
 		/>
 	</div>
+
+	${fieldStructure.children}
 </@>

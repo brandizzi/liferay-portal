@@ -31,16 +31,21 @@ import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.Transformer;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.ConfigurationContainer;
 import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.logging.Logger;
+import org.gradle.api.plugins.Convention;
 import org.gradle.api.plugins.JavaBasePlugin;
 import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.reporting.ReportingExtension;
 import org.gradle.api.specs.Spec;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.SourceSet;
+import org.gradle.api.tasks.SourceSetContainer;
+import org.gradle.api.tasks.TaskProvider;
 import org.gradle.api.tasks.compile.JavaCompile;
 import org.gradle.language.base.plugins.LifecycleBasePlugin;
 
@@ -68,361 +73,461 @@ public class FindSecurityBugsPlugin implements Plugin<Project> {
 
 	@Override
 	public void apply(Project project) {
+
+		// Configurations
+
+		ConfigurationContainer configurationContainer =
+			project.getConfigurations();
+
 		Configuration findSecurityBugsConfiguration =
-			_addConfigurationFindSecurityBugs(project);
+			configurationContainer.create(
+				FIND_SECURITY_BUGS_CONFIGURATION_NAME);
 		Configuration findSecurityBugsPluginsConfiguration =
-			_addConfigurationFindSecurityBugsPlugins(project);
+			configurationContainer.create(
+				FIND_SECURITY_BUGS_PLUGINS_CONFIGURATION_NAME);
 
-		WriteFindBugsProjectTask writeFindBugsProjectTask =
-			_addTaskWriteFindBugsProject(project);
+		_configureConfigurationFindSecurityBugs(
+			project, findSecurityBugsConfiguration);
+		_configureConfigurationFindSecurityBugsPlugins(
+			project, findSecurityBugsPluginsConfiguration);
 
-		Task findSecurityBugsTask = _addTaskFindSecurityBugs(
-			writeFindBugsProjectTask, findSecurityBugsConfiguration,
-			findSecurityBugsPluginsConfiguration);
+		// Conventions
 
-		_addTaskPrintFindSecurityBugsReport(findSecurityBugsTask);
+		Convention convention = project.getConvention();
 
-		_checkTaskCheck(findSecurityBugsTask);
+		JavaPluginConvention javaPluginConvention = convention.getPlugin(
+			JavaPluginConvention.class);
+
+		// Tasks
+
+		TaskProvider<JavaExec> findSecurityBugsTaskProvider =
+			GradleUtil.addTaskProvider(
+				project, FIND_SECURITY_BUGS_TASK_NAME, JavaExec.class);
+		TaskProvider<Task> printFindSecurityBugsReportTaskProvider =
+			GradleUtil.addTaskProvider(
+				project, PRINT_FIND_SECURITY_BUGS_REPORT_TASK_NAME, Task.class);
+		TaskProvider<WriteFindBugsProjectTask>
+			writeFindBugsProjectTaskProvider = GradleUtil.addTaskProvider(
+				project, WRITE_FIND_BUGS_PROJECT_TASK_NAME,
+				WriteFindBugsProjectTask.class);
+
+		TaskProvider<Task> checkTaskProvider = GradleUtil.getTaskProvider(
+			project, LifecycleBasePlugin.CHECK_TASK_NAME);
+		TaskProvider<Task> classesTaskProvider = GradleUtil.getTaskProvider(
+			project, JavaPlugin.CLASSES_TASK_NAME);
+		TaskProvider<JavaCompile> compileJSPTaskProivder =
+			GradleUtil.getTaskProvider(
+				project, JspCPlugin.COMPILE_JSP_TASK_NAME, JavaCompile.class);
+		TaskProvider<CompileJSPTask> generateJSPJavaTaskProvider =
+			GradleUtil.getTaskProvider(
+				project, JspCPlugin.GENERATE_JSP_JAVA_TASK_NAME,
+				CompileJSPTask.class);
+
+		_configureTaskCheckProvider(
+			checkTaskProvider, findSecurityBugsTaskProvider);
+		_configureTaskFindSecurityBugsProvider(
+			project, findSecurityBugsConfiguration,
+			findSecurityBugsPluginsConfiguration, findSecurityBugsTaskProvider,
+			printFindSecurityBugsReportTaskProvider,
+			writeFindBugsProjectTaskProvider);
+		_configureTaskPrintFindSecurityBugsReportProvider(
+			findSecurityBugsTaskProvider,
+			printFindSecurityBugsReportTaskProvider);
+		_configureTaskWriteFindBugsProjectProvider(
+			project, javaPluginConvention, classesTaskProvider,
+			compileJSPTaskProivder, generateJSPJavaTaskProvider,
+			writeFindBugsProjectTaskProvider);
 	}
 
 	private FindSecurityBugsPlugin() {
 	}
 
-	private Configuration _addConfigurationFindSecurityBugs(
-		final Project project) {
+	private void _configureConfigurationFindSecurityBugs(
+		final Project project, Configuration findSecurityBugsConfiguration) {
 
-		Configuration configuration = GradleUtil.addConfiguration(
-			project, FIND_SECURITY_BUGS_CONFIGURATION_NAME);
-
-		configuration.defaultDependencies(
+		findSecurityBugsConfiguration.defaultDependencies(
 			new Action<DependencySet>() {
 
 				@Override
 				public void execute(DependencySet dependencySet) {
-					_addDependenciesFindSecurityBugs(project);
+					GradleUtil.addDependency(
+						project, FIND_SECURITY_BUGS_CONFIGURATION_NAME,
+						"com.google.code.findbugs", "findbugs", "3.0.1");
 				}
 
 			});
 
-		configuration.setDescription(
+		findSecurityBugsConfiguration.setDescription(
 			"Configures FindBugs for the '" + FIND_SECURITY_BUGS_TASK_NAME +
 				"' task.");
-		configuration.setVisible(false);
-
-		return configuration;
+		findSecurityBugsConfiguration.setVisible(false);
 	}
 
-	private Configuration _addConfigurationFindSecurityBugsPlugins(
-		final Project project) {
+	private void _configureConfigurationFindSecurityBugsPlugins(
+		final Project project,
+		Configuration findSecurityBugsPluginsConfiguration) {
 
-		Configuration configuration = GradleUtil.addConfiguration(
-			project, FIND_SECURITY_BUGS_PLUGINS_CONFIGURATION_NAME);
-
-		configuration.defaultDependencies(
+		findSecurityBugsPluginsConfiguration.defaultDependencies(
 			new Action<DependencySet>() {
 
 				@Override
 				public void execute(DependencySet dependencySet) {
-					_addDependenciesFindSecurityBugsPlugins(project);
+					GradleUtil.addDependency(
+						project, FIND_SECURITY_BUGS_PLUGINS_CONFIGURATION_NAME,
+						"com.liferay", "com.h3xstream.findsecbugs", _VERSION);
 				}
 
 			});
 
-		configuration.setDescription("Configures FindSecurityBugs.");
-		configuration.setVisible(false);
-
-		return configuration;
+		findSecurityBugsPluginsConfiguration.setDescription(
+			"Configures FindSecurityBugs.");
+		findSecurityBugsPluginsConfiguration.setVisible(false);
 	}
 
-	private void _addDependenciesFindSecurityBugs(Project project) {
-		GradleUtil.addDependency(
-			project, FIND_SECURITY_BUGS_CONFIGURATION_NAME,
-			"com.google.code.findbugs", "findbugs", "3.0.1");
-	}
+	private void _configureTaskCheckProvider(
+		TaskProvider<Task> checkTaskProvider,
+		final TaskProvider<JavaExec> findSecurityBugsTaskProvider) {
 
-	private void _addDependenciesFindSecurityBugsPlugins(Project project) {
-		GradleUtil.addDependency(
-			project, FIND_SECURITY_BUGS_PLUGINS_CONFIGURATION_NAME,
-			"com.liferay", "com.h3xstream.findsecbugs", _VERSION);
-	}
-
-	private JavaExec _addTaskFindSecurityBugs(
-		final WriteFindBugsProjectTask writeFindBugsProjectTask,
-		FileCollection classpath, final FileCollection pluginClasspath) {
-
-		Project project = writeFindBugsProjectTask.getProject();
-
-		JavaExec javaExec = GradleUtil.addTask(
-			project, FIND_SECURITY_BUGS_TASK_NAME, JavaExec.class);
-
-		javaExec.args(
-			"-bugCategories", "SECURITY", "-effort:max", "-exitcode", "-html",
-			"-medium", "-progress", "-timestampNow");
-
-		File excludeDir = GradleUtil.getRootDir(
-			project, _FIND_SECURITY_BUGS_EXCLUDE_FILE_NAME);
-
-		if (excludeDir != null) {
-			File excludeFile = new File(
-				excludeDir, _FIND_SECURITY_BUGS_EXCLUDE_FILE_NAME);
-
-			javaExec.args("-exclude", FileUtil.getAbsolutePath(excludeFile));
-		}
-
-		File includeDir = GradleUtil.getRootDir(
-			project, _FIND_SECURITY_BUGS_INCLUDE_FILE_NAME);
-
-		if (includeDir != null) {
-			File includeFile = new File(
-				includeDir, _FIND_SECURITY_BUGS_INCLUDE_FILE_NAME);
-
-			javaExec.args("-include", FileUtil.getAbsolutePath(includeFile));
-		}
-
-		javaExec.args(
-			"-project",
-			new Object() {
-
-				@Override
-				public String toString() {
-					return FileUtil.getAbsolutePath(
-						writeFindBugsProjectTask.getOutputFile());
-				}
-
-			});
-
-		javaExec.doFirst(
+		checkTaskProvider.configure(
 			new Action<Task>() {
 
 				@Override
-				public void execute(Task task) {
-					JavaExec javaExec = (JavaExec)task;
-
-					Logger logger = javaExec.getLogger();
-
-					File outputFile = _reportsFileGetter.transform(javaExec);
-
-					File outputDir = outputFile.getParentFile();
-
-					outputDir.mkdirs();
-
-					javaExec.args(
-						"-outputFile", FileUtil.getAbsolutePath(outputFile));
-
-					javaExec.args("-pluginList", pluginClasspath.getAsPath());
-
-					if (logger.isLifecycleEnabled()) {
-						logger.lifecycle(
-							"Using Find Security Bugs version " + _VERSION);
-					}
+				public void execute(Task checkTask) {
+					checkTask.dependsOn(findSecurityBugsTaskProvider);
 				}
 
 			});
+	}
 
-		javaExec.dependsOn(writeFindBugsProjectTask);
+	private void _configureTaskFindSecurityBugsProvider(
+		final Project project,
+		final Configuration findSecurityBugsConfiguration,
+		final Configuration findSecurityBugsPluginsConfiguration,
+		TaskProvider<JavaExec> findSecurityBugsTaskProvider,
+		final TaskProvider<Task> printFindSecurityBugsReportTaskProvider,
+		final TaskProvider<WriteFindBugsProjectTask>
+			writeFindBugsProjectTaskProvider) {
 
-		javaExec.onlyIf(
-			new Spec<Task>() {
+		findSecurityBugsTaskProvider.configure(
+			new Action<JavaExec>() {
 
 				@Override
-				public boolean isSatisfiedBy(Task task) {
-					FileCollection fileCollection =
-						writeFindBugsProjectTask.getClasspath();
+				public void execute(JavaExec findSecurityBugsJavaExec) {
+					findSecurityBugsJavaExec.finalizedBy(
+						printFindSecurityBugsReportTaskProvider);
 
-					if (fileCollection == null) {
-						return true;
+					findSecurityBugsJavaExec.args(
+						"-bugCategories", "SECURITY", "-effort:max",
+						"-exitcode", "-html", "-medium", "-progress",
+						"-timestampNow");
+
+					File excludeDir = GradleUtil.getRootDir(
+						project, _FIND_SECURITY_BUGS_EXCLUDE_FILE_NAME);
+
+					if (excludeDir != null) {
+						File excludeFile = new File(
+							excludeDir, _FIND_SECURITY_BUGS_EXCLUDE_FILE_NAME);
+
+						findSecurityBugsJavaExec.args(
+							"-exclude", FileUtil.getAbsolutePath(excludeFile));
 					}
 
-					Set<File> files = fileCollection.getFiles();
+					File includeDir = GradleUtil.getRootDir(
+						project, _FIND_SECURITY_BUGS_INCLUDE_FILE_NAME);
 
-					return _containsClassOrJar(files.toArray(new File[0]));
-				}
+					if (includeDir != null) {
+						File includeFile = new File(
+							includeDir, _FIND_SECURITY_BUGS_INCLUDE_FILE_NAME);
 
-				private boolean _containsClassOrJar(File[] files) {
-					for (File file : files) {
-						if (!file.exists()) {
-							continue;
-						}
+						findSecurityBugsJavaExec.args(
+							"-include", FileUtil.getAbsolutePath(includeFile));
+					}
 
-						if (file.isFile()) {
-							String fileName = file.getName();
+					final WriteFindBugsProjectTask writeFindBugsProjectTask =
+						writeFindBugsProjectTaskProvider.get();
 
-							if (fileName.endsWith(".class") ||
-								fileName.endsWith(".jar")) {
+					findSecurityBugsJavaExec.args(
+						"-project",
+						new Object() {
 
-								return true;
+							@Override
+							public String toString() {
+								return FileUtil.getAbsolutePath(
+									writeFindBugsProjectTask.getOutputFile());
 							}
-						}
-						else if (_containsClassOrJar(file.listFiles())) {
-							return true;
-						}
+
+						});
+
+					findSecurityBugsJavaExec.doFirst(
+						new Action<Task>() {
+
+							@Override
+							public void execute(Task task) {
+								JavaExec javaExec = (JavaExec)task;
+
+								Logger logger = javaExec.getLogger();
+
+								File outputFile = _reportsFileGetter.transform(
+									javaExec);
+
+								File outputDir = outputFile.getParentFile();
+
+								outputDir.mkdirs();
+
+								javaExec.args(
+									"-outputFile",
+									FileUtil.getAbsolutePath(outputFile));
+
+								javaExec.args(
+									"-pluginList",
+									findSecurityBugsPluginsConfiguration.
+										getAsPath());
+
+								if (logger.isLifecycleEnabled()) {
+									logger.lifecycle(
+										"Using Find Security Bugs version " +
+											_VERSION);
+								}
+							}
+
+						});
+
+					findSecurityBugsJavaExec.dependsOn(
+						writeFindBugsProjectTask);
+
+					findSecurityBugsJavaExec.onlyIf(
+						new Spec<Task>() {
+
+							@Override
+							public boolean isSatisfiedBy(Task task) {
+								FileCollection fileCollection =
+									writeFindBugsProjectTask.getClasspath();
+
+								if (fileCollection == null) {
+									return true;
+								}
+
+								Set<File> files = fileCollection.getFiles();
+
+								return _containsClassOrJar(
+									files.toArray(new File[0]));
+							}
+
+							private boolean _containsClassOrJar(File[] files) {
+								for (File file : files) {
+									if (!file.exists()) {
+										continue;
+									}
+
+									if (file.isFile()) {
+										String fileName = file.getName();
+
+										if (fileName.endsWith(".class") ||
+											fileName.endsWith(".jar")) {
+
+											return true;
+										}
+									}
+									else if (_containsClassOrJar(
+												file.listFiles())) {
+
+										return true;
+									}
+								}
+
+								return false;
+							}
+
+						});
+
+					findSecurityBugsJavaExec.setClasspath(
+						findSecurityBugsConfiguration);
+					findSecurityBugsJavaExec.setDebug(
+						Boolean.getBoolean("findSecurityBugs.debug"));
+					findSecurityBugsJavaExec.setDescription(
+						"Runs FindSecurityBugs on this project.");
+					findSecurityBugsJavaExec.setGroup(
+						JavaBasePlugin.VERIFICATION_GROUP);
+					findSecurityBugsJavaExec.setIgnoreExitValue(true);
+					findSecurityBugsJavaExec.setMain(
+						"edu.umd.cs.findbugs.FindBugs2");
+
+					findSecurityBugsJavaExec.systemProperty(
+						"findsecbugs.injection.customconfigfile." +
+							"SqlInjectionDetector",
+						"liferay-config/liferay-SqlInjectionDetector.txt|" +
+							"SQL_INJECTION_HIBERNATE");
+					findSecurityBugsJavaExec.systemProperty(
+						"findsecbugs.injection.customconfigfile.XssJspDetector",
+						"liferay-config/liferay-XssJspDetector.txt|" +
+							"XSS_JSP_PRINT");
+					findSecurityBugsJavaExec.systemProperty(
+						"findsecbugs.injection.customconfigfile." +
+							"XssServletDetector",
+						"liferay-config/liferay-XssServletDetector.txt|" +
+							"XSS_SERVLET");
+
+					findSecurityBugsJavaExec.systemProperty(
+						"findsecbugs.taint.outputconfigs", "true");
+
+					String customConfigFile = "liferay-config/liferay.txt";
+
+					File derivedSummariesTxtFile = project.file(
+						"derived-config.txt");
+
+					if (derivedSummariesTxtFile.exists()) {
+						String absolutePath = FileUtil.getAbsolutePath(
+							derivedSummariesTxtFile);
+
+						customConfigFile =
+							customConfigFile + File.pathSeparator +
+								absolutePath;
 					}
 
-					return false;
+					File falsePositivesTxtFile = project.file(
+						"find-security-bugs-false-positives.txt");
+
+					if (falsePositivesTxtFile.exists()) {
+						customConfigFile =
+							customConfigFile + File.pathSeparator +
+								FileUtil.getAbsolutePath(falsePositivesTxtFile);
+					}
+
+					findSecurityBugsJavaExec.systemProperty(
+						"findsecbugs.taint.customconfigfile", customConfigFile);
 				}
 
 			});
-
-		javaExec.setClasspath(classpath);
-		javaExec.setDebug(Boolean.getBoolean("findSecurityBugs.debug"));
-		javaExec.setDescription("Runs FindSecurityBugs on this project.");
-		javaExec.setGroup(JavaBasePlugin.VERIFICATION_GROUP);
-		javaExec.setIgnoreExitValue(true);
-		javaExec.setMain("edu.umd.cs.findbugs.FindBugs2");
-
-		javaExec.systemProperty(
-			"findsecbugs.injection.customconfigfile.SqlInjectionDetector",
-			"liferay-config/liferay-SqlInjectionDetector.txt|" +
-				"SQL_INJECTION_HIBERNATE");
-		javaExec.systemProperty(
-			"findsecbugs.injection.customconfigfile.XssJspDetector",
-			"liferay-config/liferay-XssJspDetector.txt|XSS_JSP_PRINT");
-		javaExec.systemProperty(
-			"findsecbugs.injection.customconfigfile.XssServletDetector",
-			"liferay-config/liferay-XssServletDetector.txt|XSS_SERVLET");
-
-		javaExec.systemProperty("findsecbugs.taint.outputconfigs", "true");
-
-		String customConfigFile = "liferay-config/liferay.txt";
-
-		File derivedSummariesTxtFile = project.file("derived-config.txt");
-
-		if (derivedSummariesTxtFile.exists()) {
-			customConfigFile =
-				customConfigFile + File.pathSeparator +
-					FileUtil.getAbsolutePath(derivedSummariesTxtFile);
-		}
-
-		File falsePositivesTxtFile = project.file(
-			"find-security-bugs-false-positives.txt");
-
-		if (falsePositivesTxtFile.exists()) {
-			customConfigFile =
-				customConfigFile + File.pathSeparator +
-					FileUtil.getAbsolutePath(falsePositivesTxtFile);
-		}
-
-		javaExec.systemProperty(
-			"findsecbugs.taint.customconfigfile", customConfigFile);
-
-		return javaExec;
 	}
 
-	private Task _addTaskPrintFindSecurityBugsReport(
-		final Task findSecurityBugsTask) {
+	private void _configureTaskPrintFindSecurityBugsReportProvider(
+		final TaskProvider<JavaExec> findSecurityBugsTaskProvider,
+		TaskProvider<Task> printFindSecurityBugsReportTaskProvider) {
 
-		Project project = findSecurityBugsTask.getProject();
-
-		Task task = project.task(PRINT_FIND_SECURITY_BUGS_REPORT_TASK_NAME);
-
-		task.doLast(
+		printFindSecurityBugsReportTaskProvider.configure(
 			new Action<Task>() {
 
 				@Override
-				public void execute(Task task) {
-					Logger logger = task.getLogger();
+				public void execute(Task printFindSecurityBugsReportTask) {
+					printFindSecurityBugsReportTask.doLast(
+						new Action<Task>() {
 
-					File outputFile = _reportsFileGetter.transform(
-						findSecurityBugsTask);
+							@Override
+							public void execute(Task task) {
+								Logger logger = task.getLogger();
 
-					if (logger.isLifecycleEnabled()) {
-						logger.lifecycle(
-							"Find Security Bugs report saved to {}",
-							outputFile.getAbsolutePath());
-					}
+								if (logger.isLifecycleEnabled()) {
+									JavaExec findSecurityBugsJavaExec =
+										findSecurityBugsTaskProvider.get();
+
+									File outputFile =
+										_reportsFileGetter.transform(
+											findSecurityBugsJavaExec);
+
+									logger.lifecycle(
+										"Find Security Bugs report saved to {}",
+										outputFile.getAbsolutePath());
+								}
+							}
+
+						});
+
+					printFindSecurityBugsReportTask.setDescription(
+						"Prints the path of the Find Security Bugs report.");
 				}
 
 			});
-
-		task.setDescription(
-			"Prints the path of the Find Security Bugs report.");
-
-		findSecurityBugsTask.finalizedBy(task);
-
-		return task;
 	}
 
-	private WriteFindBugsProjectTask _addTaskWriteFindBugsProject(
-		final Project project) {
+	private void _configureTaskWriteFindBugsProjectProvider(
+		final Project project, final JavaPluginConvention javaPluginConvention,
+		final TaskProvider<Task> classesTaskProvider,
+		final TaskProvider<JavaCompile> compileJSPTaskProivder,
+		final TaskProvider<CompileJSPTask> generateJSPJavaTaskProvider,
+		TaskProvider<WriteFindBugsProjectTask>
+			writeFindBugsProjectTaskProvider) {
 
-		WriteFindBugsProjectTask writeFindBugsProjectTask = GradleUtil.addTask(
-			project, WRITE_FIND_BUGS_PROJECT_TASK_NAME,
-			WriteFindBugsProjectTask.class);
-
-		Task classesTask = GradleUtil.getTask(
-			project, JavaPlugin.CLASSES_TASK_NAME);
-
-		writeFindBugsProjectTask.dependsOn(classesTask);
-
-		final JavaCompile compileJSPTask = (JavaCompile)GradleUtil.getTask(
-			project, JspCPlugin.COMPILE_JSP_TASK_NAME);
-
-		writeFindBugsProjectTask.dependsOn(compileJSPTask);
-
-		final SourceSet sourceSet = GradleUtil.getSourceSet(
-			project, SourceSet.MAIN_SOURCE_SET_NAME);
-
-		FileCollection auxClasspath = project.files(
-			sourceSet.getCompileClasspath(), compileJSPTask.getClasspath());
-
-		writeFindBugsProjectTask.setAuxClasspath(auxClasspath);
-
-		FileCollection classpath = project.files(
-			new Callable<File>() {
+		writeFindBugsProjectTaskProvider.configure(
+			new Action<WriteFindBugsProjectTask>() {
 
 				@Override
-				public File call() throws Exception {
-					return compileJSPTask.getDestinationDir();
-				}
+				public void execute(
+					WriteFindBugsProjectTask writeFindBugsProjectTask) {
 
-			},
-			new Callable<File>() {
+					writeFindBugsProjectTask.dependsOn(classesTaskProvider);
+					writeFindBugsProjectTask.dependsOn(
+						generateJSPJavaTaskProvider);
 
-				@Override
-				public File call() throws Exception {
-					SourceDirectorySet sourceDirectorySet = sourceSet.getJava();
+					SourceSet mainSourceSet = _getSourceSet(
+						javaPluginConvention, SourceSet.MAIN_SOURCE_SET_NAME);
 
-					return sourceDirectorySet.getOutputDir();
+					final SourceDirectorySet javaSourceDirectorySet =
+						mainSourceSet.getJava();
+
+					final JavaCompile compileJSPJavaCompile =
+						compileJSPTaskProivder.get();
+
+					writeFindBugsProjectTask.setAuxClasspath(
+						project.files(
+							mainSourceSet.getCompileClasspath(),
+							compileJSPJavaCompile.getClasspath()));
+
+					FileCollection classpath = project.files(
+						new Callable<File>() {
+
+							@Override
+							public File call() throws Exception {
+								return compileJSPJavaCompile.
+									getDestinationDir();
+							}
+
+						},
+						new Callable<File>() {
+
+							@Override
+							public File call() throws Exception {
+								return javaSourceDirectorySet.getOutputDir();
+							}
+
+						});
+
+					writeFindBugsProjectTask.setClasspath(classpath);
+
+					writeFindBugsProjectTask.setDescription(
+						"Writes the FindBugs project file.");
+
+					writeFindBugsProjectTask.setOutputFile(
+						new Callable<File>() {
+
+							@Override
+							public File call() throws Exception {
+								return new File(
+									project.getBuildDir(), "findbugs.xml");
+							}
+
+						});
+
+					writeFindBugsProjectTask.setProjectName(project.getName());
+
+					CompileJSPTask generateJSPJavaCompileJSPTask =
+						generateJSPJavaTaskProvider.get();
+
+					writeFindBugsProjectTask.setSrcDirs(
+						project.files(
+							javaSourceDirectorySet.getSrcDirs(),
+							generateJSPJavaCompileJSPTask.getDestinationDir()));
 				}
 
 			});
-
-		writeFindBugsProjectTask.setClasspath(classpath);
-
-		writeFindBugsProjectTask.setDescription(
-			"Writes the FindBugs project file.");
-
-		writeFindBugsProjectTask.setOutputFile(
-			new Callable<File>() {
-
-				@Override
-				public File call() throws Exception {
-					return new File(project.getBuildDir(), "findbugs.xml");
-				}
-
-			});
-
-		writeFindBugsProjectTask.setProjectName(project.getName());
-
-		CompileJSPTask generateJSPJavaTask = (CompileJSPTask)GradleUtil.getTask(
-			project, JspCPlugin.GENERATE_JSP_JAVA_TASK_NAME);
-		SourceDirectorySet sourceDirectorySet = sourceSet.getJava();
-
-		FileCollection srcDirs = project.files(
-			sourceDirectorySet.getSrcDirs(),
-			generateJSPJavaTask.getDestinationDir());
-
-		writeFindBugsProjectTask.setSrcDirs(srcDirs);
-
-		return writeFindBugsProjectTask;
 	}
 
-	private void _checkTaskCheck(Task findSecurityBugsTask) {
-		Task task = GradleUtil.getTask(
-			findSecurityBugsTask.getProject(),
-			LifecycleBasePlugin.CHECK_TASK_NAME);
+	private SourceSet _getSourceSet(
+		JavaPluginConvention javaPluginConvention, String name) {
 
-		task.dependsOn(findSecurityBugsTask);
+		SourceSetContainer sourceSetContainer =
+			javaPluginConvention.getSourceSets();
+
+		return sourceSetContainer.getByName(name);
 	}
 
 	private static final String _FIND_SECURITY_BUGS_EXCLUDE_FILE_NAME =

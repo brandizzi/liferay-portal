@@ -16,6 +16,7 @@ package com.liferay.layout.responsive;
 
 import com.liferay.layout.util.structure.ColumnLayoutStructureItem;
 import com.liferay.layout.util.structure.CommonStylesUtil;
+import com.liferay.layout.util.structure.ContainerStyledLayoutStructureItem;
 import com.liferay.layout.util.structure.RowLayoutStructureItem;
 import com.liferay.layout.util.structure.RowStyledLayoutStructureItem;
 import com.liferay.layout.util.structure.StyledLayoutStructureItem;
@@ -39,21 +40,7 @@ import java.util.Set;
  */
 public class ResponsiveLayoutStructureUtil {
 
-	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnCssClass(RowStyledLayoutStructureItem, ColumnLayoutStructureItem)}
-	 */
-	@Deprecated
 	public static String getColumnCssClass(
-		RowLayoutStructureItem rowLayoutStructureItem,
-		ColumnLayoutStructureItem columnLayoutStructureItem) {
-
-		return getColumnCssClass(
-			(RowStyledLayoutStructureItem)rowLayoutStructureItem,
-			columnLayoutStructureItem);
-	}
-
-	public static String getColumnCssClass(
-		RowStyledLayoutStructureItem rowStyledLayoutStructureItem,
 		ColumnLayoutStructureItem columnLayoutStructureItem) {
 
 		StringBundler sb = new StringBundler();
@@ -83,6 +70,18 @@ public class ResponsiveLayoutStructureUtil {
 		return sb.toString();
 	}
 
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getColumnCssClass(ColumnLayoutStructureItem)}
+	 */
+	@Deprecated
+	public static String getColumnCssClass(
+		RowLayoutStructureItem rowLayoutStructureItem,
+		ColumnLayoutStructureItem columnLayoutStructureItem) {
+
+		return getColumnCssClass(columnLayoutStructureItem);
+	}
+
 	public static String getResponsiveCssClassValues(
 			StyledLayoutStructureItem styledLayoutStructureItem)
 		throws Exception {
@@ -98,8 +97,8 @@ public class ResponsiveLayoutStructureUtil {
 			}
 
 			JSONObject viewportItemConfigJSONObject =
-				itemConfigJSONObject.getJSONObject(
-					viewportSize.getViewportSizeId());
+				_getViewportItemConfigJSONObject(
+					itemConfigJSONObject, viewportSize);
 
 			if (viewportItemConfigJSONObject == null) {
 				continue;
@@ -123,6 +122,24 @@ public class ResponsiveLayoutStructureUtil {
 
 				if (Validator.isNull(value)) {
 					continue;
+				}
+
+				if (styledLayoutStructureItem instanceof
+						ContainerStyledLayoutStructureItem) {
+
+					ContainerStyledLayoutStructureItem
+						containerStyledLayoutStructureItem =
+							(ContainerStyledLayoutStructureItem)
+								styledLayoutStructureItem;
+
+					if (Objects.equals(
+							containerStyledLayoutStructureItem.getWidthType(),
+							"fixed") &&
+						(Objects.equals(key, "marginLeft") ||
+						 Objects.equals(key, "marginRight"))) {
+
+						continue;
+					}
 				}
 
 				String cssClass = StringUtil.replace(
@@ -183,7 +200,8 @@ public class ResponsiveLayoutStructureUtil {
 	}
 
 	/**
-	 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getRowCssClass(RowStyledLayoutStructureItem)}
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #getRowCssClass(RowStyledLayoutStructureItem)}
 	 */
 	@Deprecated
 	public static String getRowCssClass(
@@ -293,6 +311,53 @@ public class ResponsiveLayoutStructureUtil {
 		}
 
 		return "start";
+	}
+
+	private static JSONObject _getViewportItemConfigJSONObject(
+		JSONObject itemConfigJSONObject, ViewportSize currentViewportSize) {
+
+		if (itemConfigJSONObject.has(currentViewportSize.getViewportSizeId())) {
+			JSONObject viewportItemConfigJSONObject =
+				itemConfigJSONObject.getJSONObject(
+					currentViewportSize.getViewportSizeId());
+
+			JSONObject stylesJSONObject =
+				viewportItemConfigJSONObject.getJSONObject("styles");
+
+			if ((stylesJSONObject != null) && (stylesJSONObject.length() > 0)) {
+				return viewportItemConfigJSONObject;
+			}
+		}
+
+		ViewportSize[] viewportSizes = ViewportSize.values();
+
+		Comparator<ViewportSize> comparator = Comparator.comparingInt(
+			ViewportSize::getOrder);
+
+		Arrays.sort(viewportSizes, comparator.reversed());
+
+		for (ViewportSize viewportSize : viewportSizes) {
+			if (viewportSize.getOrder() >= currentViewportSize.getOrder()) {
+				continue;
+			}
+
+			if (itemConfigJSONObject.has(viewportSize.getViewportSizeId())) {
+				JSONObject viewportItemConfigJSONObject =
+					itemConfigJSONObject.getJSONObject(
+						viewportSize.getViewportSizeId());
+
+				JSONObject stylesJSONObject =
+					viewportItemConfigJSONObject.getJSONObject("styles");
+
+				if ((stylesJSONObject != null) &&
+					(stylesJSONObject.length() > 0)) {
+
+					return viewportItemConfigJSONObject;
+				}
+			}
+		}
+
+		return itemConfigJSONObject;
 	}
 
 }

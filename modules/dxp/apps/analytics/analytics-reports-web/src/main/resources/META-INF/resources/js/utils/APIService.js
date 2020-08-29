@@ -11,41 +11,21 @@
 
 import {fetch} from 'frontend-js-web';
 
-function APIService({endpoints, namespace, page}) {
-	const {
+function APIService({
+	endpoints: {
 		getAnalyticsReportsHistoricalReadsURL,
 		getAnalyticsReportsHistoricalViewsURL,
 		getAnalyticsReportsTotalReadsURL,
 		getAnalyticsReportsTotalViewsURL,
-	} = endpoints;
-	const {plid} = page;
-
-	function getTotalReads() {
-		const body = {plid};
-
-		return _fetchWithError(getAnalyticsReportsTotalReadsURL, {
-			body: _getFormDataRequest(body, namespace),
-			credentials: 'include',
-			method: 'POST',
-		});
-	}
-
-	function getTotalViews() {
-		const body = {plid};
-
-		return _fetchWithError(getAnalyticsReportsTotalViewsURL, {
-			body: _getFormDataRequest(body, namespace),
-			credentials: 'include',
-			method: 'POST',
-		});
-	}
-
+	},
+	namespace,
+	page: {plid},
+}) {
 	function getHistoricalReads({timeSpanKey, timeSpanOffset}) {
 		const body = {plid, timeSpanKey, timeSpanOffset};
 
 		return _fetchWithError(getAnalyticsReportsHistoricalReadsURL, {
 			body: _getFormDataRequest(body, namespace),
-			credentials: 'include',
 			method: 'POST',
 		});
 	}
@@ -55,7 +35,24 @@ function APIService({endpoints, namespace, page}) {
 
 		return _fetchWithError(getAnalyticsReportsHistoricalViewsURL, {
 			body: _getFormDataRequest(body, namespace),
-			credentials: 'include',
+			method: 'POST',
+		});
+	}
+
+	function getTotalReads() {
+		const body = {plid};
+
+		return _fetchWithError(getAnalyticsReportsTotalReadsURL, {
+			body: _getFormDataRequest(body, namespace),
+			method: 'POST',
+		});
+	}
+
+	function getTotalViews() {
+		const body = {plid};
+
+		return _fetchWithError(getAnalyticsReportsTotalViewsURL, {
+			body: _getFormDataRequest(body, namespace),
 			method: 'POST',
 		});
 	}

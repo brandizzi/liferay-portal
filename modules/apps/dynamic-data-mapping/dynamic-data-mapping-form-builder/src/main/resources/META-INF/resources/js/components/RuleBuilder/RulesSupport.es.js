@@ -56,28 +56,121 @@ const clearAllConditionFieldValues = (condition) => {
 	return condition;
 };
 
-const syncActions = (pages, actions) => {
+const formatRules = (pages, rules) => {
 	const visitor = new PagesVisitor(pages);
 
-	actions.forEach((action, index) => {
-		let targetFieldExists = false;
+	const formattedRules = (rules || []).map((rule) => {
+		const {actions, conditions} = rule;
 
-		visitor.mapFields(
-			({fieldName}) => {
-				if (action.target === fieldName) {
-					targetFieldExists = true;
-				}
-			},
-			true,
-			true
-		);
+		conditions.forEach((condition) => {
+			let firstOperandFieldExists = false;
+			let secondOperandFieldExists = false;
 
-		if (!targetFieldExists) {
-			actions = clearTargetValue(actions, index);
+			const secondOperand = condition.operands[1];
+
+			visitor.mapFields(
+				({fieldName}) => {
+					if (condition.operands[0].value === fieldName) {
+						firstOperandFieldExists = true;
+					}
+
+					if (secondOperand && secondOperand.value === fieldName) {
+						secondOperandFieldExists = true;
+					}
+				},
+				true,
+				true
+			);
+
+			if (
+				condition.operands.length < 2 &&
+				condition.operands[0].type === 'list'
+			) {
+				condition.operands = [
+					{
+						label: 'user',
+						repeatable: false,
+						type: 'user',
+						value: 'user',
+					},
+					{
+						...condition.operands[0],
+						label: condition.operands[0].value,
+					},
+				];
+			}
+
+			if (condition.operands[0].value === 'user') {
+				firstOperandFieldExists = true;
+			}
+
+			if (!firstOperandFieldExists) {
+				clearAllConditionFieldValues(condition);
+			}
+
+			if (
+				!secondOperandFieldExists &&
+				secondOperand &&
+				secondOperand.type == 'field'
+			) {
+				clearSecondOperandValue(condition);
+			}
+		});
+
+		return {
+			...rule,
+			actions: syncActions(pages, actions),
+			conditions,
+		};
+	});
+
+	return formattedRules;
+};
+
+const syncActions = (pages, actions) => {
+	actions.forEach((action) => {
+		if (action.action === 'auto-fill') {
+			const {inputs, outputs} = action;
+
+			Object.keys(inputs)
+				.filter((key) => !targetFieldExists(inputs[key], pages))
+				.map((key) => delete inputs[key]);
+
+			Object.keys(outputs)
+				.filter((key) => !targetFieldExists(outputs[key], pages))
+				.map((key) => delete outputs[key]);
+		}
+		else if (action.action === 'jump-to-page') {
+			const target = parseInt(action.target, 10) + 1;
+
+			if (pages.length < 3 || target > pages.length) {
+				action.target = '';
+			}
+		}
+		else if (!targetFieldExists(action.target, pages)) {
+			action.target = '';
 		}
 	});
 
 	return actions;
+};
+
+const targetFieldExists = (target, pages) => {
+	const visitor = new PagesVisitor(pages);
+
+	let targetFieldExists = false;
+
+	visitor.mapFields(
+		({fieldName}) => {
+			if (target === fieldName) {
+				targetFieldExists = true;
+			}
+		},
+		true,
+		true
+	);
+
+	return targetFieldExists;
 };
 
 export default {
@@ -86,5 +179,6 @@ export default {
 	clearOperatorValue,
 	clearSecondOperandValue,
 	clearTargetValue,
+	formatRules,
 	syncActions,
 };

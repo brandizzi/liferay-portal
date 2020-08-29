@@ -59,6 +59,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>OK_BUTTON</td>
+	<td>//a[contains(@role,'button')][normalize-space()='OK']</td>
+	<td></td>
+</tr>
+<tr>
 	<td>SOURCE_URL</td>
 	<td>//input[contains(@id,'sourceURL')]</td>
 	<td></td>
@@ -83,6 +88,11 @@
 <tr>
 	<td>TOOLBAR_IMAGE_BUTTON</td>
 	<td>//a[contains(@class,'cke_button') and contains(@class,'image')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>TOOLBAR_LINK_BUTTON</td>
+	<td>//label[contains(.,'${key_fieldLabel}')]//following-sibling::div//a[contains(@class,'cke_button') and contains(@class,'button__link')]</td>
 	<td></td>
 </tr>
 <tr>

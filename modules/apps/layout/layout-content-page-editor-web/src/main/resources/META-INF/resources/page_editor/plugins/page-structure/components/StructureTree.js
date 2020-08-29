@@ -14,7 +14,7 @@
 
 import ClayAlert from '@clayui/alert';
 import {Treeview} from 'frontend-js-components-web';
-import React, {useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 
 import {useActiveItemId} from '../../../app/components/Controls';
 import hasDropZoneChild from '../../../app/components/layout-data-items/hasDropZoneChild';
@@ -27,6 +27,7 @@ import {config} from '../../../app/config/index';
 import selectCanUpdateEditables from '../../../app/selectors/selectCanUpdateEditables';
 import selectCanUpdateItemConfiguration from '../../../app/selectors/selectCanUpdateItemConfiguration';
 import {useSelector} from '../../../app/store/index';
+import {DragAndDropContextProvider} from '../../../app/utils/dragAndDrop/useDragAndDrop';
 import getLayoutDataItemLabel from '../../../app/utils/getLayoutDataItemLabel';
 import PageStructureSidebarSection from './PageStructureSidebarSection';
 import StructureTreeNode from './StructureTreeNode';
@@ -40,21 +41,13 @@ const EDITABLE_TYPE_ICONS = {
 	[EDITABLE_TYPES.text]: 'text-editor',
 };
 
-const EDITABLE_TYPE_LABELS = {
-	[EDITABLE_TYPES.backgroundImage]: Liferay.Language.get('image'),
-	[EDITABLE_TYPES.html]: Liferay.Language.get('html'),
-	[EDITABLE_TYPES.image]: Liferay.Language.get('image'),
-	[EDITABLE_TYPES.link]: Liferay.Language.get('link'),
-	[EDITABLE_TYPES['rich-text']]: Liferay.Language.get('rich-text'),
-	[EDITABLE_TYPES.text]: Liferay.Language.get('text'),
-};
-
 const LAYOUT_DATA_ITEM_TYPE_ICONS = {
 	[LAYOUT_DATA_ITEM_TYPES.collection]: 'list',
 	[LAYOUT_DATA_ITEM_TYPES.collectionItem]: 'document',
 	[LAYOUT_DATA_ITEM_TYPES.container]: 'container',
 	[LAYOUT_DATA_ITEM_TYPES.dropZone]: 'box-container',
 	[LAYOUT_DATA_ITEM_TYPES.fragment]: 'code',
+	[LAYOUT_DATA_ITEM_TYPES.fragmentDropZone]: 'box-container',
 	[LAYOUT_DATA_ITEM_TYPES.root]: 'page',
 	[LAYOUT_DATA_ITEM_TYPES.row]: 'table',
 };
@@ -71,9 +64,17 @@ export default function PageStructureSidebar() {
 		(state) => state.masterLayout?.masterLayoutData
 	);
 
+	const [dragAndDropHoveredItemId, setDragAndDropHoveredItemId] = useState(
+		null
+	);
+
 	const isMasterPage = config.layoutType === LAYOUT_TYPES.master;
 
 	const data = masterLayoutData || layoutData;
+
+	const onHoverNode = useCallback((itemId) => {
+		setDragAndDropHoveredItemId(itemId);
+	}, []);
 
 	const nodes = useMemo(
 		() =>
@@ -81,10 +82,12 @@ export default function PageStructureSidebar() {
 				activeItemId,
 				canUpdateEditables,
 				canUpdateItemConfiguration,
+				dragAndDropHoveredItemId,
 				fragmentEntryLinks,
 				isMasterPage,
 				layoutData,
 				masterLayoutData,
+				onHoverNode,
 			}).children,
 		[
 			activeItemId,
@@ -92,16 +95,18 @@ export default function PageStructureSidebar() {
 			canUpdateItemConfiguration,
 			data.items,
 			data.rootItems.main,
+			dragAndDropHoveredItemId,
 			fragmentEntryLinks,
 			isMasterPage,
 			layoutData,
 			masterLayoutData,
+			onHoverNode,
 		]
 	);
 
 	return (
 		<PageStructureSidebarSection>
-			<div className="page-editor__page-structure__structure-tree px-3">
+			<div className="page-editor__page-structure__structure-tree">
 				{!nodes.length && (
 					<ClayAlert
 						displayType="info"
@@ -112,11 +117,13 @@ export default function PageStructureSidebar() {
 						)}
 					</ClayAlert>
 				)}
-				<Treeview
-					NodeComponent={StructureTreeNode}
-					nodes={nodes}
-					selectedNodeIds={[activeItemId]}
-				/>
+				<DragAndDropContextProvider>
+					<Treeview
+						NodeComponent={StructureTreeNode}
+						nodes={nodes}
+						selectedNodeIds={[activeItemId]}
+					/>
+				</DragAndDropContextProvider>
 			</div>
 		</PageStructureSidebarSection>
 	);
@@ -141,10 +148,12 @@ function visit(
 		activeItemId,
 		canUpdateEditables,
 		canUpdateItemConfiguration,
+		dragAndDropHoveredItemId,
 		fragmentEntryLinks,
 		isMasterPage,
 		layoutData,
 		masterLayoutData,
+		onHoverNode,
 	}
 ) {
 	const children = [];
@@ -176,12 +185,16 @@ function visit(
 				activable: canUpdateEditables,
 				children: [],
 				disabled: !isMasterPage && itemInMasterLayout,
+				dragAndDropHoveredItemId,
+				draggable: false,
 				expanded: childId === activeItemId,
 				icon: EDITABLE_TYPE_ICONS[type],
 				id: childId,
-				name: EDITABLE_TYPE_LABELS[type],
+				itemType: ITEM_TYPES.editable,
+				name: editableId,
+				onHoverNode,
+				parentId: item.parentId,
 				removable: false,
-				type: ITEM_TYPES.editable,
 			});
 		});
 
@@ -191,10 +204,12 @@ function visit(
 					activeItemId,
 					canUpdateEditables,
 					canUpdateItemConfiguration,
+					dragAndDropHoveredItemId,
 					fragmentEntryLinks,
 					isMasterPage,
 					layoutData,
 					masterLayoutData,
+					onHoverNode,
 				}),
 
 				name: Liferay.Language.get('drop-zone'),
@@ -207,6 +222,13 @@ function visit(
 			const childItem = items[childId];
 
 			if (
+				item.type === LAYOUT_DATA_ITEM_TYPES.collection &&
+				!item.config.collection
+			) {
+				return;
+			}
+
+			if (
 				!isMasterPage &&
 				childItem.type === LAYOUT_DATA_ITEM_TYPES.dropZone
 			) {
@@ -217,10 +239,12 @@ function visit(
 						activeItemId,
 						canUpdateEditables,
 						canUpdateItemConfiguration,
+						dragAndDropHoveredItemId,
 						fragmentEntryLinks,
 						isMasterPage,
 						layoutData,
 						masterLayoutData,
+						onHoverNode,
 					}
 				).children;
 
@@ -231,10 +255,12 @@ function visit(
 					activeItemId,
 					canUpdateEditables,
 					canUpdateItemConfiguration,
+					dragAndDropHoveredItemId,
 					fragmentEntryLinks,
 					isMasterPage,
 					layoutData,
 					masterLayoutData,
+					onHoverNode,
 				});
 
 				children.push(child);
@@ -246,14 +272,21 @@ function visit(
 		activable:
 			item.type !== LAYOUT_DATA_ITEM_TYPES.column &&
 			item.type !== LAYOUT_DATA_ITEM_TYPES.collectionItem &&
+			item.type !== LAYOUT_DATA_ITEM_TYPES.fragmentDropZone &&
 			canUpdateItemConfiguration,
 		children,
 		disabled: !isMasterPage && itemInMasterLayout,
-		expanded: item.itemId === activeItemId,
+		draggable: true,
+		expanded:
+			item.itemId === activeItemId ||
+			dragAndDropHoveredItemId === item.itemId,
 		icon,
 		id: item.itemId,
+		itemType: ITEM_TYPES.layoutDataItem,
 		name: getLayoutDataItemLabel(item, fragmentEntryLinks),
+		onHoverNode,
+		parentItemId: item.parentId,
 		removable: !itemInMasterLayout && isRemovable(item, layoutData),
-		type: ITEM_TYPES.layoutDataItem,
+		type: item.type,
 	};
 }

@@ -106,17 +106,7 @@ const ItemSelectorPreview = ({
 			'edit'
 		)} ${itemTitle} (${Liferay.Language.get('copy')})`;
 
-		let editEntityBaseZIndex = Liferay.zIndex.WINDOW;
-
-		const iframeModalEl = window.parent.document.getElementsByClassName(
-			'dialog-iframe-modal'
-		);
-
-		if (iframeModalEl) {
-			editEntityBaseZIndex = window
-				.getComputedStyle(iframeModalEl[0])
-				.getPropertyValue('z-index');
-		}
+		const editEntityBaseZIndex = Liferay.zIndex.WINDOW;
 
 		Liferay.Util.editEntity(
 			{

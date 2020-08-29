@@ -14,11 +14,10 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal.npm.flat;
 
-import com.liferay.frontend.js.loader.modules.extender.npm.JSBundle;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModuleAlias;
-import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackageDependency;
+import com.liferay.frontend.js.loader.modules.extender.npm.ModifiableJSPackage;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 
@@ -29,13 +28,15 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Provides a complete implementation of {@link JSPackage}.
  *
  * @author Iván Zaera
  */
-public class FlatJSPackage implements JSPackage {
+public class FlatJSPackage implements ModifiableJSPackage {
 
 	/**
 	 * Constructs a <code>FlatJSPackage</code> with the package's bundle, name,
@@ -65,8 +66,17 @@ public class FlatJSPackage implements JSPackage {
 	 *
 	 * @param jsModule the NPM module
 	 */
+	@Override
 	public void addJSModule(JSModule jsModule) {
-		_jsModules.add(jsModule);
+		if (jsModule.getJSPackage() != this) {
+			throw new IllegalArgumentException(
+				"The given JS module does not belong to this JS package");
+		}
+
+		if (_jsModules.putIfAbsent(jsModule.getName(), jsModule) != null) {
+			throw new IllegalStateException(
+				"A JS module with the same name already exists");
+		}
 	}
 
 	public void addJSModuleAlias(JSModuleAlias jsModuleAlias) {
@@ -98,13 +108,18 @@ public class FlatJSPackage implements JSPackage {
 	}
 
 	@Override
+	public JSModule getJSModule(String packagePath) {
+		return _jsModules.get(packagePath);
+	}
+
+	@Override
 	public Collection<JSModuleAlias> getJSModuleAliases() {
 		return _jsModuleAliases;
 	}
 
 	@Override
 	public Collection<JSModule> getJSModules() {
-		return _jsModules;
+		return _jsModules.values();
 	}
 
 	@Override
@@ -132,10 +147,7 @@ public class FlatJSPackage implements JSPackage {
 		return StringBundler.concat(_name, StringPool.AT, _version);
 	}
 
-	@Override
 	public URL getResourceURL(String location) {
-		JSBundle jsBundle = getJSBundle();
-
 		String path = "META-INF/resources/";
 
 		if (_root) {
@@ -161,12 +173,35 @@ public class FlatJSPackage implements JSPackage {
 			path = sb.toString();
 		}
 
-		return jsBundle.getResourceURL(path);
+		return _flatJSBundle.getResourceURL(path);
 	}
 
 	@Override
 	public String getVersion() {
 		return _version;
+	}
+
+	@Override
+	public void removeJSModule(JSModule jsModule) {
+		if (jsModule.getJSPackage() != this) {
+			throw new IllegalArgumentException(
+				"The given JS module does not belong to this JS package");
+		}
+
+		_jsModules.remove(jsModule.getName());
+	}
+
+	@Override
+	public void replaceJSModule(JSModule jsModule) {
+		if (jsModule.getJSPackage() != this) {
+			throw new IllegalArgumentException(
+				"The given JS module does not belong to this JS package");
+		}
+
+		if (_jsModules.replace(jsModule.getName(), jsModule) == null) {
+			throw new IllegalArgumentException(
+				"No JS module with the same name exists");
+		}
 	}
 
 	@Override
@@ -176,7 +211,8 @@ public class FlatJSPackage implements JSPackage {
 
 	private final FlatJSBundle _flatJSBundle;
 	private final List<JSModuleAlias> _jsModuleAliases = new ArrayList<>();
-	private final List<JSModule> _jsModules = new ArrayList<>();
+	private final ConcurrentMap<String, JSModule> _jsModules =
+		new ConcurrentHashMap<>();
 	private final Map<String, JSPackageDependency> _jsPackageDependencies =
 		new HashMap<>();
 	private final String _mainModuleName;

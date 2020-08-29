@@ -74,7 +74,7 @@
 	</div>
 </div>
 
-<aui:script require="frontend-js-web/liferay/ItemSelectorDialog.es as ItemSelectorDialog">
+<aui:script sandbox="<%= true %>">
 	var assetDisplayPageIdInput = document.getElementById(
 		'<portlet:namespace />assetDisplayPageIdInput'
 	);
@@ -92,37 +92,32 @@
 	);
 
 	chooseSpecificDisplayPage.addEventListener('click', function (event) {
-		var itemSelectorDialog = new ItemSelectorDialog.default({
-			eventName: '<%= selectAssetDisplayPageDisplayContext.getEventName() %>',
-			singleSelect: true,
+		Liferay.Util.openSelectionModal({
+			onSelect: function (selectedItem) {
+				assetDisplayPageIdInput.value = '';
+
+				pagesContainerInput.value = '';
+
+				if (selectedItem) {
+					if (selectedItem.type === 'asset-display-page') {
+						assetDisplayPageIdInput.value = selectedItem.id;
+					}
+					else {
+						pagesContainerInput.value = selectedItem.id;
+					}
+
+					specificDisplayPageNameInput.value = selectedItem.name;
+
+					if (previewSpecificDisplayPageButton) {
+						previewSpecificDisplayPageButton.parentNode.remove();
+					}
+				}
+			},
+			selectEventName:
+				'<%= selectAssetDisplayPageDisplayContext.getEventName() %>',
 			title: '<liferay-ui:message key="select-page" />',
 			url:
 				'<%= selectAssetDisplayPageDisplayContext.getAssetDisplayPageItemSelectorURL() %>',
-		});
-
-		itemSelectorDialog.open();
-
-		itemSelectorDialog.on('selectedItemChange', function (event) {
-			var selectedItem = event.selectedItem;
-
-			assetDisplayPageIdInput.value = '';
-
-			pagesContainerInput.value = '';
-
-			if (selectedItem) {
-				if (selectedItem.type === 'asset-display-page') {
-					assetDisplayPageIdInput.value = selectedItem.id;
-				}
-				else {
-					pagesContainerInput.value = selectedItem.id;
-				}
-
-				specificDisplayPageNameInput.value = selectedItem.name;
-
-				if (previewSpecificDisplayPageButton) {
-					previewSpecificDisplayPageButton.parentNode.remove();
-				}
-			}
 		});
 	});
 

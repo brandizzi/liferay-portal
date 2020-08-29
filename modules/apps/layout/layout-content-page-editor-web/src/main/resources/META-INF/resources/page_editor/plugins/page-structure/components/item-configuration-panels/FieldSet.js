@@ -18,6 +18,8 @@ import React from 'react';
 
 import {FRAGMENT_CONFIGURATION_FIELDS} from '../../../../app/components/fragment-configuration-fields/index';
 import {LAYOUT_DATA_ITEM_TYPES} from '../../../../app/config/constants/layoutDataItemTypes';
+import {VIEWPORT_SIZES} from '../../../../app/config/constants/viewportSizes';
+import {useSelector} from '../../../../app/store/index';
 import {ConfigurationFieldPropTypes} from '../../../../prop-types/index';
 
 const DISPLAY_SIZES = {
@@ -30,54 +32,67 @@ const fieldIsDisabled = (item, field) =>
 	(field.name === 'marginRight' || field.name === 'marginLeft');
 
 export const FieldSet = ({fields, item = {}, label, onValueSelect, values}) => {
+	const selectedViewportSize = useSelector(
+		(state) => state.selectedViewportSize
+	);
+
+	const availableFields =
+		selectedViewportSize === VIEWPORT_SIZES.desktop
+			? fields
+			: fields.filter((field) => field.responsive);
+
 	return (
-		<>
-			{label && (
-				<div className="align-items-center d-flex justify-content-between page-editor__sidebar__fieldset-label pt-3">
-					<p className="mb-3 text-uppercase">{label}</p>
-				</div>
-			)}
+		availableFields.length > 0 && (
+			<>
+				{label && (
+					<div className="align-items-center d-flex justify-content-between page-editor__sidebar__fieldset-label pt-2">
+						<p className="mb-2 text-uppercase">{label}</p>
+					</div>
+				)}
 
-			<div className="page-editor__sidebar__fieldset">
-				{fields.map((field, index) => {
-					const FieldComponent =
-						field.type && FRAGMENT_CONFIGURATION_FIELDS[field.type];
+				<div className="page-editor__sidebar__fieldset">
+					{availableFields.map((field, index) => {
+						const FieldComponent =
+							field.type &&
+							FRAGMENT_CONFIGURATION_FIELDS[field.type];
 
-					const fieldValue = values[field.name] || field.defaultValue;
+						const fieldValue =
+							values[field.name] || field.defaultValue;
 
-					const visible =
-						!field.dependencies ||
-						field.dependencies.every(
-							(dependency) =>
-								values[dependency.styleName] ===
-								dependency.value
+						const visible =
+							!field.dependencies ||
+							field.dependencies.every(
+								(dependency) =>
+									values[dependency.styleName] ===
+									dependency.value
+							);
+
+						return (
+							visible && (
+								<div
+									className={classNames(
+										'page-editor__sidebar__fieldset__field',
+										{
+											'page-editor__sidebar__fieldset__field-small':
+												field.displaySize ===
+												DISPLAY_SIZES.small,
+										}
+									)}
+									key={index}
+								>
+									<FieldComponent
+										disabled={fieldIsDisabled(item, field)}
+										field={field}
+										onValueSelect={onValueSelect}
+										value={fieldValue}
+									/>
+								</div>
+							)
 						);
-
-					return (
-						visible && (
-							<div
-								className={classNames(
-									'page-editor__sidebar__fieldset__field',
-									{
-										'page-editor__sidebar__fieldset__field-small':
-											field.displaySize ===
-											DISPLAY_SIZES.small,
-									}
-								)}
-								key={index}
-							>
-								<FieldComponent
-									disabled={fieldIsDisabled(item, field)}
-									field={field}
-									onValueSelect={onValueSelect}
-									value={fieldValue}
-								/>
-							</div>
-						)
-					);
-				})}
-			</div>
-		</>
+					})}
+				</div>
+			</>
+		)
 	);
 };
 

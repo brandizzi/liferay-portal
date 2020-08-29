@@ -14,7 +14,7 @@
 
 import {
 	DefaultEventHandler,
-	ItemSelectorDialog,
+	openSelectionModal,
 	openSimpleInputModal,
 } from 'frontend-js-web';
 
@@ -57,28 +57,22 @@ class FragmentCompositionDropdownDefaultEventHandler extends DefaultEventHandler
 	}
 
 	updateFragmentCompositionPreview(itemData) {
-		const itemSelectorDialog = new ItemSelectorDialog({
-			eventName: this.ns('changePreview'),
-			singleSelect: true,
+		openSelectionModal({
+			onSelect: (selectedItem) => {
+				if (selectedItem) {
+					const itemValue = JSON.parse(selectedItem.value);
+
+					this.one('#fragmentCompositionId').value =
+						itemData.fragmentCompositionId;
+					this.one('#fragmentCompositionFileEntryId').value =
+						itemValue.fileEntryId;
+
+					submitForm(this.one('#fragmentCompositionPreviewFm'));
+				}
+			},
+			selectEventName: this.ns('changePreview'),
 			title: Liferay.Language.get('fragment-thumbnail'),
 			url: itemData.itemSelectorURL,
-		});
-
-		itemSelectorDialog.open();
-
-		itemSelectorDialog.on('selectedItemChange', (event) => {
-			const selectedItem = event.selectedItem;
-
-			if (selectedItem) {
-				const itemValue = JSON.parse(selectedItem.value);
-
-				this.one('#fragmentCompositionId').value =
-					itemData.fragmentCompositionId;
-				this.one('#fragmentCompositionFileEntryId').value =
-					itemValue.fileEntryId;
-
-				submitForm(this.one('#fragmentCompositionPreviewFm'));
-			}
 		});
 	}
 
@@ -87,7 +81,7 @@ class FragmentCompositionDropdownDefaultEventHandler extends DefaultEventHandler
 		selectFragmentCollectionURL,
 		targetFragmentCompositionURL
 	) {
-		Liferay.Util.openModal({
+		openSelectionModal({
 			id: this.ns('selectFragmentCollection'),
 			onSelect: (selectedItem) => {
 				if (selectedItem) {

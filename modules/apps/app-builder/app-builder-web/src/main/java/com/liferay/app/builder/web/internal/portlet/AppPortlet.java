@@ -18,8 +18,8 @@ import com.liferay.app.builder.constants.AppBuilderAppConstants;
 import com.liferay.app.builder.model.AppBuilderApp;
 import com.liferay.app.builder.portlet.tab.AppBuilderAppPortletTab;
 import com.liferay.app.builder.web.internal.constants.AppBuilderWebKeys;
+import com.liferay.app.builder.web.internal.deploy.AppDeployUtil;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerCustomizerFactory.ServiceWrapper;
-import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -49,37 +49,20 @@ import javax.portlet.ResourceResponse;
 public class AppPortlet extends MVCPortlet {
 
 	public AppPortlet(
-		AppBuilderApp appBuilderApp,
-		ServiceTrackerMap<String, AppBuilderAppPortletTab>
-			appBuilderAppPortletTabServiceTrackerMap,
-		String appDeploymentType, String appName,
-		ServiceTrackerMap<String, List<ServiceWrapper<MVCResourceCommand>>>
-			appPortletMVCResourceCommandServiceTrackerMap,
+		AppBuilderApp appBuilderApp, String appDeploymentType, String appName,
 		String portletName) {
 
 		this(
-			appBuilderApp, appBuilderAppPortletTabServiceTrackerMap,
-			appDeploymentType, appName,
-			appPortletMVCResourceCommandServiceTrackerMap, portletName, true,
-			true);
+			appBuilderApp, appDeploymentType, appName, portletName, true, true);
 	}
 
 	public AppPortlet(
-		AppBuilderApp appBuilderApp,
-		ServiceTrackerMap<String, AppBuilderAppPortletTab>
-			appBuilderAppPortletTabServiceTrackerMap,
-		String appDeploymentType, String appName,
-		ServiceTrackerMap<String, List<ServiceWrapper<MVCResourceCommand>>>
-			appPortletMVCResourceCommandServiceTrackerMap,
+		AppBuilderApp appBuilderApp, String appDeploymentType, String appName,
 		String portletName, boolean showFormView, boolean showTableView) {
 
 		_appBuilderApp = appBuilderApp;
-		_appBuilderAppPortletTabServiceTrackerMap =
-			appBuilderAppPortletTabServiceTrackerMap;
 		_appDeploymentType = appDeploymentType;
 		_appName = appName;
-		_appPortletMVCResourceCommandServiceTrackerMap =
-			appPortletMVCResourceCommandServiceTrackerMap;
 		_portletName = portletName;
 		_showFormView = showFormView;
 		_showTableView = showTableView;
@@ -129,8 +112,7 @@ public class AppPortlet extends MVCPortlet {
 			AppBuilderWebKeys.APP_DEPLOYMENT_TYPE, _appDeploymentType);
 
 		AppBuilderAppPortletTab appBuilderAppPortletTab =
-			_appBuilderAppPortletTabServiceTrackerMap.getService(
-				_appBuilderApp.getScope());
+			AppDeployUtil.getAppBuilderAppPortletTab(_appBuilderApp.getScope());
 
 		renderRequest.setAttribute(
 			AppBuilderWebKeys.APP_TAB,
@@ -204,7 +186,7 @@ public class AppPortlet extends MVCPortlet {
 		String scope) {
 
 		return Stream.of(
-			_appPortletMVCResourceCommandServiceTrackerMap.getService(scope)
+			AppDeployUtil.getServices(scope)
 		).filter(
 			Objects::nonNull
 		).flatMap(
@@ -218,13 +200,8 @@ public class AppPortlet extends MVCPortlet {
 	}
 
 	private final AppBuilderApp _appBuilderApp;
-	private final ServiceTrackerMap<String, AppBuilderAppPortletTab>
-		_appBuilderAppPortletTabServiceTrackerMap;
 	private final String _appDeploymentType;
 	private final String _appName;
-	private final ServiceTrackerMap
-		<String, List<ServiceWrapper<MVCResourceCommand>>>
-			_appPortletMVCResourceCommandServiceTrackerMap;
 	private final String _portletName;
 	private final boolean _showFormView;
 	private final boolean _showTableView;

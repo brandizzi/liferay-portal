@@ -14,10 +14,9 @@
 
 import {
 	DefaultEventHandler,
-	ItemSelectorDialog,
 	createPortletURL,
 	navigate,
-	openModal,
+	openSelectionModal,
 } from 'frontend-js-web';
 
 class ManagementToolbarDefaultEventHandler extends DefaultEventHandler {
@@ -70,7 +69,7 @@ class ManagementToolbarDefaultEventHandler extends DefaultEventHandler {
 	}
 
 	addAccountUser(itemData) {
-		openModal({
+		openSelectionModal({
 			id: this.ns('addAccountUser'),
 			onSelect: (selectedItem) => {
 				var addAccountUserURL = createPortletURL(
@@ -95,20 +94,18 @@ class ManagementToolbarDefaultEventHandler extends DefaultEventHandler {
 		accountEntrySelectorURL,
 		callback
 	) {
-		const itemSelectorDialog = new ItemSelectorDialog({
+		openSelectionModal({
 			buttonAddLabel: dialogButtonLabel,
-			eventName: dialogEventName,
+			multiple: true,
+			onSelect: (selectedItem) => {
+				if (selectedItem) {
+					callback(selectedItem);
+				}
+			},
+			selectEventName: dialogEventName,
 			title: dialogTitle,
 			url: accountEntrySelectorURL,
 		});
-
-		itemSelectorDialog.on('selectedItemChange', (event) => {
-			if (event.selectedItem) {
-				callback(event.selectedItem);
-			}
-		});
-
-		itemSelectorDialog.open();
 	}
 
 	_updateAccountUsers(url) {

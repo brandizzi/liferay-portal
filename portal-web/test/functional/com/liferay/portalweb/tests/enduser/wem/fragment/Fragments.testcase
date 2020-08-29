@@ -212,7 +212,7 @@ definition {
 		}
 
 		task ("Assert add second Row fragment to the same Section") {
-			DragAndDrop.javaScriptDragAndDropObjectToBottomOfNestedObject(
+			DragAndDrop.javaScriptDragAndDropObjectBelowTallNestedObject(
 				key_collectionName = "Layout Elements",
 				key_fragmentName = "Grid",
 				key_targetFragmentName = "Grid",
@@ -313,8 +313,8 @@ definition {
 
 			PageEditor.configureFragment(
 				alignment = "Center",
-				borderRadius = "None",
-				boxShadow = "Large",
+				borderRadius = "Border Radius Small",
+				boxShadow = "Box Shadow Large",
 				imageSize = "Fit",
 				marginBottom = "5");
 		}
@@ -322,8 +322,8 @@ definition {
 		task ("View the fragment style") {
 			PageEditor.viewFragmentStyle(
 				alignment = "center",
-				borderRadius = "rounded-0",
-				boxShadow = "lg",
+				borderRadius = "border-radius-sm",
+				boxShadow = "box-shadow-lg",
 				fragmentName = "card",
 				imageSize = "100",
 				marginBottom = "5");
@@ -350,7 +350,7 @@ definition {
 		}
 	}
 
-	@description = "This is a test for LPS-98241. Contributed fragment components Heading can be configured."
+	@description = "This is a test for LPS-98241 and LPS-115224. Contributed fragment components Heading can be configured. The common fragment styles settings of fragment should be shown in view mode."
 	@priority = "4"
 	test ConfigureBasicComponentHeading {
 		task ("Add a content page") {
@@ -375,7 +375,7 @@ definition {
 
 			PageEditor.configureFragment(
 				alignment = "Right",
-				textColor = "secondary");
+				textColor = "6C757D");
 
 			PageEditor.gotoConfiguration(fragmentName = "Heading");
 
@@ -387,10 +387,27 @@ definition {
 				alignment = "right",
 				fragmentName = "heading",
 				headingLevel = "h2",
-				textColor = "secondary");
+				textColor = "blockquote-small-color");
+		}
+
+		task ("Assert the fragment styles are shown in view mode") {
+			PageEditor.clickPublish();
+
+			ContentPagesNavigator.openViewContentPage(
+				pageName = "Test Content Page Name",
+				siteName = "Test Site Name");
+
+			AssertVisible(locator1 = "//div[contains(@class,'text-right')][//h2[contains(@class,'component-heading')]]");
+
+			AssertCssValue(
+				locator1 = "//div[contains(@class,'text-right')][//h2[contains(@class,'component-heading')]]",
+				locator2 = "color",
+				value1 = "rgba(108, 117, 125, 1)");
 		}
 
 		task ("Remove the fragment") {
+			ContentPages.clickPencil();
+
 			PageEditor.removeFragment(fragmentName = "Heading");
 		}
 
@@ -494,7 +511,7 @@ definition {
 
 			PageEditor.configureFragment(
 				alignment = "Right",
-				textColor = "warning");
+				textColor = "B95000");
 		}
 
 		task ("View the fragment style") {
@@ -549,13 +566,13 @@ definition {
 			PageEditor.gotoStyle(fragmentName = "Separator");
 
 			PageEditor.configureFragment(
-				borderColor = "lighter",
+				borderColor = "F7F8F9",
 				bottomSpacing = "1");
 		}
 
 		task ("View the fragment style") {
 			PageEditor.viewFragmentStyle(
-				borderColor = "lighter",
+				borderColor = "gray-100",
 				bottomSpacing = "1",
 				fragmentName = "separator");
 		}
@@ -682,7 +699,7 @@ definition {
 		}
 
 		task ("Add a Heading below Card inside the Container") {
-			DragAndDrop.javaScriptDragAndDropObjectToBottomOfNestedObject(
+			DragAndDrop.javaScriptDragAndDropObjectBelowTallNestedObject(
 				key_collectionName = "Basic Components",
 				key_fragmentName = "Heading",
 				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT",
@@ -703,12 +720,12 @@ definition {
 				position = "1");
 
 			PageEditor.editLayoutContainer(
-				backgroundColor = "warning",
-				borderColor = "danger",
-				borderRadius = "Large",
+				backgroundColor = "B95000",
+				borderColor = "DA1414",
+				borderRadius = "Border Radius Large",
 				borderWidth = "5",
+				boxShadow = "Box Shadow Large",
 				contentDisplay = "Flex",
-				dropShadow = "Large",
 				horizontalAlign = "Center",
 				marginBottom = "2",
 				marginLeft = "2",
@@ -727,8 +744,9 @@ definition {
 			PageEditor.viewContainerStyle(
 				backgroundColor = "warning",
 				borderColor = "danger",
-				borderRadius = "lg",
+				borderRadius = "border-radius-lg",
 				borderWidth = "5",
+				boxShadow = "box-shadow-lg",
 				contentDisplay = "flex",
 				dropShadow = "lg",
 				horizontalAlign = "center",
@@ -1114,7 +1132,7 @@ definition {
 				locator1 = "PageEditor#WIDGETS_APPLICATION_SEARCH_FIELD",
 				value1 = "Asset Publisher");
 
-			DragAndDrop.javaScriptDragAndDropObjectToBottomOfNestedObject(
+			DragAndDrop.javaScriptDragAndDropObjectBelowTallNestedObject(
 				key_portletName = "Asset Publisher",
 				key_position = "1",
 				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_WIDGET",

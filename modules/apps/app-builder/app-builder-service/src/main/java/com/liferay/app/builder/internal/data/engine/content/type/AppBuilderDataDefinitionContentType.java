@@ -16,13 +16,21 @@ package com.liferay.app.builder.internal.data.engine.content.type;
 
 import com.liferay.app.builder.constants.AppBuilderConstants;
 import com.liferay.app.builder.model.AppBuilderApp;
+import com.liferay.app.builder.model.AppBuilderAppDataRecordLink;
+import com.liferay.app.builder.service.AppBuilderAppDataRecordLinkLocalService;
 import com.liferay.data.engine.content.type.DataDefinitionContentType;
+import com.liferay.dynamic.data.lists.model.DDLRecord;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.security.permission.resource.PortletResourcePermission;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.workflow.permission.WorkflowPermissionUtil;
+
+import java.util.Objects;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -63,6 +71,24 @@ public class AppBuilderDataDefinitionContentType
 			String resourceName, long primKey, long userId, String actionId)
 		throws PortalException {
 
+		if (StringUtil.contains(
+				resourceName, DDLRecord.class.getName(), StringPool.DASH)) {
+
+			AppBuilderAppDataRecordLink appBuilderAppDataRecordLink =
+				_appBuilderAppDataRecordLinkLocalService.
+					fetchDDLRecordAppBuilderAppDataRecordLink(primKey);
+
+			if (Objects.nonNull(appBuilderAppDataRecordLink)) {
+				Boolean hasPermission = WorkflowPermissionUtil.hasPermission(
+					permissionChecker, appBuilderAppDataRecordLink.getGroupId(),
+					resourceName, primKey, ActionKeys.VIEW);
+
+				if (hasPermission != null) {
+					return hasPermission;
+				}
+			}
+		}
+
 		if (_portletResourcePermission.contains(
 				PermissionThreadLocal.getPermissionChecker(), groupId,
 				ActionKeys.MANAGE)) {
@@ -95,6 +121,10 @@ public class AppBuilderDataDefinitionContentType
 	public boolean isDataRecordCollectionPermissionCheckingEnabled() {
 		return true;
 	}
+
+	@Reference
+	private AppBuilderAppDataRecordLinkLocalService
+		_appBuilderAppDataRecordLinkLocalService;
 
 	@Reference
 	private Portal _portal;

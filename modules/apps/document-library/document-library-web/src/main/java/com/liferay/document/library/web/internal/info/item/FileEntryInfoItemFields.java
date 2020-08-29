@@ -77,10 +77,10 @@ public class FileEntryInfoItemFields {
 			InfoLocalizedValue.localize(
 				FileEntryInfoItemFields.class, "file-name")
 		).build();
-	public static final InfoField<TextInfoFieldType> fileURL =
+	public static final InfoField<ImageInfoFieldType> fileURL =
 		InfoField.builder(
 		).infoFieldType(
-			TextInfoFieldType.INSTANCE
+			ImageInfoFieldType.INSTANCE
 		).name(
 			"fileURL"
 		).labelInfoLocalizedValue(
@@ -95,7 +95,7 @@ public class FileEntryInfoItemFields {
 			"mimeType"
 		).labelInfoLocalizedValue(
 			InfoLocalizedValue.localize(
-				FileEntryInfoItemFields.class, "content-type")
+				FileEntryInfoItemFields.class, "mime-type")
 		).build();
 	public static final InfoField<ImageInfoFieldType> previewImage =
 		InfoField.builder(

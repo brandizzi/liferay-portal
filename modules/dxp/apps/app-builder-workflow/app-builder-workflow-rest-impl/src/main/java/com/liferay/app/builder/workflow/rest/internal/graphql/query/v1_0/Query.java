@@ -74,6 +74,7 @@ public class Query {
 
 		public AppWorkflowPage(Page appWorkflowPage) {
 			actions = appWorkflowPage.getActions();
+
 			items = appWorkflowPage.getItems();
 			lastPage = appWorkflowPage.getLastPage();
 			page = appWorkflowPage.getPage();

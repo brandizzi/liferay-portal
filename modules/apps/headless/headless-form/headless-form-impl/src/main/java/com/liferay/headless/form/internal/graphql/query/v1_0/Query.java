@@ -274,6 +274,7 @@ public class Query {
 
 		public FormPage(Page formPage) {
 			actions = formPage.getActions();
+
 			items = formPage.getItems();
 			lastPage = formPage.getLastPage();
 			page = formPage.getPage();
@@ -306,6 +307,7 @@ public class Query {
 
 		public FormDocumentPage(Page formDocumentPage) {
 			actions = formDocumentPage.getActions();
+
 			items = formDocumentPage.getItems();
 			lastPage = formDocumentPage.getLastPage();
 			page = formDocumentPage.getPage();
@@ -338,6 +340,7 @@ public class Query {
 
 		public FormRecordPage(Page formRecordPage) {
 			actions = formRecordPage.getActions();
+
 			items = formRecordPage.getItems();
 			lastPage = formRecordPage.getLastPage();
 			page = formRecordPage.getPage();
@@ -370,6 +373,7 @@ public class Query {
 
 		public FormStructurePage(Page formStructurePage) {
 			actions = formStructurePage.getActions();
+
 			items = formStructurePage.getItems();
 			lastPage = formStructurePage.getLastPage();
 			page = formStructurePage.getPage();

@@ -17,13 +17,16 @@ package com.liferay.fragment.service.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.fragment.exception.FragmentCompositionNameException;
 import com.liferay.fragment.model.FragmentCollection;
+import com.liferay.fragment.model.FragmentComposition;
 import com.liferay.fragment.service.FragmentCompositionLocalService;
 import com.liferay.fragment.util.FragmentTestUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.transaction.Propagation;
@@ -34,6 +37,7 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PersistenceTestRule;
 import com.liferay.portal.test.rule.TransactionalTestRule;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -60,6 +64,9 @@ public class FragmentCompositionLocalServiceTest {
 
 		_fragmentCollection = FragmentTestUtil.addFragmentCollection(
 			_group.getGroupId());
+
+		_updatedFragmentCollection = FragmentTestUtil.addFragmentCollection(
+			_group.getGroupId());
 	}
 
 	@Test(expected = FragmentCompositionNameException.class)
@@ -72,6 +79,44 @@ public class FragmentCompositionLocalServiceTest {
 			ServiceContextTestUtil.getServiceContext());
 	}
 
+	@Test
+	public void testUpdateFragmentCollectionId() throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		String fragmentCompositionKey = RandomTestUtil.randomString();
+		String name = RandomTestUtil.randomString();
+		String description = RandomTestUtil.randomString();
+		String data = RandomTestUtil.randomString();
+		long previewFileEntryId = RandomTestUtil.randomLong();
+		int status = WorkflowConstants.STATUS_APPROVED;
+
+		FragmentComposition fragmentComposition =
+			_fragmentCompositionLocalService.addFragmentComposition(
+				TestPropsValues.getUserId(), _group.getGroupId(),
+				_fragmentCollection.getFragmentCollectionId(),
+				fragmentCompositionKey, name, description, data,
+				previewFileEntryId, status, serviceContext);
+
+		_fragmentCompositionLocalService.updateFragmentComposition(
+			fragmentComposition.getUserId(),
+			fragmentComposition.getFragmentCompositionId(),
+			_updatedFragmentCollection.getFragmentCollectionId(),
+			fragmentComposition.getName(), fragmentComposition.getDescription(),
+			fragmentComposition.getData(),
+			fragmentComposition.getPreviewFileEntryId(),
+			fragmentComposition.getStatus());
+
+		FragmentComposition fragmentCompositionByPrimaryKey =
+			_fragmentCompositionLocalService.fetchFragmentComposition(
+				fragmentComposition.getFragmentCompositionId());
+
+		Assert.assertEquals(
+			_updatedFragmentCollection.getFragmentCollectionId(),
+			fragmentCompositionByPrimaryKey.getFragmentCollectionId());
+	}
+
 	private FragmentCollection _fragmentCollection;
 
 	@Inject
@@ -79,5 +124,7 @@ public class FragmentCompositionLocalServiceTest {
 
 	@DeleteAfterTestRun
 	private Group _group;
+
+	private FragmentCollection _updatedFragmentCollection;
 
 }

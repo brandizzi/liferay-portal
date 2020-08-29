@@ -18,7 +18,7 @@ import com.liferay.application.list.BasePanelApp;
 import com.liferay.application.list.PanelApp;
 import com.liferay.application.list.constants.PanelCategoryKeys;
 import com.liferay.portal.kernel.model.Portlet;
-import com.liferay.saml.web.internal.constants.SamlAdminPortletKeys;
+import com.liferay.saml.constants.SamlPortletKeys;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -38,12 +38,12 @@ public class SamlAdminPanelApp extends BasePanelApp {
 
 	@Override
 	public String getPortletId() {
-		return SamlAdminPortletKeys.SAML_ADMIN;
+		return SamlPortletKeys.SAML_ADMIN;
 	}
 
 	@Override
 	@Reference(
-		target = "(javax.portlet.name=" + SamlAdminPortletKeys.SAML_ADMIN + ")",
+		target = "(javax.portlet.name=" + SamlPortletKeys.SAML_ADMIN + ")",
 		unbind = "-"
 	)
 	public void setPortlet(Portlet portlet) {

@@ -1,5 +1,479 @@
 [
 	{
+		"label": "margin",
+		"styles": [
+			{
+				"dataType": "string",
+				"defaultValue": "0",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "margin-top",
+				"name": "marginTop",
+				"responsive": true,
+				"responsiveTemplate": "mt{viewport}{value}",
+				"type": "select",
+				"validValues": [
+					{
+						"label": "0",
+						"value": "0"
+					},
+					{
+						"label": "1",
+						"value": "1"
+					},
+					{
+						"label": "2",
+						"value": "2"
+					},
+					{
+						"label": "3",
+						"value": "3"
+					},
+					{
+						"label": "4",
+						"value": "4"
+					},
+					{
+						"label": "5",
+						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
+					}
+				]
+			},
+			{
+				"dataType": "string",
+				"defaultValue": "0",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "margin-bottom",
+				"name": "marginBottom",
+				"responsive": true,
+				"responsiveTemplate": "mb{viewport}{value}",
+				"type": "select",
+				"validValues": [
+					{
+						"label": "0",
+						"value": "0"
+					},
+					{
+						"label": "1",
+						"value": "1"
+					},
+					{
+						"label": "2",
+						"value": "2"
+					},
+					{
+						"label": "3",
+						"value": "3"
+					},
+					{
+						"label": "4",
+						"value": "4"
+					},
+					{
+						"label": "5",
+						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
+					}
+				]
+			},
+			{
+				"dataType": "string",
+				"defaultValue": "0",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "margin-left",
+				"name": "marginLeft",
+				"responsive": true,
+				"responsiveTemplate": "ml{viewport}{value}",
+				"type": "select",
+				"validValues": [
+					{
+						"label": "0",
+						"value": "0"
+					},
+					{
+						"label": "1",
+						"value": "1"
+					},
+					{
+						"label": "2",
+						"value": "2"
+					},
+					{
+						"label": "3",
+						"value": "3"
+					},
+					{
+						"label": "4",
+						"value": "4"
+					},
+					{
+						"label": "5",
+						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
+					}
+				]
+			},
+			{
+				"dataType": "string",
+				"defaultValue": "0",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "margin-right",
+				"name": "marginRight",
+				"responsive": true,
+				"responsiveTemplate": "mr{viewport}{value}",
+				"type": "select",
+				"validValues": [
+					{
+						"label": "0",
+						"value": "0"
+					},
+					{
+						"label": "1",
+						"value": "1"
+					},
+					{
+						"label": "2",
+						"value": "2"
+					},
+					{
+						"label": "3",
+						"value": "3"
+					},
+					{
+						"label": "4",
+						"value": "4"
+					},
+					{
+						"label": "5",
+						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
+					}
+				]
+			}
+		]
+	},
+	{
+		"label": "padding",
+		"styles": [
+			{
+				"dataType": "string",
+				"defaultValue": "0",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "padding-top",
+				"name": "paddingTop",
+				"responsive": true,
+				"responsiveTemplate": "pt{viewport}{value}",
+				"type": "select",
+				"validValues": [
+					{
+						"label": "0",
+						"value": "0"
+					},
+					{
+						"label": "1",
+						"value": "1"
+					},
+					{
+						"label": "2",
+						"value": "2"
+					},
+					{
+						"label": "3",
+						"value": "3"
+					},
+					{
+						"label": "4",
+						"value": "4"
+					},
+					{
+						"label": "5",
+						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
+					}
+				]
+			},
+			{
+				"dataType": "string",
+				"defaultValue": "0",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "padding-bottom",
+				"name": "paddingBottom",
+				"responsive": true,
+				"responsiveTemplate": "pb{viewport}{value}",
+				"type": "select",
+				"validValues": [
+					{
+						"label": "0",
+						"value": "0"
+					},
+					{
+						"label": "1",
+						"value": "1"
+					},
+					{
+						"label": "2",
+						"value": "2"
+					},
+					{
+						"label": "3",
+						"value": "3"
+					},
+					{
+						"label": "4",
+						"value": "4"
+					},
+					{
+						"label": "5",
+						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
+					}
+				]
+			},
+			{
+				"dataType": "string",
+				"defaultValue": "0",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "padding-left",
+				"name": "paddingLeft",
+				"responsive": true,
+				"responsiveTemplate": "pl{viewport}{value}",
+				"type": "select",
+				"validValues": [
+					{
+						"label": "0",
+						"value": "0"
+					},
+					{
+						"label": "1",
+						"value": "1"
+					},
+					{
+						"label": "2",
+						"value": "2"
+					},
+					{
+						"label": "3",
+						"value": "3"
+					},
+					{
+						"label": "4",
+						"value": "4"
+					},
+					{
+						"label": "5",
+						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
+					}
+				]
+			},
+			{
+				"dataType": "string",
+				"defaultValue": "0",
+				"dependencies": [
+				],
+				"displaySize": "small",
+				"label": "padding-right",
+				"name": "paddingRight",
+				"responsive": true,
+				"responsiveTemplate": "pr{viewport}{value}",
+				"type": "select",
+				"validValues": [
+					{
+						"label": "0",
+						"value": "0"
+					},
+					{
+						"label": "1",
+						"value": "1"
+					},
+					{
+						"label": "2",
+						"value": "2"
+					},
+					{
+						"label": "3",
+						"value": "3"
+					},
+					{
+						"label": "4",
+						"value": "4"
+					},
+					{
+						"label": "5",
+						"value": "5"
+					},
+					{
+						"label": "6",
+						"value": "6"
+					},
+					{
+						"label": "7",
+						"value": "7"
+					},
+					{
+						"label": "8",
+						"value": "8"
+					},
+					{
+						"label": "9",
+						"value": "9"
+					},
+					{
+						"label": "10",
+						"value": "10"
+					}
+				]
+			}
+		]
+	},
+	{
 		"label": "size",
 		"styles": [
 			{
@@ -70,7 +544,7 @@
 			},
 			{
 				"dataType": "string",
-				"defaultValue": "visible",
+				"defaultValue": "",
 				"dependencies": [
 				],
 				"label": "overflow",
@@ -78,6 +552,10 @@
 				"responsive": false,
 				"type": "select",
 				"validValues": [
+					{
+						"label": "default",
+						"value": ""
+					},
 					{
 						"label": "visible",
 						"value": "visible"
@@ -99,325 +577,11 @@
 		]
 	},
 	{
-		"label": "margin",
-		"styles": [
-			{
-				"dataType": "string",
-				"defaultValue": "0",
-				"dependencies": [
-				],
-				"displaySize": "small",
-				"label": "margin-top",
-				"name": "marginTop",
-				"responsive": true,
-				"responsiveTemplate": "mt{viewport}{value}",
-				"type": "select",
-				"validValues": [
-					{
-						"label": "0",
-						"value": "0"
-					},
-					{
-						"label": "1",
-						"value": "1"
-					},
-					{
-						"label": "2",
-						"value": "2"
-					},
-					{
-						"label": "3",
-						"value": "3"
-					},
-					{
-						"label": "4",
-						"value": "4"
-					},
-					{
-						"label": "5",
-						"value": "5"
-					}
-				]
-			},
-			{
-				"dataType": "string",
-				"defaultValue": "0",
-				"dependencies": [
-				],
-				"displaySize": "small",
-				"label": "margin-bottom",
-				"name": "marginBottom",
-				"responsive": true,
-				"responsiveTemplate": "mb{viewport}{value}",
-				"type": "select",
-				"validValues": [
-					{
-						"label": "0",
-						"value": "0"
-					},
-					{
-						"label": "1",
-						"value": "1"
-					},
-					{
-						"label": "2",
-						"value": "2"
-					},
-					{
-						"label": "3",
-						"value": "3"
-					},
-					{
-						"label": "4",
-						"value": "4"
-					},
-					{
-						"label": "5",
-						"value": "5"
-					}
-				]
-			},
-			{
-				"dataType": "string",
-				"defaultValue": "0",
-				"dependencies": [
-				],
-				"displaySize": "small",
-				"label": "margin-left",
-				"name": "marginLeft",
-				"responsive": true,
-				"responsiveTemplate": "ml{viewport}{value}",
-				"type": "select",
-				"validValues": [
-					{
-						"label": "0",
-						"value": "0"
-					},
-					{
-						"label": "1",
-						"value": "1"
-					},
-					{
-						"label": "2",
-						"value": "2"
-					},
-					{
-						"label": "3",
-						"value": "3"
-					},
-					{
-						"label": "4",
-						"value": "4"
-					},
-					{
-						"label": "5",
-						"value": "5"
-					}
-				]
-			},
-			{
-				"dataType": "string",
-				"defaultValue": "0",
-				"dependencies": [
-				],
-				"displaySize": "small",
-				"label": "margin-right",
-				"name": "marginRight",
-				"responsive": true,
-				"responsiveTemplate": "mr{viewport}{value}",
-				"type": "select",
-				"validValues": [
-					{
-						"label": "0",
-						"value": "0"
-					},
-					{
-						"label": "1",
-						"value": "1"
-					},
-					{
-						"label": "2",
-						"value": "2"
-					},
-					{
-						"label": "3",
-						"value": "3"
-					},
-					{
-						"label": "4",
-						"value": "4"
-					},
-					{
-						"label": "5",
-						"value": "5"
-					}
-				]
-			}
-		]
-	},
-	{
-		"label": "padding",
-		"styles": [
-			{
-				"dataType": "string",
-				"defaultValue": "0",
-				"dependencies": [
-				],
-				"displaySize": "small",
-				"label": "padding-top",
-				"name": "paddingTop",
-				"responsive": true,
-				"responsiveTemplate": "pt{viewport}{value}",
-				"type": "select",
-				"validValues": [
-					{
-						"label": "0",
-						"value": "0"
-					},
-					{
-						"label": "1",
-						"value": "1"
-					},
-					{
-						"label": "2",
-						"value": "2"
-					},
-					{
-						"label": "3",
-						"value": "3"
-					},
-					{
-						"label": "4",
-						"value": "4"
-					},
-					{
-						"label": "5",
-						"value": "5"
-					}
-				]
-			},
-			{
-				"dataType": "string",
-				"defaultValue": "0",
-				"dependencies": [
-				],
-				"displaySize": "small",
-				"label": "padding-bottom",
-				"name": "paddingBottom",
-				"responsive": true,
-				"responsiveTemplate": "pb{viewport}{value}",
-				"type": "select",
-				"validValues": [
-					{
-						"label": "0",
-						"value": "0"
-					},
-					{
-						"label": "1",
-						"value": "1"
-					},
-					{
-						"label": "2",
-						"value": "2"
-					},
-					{
-						"label": "3",
-						"value": "3"
-					},
-					{
-						"label": "4",
-						"value": "4"
-					},
-					{
-						"label": "5",
-						"value": "5"
-					}
-				]
-			},
-			{
-				"dataType": "string",
-				"defaultValue": "0",
-				"dependencies": [
-				],
-				"displaySize": "small",
-				"label": "padding-left",
-				"name": "paddingLeft",
-				"responsive": true,
-				"responsiveTemplate": "pl{viewport}{value}",
-				"type": "select",
-				"validValues": [
-					{
-						"label": "0",
-						"value": "0"
-					},
-					{
-						"label": "1",
-						"value": "1"
-					},
-					{
-						"label": "2",
-						"value": "2"
-					},
-					{
-						"label": "3",
-						"value": "3"
-					},
-					{
-						"label": "4",
-						"value": "4"
-					},
-					{
-						"label": "5",
-						"value": "5"
-					}
-				]
-			},
-			{
-				"dataType": "string",
-				"defaultValue": "0",
-				"dependencies": [
-				],
-				"displaySize": "small",
-				"label": "padding-right",
-				"name": "paddingRight",
-				"responsive": true,
-				"responsiveTemplate": "pr{viewport}{value}",
-				"type": "select",
-				"validValues": [
-					{
-						"label": "0",
-						"value": "0"
-					},
-					{
-						"label": "1",
-						"value": "1"
-					},
-					{
-						"label": "2",
-						"value": "2"
-					},
-					{
-						"label": "3",
-						"value": "3"
-					},
-					{
-						"label": "4",
-						"value": "4"
-					},
-					{
-						"label": "5",
-						"value": "5"
-					}
-				]
-			}
-		]
-	},
-	{
 		"label": "text",
 		"styles": [
 			{
 				"dataType": "string",
-				"defaultValue": "sans-serif",
+				"defaultValue": "",
 				"dependencies": [
 				],
 				"label": "font-family",
@@ -426,18 +590,29 @@
 				"type": "select",
 				"validValues": [
 					{
-						"label": "sans-serif",
-						"value": "sans-serif"
+						"label": "default",
+						"value": ""
 					},
 					{
-						"label": "monospace",
-						"value": "monospace"
+						"frontendTokenName": "fontFamilySansSerif",
+						"label": "font-family-sans-serif",
+						"value": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
+					},
+					{
+						"frontendTokenName": "fontFamilyMonospace",
+						"label": "font-family-monospace",
+						"value": "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace"
+					},
+					{
+						"frontendTokenName": "fontFamilyBase",
+						"label": "font-family-base",
+						"value": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'"
 					}
 				]
 			},
 			{
 				"dataType": "string",
-				"defaultValue": "font-weight-normal",
+				"defaultValue": "",
 				"dependencies": [
 				],
 				"label": "font-weight",
@@ -446,30 +621,39 @@
 				"type": "select",
 				"validValues": [
 					{
-						"label": "normal",
-						"value": "font-weight-normal"
+						"label": "default",
+						"value": ""
 					},
 					{
-						"label": "bold",
-						"value": "font-weight-bold"
+						"frontendTokenName": "fontWeightNormal",
+						"label": "font-weight-normal",
+						"value": "400"
 					},
 					{
-						"label": "bolder",
-						"value": "font-weight-bolder"
+						"frontendTokenName": "fontWeightBold",
+						"label": "font-weight-bold",
+						"value": "700"
 					},
 					{
-						"label": "light",
-						"value": "font-weight-light"
+						"frontendTokenName": "fontWeightBolder",
+						"label": "font-weight-bolder",
+						"value": "900"
 					},
 					{
-						"label": "lighter",
-						"value": "font-weight-lighter"
+						"frontendTokenName": "fontWeightLight",
+						"label": "font-weight-light",
+						"value": "300"
+					},
+					{
+						"frontendTokenName": "fontWeightLighter",
+						"label": "font-weight-lighter",
+						"value": "lighter"
 					}
 				]
 			},
 			{
 				"dataType": "string",
-				"defaultValue": "medium",
+				"defaultValue": "",
 				"dependencies": [
 				],
 				"label": "font-size",
@@ -478,31 +662,38 @@
 				"type": "select",
 				"validValues": [
 					{
-						"label": "small",
-						"value": "small"
+						"label": "default",
+						"value": ""
 					},
 					{
-						"label": "medium",
-						"value": "medium"
+						"frontendTokenName": "fontSizeSm",
+						"label": "font-size-small",
+						"value": "0.875rem"
 					},
 					{
-						"label": "large",
-						"value": "large"
+						"frontendTokenName": "fontSizeBase",
+						"label": "font-size-base",
+						"value": "0.875rem"
+					},
+					{
+						"frontendTokenName": "fontSizeLg",
+						"label": "font-size-large",
+						"value": "1.125rem"
 					}
 				]
 			},
 			{
-				"dataType": "object",
+				"dataType": "string",
 				"dependencies": [
 				],
-				"label": "text-body",
+				"label": "text-color",
 				"name": "textColor",
 				"responsive": false,
-				"type": "colorPalette"
+				"type": "colorPicker"
 			},
 			{
 				"dataType": "string",
-				"defaultValue": "none",
+				"defaultValue": "",
 				"dependencies": [
 				],
 				"label": "text-align",
@@ -511,8 +702,8 @@
 				"type": "select",
 				"validValues": [
 					{
-						"label": "none",
-						"value": "none"
+						"label": "default",
+						"value": ""
 					},
 					{
 						"label": "left",
@@ -538,13 +729,13 @@
 		"label": "background",
 		"styles": [
 			{
-				"dataType": "object",
+				"dataType": "string",
 				"dependencies": [
 				],
 				"label": "background-color",
 				"name": "backgroundColor",
 				"responsive": false,
-				"type": "colorPalette"
+				"type": "colorPicker"
 			},
 			{
 				"dataType": "object",
@@ -567,7 +758,6 @@
 				"defaultValue": 0,
 				"dependencies": [
 				],
-				"displaySize": "small",
 				"label": "border-width",
 				"name": "borderWidth",
 				"responsive": false,
@@ -580,41 +770,48 @@
 			},
 			{
 				"dataType": "string",
-				"defaultValue": "rounded-0",
+				"defaultValue": "",
 				"dependencies": [
 				],
-				"displaySize": "small",
 				"label": "border-radius",
 				"name": "borderRadius",
 				"responsive": false,
 				"type": "select",
 				"validValues": [
 					{
-						"label": "none",
-						"value": "rounded-0"
+						"label": "default",
+						"value": ""
 					},
 					{
-						"label": "regular",
-						"value": "rounded"
+						"frontendTokenName": "borderRadiusSm",
+						"label": "border-radius-small",
+						"value": "0.1875rem"
 					},
 					{
-						"label": "pill",
-						"value": "rounded-pill"
+						"frontendTokenName": "borderRadiusLg",
+						"label": "border-radius-large",
+						"value": "0.375rem"
 					},
 					{
-						"label": "circle",
-						"value": "rounded-circle"
+						"frontendTokenName": "borderRadiusCircle",
+						"label": "border-radius-circle",
+						"value": "50%"
+					},
+					{
+						"frontendTokenName": "roundedPill",
+						"label": "rounded-pill",
+						"value": "50rem"
 					}
 				]
 			},
 			{
-				"dataType": "object",
+				"dataType": "string",
 				"dependencies": [
 				],
 				"label": "border-color",
 				"name": "borderColor",
 				"responsive": false,
-				"type": "colorPalette"
+				"type": "colorPicker"
 			}
 		]
 	},
@@ -626,7 +823,6 @@
 				"defaultValue": 100,
 				"dependencies": [
 				],
-				"displaySize": "small",
 				"label": "opacity",
 				"name": "opacity",
 				"responsive": false,
@@ -639,30 +835,32 @@
 			},
 			{
 				"dataType": "object",
-				"defaultValue": "shadow-none",
+				"defaultValue": "",
 				"dependencies": [
 				],
-				"displaySize": "small",
 				"label": "shadow",
 				"name": "shadow",
 				"responsive": false,
 				"type": "select",
 				"validValues": [
 					{
-						"label": "none",
-						"value": "shadow-none"
+						"label": "default",
+						"value": ""
 					},
 					{
-						"label": "small",
-						"value": "shadow-sm"
+						"frontendTokenName": "boxShadowSm",
+						"label": "box-shadow-small",
+						"value": "0 .125rem .25rem rgba(0, 0, 0, .075)"
 					},
 					{
-						"label": "regular",
-						"value": "shadow"
+						"frontendTokenName": "boxShadow",
+						"label": "box-shadow-regular",
+						"value": "0 .5rem 1rem rgba(0, 0, 0, .15)"
 					},
 					{
-						"label": "large",
-						"value": "shadow-lg"
+						"frontendTokenName": "boxShadowLg",
+						"label": "box-shadow-large",
+						"value": "0 1rem 3rem rgba(0, 0, 0, .175)"
 					}
 				]
 			}

@@ -20,6 +20,7 @@ import {getLayoutDataItemPropTypes} from '../../../prop-types/index';
 import selectLanguageId from '../../selectors/selectLanguageId';
 import InfoItemService from '../../services/InfoItemService';
 import {useSelector} from '../../store/index';
+import {getFrontendTokenValue} from '../../utils/getFrontendTokenValue';
 import {getResponsiveConfig} from '../../utils/getResponsiveConfig';
 import loadBackgroundImage from '../../utils/loadBackgroundImage';
 
@@ -49,15 +50,19 @@ const Container = React.forwardRef(
 			marginRight,
 			marginTop,
 			maxHeight,
+			maxWidth,
 			minHeight,
+			minWidth,
 			opacity,
 			overflow,
 			paddingBottom,
 			paddingLeft,
 			paddingRight,
 			paddingTop,
+			shadow,
 			textAlign,
 			textColor,
+			width,
 		} = itemConfig.styles;
 
 		const {widthType} = itemConfig;
@@ -96,6 +101,27 @@ const Container = React.forwardRef(
 			boxSizing: 'border-box',
 		};
 
+		style.backgroundColor = getFrontendTokenValue(backgroundColor);
+		style.border = `solid ${borderWidth}px`;
+		style.borderColor = getFrontendTokenValue(borderColor);
+		style.borderRadius = getFrontendTokenValue(borderRadius);
+		style.color = getFrontendTokenValue(textColor);
+		style.fontFamily = getFrontendTokenValue(fontFamily);
+		style.fontSize = getFrontendTokenValue(fontSize);
+		style.fontWeight = getFrontendTokenValue(fontWeight);
+		style.height = height;
+		style.maxHeight = maxHeight;
+		style.minHeight = minHeight;
+		style.opacity = opacity;
+		style.overflow = overflow;
+
+		if (!withinTopper) {
+			style.boxShadow = getFrontendTokenValue(shadow);
+			style.maxWidth = maxWidth;
+			style.minWidth = minWidth;
+			style.width = width;
+		}
+
 		if (backgroundImageValue) {
 			style.backgroundImage = `url(${backgroundImageValue})`;
 			style.backgroundPosition = '50% 50%';
@@ -103,23 +129,11 @@ const Container = React.forwardRef(
 			style.backgroundSize = 'cover';
 		}
 
-		if (fontSize) {
-			style.fontSize = fontSize;
-		}
-
-		style.border = `solid ${borderWidth}px`;
-		style.height = height;
-		style.maxHeight = maxHeight;
-		style.minHeight = minHeight;
-		style.opacity = opacity;
-		style.overflow = overflow;
-
 		const content = (
 			<div
 				{...(link ? {} : data)}
 				className={classNames(
 					className,
-					fontWeight,
 					`mb-${marginBottom}`,
 					`mt-${marginTop}`,
 					`pb-${paddingBottom}`,
@@ -127,18 +141,13 @@ const Container = React.forwardRef(
 					`pr-${paddingRight}`,
 					`pt-${paddingTop}`,
 					{
-						[`bg-${backgroundColor?.cssClass}`]: backgroundColor,
-						[`border-${borderColor?.cssClass}`]: borderColor,
-						[borderRadius]: !!borderRadius,
 						container: widthType === 'fixed',
-						empty: item.children.length === 0,
-						[`text-${fontFamily}`]: fontFamily !== 'default',
+						empty: !item.children.length && !height,
 						[`ml-${marginLeft}`]:
 							widthType !== 'fixed' && !withinTopper,
 						[`mr-${marginRight}`]:
 							widthType !== 'fixed' && !withinTopper,
-						[textAlign]: textAlign !== 'none',
-						[`text-${textColor?.cssClass || textColor}`]: textColor,
+						[textAlign]: textAlign,
 					}
 				)}
 				ref={ref}

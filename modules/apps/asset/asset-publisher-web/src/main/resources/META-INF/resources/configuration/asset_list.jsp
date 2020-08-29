@@ -39,7 +39,7 @@ AssetListEntry assetListEntry = assetPublisherDisplayContext.fetchAssetListEntry
 	<aui:button name="clearAssetListButton" value="clear" />
 </div>
 
-<aui:script require="frontend-js-web/liferay/ItemSelectorDialog.es as ItemSelectorDialog">
+<aui:script sandbox="<%= true %>">
 	var assetListEntryId = document.getElementById(
 		'<portlet:namespace />assetListEntryId'
 	);
@@ -52,27 +52,23 @@ AssetListEntry assetListEntry = assetPublisherDisplayContext.fetchAssetListEntry
 	);
 
 	if (selectAssetListButton) {
-		selectAssetListButton.addEventListener('click', function (event) {
-			var itemSelectorDialog = new ItemSelectorDialog.default({
-				eventName:
+		selectAssetListButton.addEventListener('click', function () {
+			Liferay.Util.openSelectionModal({
+				onSelect: function (selectedItem) {
+					if (selectedItem) {
+						var itemValue = JSON.parse(selectedItem.value);
+
+						assetListEntryId.value = itemValue.classPK;
+
+						assetListTitle.innerHTML = itemValue.title;
+					}
+				},
+				selectEventName:
 					'<%= assetPublisherDisplayContext.getSelectAssetListEventName() %>',
-				singleSelect: true,
 				title: '<liferay-ui:message key="select-collection" />',
 				url:
 					'<%= assetPublisherDisplayContext.getAssetListSelectorURL() %>',
 			});
-
-			itemSelectorDialog.on('selectedItemChange', function (event) {
-				if (event.selectedItem) {
-					var itemValue = JSON.parse(event.selectedItem.value);
-
-					assetListEntryId.value = itemValue.classPK;
-
-					assetListTitle.innerHTML = itemValue.title;
-				}
-			});
-
-			itemSelectorDialog.open();
 		});
 	}
 

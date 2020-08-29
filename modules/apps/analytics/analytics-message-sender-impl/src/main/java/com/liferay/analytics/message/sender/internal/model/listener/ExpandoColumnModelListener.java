@@ -52,7 +52,7 @@ public class ExpandoColumnModelListener
 	extends BaseEntityModelListener<ExpandoColumn> {
 
 	@Override
-	public List<String> getAttributeNames() {
+	public List<String> getAttributeNames(long companyId) {
 		return _attributeNames;
 	}
 
@@ -76,7 +76,9 @@ public class ExpandoColumnModelListener
 			return;
 		}
 
-		addAnalyticsMessage("update", getAttributeNames(), expandoColumn);
+		addAnalyticsMessage(
+			"update", getAttributeNames(expandoColumn.getCompanyId()),
+			expandoColumn);
 	}
 
 	@Override
@@ -148,7 +150,7 @@ public class ExpandoColumnModelListener
 		return JSONUtil.put(
 			"className", className
 		).put(
-			"companyId", expandoColumn.getColumnId()
+			"companyId", expandoColumn.getCompanyId()
 		).put(
 			"dataType", dataType
 		).put(

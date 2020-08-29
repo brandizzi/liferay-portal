@@ -24,11 +24,17 @@ import com.liferay.fragment.service.FragmentEntryLinkService;
 import com.liferay.fragment.service.FragmentEntryLocalService;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
 import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.responsive.ResponsiveLayoutStructureUtil;
 import com.liferay.layout.responsive.ViewportSize;
+import com.liferay.layout.util.structure.CommonStylesUtil;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
+import com.liferay.layout.util.structure.StyledLayoutStructureItem;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -47,6 +53,7 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -55,6 +62,8 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
+
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -121,6 +130,7 @@ public class ResponsiveLayoutStructureUtilTest {
 		_themeDisplay.setLayoutTypePortlet(
 			(LayoutTypePortlet)_layout.getLayoutType());
 		_themeDisplay.setLayoutSet(_group.getPublicLayoutSet());
+		_themeDisplay.setLocale(LocaleUtil.US);
 		_themeDisplay.setLookAndFeel(
 			_layout.getTheme(), _layout.getColorScheme());
 		_themeDisplay.setPermissionChecker(
@@ -172,10 +182,9 @@ public class ResponsiveLayoutStructureUtilTest {
 
 		_layout.includeLayoutContent(httpServletRequest, httpServletResponse);
 
-		StringBundler sb = (StringBundler)httpServletRequest.getAttribute(
-			WebKeys.LAYOUT_CONTENT);
-
-		String content = sb.toString();
+		String content = String.valueOf(
+			(StringBundler)httpServletRequest.getAttribute(
+				WebKeys.LAYOUT_CONTENT));
 
 		for (ViewportSize viewportSize : ViewportSize.values()) {
 			if (viewportSize.equals(ViewportSize.DESKTOP)) {
@@ -197,6 +206,86 @@ public class ResponsiveLayoutStructureUtilTest {
 
 			Assert.assertThat(content, containsString(colClassName));
 		}
+	}
+
+	@Test
+	public void testResponsiveLayoutStructureCommonStylesClassesExist()
+		throws Exception {
+
+		LayoutPageTemplateStructure layoutPageTemplateStructure =
+			_layoutPageTemplateStructureLocalService.
+				fetchLayoutPageTemplateStructure(
+					_layout.getGroupId(), _layout.getPlid(), true);
+
+		LayoutStructure layoutStructure = LayoutStructure.of(
+			layoutPageTemplateStructure.getData(
+				SegmentsExperienceConstants.ID_DEFAULT));
+
+		StyledLayoutStructureItem rowStyledLayoutStructureItem =
+			(StyledLayoutStructureItem)
+				layoutStructure.addRowLayoutStructureItem(
+					layoutStructure.getMainItemId(), 0, 1);
+
+		for (ViewportSize viewportSize : ViewportSize.values()) {
+			if (viewportSize.equals(ViewportSize.DESKTOP)) {
+				continue;
+			}
+
+			JSONObject viewportStylesJSONObject = JSONUtil.put(
+				viewportSize.getViewportSizeId(),
+				JSONUtil.put("styles", _getResponsiveStylesJSONObject()));
+
+			rowStyledLayoutStructureItem.updateItemConfig(
+				viewportStylesJSONObject);
+		}
+
+		List<String> commonStyleNames =
+			CommonStylesUtil.getAvailableStyleNames();
+
+		for (String styleName : commonStyleNames) {
+			if (!CommonStylesUtil.isResponsive(styleName)) {
+				continue;
+			}
+
+			String actualCssClass =
+				ResponsiveLayoutStructureUtil.getResponsiveCssClassValues(
+					rowStyledLayoutStructureItem);
+
+			for (ViewportSize viewportSize : ViewportSize.values()) {
+				if (viewportSize.equals(ViewportSize.DESKTOP)) {
+					continue;
+				}
+
+				String expectedCssClass = StringUtil.replace(
+					CommonStylesUtil.getResponsiveTemplate(styleName),
+					StringPool.OPEN_CURLY_BRACE, StringPool.CLOSE_CURLY_BRACE,
+					HashMapBuilder.put(
+						"value", "2"
+					).put(
+						"viewport", viewportSize.getCssClassPrefix()
+					).build());
+
+				Assert.assertThat(
+					actualCssClass, containsString(expectedCssClass));
+			}
+		}
+	}
+
+	private JSONObject _getResponsiveStylesJSONObject() throws Exception {
+		List<String> commonStyleNames =
+			CommonStylesUtil.getAvailableStyleNames();
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		for (String styleName : commonStyleNames) {
+			if (!CommonStylesUtil.isResponsive(styleName)) {
+				continue;
+			}
+
+			jsonObject.put(styleName, "2");
+		}
+
+		return jsonObject;
 	}
 
 	@Inject

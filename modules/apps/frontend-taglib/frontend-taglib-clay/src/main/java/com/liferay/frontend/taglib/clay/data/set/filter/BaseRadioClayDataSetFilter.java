@@ -14,7 +14,6 @@
 
 package com.liferay.frontend.taglib.clay.data.set.filter;
 
-import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 
 import java.util.List;
@@ -26,11 +25,12 @@ import java.util.ResourceBundle;
  */
 public abstract class BaseRadioClayDataSetFilter implements ClayDataSetFilter {
 
-	public abstract List<KeyValuePair> getKeyValuePairs(Locale locale);
-
 	public String getOperator() {
 		return "eq";
 	}
+
+	public abstract List<RadioClayDataSetFilterItem>
+		getRadioClayDataSetFilterItems(Locale locale);
 
 	public ResourceBundle getResourceBundle(Locale locale) {
 		return ResourceBundleUtil.getBundle(

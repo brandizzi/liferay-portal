@@ -519,6 +519,59 @@ public class ProjectTemplatesFormFieldTest
 		}
 	}
 
+	@Test
+	public void testBuildTemplateFormField73WithReactFramework()
+		throws Exception {
+
+		String jsFramework = "react";
+		String liferayVersion = "7.3.3";
+		String name = "foobar";
+
+		File workspaceDir = buildWorkspace(temporaryFolder, liferayVersion);
+
+		File gradleProjectDir = buildTemplateWithGradle(
+			new File(workspaceDir, "modules"), "form-field", name,
+			"--liferay-version", liferayVersion, "--js-framework", jsFramework);
+
+		testContains(
+			gradleProjectDir, "build.gradle",
+			"compileOnly group: \"com.liferay\", name: " +
+				"\"com.liferay.dynamic.data.mapping.api\"",
+			"compileOnly group: \"com.liferay\", name: " +
+				"\"com.liferay.frontend.js.loader.modules.extender.api\"",
+			"jsCompile group: \"com.liferay\", name: " +
+				"\"com.liferay.dynamic.data.mapping.form.field.type\"",
+			DEPENDENCY_PORTAL_KERNEL);
+		testContains(
+			gradleProjectDir,
+			"src/main/java/foobar/form/field/FoobarDDMFormFieldType.java",
+			"com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;",
+			"org.osgi.service.component.annotations.Reference;",
+			"ddm.form.field.type.description=foobar-description",
+			"ddm.form.field.type.display.order:Integer=13",
+			"ddm.form.field.type.group=customized",
+			"public String getModuleName()",
+			"public boolean isCustomDDMFormFieldType()",
+			"private NPMResolver _npmResolver;");
+		testContains(
+			gradleProjectDir,
+			"src/main/resources/META-INF/resources/foobar.es.js",
+			"import React from 'react';",
+			"import {FieldBase} from 'dynamic-data-mapping-form-field-type" +
+				"/FieldBase/ReactFieldBase.es';",
+			"import {useSyncValue} from " +
+				"'dynamic-data-mapping-form-field-type/hooks/useSyncValue.es';",
+			"const Foobar = ({name, onChange, predefinedValue, readOnly, " +
+				"value})",
+			"const Main = ({label, name, onChange, predefinedValue, " +
+				"readOnly, value, ...otherProps})",
+			"Main.displayName = 'Foobar';", "export default Main;");
+
+		testNotContains(
+			gradleProjectDir, "build.gradle", true, "^repositories \\{.*");
+		testNotContains(gradleProjectDir, "build.gradle", "version: \"[0-9].*");
+	}
+
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
 

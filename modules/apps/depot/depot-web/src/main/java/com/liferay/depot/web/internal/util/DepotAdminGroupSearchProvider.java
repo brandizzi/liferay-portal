@@ -58,57 +58,14 @@ public class DepotAdminGroupSearchProvider {
 				portletRequest, portletURL);
 		}
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
-			WebKeys.THEME_DISPLAY);
+		return _getGroupSearch(portletRequest, portletURL);
+	}
 
-		Company company = themeDisplay.getCompany();
+	public GroupSearch getGroupSearch(
+			PortletRequest portletRequest, PortletURL portletURL)
+		throws PortalException {
 
-		LinkedHashMap<String, Object> groupParams =
-			LinkedHashMapBuilder.<String, Object>put(
-				"site", Boolean.FALSE
-			).build();
-
-		GroupSearch groupSearch = new GroupSearch(portletRequest, portletURL);
-
-		GroupSearchTerms searchTerms =
-			(GroupSearchTerms)groupSearch.getSearchTerms();
-
-		List<Group> results = null;
-
-		if (searchTerms.hasSearchTerms()) {
-			int total = _groupService.searchCount(
-				company.getCompanyId(), _classNameIds,
-				searchTerms.getKeywords(), groupParams);
-
-			groupSearch.setTotal(total);
-
-			results = _groupService.search(
-				company.getCompanyId(), _classNameIds,
-				searchTerms.getKeywords(), groupParams, groupSearch.getStart(),
-				groupSearch.getEnd(), groupSearch.getOrderByComparator());
-		}
-		else {
-			int total = _groupService.searchCount(
-				company.getCompanyId(), _classNameIds,
-				searchTerms.getKeywords(), groupParams);
-
-			groupSearch.setTotal(total);
-
-			results = _groupService.search(
-				company.getCompanyId(), _classNameIds,
-				searchTerms.getKeywords(), groupParams, groupSearch.getStart(),
-				groupSearch.getEnd(), groupSearch.getOrderByComparator());
-		}
-
-		groupSearch.setEmptyResultsMessage(
-			LanguageUtil.get(
-				ResourceBundleUtil.getBundle(
-					portletRequest.getLocale(), getClass()),
-				"no-asset-libraries-were-found"));
-
-		groupSearch.setResults(results);
-
-		return groupSearch;
+		return _getGroupSearch(portletRequest, portletURL);
 	}
 
 	@Reference(target = ModuleServiceLifecycle.PORTAL_INITIALIZED, unbind = "-")
@@ -151,6 +108,63 @@ public class DepotAdminGroupSearchProvider {
 				ResourceBundleUtil.getBundle(
 					portletRequest.getLocale(), getClass()),
 				"no-asset-libraries-were-found"));
+
+		return groupSearch;
+	}
+
+	private GroupSearch _getGroupSearch(
+			PortletRequest portletRequest, PortletURL portletURL)
+		throws PortalException {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)portletRequest.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Company company = themeDisplay.getCompany();
+
+		LinkedHashMap<String, Object> groupParams =
+			LinkedHashMapBuilder.<String, Object>put(
+				"site", Boolean.FALSE
+			).build();
+
+		GroupSearch groupSearch = new GroupSearch(portletRequest, portletURL);
+
+		groupSearch.setEmptyResultsMessage(
+			LanguageUtil.get(
+				ResourceBundleUtil.getBundle(
+					portletRequest.getLocale(), getClass()),
+				"no-asset-libraries-were-found"));
+
+		GroupSearchTerms searchTerms =
+			(GroupSearchTerms)groupSearch.getSearchTerms();
+
+		List<Group> results = null;
+
+		if (searchTerms.hasSearchTerms()) {
+			int total = _groupService.searchCount(
+				company.getCompanyId(), _classNameIds,
+				searchTerms.getKeywords(), groupParams);
+
+			groupSearch.setTotal(total);
+
+			results = _groupService.search(
+				company.getCompanyId(), _classNameIds,
+				searchTerms.getKeywords(), groupParams, groupSearch.getStart(),
+				groupSearch.getEnd(), groupSearch.getOrderByComparator());
+		}
+		else {
+			int total = _groupService.searchCount(
+				company.getCompanyId(), _classNameIds,
+				searchTerms.getKeywords(), groupParams);
+
+			groupSearch.setTotal(total);
+
+			results = _groupService.search(
+				company.getCompanyId(), _classNameIds,
+				searchTerms.getKeywords(), groupParams, groupSearch.getStart(),
+				groupSearch.getEnd(), groupSearch.getOrderByComparator());
+		}
+
+		groupSearch.setResults(results);
 
 		return groupSearch;
 	}

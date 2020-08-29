@@ -114,17 +114,17 @@ public class ClayDataSetDataJSONFactoryImpl
 	private class ClayDataSetResponse {
 
 		public ClayDataSetResponse(
-			List<ClayDataSetDataRow> clayDataSetRows, int total) {
+			List<ClayDataSetDataRow> clayDataSetRows, int totalCount) {
 
 			_clayDataSetRows = clayDataSetRows;
-			_total = total;
+			_totalCount = totalCount;
 		}
 
 		@JsonProperty("items")
 		private final List<ClayDataSetDataRow> _clayDataSetRows;
 
-		@JsonProperty("total")
-		private final int _total;
+		@JsonProperty("totalCount")
+		private final int _totalCount;
 
 	}
 

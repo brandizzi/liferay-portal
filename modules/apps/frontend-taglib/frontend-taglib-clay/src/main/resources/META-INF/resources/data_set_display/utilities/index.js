@@ -16,6 +16,21 @@ import {fetch} from 'frontend-js-web';
 
 import createOdataFilter from './odata';
 
+export function delay(duration) {
+	return new Promise((resolve) => {
+		setTimeout(() => resolve(), duration);
+	});
+}
+
+function getAcceptLanguageHeaderParam() {
+	const browserLang = navigator.language ?? navigator.userLanguage;
+	const themeLang = Liferay.ThemeDisplay.getLanguageId().replace('_', '-');
+
+	return browserLang === themeLang
+		? browserLang
+		: `${browserLang}, ${themeLang};q=0.8`;
+}
+
 export function getData(apiURL, query) {
 	const url = new URL(apiURL);
 
@@ -51,7 +66,16 @@ export function getValueFromItem(item, fieldName) {
 		return null;
 	}
 	if (Array.isArray(fieldName)) {
-		return fieldName.reduce((acc, key) => acc[key], item);
+		return fieldName.reduce((acc, key) => {
+			if (key === 'LANG') {
+				return (
+					acc[Liferay.ThemeDisplay.getLanguageId()] ||
+					acc[Liferay.ThemeDisplay.getDefaultLanguageId()]
+				);
+			}
+
+			return acc[key];
+		}, item);
 	}
 
 	return item[fieldName];
@@ -59,19 +83,24 @@ export function getValueFromItem(item, fieldName) {
 
 export function executeAsyncAction(url, method = 'GET') {
 	return fetch(url, {
+		headers: {
+			Accept: 'application/json',
+			'Accept-Language': getAcceptLanguageHeaderParam(),
+			'Content-Type': 'application/json',
+		},
 		method,
 	});
 }
 
-export function formatActionUrl(url, item) {
-	const replacedUrl = url.replace(new RegExp('{(.*?)}', 'mg'), (matched) =>
+export function formatActionURL(url, item) {
+	const replacedURL = url.replace(new RegExp('{(.*?)}', 'mg'), (matched) =>
 		getValueFromItem(
 			item,
 			matched.substring(1, matched.length - 1).split('|')
 		)
 	);
 
-	return replacedUrl.replace(new RegExp('(%7B.*?%7D)', 'mg'), (matched) =>
+	return replacedURL.replace(new RegExp('(%7B.*?%7D)', 'mg'), (matched) =>
 		getValueFromItem(
 			item,
 			matched.substring(3, matched.length - 3).split('|')
@@ -101,7 +130,7 @@ export function createSortingString(values) {
 
 export function loadData(
 	apiURL,
-	currentUrl,
+	currentURL,
 	filters,
 	searchParam,
 	delta,
@@ -110,7 +139,7 @@ export function loadData(
 ) {
 	const url = new URL(apiURL, themeDisplay.getPortalURL());
 
-	url.searchParams.append('currentUrl', currentUrl);
+	url.searchParams.append('currentURL', currentURL);
 
 	if (filters.length) {
 		url.searchParams.append('filter', createOdataFilter(filters));

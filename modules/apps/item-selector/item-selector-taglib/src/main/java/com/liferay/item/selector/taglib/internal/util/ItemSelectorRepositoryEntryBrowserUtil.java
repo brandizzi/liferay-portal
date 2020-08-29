@@ -26,14 +26,17 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.FileVersion;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.service.GroupServiceUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ClassUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -43,6 +46,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,6 +60,7 @@ public class ItemSelectorRepositoryEntryBrowserUtil {
 	public static void addPortletBreadcrumbEntries(
 			long folderId, String displayStyle,
 			HttpServletRequest httpServletRequest,
+			LiferayPortletRequest liferayPortletRequest,
 			LiferayPortletResponse liferayPortletResponse,
 			PortletURL portletURL)
 		throws Exception {
@@ -69,16 +74,24 @@ public class ItemSelectorRepositoryEntryBrowserUtil {
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		Group scopeGroup = themeDisplay.getScopeGroup();
+		Folder folder = null;
+
+		if (folderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
+			folder = DLAppServiceUtil.getFolder(folderId);
+		}
+
+		Group group = themeDisplay.getScopeGroup();
+
+		if (folder != null) {
+			group = GroupServiceUtil.getGroup(folder.getGroupId());
+		}
 
 		_addPortletBreadcrumbEntry(
 			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, httpServletRequest,
-			scopeGroup.getDescriptiveName(httpServletRequest.getLocale()),
-			portletURL);
+			group.getDescriptiveName(httpServletRequest.getLocale()),
+			EntryURLUtil.getGroupPortletURL(group, liferayPortletRequest));
 
-		if (folderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {
-			Folder folder = DLAppServiceUtil.getFolder(folderId);
-
+		if (folder != null) {
 			List<Folder> ancestorFolders = folder.getAncestors();
 
 			Collections.reverse(ancestorFolders);
@@ -93,6 +106,30 @@ public class ItemSelectorRepositoryEntryBrowserUtil {
 				folder.getFolderId(), httpServletRequest, folder.getName(),
 				portletURL);
 		}
+	}
+
+	/**
+	 * @deprecated As of Athanasius (7.3.x), replaced by {@link
+	 *             #addPortletBreadcrumbEntries(long, String,
+	 *             HttpServletRequest, LiferayPortletRequest,
+	 *             LiferayPortletResponse, PortletURL)}
+	 */
+	@Deprecated
+	public static void addPortletBreadcrumbEntries(
+			long folderId, String displayStyle,
+			HttpServletRequest httpServletRequest,
+			LiferayPortletResponse liferayPortletResponse,
+			PortletURL portletURL)
+		throws Exception {
+
+		PortletRequest portletRequest =
+			(PortletRequest)httpServletRequest.getAttribute(
+				JavaConstants.JAVAX_PORTLET_REQUEST);
+
+		addPortletBreadcrumbEntries(
+			folderId, displayStyle, httpServletRequest,
+			PortalUtil.getLiferayPortletRequest(portletRequest),
+			liferayPortletResponse, portletURL);
 	}
 
 	public static JSONObject getItemMetadataJSONObject(

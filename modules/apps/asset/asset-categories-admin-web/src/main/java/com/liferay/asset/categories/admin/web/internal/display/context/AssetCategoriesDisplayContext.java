@@ -487,14 +487,18 @@ public class AssetCategoriesDisplayContext {
 		return _orderByType;
 	}
 
-	public String getSelectCategoryURL() throws Exception {
+	public String getSelectCategoryURL(long vocabularyId) throws Exception {
 		if (_selectCategoryURL != null) {
 			return _selectCategoryURL;
 		}
 
+		AssetVocabulary vocabulary = AssetVocabularyServiceUtil.getVocabulary(
+			vocabularyId);
+
 		List<AssetVocabulary> vocabularies =
 			AssetVocabularyServiceUtil.getGroupVocabularies(
-				_themeDisplay.getScopeGroupId());
+				_themeDisplay.getScopeGroupId(),
+				vocabulary.getVisibilityType());
 
 		PortletURL selectCategoryURL = PortletProviderUtil.getPortletURL(
 			_httpServletRequest, AssetCategory.class.getName(),
@@ -504,6 +508,7 @@ public class AssetCategoriesDisplayContext {
 			"allowedSelectVocabularies", Boolean.TRUE.toString());
 		selectCategoryURL.setParameter(
 			"eventName", _renderResponse.getNamespace() + "selectCategory");
+		selectCategoryURL.setParameter("moveCategory", Boolean.TRUE.toString());
 		selectCategoryURL.setParameter("singleSelect", Boolean.TRUE.toString());
 		selectCategoryURL.setParameter(
 			"vocabularyIds",

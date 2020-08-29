@@ -16,19 +16,37 @@ import {
 	DefaultEventHandler,
 	addParams,
 	navigate,
-	openModal,
+	openSelectionModal,
 } from 'frontend-js-web';
 import {Config} from 'metal-state';
 
 class ManagementToolbarDefaultEventHandler extends DefaultEventHandler {
 	deleteEntries() {
-		let message = Liferay.Language.get(
-			'are-you-sure-you-want-to-delete-the-selected-entries'
+		const searchContainer = Liferay.SearchContainer.get(
+			this.ns('articles')
 		);
 
-		if (this.trashEnabled) {
+		const selectedNodesCount = searchContainer.select
+			.getAllSelectedElements()
+			.size();
+
+		let message = Liferay.Language.get(
+			'are-you-sure-you-want-to-delete-the-selected-entry'
+		);
+
+		if (this.trashEnabled && selectedNodesCount > 1) {
 			message = Liferay.Language.get(
 				'are-you-sure-you-want-to-move-the-selected-entries-to-the-recycle-bin'
+			);
+		}
+		else if (this.trashEnabled && selectedNodesCount === 1) {
+			message = Liferay.Language.get(
+				'are-you-sure-you-want-to-move-the-selected-entry-to-the-recycle-bin'
+			);
+		}
+		else if (!this.trashEnabled && selectedNodesCount > 1) {
+			message = Liferay.Language.get(
+				'are-you-sure-you-want-to-delete-the-selected-entries'
 			);
 		}
 
@@ -50,7 +68,7 @@ class ManagementToolbarDefaultEventHandler extends DefaultEventHandler {
 	handleCreationMenuMoreButtonClicked(event) {
 		event.preventDefault();
 
-		openModal({
+		openSelectionModal({
 			onSelect: (selectedItem) => {
 				navigate(
 					addParams(
@@ -91,7 +109,7 @@ class ManagementToolbarDefaultEventHandler extends DefaultEventHandler {
 	}
 
 	openDDMStructuresSelector() {
-		openModal({
+		openSelectionModal({
 			onSelect: (selectedItem) => {
 				Liferay.Util.navigate(
 					addParams(

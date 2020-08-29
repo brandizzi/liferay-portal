@@ -76,6 +76,7 @@ public class Query {
 
 		public ExperimentPage(Page experimentPage) {
 			actions = experimentPage.getActions();
+
 			items = experimentPage.getItems();
 			lastPage = experimentPage.getLastPage();
 			page = experimentPage.getPage();

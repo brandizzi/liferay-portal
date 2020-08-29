@@ -34,11 +34,14 @@ export const ColorPaletteField = ({field, onValueSelect, value}) => {
 
 					onValueSelect(field.name, '');
 				}}
-				onColorSelect={(color) => {
+				onColorSelect={(color, event) => {
 					setNextValue(color);
 
 					onValueSelect(field.name, {
+						color,
 						cssClass: color,
+						rgbValue: getComputedStyle(event.target)
+							.backgroundColor,
 					});
 				}}
 				selectedColor={nextValue}
@@ -50,9 +53,12 @@ export const ColorPaletteField = ({field, onValueSelect, value}) => {
 ColorPaletteField.propTypes = {
 	field: PropTypes.shape(ConfigurationFieldPropTypes).isRequired,
 	onValueSelect: PropTypes.func.isRequired,
-	value: PropTypes.shape({
-		color: PropTypes.string,
-		cssClass: PropTypes.string,
-		rgbValue: PropTypes.string,
-	}),
+	value: PropTypes.oneOfType([
+		PropTypes.shape({
+			color: PropTypes.string,
+			cssClass: PropTypes.string,
+			rgbValue: PropTypes.string,
+		}),
+		PropTypes.string,
+	]),
 };

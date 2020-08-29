@@ -213,132 +213,104 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 
 	public static final String TX_MANAGER = "${entity.getTXManager()}";
 
-	<#if entity.hasEagerBlobColumn()>
-		<#if !dependencyInjectorDS>
-			<#if serviceBuilder.isVersionGTE_7_3_0()>
-				/**
-				* @deprecated As of Athanasius (7.3.x), with no direct replacement
-				*/
-				@Deprecated
-			</#if>
-			public static final boolean ENTITY_CACHE_ENABLED = false;
-
-			<#if serviceBuilder.isVersionGTE_7_3_0()>
-				/**
-				* @deprecated As of Athanasius (7.3.x), with no direct replacement
-				*/
-				@Deprecated
-			</#if>
-			public static final boolean FINDER_CACHE_ENABLED = false;
-		</#if>
-
-		<#assign columnBitmaskEnabled = false />
+	<#if serviceBuilder.isVersionGTE_7_3_0()>
+		<#assign columnBitmaskEnabled = (entity.databaseRegularEntityColumns?size &lt; 64) && !entity.hasEagerBlobColumn()/>
 	<#else>
-		<#if !dependencyInjectorDS>
+		<#assign columnBitmaskEnabled = (entity.finderEntityColumns?size &gt; 0) && (entity.finderEntityColumns?size &lt; 64) && !entity.hasEagerBlobColumn()/>
+	</#if>
+
+	<#if !dependencyInjectorDS>
+		<#if serviceBuilder.isVersionGTE_7_3_0()>
+			/**
+			* @deprecated As of Athanasius (7.3.x), with no direct replacement
+			*/
+			@Deprecated
+		</#if>
+		public static final boolean ENTITY_CACHE_ENABLED =
+		<#if entity.hasEagerBlobColumn()>
+			false;
+		<#elseif serviceBuilder.isVersionGTE_7_3_0()>
+			true;
+		<#else>
+			GetterUtil.getBoolean(${propsUtil}.get("value.object.entity.cache.enabled.${apiPackagePath}.model.${entity.name}"),
+			<#if entity.isCacheEnabled()>
+				true
+			<#else>
+				false
+			</#if>
+
+			);
+		</#if>
+
+		<#if serviceBuilder.isVersionGTE_7_3_0()>
+			/**
+			* @deprecated As of Athanasius (7.3.x), with no direct replacement
+			*/
+			@Deprecated
+		</#if>
+		public static final boolean FINDER_CACHE_ENABLED =
+		<#if entity.hasEagerBlobColumn()>
+			false;
+		<#elseif serviceBuilder.isVersionGTE_7_3_0()>
+			true;
+		<#else>
+			GetterUtil.getBoolean(${propsUtil}.get("value.object.finder.cache.enabled.${apiPackagePath}.model.${entity.name}"),
+
+			<#if entity.isCacheEnabled()>
+				true
+			<#else>
+				false
+			</#if>
+
+			);
+		</#if>
+		<#if !entity.hasEagerBlobColumn()>
 			<#if serviceBuilder.isVersionGTE_7_3_0()>
 				/**
 				* @deprecated As of Athanasius (7.3.x), with no direct replacement
 				*/
 				@Deprecated
 			</#if>
-			public static final boolean ENTITY_CACHE_ENABLED =
-			<#if serviceBuilder.isVersionGTE_7_3_0()>
+			public static final boolean COLUMN_BITMASK_ENABLED =
+			<#if columnBitmaskEnabled && serviceBuilder.isVersionGTE_7_3_0()>
 				true;
+			<#elseif (entity.finderEntityColumns?size == 0) || (entity.finderEntityColumns?size &gt; 64)>
+				false;
 			<#else>
-				GetterUtil.getBoolean(${propsUtil}.get("value.object.entity.cache.enabled.${apiPackagePath}.model.${entity.name}"),
-				<#if entity.isCacheEnabled()>
-					true
-				<#else>
-					false
-				</#if>
-
-				);
+				GetterUtil.getBoolean(${propsUtil}.get("value.object.column.bitmask.enabled.${apiPackagePath}.model.${entity.name}"), true);
 			</#if>
+		</#if>
+	</#if>
 
+	<#if columnBitmaskEnabled>
+		<#assign columnBitmask = 1 />
+
+		<#list entity.finderEntityColumns as entityColumn>
 			<#if serviceBuilder.isVersionGTE_7_3_0()>
 				/**
-				* @deprecated As of Athanasius (7.3.x), with no direct replacement
-				*/
+				 * @deprecated As of Athanasius (7.3.x), replaced by {@link #getColumnBitmask(String)
+				 */
 				@Deprecated
 			</#if>
-			public static final boolean FINDER_CACHE_ENABLED =
-			<#if serviceBuilder.isVersionGTE_7_3_0()>
-				true;
-			<#else>
-				GetterUtil.getBoolean(${propsUtil}.get("value.object.finder.cache.enabled.${apiPackagePath}.model.${entity.name}"),
+			public static final long ${entityColumn.name?upper_case}_COLUMN_BITMASK = ${columnBitmask}L;
 
-				<#if entity.isCacheEnabled()>
-					true
-				<#else>
-					false
-				</#if>
+			<#assign columnBitmask = columnBitmask * 2 />
+		</#list>
 
-				);
-			</#if>
-		</#if>
-
-		<#assign columnBitmaskEnabled = true />
-
-		<#if entity.finderEntityColumns?size == 0>
-			<#if !dependencyInjectorDS>
+		<#list orderList as order>
+			<#if !entity.finderEntityColumns?seq_contains(order)>
 				<#if serviceBuilder.isVersionGTE_7_3_0()>
 					/**
-					* @deprecated As of Athanasius (7.3.x), with no direct replacement
+					* @deprecated As of Athanasius (7.3.x), replaced by {@link
+					*		#getColumnBitmask(String)
 					*/
 					@Deprecated
 				</#if>
-				public static final boolean COLUMN_BITMASK_ENABLED = false;
-			</#if>
-
-			<#assign columnBitmaskEnabled = false />
-		</#if>
-
-		<#if entity.finderEntityColumns?size &gt; 64>
-			<#if !dependencyInjectorDS>
-				<#if serviceBuilder.isVersionGTE_7_3_0()>
-					/**
-					* @deprecated As of Athanasius (7.3.x), with no direct replacement
-					*/
-					@Deprecated
-				</#if>
-				public static final boolean COLUMN_BITMASK_ENABLED = false;
-			</#if>
-
-			<#assign columnBitmaskEnabled = false />
-		</#if>
-
-		<#if columnBitmaskEnabled>
-			<#if !dependencyInjectorDS>
-				<#if serviceBuilder.isVersionGTE_7_3_0()>
-					/**
-					* @deprecated As of Athanasius (7.3.x), with no direct replacement
-					*/
-					@Deprecated
-				</#if>
-				public static final boolean COLUMN_BITMASK_ENABLED =
-					<#if serviceBuilder.isVersionGTE_7_3_0()>
-						true;
-					<#else>
-						GetterUtil.getBoolean(${propsUtil}.get("value.object.column.bitmask.enabled.${apiPackagePath}.model.${entity.name}"), true);
-					</#if>
-			</#if>
-
-			<#assign columnBitmask = 1 />
-
-			<#list entity.finderEntityColumns as entityColumn>
-				public static final long ${entityColumn.name?upper_case}_COLUMN_BITMASK = ${columnBitmask}L;
+				public static final long ${order.name?upper_case}_COLUMN_BITMASK = ${columnBitmask}L;
 
 				<#assign columnBitmask = columnBitmask * 2 />
-			</#list>
-
-			<#list orderList as order>
-				<#if !entity.finderEntityColumns?seq_contains(order)>
-					public static final long ${order.name?upper_case}_COLUMN_BITMASK = ${columnBitmask}L;
-
-					<#assign columnBitmask = columnBitmask * 2 />
-				</#if>
-			</#list>
-		</#if>
+			</#if>
+		</#list>
 	</#if>
 
 	<#if dependencyInjectorDS>
@@ -745,31 +717,6 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 	<#if entity.versionEntity??>
 		<#assign versionEntity = entity.versionEntity />
 
-		public boolean getHead() {
-			return _head;
-		}
-
-		@Override
-		public boolean isHead() {
-			return _head;
-		}
-
-		public boolean getOriginalHead() {
-			return _originalHead;
-		}
-
-		public void setHead(boolean head) {
-			_columnBitmask |= HEAD_COLUMN_BITMASK;
-
-			if (!_setOriginalHead) {
-				_setOriginalHead = true;
-
-				_originalHead = _head;
-			}
-
-			_head = head;
-		}
-
 		@Override
 		public void populateVersionModel(${versionEntity.name} ${versionEntity.varName}) {
 			<#list entity.entityColumns as entityColumn>
@@ -816,7 +763,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		}
 	</#if>
 
-	<#list entity.regularEntityColumns as entityColumn>
+	<#list entity.databaseRegularEntityColumns as entityColumn>
 		<#if stringUtil.equals(entityColumn.name, "classNameId") && !hasClassNameCacheField>
 			@Override
 			public String getClassName() {
@@ -845,7 +792,9 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 			@JSON(include = false)
 		</#if>
 
-		@Override
+		<#if !entity.versionEntity?? || !stringUtil.equals(entityColumn.name, "head")>
+			@Override
+		</#if>
 		public ${entityColumn.genericizedType} get${entityColumn.methodName}() {
 			<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
 				if (_${entityColumn.name} == null) {
@@ -938,18 +887,20 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 			}
 		</#if>
 
-		@Override
+		<#if !entity.versionEntity?? || !stringUtil.equals(entityColumn.name, "head")>
+			@Override
+		</#if>
 		public void set${entityColumn.methodName}(${entityColumn.genericizedType} ${entityColumn.name}) {
 			<#if entity.hasEntityColumn("createDate", "Date") && entity.hasEntityColumn("modifiedDate", "Date") && stringUtil.equals(entityColumn.name, "modifiedDate")>
 				_setModifiedDate = true;
 			</#if>
 
-			<#if entityColumn.isOrderColumn() && columnBitmaskEnabled>
-				_columnBitmask = -1L;
-			</#if>
-
-			<#if entityColumn.isFinderPath() || (validator.isNotNull(parentPKColumn) && (parentPKColumn.name == entityColumn.name))>
-				<#if !entityColumn.isOrderColumn() && columnBitmaskEnabled>
+			<#if serviceBuilder.isVersionGTE_7_3_0()>
+				if (_columnOriginalValues == Collections.EMPTY_MAP) {
+					_setColumnOriginalValues();
+				}
+			<#elseif entityColumn.isFinderPath() || (validator.isNotNull(parentPKColumn) && (parentPKColumn.name == entityColumn.name))>
+				<#if columnBitmaskEnabled>
 					_columnBitmask |= ${entityColumn.name?upper_case}_COLUMN_BITMASK;
 				</#if>
 
@@ -1058,8 +1009,21 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		</#if>
 
 		<#if entityColumn.isFinderPath() || (validator.isNotNull(parentPKColumn) && (parentPKColumn.name == entityColumn.name))>
+			<#if serviceBuilder.isVersionGTE_7_3_0()>
+				/**
+				* @deprecated As of Athanasius (7.3.x), replaced by {@link
+				*             #getColumnOriginalValue(String)}
+				*/
+				@Deprecated
+			</#if>
 			public ${entityColumn.type} getOriginal${entityColumn.methodName}() {
-				<#if stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
+				<#if serviceBuilder.isVersionGTE_7_3_0()>
+					<#if entityColumn.isPrimitiveType()>
+						return GetterUtil.get${serviceBuilder.getPrimitiveObj(entityColumn.type)}(this.<${serviceBuilder.getPrimitiveObj(entityColumn.type)}>getColumnOriginalValue("${entityColumn.DBName}"));
+					<#else>
+						return getColumnOriginalValue("${entityColumn.DBName}");
+					</#if>
+				<#elseif stringUtil.equals(entityColumn.type, "String") && entityColumn.isConvertNull()>
 					return GetterUtil.getString(_original${entityColumn.methodName});
 				<#else>
 					return _original${entityColumn.methodName};
@@ -1404,6 +1368,22 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 
 	<#if columnBitmaskEnabled>
 		public long getColumnBitmask() {
+			<#if serviceBuilder.isVersionGTE_7_3_0()>
+				if (_columnBitmask > 0) {
+					return _columnBitmask;
+				}
+
+				if ((_columnOriginalValues == null) || (_columnOriginalValues == Collections.EMPTY_MAP)) {
+					return 0;
+				}
+
+				for (Map.Entry<String, Object> entry : _columnOriginalValues.entrySet()) {
+					if (entry.getValue() != getColumnValue(entry.getKey())) {
+						_columnBitmask |= _columnBitmasks.get(entry.getKey());
+					}
+				}
+			</#if>
+
 			return _columnBitmask;
 		}
 	</#if>
@@ -1689,29 +1669,23 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 
 	@Override
 	public void resetOriginalValues() {
+		<#if serviceBuilder.isVersionGTE_7_3_0()>
+			_columnOriginalValues = Collections.emptyMap();
+		</#if>
+
 		<#list entity.databaseRegularEntityColumns as entityColumn>
-			<#if entityColumn.isFinderPath() || (validator.isNotNull(parentPKColumn) && (parentPKColumn.name == entityColumn.name)) || (stringUtil.equals(entityColumn.type, "Blob") && entityColumn.lazy) || (entity.hasEntityColumn("createDate", "Date") && entity.hasEntityColumn("modifiedDate", "Date"))>
-				<#if !cloneCastModelImpl??>
-					<#assign cloneCastModelImpl = true />
-
-					${entity.name}ModelImpl ${entity.varName}ModelImpl = this;
-				</#if>
-			</#if>
-
-			<#if entityColumn.isFinderPath() || (validator.isNotNull(parentPKColumn) && (parentPKColumn.name == entityColumn.name))>
-				${entity.varName}ModelImpl._original${entityColumn.methodName} = ${entity.varName}ModelImpl._${entityColumn.name};
+			<#if stringUtil.equals(entityColumn.type, "Blob") && entityColumn.lazy>
+				_${entityColumn.name}BlobModel = null;
+			<#elseif serviceBuilder.isVersionLTE_7_2_0() && (entityColumn.isFinderPath() || (validator.isNotNull(parentPKColumn) && (parentPKColumn.name == entityColumn.name)))>
+				_original${entityColumn.methodName} = _${entityColumn.name};
 
 				<#if entityColumn.isPrimitiveType()>
-					${entity.varName}ModelImpl._setOriginal${entityColumn.methodName} = false;
+					_setOriginal${entityColumn.methodName} = false;
 				</#if>
-			</#if>
-
-			<#if stringUtil.equals(entityColumn.type, "Blob") && entityColumn.lazy>
-				${entity.varName}ModelImpl._${entityColumn.name}BlobModel = null;
 			</#if>
 
 			<#if entity.hasEntityColumn("createDate", "Date") && entity.hasEntityColumn("modifiedDate", "Date") && stringUtil.equals(entityColumn.name, "modifiedDate")>
-				${entity.varName}ModelImpl._setModifiedDate = false;
+				_setModifiedDate = false;
 			</#if>
 		</#list>
 
@@ -1725,7 +1699,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		</#list>
 
 		<#if columnBitmaskEnabled>
-			${entity.varName}ModelImpl._columnBitmask = 0;
+			_columnBitmask = 0;
 		</#if>
 	}
 
@@ -1912,7 +1886,7 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 				private String _${entityColumn.name}CurrentLanguageId;
 			</#if>
 
-			<#if entityColumn.isFinderPath() || (validator.isNotNull(parentPKColumn) && (parentPKColumn.name == entityColumn.name))>
+			<#if serviceBuilder.isVersionLTE_7_2_0() && (entityColumn.isFinderPath() || (validator.isNotNull(parentPKColumn) && (parentPKColumn.name == entityColumn.name)))>
 				private ${entityColumn.type} _original${entityColumn.methodName};
 
 				<#if entityColumn.isPrimitiveType()>
@@ -1926,7 +1900,91 @@ public class ${entity.name}ModelImpl extends BaseModelImpl<${entity.name}> imple
 		</#if>
 	</#list>
 
+	<#if serviceBuilder.isVersionGTE_7_3_0()>
+		public <T> T getColumnValue(String columnName) {
+			<#if entity.versionEntity??>
+				if (columnName.equals("head")) {
+					return (T)(Object)getHead();
+				}
+			</#if>
+
+			<#if entity.badEntityColumns?size != 0>
+				columnName = _attributeNames.getOrDefault(columnName, columnName);
+			</#if>
+
+			Function<${entity.name}, Object> function =
+				_attributeGetterFunctions.get(columnName);
+
+			if (function == null) {
+				throw new IllegalArgumentException(
+					"No attribute getter function found for " + columnName);
+			}
+
+			return (T)function.apply((${entity.name})this);
+		}
+
+		public <T> T getColumnOriginalValue(String columnName) {
+			if (_columnOriginalValues == null) {
+				return null;
+			}
+
+			if (_columnOriginalValues == Collections.EMPTY_MAP) {
+				_setColumnOriginalValues();
+			}
+
+			return (T)_columnOriginalValues.get(columnName);
+		}
+
+		private void _setColumnOriginalValues() {
+			_columnOriginalValues = new HashMap<String, Object>();
+
+			<#list entity.databaseRegularEntityColumns as entityColumn>
+				<#if !stringUtil.equals(entityColumn.type, "Blob") || !entityColumn.lazy>
+					_columnOriginalValues.put("${entityColumn.DBName}", _${entityColumn.name});
+				</#if>
+			</#list>
+		}
+
+		<#if entity.badEntityColumns?size != 0>
+			private static final Map<String, String> _attributeNames;
+
+			static {
+				Map<String, String> attributeNames = new HashMap<>();
+
+				<#list entity.badEntityColumns as entityColumn>
+					attributeNames.put("${entityColumn.DBName}", "${entityColumn.name}");
+				</#list>
+
+				_attributeNames = Collections.unmodifiableMap(attributeNames);
+			}
+		</#if>
+
+		private transient Map<String, Object> _columnOriginalValues;
+	</#if>
+
 	<#if columnBitmaskEnabled>
+		<#if serviceBuilder.isVersionGTE_7_3_0()>
+			public static long getColumnBitmask(String columnName) {
+				return _columnBitmasks.get(columnName);
+			}
+
+			private static final Map<String, Long> _columnBitmasks;
+
+			static {
+				Map<String, Long> columnBitmasks = new HashMap<>();
+
+				<#assign columnBitmask = 1 />
+
+				<#list entity.databaseRegularEntityColumns as entityColumn>
+					columnBitmasks.put("${entityColumn.DBName}", ${columnBitmask}L);
+
+					<#assign columnBitmask = columnBitmask * 2 />
+				</#list>
+
+				_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
+			}
+		</#if>
+
 		private long _columnBitmask;
 	</#if>
 

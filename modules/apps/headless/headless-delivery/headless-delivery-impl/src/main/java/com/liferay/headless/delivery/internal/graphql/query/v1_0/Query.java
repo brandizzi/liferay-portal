@@ -67,6 +67,8 @@ import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.RoleLocalService;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
+import com.liferay.portal.vulcan.aggregation.Aggregation;
+import com.liferay.portal.vulcan.aggregation.Facet;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLTypeExtension;
@@ -74,6 +76,7 @@ import com.liferay.portal.vulcan.pagination.Page;
 import com.liferay.portal.vulcan.pagination.Pagination;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
@@ -320,8 +323,7 @@ public class Query {
 	public BlogPostingPage blogPostings(
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -333,7 +335,9 @@ public class Query {
 			this::_populateResourceContext,
 			blogPostingResource -> new BlogPostingPage(
 				blogPostingResource.getSiteBlogPostingsPage(
-					Long.valueOf(siteKey), search, aggregation,
+					Long.valueOf(siteKey), search,
+					_aggregationBiFunction.apply(
+						blogPostingResource, aggregations),
 					_filterBiFunction.apply(blogPostingResource, filterString),
 					Pagination.of(page, pageSize),
 					_sortsBiFunction.apply(blogPostingResource, sortsString))));
@@ -370,8 +374,7 @@ public class Query {
 	public BlogPostingImagePage blogPostingImages(
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -383,7 +386,9 @@ public class Query {
 			this::_populateResourceContext,
 			blogPostingImageResource -> new BlogPostingImagePage(
 				blogPostingImageResource.getSiteBlogPostingImagesPage(
-					Long.valueOf(siteKey), search, aggregation,
+					Long.valueOf(siteKey), search,
+					_aggregationBiFunction.apply(
+						blogPostingImageResource, aggregations),
 					_filterBiFunction.apply(
 						blogPostingImageResource, filterString),
 					Pagination.of(page, pageSize),
@@ -402,8 +407,7 @@ public class Query {
 	public CommentPage blogPostingComments(
 			@GraphQLName("blogPostingId") Long blogPostingId,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -415,7 +419,8 @@ public class Query {
 			this::_populateResourceContext,
 			commentResource -> new CommentPage(
 				commentResource.getBlogPostingCommentsPage(
-					blogPostingId, search, aggregation,
+					blogPostingId, search,
+					_aggregationBiFunction.apply(commentResource, aggregations),
 					_filterBiFunction.apply(commentResource, filterString),
 					Pagination.of(page, pageSize),
 					_sortsBiFunction.apply(commentResource, sortsString))));
@@ -447,8 +452,7 @@ public class Query {
 	public CommentPage commentComments(
 			@GraphQLName("parentCommentId") Long parentCommentId,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -460,7 +464,8 @@ public class Query {
 			this::_populateResourceContext,
 			commentResource -> new CommentPage(
 				commentResource.getCommentCommentsPage(
-					parentCommentId, search, aggregation,
+					parentCommentId, search,
+					_aggregationBiFunction.apply(commentResource, aggregations),
 					_filterBiFunction.apply(commentResource, filterString),
 					Pagination.of(page, pageSize),
 					_sortsBiFunction.apply(commentResource, sortsString))));
@@ -477,8 +482,7 @@ public class Query {
 	public CommentPage documentComments(
 			@GraphQLName("documentId") Long documentId,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -490,7 +494,8 @@ public class Query {
 			this::_populateResourceContext,
 			commentResource -> new CommentPage(
 				commentResource.getDocumentCommentsPage(
-					documentId, search, aggregation,
+					documentId, search,
+					_aggregationBiFunction.apply(commentResource, aggregations),
 					_filterBiFunction.apply(commentResource, filterString),
 					Pagination.of(page, pageSize),
 					_sortsBiFunction.apply(commentResource, sortsString))));
@@ -507,8 +512,7 @@ public class Query {
 	public CommentPage structuredContentComments(
 			@GraphQLName("structuredContentId") Long structuredContentId,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -520,7 +524,8 @@ public class Query {
 			this::_populateResourceContext,
 			commentResource -> new CommentPage(
 				commentResource.getStructuredContentCommentsPage(
-					structuredContentId, search, aggregation,
+					structuredContentId, search,
+					_aggregationBiFunction.apply(commentResource, aggregations),
 					_filterBiFunction.apply(commentResource, filterString),
 					Pagination.of(page, pageSize),
 					_sortsBiFunction.apply(commentResource, sortsString))));
@@ -535,8 +540,7 @@ public class Query {
 	public ContentElementPage assetLibraryContentElements(
 			@GraphQLName("assetLibraryId") @NotEmpty String assetLibraryId,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -548,7 +552,9 @@ public class Query {
 			this::_populateResourceContext,
 			contentElementResource -> new ContentElementPage(
 				contentElementResource.getAssetLibraryContentElementsPage(
-					Long.valueOf(assetLibraryId), search, aggregation,
+					Long.valueOf(assetLibraryId), search,
+					_aggregationBiFunction.apply(
+						contentElementResource, aggregations),
 					_filterBiFunction.apply(
 						contentElementResource, filterString),
 					Pagination.of(page, pageSize),
@@ -565,8 +571,7 @@ public class Query {
 	public ContentElementPage contentElements(
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -578,7 +583,9 @@ public class Query {
 			this::_populateResourceContext,
 			contentElementResource -> new ContentElementPage(
 				contentElementResource.getSiteContentElementsPage(
-					Long.valueOf(siteKey), search, aggregation,
+					Long.valueOf(siteKey), search,
+					_aggregationBiFunction.apply(
+						contentElementResource, aggregations),
 					_filterBiFunction.apply(
 						contentElementResource, filterString),
 					Pagination.of(page, pageSize),
@@ -713,8 +720,7 @@ public class Query {
 	public ContentStructurePage assetLibraryContentStructures(
 			@GraphQLName("assetLibraryId") @NotEmpty String assetLibraryId,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -726,7 +732,9 @@ public class Query {
 			this::_populateResourceContext,
 			contentStructureResource -> new ContentStructurePage(
 				contentStructureResource.getAssetLibraryContentStructuresPage(
-					Long.valueOf(assetLibraryId), search, aggregation,
+					Long.valueOf(assetLibraryId), search,
+					_aggregationBiFunction.apply(
+						contentStructureResource, aggregations),
 					_filterBiFunction.apply(
 						contentStructureResource, filterString),
 					Pagination.of(page, pageSize),
@@ -763,8 +771,7 @@ public class Query {
 	public ContentStructurePage contentStructures(
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -776,7 +783,9 @@ public class Query {
 			this::_populateResourceContext,
 			contentStructureResource -> new ContentStructurePage(
 				contentStructureResource.getSiteContentStructuresPage(
-					Long.valueOf(siteKey), search, aggregation,
+					Long.valueOf(siteKey), search,
+					_aggregationBiFunction.apply(
+						contentStructureResource, aggregations),
 					_filterBiFunction.apply(
 						contentStructureResource, filterString),
 					Pagination.of(page, pageSize),
@@ -793,8 +802,7 @@ public class Query {
 	public ContentTemplatePage assetLibraryContentTemplates(
 			@GraphQLName("assetLibraryId") @NotEmpty String assetLibraryId,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -806,7 +814,9 @@ public class Query {
 			this::_populateResourceContext,
 			contentTemplateResource -> new ContentTemplatePage(
 				contentTemplateResource.getAssetLibraryContentTemplatesPage(
-					Long.valueOf(assetLibraryId), search, aggregation,
+					Long.valueOf(assetLibraryId), search,
+					_aggregationBiFunction.apply(
+						contentTemplateResource, aggregations),
 					_filterBiFunction.apply(
 						contentTemplateResource, filterString),
 					Pagination.of(page, pageSize),
@@ -823,8 +833,7 @@ public class Query {
 	public ContentTemplatePage contentTemplates(
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -836,7 +845,9 @@ public class Query {
 			this::_populateResourceContext,
 			contentTemplateResource -> new ContentTemplatePage(
 				contentTemplateResource.getSiteContentTemplatesPage(
-					Long.valueOf(siteKey), search, aggregation,
+					Long.valueOf(siteKey), search,
+					_aggregationBiFunction.apply(
+						contentTemplateResource, aggregations),
 					_filterBiFunction.apply(
 						contentTemplateResource, filterString),
 					Pagination.of(page, pageSize),
@@ -873,8 +884,7 @@ public class Query {
 			@GraphQLName("assetLibraryId") @NotEmpty String assetLibraryId,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -886,7 +896,9 @@ public class Query {
 			this::_populateResourceContext,
 			documentResource -> new DocumentPage(
 				documentResource.getAssetLibraryDocumentsPage(
-					Long.valueOf(assetLibraryId), flatten, search, aggregation,
+					Long.valueOf(assetLibraryId), flatten, search,
+					_aggregationBiFunction.apply(
+						documentResource, aggregations),
 					_filterBiFunction.apply(documentResource, filterString),
 					Pagination.of(page, pageSize),
 					_sortsBiFunction.apply(documentResource, sortsString))));
@@ -904,8 +916,7 @@ public class Query {
 			@GraphQLName("documentFolderId") Long documentFolderId,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -917,7 +928,9 @@ public class Query {
 			this::_populateResourceContext,
 			documentResource -> new DocumentPage(
 				documentResource.getDocumentFolderDocumentsPage(
-					documentFolderId, flatten, search, aggregation,
+					documentFolderId, flatten, search,
+					_aggregationBiFunction.apply(
+						documentResource, aggregations),
 					_filterBiFunction.apply(documentResource, filterString),
 					Pagination.of(page, pageSize),
 					_sortsBiFunction.apply(documentResource, sortsString))));
@@ -966,8 +979,7 @@ public class Query {
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -979,7 +991,9 @@ public class Query {
 			this::_populateResourceContext,
 			documentResource -> new DocumentPage(
 				documentResource.getSiteDocumentsPage(
-					Long.valueOf(siteKey), flatten, search, aggregation,
+					Long.valueOf(siteKey), flatten, search,
+					_aggregationBiFunction.apply(
+						documentResource, aggregations),
 					_filterBiFunction.apply(documentResource, filterString),
 					Pagination.of(page, pageSize),
 					_sortsBiFunction.apply(documentResource, sortsString))));
@@ -995,8 +1009,7 @@ public class Query {
 			@GraphQLName("assetLibraryId") @NotEmpty String assetLibraryId,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1008,7 +1021,9 @@ public class Query {
 			this::_populateResourceContext,
 			documentFolderResource -> new DocumentFolderPage(
 				documentFolderResource.getAssetLibraryDocumentFoldersPage(
-					Long.valueOf(assetLibraryId), flatten, search, aggregation,
+					Long.valueOf(assetLibraryId), flatten, search,
+					_aggregationBiFunction.apply(
+						documentFolderResource, aggregations),
 					_filterBiFunction.apply(
 						documentFolderResource, filterString),
 					Pagination.of(page, pageSize),
@@ -1045,8 +1060,7 @@ public class Query {
 			@GraphQLName("parentDocumentFolderId") Long parentDocumentFolderId,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1058,7 +1072,9 @@ public class Query {
 			this::_populateResourceContext,
 			documentFolderResource -> new DocumentFolderPage(
 				documentFolderResource.getDocumentFolderDocumentFoldersPage(
-					parentDocumentFolderId, flatten, search, aggregation,
+					parentDocumentFolderId, flatten, search,
+					_aggregationBiFunction.apply(
+						documentFolderResource, aggregations),
 					_filterBiFunction.apply(
 						documentFolderResource, filterString),
 					Pagination.of(page, pageSize),
@@ -1078,8 +1094,7 @@ public class Query {
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1091,7 +1106,9 @@ public class Query {
 			this::_populateResourceContext,
 			documentFolderResource -> new DocumentFolderPage(
 				documentFolderResource.getSiteDocumentFoldersPage(
-					Long.valueOf(siteKey), flatten, search, aggregation,
+					Long.valueOf(siteKey), flatten, search,
+					_aggregationBiFunction.apply(
+						documentFolderResource, aggregations),
 					_filterBiFunction.apply(
 						documentFolderResource, filterString),
 					Pagination.of(page, pageSize),
@@ -1150,8 +1167,7 @@ public class Query {
 				parentKnowledgeBaseArticleId,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1165,7 +1181,8 @@ public class Query {
 				knowledgeBaseArticleResource.
 					getKnowledgeBaseArticleKnowledgeBaseArticlesPage(
 						parentKnowledgeBaseArticleId, flatten, search,
-						aggregation,
+						_aggregationBiFunction.apply(
+							knowledgeBaseArticleResource, aggregations),
 						_filterBiFunction.apply(
 							knowledgeBaseArticleResource, filterString),
 						Pagination.of(page, pageSize),
@@ -1185,8 +1202,7 @@ public class Query {
 			@GraphQLName("knowledgeBaseFolderId") Long knowledgeBaseFolderId,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1199,7 +1215,9 @@ public class Query {
 			knowledgeBaseArticleResource -> new KnowledgeBaseArticlePage(
 				knowledgeBaseArticleResource.
 					getKnowledgeBaseFolderKnowledgeBaseArticlesPage(
-						knowledgeBaseFolderId, flatten, search, aggregation,
+						knowledgeBaseFolderId, flatten, search,
+						_aggregationBiFunction.apply(
+							knowledgeBaseArticleResource, aggregations),
 						_filterBiFunction.apply(
 							knowledgeBaseArticleResource, filterString),
 						Pagination.of(page, pageSize),
@@ -1219,8 +1237,7 @@ public class Query {
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1232,7 +1249,9 @@ public class Query {
 			this::_populateResourceContext,
 			knowledgeBaseArticleResource -> new KnowledgeBaseArticlePage(
 				knowledgeBaseArticleResource.getSiteKnowledgeBaseArticlesPage(
-					Long.valueOf(siteKey), flatten, search, aggregation,
+					Long.valueOf(siteKey), flatten, search,
+					_aggregationBiFunction.apply(
+						knowledgeBaseArticleResource, aggregations),
 					_filterBiFunction.apply(
 						knowledgeBaseArticleResource, filterString),
 					Pagination.of(page, pageSize),
@@ -1459,8 +1478,7 @@ public class Query {
 				parentMessageBoardMessageId,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1474,7 +1492,8 @@ public class Query {
 				messageBoardMessageResource.
 					getMessageBoardMessageMessageBoardMessagesPage(
 						parentMessageBoardMessageId, flatten, search,
-						aggregation,
+						_aggregationBiFunction.apply(
+							messageBoardMessageResource, aggregations),
 						_filterBiFunction.apply(
 							messageBoardMessageResource, filterString),
 						Pagination.of(page, pageSize),
@@ -1493,8 +1512,7 @@ public class Query {
 	public MessageBoardMessagePage messageBoardThreadMessageBoardMessages(
 			@GraphQLName("messageBoardThreadId") Long messageBoardThreadId,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1507,7 +1525,9 @@ public class Query {
 			messageBoardMessageResource -> new MessageBoardMessagePage(
 				messageBoardMessageResource.
 					getMessageBoardThreadMessageBoardMessagesPage(
-						messageBoardThreadId, search, aggregation,
+						messageBoardThreadId, search,
+						_aggregationBiFunction.apply(
+							messageBoardMessageResource, aggregations),
 						_filterBiFunction.apply(
 							messageBoardMessageResource, filterString),
 						Pagination.of(page, pageSize),
@@ -1525,8 +1545,7 @@ public class Query {
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1538,7 +1557,9 @@ public class Query {
 			this::_populateResourceContext,
 			messageBoardMessageResource -> new MessageBoardMessagePage(
 				messageBoardMessageResource.getSiteMessageBoardMessagesPage(
-					Long.valueOf(siteKey), flatten, search, aggregation,
+					Long.valueOf(siteKey), flatten, search,
+					_aggregationBiFunction.apply(
+						messageBoardMessageResource, aggregations),
 					_filterBiFunction.apply(
 						messageBoardMessageResource, filterString),
 					Pagination.of(page, pageSize),
@@ -1596,8 +1617,7 @@ public class Query {
 			@GraphQLName("parentMessageBoardSectionId") Long
 				parentMessageBoardSectionId,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1610,7 +1630,9 @@ public class Query {
 			messageBoardSectionResource -> new MessageBoardSectionPage(
 				messageBoardSectionResource.
 					getMessageBoardSectionMessageBoardSectionsPage(
-						parentMessageBoardSectionId, search, aggregation,
+						parentMessageBoardSectionId, search,
+						_aggregationBiFunction.apply(
+							messageBoardSectionResource, aggregations),
 						_filterBiFunction.apply(
 							messageBoardSectionResource, filterString),
 						Pagination.of(page, pageSize),
@@ -1630,8 +1652,7 @@ public class Query {
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1643,7 +1664,9 @@ public class Query {
 			this::_populateResourceContext,
 			messageBoardSectionResource -> new MessageBoardSectionPage(
 				messageBoardSectionResource.getSiteMessageBoardSectionsPage(
-					Long.valueOf(siteKey), flatten, search, aggregation,
+					Long.valueOf(siteKey), flatten, search,
+					_aggregationBiFunction.apply(
+						messageBoardSectionResource, aggregations),
 					_filterBiFunction.apply(
 						messageBoardSectionResource, filterString),
 					Pagination.of(page, pageSize),
@@ -1662,8 +1685,7 @@ public class Query {
 	public MessageBoardThreadPage messageBoardSectionMessageBoardThreads(
 			@GraphQLName("messageBoardSectionId") Long messageBoardSectionId,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1676,7 +1698,9 @@ public class Query {
 			messageBoardThreadResource -> new MessageBoardThreadPage(
 				messageBoardThreadResource.
 					getMessageBoardSectionMessageBoardThreadsPage(
-						messageBoardSectionId, search, aggregation,
+						messageBoardSectionId, search,
+						_aggregationBiFunction.apply(
+							messageBoardThreadResource, aggregations),
 						_filterBiFunction.apply(
 							messageBoardThreadResource, filterString),
 						Pagination.of(page, pageSize),
@@ -1758,8 +1782,7 @@ public class Query {
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1771,7 +1794,9 @@ public class Query {
 			this::_populateResourceContext,
 			messageBoardThreadResource -> new MessageBoardThreadPage(
 				messageBoardThreadResource.getSiteMessageBoardThreadsPage(
-					Long.valueOf(siteKey), flatten, search, aggregation,
+					Long.valueOf(siteKey), flatten, search,
+					_aggregationBiFunction.apply(
+						messageBoardThreadResource, aggregations),
 					_filterBiFunction.apply(
 						messageBoardThreadResource, filterString),
 					Pagination.of(page, pageSize),
@@ -1846,8 +1871,7 @@ public class Query {
 			@GraphQLName("assetLibraryId") @NotEmpty String assetLibraryId,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1859,7 +1883,9 @@ public class Query {
 			this::_populateResourceContext,
 			structuredContentResource -> new StructuredContentPage(
 				structuredContentResource.getAssetLibraryStructuredContentsPage(
-					Long.valueOf(assetLibraryId), flatten, search, aggregation,
+					Long.valueOf(assetLibraryId), flatten, search,
+					_aggregationBiFunction.apply(
+						structuredContentResource, aggregations),
 					_filterBiFunction.apply(
 						structuredContentResource, filterString),
 					Pagination.of(page, pageSize),
@@ -1878,8 +1904,7 @@ public class Query {
 	public StructuredContentPage contentStructureStructuredContents(
 			@GraphQLName("contentStructureId") Long contentStructureId,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1892,7 +1917,9 @@ public class Query {
 			structuredContentResource -> new StructuredContentPage(
 				structuredContentResource.
 					getContentStructureStructuredContentsPage(
-						contentStructureId, search, aggregation,
+						contentStructureId, search,
+						_aggregationBiFunction.apply(
+							structuredContentResource, aggregations),
 						_filterBiFunction.apply(
 							structuredContentResource, filterString),
 						Pagination.of(page, pageSize),
@@ -1912,8 +1939,7 @@ public class Query {
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -1925,7 +1951,9 @@ public class Query {
 			this::_populateResourceContext,
 			structuredContentResource -> new StructuredContentPage(
 				structuredContentResource.getSiteStructuredContentsPage(
-					Long.valueOf(siteKey), flatten, search, aggregation,
+					Long.valueOf(siteKey), flatten, search,
+					_aggregationBiFunction.apply(
+						structuredContentResource, aggregations),
 					_filterBiFunction.apply(
 						structuredContentResource, filterString),
 					Pagination.of(page, pageSize),
@@ -2006,8 +2034,7 @@ public class Query {
 				structuredContentFolderId,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -2020,7 +2047,9 @@ public class Query {
 			structuredContentResource -> new StructuredContentPage(
 				structuredContentResource.
 					getStructuredContentFolderStructuredContentsPage(
-						structuredContentFolderId, flatten, search, aggregation,
+						structuredContentFolderId, flatten, search,
+						_aggregationBiFunction.apply(
+							structuredContentResource, aggregations),
 						_filterBiFunction.apply(
 							structuredContentResource, filterString),
 						Pagination.of(page, pageSize),
@@ -2115,8 +2144,7 @@ public class Query {
 			@GraphQLName("assetLibraryId") @NotEmpty String assetLibraryId,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -2130,7 +2158,8 @@ public class Query {
 				structuredContentFolderResource.
 					getAssetLibraryStructuredContentFoldersPage(
 						Long.valueOf(assetLibraryId), flatten, search,
-						aggregation,
+						_aggregationBiFunction.apply(
+							structuredContentFolderResource, aggregations),
 						_filterBiFunction.apply(
 							structuredContentFolderResource, filterString),
 						Pagination.of(page, pageSize),
@@ -2150,8 +2179,7 @@ public class Query {
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("flatten") Boolean flatten,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -2164,7 +2192,9 @@ public class Query {
 			structuredContentFolderResource -> new StructuredContentFolderPage(
 				structuredContentFolderResource.
 					getSiteStructuredContentFoldersPage(
-						Long.valueOf(siteKey), flatten, search, aggregation,
+						Long.valueOf(siteKey), flatten, search,
+						_aggregationBiFunction.apply(
+							structuredContentFolderResource, aggregations),
 						_filterBiFunction.apply(
 							structuredContentFolderResource, filterString),
 						Pagination.of(page, pageSize),
@@ -2185,9 +2215,7 @@ public class Query {
 				@GraphQLName("parentStructuredContentFolderId") Long
 					parentStructuredContentFolderId,
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -2200,7 +2228,9 @@ public class Query {
 			structuredContentFolderResource -> new StructuredContentFolderPage(
 				structuredContentFolderResource.
 					getStructuredContentFolderStructuredContentFoldersPage(
-						parentStructuredContentFolderId, search, aggregation,
+						parentStructuredContentFolderId, search,
+						_aggregationBiFunction.apply(
+							structuredContentFolderResource, aggregations),
 						_filterBiFunction.apply(
 							structuredContentFolderResource, filterString),
 						Pagination.of(page, pageSize),
@@ -2238,8 +2268,7 @@ public class Query {
 	public WikiNodePage wikiNodes(
 			@GraphQLName("siteKey") @NotEmpty String siteKey,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -2251,7 +2280,9 @@ public class Query {
 			this::_populateResourceContext,
 			wikiNodeResource -> new WikiNodePage(
 				wikiNodeResource.getSiteWikiNodesPage(
-					Long.valueOf(siteKey), search, aggregation,
+					Long.valueOf(siteKey), search,
+					_aggregationBiFunction.apply(
+						wikiNodeResource, aggregations),
 					_filterBiFunction.apply(wikiNodeResource, filterString),
 					Pagination.of(page, pageSize),
 					_sortsBiFunction.apply(wikiNodeResource, sortsString))));
@@ -2283,8 +2314,7 @@ public class Query {
 	public WikiPagePage wikiNodeWikiPages(
 			@GraphQLName("wikiNodeId") Long wikiNodeId,
 			@GraphQLName("search") String search,
-			@GraphQLName("aggregation")
-				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
+			@GraphQLName("aggregation") List<String> aggregations,
 			@GraphQLName("filter") String filterString,
 			@GraphQLName("pageSize") int pageSize,
 			@GraphQLName("page") int page,
@@ -2296,7 +2326,9 @@ public class Query {
 			this::_populateResourceContext,
 			wikiPageResource -> new WikiPagePage(
 				wikiPageResource.getWikiNodeWikiPagesPage(
-					wikiNodeId, search, aggregation,
+					wikiNodeId, search,
+					_aggregationBiFunction.apply(
+						wikiPageResource, aggregations),
 					_filterBiFunction.apply(wikiPageResource, filterString),
 					Pagination.of(page, pageSize),
 					_sortsBiFunction.apply(wikiPageResource, sortsString))));
@@ -2387,9 +2419,7 @@ public class Query {
 		public KnowledgeBaseArticlePage knowledgeBaseArticles(
 				@GraphQLName("flatten") Boolean flatten,
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -2403,7 +2433,8 @@ public class Query {
 					knowledgeBaseArticleResource.
 						getKnowledgeBaseArticleKnowledgeBaseArticlesPage(
 							_knowledgeBaseArticle.getId(), flatten, search,
-							aggregation,
+							_aggregationBiFunction.apply(
+								knowledgeBaseArticleResource, aggregations),
 							_filterBiFunction.apply(
 								knowledgeBaseArticleResource, filterString),
 							Pagination.of(page, pageSize),
@@ -2582,9 +2613,7 @@ public class Query {
 		)
 		public StructuredContentPage structuredContents(
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -2597,7 +2626,9 @@ public class Query {
 				structuredContentResource -> new StructuredContentPage(
 					structuredContentResource.
 						getContentStructureStructuredContentsPage(
-							_contentStructure.getId(), search, aggregation,
+							_contentStructure.getId(), search,
+							_aggregationBiFunction.apply(
+								structuredContentResource, aggregations),
 							_filterBiFunction.apply(
 								structuredContentResource, filterString),
 							Pagination.of(page, pageSize),
@@ -2653,9 +2684,7 @@ public class Query {
 		)
 		public CommentPage comments(
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -2667,7 +2696,9 @@ public class Query {
 				Query.this::_populateResourceContext,
 				commentResource -> new CommentPage(
 					commentResource.getBlogPostingCommentsPage(
-						_blogPosting.getId(), search, aggregation,
+						_blogPosting.getId(), search,
+						_aggregationBiFunction.apply(
+							commentResource, aggregations),
 						_filterBiFunction.apply(commentResource, filterString),
 						Pagination.of(page, pageSize),
 						_sortsBiFunction.apply(commentResource, sortsString))));
@@ -2692,9 +2723,7 @@ public class Query {
 		public DocumentPage documents(
 				@GraphQLName("flatten") Boolean flatten,
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -2706,7 +2735,9 @@ public class Query {
 				Query.this::_populateResourceContext,
 				documentResource -> new DocumentPage(
 					documentResource.getDocumentFolderDocumentsPage(
-						_documentFolder.getId(), flatten, search, aggregation,
+						_documentFolder.getId(), flatten, search,
+						_aggregationBiFunction.apply(
+							documentResource, aggregations),
 						_filterBiFunction.apply(documentResource, filterString),
 						Pagination.of(page, pageSize),
 						_sortsBiFunction.apply(
@@ -2777,9 +2808,7 @@ public class Query {
 		)
 		public CommentPage comments(
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -2791,7 +2820,9 @@ public class Query {
 				Query.this::_populateResourceContext,
 				commentResource -> new CommentPage(
 					commentResource.getStructuredContentCommentsPage(
-						_structuredContent.getId(), search, aggregation,
+						_structuredContent.getId(), search,
+						_aggregationBiFunction.apply(
+							commentResource, aggregations),
 						_filterBiFunction.apply(commentResource, filterString),
 						Pagination.of(page, pageSize),
 						_sortsBiFunction.apply(commentResource, sortsString))));
@@ -2813,9 +2844,7 @@ public class Query {
 		)
 		public WikiPagePage wikiPages(
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -2827,7 +2856,9 @@ public class Query {
 				Query.this::_populateResourceContext,
 				wikiPageResource -> new WikiPagePage(
 					wikiPageResource.getWikiNodeWikiPagesPage(
-						_wikiNode.getId(), search, aggregation,
+						_wikiNode.getId(), search,
+						_aggregationBiFunction.apply(
+							wikiPageResource, aggregations),
 						_filterBiFunction.apply(wikiPageResource, filterString),
 						Pagination.of(page, pageSize),
 						_sortsBiFunction.apply(
@@ -2902,9 +2933,7 @@ public class Query {
 		public DocumentFolderPage documentFolders(
 				@GraphQLName("flatten") Boolean flatten,
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -2916,7 +2945,9 @@ public class Query {
 				Query.this::_populateResourceContext,
 				documentFolderResource -> new DocumentFolderPage(
 					documentFolderResource.getDocumentFolderDocumentFoldersPage(
-						_documentFolder.getId(), flatten, search, aggregation,
+						_documentFolder.getId(), flatten, search,
+						_aggregationBiFunction.apply(
+							documentFolderResource, aggregations),
 						_filterBiFunction.apply(
 							documentFolderResource, filterString),
 						Pagination.of(page, pageSize),
@@ -2943,9 +2974,7 @@ public class Query {
 		public KnowledgeBaseArticlePage knowledgeBaseArticles(
 				@GraphQLName("flatten") Boolean flatten,
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -2959,7 +2988,8 @@ public class Query {
 					knowledgeBaseArticleResource.
 						getKnowledgeBaseFolderKnowledgeBaseArticlesPage(
 							_knowledgeBaseFolder.getId(), flatten, search,
-							aggregation,
+							_aggregationBiFunction.apply(
+								knowledgeBaseArticleResource, aggregations),
 							_filterBiFunction.apply(
 								knowledgeBaseArticleResource, filterString),
 							Pagination.of(page, pageSize),
@@ -3031,9 +3061,7 @@ public class Query {
 		)
 		public CommentPage comments(
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -3045,7 +3073,9 @@ public class Query {
 				Query.this::_populateResourceContext,
 				commentResource -> new CommentPage(
 					commentResource.getDocumentCommentsPage(
-						_document.getId(), search, aggregation,
+						_document.getId(), search,
+						_aggregationBiFunction.apply(
+							commentResource, aggregations),
 						_filterBiFunction.apply(commentResource, filterString),
 						Pagination.of(page, pageSize),
 						_sortsBiFunction.apply(commentResource, sortsString))));
@@ -3100,9 +3130,7 @@ public class Query {
 		public StructuredContentPage structuredContents(
 				@GraphQLName("flatten") Boolean flatten,
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -3116,7 +3144,8 @@ public class Query {
 					structuredContentResource.
 						getStructuredContentFolderStructuredContentsPage(
 							_structuredContentFolder.getId(), flatten, search,
-							aggregation,
+							_aggregationBiFunction.apply(
+								structuredContentResource, aggregations),
 							_filterBiFunction.apply(
 								structuredContentResource, filterString),
 							Pagination.of(page, pageSize),
@@ -3143,9 +3172,7 @@ public class Query {
 		)
 		public StructuredContentFolderPage structuredContentFolders(
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -3160,7 +3187,9 @@ public class Query {
 						structuredContentFolderResource.
 							getStructuredContentFolderStructuredContentFoldersPage(
 								_structuredContentFolder.getId(), search,
-								aggregation,
+								_aggregationBiFunction.apply(
+									structuredContentFolderResource,
+									aggregations),
 								_filterBiFunction.apply(
 									structuredContentFolderResource,
 									filterString),
@@ -3214,9 +3243,7 @@ public class Query {
 		public MessageBoardMessagePage messageBoardMessages(
 				@GraphQLName("flatten") Boolean flatten,
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -3230,7 +3257,8 @@ public class Query {
 					messageBoardMessageResource.
 						getMessageBoardMessageMessageBoardMessagesPage(
 							_messageBoardMessage.getId(), flatten, search,
-							aggregation,
+							_aggregationBiFunction.apply(
+								messageBoardMessageResource, aggregations),
 							_filterBiFunction.apply(
 								messageBoardMessageResource, filterString),
 							Pagination.of(page, pageSize),
@@ -3254,9 +3282,7 @@ public class Query {
 		)
 		public CommentPage comments(
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -3268,7 +3294,9 @@ public class Query {
 				Query.this::_populateResourceContext,
 				commentResource -> new CommentPage(
 					commentResource.getCommentCommentsPage(
-						_comment.getId(), search, aggregation,
+						_comment.getId(), search,
+						_aggregationBiFunction.apply(
+							commentResource, aggregations),
 						_filterBiFunction.apply(commentResource, filterString),
 						Pagination.of(page, pageSize),
 						_sortsBiFunction.apply(commentResource, sortsString))));
@@ -3292,9 +3320,7 @@ public class Query {
 		)
 		public MessageBoardSectionPage messageBoardSections(
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -3307,7 +3333,9 @@ public class Query {
 				messageBoardSectionResource -> new MessageBoardSectionPage(
 					messageBoardSectionResource.
 						getMessageBoardSectionMessageBoardSectionsPage(
-							_messageBoardSection.getId(), search, aggregation,
+							_messageBoardSection.getId(), search,
+							_aggregationBiFunction.apply(
+								messageBoardSectionResource, aggregations),
 							_filterBiFunction.apply(
 								messageBoardSectionResource, filterString),
 							Pagination.of(page, pageSize),
@@ -3383,9 +3411,7 @@ public class Query {
 		)
 		public MessageBoardThreadPage messageBoardThreads(
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -3398,7 +3424,9 @@ public class Query {
 				messageBoardThreadResource -> new MessageBoardThreadPage(
 					messageBoardThreadResource.
 						getMessageBoardSectionMessageBoardThreadsPage(
-							_messageBoardSection.getId(), search, aggregation,
+							_messageBoardSection.getId(), search,
+							_aggregationBiFunction.apply(
+								messageBoardThreadResource, aggregations),
 							_filterBiFunction.apply(
 								messageBoardThreadResource, filterString),
 							Pagination.of(page, pageSize),
@@ -3449,9 +3477,7 @@ public class Query {
 		)
 		public MessageBoardMessagePage messageBoardMessages(
 				@GraphQLName("search") String search,
-				@GraphQLName("aggregation")
-					com.liferay.portal.vulcan.aggregation.Aggregation
-						aggregation,
+				@GraphQLName("aggregation") List<String> aggregations,
 				@GraphQLName("filter") String filterString,
 				@GraphQLName("pageSize") int pageSize,
 				@GraphQLName("page") int page,
@@ -3464,7 +3490,9 @@ public class Query {
 				messageBoardMessageResource -> new MessageBoardMessagePage(
 					messageBoardMessageResource.
 						getMessageBoardThreadMessageBoardMessagesPage(
-							_messageBoardThread.getId(), search, aggregation,
+							_messageBoardThread.getId(), search,
+							_aggregationBiFunction.apply(
+								messageBoardMessageResource, aggregations),
 							_filterBiFunction.apply(
 								messageBoardMessageResource, filterString),
 							Pagination.of(page, pageSize),
@@ -3481,6 +3509,9 @@ public class Query {
 
 		public BlogPostingPage(Page blogPostingPage) {
 			actions = blogPostingPage.getActions();
+
+			facets = blogPostingPage.getFacets();
+
 			items = blogPostingPage.getItems();
 			lastPage = blogPostingPage.getLastPage();
 			page = blogPostingPage.getPage();
@@ -3490,6 +3521,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<BlogPosting> items;
@@ -3513,6 +3547,9 @@ public class Query {
 
 		public BlogPostingImagePage(Page blogPostingImagePage) {
 			actions = blogPostingImagePage.getActions();
+
+			facets = blogPostingImagePage.getFacets();
+
 			items = blogPostingImagePage.getItems();
 			lastPage = blogPostingImagePage.getLastPage();
 			page = blogPostingImagePage.getPage();
@@ -3522,6 +3559,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<BlogPostingImage> items;
@@ -3545,6 +3585,9 @@ public class Query {
 
 		public CommentPage(Page commentPage) {
 			actions = commentPage.getActions();
+
+			facets = commentPage.getFacets();
+
 			items = commentPage.getItems();
 			lastPage = commentPage.getLastPage();
 			page = commentPage.getPage();
@@ -3554,6 +3597,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<Comment> items;
@@ -3577,6 +3623,9 @@ public class Query {
 
 		public ContentElementPage(Page contentElementPage) {
 			actions = contentElementPage.getActions();
+
+			facets = contentElementPage.getFacets();
+
 			items = contentElementPage.getItems();
 			lastPage = contentElementPage.getLastPage();
 			page = contentElementPage.getPage();
@@ -3586,6 +3635,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<ContentElement> items;
@@ -3609,6 +3661,9 @@ public class Query {
 
 		public ContentSetElementPage(Page contentSetElementPage) {
 			actions = contentSetElementPage.getActions();
+
+			facets = contentSetElementPage.getFacets();
+
 			items = contentSetElementPage.getItems();
 			lastPage = contentSetElementPage.getLastPage();
 			page = contentSetElementPage.getPage();
@@ -3618,6 +3673,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<ContentSetElement> items;
@@ -3641,6 +3699,9 @@ public class Query {
 
 		public ContentStructurePage(Page contentStructurePage) {
 			actions = contentStructurePage.getActions();
+
+			facets = contentStructurePage.getFacets();
+
 			items = contentStructurePage.getItems();
 			lastPage = contentStructurePage.getLastPage();
 			page = contentStructurePage.getPage();
@@ -3650,6 +3711,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<ContentStructure> items;
@@ -3673,6 +3737,9 @@ public class Query {
 
 		public ContentTemplatePage(Page contentTemplatePage) {
 			actions = contentTemplatePage.getActions();
+
+			facets = contentTemplatePage.getFacets();
+
 			items = contentTemplatePage.getItems();
 			lastPage = contentTemplatePage.getLastPage();
 			page = contentTemplatePage.getPage();
@@ -3682,6 +3749,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<ContentTemplate> items;
@@ -3705,6 +3775,9 @@ public class Query {
 
 		public DocumentPage(Page documentPage) {
 			actions = documentPage.getActions();
+
+			facets = documentPage.getFacets();
+
 			items = documentPage.getItems();
 			lastPage = documentPage.getLastPage();
 			page = documentPage.getPage();
@@ -3714,6 +3787,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<Document> items;
@@ -3737,6 +3813,9 @@ public class Query {
 
 		public DocumentFolderPage(Page documentFolderPage) {
 			actions = documentFolderPage.getActions();
+
+			facets = documentFolderPage.getFacets();
+
 			items = documentFolderPage.getItems();
 			lastPage = documentFolderPage.getLastPage();
 			page = documentFolderPage.getPage();
@@ -3746,6 +3825,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<DocumentFolder> items;
@@ -3769,6 +3851,9 @@ public class Query {
 
 		public KnowledgeBaseArticlePage(Page knowledgeBaseArticlePage) {
 			actions = knowledgeBaseArticlePage.getActions();
+
+			facets = knowledgeBaseArticlePage.getFacets();
+
 			items = knowledgeBaseArticlePage.getItems();
 			lastPage = knowledgeBaseArticlePage.getLastPage();
 			page = knowledgeBaseArticlePage.getPage();
@@ -3778,6 +3863,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<KnowledgeBaseArticle> items;
@@ -3801,6 +3889,9 @@ public class Query {
 
 		public KnowledgeBaseAttachmentPage(Page knowledgeBaseAttachmentPage) {
 			actions = knowledgeBaseAttachmentPage.getActions();
+
+			facets = knowledgeBaseAttachmentPage.getFacets();
+
 			items = knowledgeBaseAttachmentPage.getItems();
 			lastPage = knowledgeBaseAttachmentPage.getLastPage();
 			page = knowledgeBaseAttachmentPage.getPage();
@@ -3810,6 +3901,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<KnowledgeBaseAttachment> items;
@@ -3833,6 +3927,9 @@ public class Query {
 
 		public KnowledgeBaseFolderPage(Page knowledgeBaseFolderPage) {
 			actions = knowledgeBaseFolderPage.getActions();
+
+			facets = knowledgeBaseFolderPage.getFacets();
+
 			items = knowledgeBaseFolderPage.getItems();
 			lastPage = knowledgeBaseFolderPage.getLastPage();
 			page = knowledgeBaseFolderPage.getPage();
@@ -3842,6 +3939,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<KnowledgeBaseFolder> items;
@@ -3865,6 +3965,9 @@ public class Query {
 
 		public MessageBoardAttachmentPage(Page messageBoardAttachmentPage) {
 			actions = messageBoardAttachmentPage.getActions();
+
+			facets = messageBoardAttachmentPage.getFacets();
+
 			items = messageBoardAttachmentPage.getItems();
 			lastPage = messageBoardAttachmentPage.getLastPage();
 			page = messageBoardAttachmentPage.getPage();
@@ -3874,6 +3977,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<MessageBoardAttachment> items;
@@ -3897,6 +4003,9 @@ public class Query {
 
 		public MessageBoardMessagePage(Page messageBoardMessagePage) {
 			actions = messageBoardMessagePage.getActions();
+
+			facets = messageBoardMessagePage.getFacets();
+
 			items = messageBoardMessagePage.getItems();
 			lastPage = messageBoardMessagePage.getLastPage();
 			page = messageBoardMessagePage.getPage();
@@ -3906,6 +4015,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<MessageBoardMessage> items;
@@ -3929,6 +4041,9 @@ public class Query {
 
 		public MessageBoardSectionPage(Page messageBoardSectionPage) {
 			actions = messageBoardSectionPage.getActions();
+
+			facets = messageBoardSectionPage.getFacets();
+
 			items = messageBoardSectionPage.getItems();
 			lastPage = messageBoardSectionPage.getLastPage();
 			page = messageBoardSectionPage.getPage();
@@ -3938,6 +4053,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<MessageBoardSection> items;
@@ -3961,6 +4079,9 @@ public class Query {
 
 		public MessageBoardThreadPage(Page messageBoardThreadPage) {
 			actions = messageBoardThreadPage.getActions();
+
+			facets = messageBoardThreadPage.getFacets();
+
 			items = messageBoardThreadPage.getItems();
 			lastPage = messageBoardThreadPage.getLastPage();
 			page = messageBoardThreadPage.getPage();
@@ -3970,6 +4091,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<MessageBoardThread> items;
@@ -3993,6 +4117,9 @@ public class Query {
 
 		public NavigationMenuPage(Page navigationMenuPage) {
 			actions = navigationMenuPage.getActions();
+
+			facets = navigationMenuPage.getFacets();
+
 			items = navigationMenuPage.getItems();
 			lastPage = navigationMenuPage.getLastPage();
 			page = navigationMenuPage.getPage();
@@ -4002,6 +4129,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<NavigationMenu> items;
@@ -4025,6 +4155,9 @@ public class Query {
 
 		public StructuredContentPage(Page structuredContentPage) {
 			actions = structuredContentPage.getActions();
+
+			facets = structuredContentPage.getFacets();
+
 			items = structuredContentPage.getItems();
 			lastPage = structuredContentPage.getLastPage();
 			page = structuredContentPage.getPage();
@@ -4034,6 +4167,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<StructuredContent> items;
@@ -4057,6 +4193,9 @@ public class Query {
 
 		public StructuredContentFolderPage(Page structuredContentFolderPage) {
 			actions = structuredContentFolderPage.getActions();
+
+			facets = structuredContentFolderPage.getFacets();
+
 			items = structuredContentFolderPage.getItems();
 			lastPage = structuredContentFolderPage.getLastPage();
 			page = structuredContentFolderPage.getPage();
@@ -4066,6 +4205,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<StructuredContentFolder> items;
@@ -4089,6 +4231,9 @@ public class Query {
 
 		public WikiNodePage(Page wikiNodePage) {
 			actions = wikiNodePage.getActions();
+
+			facets = wikiNodePage.getFacets();
+
 			items = wikiNodePage.getItems();
 			lastPage = wikiNodePage.getLastPage();
 			page = wikiNodePage.getPage();
@@ -4098,6 +4243,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<WikiNode> items;
@@ -4121,6 +4269,9 @@ public class Query {
 
 		public WikiPagePage(Page wikiPagePage) {
 			actions = wikiPagePage.getActions();
+
+			facets = wikiPagePage.getFacets();
+
 			items = wikiPagePage.getItems();
 			lastPage = wikiPagePage.getLastPage();
 			page = wikiPagePage.getPage();
@@ -4130,6 +4281,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<WikiPage> items;
@@ -4153,6 +4307,9 @@ public class Query {
 
 		public WikiPageAttachmentPage(Page wikiPageAttachmentPage) {
 			actions = wikiPageAttachmentPage.getActions();
+
+			facets = wikiPageAttachmentPage.getFacets();
+
 			items = wikiPageAttachmentPage.getItems();
 			lastPage = wikiPageAttachmentPage.getLastPage();
 			page = wikiPageAttachmentPage.getPage();
@@ -4162,6 +4319,9 @@ public class Query {
 
 		@GraphQLField
 		protected Map<String, Map> actions;
+
+		@GraphQLField
+		protected List<Facet> facets;
 
 		@GraphQLField
 		protected java.util.Collection<WikiPageAttachment> items;
@@ -4781,6 +4941,8 @@ public class Query {
 		_wikiPageAttachmentResourceComponentServiceObjects;
 
 	private AcceptLanguage _acceptLanguage;
+	private BiFunction<Object, List<String>, Aggregation>
+		_aggregationBiFunction;
 	private com.liferay.portal.kernel.model.Company _company;
 	private BiFunction<Object, String, Filter> _filterBiFunction;
 	private GroupLocalService _groupLocalService;

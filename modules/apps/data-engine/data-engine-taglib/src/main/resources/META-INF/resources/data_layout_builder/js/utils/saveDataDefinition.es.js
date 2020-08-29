@@ -19,11 +19,11 @@ import {addItem, updateItem} from './client.es';
  * @param {Array} availableLanguageIds
  * @param {Object} field
  * @description some fields are translated with the language of
- * themeDisplay.getLanguageId() which is not necessarily the language of dataDefinition,
- * so we need to normalize all fields so that they receive themeDisplay.getLanguageId()
+ * themeDisplay.getDefaultLanguageId() which is not necessarily the language of dataDefinition,
+ * so we need to normalize all fields so that they receive themeDisplay.getDefaultLanguageId()
  */
 const normalizeField = (availableLanguageIds, field) => {
-	const defaultLanguageId = themeDisplay.getLanguageId();
+	const defaultLanguageId = themeDisplay.getDefaultLanguageId();
 
 	const toArray = (value) =>
 		availableLanguageIds.reduce((accumulator, currentValue) => {
@@ -83,7 +83,7 @@ export default ({
 	dataLayout,
 	dataLayoutId,
 }) => {
-	const defaultLanguageId = themeDisplay.getLanguageId();
+	const defaultLanguageId = themeDisplay.getDefaultLanguageId();
 
 	const normalizedDataLayout = {
 		...dataLayout,

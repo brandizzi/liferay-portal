@@ -136,6 +136,10 @@ const {data, items, processSteps} = {
 	totalCount: 45,
 };
 
+const mockTasks = {
+	data: {items, totalCount: items.length + 1},
+};
+
 const ContainerMockPrimary = ({children}) => {
 	const processId = '12345';
 
@@ -168,11 +172,6 @@ const ContainerMockPrimary = ({children}) => {
 	const [visibleModal, setVisibleModal] = useState('bulkTransition');
 
 	const clientMock = {
-		get: jest
-			.fn()
-			.mockRejectedValueOnce(new Error('request-failure'))
-			.mockResolvedValueOnce({data})
-			.mockResolvedValueOnce({data}),
 		patch: jest
 			.fn()
 			.mockRejectedValueOnce(new Error('request-failure'))
@@ -180,9 +179,10 @@ const ContainerMockPrimary = ({children}) => {
 		post: jest
 			.fn()
 			.mockRejectedValueOnce(new Error('request-failure'))
-			.mockResolvedValue({
-				data: {items, totalCount: items.length + 1},
-			}),
+			.mockResolvedValueOnce(mockTasks)
+			.mockResolvedValueOnce(mockTasks)
+			.mockRejectedValueOnce(new Error('request-failure'))
+			.mockResolvedValue({data}),
 		request: jest
 			.fn()
 			.mockResolvedValueOnce({data: {items: processSteps}})
@@ -441,7 +441,7 @@ describe('The BulkTransitionModal component should', () => {
 		fireEvent.click(nextBtn);
 	});
 
-	test('Show alert message when attempt to transition without selecting any transition go to previous step and foward', () => {
+	test('Show alert message when attempt to transition without selecting any transition go to previous step and forward', () => {
 		const alertError = getByTestId('alertError');
 
 		expect(alertError).toHaveTextContent('your-request-has-failed');

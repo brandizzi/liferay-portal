@@ -1374,7 +1374,6 @@ public class PortalImpl implements Portal {
 		throws PortalException {
 
 		String groupFriendlyURL = StringPool.BLANK;
-		boolean hasFriendlyURLSeparator = false;
 		boolean includeParametersURL = false;
 		String parametersURL = StringPool.BLANK;
 
@@ -1389,7 +1388,6 @@ public class PortalImpl implements Portal {
 				pos = completeURL.indexOf(urlSeparator);
 
 				if (pos != -1) {
-					hasFriendlyURLSeparator = true;
 					includeParametersURL = true;
 
 					break;
@@ -1427,9 +1425,15 @@ public class PortalImpl implements Portal {
 				getSiteDefaultLocale(layout.getGroupId()));
 		}
 
-		if (!hasFriendlyURLSeparator &&
-			(forceLayoutFriendlyURL || !layout.isFirstParent() ||
-			 Validator.isNotNull(parametersURL))) {
+		Group siteGroup = themeDisplay.getSiteGroup();
+
+		if (forceLayoutFriendlyURL ||
+			((!layout.isFirstParent() || Validator.isNotNull(parametersURL)) &&
+			 (groupFriendlyURL.contains(
+				 siteGroup.getFriendlyURL() +
+					 themeDisplay.getLayoutFriendlyURL(layout)) ||
+			  groupFriendlyURL.endsWith(
+				  StringPool.SLASH + layout.getLayoutId())))) {
 
 			canonicalLayoutFriendlyURL = defaultLayoutFriendlyURL;
 		}
@@ -1855,11 +1859,9 @@ public class PortalImpl implements Portal {
 				return createAccountURL.toString();
 			}
 
-			String portalURL = getPortalURL(httpServletRequest);
-			String portalURLSecure = getPortalURL(httpServletRequest, true);
-
 			return StringUtil.replaceFirst(
-				createAccountURL.toString(), portalURL, portalURLSecure);
+				createAccountURL.toString(), getPortalURL(httpServletRequest),
+				getPortalURL(httpServletRequest, true));
 		}
 
 		try {
@@ -7545,7 +7547,7 @@ public class PortalImpl implements Portal {
 	protected Group getCurrentSiteGroup(long groupId) throws PortalException {
 		Group siteGroup = _getSiteGroup(groupId);
 
-		if (!siteGroup.isLayoutPrototype()) {
+		if ((siteGroup != null) && !siteGroup.isLayoutPrototype()) {
 			return siteGroup;
 		}
 

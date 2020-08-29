@@ -21,12 +21,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.gradle.api.Project;
 import org.gradle.api.invocation.Gradle;
+import org.gradle.util.GUtil;
 
 /**
  * @author Andrea Di Giorgi
@@ -64,10 +65,8 @@ public class PoshiRunnerResourcesExtension {
 		};
 	}
 
-	public PoshiRunnerResourcesExtension baseNameDir(
-		Object baseName, Object dir) {
-
-		_baseNameDirs.put(baseName, dir);
+	public PoshiRunnerResourcesExtension dirs(Iterable<?> dirs) {
+		GUtil.addToCollection(_dirs, dirs);
 
 		return this;
 	}
@@ -80,8 +79,12 @@ public class PoshiRunnerResourcesExtension {
 		return GradleUtil.toString(_artifactVersion);
 	}
 
-	public Map<Object, Object> getBaseNameDirs() {
-		return _baseNameDirs;
+	public String getBaseName() {
+		return GradleUtil.toString(_baseName);
+	}
+
+	public Iterable<Object> getDirs() {
+		return _dirs;
 	}
 
 	public String getRootDirName() {
@@ -96,8 +99,14 @@ public class PoshiRunnerResourcesExtension {
 		_artifactVersion = artifactVersion;
 	}
 
-	public void setBaseNameDirs(Map<?, ?> baseNameDirs) {
-		_baseNameDirs.putAll(baseNameDirs);
+	public void setBaseName(Object baseName) {
+		_baseName = baseName;
+	}
+
+	public void setDirs(Iterable<?> dirs) {
+		_dirs.clear();
+
+		dirs(dirs);
 	}
 
 	public void setRootDirName(Object rootDirName) {
@@ -109,7 +118,8 @@ public class PoshiRunnerResourcesExtension {
 
 	private Object _artifactAppendix;
 	private Object _artifactVersion;
-	private final Map<Object, Object> _baseNameDirs = new LinkedHashMap<>();
+	private Object _baseName;
+	private final Set<Object> _dirs = new HashSet<>();
 	private final Project _project;
 	private Object _rootDirName;
 

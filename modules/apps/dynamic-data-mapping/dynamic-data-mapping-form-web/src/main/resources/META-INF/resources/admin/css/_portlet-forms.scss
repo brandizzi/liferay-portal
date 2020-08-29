@@ -1,6 +1,7 @@
 .portlet-forms,
 .form-entry {
 	label,
+	legend,
 	p {
 		float: initial;
 	}
@@ -31,6 +32,10 @@
 			font-weight: normal;
 			line-height: 24px;
 			padding: $baseline * 2 0 0 0;
+
+			p {
+				font-weight: 400;
+			}
 		}
 
 		.ddm-form-name {
@@ -39,7 +44,7 @@
 			padding: $baseline * 5 0 0 0;
 
 			p {
-				font-weight: 400;
+				font-weight: 600;
 			}
 		}
 	}

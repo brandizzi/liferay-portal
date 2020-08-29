@@ -49,6 +49,7 @@ export default withRouter(({history, location}) => {
 	const context = useContext(AppContext);
 
 	const [error, setError] = useState({});
+	const [searchBoxValue, setSearchBoxValue] = useState('');
 	const [loading, setLoading] = useState(true);
 	const [orderBy, setOrderBy] = useState('number-of-usages');
 	const [page, setPage] = useState(1);
@@ -61,6 +62,7 @@ export default withRouter(({history, location}) => {
 			.then(({data, loading}) => {
 				setTags(data || []);
 				setLoading(loading);
+				setSearchBoxValue(search);
 			})
 			.catch((error) => {
 				if (process.env.NODE_ENV === 'development') {
@@ -81,16 +83,33 @@ export default withRouter(({history, location}) => {
 		setPageSize(+queryParams.get('pagesize') || 20);
 	}, [queryParams]);
 
+	useEffect(() => {
+		setSearch(queryParams.get('search') || '');
+	}, [queryParams]);
+
 	const historyPushParser = historyPushWithSlug(history.push);
 
+	function buildURL(search, page, pageSize) {
+		let url = '/tags?';
+
+		if (search) {
+			url += `search=${search}&`;
+		}
+
+		url += `page=${page}&pagesize=${pageSize}`;
+
+		return url;
+	}
+
 	const changePage = (page, pageSize) => {
-		historyPushParser(`/tags?page=${page}&pagesize=${pageSize}`);
+		historyPushParser(buildURL(search, page, pageSize));
 	};
 
 	const orderByOptions = getOrderByOptions();
 
 	const [debounceCallback] = useDebounceCallback((search) => {
-		setSearch(search);
+		setLoading(true);
+		historyPushParser(buildURL(search, 1, pageSize));
 	}, 500);
 
 	return (
@@ -142,11 +161,13 @@ export default withRouter(({history, location}) => {
 										tags.items &&
 										!tags.items.length
 									}
-									onChange={(event) =>
-										debounceCallback(event.target.value)
-									}
+									onChange={(event) => {
+										setSearchBoxValue(event.target.value);
+										debounceCallback(event.target.value);
+									}}
 									placeholder={Liferay.Language.get('search')}
 									type="text"
+									value={searchBoxValue}
 								/>
 
 								<ClayInput.GroupInsetItem
@@ -155,13 +176,23 @@ export default withRouter(({history, location}) => {
 									tag="span"
 								>
 									{loading && <ClayLoadingIndicator small />}
-									{!loading && (
-										<ClayButtonWithIcon
-											displayType="unstyled"
-											symbol="search"
-											type="submit"
-										/>
-									)}
+									{!loading &&
+										((!!search && (
+											<ClayButtonWithIcon
+												displayType="unstyled"
+												onClick={() => {
+													setSearch('');
+												}}
+												symbol="times-circle"
+												type="submit"
+											/>
+										)) || (
+											<ClayButtonWithIcon
+												displayType="unstyled"
+												symbol="search"
+												type="search"
+											/>
+										))}
 								</ClayInput.GroupInsetItem>
 							</ClayInput.GroupItem>
 						</ClayInput.Group>

@@ -28,8 +28,8 @@ import com.liferay.portal.kernel.util.PortalRunMode;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.search.ccr.CrossClusterReplicationHelper;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchConnectionManager;
-import com.liferay.portal.search.elasticsearch7.internal.index.CompanyIndexCreator;
 import com.liferay.portal.search.elasticsearch7.internal.index.IndexFactory;
 import com.liferay.portal.search.engine.adapter.SearchEngineAdapter;
 import com.liferay.portal.search.engine.adapter.cluster.ClusterHealthStatus;
@@ -58,6 +58,8 @@ import org.elasticsearch.common.Strings;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
@@ -113,9 +115,14 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 
 		_indexFactory.createIndices(restHighLevelClient.indices(), companyId);
 
-		_companyIndexCreator.registerCompanyId(companyId);
+		_indexFactory.registerCompanyId(companyId);
 
 		waitForYellowStatus();
+
+		if (_crossClusterReplicationHelper != null) {
+			_crossClusterReplicationHelper.follow(
+				_indexNameBuilder.getIndexName(companyId));
+		}
 	}
 
 	@Override
@@ -134,6 +141,11 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 	public void removeCompany(long companyId) {
 		super.removeCompany(companyId);
 
+		if (_crossClusterReplicationHelper != null) {
+			_crossClusterReplicationHelper.unfollow(
+				_indexNameBuilder.getIndexName(companyId));
+		}
+
 		try {
 			RestHighLevelClient restHighLevelClient =
 				_elasticsearchConnectionManager.getRestHighLevelClient();
@@ -141,7 +153,7 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 			_indexFactory.deleteIndices(
 				restHighLevelClient.indices(), companyId);
 
-			_companyIndexCreator.unregisterCompanyId(companyId);
+			_indexFactory.unregisterCompanyId(companyId);
 		}
 		catch (Exception exception) {
 			if (_log.isWarnEnabled()) {
@@ -193,10 +205,10 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 		super.setIndexWriter(indexWriter);
 	}
 
-	public void unsetCompanyIndexCreator(
-		CompanyIndexCreator companyIndexCreator) {
+	public void unsetCrossClusterReplicationHelper(
+		CrossClusterReplicationHelper crossClusterReplicationHelper) {
 
-		_companyIndexCreator = companyIndexCreator;
+		_crossClusterReplicationHelper = null;
 	}
 
 	public void unsetElasticsearchConnectionManager(
@@ -227,32 +239,30 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 	}
 
 	protected boolean hasBackupRepository() {
-		try {
-			GetSnapshotRepositoriesRequest getSnapshotRepositoriesRequest =
-				new GetSnapshotRepositoriesRequest(_BACKUP_REPOSITORY_NAME);
+		GetSnapshotRepositoriesRequest getSnapshotRepositoriesRequest =
+			new GetSnapshotRepositoriesRequest(_BACKUP_REPOSITORY_NAME);
 
-			GetSnapshotRepositoriesResponse getSnapshotRepositoriesResponse =
-				_searchEngineAdapter.execute(getSnapshotRepositoriesRequest);
+		GetSnapshotRepositoriesResponse getSnapshotRepositoriesResponse =
+			_searchEngineAdapter.execute(getSnapshotRepositoriesRequest);
 
-			List<SnapshotRepositoryDetails> snapshotRepositoryDetailsList =
-				getSnapshotRepositoriesResponse.getSnapshotRepositoryDetails();
+		List<SnapshotRepositoryDetails> snapshotRepositoryDetailsList =
+			getSnapshotRepositoriesResponse.getSnapshotRepositoryDetails();
 
-			if (snapshotRepositoryDetailsList.isEmpty()) {
-				return false;
-			}
-		}
-		catch (Exception exception) {
-			_log.error(exception, exception);
+		if (snapshotRepositoryDetailsList.isEmpty()) {
+			return false;
 		}
 
 		return true;
 	}
 
-	@Reference
-	protected void setCompanyIndexCreator(
-		CompanyIndexCreator companyIndexCreator) {
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected void setCrossClusterReplicationHelper(
+		CrossClusterReplicationHelper crossClusterReplicationHelper) {
 
-		_companyIndexCreator = companyIndexCreator;
+		_crossClusterReplicationHelper = crossClusterReplicationHelper;
 	}
 
 	@Reference
@@ -347,7 +357,7 @@ public class ElasticsearchSearchEngine extends BaseSearchEngine {
 	private static final Log _log = LogFactoryUtil.getLog(
 		ElasticsearchSearchEngine.class);
 
-	private CompanyIndexCreator _companyIndexCreator;
+	private CrossClusterReplicationHelper _crossClusterReplicationHelper;
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
 	private IndexFactory _indexFactory;
 	private IndexNameBuilder _indexNameBuilder;

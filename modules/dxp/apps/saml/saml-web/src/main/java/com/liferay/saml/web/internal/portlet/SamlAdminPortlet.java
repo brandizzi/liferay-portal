@@ -21,7 +21,7 @@ import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.saml.web.internal.constants.SamlAdminPortletKeys;
+import com.liferay.saml.constants.SamlPortletKeys;
 
 import javax.portlet.Portlet;
 import javax.portlet.PortletRequest;
@@ -42,7 +42,7 @@ import org.osgi.service.component.annotations.Component;
 		"javax.portlet.expiration-cache=0",
 		"javax.portlet.init-param.copy-request-parameters=true",
 		"javax.portlet.init-param.mvc-command-names-default-views=/admin",
-		"javax.portlet.name=" + SamlAdminPortletKeys.SAML_ADMIN,
+		"javax.portlet.name=" + SamlPortletKeys.SAML_ADMIN,
 		"javax.portlet.portlet.info.keywords=SAML Admin",
 		"javax.portlet.portlet.info.short-title=SAML Admin",
 		"javax.portlet.portlet.info.title=SAML Admin",

@@ -24,7 +24,7 @@ import CommentRenderer from '../../data_renderers/CommentRenderer';
 import RadioRenderer from '../../data_renderers/RadioRenderer';
 import {
 	getDataRendererById,
-	getDataRendererByUrl,
+	getDataRendererByURL,
 } from '../../data_renderers/index';
 import {getValueFromItem} from '../../utilities/index';
 import ViewsContext from '../ViewsContext';
@@ -41,7 +41,7 @@ function CustomTableCell({
 }) {
 	const [currentView, updateCurrentView] = useState({
 		...view,
-		Component: view.contentRendererModuleUrl
+		Component: view.contentRendererModuleURL
 			? null
 			: getDataRendererById(view.contentRenderer),
 	});
@@ -51,9 +51,9 @@ function CustomTableCell({
 		if (loading) {
 			return;
 		}
-		if (currentView.contentRendererModuleUrl) {
+		if (currentView.contentRendererModuleURL) {
 			setLoading(true);
-			getDataRendererByUrl(currentView.contentRendererModuleUrl).then(
+			getDataRendererByURL(currentView.contentRendererModuleURL).then(
 				(Component) => {
 					updateCurrentView({
 						...currentView,
@@ -89,7 +89,7 @@ function CustomTableCell({
 
 function getItemFields(item, fields, itemId, itemsActions) {
 	return fields.map((field, i) => {
-		const {actionItems, comments} = item;
+		const {actionDropdownItems, comments} = item;
 		const rawValue = getValueFromItem(item, field.fieldName);
 		const formattedValue = field.mapData
 			? field.mapData(rawValue)
@@ -98,7 +98,7 @@ function getItemFields(item, fields, itemId, itemsActions) {
 
 		return (
 			<CustomTableCell
-				actions={itemsActions || actionItems}
+				actions={itemsActions || actionDropdownItems}
 				comment={comment}
 				itemData={item}
 				itemId={itemId}
@@ -107,7 +107,7 @@ function getItemFields(item, fields, itemId, itemsActions) {
 				value={formattedValue}
 				view={{
 					contentRenderer: field.contentRenderer,
-					contentRendererModuleUrl: field.contentRendererModuleUrl,
+					contentRendererModuleURL: field.contentRendererModuleURL,
 				}}
 			/>
 		);
@@ -141,7 +141,7 @@ function Table({items, itemsActions, schema, style}) {
 
 	const showActionItems = Boolean(
 		itemsActions?.length ||
-			items.find((element) => element.actionDropdownItems)
+			items.find((item) => item.actions || item.actionDropdownItems)
 	);
 
 	const SelectionComponent =
@@ -207,17 +207,17 @@ function Table({items, itemsActions, schema, style}) {
 										itemsActions
 									)}
 									<ClayTable.Cell className="data-set-item-actions-wrapper">
-										{showActionItems &&
-											item.actionDropdownItems && (
-												<ActionsDropdownRenderer
-													actions={
-														itemsActions ||
-														item.actionDropdownItems
-													}
-													itemData={item}
-													itemId={itemId}
-												/>
-											)}
+										{(showActionItems || item.actions) && (
+											<ActionsDropdownRenderer
+												actions={
+													itemsActions ||
+													item.actions ||
+													item.actionDropdownItems
+												}
+												itemData={item}
+												itemId={itemId}
+											/>
+										)}
 									</ClayTable.Cell>
 								</ClayTable.Row>
 								{nestedItems?.length

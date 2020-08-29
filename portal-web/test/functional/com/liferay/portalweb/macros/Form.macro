@@ -41,6 +41,8 @@ definition {
 	}
 
 	macro addTranslation {
+		ScrollWebElementIntoView(locator1 = "Translation#ADD");
+
 		Click(locator1 = "Translation#ADD");
 
 		var key_localizedLanguage = "${localizedLanguage}";
@@ -170,9 +172,7 @@ definition {
 			var fieldName = StringUtil.replace("${fieldValue}", " ", "");
 		}
 
-		Form.editFieldLabelMetal(
-			fieldName = "${fieldName}",
-			fieldValue = "${fieldValue}");
+		Form.editFieldLabelMetal(fieldValue = "${fieldValue}");
 	}
 
 	macro editFieldDataProvider {
@@ -248,7 +248,7 @@ definition {
 	macro editPageTitle {
 		var key_titleNumber = "${formTitleNumber}";
 
-		ScrollBy(value1 = "0, 230");
+		ScrollWebElementIntoView(locator1 = "Form#PAGE_TITLE_FIELD");
 
 		WaitForElementPresent(
 			locator1 = "Form#PAGE_TITLE_FIELD",
@@ -521,6 +521,8 @@ definition {
 	macro selectTranslation {
 		var key_localizedLanguage = "${localizedLanguage}";
 
+		ScrollWebElementIntoView(locator1 = "Translation#UNSELECTED_LOCALE_ICON");
+
 		Click(locator1 = "Translation#UNSELECTED_LOCALE_ICON");
 	}
 
@@ -572,7 +574,7 @@ definition {
 
 		Click(locator1 = "Form#UNPUBLISH_FORM_BUTTON");
 
-		var key_uniqueSuccess = "The form was unpublished successfully!";
+		var key_uniqueSuccess = "The form was unpublished successfully.";
 
 		AssertElementPresent(locator1 = "Message#UNIQUE_SUCCESS");
 	}

@@ -16,16 +16,13 @@ package com.liferay.portal.search.elasticsearch7.internal.connection;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.cluster.ClusterExecutor;
 import com.liferay.portal.kernel.cluster.ClusterNode;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.search.configuration.CrossClusterReplicationConfigurationWrapper;
+import com.liferay.portal.search.ccr.CrossClusterReplicationConfigurationHelper;
 import com.liferay.portal.search.elasticsearch7.internal.configuration.ElasticsearchConfigurationObserver;
-import com.liferay.portal.search.elasticsearch7.internal.configuration.ElasticsearchConfigurationObserverComparator;
 import com.liferay.portal.search.elasticsearch7.internal.configuration.ElasticsearchConfigurationWrapper;
 import com.liferay.portal.search.elasticsearch7.internal.configuration.OperationModeResolver;
 import com.liferay.portal.search.elasticsearch7.internal.connection.constants.ConnectionConstants;
@@ -33,7 +30,6 @@ import com.liferay.portal.search.elasticsearch7.internal.util.SearchLogHelperUti
 
 import java.net.InetAddress;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +42,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Michael C. Han
@@ -100,7 +97,7 @@ public class ElasticsearchConnectionManager
 	public int compareTo(
 		ElasticsearchConfigurationObserver elasticsearchConfigurationObserver) {
 
-		return elasticsearchConfigurationObserverComparator.compare(
+		return elasticsearchConfigurationWrapper.compare(
 			this, elasticsearchConfigurationObserver);
 	}
 
@@ -129,7 +126,8 @@ public class ElasticsearchConnectionManager
 
 		if (localClusterNode == null) {
 			List<String> localClusterConnectionIds =
-				getLocalClusterConnectionIds();
+				crossClusterReplicationConfigurationHelper.
+					getLocalClusterConnectionIds();
 
 			return localClusterConnectionIds.get(0);
 		}
@@ -144,43 +142,12 @@ public class ElasticsearchConnectionManager
 			portalInetAddress.getHostName() + StringPool.COLON +
 				localClusterNode.getPortalPort();
 
-		String[] localClusterConnectionConfigurations =
-			crossClusterReplicationConfigurationWrapper.
-				getCCRLocalClusterConnectionConfigurations();
+		Map<String, String> localClusterConnectionConfigurations =
+			crossClusterReplicationConfigurationHelper.
+				getLocalClusterConnectionIdsMap();
 
-		for (String localClusterConnectionConfiguration :
-				localClusterConnectionConfigurations) {
-
-			List<String> localClusterConnectionConfigurationParts =
-				StringUtil.split(localClusterConnectionConfiguration);
-
-			String hostName = localClusterConnectionConfigurationParts.get(0);
-
-			if (hostName.equals(localClusterNodeHostName)) {
-				return localClusterConnectionConfigurationParts.get(1);
-			}
-		}
-
-		return null;
-	}
-
-	public List<String> getLocalClusterConnectionIds() {
-		List<String> connectionIds = new ArrayList<>();
-
-		String[] localClusterConnectionConfigurations =
-			crossClusterReplicationConfigurationWrapper.
-				getCCRLocalClusterConnectionConfigurations();
-
-		for (String localClusterConnectionConfiguration :
-				localClusterConnectionConfigurations) {
-
-			List<String> localClusterConnectionConfigurationParts =
-				StringUtil.split(localClusterConnectionConfiguration);
-
-			connectionIds.add(localClusterConnectionConfigurationParts.get(1));
-		}
-
-		return connectionIds;
+		return localClusterConnectionConfigurations.get(
+			localClusterNodeHostName);
 	}
 
 	@Override
@@ -227,18 +194,12 @@ public class ElasticsearchConnectionManager
 	}
 
 	public boolean isCrossClusterReplicationEnabled() {
-		if (crossClusterReplicationConfigurationWrapper == null) {
+		if (crossClusterReplicationConfigurationHelper == null) {
 			return false;
 		}
 
-		if (ArrayUtil.isEmpty(
-				crossClusterReplicationConfigurationWrapper.
-					getCCRLocalClusterConnectionConfigurations())) {
-
-			return false;
-		}
-
-		return crossClusterReplicationConfigurationWrapper.isCCREnabled();
+		return crossClusterReplicationConfigurationHelper.
+			isCrossClusterReplicationEnabled();
 	}
 
 	@Override
@@ -361,13 +322,12 @@ public class ElasticsearchConnectionManager
 		_clusterExecutor = clusterExecutor;
 	}
 
-	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
-	protected volatile CrossClusterReplicationConfigurationWrapper
-		crossClusterReplicationConfigurationWrapper;
-
-	@Reference
-	protected ElasticsearchConfigurationObserverComparator
-		elasticsearchConfigurationObserverComparator;
+	@Reference(
+		cardinality = ReferenceCardinality.OPTIONAL,
+		policyOption = ReferencePolicyOption.GREEDY
+	)
+	protected CrossClusterReplicationConfigurationHelper
+		crossClusterReplicationConfigurationHelper;
 
 	@Reference
 	protected volatile ElasticsearchConfigurationWrapper

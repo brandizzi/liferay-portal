@@ -100,6 +100,12 @@ $appBuilderTableViewTransitionTime: 0.5s;
 				border-bottom: 1px solid #e7e7ed;
 				padding: 1.5rem 0;
 			}
+
+			.component-tbar {
+				.container-fluid {
+					margin-top: 4px;
+				}
+			}
 		}
 
 		.multiple-select-filter-trigger {

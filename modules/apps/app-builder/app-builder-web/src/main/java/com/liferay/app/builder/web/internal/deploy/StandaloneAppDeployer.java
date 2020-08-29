@@ -76,10 +76,7 @@ public class StandaloneAppDeployer extends BaseAppDeployer {
 					return new ServiceRegistration<?>[] {
 						deployPortlet(
 							new AppPortlet(
-								appBuilderApp,
-								appBuilderAppPortletTabServiceTrackerMap,
-								"standalone", appName,
-								appPortletMVCResourceCommandServiceTrackerMap,
+								appBuilderApp, "standalone", appName,
 								portletName),
 							HashMapBuilder.<String, Object>put(
 								"com.liferay.portlet.application-type",

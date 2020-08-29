@@ -60,7 +60,7 @@ const ROW_STYLE_IDENTIFIERS = {
 };
 
 export const RowStylesPanel = ({item}) => {
-	const {availableViewportSizes} = config;
+	const {availableViewportSizes, commonStyles} = config;
 	const dispatch = useDispatch();
 	const segmentsExperienceId = useSelector(selectSegmentsExperienceId);
 	const selectedViewportSize = useSelector(
@@ -69,8 +69,6 @@ export const RowStylesPanel = ({item}) => {
 	const setUpdatedLayoutData = useSetUpdatedLayoutDataContext();
 	const setCustomRow = useSetCustomRowContext();
 	const customRow = useCustomRowContext();
-
-	const {commonStyles} = config;
 
 	const onCustomStylesValueSelect = (identifier, value) => {
 		setCustomRow(false);

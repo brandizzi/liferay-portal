@@ -24,14 +24,12 @@ definition {
 		}
 	}
 
-	// Quarantine it until LPS-119174 resolved
-
 	@description = "This is use case for LPS-107776. Can add collection items in a collection page based on dynamic collection with all types."
 	@priority = "5"
 	test AddCollectionItemsInCollectionPageBasedOnDynamicCollection {
 		property osgi.app.includes = "bookmarks";
 		property osgi.app.includes = "document-library-google-docs";
-		property portal.acceptance = "quarantine";
+		property portal.acceptance = "true";
 
 		task ("Add a dynamic collection with All Types") {
 			JSONAssetlist.addDynamicAssetListEntryWithItemType(
@@ -150,18 +148,16 @@ definition {
 		}
 	}
 
-	// Quarantine it until LPS-119174 resolved
-
 	@description = "This is a test for LPS-107775. Can add new collections when add a collection page from pages admin."
 	@priority = "5"
 	test AddcollectionViaAddingCollectionPage {
-		property portal.acceptance = "quarantine";
+		property portal.acceptance = "true";
 
 		SitePages.openPagesAdmin(siteURLKey = "test-site-name");
 
 		ContentPages.addPublicCollectionPage(
 			collectionName = "Manual Collection Name",
-			menuItem = "Manual Selection",
+			menuItem = "Manual Collection",
 			pageName = "Manual Collection Page Name",
 			selectedAsset = "All Types",
 			tabName = "Collections");
@@ -170,7 +166,7 @@ definition {
 
 		ContentPages.addPublicCollectionPage(
 			collectionName = "Dynamic Collection Name",
-			menuItem = "Dynamic Selection",
+			menuItem = "Dynamic Collection",
 			pageName = "Dynamic Collection Page Name",
 			selectedAsset = "All Types",
 			tabName = "Collections");
@@ -351,12 +347,10 @@ definition {
 		SitePages.viewCheckboxChecked(pageName = "Test Content Page");
 	}
 
-	// Quarantine it until LPS-119174 resolved
-
 	@description = "This is a test for LPS-110183. Can access to display page in Collection Items modal when the collection item has associated display page template."
 	@priority = "5"
 	test GoToCollectionItemDisplayPage {
-		property portal.acceptance = "quarantine";
+		property portal.acceptance = "true";
 
 		JSONLayoutpagetemplate.addDisplayPageTemplateEntry(
 			contentType = "Web Content Article",
@@ -444,11 +438,13 @@ definition {
 		PagesFinder.goToFindAPage();
 
 		for (var i : list "1,2,3") {
+			WaitForLiferayEvent.initializeLiferayEventLog();
+
 			PagesFinder.gotoPageEllipsisItem(
 				item = "View Collection Items",
 				pageName = "Content Collection Page Name");
 
-			SelectFrame.selectFrameNoLoading(locator1 = "IFrame#MODAL_BODY");
+			SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 			Page.gotoCollectionEntryEllipsisItem(
 				item = "View Display Page",
@@ -548,11 +544,13 @@ definition {
 
 		PagesFinder.goToFindAPage();
 
+		WaitForLiferayEvent.initializeLiferayEventLog();
+
 		PagesFinder.gotoPageEllipsisItem(
 			item = "View Collection Items",
 			pageName = "Content Collection Page Name");
 
-		SelectFrame.selectFrameNoLoading(locator1 = "IFrame#MODAL_BODY");
+		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		Page.gotoCollectionEntryEllipsisItem(
 			item = "Edit Content",
@@ -562,11 +560,13 @@ definition {
 
 		Click(locator1 = "Icon#ANGLE_LEFT_BACK");
 
+		WaitForLiferayEvent.initializeLiferayEventLog();
+
 		PagesFinder.gotoPageEllipsisItem(
 			item = "View Collection Items",
 			pageName = "Content Collection Page Name");
 
-		SelectFrame.selectFrameNoLoading(locator1 = "IFrame#MODAL_BODY");
+		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		Page.gotoCollectionEntryEllipsisItem(
 			item = "Edit Content",
@@ -579,11 +579,13 @@ definition {
 
 		Click(locator1 = "Icon#ANGLE_LEFT_BACK");
 
+		WaitForLiferayEvent.initializeLiferayEventLog();
+
 		PagesFinder.gotoPageEllipsisItem(
 			item = "View Collection Items",
 			pageName = "Content Collection Page Name");
 
-		SelectFrame.selectFrameNoLoading(locator1 = "IFrame#MODAL_BODY");
+		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		Page.gotoCollectionEntryEllipsisItem(
 			item = "Edit Content",
@@ -1095,12 +1097,10 @@ definition {
 		AssertVisible(locator1 = "Icon#EDIT_PENCIL");
 	}
 
-	// Quarantine it until LPS-119174 resolved
-
 	@description = "This is a test for LPS-110183. Can view information about collection items of collection page."
 	@priority = "5"
 	test ViewCollectionItemViaPageFinderAndPageAdmin {
-		property portal.acceptance = "quarantine";
+		property portal.acceptance = "true";
 		property osgi.app.includes = "bookmarks";
 		property osgi.app.includes = "document-library-google-docs";
 
@@ -1138,11 +1138,13 @@ definition {
 
 		PagesFinder.viewPageNameInPagesFinder(pageName = "Content Collection Page Name");
 
+		WaitForLiferayEvent.initializeLiferayEventLog();
+
 		PagesFinder.gotoPageEllipsisItem(
 			item = "View Collection Items",
 			pageName = "Content Collection Page Name");
 
-		SelectFrame.selectFrameNoLoading(locator1 = "IFrame#MODAL_BODY");
+		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		for (var tableHeader : list "Title,Type,Author,Modified Date,Create Date") {
 			AssertElementPresent(

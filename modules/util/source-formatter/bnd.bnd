@@ -1,6 +1,6 @@
 Bundle-Name: Liferay Source Formatter
 Bundle-SymbolicName: com.liferay.source.formatter
-Bundle-Version: 1.0.1037
+Bundle-Version: 1.0.1042
 Import-Package:\
 	!javax.portlet,\
 	\
@@ -49,6 +49,7 @@ Main-Class: com.liferay.source.formatter.SourceFormatter
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/exception/NestableRuntimeException.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/exception/PortalException.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/exception/SystemException.class,\
+	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/io/BigEndianCodec.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/io/unsync/UnsyncBufferedReader.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/io/unsync/UnsyncByteArrayInputStream.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/io/unsync/UnsyncByteArrayOutputStream.class,\
@@ -68,6 +69,7 @@ Main-Class: com.liferay.source.formatter.SourceFormatter
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/search/Field.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/search/highlight/HighlightUtil.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/security/RandomUtil.class,\
+	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/security/SecureRandomUtil.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/security/xml/SecureXMLFactoryProvider.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/security/xml/SecureXMLFactoryProviderUtil.class,\
 	@com.liferay.portal.kernel-*.jar!/com/liferay/portal/kernel/util/*,\

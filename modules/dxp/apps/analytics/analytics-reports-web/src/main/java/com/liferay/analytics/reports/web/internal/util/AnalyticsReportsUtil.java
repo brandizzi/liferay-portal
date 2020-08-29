@@ -20,7 +20,7 @@ import com.liferay.analytics.reports.web.internal.constants.AnalyticsReportsPort
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRenderer;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
-import com.liferay.info.display.contributor.InfoDisplayObjectProvider;
+import com.liferay.layout.display.page.LayoutDisplayPageObjectProvider;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Layout;
@@ -56,7 +56,7 @@ public class AnalyticsReportsUtil {
 		"https://www.liferay.com/products/analytics-cloud/get-started";
 
 	public static String getAnalyticsReportsPanelURL(
-			long classNameId, long classPK,
+			long classNameId, long classPK, long groupId,
 			HttpServletRequest httpServletRequest, Portal portal,
 			PortletURLFactory portletURLFactory)
 		throws WindowStateException {
@@ -70,6 +70,7 @@ public class AnalyticsReportsUtil {
 			"redirect", portal.getCurrentCompleteURL(httpServletRequest));
 		portletURL.setParameter("classNameId", String.valueOf(classNameId));
 		portletURL.setParameter("classPK", String.valueOf(classPK));
+		portletURL.setParameter("groupId", String.valueOf(groupId));
 		portletURL.setWindowState(LiferayWindowState.EXCLUSIVE);
 
 		return portletURL.toString();
@@ -134,23 +135,24 @@ public class AnalyticsReportsUtil {
 	public static boolean isShowAnalyticsReportsPanel(
 			AnalyticsReportsInfoItemTracker analyticsReportsInfoItemTracker,
 			long companyId, HttpServletRequest httpServletRequest,
-			InfoDisplayObjectProvider<?> infoDisplayObjectProvider,
-			Layout layout, PermissionChecker permissionChecker, Portal portal)
+			Layout layout,
+			LayoutDisplayPageObjectProvider<?> layoutDisplayPageObjectProvider,
+			PermissionChecker permissionChecker, Portal portal)
 		throws PortalException {
 
 		if (!layout.isTypeAssetDisplay()) {
 			return false;
 		}
 
-		if ((infoDisplayObjectProvider == null) ||
-			(infoDisplayObjectProvider.getDisplayObject() == null)) {
+		if ((layoutDisplayPageObjectProvider == null) ||
+			(layoutDisplayPageObjectProvider.getDisplayObject() == null)) {
 
 			return false;
 		}
 
 		if (!_hasAnalyticsReportsInfoItem(
-				analyticsReportsInfoItemTracker, infoDisplayObjectProvider,
-				portal)) {
+				analyticsReportsInfoItemTracker,
+				layoutDisplayPageObjectProvider, portal)) {
 
 			return false;
 		}
@@ -179,8 +181,8 @@ public class AnalyticsReportsUtil {
 		}
 
 		if (!_hasEditPermission(
-				infoDisplayObjectProvider.getClassNameId(),
-				infoDisplayObjectProvider.getClassPK(), layout,
+				layoutDisplayPageObjectProvider.getClassNameId(),
+				layoutDisplayPageObjectProvider.getClassPK(), layout,
 				permissionChecker)) {
 
 			return false;
@@ -191,12 +193,13 @@ public class AnalyticsReportsUtil {
 
 	private static boolean _hasAnalyticsReportsInfoItem(
 		AnalyticsReportsInfoItemTracker analyticsReportsInfoItemTracker,
-		InfoDisplayObjectProvider<?> infoDisplayObjectProvider, Portal portal) {
+		LayoutDisplayPageObjectProvider<?> layoutDisplayPageObjectProvider,
+		Portal portal) {
 
 		AnalyticsReportsInfoItem<?> analyticsReportsInfoItem =
 			analyticsReportsInfoItemTracker.getAnalyticsReportsInfoItem(
 				portal.getClassName(
-					infoDisplayObjectProvider.getClassNameId()));
+					layoutDisplayPageObjectProvider.getClassNameId()));
 
 		if (analyticsReportsInfoItem == null) {
 			return false;

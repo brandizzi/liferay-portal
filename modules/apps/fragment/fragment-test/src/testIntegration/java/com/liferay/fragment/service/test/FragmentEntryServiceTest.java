@@ -80,6 +80,9 @@ public class FragmentEntryServiceTest {
 
 		_fragmentCollection = FragmentTestUtil.addFragmentCollection(
 			_group.getGroupId());
+
+		_updatedFragmentCollection = FragmentTestUtil.addFragmentCollection(
+			_group.getGroupId());
 	}
 
 	@Test
@@ -1224,6 +1227,39 @@ public class FragmentEntryServiceTest {
 	}
 
 	@Test
+	public void testUpdateFragmentCollectionId() throws Exception {
+		FragmentEntry fragmentEntry = FragmentEntryTestUtil.addFragmentEntry(
+			_fragmentCollection.getFragmentCollectionId());
+
+		_fragmentEntryService.updateFragmentEntry(
+			fragmentEntry.getFragmentEntryId(),
+			_updatedFragmentCollection.getFragmentCollectionId(),
+			"Fragment Entry Updated", "div {\ncolor: red;\n}",
+			"<div>Updated</div>", "alert(\"test\");", false,
+			"{\n\t\"fieldSets\": [\n\t]\n}", 1,
+			WorkflowConstants.STATUS_APPROVED);
+
+		FragmentEntry persistedFragmentEntry =
+			_fragmentEntryPersistence.fetchByPrimaryKey(
+				fragmentEntry.getFragmentEntryId());
+
+		Assert.assertEquals(
+			persistedFragmentEntry.getFragmentCollectionId(),
+			_updatedFragmentCollection.getFragmentCollectionId());
+		Assert.assertEquals(
+			"Fragment Entry Updated", persistedFragmentEntry.getName());
+		Assert.assertEquals(
+			"div {\ncolor: red;\n}", persistedFragmentEntry.getCss());
+		Assert.assertEquals(
+			"<div>Updated</div>", persistedFragmentEntry.getHtml());
+		Assert.assertEquals("alert(\"test\");", persistedFragmentEntry.getJs());
+		Assert.assertEquals(1, persistedFragmentEntry.getPreviewFileEntryId());
+		Assert.assertEquals(
+			WorkflowConstants.STATUS_APPROVED,
+			persistedFragmentEntry.getStatus());
+	}
+
+	@Test
 	public void testUpdateFragmentEntryName() throws Exception {
 		FragmentEntry fragmentEntry = FragmentEntryTestUtil.addFragmentEntry(
 			_fragmentCollection.getFragmentCollectionId(),
@@ -1371,5 +1407,7 @@ public class FragmentEntryServiceTest {
 
 	@DeleteAfterTestRun
 	private Group _group;
+
+	private FragmentCollection _updatedFragmentCollection;
 
 }

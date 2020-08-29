@@ -7,13 +7,13 @@ definition {
 			Click.waitForMenuToggleJSClick(locator1 = "Dropdown#EMPTY_MESSAGE_DROPDOWN");
 
 			Click(
-				key_menuItem = "Dynamic Selection",
+				key_menuItem = "Dynamic Collection",
 				locator1 = "MenuItem#DROPDOWN_MENU_ITEM");
 		}
 
 		else {
 
-			LexiconEntry.gotoAddMenuItem(menuItem = "Dynamic Selection");
+			LexiconEntry.gotoAddMenuItem(menuItem = "Dynamic Collection");
 
 		}
 
@@ -67,13 +67,13 @@ definition {
 			Click.waitForMenuToggleJSClick(locator1 = "Dropdown#EMPTY_MESSAGE_DROPDOWN");
 
 			Click(
-				key_menuItem = "Manual Selection",
+				key_menuItem = "Manual Collection",
 				locator1 = "MenuItem#DROPDOWN_MENU_ITEM");
 		}
 
 		else {
 
-			LexiconEntry.gotoAddMenuItem(menuItem = "Manual Selection");
+			LexiconEntry.gotoAddMenuItem(menuItem = "Manual Collection");
 
 		}
 
@@ -127,7 +127,21 @@ definition {
 			locator1 = "APConfiguration#FILTER_CATEGORIZATION_SELECT",
 			value1 = "Tags");
 
-		AssetCategorization.selectTag(tagNameList = "${tagNameList}");
+		Click(locator1 = "AssetCategorization#TAGS_SELECT_BUTTON");
+
+		SelectFrame(locator1 = "IFrame#MODAL_BODY");
+
+		for (var tagName : list "${tagNameList}") {
+			Check(
+				key_rowEntry = "${tagName}",
+				locator1 = "ContentRow#ENTRY_CONTENT_ENTRY_CHECKBOX");
+		}
+
+		SelectFrameTop();
+
+		AssertClick(
+			locator1 = "Button#DONE",
+			value1 = "Done");
 
 		PortletEntry.save();
 	}

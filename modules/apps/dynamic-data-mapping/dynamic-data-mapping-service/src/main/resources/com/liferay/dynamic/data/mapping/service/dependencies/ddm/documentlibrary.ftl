@@ -7,19 +7,17 @@
 <#assign
 	fieldRawValue = paramUtil.getString(request, "${namespacedFieldName}", fieldRawValue)
 
-	fileEntryTitle = ""
+	message = ""
+	title = ""
 />
 
 <#if validator.isNotNull(fieldRawValue)>
 	<#assign
 		fileJSONObject = getFileJSONObject(fieldRawValue)
 
-		fileEntry = getFileEntry(fileJSONObject)
+		message = fileJSONObject.getString("message")
+		title = fileJSONObject.getString("title")
 	/>
-
-	<#if validator.isNotNull(fileEntry)>
-		<#assign fileEntryTitle = fileEntry.getTitle() />
-	</#if>
 </#if>
 
 <#assign data = data + {
@@ -31,7 +29,7 @@
 	data=data
 	required=required
 >
-	<div class="form-group">
+	<div class="form-group ${(message?has_content)?string('has-warning', '')}">
 		<div class="hide" id="${portletNamespace}${namespacedFieldName}UploadContainer"></div>
 
 		<@liferay_aui.input
@@ -42,7 +40,7 @@
 			readonly="readonly"
 			required=required
 			type="text"
-			value=(fileEntryTitle?has_content)?string(fileEntryTitle, '')
+			value=title
 		/>
 
 		<@liferay_aui.input
@@ -50,6 +48,10 @@
 			type="hidden"
 			value=fieldRawValue
 		/>
+
+		<#if validator.isNotNull(message)>
+			<div class="form-feedback-item" id="${portletNamespace}${namespacedFieldName}Message">${message}</div>
+		</#if>
 
 		<div class="button-holder">
 			<@liferay_aui.button

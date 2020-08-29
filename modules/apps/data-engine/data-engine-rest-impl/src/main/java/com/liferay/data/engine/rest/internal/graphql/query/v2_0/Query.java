@@ -928,6 +928,7 @@ public class Query {
 
 		public DataDefinitionPage(Page dataDefinitionPage) {
 			actions = dataDefinitionPage.getActions();
+
 			items = dataDefinitionPage.getItems();
 			lastPage = dataDefinitionPage.getLastPage();
 			page = dataDefinitionPage.getPage();
@@ -960,6 +961,7 @@ public class Query {
 
 		public DataDefinitionFieldLinkPage(Page dataDefinitionFieldLinkPage) {
 			actions = dataDefinitionFieldLinkPage.getActions();
+
 			items = dataDefinitionFieldLinkPage.getItems();
 			lastPage = dataDefinitionFieldLinkPage.getLastPage();
 			page = dataDefinitionFieldLinkPage.getPage();
@@ -992,6 +994,7 @@ public class Query {
 
 		public DataLayoutPage(Page dataLayoutPage) {
 			actions = dataLayoutPage.getActions();
+
 			items = dataLayoutPage.getItems();
 			lastPage = dataLayoutPage.getLastPage();
 			page = dataLayoutPage.getPage();
@@ -1024,6 +1027,7 @@ public class Query {
 
 		public DataListViewPage(Page dataListViewPage) {
 			actions = dataListViewPage.getActions();
+
 			items = dataListViewPage.getItems();
 			lastPage = dataListViewPage.getLastPage();
 			page = dataListViewPage.getPage();
@@ -1056,6 +1060,7 @@ public class Query {
 
 		public DataRecordPage(Page dataRecordPage) {
 			actions = dataRecordPage.getActions();
+
 			items = dataRecordPage.getItems();
 			lastPage = dataRecordPage.getLastPage();
 			page = dataRecordPage.getPage();
@@ -1088,6 +1093,7 @@ public class Query {
 
 		public DataRecordCollectionPage(Page dataRecordCollectionPage) {
 			actions = dataRecordCollectionPage.getActions();
+
 			items = dataRecordCollectionPage.getItems();
 			lastPage = dataRecordCollectionPage.getLastPage();
 			page = dataRecordCollectionPage.getPage();

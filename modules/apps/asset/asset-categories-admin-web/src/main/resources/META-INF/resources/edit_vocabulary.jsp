@@ -40,6 +40,7 @@ renderResponse.setTitle((vocabulary == null) ? LanguageUtil.get(request, "add-vo
 <liferay-frontend:edit-form
 	action="<%= editVocabularyURL %>"
 	name="fm"
+	onSubmit='<%= liferayPortletResponse.getNamespace() + "confirmation(event);" %>'
 >
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="vocabularyId" type="hidden" value="<%= vocabularyId %>" />
@@ -62,7 +63,13 @@ renderResponse.setTitle((vocabulary == null) ? LanguageUtil.get(request, "add-vo
 
 				<aui:input helpMessage="multi-valued-help" label="allow-multiple-categories" name="multiValued" type="toggle-switch" value="<%= (vocabulary != null) ? vocabulary.isMultiValued() : true %>" />
 
-				<aui:input helpMessage="for-internal-use-only-help" label="for-internal-use-only" name="internalUse" type="toggle-switch" value="<%= (vocabulary != null) ? (vocabulary.getVisibilityType() == AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL) : false %>" />
+				<label><liferay-ui:message key="visibility" /> <liferay-ui:icon-help message="visibility-help" /></label>
+
+				<div class="form-group" id="<portlet:namespace />visibilityOptions">
+					<aui:input checked="<%= (vocabulary != null) ? (vocabulary.getVisibilityType() == AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC) : true %>" disabled="<%= !(vocabulary == null) %>" id="visibilityTypePublic" label="public" name="visibilityType" type="radio" value="<%= AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC %>" />
+
+					<aui:input checked="<%= (vocabulary != null) ? (vocabulary.getVisibilityType() == AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL) : false %>" disabled="<%= !(vocabulary == null) %>" label="internal" name="visibilityType" type="radio" value="<%= AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL %>" />
+				</div>
 			</liferay-frontend:fieldset>
 
 			<%@ include file="/edit_vocabulary_settings.jspf" %>
@@ -87,3 +94,32 @@ renderResponse.setTitle((vocabulary == null) ? LanguageUtil.get(request, "add-vo
 		<aui:button href="<%= redirect %>" type="cancel" />
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
+
+<aui:script>
+	function <portlet:namespace />confirmation(event) {
+		<c:if test="<%= vocabulary == null %>">
+			var message =
+				'<liferay-ui:message key="are-you-sure-you-want-to-create-this-vocabulary-only-with-internal-visibility" />';
+
+			var visibilityTypePublic = document.getElementById(
+				'<portlet:namespace />visibilityTypePublic'
+			);
+
+			var visibilityTypePublicChecked = visibilityTypePublic.checked;
+
+			if (visibilityTypePublicChecked) {
+				message =
+					'<liferay-ui:message key="are-you-sure-you-want-to-create-this-vocabulary-with-public-visibility" />';
+			}
+
+			if (
+				!confirm(
+					message +
+						' \n\n<liferay-ui:message key="the-action-of-setting-a-vocabulary-either-with-internal-or-public-visibility-cannot-be-reversed" />'
+				)
+			) {
+				event.preventDefault();
+			}
+		</c:if>
+	}
+</aui:script>

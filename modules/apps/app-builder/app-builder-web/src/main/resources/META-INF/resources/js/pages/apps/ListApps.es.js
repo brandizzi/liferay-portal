@@ -72,7 +72,9 @@ export default ({
 }) => {
 	const {scope} = useContext(AppContext);
 	const withBackUrl = useBackUrl();
-	const {defaultLanguageId} = useDataDefinition(dataDefinitionId);
+	const {
+		defaultLanguageId = themeDisplay.getDefaultLanguageId(),
+	} = useDataDefinition(dataDefinitionId);
 	const newAppLink = compile(editPath[0])({dataDefinitionId, objectType});
 
 	const ADD_BUTTON = () => (

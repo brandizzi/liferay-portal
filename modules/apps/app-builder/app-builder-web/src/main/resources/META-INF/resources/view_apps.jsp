@@ -23,6 +23,8 @@
 <div id="<portlet:namespace />-app-builder-root">
 	<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" var="baseResourceURL" />
 
+	<liferay-portlet:renderURL portletName="<%= AppBuilderPortletKeys.OBJECTS %>" var="objectsPortletURL" />
+
 	<react:component
 		module="js/pages/apps/index.es"
 		props='<%=
@@ -36,6 +38,8 @@
 				"defaultDelta", PropsValues.SEARCH_CONTAINER_PAGE_DEFAULT_DELTA
 			).put(
 				"deltaValues", PropsValues.SEARCH_CONTAINER_PAGE_DELTA_VALUES
+			).put(
+				"objectsPortletURL", String.valueOf(objectsPortletURL)
 			).put(
 				"pathFriendlyURLPublic", PortalUtil.getPathFriendlyURLPublic()
 			).put(

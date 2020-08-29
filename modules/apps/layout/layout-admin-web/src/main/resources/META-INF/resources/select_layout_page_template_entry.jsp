@@ -88,7 +88,9 @@ renderResponse.setTitle(LanguageUtil.get(request, "select-template"));
 		<clay:col
 			lg="9"
 		>
-			<clay:sheet>
+			<clay:sheet
+				size="full"
+			>
 				<h2 class="sheet-title">
 					<clay:content-row
 						verticalAlign="center"
@@ -176,7 +178,9 @@ renderResponse.setTitle(LanguageUtil.get(request, "select-template"));
 		'.add-layout-action-option',
 		function (event) {
 			Liferay.Util.openModal({
+				height: '480px',
 				id: '<portlet:namespace />addLayoutDialog',
+				size: 'md',
 				title: '<liferay-ui:message key="add-page" />',
 				url: event.delegateTarget.dataset.addLayoutUrl,
 			});

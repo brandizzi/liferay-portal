@@ -52,10 +52,33 @@ const getDefaultRows = (nestedFields) => {
 	});
 };
 
+const FieldProperties = ({required, tooltip}) => {
+	return (
+		<>
+			{required && (
+				<span className="reference-mark">
+					<ClayIcon symbol="asterisk" />
+				</span>
+			)}
+
+			{tooltip && (
+				<span className="ddm-tooltip">
+					<ClayIcon
+						data-tooltip-align="right"
+						symbol="question-circle-full"
+						title={tooltip}
+					/>
+				</span>
+			)}
+		</>
+	);
+};
+
 function FieldBase({
 	children,
 	displayErrors,
 	errorMessage,
+	id,
 	label,
 	localizedValue = {},
 	name,
@@ -65,14 +88,19 @@ function FieldBase({
 	repeatable,
 	required,
 	showLabel = true,
+	style,
+	text,
 	tip,
 	tooltip,
+	type,
 	valid,
 	visible,
 }) {
 	const {editingLanguageId = themeDisplay.getLanguageId()} = usePage();
+	let fieldDetails = '';
+	const fieldDetailsId = name + '_fieldDetails';
 	const dispatch = useForm();
-
+	const hasError = displayErrors && errorMessage && !valid;
 	const localizedValueArray = useMemo(() => {
 		const languageValues = [];
 
@@ -87,17 +115,57 @@ function FieldBase({
 
 		return languageValues;
 	}, [localizedValue, editingLanguageId, name]);
+
+	let parentDivAriaLabelledby;
+	let parentDivTabIndex;
+	const renderLabel =
+		(label && showLabel) || required || tooltip || repeatable;
+
 	const repeatedIndex = useMemo(() => getRepeatedIndex(name), [name]);
+	const requiredText = Liferay.Language.get('required');
+	const showLegend =
+		type &&
+		(type === 'checkbox_multiple' ||
+			type === 'grid' ||
+			type === 'paragraph' ||
+			type === 'radio');
+
+	if (renderLabel) {
+		fieldDetails += label + '<br>';
+	}
+	else {
+		parentDivTabIndex = 0;
+		parentDivAriaLabelledby = fieldDetailsId;
+	}
+
+	if (tip) {
+		fieldDetails += tip + '<br>';
+	}
+
+	if (text) {
+		fieldDetails +=
+			(typeof text === 'object' ? text.content : text) + '<br>';
+	}
+
+	if (hasError) {
+		fieldDetails += errorMessage;
+	}
+	else if (required) {
+		fieldDetails += requiredText;
+	}
 
 	return (
 		<ClayTooltipProvider>
 			<div
+				aria-labelledby={parentDivAriaLabelledby}
 				className={classNames('form-group', {
-					'has-error': displayErrors && errorMessage && !valid,
+					'has-error': hasError,
 					hide: !visible,
 				})}
 				data-field-name={name}
 				onClick={onClick}
+				style={style}
+				tabIndex={parentDivTabIndex}
 			>
 				{repeatable && (
 					<div className="lfr-ddm-form-field-repeatable-toolbar">
@@ -137,37 +205,49 @@ function FieldBase({
 					</div>
 				)}
 
-				{((label && showLabel) ||
-					required ||
-					tooltip ||
-					repeatable) && (
-					<p
-						className={classNames({
-							'ddm-empty': !showLabel && !required,
-							'ddm-label': showLabel || required,
-						})}
-					>
-						{label && showLabel && label}
+				{renderLabel && (
+					<>
+						{showLegend ? (
+							<fieldset>
+								<legend
+									aria-labelledby={fieldDetailsId}
+									className="lfr-ddm-legend"
+									tabIndex="0"
+								>
+									{label && showLabel && label}
 
-						{required && (
-							<span className="reference-mark">
-								<ClayIcon symbol="asterisk" />
-							</span>
-						)}
+									<FieldProperties
+										required={required}
+										tooltip={tooltip}
+									/>
+								</legend>
+								{children}
+							</fieldset>
+						) : (
+							<>
+								<label
+									aria-labelledby={fieldDetailsId}
+									className={classNames({
+										'ddm-empty': !showLabel && !required,
+										'ddm-label': showLabel || required,
+									})}
+									htmlFor={id ? id : name}
+									tabIndex="0"
+								>
+									{label && showLabel && label}
 
-						{tooltip && (
-							<span className="ddm-tooltip">
-								<ClayIcon
-									data-tooltip-align="right"
-									symbol="question-circle-full"
-									title={tooltip}
-								/>
-							</span>
+									<FieldProperties
+										required={required}
+										tooltip={tooltip}
+									/>
+								</label>
+								{children}
+							</>
 						)}
-					</p>
+					</>
 				)}
 
-				{children}
+				{!renderLabel && children}
 
 				{localizedValueArray.length > 0 &&
 					localizedValueArray.map((language) => (
@@ -179,12 +259,29 @@ function FieldBase({
 						/>
 					))}
 
-				{tip && <span className="form-text">{tip}</span>}
-
-				{displayErrors && errorMessage && !valid && (
-					<span className="form-feedback-group">
-						<div className="form-feedback-item">{errorMessage}</div>
+				{tip && (
+					<span aria-hidden="true" className="form-text">
+						{tip}
 					</span>
+				)}
+
+				{hasError && (
+					<span className="form-feedback-group">
+						<div aria-hidden="true" className="form-feedback-item">
+							{errorMessage}
+						</div>
+					</span>
+				)}
+
+				{fieldDetails && (
+					<span
+						aria-hidden="false"
+						dangerouslySetInnerHTML={{
+							__html: fieldDetails,
+						}}
+						hidden
+						id={fieldDetailsId}
+					/>
 				)}
 
 				{nestedFields && <Layout rows={getDefaultRows(nestedFields)} />}

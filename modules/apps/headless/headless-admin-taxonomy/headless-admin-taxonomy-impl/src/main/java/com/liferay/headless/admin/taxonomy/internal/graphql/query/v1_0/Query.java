@@ -428,6 +428,7 @@ public class Query {
 
 		public KeywordPage(Page keywordPage) {
 			actions = keywordPage.getActions();
+
 			items = keywordPage.getItems();
 			lastPage = keywordPage.getLastPage();
 			page = keywordPage.getPage();
@@ -460,6 +461,7 @@ public class Query {
 
 		public TaxonomyCategoryPage(Page taxonomyCategoryPage) {
 			actions = taxonomyCategoryPage.getActions();
+
 			items = taxonomyCategoryPage.getItems();
 			lastPage = taxonomyCategoryPage.getLastPage();
 			page = taxonomyCategoryPage.getPage();
@@ -492,6 +494,7 @@ public class Query {
 
 		public TaxonomyVocabularyPage(Page taxonomyVocabularyPage) {
 			actions = taxonomyVocabularyPage.getActions();
+
 			items = taxonomyVocabularyPage.getItems();
 			lastPage = taxonomyVocabularyPage.getLastPage();
 			page = taxonomyVocabularyPage.getPage();

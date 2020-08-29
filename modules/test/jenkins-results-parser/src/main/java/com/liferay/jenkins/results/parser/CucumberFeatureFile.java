@@ -43,27 +43,21 @@ public class CucumberFeatureFile implements Serializable {
 	}
 
 	public String getCategoryName() {
-		StringBuilder sb = new StringBuilder();
+		Matcher matcher = _relativePathPattern.matcher(getRelativePath());
 
-		String relativePath = getRelativePath();
-
-		String relativePathRegex = ".*/features/(.*)/[^/]+";
-
-		if (relativePath.matches(relativePathRegex)) {
-			String folderNames = relativePath.replaceAll(
-				relativePathRegex, "$1");
-
-			for (String folderName : folderNames.split("/")) {
-				sb.append(StringUtils.capitalize(folderName));
-				sb.append("/");
-			}
+		if (!matcher.matches()) {
+			return "";
 		}
 
-		if (sb.length() >= 1) {
-			sb.setLength(sb.length() - 1);
-		}
+		String folderNames = matcher.group(1);
 
-		return sb.toString();
+		folderNames = folderNames.replaceAll("\\.", " ");
+
+		folderNames = StringUtils.capitalize(folderNames);
+
+		folderNames = folderNames.replaceAll("\\s*(.+?)[/\\s]*", "$1");
+
+		return folderNames;
 	}
 
 	public File getFile() {
@@ -103,7 +97,8 @@ public class CucumberFeatureFile implements Serializable {
 						process.getInputStream());
 
 				for (String gitGrepResult : gitGrepResults.split("\n")) {
-					Matcher matcher = _pattern.matcher(gitGrepResult);
+					Matcher matcher = _gitGrepResultsPattern.matcher(
+						gitGrepResult);
 
 					if (!matcher.find()) {
 						continue;
@@ -138,8 +133,10 @@ public class CucumberFeatureFile implements Serializable {
 		return _getFeaturePaths(scenarioName.trim());
 	}
 
-	private static final Pattern _pattern = Pattern.compile(
-		"([^\\.]+\\.feature)\\:.*");
+	private static final Pattern _gitGrepResultsPattern = Pattern.compile(
+		"(.+\\.feature)\\:.*");
+	private static final Pattern _relativePathPattern = Pattern.compile(
+		".*/features/(.*)/[^/]+");
 
 	private final CucumberFeatureResult _cucumberFeatureResult;
 	private final CucumberScenarioResult _cucumberScenarioResult;

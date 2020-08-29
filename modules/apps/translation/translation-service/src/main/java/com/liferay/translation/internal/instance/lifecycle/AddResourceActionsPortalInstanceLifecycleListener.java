@@ -16,13 +16,12 @@ package com.liferay.translation.internal.instance.lifecycle;
 
 import com.liferay.portal.instance.lifecycle.BasePortalInstanceLifecycleListener;
 import com.liferay.portal.instance.lifecycle.PortalInstanceLifecycleListener;
-import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.security.permission.ResourceActions;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-
-import java.util.Locale;
+import com.liferay.portal.util.PropsValues;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -40,21 +39,21 @@ public class AddResourceActionsPortalInstanceLifecycleListener
 			AddResourceActionsPortalInstanceLifecycleListener.class.
 				getClassLoader(),
 			"/com/liferay/translation/internal/instance/lifecycle" +
-				"/dependencies/languages.xml.tpl");
+				"/dependencies/resource-actions.xml.tpl");
 
-		for (Locale availableLocale : _language.getAvailableLocales()) {
+		String[] languageIds = ArrayUtil.sortedUnique(PropsValues.LOCALES);
+
+		for (int i = 0; i < languageIds.length; i++) {
 			_resourceActions.read(
 				null,
 				SAXReaderUtil.read(
 					StringUtil.replace(
-						xml, "[$LANGUAGE$]",
-						_language.getLanguageId(availableLocale))),
+						StringUtil.replace(
+							xml, "[$LANGUAGE_ID$]", languageIds[i]),
+						"[$WEIGHT$]", String.valueOf(i))),
 				null);
 		}
 	}
-
-	@Reference
-	private Language _language;
 
 	@Reference
 	private ResourceActions _resourceActions;

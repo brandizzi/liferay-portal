@@ -22,7 +22,7 @@ import React, {useContext} from 'react';
 import ActionsDropdownRenderer from '../../data_renderers/ActionsDropdownRenderer';
 
 function Email({
-	actionItems,
+	actionDropdownItems,
 	author,
 	borderBottom,
 	dataSetDisplayContext,
@@ -102,9 +102,11 @@ function Email({
 						</div>
 					</div>
 				</div>
-				{actionItems.length ? (
+				{actionDropdownItems.length ? (
 					<div className="col-auto d-flex flex-column justify-content-center">
-						<ActionsDropdownRenderer actions={actionItems} />
+						<ActionsDropdownRenderer
+							actions={actionDropdownItems}
+						/>
 					</div>
 				) : null}
 			</div>
@@ -113,7 +115,7 @@ function Email({
 }
 
 Email.propTypes = {
-	actionItems: PropTypes.array,
+	actionDropdownItems: PropTypes.array,
 	author: PropTypes.shape({
 		avatarSrc: PropTypes.string,
 		email: PropTypes.string.isRequired,

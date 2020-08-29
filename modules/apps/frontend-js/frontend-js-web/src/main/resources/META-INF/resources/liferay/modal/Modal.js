@@ -102,6 +102,95 @@ const openPortletWindow = ({bodyCssClass, portlet, uri, ...otherProps}) => {
 	});
 };
 
+const openSelectionModal = ({
+	buttonAddLabel = Liferay.Language.get('add'),
+	buttonCancelLabel = Liferay.Language.get('cancel'),
+	customSelectEvent = false,
+	id,
+	multiple = false,
+	onSelect,
+	selectEventName,
+	selectedData,
+	title,
+	url,
+	zIndex,
+}) => {
+	let selectedItem;
+
+	const eventHandlers = [];
+	const select = ({processClose}) => {
+		onSelect(selectedItem);
+
+		processClose();
+	};
+
+	openModal({
+		buttons: multiple
+			? [
+					{
+						displayType: 'secondary',
+						label: buttonCancelLabel,
+						type: 'cancel',
+					},
+					{
+						label: buttonAddLabel,
+						onClick: select,
+					},
+			  ]
+			: null,
+		id: id || selectEventName,
+		onClose: () => {
+			eventHandlers.forEach((eventHandler) => {
+				eventHandler.detach();
+			});
+
+			eventHandlers.splice(0, eventHandlers.length);
+		},
+		onOpen: ({container, processClose}) => {
+			const selectEventHandler = Liferay.on(selectEventName, (event) => {
+				selectedItem = event.data || event;
+
+				if (!multiple) {
+					select({processClose});
+				}
+			});
+
+			eventHandlers.push(selectEventHandler);
+
+			const itemElements = container.querySelectorAll('.selector-button');
+
+			if (selectedData) {
+				const selectedDataSet = new Set(selectedData);
+
+				itemElements.forEach((itemElement) => {
+					const itemId =
+						itemElement.dataset.entityid ||
+						itemElement.dataset.entityname;
+
+					if (selectedDataSet.has(itemId)) {
+						itemElement.disabled = true;
+					}
+				});
+			}
+
+			if (!customSelectEvent) {
+				container.addEventListener('click', (event) => {
+					const delegateTarget =
+						event.target &&
+						event.target.closest('.selector-button');
+
+					if (delegateTarget) {
+						Liferay.fire(selectEventName, delegateTarget.dataset);
+					}
+				});
+			}
+		},
+		title,
+		url,
+		zIndex,
+	});
+};
+
 const Modal = ({
 	bodyHTML,
 	buttons,
@@ -113,12 +202,10 @@ const Modal = ({
 	iframeProps = {},
 	onClose,
 	onOpen,
-	onSelect,
-	selectEventName,
-	selectedData,
 	size,
 	title,
 	url,
+	zIndex,
 }) => {
 	const [loading, setLoading] = useState(true);
 	const [visible, setVisible] = useState(true);
@@ -128,25 +215,6 @@ const Modal = ({
 	const {observer} = useModal({
 		onClose: () => processClose(),
 	});
-
-	const disableSelectedItems = ({container}) => {
-		if (!selectedData) {
-			return;
-		}
-
-		const selectedDataSet = new Set(selectedData);
-
-		const itemElements = container.querySelectorAll('.selector-button');
-
-		itemElements.forEach((itemElement) => {
-			const itemId =
-				itemElement.dataset.entityid || itemElement.dataset.entityname;
-
-			if (selectedDataSet.has(itemId)) {
-				itemElement.disabled = true;
-			}
-		});
-	};
 
 	const onButtonClick = ({formId, onClick, type}) => {
 		if (type === 'cancel') {
@@ -181,7 +249,7 @@ const Modal = ({
 		}
 
 		if (onClick) {
-			onClick();
+			onClick({processClose});
 		}
 	};
 
@@ -211,14 +279,12 @@ const Modal = ({
 				.createRange()
 				.createContextualFragment(html);
 
-			disableSelectedItems({container: fragment});
-
 			bodyRef.current.innerHTML = '';
 
 			bodyRef.current.appendChild(fragment);
 
 			if (onOpen) {
-				onOpen();
+				onOpen({container: fragment, processClose});
 			}
 		}, [html]);
 
@@ -227,19 +293,6 @@ const Modal = ({
 
 	useEffect(() => {
 		const eventHandlers = eventHandlersRef.current;
-
-		if (onSelect && selectEventName) {
-			const selectEventHandler = Liferay.on(
-				selectEventName,
-				(selectedItem) => {
-					processClose();
-
-					onSelect(selectedItem);
-				}
-			);
-
-			eventHandlers.push(selectEventHandler);
-		}
 
 		if (customEvents) {
 			customEvents.forEach((customEvent) => {
@@ -277,16 +330,7 @@ const Modal = ({
 
 			eventHandlers.splice(0, eventHandlers.length);
 		};
-	}, [
-		customEvents,
-		eventHandlersRef,
-		id,
-		onClose,
-		onOpen,
-		onSelect,
-		processClose,
-		selectEventName,
-	]);
+	}, [customEvents, eventHandlersRef, id, onClose, onOpen, processClose]);
 
 	return (
 		<>
@@ -296,6 +340,7 @@ const Modal = ({
 					id={id}
 					observer={observer}
 					size={url && !size ? 'full-screen' : size}
+					zIndex={zIndex}
 				>
 					<ClayModal.Header>
 						{headerHTML ? (
@@ -320,7 +365,6 @@ const Modal = ({
 							<>
 								{loading && <ClayLoadingIndicator />}
 								<Iframe
-									disableSelectedItems={disableSelectedItems}
 									iframeBodyCssClass={iframeBodyCssClass}
 									iframeProps={{
 										id: id && `${id}_iframe_`,
@@ -390,17 +434,7 @@ class Iframe extends React.Component {
 
 		iframeURL.searchParams.set(`_${namespace}_bodyCssClass`, bodyCssClass);
 
-		this.state = {loading: true, src: iframeURL.toString()};
-	}
-
-	componentDidUpdate(prevProps, prevState) {
-		if (!this.state.loading && prevState.loading) {
-			Liferay.fire('modalIframeLoaded', {src: this.state.src});
-
-			if (this.props.onOpen) {
-				this.props.onOpen();
-			}
-		}
+		this.state = {src: iframeURL.toString()};
 	}
 
 	componentWillUnmount() {
@@ -436,28 +470,26 @@ class Iframe extends React.Component {
 			);
 		}
 
-		this.props.disableSelectedItems({
-			container: iframeWindow.document.body,
-		});
-
 		this.props.updateLoading(false);
-
-		this.setState({loading: false});
 
 		iframeWindow.onunload = () => {
 			this.props.updateLoading(true);
-
-			this.setState({loading: true});
 		};
+
+		Liferay.fire('modalIframeLoaded', {src: this.state.src});
+
+		if (this.props.onOpen) {
+			this.props.onOpen({
+				container: iframeWindow.document.body,
+				processClose: this.props.processClose,
+			});
+		}
 	};
 
 	render() {
 		return (
 			<iframe
 				{...this.props.iframeProps}
-				className={classNames({
-					hide: this.state.loading,
-				})}
 				onLoad={this.onLoadHandler}
 				ref={this.iframeRef}
 				src={this.state.src}
@@ -496,12 +528,15 @@ Modal.propTypes = {
 	iframeProps: PropTypes.object,
 	onClose: PropTypes.func,
 	onOpen: PropTypes.func,
-	onSelect: PropTypes.func,
-	selectEventName: PropTypes.string,
-	selectedData: PropTypes.array,
-	size: PropTypes.oneOf(['full-screen', 'lg', 'sm']),
+	size: PropTypes.oneOf(['full-screen', 'lg', 'md', 'sm']),
 	title: PropTypes.string,
 	url: PropTypes.string,
 };
 
-export {Modal, openModal, openPortletModal, openPortletWindow};
+export {
+	Modal,
+	openModal,
+	openPortletModal,
+	openPortletWindow,
+	openSelectionModal,
+};

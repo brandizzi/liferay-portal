@@ -15,6 +15,8 @@
 package com.liferay.project.templates;
 
 import aQute.bnd.main.bnd;
+import aQute.bnd.version.Version;
+import aQute.bnd.version.VersionRange;
 
 import com.liferay.maven.executor.MavenExecutor;
 import com.liferay.project.templates.extensions.ProjectTemplatesArgs;
@@ -111,16 +113,23 @@ public interface BaseProjectTemplatesTestCase {
 			"Javac-Encoding"),
 		',');
 
-	public static final String DEPENDENCY_MODULES_EXTENDER_API =
-		"compileOnly group: \"com.liferay\", name: " +
-			"\"com.liferay.frontend.js.loader.modules.extender.api\"";
+	public static final String DEPENDENCY_JAVAX_PORTLET_API =
+		"compileOnly group: \"javax.portlet\", name: \"portlet-api\"";
 
-	public static final String DEPENDENCY_OSGI_CORE =
-		"compileOnly group: \"org.osgi\", name: \"org.osgi.core\"";
+	public static final String DEPENDENCY_JAVAX_SERVLET_API =
+		"compileOnly group: \"javax.servlet\", name: \"javax.servlet-api\"";
+
+	public static final String DEPENDENCY_ORG_OSGI_ANNOTATIONS =
+		"compileOnly group: \"org.osgi\", name: " +
+			"\"org.osgi.service.component.annotations\"";
 
 	public static final String DEPENDENCY_PORTAL_KERNEL =
 		"compileOnly group: \"com.liferay.portal\", name: " +
 			"\"com.liferay.portal.kernel\"";
+
+	public static final String DEPENDENCY_RELEASE_PORTAL_API =
+		"compileOnly group: \"com.liferay.portal\", name: " +
+			"\"release.portal.api\"";
 
 	public static final String FREEMARKER_PORTLET_VIEW_FTL_PREFIX =
 		"<#include \"init.ftl\">";
@@ -1072,6 +1081,16 @@ public interface BaseProjectTemplatesTestCase {
 			gradleWorkspaceModulesDir, template, name, "--liferay-version",
 			liferayVersion);
 
+		Version version = Version.parseVersion(liferayVersion);
+
+		VersionRange versionRange = new VersionRange("[7.0,7.3)");
+
+		if (versionRange.includes(version)) {
+			testContains(
+				gradleProjectDir, "build.gradle", DEPENDENCY_JAVAX_PORTLET_API,
+				DEPENDENCY_JAVAX_SERVLET_API, DEPENDENCY_ORG_OSGI_ANNOTATIONS);
+		}
+
 		testContains(
 			gradleProjectDir, "package.json",
 			"build/resources/main/META-INF/resources",
@@ -1178,7 +1197,7 @@ public interface BaseProjectTemplatesTestCase {
 		}
 
 		testContains(
-			gradleProjectDir, "build.gradle", DEPENDENCY_PORTAL_KERNEL);
+			gradleProjectDir, "build.gradle", DEPENDENCY_RELEASE_PORTAL_API);
 
 		testNotContains(gradleProjectDir, "build.gradle", "version: \"[0-9].*");
 

@@ -21,8 +21,9 @@ import {
 } from '../../prop-types/index';
 import selectCanUpdatePageStructure from '../selectors/selectCanUpdatePageStructure';
 import {useSelector} from '../store/index';
+import {TARGET_POSITION} from '../utils/dragAndDrop/constants/targetPosition';
+import {useDropTarget} from '../utils/dragAndDrop/useDragAndDrop';
 import getLayoutDataItemLabel from '../utils/getLayoutDataItemLabel';
-import {TARGET_POSITION, useDropTarget} from '../utils/useDragAndDrop';
 
 export default function ({children, ...props}) {
 	const canUpdatePageStructure = useSelector(selectCanUpdatePageStructure);
@@ -34,7 +35,7 @@ export default function ({children, ...props}) {
 	);
 }
 
-function TopperEmpty({children, item, layoutData}) {
+function TopperEmpty({children, item}) {
 	const containerRef = useRef(null);
 	const fragmentEntryLinks = useSelector((state) => state.fragmentEntryLinks);
 
@@ -44,7 +45,7 @@ function TopperEmpty({children, item, layoutData}) {
 		sourceItem,
 		targetPosition,
 		targetRef,
-	} = useDropTarget(item, layoutData);
+	} = useDropTarget(item);
 
 	const isFragment = children.type === React.Fragment;
 	const realChildren = isFragment ? children.props.children : children;

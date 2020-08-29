@@ -1108,6 +1108,7 @@ public class Query {
 
 		public EmailAddressPage(Page emailAddressPage) {
 			actions = emailAddressPage.getActions();
+
 			items = emailAddressPage.getItems();
 			lastPage = emailAddressPage.getLastPage();
 			page = emailAddressPage.getPage();
@@ -1140,6 +1141,7 @@ public class Query {
 
 		public OrganizationPage(Page organizationPage) {
 			actions = organizationPage.getActions();
+
 			items = organizationPage.getItems();
 			lastPage = organizationPage.getLastPage();
 			page = organizationPage.getPage();
@@ -1172,6 +1174,7 @@ public class Query {
 
 		public PhonePage(Page phonePage) {
 			actions = phonePage.getActions();
+
 			items = phonePage.getItems();
 			lastPage = phonePage.getLastPage();
 			page = phonePage.getPage();
@@ -1204,6 +1207,7 @@ public class Query {
 
 		public PostalAddressPage(Page postalAddressPage) {
 			actions = postalAddressPage.getActions();
+
 			items = postalAddressPage.getItems();
 			lastPage = postalAddressPage.getLastPage();
 			page = postalAddressPage.getPage();
@@ -1236,6 +1240,7 @@ public class Query {
 
 		public RolePage(Page rolePage) {
 			actions = rolePage.getActions();
+
 			items = rolePage.getItems();
 			lastPage = rolePage.getLastPage();
 			page = rolePage.getPage();
@@ -1268,6 +1273,7 @@ public class Query {
 
 		public SegmentPage(Page segmentPage) {
 			actions = segmentPage.getActions();
+
 			items = segmentPage.getItems();
 			lastPage = segmentPage.getLastPage();
 			page = segmentPage.getPage();
@@ -1300,6 +1306,7 @@ public class Query {
 
 		public SegmentUserPage(Page segmentUserPage) {
 			actions = segmentUserPage.getActions();
+
 			items = segmentUserPage.getItems();
 			lastPage = segmentUserPage.getLastPage();
 			page = segmentUserPage.getPage();
@@ -1332,6 +1339,7 @@ public class Query {
 
 		public SitePage(Page sitePage) {
 			actions = sitePage.getActions();
+
 			items = sitePage.getItems();
 			lastPage = sitePage.getLastPage();
 			page = sitePage.getPage();
@@ -1364,6 +1372,7 @@ public class Query {
 
 		public SubscriptionPage(Page subscriptionPage) {
 			actions = subscriptionPage.getActions();
+
 			items = subscriptionPage.getItems();
 			lastPage = subscriptionPage.getLastPage();
 			page = subscriptionPage.getPage();
@@ -1396,6 +1405,7 @@ public class Query {
 
 		public UserAccountPage(Page userAccountPage) {
 			actions = userAccountPage.getActions();
+
 			items = userAccountPage.getItems();
 			lastPage = userAccountPage.getLastPage();
 			page = userAccountPage.getPage();
@@ -1428,6 +1438,7 @@ public class Query {
 
 		public WebUrlPage(Page webUrlPage) {
 			actions = webUrlPage.getActions();
+
 			items = webUrlPage.getItems();
 			lastPage = webUrlPage.getLastPage();
 			page = webUrlPage.getPage();

@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.site.util.GroupURLProvider;
 
@@ -110,7 +111,22 @@ public class DepotBreadcrumbEntryContributorImpl
 					portletDisplay.getPortletName())) {
 
 				breadcrumbEntries.add(
-					_getHomeBreadcrumbEntry(scopeGroup, httpServletRequest));
+					_getPortletBreadcrumbEntry(
+						httpServletRequest, scopeGroup,
+						_getTitle(
+							httpServletRequest, themeDisplay.getLanguageId(),
+							portletDisplay)));
+			}
+			else if (!originalBreadcrumbEntries.isEmpty()) {
+				BreadcrumbEntry breadcrumbEntry = originalBreadcrumbEntries.get(
+					0);
+
+				String title = _language.get(httpServletRequest, "home");
+
+				if (Objects.equals(breadcrumbEntry.getTitle(), title)) {
+					breadcrumbEntry.setTitle(
+						portletDisplay.getPortletDisplayName());
+				}
 			}
 		}
 		catch (PortalException portalException) {
@@ -166,12 +182,12 @@ public class DepotBreadcrumbEntryContributorImpl
 		return _depotEntryService.getDepotEntry(depotEntryId);
 	}
 
-	private BreadcrumbEntry _getHomeBreadcrumbEntry(
-		Group scopeGroup, HttpServletRequest httpServletRequest) {
+	private BreadcrumbEntry _getPortletBreadcrumbEntry(
+		HttpServletRequest httpServletRequest, Group scopeGroup, String title) {
 
 		BreadcrumbEntry breadcrumbEntry = new BreadcrumbEntry();
 
-		breadcrumbEntry.setTitle(_language.get(httpServletRequest, "home"));
+		breadcrumbEntry.setTitle(_language.get(httpServletRequest, title));
 		breadcrumbEntry.setURL(
 			_groupURLProvider.getGroupURL(
 				scopeGroup,
@@ -179,6 +195,27 @@ public class DepotBreadcrumbEntryContributorImpl
 					JavaConstants.JAVAX_PORTLET_REQUEST)));
 
 		return breadcrumbEntry;
+	}
+
+	private String _getTitle(
+		HttpServletRequest httpServletRequest, String languageId,
+		PortletDisplay portletDisplay) {
+
+		String title = portletDisplay.getPortletDisplayName();
+
+		if (Validator.isNotNull(title)) {
+			return title;
+		}
+
+		if (Validator.isNotNull(portletDisplay.getId())) {
+			title = _portal.getPortletTitle(portletDisplay.getId(), languageId);
+
+			if (Validator.isNotNull(title)) {
+				return title;
+			}
+		}
+
+		return _language.get(httpServletRequest, "home");
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
