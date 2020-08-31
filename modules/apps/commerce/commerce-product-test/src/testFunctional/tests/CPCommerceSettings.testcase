@@ -1,20 +1,12 @@
 @component-name = "portal-commerce"
+@ignore = "true"
 definition {
 
-	property osgi.app.includes = "commerce";
 	property portal.release = "true";
 	property portal.upstream = "true";
 	property testray.main.component.name = "Commerce";
 
 	setUp {
-		Portlet.shutdownServer();
-
-		AntCommand(
-			locator1 = "build-test.xml",
-			value1 = "deploy-commerce-license-li");
-
-		Portlet.startServer(deleteLiferayHome = "false");
-
 		TestCase.setUpPortalInstance();
 
 		User.firstLoginPG();
@@ -36,7 +28,7 @@ definition {
 		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "CPCommerceSettings#CreateNewAvailabilityEstimate";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Settings");
@@ -57,7 +49,7 @@ definition {
 		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "CPCommerceSettings#CreateNewCountry";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Settings");
@@ -90,7 +82,7 @@ definition {
 		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "CPCommerceSettings#CreateNewMeasurementUnits";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Settings");
@@ -126,7 +118,7 @@ definition {
 			criterionEntryName = "Commerce User",
 			entryName = "Account groups");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Site Administration",
 			portlet = "Settings");

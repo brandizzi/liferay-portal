@@ -1,32 +1,15 @@
 @component-name = "portal-commerce"
+@ignore = "true"
 definition {
 
-	property osgi.app.includes = "commerce";
 	property portal.release = "true";
 	property portal.upstream = "true";
 	property testray.main.component.name = "Commerce";
 
 	setUp {
-		Portlet.shutdownServer();
-
-		AntCommand(
-			locator1 = "build-test.xml",
-			value1 = "deploy-commerce-license-li");
-
-		Portlet.startServer(deleteLiferayHome = "false");
-
 		TestCase.setUpPortalInstance();
 
 		User.firstLoginPG();
-
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
-			panel = "Control Panel",
-			portlet = "Search");
-
-		SearchAdministration.executeSearchActions(actionsDescription = "Reindex all search indexes.");
-
-		Pause(locator1 = "5000");
 	}
 
 	tearDown {
@@ -42,7 +25,7 @@ definition {
 
 			CommerceConfiguration.commerceInitializersTearDown();
 
-			ProductMenu.gotoPortlet(
+			ApplicationsMenu.gotoPortlet(
 				category = "Commerce",
 				panel = "Control Panel",
 				portlet = "Products");
@@ -67,7 +50,7 @@ definition {
 		property environment.acceptance = "true";
 		property portal.acceptance = "true";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Products");
@@ -82,7 +65,7 @@ definition {
 			specificationDescription = "Specification-1 Description",
 			specificationTitle = "specification-1");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Products");
@@ -105,7 +88,7 @@ definition {
 		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "CommerceSmoke#PublishSimpleProduct";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Products");
@@ -114,7 +97,7 @@ definition {
 			productName = "Simple T-Shirt",
 			productType = "Simple");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Products");

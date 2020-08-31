@@ -27,11 +27,9 @@ import com.liferay.portal.kernel.dao.jdbc.DataAccess;
 import com.liferay.portal.kernel.dependency.manager.DependencyManagerSyncUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.model.ReleaseConstants;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.service.ClassNameLocalServiceUtil;
-import com.liferay.portal.kernel.service.ReleaseLocalServiceUtil;
 import com.liferay.portal.kernel.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ReleaseInfo;
@@ -49,7 +47,6 @@ import com.liferay.portal.verify.VerifyProperties;
 import com.liferay.portal.verify.VerifyResourcePermissions;
 import com.liferay.registry.Registry;
 import com.liferay.registry.RegistryUtil;
-import com.liferay.registry.ServiceRegistrar;
 import com.liferay.util.dao.orm.CustomSQLUtil;
 
 import java.sql.Connection;
@@ -249,26 +246,6 @@ public class DBUpgrader {
 			).build());
 	}
 
-	private static void _registerReleaseService() {
-		Registry registry = RegistryUtil.getRegistry();
-
-		ServiceRegistrar<Release> serviceRegistrar =
-			registry.getServiceRegistrar(Release.class);
-
-		Release release = ReleaseLocalServiceUtil.fetchRelease(
-			ReleaseConstants.DEFAULT_SERVLET_CONTEXT_NAME);
-
-		serviceRegistrar.registerService(
-			Release.class, release,
-			HashMapBuilder.<String, Object>put(
-				"build.date", release.getBuildDate()
-			).put(
-				"build.number", release.getBuildNumber()
-			).put(
-				"servlet.context.name", release.getServletContextName()
-			).build());
-	}
-
 	private static void _updateCompanyKey() throws Exception {
 		DB db = DBManagerUtil.getDB();
 
@@ -324,18 +301,21 @@ public class DBUpgrader {
 	}
 
 	private static void _upgradePortal() throws Exception {
-
-		// Check required build number
-
 		checkRequiredBuildNumber(ReleaseInfo.RELEASE_6_2_0_BUILD_NUMBER);
 
+		checkReleaseState();
+
+		int buildNumber = _getReleaseColumnValue("buildNumber");
+
 		try (Connection connection = DataAccess.getConnection()) {
-			if (PortalUpgradeProcess.isInLatestSchemaVersion(connection)) {
+			if (PortalUpgradeProcess.isInLatestSchemaVersion(connection) &&
+				(buildNumber == ReleaseInfo.getParentBuildNumber())) {
+
+				_checkClassNamesAndResourceActions();
+
 				return;
 			}
 		}
-
-		// Disable database caching before upgrade
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Disable cache registry");
@@ -343,15 +323,9 @@ public class DBUpgrader {
 
 		CacheRegistryUtil.setActive(false);
 
-		// Upgrade
-
-		int buildNumber = _getReleaseColumnValue("buildNumber");
-
 		if (_log.isDebugEnabled()) {
 			_log.debug("Update build " + buildNumber);
 		}
-
-		checkReleaseState();
 
 		if (PropsValues.UPGRADE_DATABASE_TRANSACTIONS_DISABLED) {
 			TransactionsUtil.disableTransactions();
@@ -373,20 +347,12 @@ public class DBUpgrader {
 			}
 		}
 
-		// Update indexes
-
 		StartupHelperUtil.updateIndexes(true);
-
-		// Update release build info
 
 		_updateReleaseBuildInfo();
 
-		// Reload SQL
-
 		CustomSQLUtil.reloadCustomSQL();
 		SQLTransformer.reloadSQLTransformer();
-
-		// Update company key
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Update company key");
@@ -397,13 +363,7 @@ public class DBUpgrader {
 		PortalCacheHelperUtil.clearPortalCaches(
 			PortalCacheManagerNames.MULTI_VM);
 
-		// Enable database caching after upgrade
-
 		CacheRegistryUtil.setActive(true);
-
-		// Register release service
-
-		_registerReleaseService();
 
 		_checkClassNamesAndResourceActions();
 

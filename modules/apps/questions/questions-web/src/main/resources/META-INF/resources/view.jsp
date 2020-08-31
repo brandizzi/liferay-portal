@@ -42,9 +42,9 @@ String questionsRootElementId = liferayPortletResponse.getNamespace() + "-questi
 			).put(
 				"redirectToLogin", questionsConfiguration.enableRedirectToLogin()
 			).put(
-				"rootTopic", questionsConfiguration.rootTopic()
+				"rootTopicId", questionsConfiguration.rootTopicId()
 			).put(
-				"showSectionLanding", questionsConfiguration.showSectionLanding()
+				"showCardsForTopicNavigation", questionsConfiguration.showCardsForTopicNavigation()
 			).put(
 				"siteKey", String.valueOf(themeDisplay.getScopeGroupId())
 			).put(

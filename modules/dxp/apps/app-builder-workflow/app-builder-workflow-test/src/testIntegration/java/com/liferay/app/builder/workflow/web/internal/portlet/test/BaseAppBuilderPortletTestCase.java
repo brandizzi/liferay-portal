@@ -77,6 +77,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -111,6 +113,10 @@ public abstract class BaseAppBuilderPortletTestCase {
 	}
 
 	protected App addApp() throws Exception {
+		return addApp(createAppWorkflow());
+	}
+
+	protected App addApp(AppWorkflow appWorkflow) throws Exception {
 		return _toDTO(
 			App.class,
 			_serveResource(
@@ -118,7 +124,7 @@ public abstract class BaseAppBuilderPortletTestCase {
 				HashMapBuilder.<String, Object>put(
 					"app", _createApp()
 				).put(
-					"appWorkflow", createAppWorkflow()
+					"appWorkflow", appWorkflow
 				).put(
 					"dataDefinitionId", _ddmStructure.getStructureId()
 				).build()));
@@ -218,6 +224,22 @@ public abstract class BaseAppBuilderPortletTestCase {
 				};
 			}
 		};
+	}
+
+	protected boolean deleteApp(App app) throws Exception {
+		HttpServletResponse httpServletResponse =
+			PortalUtil.getHttpServletResponse(
+				_serveResource(
+					_deleteAppBuilderAppMVCResourceCommand,
+					HashMapBuilder.<String, Object>put(
+						"appBuilderAppId", app.getId()
+					).build()));
+
+		if (httpServletResponse.getStatus() == HttpServletResponse.SC_OK) {
+			return true;
+		}
+
+		return false;
 	}
 
 	protected AppWorkflow getAppWorkflow(App app) throws Exception {
@@ -429,6 +451,13 @@ public abstract class BaseAppBuilderPortletTestCase {
 			MockLiferayResourceResponse mockLiferayResourceResponse)
 		throws Exception {
 
+		HttpServletResponse httpServletResponse =
+			PortalUtil.getHttpServletResponse(mockLiferayResourceResponse);
+
+		if (httpServletResponse.getStatus() != HttpServletResponse.SC_OK) {
+			return null;
+		}
+
 		ByteArrayOutputStream byteArrayOutputStream =
 			(ByteArrayOutputStream)
 				mockLiferayResourceResponse.getPortletOutputStream();
@@ -460,6 +489,9 @@ public abstract class BaseAppBuilderPortletTestCase {
 
 	@Inject
 	private DEDataListViewLocalService _deDataListViewLocalService;
+
+	@Inject(filter = "mvc.command.name=/app_builder/delete_workflow_app")
+	private MVCResourceCommand _deleteAppBuilderAppMVCResourceCommand;
 
 	private Group _group;
 

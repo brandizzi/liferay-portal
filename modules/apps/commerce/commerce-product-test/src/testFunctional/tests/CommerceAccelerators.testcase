@@ -1,32 +1,15 @@
 @component-name = "portal-commerce"
+@ignore = "true"
 definition {
 
-	property osgi.app.includes = "commerce";
 	property portal.release = "true";
 	property portal.upstream = "true";
 	property testray.main.component.name = "Commerce";
 
 	setUp {
-		Portlet.shutdownServer();
-
-		AntCommand(
-			locator1 = "build-test.xml",
-			value1 = "deploy-commerce-license-li");
-
-		Portlet.startServer(deleteLiferayHome = "false");
-
 		TestCase.setUpPortalInstance();
 
 		User.firstLoginPG();
-
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
-			panel = "Control Panel",
-			portlet = "Search");
-
-		SearchAdministration.executeSearchActions(actionsDescription = "Reindex all search indexes.");
-
-		Pause(locator1 = "5000");
 	}
 
 	tearDown {
@@ -68,7 +51,7 @@ definition {
 			emailAddress = "buyer@liferay.com",
 			role = "Buyer");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -130,7 +113,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Minium");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -144,7 +127,7 @@ definition {
 			channelType = "Site",
 			commerceSiteType = "B2B");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Catalogs");
@@ -156,7 +139,7 @@ definition {
 			catalogLanguage = "English (United States)",
 			catalogName = "Minium");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Products");
@@ -183,7 +166,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -197,7 +180,7 @@ definition {
 			channelType = "Site",
 			commerceSiteType = "B2C");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Catalogs");
@@ -209,7 +192,7 @@ definition {
 			catalogLanguage = "English (United States)",
 			catalogName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Products");
@@ -235,7 +218,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Minium");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -260,7 +243,7 @@ definition {
 			emailAddress = "buyer@liferay.com",
 			role = "Buyer");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -343,7 +326,7 @@ definition {
 			productSKU = "MIN93015",
 			productUnitPrice = "50.00");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Orders");
@@ -361,7 +344,7 @@ definition {
 			productSKU = "MIN93015",
 			productUnitPrice = "50.00");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Orders");
@@ -390,7 +373,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -401,7 +384,7 @@ definition {
 
 		Refresh();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -492,7 +475,7 @@ definition {
 
 		Refresh();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Orders");
@@ -510,7 +493,7 @@ definition {
 			productSKU = "SPEED93015",
 			productUnitPrice = "50.00");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Orders");

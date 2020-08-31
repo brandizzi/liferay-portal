@@ -85,6 +85,8 @@ public class UnnecessaryAssignCheck extends BaseUnnecessaryStatementCheck {
 			return;
 		}
 
+		checkUnnecessaryToString(detailAST, _MSG_UNNECESSARY_TO_STRING);
+
 		DetailAST firstNextVariableCallerDetailAST = null;
 		DetailAST secondNextVariableCallerDetailAST = null;
 
@@ -215,5 +217,8 @@ public class UnnecessaryAssignCheck extends BaseUnnecessaryStatementCheck {
 
 	private static final String _MSG_UNNECESSARY_ASSIGN_UNUSED =
 		"assign.unnecessary.unused";
+
+	private static final String _MSG_UNNECESSARY_TO_STRING =
+		"assign.unnecessary.to.string";
 
 }

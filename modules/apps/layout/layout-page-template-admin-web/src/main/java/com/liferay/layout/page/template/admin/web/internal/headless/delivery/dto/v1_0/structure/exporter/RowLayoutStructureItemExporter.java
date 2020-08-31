@@ -35,7 +35,7 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(service = LayoutStructureItemExporter.class)
 public class RowLayoutStructureItemExporter
-	implements LayoutStructureItemExporter {
+	extends BaseStyledLayoutStructureItemExporter {
 
 	@Override
 	public String getClassName() {
@@ -62,6 +62,26 @@ public class RowLayoutStructureItemExporter
 						reverseOrder = getReverseOrder();
 						verticalAlignment = getVerticalAlignment();
 
+						setFragmentStyle(
+							() -> {
+								JSONObject itemConfigJSONObject =
+									rowStyledLayoutStructureItem.
+										getItemConfigJSONObject();
+
+								return toFragmentStyle(
+									itemConfigJSONObject.getJSONObject(
+										"styles"),
+									saveMappingConfiguration);
+							});
+						setFragmentViewports(
+							() -> {
+								JSONObject itemConfigJSONObject =
+									rowStyledLayoutStructureItem.
+										getItemConfigJSONObject();
+
+								return getFragmentViewPorts(
+									itemConfigJSONObject);
+							});
 						setRowViewports(
 							() -> {
 								Map<String, JSONObject>

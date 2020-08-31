@@ -254,6 +254,18 @@ public class PortalImplUnitTest {
 	}
 
 	@Test
+	public void testGetHost() {
+		_assertGetHost("123.1.1.1", "123.1.1.1");
+		_assertGetHost("123.1.1.1:80", "123.1.1.1");
+		_assertGetHost("[0:0:0:0:0:0:0:1]", "0:0:0:0:0:0:0:1");
+		_assertGetHost("[0:0:0:0:0:0:0:1]:80", "0:0:0:0:0:0:0:1");
+		_assertGetHost("[::1]", "::1");
+		_assertGetHost("[::1]:80", "::1");
+		_assertGetHost("abc.com", "abc.com");
+		_assertGetHost("abc.com:80", "abc.com");
+	}
+
+	@Test
 	public void testGetOriginalServletRequest() {
 		HttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
@@ -685,6 +697,15 @@ public class PortalImplUnitTest {
 		throws Exception {
 
 		ReflectionTestUtil.setFieldValue(PropsValues.class, fieldName, value);
+	}
+
+	private void _assertGetHost(String httpHostHeader, String host) {
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest();
+
+		mockHttpServletRequest.addHeader("Host", httpHostHeader);
+
+		Assert.assertEquals(host, _portalImpl.getHost(mockHttpServletRequest));
 	}
 
 	private final PortalImpl _portalImpl = new PortalImpl();

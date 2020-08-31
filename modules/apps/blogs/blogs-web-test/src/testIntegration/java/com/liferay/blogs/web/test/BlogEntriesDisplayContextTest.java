@@ -15,6 +15,13 @@
 package com.liferay.blogs.web.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.asset.kernel.model.AssetCategory;
+import com.liferay.asset.kernel.model.AssetCategoryConstants;
+import com.liferay.asset.kernel.model.AssetVocabulary;
+import com.liferay.asset.kernel.model.AssetVocabularyConstants;
+import com.liferay.asset.kernel.service.AssetCategoryLocalService;
+import com.liferay.asset.kernel.service.AssetEntryLocalService;
+import com.liferay.asset.kernel.service.AssetVocabularyLocalService;
 import com.liferay.blogs.model.BlogsEntry;
 import com.liferay.blogs.service.BlogsEntryService;
 import com.liferay.layout.test.util.LayoutTestUtil;
@@ -28,6 +35,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.IdentityServiceContextFunction;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.portlet.MockLiferayPortletRenderRequest;
 import com.liferay.portal.kernel.test.portlet.MockLiferayPortletRenderResponse;
@@ -40,6 +48,8 @@ import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -147,30 +157,110 @@ public class BlogEntriesDisplayContextTest {
 	}
 
 	@Test
-	public void testGetSearchContainerWithSearch() throws Exception {
-		for (int i = 0; i <= SearchContainer.DEFAULT_DELTA; i++) {
-			_addBlogEntry("alpha_" + i);
-		}
+	public void testGetSearchContainerByInternalAssetCategory()
+		throws Exception {
+
+		AssetVocabulary assetVocabulary = _addAssetVocabulary(
+			AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL);
+
+		AssetCategory assetCategory = _addAssetCategory(assetVocabulary);
+
+		BlogsEntry blogsEntry = _addBlogEntry(
+			new long[] {assetCategory.getCategoryId()});
+
+		_addBlogEntry(RandomTestUtil.randomString());
 
 		SearchContainer<BlogsEntry> searchContainer = _getSearchContainer(
-			_getMockHttpServletRequestWithSearch("alpha"));
+			_getMockHttpServletRequestWithSearch(assetCategory.getName()));
 
-		Assert.assertEquals(
-			SearchContainer.DEFAULT_DELTA + 1, searchContainer.getTotal());
+		Assert.assertEquals(1, searchContainer.getTotal());
 
 		List<BlogsEntry> blogsEntries = searchContainer.getResults();
 
+		Assert.assertEquals(blogsEntries.toString(), 1, blogsEntries.size());
+
+		BlogsEntry returnedBlogsEntry = blogsEntries.get(0);
+
 		Assert.assertEquals(
-			blogsEntries.toString(), SearchContainer.DEFAULT_DELTA,
-			blogsEntries.size());
+			returnedBlogsEntry.getTitle(), blogsEntry.getTitle());
+	}
+
+	@Test
+	public void testGetSearchContainerByPublicAssetCategory() throws Exception {
+		AssetVocabulary assetVocabulary = _addAssetVocabulary(
+			AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC);
+
+		AssetCategory assetCategory = _addAssetCategory(assetVocabulary);
+
+		BlogsEntry blogsEntry = _addBlogEntry(
+			new long[] {assetCategory.getCategoryId()});
+
+		_addBlogEntry(RandomTestUtil.randomString());
+
+		SearchContainer<BlogsEntry> searchContainer = _getSearchContainer(
+			_getMockHttpServletRequestWithSearch(assetCategory.getName()));
+
+		Assert.assertEquals(1, searchContainer.getTotal());
+
+		List<BlogsEntry> blogsEntries = searchContainer.getResults();
+
+		Assert.assertEquals(blogsEntries.toString(), 1, blogsEntries.size());
+
+		BlogsEntry returnedBlogsEntry = blogsEntries.get(0);
+
+		Assert.assertEquals(
+			returnedBlogsEntry.getTitle(), blogsEntry.getTitle());
+	}
+
+	private AssetCategory _addAssetCategory(AssetVocabulary assetVocabulary)
+		throws Exception {
+
+		return _assetCategoryLocalService.addCategory(
+			TestPropsValues.getUserId(), _group.getGroupId(),
+			AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID,
+			HashMapBuilder.put(
+				LocaleUtil.US, RandomTestUtil.randomString()
+			).build(),
+			null, assetVocabulary.getVocabularyId(), null,
+			new ServiceContext());
+	}
+
+	private AssetVocabulary _addAssetVocabulary(int visibilityTypePublic)
+		throws Exception {
+
+		return _assetVocabularyLocalService.addVocabulary(
+			TestPropsValues.getUserId(), _group.getGroupId(), null,
+			HashMapBuilder.put(
+				LocaleUtil.US, RandomTestUtil.randomString()
+			).build(),
+			null, null, visibilityTypePublic, new ServiceContext());
+	}
+
+	private BlogsEntry _addBlogEntry(long[] assetCategoryIds) throws Exception {
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), TestPropsValues.getUserId());
+
+		serviceContext.setAssetCategoryIds(assetCategoryIds);
+
+		return _addBlogEntry(RandomTestUtil.randomString(), serviceContext);
 	}
 
 	private BlogsEntry _addBlogEntry(String title) throws Exception {
+		return _addBlogEntry(
+			title,
+			ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
+	}
+
+	private BlogsEntry _addBlogEntry(
+			String title, ServiceContext serviceContext)
+		throws Exception {
+
 		return _blogsEntryService.addEntry(
 			title, RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString(), 1, 1, 1990, 1, 1, true, false,
 			new String[0], RandomTestUtil.randomString(), null, null,
-			ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
+			serviceContext);
 	}
 
 	private MockHttpServletRequest _getMockHttpServletRequest()
@@ -236,6 +326,15 @@ public class BlogEntriesDisplayContextTest {
 
 	private static ServiceTracker<MVCRenderCommand, MVCRenderCommand>
 		_serviceTracker;
+
+	@Inject
+	private AssetCategoryLocalService _assetCategoryLocalService;
+
+	@Inject
+	private AssetEntryLocalService _assetEntryLocalService;
+
+	@Inject
+	private AssetVocabularyLocalService _assetVocabularyLocalService;
 
 	@Inject
 	private BlogsEntryService _blogsEntryService;

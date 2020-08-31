@@ -179,6 +179,7 @@ const withActionableFields = (ChildComponent) => {
 		_handleMouseEnterField(event) {
 			const {pages} = this.props;
 			const {delegateTarget} = event;
+			const {dispatch} = this.context;
 			const {fieldName} = delegateTarget.dataset;
 			const {hoveredFieldActions, selectedFieldActions} = this.refs;
 			const activePage = parseInt(
@@ -201,9 +202,13 @@ const withActionableFields = (ChildComponent) => {
 
 			if (hoveredNode) {
 				hoveredNode.classList.remove(_CSS_HOVERED);
+
+				dispatch('fieldBlurred', {});
 			}
 
 			delegateTarget.classList.add(_CSS_HOVERED);
+
+			dispatch('fieldHovered', {fieldName});
 
 			this.showActions(hoveredFieldActions, fieldName);
 

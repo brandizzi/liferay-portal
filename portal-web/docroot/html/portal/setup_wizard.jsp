@@ -16,7 +16,7 @@
 
 <%@ include file="/html/portal/init.jsp" %>
 
-<div id="wrapper">
+<div class="pt-0" id="wrapper">
 	<header class="mb-4" id="banner">
 		<div class="mb-4 navbar navbar-classic navbar-top py-3">
 			<div class="container">
@@ -37,7 +37,7 @@
 	</header>
 
 	<div class="container" id="content">
-		<div class="sheet sheet-lg">
+		<div class="pl-4 position-relative pr-4 pt-4 sheet sheet-lg" id="main-content">
 			<h2 class="sheet-title" title="<liferay-ui:message key="basic-configuration" />">
 				<liferay-ui:message key="basic-configuration" />
 			</h2>
@@ -337,7 +337,7 @@
 						var loadingMask = new A.LoadingMask(
 							{
 								'strings.loading': '<%= UnicodeLanguageUtil.get(request, "liferay-is-being-installed") %>',
-								target: A.getBody()
+								target: A.one('#main-content')
 							}
 						);
 

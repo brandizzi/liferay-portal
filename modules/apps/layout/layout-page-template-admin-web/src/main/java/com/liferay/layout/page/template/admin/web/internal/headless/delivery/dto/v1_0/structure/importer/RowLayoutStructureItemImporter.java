@@ -21,6 +21,7 @@ import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.layout.util.structure.RowStyledLayoutStructureItem;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.util.GetterUtil;
 
@@ -99,6 +100,30 @@ public class RowLayoutStructureItemImporter
 					_processRowViewportDefinition(
 						rowStyledLayoutStructureItem,
 						(Map<String, Object>)entry.getValue(), entry.getKey());
+				}
+			}
+
+			Map<String, Object> fragmentStyleMap =
+				(Map<String, Object>)definitionMap.get("fragmentStyle");
+
+			if (fragmentStyleMap != null) {
+				JSONObject jsonObject = JSONUtil.put(
+					"styles", toStylesJSONObject(fragmentStyleMap));
+
+				rowStyledLayoutStructureItem.updateItemConfig(jsonObject);
+			}
+
+			if (definitionMap.containsKey("fragmentViewports")) {
+				List<Map<String, Object>> fragmentViewports =
+					(List<Map<String, Object>>)definitionMap.get(
+						"fragmentViewports");
+
+				for (Map<String, Object> fragmentViewport : fragmentViewports) {
+					JSONObject jsonObject = JSONUtil.put(
+						(String)fragmentViewport.get("id"),
+						toFragmentViewportStylesJSONObject(fragmentViewport));
+
+					rowStyledLayoutStructureItem.updateItemConfig(jsonObject);
 				}
 			}
 		}

@@ -33,9 +33,9 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -86,6 +86,32 @@ public class CollectionLayoutStructureItemImporter
 				(Integer)definitionMap.get("numberOfItems"));
 			collectionStyledLayoutStructureItem.setTemplateKey(
 				(String)definitionMap.get("templateKey"));
+
+			Map<String, Object> fragmentStyleMap =
+				(Map<String, Object>)definitionMap.get("fragmentStyle");
+
+			if (fragmentStyleMap != null) {
+				JSONObject jsonObject = JSONUtil.put(
+					"styles", toStylesJSONObject(fragmentStyleMap));
+
+				collectionStyledLayoutStructureItem.updateItemConfig(
+					jsonObject);
+			}
+
+			if (definitionMap.containsKey("fragmentViewports")) {
+				List<Map<String, Object>> fragmentViewports =
+					(List<Map<String, Object>>)definitionMap.get(
+						"fragmentViewports");
+
+				for (Map<String, Object> fragmentViewport : fragmentViewports) {
+					JSONObject jsonObject = JSONUtil.put(
+						(String)fragmentViewport.get("id"),
+						toFragmentViewportStylesJSONObject(fragmentViewport));
+
+					collectionStyledLayoutStructureItem.updateItemConfig(
+						jsonObject);
+				}
+			}
 		}
 
 		return collectionStyledLayoutStructureItem;
@@ -146,8 +172,7 @@ public class CollectionLayoutStructureItemImporter
 		}
 
 		return JSONUtil.put(
-			"classNameId",
-			_portal.getClassNameId(AssetListEntry.class.getName())
+			"classNameId", portal.getClassNameId(AssetListEntry.class.getName())
 		).put(
 			"classPK", String.valueOf(classPK)
 		).put(
@@ -216,8 +241,5 @@ public class CollectionLayoutStructureItemImporter
 
 	@Reference
 	private InfoListProviderTracker _infoListProviderTracker;
-
-	@Reference
-	private Portal _portal;
 
 }
