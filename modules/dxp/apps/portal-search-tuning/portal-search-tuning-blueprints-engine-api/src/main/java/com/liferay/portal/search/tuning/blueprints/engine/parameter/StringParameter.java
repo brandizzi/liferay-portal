@@ -76,6 +76,11 @@ public class StringParameter implements Parameter {
 		return _value;
 	}
 
+	@Override
+	public String toString() {
+		return _name + "=" + _value;
+	}
+
 	private final String _configurationVariable;
 	private final String _name;
 	private final String _value;
