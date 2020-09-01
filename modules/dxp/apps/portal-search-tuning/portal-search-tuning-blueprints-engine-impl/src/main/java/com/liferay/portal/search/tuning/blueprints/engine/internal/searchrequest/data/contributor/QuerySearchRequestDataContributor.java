@@ -318,7 +318,7 @@ public class QuerySearchRequestDataContributor
 		SearchRequestContext searchRequestContext, JSONObject queryJsonObject) {
 
 		String occurString = queryJsonObject.getString(
-			ClausesConfigurationKeys.OCCUR.getJsonKey());
+			ClausesConfigurationKeys.OCCUR.getJsonKey(), "must");
 
 		try {
 			occurString = StringUtil.toUpperCase(occurString);
@@ -392,7 +392,7 @@ public class QuerySearchRequestDataContributor
 					_clauseConditionHandlerFactory.getHandler(handler);
 
 				String operatorString = conditionJsonObject.getString(
-					ConditionsConfigurationKeys.OPERATOR.getJsonKey());
+					ConditionsConfigurationKeys.OPERATOR.getJsonKey(), Operator.AND.name());
 
 				Operator operator = BlueprintValueUtil.getOperator(
 					operatorString);
@@ -541,6 +541,9 @@ public class QuerySearchRequestDataContributor
 	private volatile List<QueryContributor> _queryContributors =
 		new ArrayList<>();
 
+	@Reference
+ 	private ComplexQueryPartBuilderFactory _complexQueryPartBuilderFactory;
+	
 	@Reference(cardinality = ReferenceCardinality.OPTIONAL)
 	private RescoreBuilder _rescoreBuilder;
 
