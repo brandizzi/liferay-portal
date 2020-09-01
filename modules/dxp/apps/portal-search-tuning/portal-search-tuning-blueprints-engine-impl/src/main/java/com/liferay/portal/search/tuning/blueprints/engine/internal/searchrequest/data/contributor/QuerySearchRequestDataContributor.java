@@ -89,7 +89,7 @@ public class QuerySearchRequestDataContributor
 			_addPostFilterClause(searchRequestData, subquery, occur);
 		}
 		else if (clauseContext.equals(ClauseContext.PRE_FILTER)) {
-			_addPreFilterClause(searchRequestData, subquery, occur);
+			_addPreFilterClause(searchRequestData, subquery);
 		}
 		else if (clauseContext.equals(ClauseContext.QUERY)) {
 			_addQueryClause(searchRequestData, clauseContext, occur, subquery);
@@ -234,7 +234,7 @@ public class QuerySearchRequestDataContributor
 	}
 
 	private void _addPreFilterClause(
-		SearchRequestData searchRequestData, Query subquery, Occur occur) {
+		SearchRequestData searchRequestData, Query subquery) {
 
 		BooleanQuery query = searchRequestData.getQuery();
 
@@ -311,7 +311,7 @@ public class QuerySearchRequestDataContributor
 		SearchRequestContext searchRequestContext, JSONObject queryJsonObject) {
 
 		String occurString = queryJsonObject.getString(
-			ClausesConfigurationKeys.OCCUR.getJsonKey());
+			ClausesConfigurationKeys.OCCUR.getJsonKey(), "must");
 
 		try {
 			occurString = StringUtil.toUpperCase(occurString);
@@ -369,7 +369,7 @@ public class QuerySearchRequestDataContributor
 					_clauseConditionHandlerFactory.getHandler(handler);
 
 				String operatorString = conditionJsonObject.getString(
-					ConditionsConfigurationKeys.OPERATOR.getJsonKey());
+					ConditionsConfigurationKeys.OPERATOR.getJsonKey(), Operator.AND.name());
 
 				Operator operator = BlueprintValueUtil.getOperator(
 					operatorString);
