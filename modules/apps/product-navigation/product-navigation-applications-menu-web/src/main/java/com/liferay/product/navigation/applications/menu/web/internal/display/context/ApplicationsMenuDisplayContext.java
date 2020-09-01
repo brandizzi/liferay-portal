@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.webserver.WebServerServletTokenUtil;
 import com.liferay.product.navigation.applications.menu.web.internal.constants.ProductNavigationApplicationsMenuPortletKeys;
@@ -53,13 +54,13 @@ public class ApplicationsMenuDisplayContext {
 		Company company = themeDisplay.getCompany();
 
 		return HashMapBuilder.<String, Object>put(
-			"companyName", HtmlUtil.escape(company.getName())
-		).put(
-			"logoURL",
+			"liferayLogoURL",
 			StringBundler.concat(
 				themeDisplay.getPathImage(), "/company_logo?img_id=",
 				company.getLogoId(), "&t=",
 				WebServerServletTokenUtil.getToken(company.getLogoId()))
+		).put(
+			"liferayName", HtmlUtil.escape(company.getName())
 		).put(
 			"panelAppsURL",
 			() -> {
@@ -77,6 +78,21 @@ public class ApplicationsMenuDisplayContext {
 			}
 		).put(
 			"selectedPortletId", themeDisplay.getPpid()
+		).put(
+			"virtualInstance",
+			HashMapBuilder.<String, Object>put(
+				"label", HtmlUtil.escape(company.getName())
+			).put(
+				"logoURL",
+				StringBundler.concat(
+					themeDisplay.getPathImage(), "/company_logo?img_id=",
+					company.getLogoId(), "&t=",
+					WebServerServletTokenUtil.getToken(company.getLogoId()))
+			).put(
+				"url",
+				PortalUtil.addPreservedParameters(
+					themeDisplay, themeDisplay.getURLPortal(), false, true)
+			).build()
 		).build();
 	}
 

@@ -467,6 +467,8 @@ public class DataDefinitionResourceImpl
 		DDMForm ddmForm = DataDefinitionUtil.toDDMForm(
 			dataDefinition, _ddmFormFieldTypeServicesTracker);
 
+		ddmForm.setDefinitionSchemaVersion("2.0");
+
 		_validate(
 			dataDefinition,
 			_dataDefinitionContentTypeTracker.getDataDefinitionContentType(
@@ -575,8 +577,15 @@ public class DataDefinitionResourceImpl
 
 		DDMStructure ddmStructure = _ddmStructureLocalService.getDDMStructure(
 			dataDefinitionId);
+
+		JSONObject definitionJSONObject = _jsonFactory.createJSONObject(
+			ddmStructure.getDefinition());
+
 		DDMForm ddmForm = DataDefinitionUtil.toDDMForm(
 			dataDefinition, _ddmFormFieldTypeServicesTracker);
+
+		ddmForm.setDefinitionSchemaVersion(
+			definitionJSONObject.getString("definitionSchemaVersion"));
 
 		_validate(
 			dataDefinition,
@@ -1214,11 +1223,18 @@ public class DataDefinitionResourceImpl
 
 			_removeFieldsFromDataLayout(dataLayout, fieldNames);
 
-			DDMFormLayout ddmFormLayout = DataLayoutUtil.toDDMFormLayout(
+			DDMFormLayout ddmFormLayout = ddmStructureLayout.getDDMFormLayout();
+
+			String definitionSchemaVersion =
+				ddmFormLayout.getDefinitionSchemaVersion();
+
+			ddmFormLayout = DataLayoutUtil.toDDMFormLayout(
 				dataLayout,
 				DataDefinitionUtil.toDDMForm(
 					dataDefinition, _ddmFormFieldTypeServicesTracker),
 				_ddmFormRuleDeserializer);
+
+			ddmFormLayout.setDefinitionSchemaVersion(definitionSchemaVersion);
 
 			DDMFormLayoutSerializerSerializeRequest.Builder builder =
 				DDMFormLayoutSerializerSerializeRequest.Builder.newBuilder(
@@ -1672,19 +1688,20 @@ public class DataDefinitionResourceImpl
 		DataDefinitionContentType dataDefinitionContentType, DDMForm ddmForm) {
 
 		try {
-			_ddmFormValidator.validate(ddmForm);
-
 			Map<String, Object> name = dataDefinition.getName();
 
 			Locale defaultLocale = ddmForm.getDefaultLocale();
 
 			if ((name == null) ||
-				!name.containsKey(LocaleUtil.toLanguageId(defaultLocale))) {
+				Validator.isNull(
+					name.get(LocaleUtil.toLanguageId(defaultLocale)))) {
 
 				throw new DataDefinitionValidationException.MustSetValidName(
 					"Name is null for locale " +
 						defaultLocale.getDisplayName());
 			}
+
+			_ddmFormValidator.validate(ddmForm);
 		}
 		catch (DDMFormValidationException ddmFormValidationException) {
 			if ((ddmFormValidationException instanceof

@@ -1,28 +1,15 @@
 @component-name = "portal-commerce"
+@ignore = "true"
 definition {
 
-	property osgi.app.includes = "commerce";
 	property portal.release = "true";
 	property portal.upstream = "true";
 	property testray.main.component.name = "Commerce";
 
 	setUp {
-		Portlet.shutdownServer();
-
-		Portlet.startServer(deleteLiferayHome = "false");
-
 		TestCase.setUpPortalInstance();
 
 		User.firstLoginPG();
-
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
-			panel = "Control Panel",
-			portlet = "Search");
-
-		SearchAdministration.executeSearchActions(actionsDescription = "Reindex all search indexes.");
-
-		Pause(locator1 = "5000");
 	}
 
 	tearDown {
@@ -54,7 +41,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -81,7 +68,7 @@ definition {
 
 		Alert.viewSuccessMessage();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -154,7 +141,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -181,7 +168,7 @@ definition {
 
 		Alert.viewSuccessMessage();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -284,7 +271,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -311,7 +298,7 @@ definition {
 
 		Alert.viewSuccessMessage();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -414,7 +401,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -466,7 +453,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -557,7 +544,7 @@ definition {
 
 		User.loginPG();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Accounts");
@@ -587,7 +574,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -645,7 +632,7 @@ definition {
 
 		User.firstLoginPG();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Accounts");
@@ -663,7 +650,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -690,7 +677,7 @@ definition {
 
 		Alert.viewSuccessMessage();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -798,7 +785,7 @@ definition {
 
 		User.loginPG();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Accounts");
@@ -828,7 +815,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Users and Organizations");
@@ -852,7 +839,7 @@ definition {
 			siteName = "Speedwell",
 			userScreenName = "buyer");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -928,7 +915,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -991,7 +978,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -1014,7 +1001,7 @@ definition {
 
 		Button.clickSave();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Products");
@@ -1071,7 +1058,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -1130,7 +1117,7 @@ definition {
 		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "GuestCheckout#UserAccountIsNotCombinedWithExistingGuestAccount";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Configuration",
 			panel = "Control Panel",
 			portlet = "System Settings");
@@ -1148,7 +1135,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Speedwell");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Channels");
@@ -1267,7 +1254,7 @@ definition {
 
 		User.loginPG();
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Users",
 			panel = "Control Panel",
 			portlet = "Accounts");

@@ -50,17 +50,19 @@ public class AddDefaultAssetVocabulariesPortalInstanceLifecycleListener
 	public void portalInstanceRegistered(Company company) throws Exception {
 		_addAssetVocabulary(
 			company, PropsValues.ASSET_VOCABULARY_DEFAULT,
-			AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC);
+			AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC, null);
 		_addAssetVocabulary(
 			company, "audience",
-			AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL);
+			AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL,
+			JournalArticle.class);
 		_addAssetVocabulary(
-			company, "stage",
-			AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL);
+			company, "stage", AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL,
+			JournalArticle.class);
 	}
 
 	private void _addAssetVocabulary(
-			Company company, String name, int visibilityType)
+			Company company, String name, int visibilityType,
+			Class<?> assetVocabularyTypeClass)
 		throws Exception {
 
 		AssetVocabulary assetVocabulary =
@@ -88,10 +90,12 @@ public class AddDefaultAssetVocabulariesPortalInstanceLifecycleListener
 		AssetVocabularySettingsHelper assetVocabularySettingsHelper =
 			new AssetVocabularySettingsHelper();
 
-		assetVocabularySettingsHelper.setClassNameIdsAndClassTypePKs(
-			new long[] {_portal.getClassNameId(JournalArticle.class)},
-			new long[] {AssetCategoryConstants.ALL_CLASS_TYPE_PK},
-			new boolean[] {false});
+		if (assetVocabularyTypeClass != null) {
+			assetVocabularySettingsHelper.setClassNameIdsAndClassTypePKs(
+				new long[] {_portal.getClassNameId(assetVocabularyTypeClass)},
+				new long[] {AssetCategoryConstants.ALL_CLASS_TYPE_PK},
+				new boolean[] {false});
+		}
 
 		ServiceContext serviceContext = new ServiceContext();
 

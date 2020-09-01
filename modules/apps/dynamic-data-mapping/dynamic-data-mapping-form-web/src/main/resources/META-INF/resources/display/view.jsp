@@ -153,6 +153,17 @@ long formInstanceId = ddmFormDisplayContext.getFormInstanceId();
 							</div>
 						</c:if>
 
+						<c:if test="<%= !ddmFormDisplayContext.hasValidStorageType(formInstance) %>">
+							<div class="ddm-form-basic-info">
+								<clay:container-fluid>
+									<clay:alert
+										displayType="danger"
+										message='<%= LanguageUtil.format(request, "this-form-was-created-using-a-storage-type-x-that-is-not-available-for-this-liferay-dxp-installation.-install-x-to-make-it-available-for-editing", formInstance.getStorageType()) %>'
+									/>
+								</clay:container-fluid>
+							</div>
+						</c:if>
+
 						<div class="ddm-form-basic-info">
 							<clay:container-fluid>
 								<h1 class="ddm-form-name"><%= HtmlUtil.escape(formInstance.getName(displayLocale)) %></h1>

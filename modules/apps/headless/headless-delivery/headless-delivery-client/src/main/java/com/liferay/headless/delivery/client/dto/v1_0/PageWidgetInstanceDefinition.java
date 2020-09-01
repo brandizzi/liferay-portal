@@ -32,6 +32,49 @@ public class PageWidgetInstanceDefinition implements Cloneable {
 		return PageWidgetInstanceDefinitionSerDes.toDTO(json);
 	}
 
+	public FragmentStyle getFragmentStyle() {
+		return fragmentStyle;
+	}
+
+	public void setFragmentStyle(FragmentStyle fragmentStyle) {
+		this.fragmentStyle = fragmentStyle;
+	}
+
+	public void setFragmentStyle(
+		UnsafeSupplier<FragmentStyle, Exception> fragmentStyleUnsafeSupplier) {
+
+		try {
+			fragmentStyle = fragmentStyleUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected FragmentStyle fragmentStyle;
+
+	public FragmentViewport[] getFragmentViewports() {
+		return fragmentViewports;
+	}
+
+	public void setFragmentViewports(FragmentViewport[] fragmentViewports) {
+		this.fragmentViewports = fragmentViewports;
+	}
+
+	public void setFragmentViewports(
+		UnsafeSupplier<FragmentViewport[], Exception>
+			fragmentViewportsUnsafeSupplier) {
+
+		try {
+			fragmentViewports = fragmentViewportsUnsafeSupplier.get();
+		}
+		catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	protected FragmentViewport[] fragmentViewports;
+
 	public WidgetInstance getWidgetInstance() {
 		return widgetInstance;
 	}

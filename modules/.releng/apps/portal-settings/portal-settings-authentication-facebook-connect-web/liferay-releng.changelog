@@ -7,3 +7,8 @@
 # Bundle Version 4.0.1
 #
 71cdfe835b236d0a1e1a8f3070587461bcd9a301^..2bc2bd84c124c9d28aa34b0824bc0f1cc4727b09=LPS-106397
+
+#
+# Bundle Version 4.0.6
+#
+2bc2bd84c124c9d28aa34b0824bc0f1cc4727b09^..6b4a642db4ec68a3dced3f9f40dfa9a887b32792=LPS-119025 LRDOCS-8198

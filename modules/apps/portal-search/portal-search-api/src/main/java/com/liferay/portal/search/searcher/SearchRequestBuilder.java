@@ -52,6 +52,8 @@ public interface SearchRequestBuilder {
 	public SearchRequestBuilder addPipelineAggregation(
 		PipelineAggregation pipelineAggregation);
 
+	public SearchRequestBuilder addRescore(Rescore rescore);
+
 	/**
 	 * Adds fields to include in the search results as a map of keys and values.
 	 *
@@ -60,6 +62,8 @@ public interface SearchRequestBuilder {
 	 */
 	public SearchRequestBuilder addSelectedFieldNames(
 		String... selectedFieldNames);
+
+	public SearchRequestBuilder addSort(Sort sort);
 
 	public SearchRequestBuilder basicFacetSelection(
 		boolean basicFacetSelection);

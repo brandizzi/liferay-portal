@@ -88,8 +88,8 @@ public class QuerySearchRequestDataContributor
 		Occur occur, Query subquery, JSONObject queryJsonObject) {
 
 		SearchRequestBuilder searchRequestBuilder =
-	 			searchRequestData.getSearchRequestBuilder();
-		
+			searchRequestData.getSearchRequestBuilder();
+
 		if (clauseContext.equals(ClauseContext.POST_FILTER)) {
 			_addPostFilterClause(searchRequestData, subquery, occur);
 		}
@@ -239,24 +239,24 @@ public class QuerySearchRequestDataContributor
 	}
 
 	private void _addPreFilterClause(
-			SearchRequestBuilder searchRequestBuilder, Query subquery) {
-		
-			searchRequestBuilder.addComplexQueryPart(
-		 			_complexQueryPartBuilderFactory.builder()
-		 			.query(subquery)
-		 			.occur("filter")
-		 			.build());
+		SearchRequestBuilder searchRequestBuilder, Query subquery) {
+
+		searchRequestBuilder.addComplexQueryPart(
+			_complexQueryPartBuilderFactory.builder()
+			.query(subquery)
+			.occur("filter")
+			.build());
 	}
 
 	private void _addQueryClause(
-			SearchRequestBuilder searchRequestBuilder, Occur occur,
-	 		Query subquery) {
+		SearchRequestBuilder searchRequestBuilder, Occur occur,
+		Query subquery) {
 
 		String occurString = _getOccurString(occur);
 
 		if (occurString == null) {
- 			return;
- 		}
+			return;
+		}
 
 		searchRequestBuilder.addComplexQueryPart(
 			_complexQueryPartBuilderFactory.builder()
@@ -351,7 +351,7 @@ public class QuerySearchRequestDataContributor
 		}
 
 		return null;
- 	}
+	}
 
 	private Integer _getWindoSize(JSONObject queryJsonObject) {
 		if (queryJsonObject.has(
@@ -526,6 +526,9 @@ public class QuerySearchRequestDataContributor
 
 	@Reference
 	private ConditionHandlerFactory _clauseConditionHandlerFactory;
+
+	@Reference
+	private ComplexQueryPartBuilderFactory _complexQueryPartBuilderFactory;
 
 	@Reference
 	private Queries _queries;

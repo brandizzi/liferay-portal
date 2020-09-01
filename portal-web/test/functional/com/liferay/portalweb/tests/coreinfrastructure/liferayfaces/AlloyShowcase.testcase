@@ -52,6 +52,18 @@ definition {
 
 		AlloyShowcase.clickButton(buttonNum = "1,2,3");
 
+		// ButtonMenu
+
+		Navigator.openWithAppendToBaseURL(urlAppend = "web/guest/alloy-showcase/-/alloy-tag/alloy/button/menu");
+
+		AlloyShowcase.testMenu();
+
+		// CommandButtonMenu
+
+		Navigator.openWithAppendToBaseURL(urlAppend = "web/guest/alloy-showcase/-/alloy-tag/alloy/commandbutton/menu");
+
+		AlloyShowcase.testMenu(command = "true");
+
 		// CommandButtonGeneral
 
 		Navigator.openWithAppendToBaseURL(urlAppend = "web/guest/alloy-showcase/-/alloy-tag/alloy/commandbutton/general");
@@ -94,12 +106,14 @@ definition {
 
 		Navigator.openWithAppendToBaseURL(urlAppend = "web/guest/alloy-showcase/-/alloy-tag/alloy/datatable/selection");
 
-		AlloyShowcase.viewSelectionPaginator(
+		AlloyShowcase.viewPaginator(
 			screenName1 = "John",
 			screenName2 = "Philip",
 			screenName3 = "George",
 			screenName4 = "William",
 			useCase = "selection");
+
+		AlloyShowcase.selectDataTable();
 
 		Navigator.openWithAppendToBaseURL(urlAppend = "web/guest/alloy-showcase/-/alloy-tag/alloy/datatable/server-events");
 

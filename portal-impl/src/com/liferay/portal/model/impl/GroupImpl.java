@@ -440,11 +440,27 @@ public class GroupImpl extends GroupBaseImpl {
 			return null;
 		}
 
+		if (logoId > 0) {
+			StringBundler sb = new StringBundler(5);
+
+			sb.append(themeDisplay.getPathImage());
+			sb.append("/layout_set_logo?img_id=");
+			sb.append(logoId);
+			sb.append("&t=");
+			sb.append(WebServerServletTokenUtil.getToken(logoId));
+
+			return sb.toString();
+		}
+
 		StringBundler sb = new StringBundler(5);
 
 		sb.append(themeDisplay.getPathImage());
-		sb.append("/layout_set_logo?img_id=");
-		sb.append(logoId);
+		sb.append("/company_logo?img_id=");
+
+		Company company = themeDisplay.getCompany();
+
+		sb.append(company.getCompanyId());
+
 		sb.append("&t=");
 		sb.append(WebServerServletTokenUtil.getToken(logoId));
 

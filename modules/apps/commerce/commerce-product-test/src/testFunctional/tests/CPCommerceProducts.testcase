@@ -1,32 +1,15 @@
 @component-name = "portal-commerce"
+@ignore = "true"
 definition {
 
-	property osgi.app.includes = "commerce";
 	property portal.release = "true";
 	property portal.upstream = "true";
 	property testray.main.component.name = "Commerce";
 
 	setUp {
-		Portlet.shutdownServer();
-
-		AntCommand(
-			locator1 = "build-test.xml",
-			value1 = "deploy-commerce-license-li");
-
-		Portlet.startServer(deleteLiferayHome = "false");
-
 		TestCase.setUpPortalInstance();
 
 		User.firstLoginPG();
-
-		ProductMenu.gotoPortlet(
-			category = "Configuration",
-			panel = "Control Panel",
-			portlet = "Search");
-
-		SearchAdministration.executeSearchActions(actionsDescription = "Reindex all search indexes.");
-
-		Pause(locator1 = "5000");
 	}
 
 	tearDown {
@@ -51,7 +34,7 @@ definition {
 		property portal.acceptance = "true";
 		property test.name.skip.portal.instance = "CPCommerceProducts#ProductPublishing";
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Products");
@@ -87,7 +70,7 @@ definition {
 
 		CommerceProductImages.addProductImages(optionValuesList = "Black,Blue,White");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Products");
@@ -100,7 +83,7 @@ definition {
 			specificationDescription = "SpecificationGroups",
 			specificationTitle = "SpecificationGroups");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Products");
@@ -112,7 +95,7 @@ definition {
 			specificationGroupTitle = "SpecificationGroups",
 			specificationTitle = "SpecificationLabel");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Products");
@@ -142,7 +125,7 @@ definition {
 
 		CommerceAccelerators.initializeAccelerator(siteName = "Minium");
 
-		ProductMenu.gotoPortlet(
+		ApplicationsMenu.gotoPortlet(
 			category = "Commerce",
 			panel = "Control Panel",
 			portlet = "Products");

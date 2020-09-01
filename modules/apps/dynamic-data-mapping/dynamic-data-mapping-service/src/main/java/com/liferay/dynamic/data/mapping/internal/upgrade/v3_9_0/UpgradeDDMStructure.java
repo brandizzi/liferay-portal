@@ -143,6 +143,7 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 		DDMFormLayout ddmFormLayout = DDMFormLayoutDeserializeUtil.deserialize(
 			_ddmFormLayoutDeserializer, content);
 
+		ddmFormLayout.setDefinitionSchemaVersion("2.0");
 		ddmFormLayout.setPaginationMode(DDMFormLayout.SINGLE_PAGE_MODE);
 
 		for (DDMFormLayoutPage ddmFormLayoutPage :
@@ -267,8 +268,11 @@ public class UpgradeDDMStructure extends UpgradeProcess {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject(definition);
 
 		jsonObject.put(
+			"definitionSchemaVersion", "2.0"
+		).put(
 			"fields",
-			_upgradeFields(companyId, jsonObject.getJSONArray("fields")));
+			_upgradeFields(companyId, jsonObject.getJSONArray("fields"))
+		);
 
 		return jsonObject.toString();
 	}

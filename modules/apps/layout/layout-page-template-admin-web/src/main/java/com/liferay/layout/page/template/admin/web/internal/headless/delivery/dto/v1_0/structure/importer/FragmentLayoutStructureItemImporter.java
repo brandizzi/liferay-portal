@@ -52,6 +52,7 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -93,8 +94,41 @@ public class FragmentLayoutStructureItemImporter
 			return null;
 		}
 
-		return layoutStructure.addFragmentLayoutStructureItem(
-			fragmentEntryLink.getFragmentEntryLinkId(), parentItemId, position);
+		LayoutStructureItem layoutStructureItem =
+			layoutStructure.addFragmentLayoutStructureItem(
+				fragmentEntryLink.getFragmentEntryLinkId(), parentItemId,
+				position);
+
+		Map<String, Object> definitionMap = getDefinitionMap(
+			pageElement.getDefinition());
+
+		if (definitionMap != null) {
+			Map<String, Object> fragmentStyleMap =
+				(Map<String, Object>)definitionMap.get("fragmentStyle");
+
+			if (fragmentStyleMap != null) {
+				JSONObject jsonObject = JSONUtil.put(
+					"styles", toStylesJSONObject(fragmentStyleMap));
+
+				layoutStructureItem.updateItemConfig(jsonObject);
+			}
+
+			if (definitionMap.containsKey("fragmentViewports")) {
+				List<Map<String, Object>> fragmentViewports =
+					(List<Map<String, Object>>)definitionMap.get(
+						"fragmentViewports");
+
+				for (Map<String, Object> fragmentViewport : fragmentViewports) {
+					JSONObject jsonObject = JSONUtil.put(
+						(String)fragmentViewport.get("id"),
+						toFragmentViewportStylesJSONObject(fragmentViewport));
+
+					layoutStructureItem.updateItemConfig(jsonObject);
+				}
+			}
+		}
+
+		return layoutStructureItem;
 	}
 
 	@Override
@@ -643,7 +677,7 @@ public class FragmentLayoutStructureItemImporter
 				(Map<String, Object>)fragmentFieldValueMap.get(
 					"backgroundFragmentImage");
 
-			if (backgroundFragmentImageMap == null) {
+			if (MapUtil.isEmpty(backgroundFragmentImageMap)) {
 				backgroundFragmentImageMap =
 					(Map<String, Object>)fragmentFieldValueMap.get(
 						"backgroundImage");
