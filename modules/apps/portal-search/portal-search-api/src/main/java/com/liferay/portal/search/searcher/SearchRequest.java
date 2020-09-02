@@ -78,6 +78,8 @@ public interface SearchRequest {
 
 	public Map<String, PipelineAggregation> getPipelineAggregationsMap();
 
+	public List<ComplexQueryPart> getPostFilterComplexQueryParts();
+
 	public Query getPostFilterQuery();
 
 	public Query getQuery();
