@@ -73,6 +73,8 @@ public class SearchRequestImpl implements SearchRequest, Serializable {
 		_pipelineAggregationsMap.putAll(
 			searchRequestImpl._pipelineAggregationsMap);
 		_postFilterQuery = searchRequestImpl._postFilterQuery;
+		_postFilterComplexQueryParts.addAll(
+			searchRequestImpl._postFilterComplexQueryParts);
 		_query = searchRequestImpl._query;
 		_rescoreQuery = searchRequestImpl._rescoreQuery;
 		_rescores.addAll(searchRequestImpl._rescores);
@@ -119,6 +121,10 @@ public class SearchRequestImpl implements SearchRequest, Serializable {
 
 		_pipelineAggregationsMap.put(
 			pipelineAggregation.getName(), pipelineAggregation);
+	}
+
+	public void addPostFilterQueryPart(ComplexQueryPart complexQueryPart) {
+		_postFilterComplexQueryParts.add(complexQueryPart);
 	}
 
 	public void addRescore(Rescore rescore) {
@@ -222,6 +228,11 @@ public class SearchRequestImpl implements SearchRequest, Serializable {
 	@Override
 	public Map<String, PipelineAggregation> getPipelineAggregationsMap() {
 		return Collections.unmodifiableMap(_pipelineAggregationsMap);
+	}
+
+	@Override
+	public List<ComplexQueryPart> getPostFilterComplexQueryParts() {
+		return Collections.unmodifiableList(_postFilterComplexQueryParts);
 	}
 
 	@Override
@@ -452,6 +463,8 @@ public class SearchRequestImpl implements SearchRequest, Serializable {
 	private String _paginationStartParameterName;
 	private final Map<String, PipelineAggregation> _pipelineAggregationsMap =
 		new LinkedHashMap<>();
+	private List<ComplexQueryPart> _postFilterComplexQueryParts =
+		new ArrayList<>();
 	private Query _postFilterQuery;
 	private Query _query;
 	private Query _rescoreQuery;
