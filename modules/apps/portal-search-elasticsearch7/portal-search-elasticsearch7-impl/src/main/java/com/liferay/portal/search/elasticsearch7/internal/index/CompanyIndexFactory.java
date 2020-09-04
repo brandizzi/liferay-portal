@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -487,7 +488,7 @@ public class CompanyIndexFactory
 		new CopyOnWriteArrayList<>();
 	private IndexNameBuilder _indexNameBuilder;
 	private final Set<IndexSettingsContributor> _indexSettingsContributors =
-		new ConcurrentSkipListSet<>();
+		ConcurrentHashMap.newKeySet();
 	private JSONFactory _jsonFactory;
 
 }
