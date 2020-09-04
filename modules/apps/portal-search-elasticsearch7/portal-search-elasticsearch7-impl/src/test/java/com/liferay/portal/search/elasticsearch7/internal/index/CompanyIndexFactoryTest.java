@@ -176,6 +176,15 @@ public class CompanyIndexFactoryTest {
 	}
 
 	@Test
+	public void testAddMultipleIndexSettingsContributors() throws Exception {
+		_companyIndexFactory.addIndexSettingsContributor(
+			new TestIndexSettingsContributor());
+
+		_companyIndexFactory.addIndexSettingsContributor(
+			new TestIndexSettingsContributor());
+	}
+
+	@Test
 	public void testCreateIndicesWithBlankStrings() throws Exception {
 		Mockito.when(
 			_elasticsearchConfigurationWrapper.additionalIndexConfigurations()
@@ -548,6 +557,18 @@ public class CompanyIndexFactoryTest {
 		assertNoAnalyzer(field);
 	}
 
+	@Test
+	public void testRemoveIndexSettingsContributor() throws Exception {
+		IndexSettingsContributor indexSettingsContributor =
+			new TestIndexSettingsContributor();
+
+		_companyIndexFactory.addIndexSettingsContributor(
+			indexSettingsContributor);
+
+		_companyIndexFactory.removeIndexSettingsContributor(
+			indexSettingsContributor);
+	}
+
 	@Rule
 	public TestName testName = new TestName();
 
@@ -748,6 +769,24 @@ public class CompanyIndexFactoryTest {
 	protected String replaceAnalyzer(String mappings, String analyzer) {
 		return StringUtil.replace(
 			mappings, "kuromoji_liferay_custom", analyzer);
+	}
+
+	protected static class TestIndexSettingsContributor
+		implements IndexSettingsContributor {
+
+		@Override
+		public void contribute(
+			String indexName,
+			com.liferay.portal.search.spi.settings.TypeMappingsHelper
+				typeMappingsHelper) {
+		}
+
+		@Override
+		public void populate(
+			com.liferay.portal.search.spi.settings.IndexSettingsHelper
+				indexSettingsHelper) {
+		}
+
 	}
 
 	private static ElasticsearchFixture _elasticsearchFixture;
