@@ -94,6 +94,26 @@ public class CommonSearchSourceBuilderAssemblerImpl
 		).build();
 	}
 
+	protected QueryBuilder buildQueryBuilder(
+		BaseSearchRequest baseSearchRequest) {
+
+		QueryBuilder queryBuilder = null;
+
+		if (baseSearchRequest.getPostFilterQuery() != null) {
+			queryBuilder = _queryToQueryBuilderTranslator.translate(
+				baseSearchRequest.getPostFilterQuery());
+		}
+
+		List<ComplexQueryPart> postFilterQueryParts =
+			baseSearchRequest.getPostFilterQueryParts();
+
+		if (!postFilterQueryParts.isEmpty()) {
+			queryBuilder = combine(queryBuilder, postFilterQueryParts);
+		}
+
+		return queryBuilder;
+	}
+
 	protected QueryBuilder combine(
 		BoolQueryBuilder boolQueryBuilder, QueryBuilder queryBuilder,
 		BiConsumer<BoolQueryBuilder, QueryBuilder> biConsumer) {
@@ -313,40 +333,16 @@ public class CommonSearchSourceBuilderAssemblerImpl
 		_pipelineAggregationTranslator = pipelineAggregationTranslator;
 	}
 
-	protected boolean setPostFilter(
-		BaseSearchRequest baseSearchRequest,
-		SearchSourceBuilder searchSourceBuilder) {
-
-		QueryBuilder queryBuilder = null;
-
-		if (baseSearchRequest.getPostFilterQuery() != null) {
-			queryBuilder = _queryToQueryBuilderTranslator.translate(
-				baseSearchRequest.getPostFilterQuery());
-		}
-
-		List<ComplexQueryPart> postFilterQueryParts =
-			baseSearchRequest.getPostFilterQueryParts();
-
-		if (!postFilterQueryParts.isEmpty()) {
-			queryBuilder = combine(queryBuilder, postFilterQueryParts);
-		}
-
-		if (queryBuilder != null) {
-			searchSourceBuilder.postFilter(queryBuilder);
-
-			return true;
-		}
-
-		return false;
-	}
-
 	protected void setPostFilter(
 		SearchSourceBuilder searchSourceBuilder,
 		BaseSearchRequest baseSearchRequest) {
 
-		if (!setPostFilter(baseSearchRequest, searchSourceBuilder) &&
-			(baseSearchRequest.getPostFilter() != null)) {
+		QueryBuilder queryBuilder = buildQueryBuilder(baseSearchRequest);
 
+		if (queryBuilder != null) {
+			searchSourceBuilder.postFilter(queryBuilder);
+		}
+		else if (baseSearchRequest.getPostFilter() != null) {
 			searchSourceBuilder.postFilter(
 				_filterToQueryBuilderTranslator.translate(
 					baseSearchRequest.getPostFilter(), null));
