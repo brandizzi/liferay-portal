@@ -74,29 +74,37 @@ public class IndexDocumentRequestExecutorTest {
 		doIndexDocument(true);
 	}
 
-	protected void doIndexDocument(boolean refresh) {
+	protected void assertFieldEquals(
+		String fieldName, Document expectedDocument, Document actualDocument) {
+
+		Assert.assertEquals(
+			expectedDocument.getString(fieldName),
+			actualDocument.getString(fieldName));
+	}
+
+	protected Document buildDocument(String fieldName, String fieldValue) {
 		DocumentBuilder documentBuilder = new DocumentBuilderImpl();
 
-		Document document1 = documentBuilder.setString(
-			_FIELD_NAME, "example test"
+		return documentBuilder.setString(
+			fieldName, fieldValue
 		).build();
+	}
+
+	protected void doIndexDocument(boolean refresh) {
+		Document document = buildDocument(_FIELD_NAME, "example test");
 
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
-			_INDEX_NAME, document1);
+			_INDEX_NAME, document);
 
 		indexDocumentRequest.setRefresh(refresh);
 
 		IndexDocumentResponse indexDocumentResponse =
 			_indexDocumentRequestExecutor.execute(indexDocumentRequest);
 
-		String uid = indexDocumentResponse.getUid();
-
-		Document document2 = _requestExecutorFixture.getDocumentById(
-			_INDEX_NAME, uid);
-
-		Assert.assertEquals(
-			uid + " -> " + document2.toString(),
-			document1.getString(_FIELD_NAME), document2.getString(_FIELD_NAME));
+		assertFieldEquals(
+			_FIELD_NAME, document,
+			_requestExecutorFixture.getDocumentById(
+				_INDEX_NAME, indexDocumentResponse.getUid()));
 	}
 
 	private static final String _FIELD_NAME = "testField";

@@ -23,12 +23,16 @@ import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.d
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.document.GetDocumentRequestExecutorImpl;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.document.IndexDocumentRequestExecutor;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.document.IndexDocumentRequestExecutorImpl;
+import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.document.UpdateDocumentRequestExecutor;
+import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.document.UpdateDocumentRequestExecutorImpl;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.CreateIndexRequestExecutorImpl;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.DeleteIndexRequestExecutorImpl;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.IndicesOptionsTranslator;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.IndicesOptionsTranslatorImpl;
 import com.liferay.portal.search.engine.adapter.document.GetDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.GetDocumentResponse;
+import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
+import com.liferay.portal.search.engine.adapter.document.IndexDocumentResponse;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
 import com.liferay.portal.search.internal.document.DocumentBuilderFactoryImpl;
@@ -81,6 +85,22 @@ public class RequestExecutorFixture {
 		return _indexDocumentRequestExecutor;
 	}
 
+	public UpdateDocumentRequestExecutor getUpdateDocumentRequestExecutor() {
+		return _updateDocumentRequestExecutor;
+	}
+
+	public IndexDocumentResponse indexDocument(
+		String indexName, Document document) {
+
+		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
+			indexName, document);
+
+		IndexDocumentResponse indexDocumentResponse =
+			_indexDocumentRequestExecutor.execute(indexDocumentRequest);
+
+		return indexDocumentResponse;
+	}
+
 	public void setUp() {
 		_createIndexRequestExecutor = new CreateIndexRequestExecutorImpl() {
 			{
@@ -126,6 +146,16 @@ public class RequestExecutorFixture {
 				setElasticsearchClientResolver(_elasticsearchClientResolver);
 			}
 		};
+
+		_updateDocumentRequestExecutor =
+			new UpdateDocumentRequestExecutorImpl() {
+				{
+					setBulkableDocumentRequestTranslator(
+						bulkableDocumentRequestTranslator);
+					setElasticsearchClientResolver(
+						_elasticsearchClientResolver);
+				}
+			};
 	}
 
 	private CreateIndexRequestExecutorImpl _createIndexRequestExecutor;
@@ -133,5 +163,6 @@ public class RequestExecutorFixture {
 	private final ElasticsearchClientResolver _elasticsearchClientResolver;
 	private GetDocumentRequestExecutorImpl _getDocumentRequestExecutor;
 	private IndexDocumentRequestExecutor _indexDocumentRequestExecutor;
+	private UpdateDocumentRequestExecutor _updateDocumentRequestExecutor;
 
 }
