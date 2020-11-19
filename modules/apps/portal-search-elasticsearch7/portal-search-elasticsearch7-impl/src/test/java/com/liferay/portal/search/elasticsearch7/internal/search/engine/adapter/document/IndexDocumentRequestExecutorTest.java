@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.document;
 
 import com.liferay.portal.search.document.Document;
+import com.liferay.portal.search.document.DocumentBuilder;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.test.util.RequestExecutorFixture;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
@@ -74,7 +75,9 @@ public class IndexDocumentRequestExecutorTest {
 	}
 
 	protected void doIndexDocument(boolean refresh) {
-		Document document1 = new DocumentBuilderImpl().setString(
+		DocumentBuilder documentBuilder = new DocumentBuilderImpl();
+
+		Document document1 = documentBuilder.setString(
 			_FIELD_NAME, "example test"
 		).build();
 
