@@ -14,27 +14,19 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.document;
 
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.search.document.Document;
-import com.liferay.portal.search.document.DocumentBuilderFactory;
+import com.liferay.portal.search.document.DocumentBuilder;
 import com.liferay.portal.search.elasticsearch7.internal.connection.ElasticsearchFixture;
-import com.liferay.portal.search.elasticsearch7.internal.document.DefaultElasticsearchDocumentFactory;
-import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.CreateIndexRequestExecutorImpl;
-import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.DeleteIndexRequestExecutorImpl;
-import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.IndicesOptionsTranslator;
-import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.IndicesOptionsTranslatorImpl;
-import com.liferay.portal.search.engine.adapter.document.GetDocumentRequest;
-import com.liferay.portal.search.engine.adapter.document.GetDocumentResponse;
+import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.test.util.RequestExecutorFixture;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentResponse;
-import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
-import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
-import com.liferay.portal.search.internal.document.DocumentBuilderFactoryImpl;
 import com.liferay.portal.search.internal.document.DocumentBuilderImpl;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -42,21 +34,34 @@ import org.junit.Test;
  */
 public class IndexDocumentRequestExecutorTest {
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUpClass() throws Exception {
 		_elasticsearchFixture = new ElasticsearchFixture();
 
 		_elasticsearchFixture.setUp();
 
-		setUpRequestExecutors();
+		_requestExecutorFixture = new RequestExecutorFixture(
+			_elasticsearchFixture);
+
+		_requestExecutorFixture.setUp();
+	}
+
+	@AfterClass
+	public static void tearDownClass() throws Exception {
+		_elasticsearchFixture.tearDown();
+	}
+
+	@Before
+	public void setUp() {
+		_indexDocumentRequestExecutor =
+			_requestExecutorFixture.getIndexDocumentRequestExecutor();
+
+		_requestExecutorFixture.createIndex(_INDEX_NAME);
 	}
 
 	@After
-	public void tearDown() throws Exception {
-		_deleteIndexRequestExecutor.execute(
-			new DeleteIndexRequest(_INDEX_NAME));
-
-		_elasticsearchFixture.tearDown();
+	public void tearDown() {
+		_requestExecutorFixture.deleteIndex(_INDEX_NAME);
 	}
 
 	@Test
@@ -69,95 +74,46 @@ public class IndexDocumentRequestExecutorTest {
 		doIndexDocument(true);
 	}
 
-	protected void doIndexDocument(boolean refresh) {
-		Document document1 = new DocumentBuilderImpl().setString(
-			_FIELD_NAME, "example test"
+	protected void assertFieldEquals(
+		String fieldName, Document expectedDocument, Document actualDocument) {
+
+		Assert.assertEquals(
+			expectedDocument.getString(fieldName),
+			actualDocument.getString(fieldName));
+	}
+
+	protected Document buildDocument(String fieldName, String fieldValue) {
+		DocumentBuilder documentBuilder = new DocumentBuilderImpl();
+
+		return documentBuilder.setString(
+			fieldName, fieldValue
 		).build();
+	}
+
+	protected void doIndexDocument(boolean refresh) {
+		Document document = buildDocument(_FIELD_NAME, "example test");
 
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
-			_INDEX_NAME, document1);
+			_INDEX_NAME, document);
 
 		indexDocumentRequest.setRefresh(refresh);
 
 		IndexDocumentResponse indexDocumentResponse =
 			_indexDocumentRequestExecutor.execute(indexDocumentRequest);
 
-		String uid = indexDocumentResponse.getUid();
-
-		GetDocumentRequest getDocumentRequest = new GetDocumentRequest(
-			_INDEX_NAME, uid);
-
-		getDocumentRequest.setFetchSource(true);
-		getDocumentRequest.setFetchSourceInclude(StringPool.STAR);
-
-		GetDocumentResponse getDocumentResponse =
-			_getDocumentRequestExecutor.execute(getDocumentRequest);
-
-		Document document2 = getDocumentResponse.getDocument();
-
-		Assert.assertEquals(
-			uid + " -> " + document2.toString(),
-			document1.getString(_FIELD_NAME), document2.getString(_FIELD_NAME));
-	}
-
-	protected void setUpRequestExecutors() {
-		_createIndexRequestExecutor = new CreateIndexRequestExecutorImpl() {
-			{
-				setElasticsearchClientResolver(_elasticsearchFixture);
-			}
-		};
-
-		IndicesOptionsTranslator indicesOptionsTranslator =
-			new IndicesOptionsTranslatorImpl();
-
-		_deleteIndexRequestExecutor = new DeleteIndexRequestExecutorImpl() {
-			{
-				setIndicesOptionsTranslator(indicesOptionsTranslator);
-				setElasticsearchClientResolver(_elasticsearchFixture);
-			}
-		};
-
-		ElasticsearchBulkableDocumentRequestTranslatorImpl
-			bulkableDocumentRequestTranslator =
-				new ElasticsearchBulkableDocumentRequestTranslatorImpl() {
-					{
-						setElasticsearchDocumentFactory(
-							new DefaultElasticsearchDocumentFactory());
-					}
-				};
-
-		DocumentBuilderFactory documentBuilderFactory =
-			new DocumentBuilderFactoryImpl();
-
-		_getDocumentRequestExecutor = new GetDocumentRequestExecutorImpl() {
-			{
-				setBulkableDocumentRequestTranslator(
-					bulkableDocumentRequestTranslator);
-				setElasticsearchClientResolver(_elasticsearchFixture);
-				setDocumentBuilderFactory(documentBuilderFactory);
-			}
-		};
-
-		_indexDocumentRequestExecutor = new IndexDocumentRequestExecutorImpl() {
-			{
-				setBulkableDocumentRequestTranslator(
-					bulkableDocumentRequestTranslator);
-				setElasticsearchClientResolver(_elasticsearchFixture);
-			}
-		};
-
-		_createIndexRequestExecutor.execute(
-			new CreateIndexRequest(_INDEX_NAME));
+		assertFieldEquals(
+			_FIELD_NAME, document,
+			_requestExecutorFixture.getDocumentById(
+				_INDEX_NAME, indexDocumentResponse.getUid()));
 	}
 
 	private static final String _FIELD_NAME = "testField";
 
 	private static final String _INDEX_NAME = "test_request_index";
 
-	private CreateIndexRequestExecutorImpl _createIndexRequestExecutor;
-	private DeleteIndexRequestExecutorImpl _deleteIndexRequestExecutor;
-	private ElasticsearchFixture _elasticsearchFixture;
-	private GetDocumentRequestExecutorImpl _getDocumentRequestExecutor;
+	private static ElasticsearchFixture _elasticsearchFixture;
+	private static RequestExecutorFixture _requestExecutorFixture;
+
 	private IndexDocumentRequestExecutor _indexDocumentRequestExecutor;
 
 }
