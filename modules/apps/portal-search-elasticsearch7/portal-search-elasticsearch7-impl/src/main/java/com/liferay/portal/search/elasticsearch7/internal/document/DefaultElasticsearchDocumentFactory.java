@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.document;
 
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.document.Document;
@@ -104,10 +103,6 @@ public class DefaultElasticsearchDocumentFactory
 
 		List<Object> values = field.getValues();
 
-		if (values.isEmpty()) {
-			addFieldValueless(field, xContentBuilder);
-		}
-
 		if (values.size() == 1) {
 			addFieldValue(field, values.get(0), xContentBuilder);
 
@@ -127,22 +122,10 @@ public class DefaultElasticsearchDocumentFactory
 		if (!field.isLocalized()) {
 			String[] values = field.getValues();
 
-			if (ArrayUtil.isEmpty(values)) {
-				return;
-			}
-
 			List<String> valuesList = new ArrayList<>(values.length);
 
 			for (String value : values) {
-				if (value == null) {
-					continue;
-				}
-
 				valuesList.add(value.trim());
-			}
-
-			if (valuesList.isEmpty()) {
-				return;
 			}
 
 			values = valuesList.toArray(new String[0]);
