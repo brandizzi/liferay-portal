@@ -196,7 +196,7 @@ public class DocumentImpl implements Document {
 	}
 
 	protected Field removeField(String name) {
-		return _fields.remove(name);
+		return _fields.put(name, new FieldImpl(name, Collections.emptyList()));
 	}
 
 	protected void setFieldValue(String name, Object value) {
@@ -230,11 +230,11 @@ public class DocumentImpl implements Document {
 
 	private Collection<Object> _toCollection(Object[] values) {
 		if (ArrayUtil.isEmpty(values)) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		if ((values.length == 1) && (values[0] == null)) {
-			return null;
+			return Collections.emptyList();
 		}
 
 		return Arrays.asList(values);
