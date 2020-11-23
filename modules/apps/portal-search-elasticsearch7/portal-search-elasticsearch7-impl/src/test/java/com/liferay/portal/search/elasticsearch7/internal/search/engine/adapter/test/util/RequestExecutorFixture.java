@@ -94,6 +94,15 @@ public class RequestExecutorFixture {
 	}
 
 	public IndexDocumentResponse indexDocument(
+		String indexName, com.liferay.portal.kernel.search.Document document) {
+
+		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
+			indexName, document);
+
+		return _indexDocumentRequestExecutor.execute(indexDocumentRequest);
+	}
+
+	public IndexDocumentResponse indexDocument(
 		String indexName, Document document) {
 
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
