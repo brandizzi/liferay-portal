@@ -125,7 +125,12 @@ public class DefaultElasticsearchDocumentFactory
 			List<String> valuesList = new ArrayList<>(values.length);
 
 			for (String value : values) {
-				valuesList.add(value.trim());
+				if (value != null) {
+					valuesList.add(value.trim());
+				}
+				else {
+					valuesList.add(value);
+				}
 			}
 
 			values = valuesList.toArray(new String[0]);
@@ -183,7 +188,7 @@ public class DefaultElasticsearchDocumentFactory
 
 		xContentBuilder.field(fieldName);
 
-		if (field.isArray() || (values.length > 1)) {
+		if (field.isArray() || (values.length != 1)) {
 			xContentBuilder.startArray();
 		}
 
@@ -206,7 +211,7 @@ public class DefaultElasticsearchDocumentFactory
 			}
 		}
 
-		if (field.isArray() || (values.length > 1)) {
+		if (field.isArray() || (values.length != 1)) {
 			xContentBuilder.endArray();
 		}
 	}
