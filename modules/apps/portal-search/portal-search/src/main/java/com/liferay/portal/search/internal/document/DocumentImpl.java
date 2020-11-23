@@ -233,10 +233,6 @@ public class DocumentImpl implements Document {
 			return Collections.emptyList();
 		}
 
-		if ((values.length == 1) && (values[0] == null)) {
-			return Collections.emptyList();
-		}
-
 		return Arrays.asList(values);
 	}
 
