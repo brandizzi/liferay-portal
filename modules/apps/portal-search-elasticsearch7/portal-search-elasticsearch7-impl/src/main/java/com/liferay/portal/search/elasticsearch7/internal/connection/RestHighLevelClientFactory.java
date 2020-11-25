@@ -96,6 +96,12 @@ public class RestHighLevelClientFactory {
 			return this;
 		}
 
+		public Builder proxyConfig(ProxyConfig proxyConfig) {
+			_restHighLevelClientFactory._proxyConfig = proxyConfig;
+
+			return this;
+		}
+
 		public Builder truststorePassword(String truststorePassword) {
 			_restHighLevelClientFactory._truststorePassword =
 				truststorePassword;
@@ -129,6 +135,13 @@ public class RestHighLevelClientFactory {
 	protected CredentialsProvider createCredentialsProvider() {
 		CredentialsProvider credentialsProvider =
 			new BasicCredentialsProvider();
+
+		if (_proxyConfig.shouldApplyCredentials()) {
+			credentialsProvider.setCredentials(
+				new AuthScope(_proxyConfig.getHost(), _proxyConfig.getPort()),
+				new UsernamePasswordCredentials(
+					_proxyConfig.getUserName(), _proxyConfig.getPassword()));
+		}
 
 		credentialsProvider.setCredentials(
 			AuthScope.ANY,
@@ -172,6 +185,12 @@ public class RestHighLevelClientFactory {
 			httpAsyncClientBuilder.setSSLContext(createSSLContext());
 		}
 
+		if ((_proxyConfig != null) && _proxyConfig.shouldApplyConfig()) {
+			httpAsyncClientBuilder.setProxy(
+				new HttpHost(
+					_proxyConfig.getHost(), _proxyConfig.getPort(), "http"));
+		}
+
 		return httpAsyncClientBuilder;
 	}
 
@@ -206,6 +225,7 @@ public class RestHighLevelClientFactory {
 		_truststorePassword = restHighLevelClientFactory._truststorePassword;
 		_truststorePath = restHighLevelClientFactory._truststorePath;
 		_truststoreType = restHighLevelClientFactory._truststoreType;
+		_proxyConfig = restHighLevelClientFactory._proxyConfig;
 		_userName = restHighLevelClientFactory._userName;
 	}
 
@@ -213,6 +233,7 @@ public class RestHighLevelClientFactory {
 	private boolean _httpSSLEnabled;
 	private String[] _networkHostAddresses;
 	private String _password;
+	private ProxyConfig _proxyConfig;
 	private String _truststorePassword;
 	private String _truststorePath;
 	private String _truststoreType;

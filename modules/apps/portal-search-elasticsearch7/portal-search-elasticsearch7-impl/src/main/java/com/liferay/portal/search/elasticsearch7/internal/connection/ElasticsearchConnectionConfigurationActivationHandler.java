@@ -15,6 +15,7 @@
 package com.liferay.portal.search.elasticsearch7.internal.connection;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConnectionConfiguration;
 
 import java.util.Map;
@@ -54,6 +55,8 @@ public class ElasticsearchConnectionConfigurationActivationHandler {
 			elasticsearchConnectionConfiguration.networkHostAddresses()
 		).password(
 			elasticsearchConnectionConfiguration.password()
+		).proxyConfig(
+			createProxyConfig(elasticsearchConnectionConfiguration)
 		).truststorePassword(
 			elasticsearchConnectionConfiguration.truststorePassword()
 		).truststorePath(
@@ -68,7 +71,29 @@ public class ElasticsearchConnectionConfigurationActivationHandler {
 			elasticsearchConnectionBuilder.build());
 	}
 
+	protected ProxyConfig createProxyConfig(
+		ElasticsearchConnectionConfiguration
+			elasticsearchConnectionConfiguration) {
+
+		ProxyConfig.Builder proxyConfigBuilder = ProxyConfig.builder(http);
+
+		return proxyConfigBuilder.networkAddresses(
+			elasticsearchConnectionConfiguration.networkHostAddresses()
+		).host(
+			elasticsearchConnectionConfiguration.proxyHost()
+		).password(
+			elasticsearchConnectionConfiguration.proxyPassword()
+		).port(
+			elasticsearchConnectionConfiguration.proxyPort()
+		).userName(
+			elasticsearchConnectionConfiguration.proxyHost()
+		).build();
+	}
+
 	@Reference
 	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
+
+	@Reference
+	protected Http http;
 
 }
