@@ -97,4 +97,27 @@ public interface ElasticsearchConnectionConfiguration {
 	)
 	public String truststorePassword();
 
+	@Meta.AD(
+		description = "proxy-host-help", name = "proxy-host", required = false
+	)
+	public String proxyHost();
+
+	@Meta.AD(
+		deflt = "0", description = "proxy-port-help", name = "proxy-port",
+		required = false
+	)
+	public int proxyPort();
+
+	@Meta.AD(
+		description = "proxy-username-help", name = "proxy-username",
+		required = false
+	)
+	public String proxyUserName();
+
+	@Meta.AD(
+		description = "proxy-password-help", name = "proxy-password",
+		required = false, type = Meta.Type.Password
+	)
+	public String proxyPassword();
+
 }
