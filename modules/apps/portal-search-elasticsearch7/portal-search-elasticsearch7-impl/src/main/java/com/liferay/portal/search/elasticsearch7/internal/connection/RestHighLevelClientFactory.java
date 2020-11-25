@@ -14,6 +14,11 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.connection;
 
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.Http;
+import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.SystemProperties;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.elasticsearch7.internal.util.ClassLoaderUtil;
 
 import java.io.InputStream;
@@ -96,6 +101,30 @@ public class RestHighLevelClientFactory {
 			return this;
 		}
 
+		public Builder proxyHost(String proxyHost) {
+			_restHighLevelClientFactory._proxyHost = proxyHost;
+
+			return this;
+		}
+
+		public Builder proxyPassword(String proxyPassword) {
+			_restHighLevelClientFactory._proxyPassword = proxyPassword;
+
+			return this;
+		}
+
+		public Builder proxyPort(int proxyPort) {
+			_restHighLevelClientFactory._proxyPort = proxyPort;
+
+			return this;
+		}
+
+		public Builder proxyUserName(String proxyUserName) {
+			_restHighLevelClientFactory._proxyUserName = proxyUserName;
+
+			return this;
+		}
+
 		public Builder truststorePassword(String truststorePassword) {
 			_restHighLevelClientFactory._truststorePassword =
 				truststorePassword;
@@ -129,6 +158,13 @@ public class RestHighLevelClientFactory {
 	protected CredentialsProvider createCredentialsProvider() {
 		CredentialsProvider credentialsProvider =
 			new BasicCredentialsProvider();
+
+		if (shouldApplyProxyCredentials()) {
+			credentialsProvider.setCredentials(
+				new AuthScope(_proxyHost, _proxyPort),
+				new UsernamePasswordCredentials(
+					_proxyUserName, _proxyPassword));
+		}
 
 		credentialsProvider.setCredentials(
 			AuthScope.ANY,
@@ -172,6 +208,11 @@ public class RestHighLevelClientFactory {
 			httpAsyncClientBuilder.setSSLContext(createSSLContext());
 		}
 
+		if (shouldApplyProxyConfiguration()) {
+			httpAsyncClientBuilder.setProxy(
+				new HttpHost(getProxyHost(), getProxyPort(), "http"));
+		}
+
 		return httpAsyncClientBuilder;
 	}
 
@@ -179,6 +220,17 @@ public class RestHighLevelClientFactory {
 		RequestConfig.Builder requestConfigBuilder) {
 
 		return requestConfigBuilder.setSocketTimeout(120000);
+	}
+
+	protected Http getHttp() {
+
+		// See LPS-72507 and LPS-76500
+
+		if (http != null) {
+			return http;
+		}
+
+		return HttpUtil.getHttp();
 	}
 
 	protected HttpHost[] getHttpHosts() {
@@ -190,6 +242,53 @@ public class RestHighLevelClientFactory {
 			HttpHost[]::new
 		);
 	}
+
+	protected String getProxyHost() {
+		if (!Validator.isBlank(_proxyHost)) {
+			return _proxyHost;
+		}
+
+		return SystemProperties.get("http.proxyHost");
+	}
+
+	protected int getProxyPort() {
+		if (_proxyPort > 0) {
+			return _proxyPort;
+		}
+
+		return GetterUtil.getInteger(SystemProperties.get("http.proxyPort"));
+	}
+
+	protected boolean shouldApplyProxyConfiguration() {
+		if (!Validator.isBlank(_proxyHost)) {
+			return true;
+		}
+
+		Http http = getHttp();
+
+		if (!http.hasProxyConfig()) {
+			return false;
+		}
+
+		return Stream.of(
+			_networkHostAddresses
+		).allMatch(
+			host -> !http.isNonProxyHost(host)
+		);
+	}
+
+	protected boolean shouldApplyProxyCredentials() {
+		if (!Validator.isBlank(_proxyHost) &&
+			!Validator.isBlank(_proxyPassword) && (_proxyPort > 0) &&
+			!Validator.isBlank(_proxyUserName)) {
+
+			return true;
+		}
+
+		return false;
+	}
+
+	protected Http http;
 
 	private RestHighLevelClientFactory() {
 	}
@@ -206,6 +305,10 @@ public class RestHighLevelClientFactory {
 		_truststorePassword = restHighLevelClientFactory._truststorePassword;
 		_truststorePath = restHighLevelClientFactory._truststorePath;
 		_truststoreType = restHighLevelClientFactory._truststoreType;
+		_proxyHost = restHighLevelClientFactory._proxyHost;
+		_proxyPassword = restHighLevelClientFactory._proxyPassword;
+		_proxyPort = restHighLevelClientFactory._proxyPort;
+		_proxyUserName = restHighLevelClientFactory._proxyUserName;
 		_userName = restHighLevelClientFactory._userName;
 	}
 
@@ -213,6 +316,10 @@ public class RestHighLevelClientFactory {
 	private boolean _httpSSLEnabled;
 	private String[] _networkHostAddresses;
 	private String _password;
+	private String _proxyHost;
+	private String _proxyPassword;
+	private int _proxyPort;
+	private String _proxyUserName;
 	private String _truststorePassword;
 	private String _truststorePath;
 	private String _truststoreType;
