@@ -33,13 +33,20 @@ import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.i
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.DeleteIndexRequestExecutorImpl;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.IndicesOptionsTranslator;
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.index.IndicesOptionsTranslatorImpl;
+import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.search.SearchSearchRequestAssemblerFixture;
+import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.search.SearchSearchRequestExecutor;
+import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.search.SearchSearchRequestExecutorImpl;
+import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.search.SearchSearchResponseAssemblerFixture;
 import com.liferay.portal.search.engine.adapter.document.GetDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.GetDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentRequest;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentResponse;
 import com.liferay.portal.search.engine.adapter.index.CreateIndexRequest;
 import com.liferay.portal.search.engine.adapter.index.DeleteIndexRequest;
+import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
+import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
 import com.liferay.portal.search.internal.document.DocumentBuilderFactoryImpl;
+import com.liferay.portal.search.query.Query;
 
 /**
  * @author Adam Brandizzi
@@ -89,6 +96,10 @@ public class RequestExecutorFixture {
 		return _indexDocumentRequestExecutor;
 	}
 
+	public SearchSearchRequestExecutor getSearchSearchRequestExecutor() {
+		return _searchSearchRequestExecutor;
+	}
+
 	public UpdateDocumentRequestExecutor getUpdateDocumentRequestExecutor() {
 		return _updateDocumentRequestExecutor;
 	}
@@ -96,6 +107,7 @@ public class RequestExecutorFixture {
 	public IndexDocumentResponse indexDocument(
 		String indexName, com.liferay.portal.kernel.search.Document document) {
 
+		@SuppressWarnings("deprecation")
 		IndexDocumentRequest indexDocumentRequest = new IndexDocumentRequest(
 			indexName, document);
 
@@ -109,6 +121,15 @@ public class RequestExecutorFixture {
 			indexName, document);
 
 		return _indexDocumentRequestExecutor.execute(indexDocumentRequest);
+	}
+
+	public SearchSearchResponse search(String indexName, Query query) {
+		SearchSearchRequest searchSearchRequest = new SearchSearchRequest();
+
+		searchSearchRequest.setIndexNames(indexName);
+		searchSearchRequest.setQuery(query);
+
+		return _searchSearchRequestExecutor.execute(searchSearchRequest);
 	}
 
 	public void setUp() {
@@ -157,6 +178,28 @@ public class RequestExecutorFixture {
 			}
 		};
 
+		SearchSearchRequestAssemblerFixture
+			searchSearchRequestAssemblerFixture =
+				new SearchSearchRequestAssemblerFixture();
+
+		searchSearchRequestAssemblerFixture.setUp();
+
+		SearchSearchResponseAssemblerFixture
+			searchSearchResponseAssemblerFixture =
+				new SearchSearchResponseAssemblerFixture();
+
+		_searchSearchRequestExecutor = new SearchSearchRequestExecutorImpl() {
+			{
+				setElasticsearchClientResolver(_elasticsearchClientResolver);
+				setSearchSearchRequestAssembler(
+					searchSearchRequestAssemblerFixture.
+						createSearchSearchRequestAssembler());
+				setSearchSearchResponseAssembler(
+					searchSearchResponseAssemblerFixture.
+						createSearchSearchResponseAssembler());
+			}
+		};
+
 		_updateDocumentRequestExecutor =
 			new UpdateDocumentRequestExecutorImpl() {
 				{
@@ -173,6 +216,7 @@ public class RequestExecutorFixture {
 	private final ElasticsearchClientResolver _elasticsearchClientResolver;
 	private GetDocumentRequestExecutor _getDocumentRequestExecutor;
 	private IndexDocumentRequestExecutor _indexDocumentRequestExecutor;
+	private SearchSearchRequestExecutor _searchSearchRequestExecutor;
 	private UpdateDocumentRequestExecutor _updateDocumentRequestExecutor;
 
 }

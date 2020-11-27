@@ -197,7 +197,7 @@ public class DefaultElasticsearchDocumentFactoryTest {
 
 	@Test
 	public void testNull() throws Exception {
-		assertDocumentSameAsLegacy(null, "{\"field\":null}");
+		assertDocumentSameAsLegacy(null, "{}");
 	}
 
 	@Test

@@ -22,6 +22,12 @@ import com.liferay.portal.search.elasticsearch7.internal.connection.Elasticsearc
 import com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.test.util.RequestExecutorFixture;
 import com.liferay.portal.search.engine.adapter.document.IndexDocumentResponse;
 import com.liferay.portal.search.engine.adapter.document.UpdateDocumentRequest;
+import com.liferay.portal.search.engine.adapter.search.SearchSearchResponse;
+import com.liferay.portal.search.internal.query.BooleanQueryImpl;
+import com.liferay.portal.search.internal.query.ExistsQueryImpl;
+import com.liferay.portal.search.internal.query.IdsQueryImpl;
+import com.liferay.portal.search.query.BooleanQuery;
+import com.liferay.portal.search.query.IdsQuery;
 import com.liferay.portal.util.PropsImpl;
 
 import org.junit.After;
@@ -29,12 +35,12 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * @author Adam Brandizzi
  */
+@SuppressWarnings("deprecation")
 public class UpdateDocumentRequestExecutorLegacyTest {
 
 	@BeforeClass
@@ -69,108 +75,95 @@ public class UpdateDocumentRequestExecutorLegacyTest {
 		_requestExecutorFixture.deleteIndex(_INDEX_NAME);
 	}
 
-	@Ignore
+	@Test
+	public void testFieldArrayWithNull() {
+		IndexDocumentResponse indexDocumentResponse =
+			_requestExecutorFixture.indexDocument(
+				_INDEX_NAME, buildDocument(_FIELD_NAME, "example test"));
+
+		String uid = indexDocumentResponse.getUid();
+
+		assertIndexedFieldEquals(uid, _FIELD_NAME, "example test");
+
+		_updateDocumentRequestExecutor.execute(
+			new UpdateDocumentRequest(
+				_INDEX_NAME, uid,
+				buildDocument(_FIELD_NAME, new String[] {null})));
+
+		assertIndexedFieldEquals(uid, _FIELD_NAME, "example test");
+	}
+
+	@Test
+	public void testFieldEmptyArray() {
+		IndexDocumentResponse indexDocumentResponse =
+			_requestExecutorFixture.indexDocument(
+				_INDEX_NAME, buildDocument(_FIELD_NAME, "example test"));
+
+		String uid = indexDocumentResponse.getUid();
+
+		assertIndexedFieldEquals(uid, _FIELD_NAME, "example test");
+
+		_updateDocumentRequestExecutor.execute(
+			new UpdateDocumentRequest(
+				_INDEX_NAME, uid, buildDocument(_FIELD_NAME, new String[0])));
+
+		assertIndexedFieldEquals(uid, _FIELD_NAME, "example test");
+	}
+
+	@Test
+	public void testFieldNull() {
+		IndexDocumentResponse indexDocumentResponse =
+			_requestExecutorFixture.indexDocument(
+				_INDEX_NAME, buildDocument(_FIELD_NAME, "example test"));
+
+		String uid = indexDocumentResponse.getUid();
+
+		assertIndexedFieldEquals(uid, _FIELD_NAME, "example test");
+
+		_updateDocumentRequestExecutor.execute(
+			new UpdateDocumentRequest(
+				_INDEX_NAME, uid, buildDocument(_FIELD_NAME, (String[])null)));
+
+		assertIndexedFieldEquals(uid, _FIELD_NAME, "example test");
+	}
+
 	@Test
 	public void testUnsetValue() {
+		IndexDocumentResponse indexDocumentResponse =
+			_requestExecutorFixture.indexDocument(
+				_INDEX_NAME, buildDocument(_FIELD_NAME, "example test"));
+
+		String uid = indexDocumentResponse.getUid();
+
+		assertIndexedFieldEquals(uid, _FIELD_NAME, "example test");
+
+		_updateDocumentRequestExecutor.execute(
+			new UpdateDocumentRequest(
+				_INDEX_NAME, uid, buildDocumentWithUnsetField(_FIELD_NAME)));
+
+		assertIndexedFieldEquals(uid, _FIELD_NAME, "example test");
+	}
+
+	@Test
+	public void testUnsetValueExists() {
 		String fieldName = _FIELD_NAME;
 
-		Document document1 = buildDocument(fieldName, "example test");
-
 		IndexDocumentResponse indexDocumentResponse =
-			_requestExecutorFixture.indexDocument(_INDEX_NAME, document1);
+			_requestExecutorFixture.indexDocument(
+				_INDEX_NAME, buildDocument(fieldName, "example test"));
 
 		String uid = indexDocumentResponse.getUid();
 
-		assertFieldEquals(
-			fieldName, document1,
-			_requestExecutorFixture.getDocumentById(_INDEX_NAME, uid));
+		assertIndexedFieldEquals(uid, fieldName, "example test");
 
-		Document document2 = buildDocumentWithUnsetField(fieldName);
+		_updateDocumentRequestExecutor.execute(
+			new UpdateDocumentRequest(
+				_INDEX_NAME, uid, buildDocumentWithUnsetField(fieldName)));
 
-		UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest(
-			_INDEX_NAME, uid, document2);
+		SearchSearchResponse searchSearchResponse = queryByIdAndFieldExistence(
+			uid, fieldName);
 
-		_updateDocumentRequestExecutor.execute(updateDocumentRequest);
-
-		assertFieldEquals(
-			fieldName, document2,
-			_requestExecutorFixture.getDocumentById(_INDEX_NAME, uid));
-	}
-
-	@Test
-	public void testUnsetValueWithArrayWithNull() {
-		Document document1 = buildDocument(_FIELD_NAME, "example test");
-
-		IndexDocumentResponse indexDocumentResponse =
-			_requestExecutorFixture.indexDocument(_INDEX_NAME, document1);
-
-		String uid = indexDocumentResponse.getUid();
-
-		assertFieldEquals(
-			_FIELD_NAME, document1,
-			_requestExecutorFixture.getDocumentById(_INDEX_NAME, uid));
-
-		Document document2 = buildDocument(_FIELD_NAME, new String[] {null});
-
-		UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest(
-			_INDEX_NAME, uid, document2);
-
-		_updateDocumentRequestExecutor.execute(updateDocumentRequest);
-
-		assertFieldEquals(
-			_FIELD_NAME, document2,
-			_requestExecutorFixture.getDocumentById(_INDEX_NAME, uid));
-	}
-
-	@Test
-	public void testUnsetValueWithEmptyArray() {
-		Document document1 = buildDocument(_FIELD_NAME, "example test");
-
-		IndexDocumentResponse indexDocumentResponse =
-			_requestExecutorFixture.indexDocument(_INDEX_NAME, document1);
-
-		String uid = indexDocumentResponse.getUid();
-
-		assertFieldEquals(
-			_FIELD_NAME, document1,
-			_requestExecutorFixture.getDocumentById(_INDEX_NAME, uid));
-
-		Document document2 = buildDocument(_FIELD_NAME, new String[0]);
-
-		UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest(
-			_INDEX_NAME, uid, document2);
-
-		_updateDocumentRequestExecutor.execute(updateDocumentRequest);
-
-		assertFieldEquals(
-			_FIELD_NAME, document2,
-			_requestExecutorFixture.getDocumentById(_INDEX_NAME, uid));
-	}
-
-	@Ignore
-	@Test
-	public void testUnsetValueWithNull() {
-		Document document1 = buildDocument(_FIELD_NAME, "example test");
-
-		IndexDocumentResponse indexDocumentResponse =
-			_requestExecutorFixture.indexDocument(_INDEX_NAME, document1);
-
-		String uid = indexDocumentResponse.getUid();
-
-		assertFieldEquals(
-			_FIELD_NAME, document1,
-			_requestExecutorFixture.getDocumentById(_INDEX_NAME, uid));
-
-		Document document2 = buildDocument(_FIELD_NAME, null);
-
-		UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest(
-			_INDEX_NAME, uid, document2);
-
-		_updateDocumentRequestExecutor.execute(updateDocumentRequest);
-
-		assertFieldEquals(
-			_FIELD_NAME, document2,
-			_requestExecutorFixture.getDocumentById(_INDEX_NAME, uid));
+		Assert.assertEquals(1, searchSearchResponse.getCount());
 	}
 
 	@Test
@@ -183,13 +176,13 @@ public class UpdateDocumentRequestExecutorLegacyTest {
 		doUpdateDocument(true);
 	}
 
-	protected void assertFieldEquals(
-		String fieldName, Document expectedDocument,
-		com.liferay.portal.search.document.Document actualDocument) {
+	protected void assertIndexedFieldEquals(
+		String uid, String fieldName, String expecedFieldValue) {
 
-		Assert.assertEquals(
-			expectedDocument.get(fieldName),
-			actualDocument.getString(fieldName));
+		com.liferay.portal.search.document.Document document =
+			_requestExecutorFixture.getDocumentById(_INDEX_NAME, uid);
+
+		Assert.assertEquals(expecedFieldValue, document.getString(fieldName));
 	}
 
 	protected Document buildDocument(String fieldName, String... fieldValue) {
@@ -220,29 +213,50 @@ public class UpdateDocumentRequestExecutorLegacyTest {
 	}
 
 	protected void doUpdateDocument(boolean refresh) {
-		Document document1 = buildDocument(_FIELD_NAME, "example test");
-
 		IndexDocumentResponse indexDocumentResponse =
-			_requestExecutorFixture.indexDocument(_INDEX_NAME, document1);
+			_requestExecutorFixture.indexDocument(
+				_INDEX_NAME, buildDocument(_FIELD_NAME, "example test"));
 
 		String uid = indexDocumentResponse.getUid();
 
-		assertFieldEquals(
-			_FIELD_NAME, document1,
-			_requestExecutorFixture.getDocumentById(_INDEX_NAME, uid));
-
-		Document document2 = buildDocument(_FIELD_NAME, "updated value");
+		assertIndexedFieldEquals(uid, _FIELD_NAME, "example test");
 
 		UpdateDocumentRequest updateDocumentRequest = new UpdateDocumentRequest(
-			_INDEX_NAME, uid, document2);
+			_INDEX_NAME, uid, buildDocument(_FIELD_NAME, "updated value"));
 
 		updateDocumentRequest.setRefresh(refresh);
 
 		_updateDocumentRequestExecutor.execute(updateDocumentRequest);
 
-		assertFieldEquals(
-			_FIELD_NAME, document2,
-			_requestExecutorFixture.getDocumentById(_INDEX_NAME, uid));
+		assertIndexedFieldEquals(uid, _FIELD_NAME, "updated value");
+	}
+
+	protected BooleanQuery getFieldExistsQuery(String uid, String fieldName) {
+		BooleanQueryImpl booleanQueryImpl = new BooleanQueryImpl();
+
+		IdsQuery idsQuery = new IdsQueryImpl();
+
+		idsQuery.addIds(uid);
+
+		booleanQueryImpl.addFilterQueryClauses(
+			new ExistsQueryImpl(fieldName), idsQuery);
+
+		return booleanQueryImpl;
+	}
+
+	protected SearchSearchResponse queryByIdAndFieldExistence(
+		String uid, String fieldName) {
+
+		BooleanQueryImpl booleanQueryImpl = new BooleanQueryImpl();
+
+		IdsQuery idsQuery = new IdsQueryImpl();
+
+		idsQuery.addIds(uid);
+
+		booleanQueryImpl.addFilterQueryClauses(
+			new ExistsQueryImpl(fieldName), idsQuery);
+
+		return _requestExecutorFixture.search(_INDEX_NAME, booleanQueryImpl);
 	}
 
 	private static final String _FIELD_NAME = "testField";

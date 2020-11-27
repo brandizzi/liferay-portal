@@ -17,16 +17,10 @@ package com.liferay.portal.search.elasticsearch7.internal.search.engine.adapter.
 import com.liferay.portal.kernel.search.generic.MatchQuery;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.search.elasticsearch7.internal.connection.IndexName;
-import com.liferay.portal.search.elasticsearch7.internal.facet.DefaultFacetTranslator;
-import com.liferay.portal.search.elasticsearch7.internal.filter.ElasticsearchFilterTranslatorFixture;
 import com.liferay.portal.search.elasticsearch7.internal.index.LiferayIndexFixture;
-import com.liferay.portal.search.elasticsearch7.internal.query.ElasticsearchQueryTranslator;
-import com.liferay.portal.search.elasticsearch7.internal.query.ElasticsearchQueryTranslatorFixture;
 import com.liferay.portal.search.elasticsearch7.internal.query.SearchAssert;
 import com.liferay.portal.search.engine.adapter.search.SearchSearchRequest;
-import com.liferay.portal.search.filter.ComplexQueryBuilderFactory;
 import com.liferay.portal.search.filter.ComplexQueryPartBuilderFactory;
-import com.liferay.portal.search.internal.filter.ComplexQueryBuilderImpl;
 import com.liferay.portal.search.internal.filter.ComplexQueryPartBuilderFactoryImpl;
 import com.liferay.portal.search.internal.query.QueriesImpl;
 import com.liferay.portal.search.query.Queries;
@@ -59,11 +53,17 @@ public class CommonSearchSourceBuilderAssemblerImplTest {
 
 		_liferayIndexFixture.setUp();
 
-		Queries queries = new QueriesImpl();
+		_queries = new QueriesImpl();
+
+		CommonSearchSourceBuilderAssemblerFixture
+			commonSearchSourceBuilderAssemblerFixture =
+				new CommonSearchSourceBuilderAssemblerFixture();
+
+		commonSearchSourceBuilderAssemblerFixture.setUp();
 
 		_commonSearchSourceBuilderAssembler =
-			createCommonSearchSourceBuilderAssembler(queries);
-		_queries = queries;
+			commonSearchSourceBuilderAssemblerFixture.
+				createCommonSearchSourceBuilderAssembler(_queries);
 	}
 
 	@After
@@ -116,53 +116,6 @@ public class CommonSearchSourceBuilderAssemblerImplTest {
 
 	@Rule
 	public TestName testName = new TestName();
-
-	protected static CommonSearchSourceBuilderAssembler
-		createCommonSearchSourceBuilderAssembler(Queries queries) {
-
-		ElasticsearchQueryTranslatorFixture
-			elasticsearchQueryTranslatorFixture =
-				new ElasticsearchQueryTranslatorFixture();
-
-		ElasticsearchFilterTranslatorFixture
-			elasticsearchFilterTranslatorFixture =
-				new ElasticsearchFilterTranslatorFixture();
-
-		ElasticsearchQueryTranslator elasticsearchQueryTranslator =
-			elasticsearchQueryTranslatorFixture.
-				getElasticsearchQueryTranslator();
-
-		com.liferay.portal.search.elasticsearch7.internal.legacy.query.
-			ElasticsearchQueryTranslatorFixture
-				legacyElasticsearchQueryTranslatorFixture =
-					new com.liferay.portal.search.elasticsearch7.internal.
-						legacy.query.ElasticsearchQueryTranslatorFixture();
-
-		com.liferay.portal.search.elasticsearch7.internal.legacy.query.
-			ElasticsearchQueryTranslator legacyElasticsearchQueryTranslator =
-				legacyElasticsearchQueryTranslatorFixture.
-					getElasticsearchQueryTranslator();
-
-		return new CommonSearchSourceBuilderAssemblerImpl() {
-			{
-				setComplexQueryBuilderFactory(
-					createComplexQueryBuilderFactory(queries));
-				setFacetTranslator(new DefaultFacetTranslator());
-				setFilterToQueryBuilderTranslator(
-					elasticsearchFilterTranslatorFixture.
-						getElasticsearchFilterTranslator());
-				setLegacyQueryToQueryBuilderTranslator(
-					legacyElasticsearchQueryTranslator);
-				setQueryToQueryBuilderTranslator(elasticsearchQueryTranslator);
-			}
-		};
-	}
-
-	protected static ComplexQueryBuilderFactory
-		createComplexQueryBuilderFactory(Queries queries) {
-
-		return () -> new ComplexQueryBuilderImpl(queries, null);
-	}
 
 	protected void addPart(
 		String occur, Query query, SearchSearchRequest searchSearchRequest) {
