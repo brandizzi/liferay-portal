@@ -158,7 +158,7 @@ public class RestHighLevelClientFactory {
 		CredentialsProvider credentialsProvider =
 			new BasicCredentialsProvider();
 
-		if (_applyProxyCredentials()) {
+		if (hasProxyCredentials()) {
 			credentialsProvider.setCredentials(
 				new AuthScope(_proxyHost, _proxyPort),
 				new UsernamePasswordCredentials(
@@ -207,9 +207,9 @@ public class RestHighLevelClientFactory {
 			httpAsyncClientBuilder.setSSLContext(createSSLContext());
 		}
 
-		if (_applyProxyConfig()) {
+		if (hasProxyConfiguration()) {
 			httpAsyncClientBuilder.setProxy(
-				new HttpHost(_getProxyHost(), _getProxyPort(), "http"));
+				new HttpHost(getProxyHost(), getProxyPort(), "http"));
 		}
 
 		return httpAsyncClientBuilder;
@@ -229,6 +229,49 @@ public class RestHighLevelClientFactory {
 		).toArray(
 			HttpHost[]::new
 		);
+	}
+
+	protected String getProxyHost() {
+		if (!Validator.isBlank(_proxyHost)) {
+			return _proxyHost;
+		}
+
+		return SystemProperties.get("http.proxyHost");
+	}
+
+	protected int getProxyPort() {
+		if (_proxyPort > 0) {
+			return _proxyPort;
+		}
+
+		return GetterUtil.getInteger(SystemProperties.get("http.proxyPort"));
+	}
+
+	protected boolean hasProxyConfiguration() {
+		if (!Validator.isBlank(_proxyHost)) {
+			return true;
+		}
+
+		if (!HttpUtil.hasProxyConfig()) {
+			return false;
+		}
+
+		return Stream.of(
+			_networkHostAddresses
+		).allMatch(
+			host -> !HttpUtil.isNonProxyHost(host)
+		);
+	}
+
+	protected boolean hasProxyCredentials() {
+		if (!Validator.isBlank(_proxyHost) &&
+			!Validator.isBlank(_proxyPassword) && (_proxyPort > 0) &&
+			!Validator.isBlank(_proxyUserName)) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	private RestHighLevelClientFactory() {
@@ -251,49 +294,6 @@ public class RestHighLevelClientFactory {
 		_proxyPort = restHighLevelClientFactory._proxyPort;
 		_proxyUserName = restHighLevelClientFactory._proxyUserName;
 		_userName = restHighLevelClientFactory._userName;
-	}
-
-	private boolean _applyProxyConfig() {
-		if (Validator.isNotNull(_proxyHost)) {
-			return true;
-		}
-
-		if (!HttpUtil.hasProxyConfig()) {
-			return false;
-		}
-
-		return Stream.of(
-			_networkHostAddresses
-		).allMatch(
-			host -> !HttpUtil.isNonProxyHost(host)
-		);
-	}
-
-	private boolean _applyProxyCredentials() {
-		if (Validator.isNotNull(_proxyHost) &&
-			Validator.isNotNull(_proxyPassword) && (_proxyPort > 0) &&
-			Validator.isNotNull(_proxyUserName)) {
-
-			return true;
-		}
-
-		return false;
-	}
-
-	private String _getProxyHost() {
-		if (Validator.isNotNull(_proxyHost)) {
-			return _proxyHost;
-		}
-
-		return SystemProperties.get("http.proxyHost");
-	}
-
-	private int _getProxyPort() {
-		if (_proxyPort > 0) {
-			return _proxyPort;
-		}
-
-		return GetterUtil.getInteger(SystemProperties.get("http.proxyPort"));
 	}
 
 	private boolean _authenticationEnabled;
