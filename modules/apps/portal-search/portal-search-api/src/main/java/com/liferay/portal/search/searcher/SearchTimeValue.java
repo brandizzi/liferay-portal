@@ -22,70 +22,176 @@ import java.util.concurrent.TimeUnit;
 public final class SearchTimeValue {
 
 	public long getDays() {
-		return _timeUnit.toDays(_duration);
+		return _days;
 	}
 
 	public double getDaysFrac() {
-		return (double)getNanos() / _C6;
+		return _daysFrac;
+	}
+
+	public long getDuration() {
+		return _duration;
 	}
 
 	public long getHours() {
-		return _timeUnit.toHours(_duration);
+		return _hours;
 	}
 
 	public double getHoursFrac() {
-		return (double)getNanos() / _C5;
+		return _hoursFrac;
 	}
 
 	public long getMicros() {
-		return _timeUnit.toMicros(_duration);
+		return _micros;
 	}
 
 	public double getMicrosFrac() {
-		return (double)getNanos() / _C1;
+		return _microsFrac;
 	}
 
 	public long getMillis() {
-		return _timeUnit.toMillis(_duration);
+		return _millis;
 	}
 
 	public double getMillisFrac() {
-		return (double)getNanos() / _C2;
+		return _millisFrac;
 	}
 
 	public long getMinutes() {
-		return _timeUnit.toMinutes(_duration);
+		return _minutes;
 	}
 
 	public double getMinutesFrac() {
-		return (double)getNanos() / _C4;
+		return _minutesFrac;
 	}
 
 	public long getNanos() {
-		return _timeUnit.toNanos(_duration);
+		return _nanos;
 	}
 
 	public long getSeconds() {
-		return _timeUnit.toSeconds(_duration);
+		return _seconds;
 	}
 
 	public double getSecondsFrac() {
-		return (double)getNanos() / _C3;
+		return _secondsFrac;
+	}
+
+	public String getStringRep() {
+		return _stringRep;
+	}
+
+	public TimeUnit getTimeUnit() {
+		return _timeUnit;
 	}
 
 	public static class Builder {
 
-		public static Builder newBuilder(long duration, TimeUnit timeUnit) {
-			return new Builder(duration, timeUnit);
+		public static Builder newBuilder() {
+			return new Builder();
 		}
 
 		public SearchTimeValue build() {
 			return _searchTimeValue;
 		}
 
-		private Builder(long duration, TimeUnit timeUnit) {
+		public Builder days(long days) {
+			_searchTimeValue._days = days;
+
+			return this;
+		}
+
+		public Builder daysFrac(double daysFrac) {
+			_searchTimeValue._daysFrac = daysFrac;
+
+			return this;
+		}
+
+		public Builder duration(long duration) {
 			_searchTimeValue._duration = duration;
+
+			return this;
+		}
+
+		public Builder hours(long hours) {
+			_searchTimeValue._hours = hours;
+
+			return this;
+		}
+
+		public Builder hoursFrac(double hoursFrac) {
+			_searchTimeValue._hoursFrac = hoursFrac;
+
+			return this;
+		}
+
+		public Builder micros(long micros) {
+			_searchTimeValue._micros = micros;
+
+			return this;
+		}
+
+		public Builder microsFrac(double microsFrac) {
+			_searchTimeValue._microsFrac = microsFrac;
+
+			return this;
+		}
+
+		public Builder millis(long millis) {
+			_searchTimeValue._millis = millis;
+
+			return this;
+		}
+
+		public Builder millisFrac(double millisFrac) {
+			_searchTimeValue._millisFrac = millisFrac;
+
+			return this;
+		}
+
+		public Builder minutes(long minutes) {
+			_searchTimeValue._minutes = minutes;
+
+			return this;
+		}
+
+		public Builder minutesFrac(double minutesFrac) {
+			_searchTimeValue._minutesFrac = minutesFrac;
+
+			return this;
+		}
+
+		public Builder nanos(long nanos) {
+			_searchTimeValue._nanos = nanos;
+
+			return this;
+		}
+
+		public Builder seconds(long seconds) {
+			_searchTimeValue._seconds = seconds;
+
+			return this;
+		}
+
+		public Builder secondsFrac(double secondsFrac) {
+			_searchTimeValue._secondsFrac = secondsFrac;
+
+			return this;
+		}
+
+		public Builder stringRep(String stringRep) {
+			_searchTimeValue._stringRep = stringRep;
+
+			return this;
+		}
+
+		public Builder timeUnit(TimeUnit timeUnit) {
 			_searchTimeValue._timeUnit = timeUnit;
+
+			return this;
+		}
+
+		private Builder() {
 		}
 
 		private final SearchTimeValue _searchTimeValue = new SearchTimeValue();
@@ -95,21 +201,21 @@ public final class SearchTimeValue {
 	private SearchTimeValue() {
 	}
 
-	private static final long _C0 = 1L;
-
-	private static final long _C1 = _C0 * 1000L;
-
-	private static final long _C2 = _C1 * 1000L;
-
-	private static final long _C3 = _C2 * 1000L;
-
-	private static final long _C4 = _C3 * 60L;
-
-	private static final long _C5 = _C4 * 60L;
-
-	private static final long _C6 = _C5 * 24L;
-
+	private long _days;
+	private double _daysFrac;
 	private long _duration;
+	private long _hours;
+	private double _hoursFrac;
+	private long _micros;
+	private double _microsFrac;
+	private long _millis;
+	private double _millisFrac;
+	private long _minutes;
+	private double _minutesFrac;
+	private long _nanos;
+	private long _seconds;
+	private double _secondsFrac;
+	private String _stringRep;
 	private TimeUnit _timeUnit;
 
 }
