@@ -238,11 +238,43 @@ public class SearchSearchResponseAssemblerImpl
 
 		TimeValue took = searchResponse.getTook();
 
-		SearchTimeValue.Builder searchTimeValueBuilder =
-			SearchTimeValue.Builder.newBuilder(
-				took.duration(), took.timeUnit());
+		SearchTimeValue.Builder builder = SearchTimeValue.Builder.newBuilder();
 
-		searchSearchResponse.setTook(searchTimeValueBuilder.build());
+		builder.days(
+			took.getDays()
+		).duration(
+			took.duration()
+		).daysFrac(
+			took.getDaysFrac()
+		).hours(
+			took.getHours()
+		).hoursFrac(
+			took.getHoursFrac()
+		).micros(
+			took.getMicros()
+		).microsFrac(
+			took.getMicrosFrac()
+		).millis(
+			took.getMillis()
+		).millisFrac(
+			took.getMillisFrac()
+		).minutes(
+			took.getMinutes()
+		).minutesFrac(
+			took.getMinutesFrac()
+		).nanos(
+			took.getNanos()
+		).seconds(
+			took.getSeconds()
+		).secondsFrac(
+			took.getSecondsFrac()
+		).stringRep(
+			took.getStringRep()
+		).timeUnit(
+			took.timeUnit()
+		);
+
+		searchSearchResponse.setTook(builder.build());
 	}
 
 	private AggregationResults _aggregationResults;
