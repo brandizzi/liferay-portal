@@ -31,6 +31,7 @@ import com.liferay.portal.search.internal.legacy.searcher.FacetContextImpl;
 import com.liferay.portal.search.searcher.FacetContext;
 import com.liferay.portal.search.searcher.SearchRequest;
 import com.liferay.portal.search.searcher.SearchResponse;
+import com.liferay.portal.search.searcher.SearchTimeValue;
 import com.liferay.portal.search.stats.StatsResponse;
 
 import java.io.Serializable;
@@ -155,6 +156,11 @@ public class SearchResponseImpl implements SearchResponse, Serializable {
 	}
 
 	@Override
+	public SearchTimeValue getSearchTimeValue() {
+		return _searchTimeValue;
+	}
+
+	@Override
 	public Map<String, StatsResponse> getStatsResponseMap() {
 		return Collections.unmodifiableMap(_statsResponseMap);
 	}
@@ -216,6 +222,10 @@ public class SearchResponseImpl implements SearchResponse, Serializable {
 		_statsResponseMap.putAll(map);
 	}
 
+	public void setTook(SearchTimeValue searchTimeValue) {
+		_searchTimeValue = searchTimeValue;
+	}
+
 	@Override
 	public void withFacetContext(Consumer<FacetContext> facetContextConsumer) {
 		facetContextConsumer.accept(_facetContextImpl);
@@ -266,6 +276,7 @@ public class SearchResponseImpl implements SearchResponse, Serializable {
 	private SearchHitsBuilderFactory _searchHitsBuilderFactory =
 		new SearchHitsBuilderFactoryImpl();
 	private SearchRequest _searchRequest;
+	private SearchTimeValue _searchTimeValue;
 	private final Map<String, StatsResponse> _statsResponseMap =
 		new LinkedHashMap<>();
 
