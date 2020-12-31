@@ -14,6 +14,7 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.connection;
 
+import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.search.elasticsearch7.configuration.RESTClientLoggerLevel;
 import com.liferay.portal.search.elasticsearch7.internal.configuration.ElasticsearchConfigurationWrapper;
 import com.liferay.portal.search.elasticsearch7.internal.configuration.OperationModeResolver;
@@ -561,6 +562,7 @@ public class ElasticsearchConnectionManagerTest {
 				{
 					elasticsearchConfigurationWrapper =
 						_elasticsearchConfigurationWrapper;
+					http = _http;
 					operationModeResolver = _operationModeResolver;
 				}
 			};
@@ -746,6 +748,9 @@ public class ElasticsearchConnectionManagerTest {
 		_elasticsearchConfigurationWrapper;
 
 	private ElasticsearchConnectionManager _elasticsearchConnectionManager;
+
+	@Mock
+	private Http _http;
 
 	@Mock
 	private OperationModeResolver _operationModeResolver;
