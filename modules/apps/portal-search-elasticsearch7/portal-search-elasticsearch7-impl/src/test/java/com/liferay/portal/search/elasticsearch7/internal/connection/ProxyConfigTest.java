@@ -14,7 +14,8 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.connection;
 
-import com.liferay.portal.kernel.util.Http;
+import com.liferay.portal.search.elasticsearch7.internal.connection.proxy.ProxyConfig;
+import com.liferay.portal.search.elasticsearch7.internal.connection.proxy.SystemPropertiesProxyConfigRetriever;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,12 +38,13 @@ public class ProxyConfigTest {
 	@Test
 	public void testShouldApplyConfigIfHttpHasProxyConfig() {
 		Mockito.when(
-			_http.hasProxyConfig()
+			_systemPropertiesProxyConfigRetriever.hasProxyConfig()
 		).thenReturn(
 			true
 		);
 
-		ProxyConfig.Builder builder = ProxyConfig.builder(_http);
+		ProxyConfig.Builder builder = ProxyConfig.builder(
+			_systemPropertiesProxyConfigRetriever);
 
 		ProxyConfig proxyConfig = builder.host(
 			"http://proxy"
@@ -53,7 +55,8 @@ public class ProxyConfigTest {
 
 	@Test
 	public void testShouldApplyConfigWithHostAndPort() {
-		ProxyConfig.Builder builder = ProxyConfig.builder(_http);
+		ProxyConfig.Builder builder = ProxyConfig.builder(
+			_systemPropertiesProxyConfigRetriever);
 
 		ProxyConfig proxyConfig = builder.host(
 			"http://proxy"
@@ -66,7 +69,8 @@ public class ProxyConfigTest {
 
 	@Test
 	public void testShouldNotApplyConfigWithoutHost() {
-		ProxyConfig.Builder builder = ProxyConfig.builder(_http);
+		ProxyConfig.Builder builder = ProxyConfig.builder(
+			_systemPropertiesProxyConfigRetriever);
 
 		ProxyConfig proxyConfig = builder.port(
 			32000
@@ -77,7 +81,8 @@ public class ProxyConfigTest {
 
 	@Test
 	public void testShouldNotApplyConfigWithoutPort() {
-		ProxyConfig.Builder builder = ProxyConfig.builder(_http);
+		ProxyConfig.Builder builder = ProxyConfig.builder(
+			_systemPropertiesProxyConfigRetriever);
 
 		ProxyConfig proxyConfig = builder.host(
 			"http://proxy"
@@ -87,6 +92,7 @@ public class ProxyConfigTest {
 	}
 
 	@Mock
-	private Http _http;
+	private SystemPropertiesProxyConfigRetriever
+		_systemPropertiesProxyConfigRetriever;
 
 }
