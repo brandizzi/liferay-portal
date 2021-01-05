@@ -12,11 +12,8 @@
  * details.
  */
 
-package com.liferay.portal.search.elasticsearch7.internal.connection;
+package com.liferay.portal.search.elasticsearch7.internal.connection.proxy;
 
-import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.Http;
-import com.liferay.portal.kernel.util.SystemProperties;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.stream.Stream;
@@ -26,8 +23,11 @@ import java.util.stream.Stream;
  */
 public class ProxyConfig {
 
-	public static Builder builder(Http http) {
-		return new Builder(http);
+	public static Builder builder(
+		SystemPropertiesProxyConfigRetriever
+			systemPropertiesProxyConfigRetriever) {
+
+		return new Builder(systemPropertiesProxyConfigRetriever);
 	}
 
 	public String getHost() {
@@ -56,8 +56,12 @@ public class ProxyConfig {
 
 	public static class Builder {
 
-		public Builder(Http http) {
-			_http = http;
+		public Builder(
+			SystemPropertiesProxyConfigRetriever
+				systemPropertiesProxyConfigRetriever) {
+
+			_systemPropertiesProxyConfigRetriever =
+				systemPropertiesProxyConfigRetriever;
 		}
 
 		public ProxyConfig build() {
@@ -106,7 +110,7 @@ public class ProxyConfig {
 				return _host;
 			}
 
-			return SystemProperties.get("http.proxyHost");
+			return _systemPropertiesProxyConfigRetriever.getHost();
 		}
 
 		protected int getPort() {
@@ -114,7 +118,7 @@ public class ProxyConfig {
 				return _port;
 			}
 
-			return GetterUtil.getInteger(SystemProperties.get("http.port"));
+			return _systemPropertiesProxyConfigRetriever.getPort();
 		}
 
 		protected boolean hasHostAndPort() {
@@ -134,14 +138,15 @@ public class ProxyConfig {
 				return true;
 			}
 
-			if (!_http.hasProxyConfig()) {
+			if (!_systemPropertiesProxyConfigRetriever.isConfigured()) {
 				return false;
 			}
 
 			return Stream.of(
 				_networkHostAddresses
 			).allMatch(
-				host -> !_http.isNonProxyHost(host)
+				host -> _systemPropertiesProxyConfigRetriever.shouldBeProxied(
+					host)
 			);
 		}
 
@@ -162,10 +167,11 @@ public class ProxyConfig {
 		}
 
 		private String _host;
-		private final Http _http;
 		private String[] _networkHostAddresses = {};
 		private String _password;
 		private int _port;
+		private final SystemPropertiesProxyConfigRetriever
+			_systemPropertiesProxyConfigRetriever;
 		private String _userName;
 
 	}

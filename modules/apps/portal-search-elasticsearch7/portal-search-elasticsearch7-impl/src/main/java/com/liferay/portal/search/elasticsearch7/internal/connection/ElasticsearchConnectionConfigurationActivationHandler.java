@@ -15,8 +15,9 @@
 package com.liferay.portal.search.elasticsearch7.internal.connection;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.search.elasticsearch7.configuration.ElasticsearchConnectionConfiguration;
+import com.liferay.portal.search.elasticsearch7.internal.connection.proxy.ProxyConfig;
+import com.liferay.portal.search.elasticsearch7.internal.connection.proxy.SystemPropertiesProxyConfigRetriever;
 
 import java.util.Map;
 
@@ -75,7 +76,8 @@ public class ElasticsearchConnectionConfigurationActivationHandler {
 		ElasticsearchConnectionConfiguration
 			elasticsearchConnectionConfiguration) {
 
-		ProxyConfig.Builder proxyConfigBuilder = ProxyConfig.builder(http);
+		ProxyConfig.Builder proxyConfigBuilder = ProxyConfig.builder(
+			systemPropertiesProxyConfigRetriever);
 
 		return proxyConfigBuilder.networkAddresses(
 			elasticsearchConnectionConfiguration.networkHostAddresses()
@@ -94,6 +96,7 @@ public class ElasticsearchConnectionConfigurationActivationHandler {
 	protected ElasticsearchConnectionManager elasticsearchConnectionManager;
 
 	@Reference
-	protected Http http;
+	protected SystemPropertiesProxyConfigRetriever
+		systemPropertiesProxyConfigRetriever;
 
 }

@@ -20,13 +20,14 @@ import com.liferay.portal.kernel.cluster.ClusterExecutor;
 import com.liferay.portal.kernel.cluster.ClusterNode;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.search.ccr.CrossClusterReplicationConfigurationHelper;
 import com.liferay.portal.search.elasticsearch7.internal.configuration.ElasticsearchConfigurationObserver;
 import com.liferay.portal.search.elasticsearch7.internal.configuration.ElasticsearchConfigurationWrapper;
 import com.liferay.portal.search.elasticsearch7.internal.configuration.OperationModeResolver;
 import com.liferay.portal.search.elasticsearch7.internal.connection.constants.ConnectionConstants;
+import com.liferay.portal.search.elasticsearch7.internal.connection.proxy.ProxyConfig;
+import com.liferay.portal.search.elasticsearch7.internal.connection.proxy.SystemPropertiesProxyConfigRetriever;
 import com.liferay.portal.search.elasticsearch7.internal.util.SearchLogHelperUtil;
 
 import java.net.InetAddress;
@@ -266,7 +267,8 @@ public class ElasticsearchConnectionManager
 	}
 
 	protected ProxyConfig createProxyConfig() {
-		ProxyConfig.Builder proxyConfigBuilder = ProxyConfig.builder(http);
+		ProxyConfig.Builder proxyConfigBuilder = ProxyConfig.builder(
+			systemPropertiesProxyConfigRetriever);
 
 		return proxyConfigBuilder.networkAddresses(
 			elasticsearchConfigurationWrapper.networkHostAddresses()
@@ -369,10 +371,11 @@ public class ElasticsearchConnectionManager
 		elasticsearchConfigurationWrapper;
 
 	@Reference
-	protected Http http;
+	protected OperationModeResolver operationModeResolver;
 
 	@Reference
-	protected OperationModeResolver operationModeResolver;
+	protected SystemPropertiesProxyConfigRetriever
+		systemPropertiesProxyConfigRetriever;
 
 	private ElasticsearchConnection _createRemoteElasticsearchConnection() {
 		ElasticsearchConnectionBuilder elasticsearchConnectionBuilder =

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.search.elasticsearch7.internal.connection;
 
+import com.liferay.portal.search.elasticsearch7.internal.connection.proxy.ProxyConfig;
+
 import java.util.function.Consumer;
 
 /**
