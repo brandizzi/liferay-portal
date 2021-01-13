@@ -48,6 +48,22 @@ public class DocumentsAssert {
 			message + "->" + actualValues, expectedCount, documents.length);
 	}
 
+	public static void assertCount(
+		String message, Stream<Document> stream, String fieldName,
+		int expectedCount) {
+
+		Document[] documents = stream.toArray(Document[]::new);
+
+		if (documents.length == expectedCount) {
+			return;
+		}
+
+		List<String> actualValues = _getFieldValueStrings(fieldName, documents);
+
+		Assert.assertEquals(
+			message + "->" + actualValues, expectedCount, documents.length);
+	}
+
 	public static void assertValues(
 		String message, com.liferay.portal.kernel.search.Document[] documents,
 		String fieldName, List<String> expectedValues) {
