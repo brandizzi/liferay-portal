@@ -21,9 +21,11 @@ import com.liferay.journal.test.util.search.JournalArticleBlueprint;
 import com.liferay.journal.test.util.search.JournalArticleContent;
 import com.liferay.journal.test.util.search.JournalArticleSearchFixture;
 import com.liferay.journal.test.util.search.JournalArticleTitle;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.security.permission.PermissionCheckerFactory;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -48,6 +50,9 @@ import com.liferay.users.admin.test.util.search.GroupBlueprint;
 import com.liferay.users.admin.test.util.search.GroupSearchFixture;
 import com.liferay.users.admin.test.util.search.UserSearchFixture;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -106,7 +111,8 @@ public class IndexerClausesSuppressionTest {
 		SearchRequestBuilder searchRequestBuilder1 = createSearchRequestBuilder(
 			queryString);
 
-		assertSearch(searchRequestBuilder1, "title_en_US", "[gamma]");
+		assertSearch(
+			searchRequestBuilder1, _TITLE_EN_US, Arrays.asList("gamma"));
 
 		SearchRequestBuilder searchRequestBuilder2 = createSearchRequestBuilder(
 			queryString
@@ -115,7 +121,8 @@ public class IndexerClausesSuppressionTest {
 				"search.full.query.suppress.indexer.provided.clauses", true)
 		);
 
-		assertSearchEmpty(searchRequestBuilder2, "title_en_US");
+		assertSearch(
+			searchRequestBuilder2, _TITLE_EN_US, Collections.emptyList());
 
 		SearchRequestBuilder searchRequestBuilder3 = createSearchRequestBuilder(
 			queryString
@@ -126,7 +133,8 @@ public class IndexerClausesSuppressionTest {
 			createComplexQueryPart("title_en_US", "gamma")
 		);
 
-		assertSearch(searchRequestBuilder3, "title_en_US", "[gamma]");
+		assertSearch(
+			searchRequestBuilder3, _TITLE_EN_US, Arrays.asList("gamma"));
 	}
 
 	@Test
@@ -138,7 +146,9 @@ public class IndexerClausesSuppressionTest {
 		SearchRequestBuilder searchRequestBuilder1 = createSearchRequestBuilder(
 			queryString);
 
-		assertSearch(searchRequestBuilder1, "userName", "[gama omega]");
+		assertSearch(
+			searchRequestBuilder1, Field.USER_NAME,
+			Arrays.asList("gama omega"));
 
 		SearchRequestBuilder searchRequestBuilder2 = createSearchRequestBuilder(
 			queryString
@@ -147,7 +157,8 @@ public class IndexerClausesSuppressionTest {
 				"search.full.query.suppress.indexer.provided.clauses", true)
 		);
 
-		assertSearchEmpty(searchRequestBuilder2, "userName");
+		assertSearch(
+			searchRequestBuilder2, Field.USER_NAME, Collections.emptyList());
 
 		SearchRequestBuilder searchRequestBuilder3 = createSearchRequestBuilder(
 			queryString
@@ -158,7 +169,9 @@ public class IndexerClausesSuppressionTest {
 			createComplexQueryPart("userName", "alpha")
 		);
 
-		assertSearch(searchRequestBuilder3, "title_en_US", "[gama omega]");
+		assertSearch(
+			searchRequestBuilder3, Field.USER_NAME,
+			Arrays.asList("gama omega"));
 	}
 
 	@Rule
@@ -227,25 +240,15 @@ public class IndexerClausesSuppressionTest {
 
 	protected void assertSearch(
 		SearchRequestBuilder searchRequestBuilder, String fieldName,
-		String expected) {
+		Collection<String> expectedValues) {
 
 		SearchResponse searchResponse = _searcher.search(
 			searchRequestBuilder.build());
 
-		DocumentsAssert.assertValues(
+		DocumentsAssert.assertValuesIgnoreRelevance(
 			searchResponse.getRequestString(),
-			searchResponse.getDocumentsStream(), fieldName, expected);
-	}
-
-	protected void assertSearchEmpty(
-		SearchRequestBuilder searchRequestBuilder, String fieldName) {
-
-		SearchResponse searchResponse = _searcher.search(
-			searchRequestBuilder.build());
-
-		DocumentsAssert.assertCount(
-			searchResponse.getRequestString(),
-			searchResponse.getDocumentsStream(), fieldName, 0);
+			searchResponse.getDocumentsStream(), fieldName,
+			expectedValues.stream());
 	}
 
 	protected ComplexQueryPart createComplexQueryPart(
@@ -288,6 +291,9 @@ public class IndexerClausesSuppressionTest {
 		PermissionThreadLocal.setPermissionChecker(
 			_permissionCheckerFactory.create(_user));
 	}
+
+	private static final String _TITLE_EN_US = StringBundler.concat(
+		Field.TITLE, StringPool.UNDERLINE, LocaleUtil.US);
 
 	@Inject
 	private ComplexQueryPartBuilderFactory _complexQueryPartBuilderFactory;
