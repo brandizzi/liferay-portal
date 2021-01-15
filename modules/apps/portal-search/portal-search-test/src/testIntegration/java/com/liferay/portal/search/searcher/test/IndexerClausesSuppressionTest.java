@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.security.permission.PermissionCheckerFactory;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.TimeZoneUtil;
@@ -184,6 +185,53 @@ public class IndexerClausesSuppressionTest {
 	}
 
 	@Test
+	public void testSuppressClausePreservesPermissions() throws Exception {
+		addJournalArticle("alpha", "gamma");
+	
+		JournalArticle journalArticle = addJournalArticle("gamma", "alpha");
+		
+		_permission
+
+		String queryString = "gamma";
+
+		SearchRequestBuilder searchRequestBuilder1 = createSearchRequestBuilder(
+			queryString
+		).withSearchContext(
+			searchContext -> searchContext.setUserId(_user.getUserId())
+		);
+
+
+		assertSearch(
+			searchRequestBuilder1, Field.USER_NAME,
+			Arrays.asList("gama omega"));
+
+		SearchRequestBuilder searchRequestBuilder2 = createSearchRequestBuilder(
+			queryString
+		).withSearchContext(
+			searchContext -> searchContext.setAttribute(
+				"search.full.query.suppress.indexer.provided.clauses", true)
+		);
+
+		assertSearch(
+			searchRequestBuilder2, Field.USER_NAME, Collections.emptyList());
+
+		SearchRequestBuilder searchRequestBuilder3 = createSearchRequestBuilder(
+			queryString
+		).withSearchContext(
+			searchContext -> searchContext.setAttribute(
+				"search.full.query.suppress.indexer.provided.clauses", true)
+		).addComplexQueryPart(
+			createComplexQueryPart("userName", "alpha")
+		);
+
+		assertSearch(
+			searchRequestBuilder3, Field.USER_NAME,
+			Arrays.asList("gama omega"));
+	}
+
+
+	
+	@Test
 	public void testSuppressClauseWithFacetedSearcher() throws Exception {
 		addJournalArticle("alpha", "gamma");
 		addUser("alpha", "gama", "omega");
@@ -230,16 +278,17 @@ public class IndexerClausesSuppressionTest {
 								put(LocaleUtil.US, title);
 							}
 						});
+					setUserId(_user.getUserId());
 				}
 			});
 	}
 
-	protected void addUser(String userName, String firstName, String lastName)
+	protected User addUser(String userName, String firstName, String lastName)
 		throws Exception {
 
 		String[] assetTagNames = {};
 
-		_userSearchFixture.addUser(
+		return _userSearchFixture.addUser(
 			userName, firstName, lastName, LocaleUtil.US, _group,
 			assetTagNames);
 	}
@@ -300,9 +349,6 @@ public class IndexerClausesSuppressionTest {
 	}
 
 	@Inject
-	protected Searcher searcher;
-
-	@Inject
 	protected SearchRequestBuilderFactory searchRequestBuilderFactory;
 
 	private void _addGroupAndUser() throws Exception {
@@ -349,9 +395,6 @@ public class IndexerClausesSuppressionTest {
 	private Queries _queries;
 
 	@Inject
-	private RescoreBuilderFactory _rescoreBuilderFactory;
-
-	@Inject
 	private SearchContextFactory _searchContextFactory;
 
 	@Inject
@@ -360,8 +403,6 @@ public class IndexerClausesSuppressionTest {
 	@Inject
 	private SearchRequestBuilderFactory _searchRequestBuilderFactory;
 
-	@Inject
-	private Sorts _sorts;
 
 	private User _user;
 
