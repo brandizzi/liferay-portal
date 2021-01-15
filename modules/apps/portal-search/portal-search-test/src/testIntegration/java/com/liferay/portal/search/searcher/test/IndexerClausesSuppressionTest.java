@@ -25,13 +25,21 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
+import com.liferay.portal.kernel.search.Hits;
+import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcher;
+import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcherManager;
 import com.liferay.portal.kernel.security.permission.PermissionCheckerFactory;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.TimeZoneUtil;
+import com.liferay.portal.search.context.SearchContextFactory;
 import com.liferay.portal.search.filter.ComplexQueryPart;
 import com.liferay.portal.search.filter.ComplexQueryPartBuilderFactory;
 import com.liferay.portal.search.query.Queries;
@@ -78,6 +86,8 @@ public class IndexerClausesSuppressionTest {
 
 	@Before
 	public void setUp() throws Exception {
+		_facetedSearcher = _facetedSearcherManager.createFacetedSearcher();
+
 		_journalArticleSearchFixture = new JournalArticleSearchFixture(
 			_journalArticleLocalService);
 
@@ -173,6 +183,27 @@ public class IndexerClausesSuppressionTest {
 			Arrays.asList("gama omega"));
 	}
 
+	@Test
+	public void testSuppressClauseWithFacetedSearcher() throws Exception {
+		addJournalArticle("alpha", "gamma");
+		addUser("alpha", "gama", "omega");
+
+		String queryString = "omega";
+
+		SearchContext searchContext1 = createSearchContext(queryString);
+
+		assertSearch(
+			searchContext1, Field.USER_NAME, Arrays.asList("gama omega"));
+
+		SearchContext searchContext2 = createSearchContext(queryString);
+
+		searchContext2.setAttribute(
+			"search.full.query.suppress.indexer.provided.clauses",
+			Boolean.TRUE);
+
+		assertSearch(searchContext2, Field.USER_NAME, Collections.emptyList());
+	}
+
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
@@ -214,6 +245,19 @@ public class IndexerClausesSuppressionTest {
 	}
 
 	protected void assertSearch(
+			SearchContext searchContext, String fieldName,
+			List<String> expectedValues)
+		throws SearchException {
+
+		Hits hits = _facetedSearcher.search(searchContext);
+
+		Document[] documents = hits.getDocs();
+
+		DocumentsAssert.assertValuesIgnoreRelevance(
+			documents.toString(), documents, fieldName, expectedValues);
+	}
+
+	protected void assertSearch(
 		SearchRequestBuilder searchRequestBuilder, String fieldName,
 		Collection<String> expectedValues) {
 
@@ -233,6 +277,13 @@ public class IndexerClausesSuppressionTest {
 		).query(
 			_queries.match(field, value)
 		).build();
+	}
+
+	protected SearchContext createSearchContext(String queryString) {
+		return _searchContextFactory.getSearchContext(
+			new long[0], new String[0], _group.getCompanyId(), queryString,
+			null, LocaleUtil.US, Collections.emptyMap(), _group.getGroupId(),
+			TimeZoneUtil.GMT, _user.getUserId());
 	}
 
 	protected SearchRequestBuilder createSearchRequestBuilder(
@@ -273,6 +324,11 @@ public class IndexerClausesSuppressionTest {
 	@Inject
 	private ComplexQueryPartBuilderFactory _complexQueryPartBuilderFactory;
 
+	private FacetedSearcher _facetedSearcher;
+
+	@Inject
+	private FacetedSearcherManager _facetedSearcherManager;
+
 	private Group _group;
 
 	@DeleteAfterTestRun
@@ -294,6 +350,9 @@ public class IndexerClausesSuppressionTest {
 
 	@Inject
 	private RescoreBuilderFactory _rescoreBuilderFactory;
+
+	@Inject
+	private SearchContextFactory _searchContextFactory;
 
 	@Inject
 	private Searcher _searcher;
