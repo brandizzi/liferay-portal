@@ -54,7 +54,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.junit.After;
 import org.junit.Before;
@@ -212,30 +211,6 @@ public class IndexerClausesSuppressionTest {
 		_userSearchFixture.addUser(
 			userName, firstName, lastName, LocaleUtil.US, _group,
 			assetTagNames);
-	}
-
-	protected void assertSearch(
-		Consumer<SearchRequestBuilder> consumer, String fieldName,
-		String expected) {
-
-		@SuppressWarnings("unchecked")
-		SearchResponse searchResponse = searcher.search(
-			searchRequestBuilderFactory.builder(
-			).companyId(
-				_group.getCompanyId()
-			).fields(
-				StringPool.STAR
-			).groupIds(
-				_group.getGroupId()
-			).modelIndexerClasses(
-				JournalArticle.class
-			).withSearchRequestBuilder(
-				consumer
-			).build());
-
-		DocumentsAssert.assertValuesIgnoreRelevance(
-			searchResponse.getRequestString(),
-			searchResponse.getDocumentsStream(), fieldName, expected);
 	}
 
 	protected void assertSearch(
