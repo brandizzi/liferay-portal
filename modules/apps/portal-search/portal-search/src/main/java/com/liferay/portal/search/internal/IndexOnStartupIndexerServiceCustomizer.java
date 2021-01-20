@@ -34,6 +34,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -119,14 +122,31 @@ public class IndexOnStartupIndexerServiceCustomizer
 	protected void activate(BundleContext bundleContext) {
 		_bundleContext = bundleContext;
 
-		_serviceTracker = new ServiceTracker<>(
-			bundleContext, (Class<Indexer<?>>)(Class<?>)Indexer.class, this);
+		long indexOnStartupDelay = GetterUtil.getInteger(
+			_props.get(PropsKeys.INDEX_ON_STARTUP_DELAY));
 
-		_serviceTracker.open();
+		ScheduledExecutorService scheduledExecutorService =
+			Executors.newSingleThreadScheduledExecutor();
+
+		scheduledExecutorService.schedule(
+			() -> {
+				if (_bundleContext != null) {
+					_serviceTracker = new ServiceTracker<>(
+						_bundleContext,
+						(Class<Indexer<?>>)(Class<?>)Indexer.class, this);
+
+					_serviceTracker.open();
+				}
+			},
+			indexOnStartupDelay, TimeUnit.SECONDS);
+
+		scheduledExecutorService.shutdown();
 	}
 
 	@Deactivate
 	protected void deactivate() {
+		_bundleContext = null;
+
 		Set<String> removedIndexerClassNames = new HashSet<>();
 
 		synchronized (_serviceRegistrations) {
@@ -146,8 +166,6 @@ public class IndexOnStartupIndexerServiceCustomizer
 				_serviceRegistrations.remove(removedIndexerClassName);
 			}
 		}
-
-		_bundleContext = null;
 
 		if (_serviceTracker != null) {
 			_serviceTracker.close();
