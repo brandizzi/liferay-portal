@@ -63,6 +63,12 @@ public class JournalArticleBlueprintBuilder {
 		return this;
 	}
 
+	public JournalArticleBlueprintBuilder userId(long userId) {
+		_journalArticleBlueprint.setUserId(userId);
+
+		return this;
+	}
+
 	private final JournalArticleBlueprint _journalArticleBlueprint =
 		new JournalArticleBlueprint();
 
