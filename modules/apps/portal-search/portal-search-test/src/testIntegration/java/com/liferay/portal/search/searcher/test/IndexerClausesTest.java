@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.search.context.SearchContextFactory;
 import com.liferay.portal.search.filter.ComplexQueryPartBuilderFactory;
 import com.liferay.portal.search.query.Queries;
+import com.liferay.portal.search.query.Query;
 import com.liferay.portal.search.rescore.RescoreBuilderFactory;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
 import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
@@ -138,6 +139,35 @@ public class IndexerClausesTest {
 			Arrays.asList("gama omega", "gama omega"));
 	}
 
+	@Test
+	public void testSuppressClauseWithBaseIndexer() throws Exception {
+		addJournalArticle("alpha", "omega");
+
+		assertClausesSuppression(
+			"omega", Arrays.asList(JournalArticle.class), _TITLE_EN_US,
+			Arrays.asList("alpha"));
+	}
+
+	@Test
+	public void testSuppressClauseWithDefaultIndexer() throws Exception {
+		addUser("alpha", "gama", "omega");
+
+		assertClausesSuppression(
+			"omega", Arrays.asList(User.class), Field.USER_NAME,
+			Arrays.asList("gama omega"));
+	}
+
+	@Test
+	public void testSuppressClauseWithFacetedSearcher() throws Exception {
+		User user = addUser("alpha", "gama", "omega");
+
+		addJournalArticle(user.getUserId(), "alpha", "omega");
+
+		assertClausesSuppression(
+			"omega", Arrays.asList(User.class, JournalArticle.class),
+			Field.USER_NAME, Arrays.asList("gama omega", "gama omega"));
+	}
+
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
@@ -180,6 +210,28 @@ public class IndexerClausesTest {
 		return _userSearchFixture.addUser(
 			userName, firstName, lastName, LocaleUtil.US, _group,
 			new String[0]);
+	}
+
+	protected void assertClausesSuppression(
+		String queryString, List<Class<?>> modelIndexerClasses,
+		String fieldName, List<String> expectedResults) {
+
+		SearchRequestBuilder searchRequestBuilder1 = createSearchRequestBuilder(
+			queryString, modelIndexerClasses);
+
+		assertSearch(searchRequestBuilder1, fieldName, expectedResults);
+
+		/*
+		SearchRequestBuilder searchRequestBuilder2 = createSearchRequestBuilder(
+			queryString, modelIndexerClasses
+		).withSearchContext(
+			searchContext -> searchContext.setAttribute(
+				"search.full.query.suppress.indexer.provided.clauses", true)
+		);
+
+		assertSearch(
+			searchRequestBuilder2, fieldName, Collections.emptyList());
+		 */
 	}
 
 	protected void assertSearch(
