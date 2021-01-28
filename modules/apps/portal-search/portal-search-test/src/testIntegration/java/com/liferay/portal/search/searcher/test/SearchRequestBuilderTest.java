@@ -120,8 +120,6 @@ public class SearchRequestBuilderTest {
 				_group.getGroupId()
 			).queryString(
 				queryString
-			).addSort(
-				_sorts.field("userName", SortOrder.ASC)
 			);
 
 		_assertSearch(
@@ -188,8 +186,6 @@ public class SearchRequestBuilderTest {
 				).query(
 					_queries.term("screenName", "alpha")
 				).build()
-			).addSort(
-				_sorts.field("userName", SortOrder.ASC)
 			);
 
 		_assertSearch("[alpha delta]", "userName", searchRequestBuilder);
@@ -270,8 +266,6 @@ public class SearchRequestBuilderTest {
 				User.class.getCanonicalName()
 			).queryString(
 				queryString
-			).addSort(
-				_sorts.field("userName", SortOrder.ASC)
 			);
 
 		_assertSearch(
@@ -311,8 +305,6 @@ public class SearchRequestBuilderTest {
 				JournalArticle.class.getCanonicalName()
 			).queryString(
 				queryString
-			).addSort(
-				_sorts.field("title_en_US_sortable", SortOrder.ASC)
 			);
 
 		_assertSearch(
@@ -391,7 +383,7 @@ public class SearchRequestBuilderTest {
 		SearchResponse searchResponse = _searcher.search(
 			searchRequestBuilder.build());
 
-		DocumentsAssert.assertValues(
+		DocumentsAssert.assertValuesIgnoreRelevance(
 			searchResponse.getRequestString(),
 			searchResponse.getDocumentsStream(), fieldName, expected);
 	}
