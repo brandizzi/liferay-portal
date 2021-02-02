@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.search.context.SearchContextFactory;
 import com.liferay.portal.search.filter.ComplexQueryPartBuilderFactory;
 import com.liferay.portal.search.query.Queries;
+import com.liferay.portal.search.query.Query;
 import com.liferay.portal.search.rescore.RescoreBuilderFactory;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
 import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
@@ -179,6 +180,38 @@ public class IndexerClausesPermissionTest {
 			searchRequestBuilder2, _TITLE_EN_US, Collections.emptyList());
 	}
 
+	@Test
+	public void testPermissionsNotSuppressedWithBaseIndexer() throws Exception {
+		addJournalArticle(_user1, "alpha", "omega");
+
+		assertPermissionsNotSupressed(
+			"omega", _user1, _queries.match(_TITLE_EN_US, "alpha"),
+			Arrays.asList(JournalArticle.class), _TITLE_EN_US,
+			Arrays.asList("alpha"));
+
+		assertPermissionsNotSupressed(
+			"omega", _user2, _queries.match(_TITLE_EN_US, "alpha"),
+			Arrays.asList(JournalArticle.class), _TITLE_EN_US,
+			Collections.emptyList());
+	}
+
+	@Test
+	public void testPermissionsNotSuppressedWithDefaultIndexer()
+		throws Exception {
+
+		addUser("alpha", "gama", "omega");
+
+		assertPermissionsNotSupressed(
+			"omega", _user1, _queries.match(Field.USER_NAME, "omega"),
+			Arrays.asList(User.class), Field.USER_NAME,
+			Arrays.asList("gama omega"));
+
+		assertPermissionsNotSupressed(
+			"omega", _user2, _queries.match(Field.USER_NAME, "omega"),
+			Arrays.asList(User.class), Field.USER_NAME,
+			Collections.emptyList());
+	}
+
 	@Rule
 	public SearchTestRule searchTestRule = new SearchTestRule();
 
@@ -233,6 +266,32 @@ public class IndexerClausesPermissionTest {
 			);
 
 		return _userSearchFixture.addUser(userBlueprintBuilder);
+	}
+
+	protected void assertPermissionsNotSupressed(
+		String queryString, User user, Query complexQueryPartQuery,
+		List<Class<?>> modelIndexerClasses, String fieldName,
+		List<String> expectedResults) {
+
+		SearchRequestBuilder searchRequestBuilder = createSearchRequestBuilder(
+			queryString, modelIndexerClasses
+		).addComplexQueryPart(
+			_complexQueryPartBuilderFactory.builder(
+			).query(
+				complexQueryPartQuery
+			).occur(
+				"should"
+			).build()
+		).withSearchContext(
+			searchContext -> {
+				searchContext.setAttribute(
+					"search.full.query.suppress.indexer.provided.clauses",
+					Boolean.TRUE);
+				searchContext.setUserId(user.getUserId());
+			}
+		);
+
+		assertSearch(searchRequestBuilder, fieldName, expectedResults);
 	}
 
 	protected void assertSearch(
