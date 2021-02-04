@@ -31,7 +31,6 @@ import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.facet.faceted.searcher.FacetedSearcher;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
-import com.liferay.portal.kernel.search.generic.MatchAllQuery;
 import com.liferay.portal.kernel.search.generic.StringQuery;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -275,16 +274,7 @@ public class FacetedSearcherImpl
 	}
 
 	private Query _getFinalQuery(Query query) {
-		if (query.hasChildren()) {
-			return query;
-		}
-
-		MatchAllQuery matchAllQuery = new MatchAllQuery();
-
-		matchAllQuery.setPostFilter(query.getPostFilter());
-		matchAllQuery.setPreBooleanFilter(query.getPreBooleanFilter());
-
-		return matchAllQuery;
+		return query;
 	}
 
 	private void _postProcessFullQuery(
