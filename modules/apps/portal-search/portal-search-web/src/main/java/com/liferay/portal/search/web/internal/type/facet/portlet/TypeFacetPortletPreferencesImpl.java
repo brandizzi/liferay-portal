@@ -17,6 +17,7 @@ package com.liferay.portal.search.web.internal.type.facet.portlet;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.search.SearchEngineHelperUtil;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
@@ -27,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import javax.portlet.PortletPreferences;
 
@@ -122,20 +122,31 @@ public class TypeFacetPortletPreferencesImpl
 	}
 
 	protected String[] getAllAssetTypes(long companyId) {
+		List<String> assetTypes = new ArrayList<>();
+
 		List<AssetRendererFactory<?>> assetRendererFactories =
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactories(
 				companyId);
 
-		Stream<AssetRendererFactory<?>> assetRendererFactoriesStream =
-			assetRendererFactories.stream();
+		String[] engineHelperAllowedEntryClassNames =
+			SearchEngineHelperUtil.getEntryClassNames();
 
-		return assetRendererFactoriesStream.filter(
-			AssetRendererFactory::isSearchable
-		).map(
-			AssetRendererFactory::getClassName
-		).toArray(
-			String[]::new
-		);
+		for (AssetRendererFactory<?> assetRendererFactory :
+				assetRendererFactories) {
+
+			String className = assetRendererFactory.getClassName();
+
+			if (!assetRendererFactory.isSearchable() ||
+				!ArrayUtil.contains(
+					engineHelperAllowedEntryClassNames, className, false)) {
+
+				continue;
+			}
+
+			assetTypes.add(className);
+		}
+
+		return ArrayUtil.toStringArray(assetTypes);
 	}
 
 	protected KeyValuePair getKeyValuePair(Locale locale, String className) {

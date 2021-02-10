@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.search.facet.config.FacetConfiguration;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -217,14 +218,22 @@ public class AssetEntriesSearchFacet extends BaseJSPSearchFacet {
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactories(
 				companyId);
 
+		String[] engineHelperAllowedEntryClassNames =
+			searchEngineHelper.getEntryClassNames();
+
 		for (AssetRendererFactory<?> assetRendererFactory :
 				assetRendererFactories) {
 
-			if (!assetRendererFactory.isSearchable()) {
+			String className = assetRendererFactory.getClassName();
+
+			if (!assetRendererFactory.isSearchable() ||
+				!ArrayUtil.contains(
+					engineHelperAllowedEntryClassNames, className, false)) {
+
 				continue;
 			}
 
-			assetTypes.add(assetRendererFactory.getClassName());
+			assetTypes.add(className);
 		}
 
 		return ArrayUtil.toStringArray(assetTypes);
@@ -237,6 +246,9 @@ public class AssetEntriesSearchFacet extends BaseJSPSearchFacet {
 
 	@Reference
 	protected AssetEntriesFacetFactory assetEntriesFacetFactory;
+
+	@Reference
+	protected SearchEngineHelper searchEngineHelper;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		AssetEntriesSearchFacet.class);
