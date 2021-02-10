@@ -16,6 +16,7 @@ package com.liferay.portal.search.internal.asset;
 
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
+import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.search.asset.SearchableAssetClassNamesProvider;
 
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Bryan Engler
@@ -39,17 +41,28 @@ public class SearchableAssetClassNamesProviderImpl
 			AssetRendererFactoryRegistryUtil.getAssetRendererFactories(
 				companyId);
 
+		String[] engineHelperAllowedEntryClassNames =
+			searchEngineHelper.getEntryClassNames();
+
 		for (AssetRendererFactory<?> assetRendererFactory :
 				assetRendererFactories) {
 
-			if (!assetRendererFactory.isSearchable()) {
+			String className = assetRendererFactory.getClassName();
+
+			if (!assetRendererFactory.isSearchable() ||
+				!ArrayUtil.contains(
+					engineHelperAllowedEntryClassNames, className, false)) {
+
 				continue;
 			}
 
-			classNames.add(assetRendererFactory.getClassName());
+			classNames.add(className);
 		}
 
 		return ArrayUtil.toStringArray(classNames);
 	}
+
+	@Reference
+	protected SearchEngineHelper searchEngineHelper;
 
 }
