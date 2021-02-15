@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.web.internal.facet;
 
-import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
@@ -36,6 +35,7 @@ import com.liferay.portal.search.facet.FacetFactory;
 import com.liferay.portal.search.facet.type.AssetEntriesFacetFactory;
 import com.liferay.portal.search.web.facet.BaseJSPSearchFacet;
 import com.liferay.portal.search.web.facet.SearchFacet;
+import com.liferay.portal.search.web.internal.facet.asset.renderer.AssetRendererFactoryRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +110,7 @@ public class AssetEntriesSearchFacet extends BaseJSPSearchFacet {
 	public List<AssetRendererFactory<?>> getAssetRendererFactories(
 		long companyId) {
 
-		return AssetRendererFactoryRegistryUtil.getAssetRendererFactories(
+		return assetRendererFactoryRegistry.getAssetRendererFactories(
 			companyId);
 	}
 
@@ -215,8 +215,7 @@ public class AssetEntriesSearchFacet extends BaseJSPSearchFacet {
 		List<String> assetTypes = new ArrayList<>();
 
 		List<AssetRendererFactory<?>> assetRendererFactories =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactories(
-				companyId);
+			assetRendererFactoryRegistry.getAssetRendererFactories(companyId);
 
 		String[] engineHelperAllowedEntryClassNames =
 			searchEngineHelper.getEntryClassNames();
@@ -246,6 +245,9 @@ public class AssetEntriesSearchFacet extends BaseJSPSearchFacet {
 
 	@Reference
 	protected AssetEntriesFacetFactory assetEntriesFacetFactory;
+
+	@Reference
+	protected AssetRendererFactoryRegistry assetRendererFactoryRegistry;
 
 	@Reference
 	protected SearchEngineHelper searchEngineHelper;

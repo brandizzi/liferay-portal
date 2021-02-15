@@ -14,14 +14,14 @@
 
 package com.liferay.portal.search.web.internal.type.facet.portlet;
 
-import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.search.SearchEngineHelperUtil;
+import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.search.web.internal.facet.asset.renderer.AssetRendererFactoryRegistry;
 import com.liferay.portal.search.web.internal.util.PortletPreferencesHelper;
 
 import java.util.ArrayList;
@@ -38,7 +38,12 @@ public class TypeFacetPortletPreferencesImpl
 	implements TypeFacetPortletPreferences {
 
 	public TypeFacetPortletPreferencesImpl(
-		Optional<PortletPreferences> portletPreferencesOptional) {
+		Optional<PortletPreferences> portletPreferencesOptional,
+		AssetRendererFactoryRegistry assetRendererFactoryRegistry,
+		SearchEngineHelper searchEngineHelper) {
+
+		_assetRendererFactoryRegistry = assetRendererFactoryRegistry;
+		_searchEngineHelper = searchEngineHelper;
 
 		_portletPreferencesHelper = new PortletPreferencesHelper(
 			portletPreferencesOptional);
@@ -125,11 +130,10 @@ public class TypeFacetPortletPreferencesImpl
 		List<String> assetTypes = new ArrayList<>();
 
 		List<AssetRendererFactory<?>> assetRendererFactories =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactories(
-				companyId);
+			_assetRendererFactoryRegistry.getAssetRendererFactories(companyId);
 
 		String[] engineHelperAllowedEntryClassNames =
-			SearchEngineHelperUtil.getEntryClassNames();
+			_searchEngineHelper.getEntryClassNames();
 
 		for (AssetRendererFactory<?> assetRendererFactory :
 				assetRendererFactories) {
@@ -154,6 +158,8 @@ public class TypeFacetPortletPreferencesImpl
 			className, ResourceActionsUtil.getModelResource(locale, className));
 	}
 
+	private final AssetRendererFactoryRegistry _assetRendererFactoryRegistry;
 	private final PortletPreferencesHelper _portletPreferencesHelper;
+	private final SearchEngineHelper _searchEngineHelper;
 
 }
