@@ -14,11 +14,10 @@
 
 package com.liferay.portal.search.web.internal.type.facet.portlet.shared.search;
 
-import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.search.asset.SearchableAssetClassNamesProvider;
 import com.liferay.portal.search.facet.type.TypeFacetSearchContributor;
 import com.liferay.portal.search.searcher.SearchRequestBuilder;
-import com.liferay.portal.search.web.internal.facet.asset.renderer.AssetRendererFactoryRegistry;
 import com.liferay.portal.search.web.internal.type.facet.constants.TypeFacetPortletKeys;
 import com.liferay.portal.search.web.internal.type.facet.portlet.TypeFacetPortletPreferences;
 import com.liferay.portal.search.web.internal.type.facet.portlet.TypeFacetPortletPreferencesImpl;
@@ -46,7 +45,7 @@ public class TypeFacetPortletSharedSearchContributor
 		TypeFacetPortletPreferences typeFacetPortletPreferences =
 			new TypeFacetPortletPreferencesImpl(
 				portletSharedSearchSettings.getPortletPreferencesOptional(),
-				assetRendererFactoryRegistry, searchEngineHelper);
+				searchableAssetClassNamesProvider);
 
 		SearchRequestBuilder searchRequestBuilder =
 			portletSharedSearchSettings.getSearchRequestBuilder();
@@ -71,10 +70,8 @@ public class TypeFacetPortletSharedSearchContributor
 	}
 
 	@Reference
-	protected AssetRendererFactoryRegistry assetRendererFactoryRegistry;
-
-	@Reference
-	protected SearchEngineHelper searchEngineHelper;
+	protected SearchableAssetClassNamesProvider
+		searchableAssetClassNamesProvider;
 
 	@Reference
 	protected TypeFacetSearchContributor typeFacetSearchContributor;

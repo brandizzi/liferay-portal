@@ -17,7 +17,8 @@ package com.liferay.portal.search.web.internal.type.facet.portlet;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
-import com.liferay.portal.search.web.internal.facet.asset.renderer.AssetRendererFactoryRegistry;
+import com.liferay.portal.search.internal.asset.AssetRendererFactoryRegistry;
+import com.liferay.portal.search.internal.asset.SearchableAssetClassNamesProviderImpl;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -25,7 +26,7 @@ import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -41,8 +42,14 @@ public class TypeFacetPortletPreferencesImplTest {
 		MockitoAnnotations.initMocks(this);
 
 		typeFacetPortletPreferencesImpl = new TypeFacetPortletPreferencesImpl(
-			Optional.empty(), _assetRendererFactoryRegistry,
-			_searchEngineHelper);
+			Optional.empty(),
+			new SearchableAssetClassNamesProviderImpl() {
+				{
+					assetRendererFactoryRegistry =
+						_assetRendererFactoryRegistry;
+					searchEngineHelper = _searchEngineHelper;
+				}
+			});
 
 		mockAssetRendererFactoryGetClassName(
 			assetRendererFactory1, CLASS_NAME_1);

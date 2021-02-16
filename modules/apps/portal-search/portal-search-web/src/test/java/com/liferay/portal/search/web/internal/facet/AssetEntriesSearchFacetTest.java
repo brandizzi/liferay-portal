@@ -17,7 +17,8 @@ package com.liferay.portal.search.web.internal.facet;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
-import com.liferay.portal.search.web.internal.facet.asset.renderer.AssetRendererFactoryRegistry;
+import com.liferay.portal.search.internal.asset.AssetRendererFactoryRegistry;
+import com.liferay.portal.search.internal.asset.SearchableAssetClassNamesProviderImpl;
 
 import java.util.Arrays;
 
@@ -44,8 +45,14 @@ public class AssetEntriesSearchFacetTest {
 	public void setUp() {
 		assetEntriesSearchFacet = new AssetEntriesSearchFacet() {
 			{
-				assetRendererFactoryRegistry = _assetRendererFactoryRegistry;
-				searchEngineHelper = _searchEngineHelper;
+				searchableAssetClassNamesProvider =
+					new SearchableAssetClassNamesProviderImpl() {
+						{
+							assetRendererFactoryRegistry =
+								_assetRendererFactoryRegistry;
+							searchEngineHelper = _searchEngineHelper;
+						}
+					};
 			}
 		};
 

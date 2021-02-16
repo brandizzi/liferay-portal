@@ -14,14 +14,12 @@
 
 package com.liferay.portal.search.web.internal.type.facet.portlet;
 
-import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.search.web.internal.facet.asset.renderer.AssetRendererFactoryRegistry;
+import com.liferay.portal.search.asset.SearchableAssetClassNamesProvider;
 import com.liferay.portal.search.web.internal.util.PortletPreferencesHelper;
 
 import java.util.ArrayList;
@@ -39,11 +37,9 @@ public class TypeFacetPortletPreferencesImpl
 
 	public TypeFacetPortletPreferencesImpl(
 		Optional<PortletPreferences> portletPreferencesOptional,
-		AssetRendererFactoryRegistry assetRendererFactoryRegistry,
-		SearchEngineHelper searchEngineHelper) {
+		SearchableAssetClassNamesProvider searchableAssetClassNamesProvider) {
 
-		_assetRendererFactoryRegistry = assetRendererFactoryRegistry;
-		_searchEngineHelper = searchEngineHelper;
+		_searchableAssetClassNamesProvider = searchableAssetClassNamesProvider;
 
 		_portletPreferencesHelper = new PortletPreferencesHelper(
 			portletPreferencesOptional);
@@ -127,30 +123,7 @@ public class TypeFacetPortletPreferencesImpl
 	}
 
 	protected String[] getAllAssetTypes(long companyId) {
-		List<String> assetTypes = new ArrayList<>();
-
-		List<AssetRendererFactory<?>> assetRendererFactories =
-			_assetRendererFactoryRegistry.getAssetRendererFactories(companyId);
-
-		String[] engineHelperAllowedEntryClassNames =
-			_searchEngineHelper.getEntryClassNames();
-
-		for (AssetRendererFactory<?> assetRendererFactory :
-				assetRendererFactories) {
-
-			String className = assetRendererFactory.getClassName();
-
-			if (!assetRendererFactory.isSearchable() ||
-				!ArrayUtil.contains(
-					engineHelperAllowedEntryClassNames, className, false)) {
-
-				continue;
-			}
-
-			assetTypes.add(className);
-		}
-
-		return ArrayUtil.toStringArray(assetTypes);
+		return _searchableAssetClassNamesProvider.getClassNames(companyId);
 	}
 
 	protected KeyValuePair getKeyValuePair(Locale locale, String className) {
@@ -158,8 +131,8 @@ public class TypeFacetPortletPreferencesImpl
 			className, ResourceActionsUtil.getModelResource(locale, className));
 	}
 
-	private final AssetRendererFactoryRegistry _assetRendererFactoryRegistry;
 	private final PortletPreferencesHelper _portletPreferencesHelper;
-	private final SearchEngineHelper _searchEngineHelper;
+	private final SearchableAssetClassNamesProvider
+		_searchableAssetClassNamesProvider;
 
 }
