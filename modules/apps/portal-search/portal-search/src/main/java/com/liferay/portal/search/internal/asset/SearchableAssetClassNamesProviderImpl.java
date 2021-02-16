@@ -19,8 +19,8 @@ import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.search.asset.SearchableAssetClassNamesProvider;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -34,30 +34,25 @@ public class SearchableAssetClassNamesProviderImpl
 
 	@Override
 	public String[] getClassNames(long companyId) {
-		List<String> classNames = new ArrayList<>();
-
 		List<AssetRendererFactory<?>> assetRendererFactories =
 			assetRendererFactoryRegistry.getAssetRendererFactories(companyId);
 
-		String[] engineHelperAllowedEntryClassNames =
+		Stream<AssetRendererFactory<?>> stream =
+			assetRendererFactories.stream();
+
+		String[] searchEngineHelperEntryClassNames =
 			searchEngineHelper.getEntryClassNames();
 
-		for (AssetRendererFactory<?> assetRendererFactory :
-				assetRendererFactories) {
-
-			String className = assetRendererFactory.getClassName();
-
-			if (!assetRendererFactory.isSearchable() ||
-				!ArrayUtil.contains(
-					engineHelperAllowedEntryClassNames, className, false)) {
-
-				continue;
-			}
-
-			classNames.add(className);
-		}
-
-		return ArrayUtil.toStringArray(classNames);
+		return stream.filter(
+			AssetRendererFactory::isSearchable
+		).map(
+			AssetRendererFactory::getClassName
+		).filter(
+			className -> ArrayUtil.contains(
+				searchEngineHelperEntryClassNames, className, false)
+		).toArray(
+			String[]::new
+		);
 	}
 
 	@Reference
