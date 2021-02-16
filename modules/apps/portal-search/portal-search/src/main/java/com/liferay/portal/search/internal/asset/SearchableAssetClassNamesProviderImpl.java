@@ -14,7 +14,6 @@
 
 package com.liferay.portal.search.internal.asset;
 
-import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
 import com.liferay.asset.kernel.model.AssetRendererFactory;
 import com.liferay.portal.kernel.search.SearchEngineHelper;
 import com.liferay.portal.kernel.util.ArrayUtil;
@@ -38,8 +37,7 @@ public class SearchableAssetClassNamesProviderImpl
 		List<String> classNames = new ArrayList<>();
 
 		List<AssetRendererFactory<?>> assetRendererFactories =
-			AssetRendererFactoryRegistryUtil.getAssetRendererFactories(
-				companyId);
+			assetRendererFactoryRegistry.getAssetRendererFactories(companyId);
 
 		String[] engineHelperAllowedEntryClassNames =
 			searchEngineHelper.getEntryClassNames();
@@ -61,6 +59,9 @@ public class SearchableAssetClassNamesProviderImpl
 
 		return ArrayUtil.toStringArray(classNames);
 	}
+
+	@Reference
+	protected AssetRendererFactoryRegistry assetRendererFactoryRegistry;
 
 	@Reference
 	protected SearchEngineHelper searchEngineHelper;
