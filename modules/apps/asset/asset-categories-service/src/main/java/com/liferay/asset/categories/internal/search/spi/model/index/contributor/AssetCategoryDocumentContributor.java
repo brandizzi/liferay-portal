@@ -50,41 +50,55 @@ public class AssetCategoryDocumentContributor
 	public void contribute(
 		Document document, BaseModel<AssetCategory> baseModel) {
 
+		_addAssetCategoriesFields(
+			document, Field.ASSET_CATEGORY_IDS, Field.ASSET_CATEGORY_TITLES,
+			AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC);
+
+		_addAssetCategoriesFields(
+			document, Field.ASSET_INTERNAL_CATEGORY_IDS,
+			Field.ASSET_INTERNAL_CATEGORY_TITLES,
+			AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL);
+	}
+
+	private void _addAssetCategoriesFields(
+		Document document, String assetCategoryIdsFieldName,
+		String assetCategoryTitlesFieldName, int visibilityType) {
+
 		Map<Long, AssetVocabulary> assetVocabulariesMap = new HashMap<>();
-		List<AssetCategory> publicAssetCategories = new ArrayList<>();
+		List<AssetCategory> filteredAssetCategories = new ArrayList<>();
 
 		String className = document.get(Field.ENTRY_CLASS_NAME);
 		long classPK = GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK));
 
 		List<AssetCategory> assetCategories =
-			assetCategoryLocalService.getCategories(className, classPK);
+			_assetCategoryLocalService.getCategories(className, classPK);
 
 		for (AssetCategory assetCategory : assetCategories) {
 			AssetVocabulary assetVocabulary =
 				assetVocabulariesMap.computeIfAbsent(
 					assetCategory.getVocabularyId(),
 					vocabularyId ->
-						assetVocabularyLocalService.fetchAssetVocabulary(
+						_assetVocabularyLocalService.fetchAssetVocabulary(
 							vocabularyId));
 
 			if ((assetVocabulary != null) &&
-				(assetVocabulary.getVisibilityType() ==
-					AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC)) {
+				(assetVocabulary.getVisibilityType() == visibilityType)) {
 
-				publicAssetCategories.add(assetCategory);
+				filteredAssetCategories.add(assetCategory);
 			}
 		}
 
-		long[] publicAssetCategoryIds = ListUtil.toLongArray(
-			publicAssetCategories, AssetCategory.CATEGORY_ID_ACCESSOR);
+		long[] filteredAssetCategoryIds = ListUtil.toLongArray(
+			filteredAssetCategories, AssetCategory.CATEGORY_ID_ACCESSOR);
 
-		document.addKeyword(Field.ASSET_CATEGORY_IDS, publicAssetCategoryIds);
+		document.addKeyword(
+			assetCategoryIdsFieldName, filteredAssetCategoryIds);
 
-		addAssetCategoryTitles(
-			document, Field.ASSET_CATEGORY_TITLES, publicAssetCategories);
+		_addAssetCategoryTitles(
+			document, assetCategoryTitlesFieldName, filteredAssetCategories);
 	}
 
-	protected void addAssetCategoryTitles(
+	private void _addAssetCategoryTitles(
 		Document document, String field, List<AssetCategory> assetCategories) {
 
 		Map<Locale, List<String>> assetCategoryTitles = new HashMap<>();
@@ -125,9 +139,9 @@ public class AssetCategoryDocumentContributor
 	}
 
 	@Reference
-	protected AssetCategoryLocalService assetCategoryLocalService;
+	private AssetCategoryLocalService _assetCategoryLocalService;
 
 	@Reference
-	protected AssetVocabularyLocalService assetVocabularyLocalService;
+	private AssetVocabularyLocalService _assetVocabularyLocalService;
 
 }
