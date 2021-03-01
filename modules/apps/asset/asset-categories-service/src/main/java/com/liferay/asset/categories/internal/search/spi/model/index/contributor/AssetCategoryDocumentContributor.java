@@ -50,14 +50,16 @@ public class AssetCategoryDocumentContributor
 	public void contribute(
 		Document document, BaseModel<AssetCategory> baseModel) {
 
+		// WRONG ASSERTS!
+
 		_addAssetCategoriesFields(
 			document, Field.ASSET_CATEGORY_IDS, Field.ASSET_CATEGORY_TITLES,
-			AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC);
+			AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL);
 
 		_addAssetCategoriesFields(
 			document, Field.ASSET_INTERNAL_CATEGORY_IDS,
 			Field.ASSET_INTERNAL_CATEGORY_TITLES,
-			AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL);
+			AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC);
 	}
 
 	private void _addAssetCategoriesFields(
