@@ -50,8 +50,22 @@ public class AssetCategoryDocumentContributor
 	public void contribute(
 		Document document, BaseModel<AssetCategory> baseModel) {
 
+		addAssetCategoriesFields(
+			document, Field.ASSET_CATEGORY_IDS, Field.ASSET_CATEGORY_TITLES,
+			AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC);
+
+		addAssetCategoriesFields(
+			document, Field.ASSET_INTERNAL_CATEGORY_IDS,
+			Field.ASSET_INTERNAL_CATEGORY_TITLES,
+			AssetVocabularyConstants.VISIBILITY_TYPE_INTERNAL);
+	}
+
+	protected void addAssetCategoriesFields(
+		Document document, String assetCategoryIdsFieldName,
+		String assetCategoryTitlesFieldName, int visibilityType) {
+
 		Map<Long, AssetVocabulary> assetVocabulariesMap = new HashMap<>();
-		List<AssetCategory> publicAssetCategories = new ArrayList<>();
+		List<AssetCategory> filteredAssetCategories = new ArrayList<>();
 
 		String className = document.get(Field.ENTRY_CLASS_NAME);
 		long classPK = GetterUtil.getLong(document.get(Field.ENTRY_CLASS_PK));
@@ -68,20 +82,19 @@ public class AssetCategoryDocumentContributor
 							vocabularyId));
 
 			if ((assetVocabulary != null) &&
-				(assetVocabulary.getVisibilityType() ==
-					AssetVocabularyConstants.VISIBILITY_TYPE_PUBLIC)) {
+				(assetVocabulary.getVisibilityType() == visibilityType)) {
 
-				publicAssetCategories.add(assetCategory);
+				filteredAssetCategories.add(assetCategory);
 			}
 		}
 
 		long[] publicAssetCategoryIds = ListUtil.toLongArray(
-			publicAssetCategories, AssetCategory.CATEGORY_ID_ACCESSOR);
+			filteredAssetCategories, AssetCategory.CATEGORY_ID_ACCESSOR);
 
-		document.addKeyword(Field.ASSET_CATEGORY_IDS, publicAssetCategoryIds);
+		document.addKeyword(assetCategoryIdsFieldName, publicAssetCategoryIds);
 
 		addAssetCategoryTitles(
-			document, Field.ASSET_CATEGORY_TITLES, publicAssetCategories);
+			document, assetCategoryTitlesFieldName, filteredAssetCategories);
 	}
 
 	protected void addAssetCategoryTitles(
