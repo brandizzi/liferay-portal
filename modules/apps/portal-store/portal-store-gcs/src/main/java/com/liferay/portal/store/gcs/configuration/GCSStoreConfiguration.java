@@ -30,8 +30,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 public interface GCSStoreConfiguration {
 
 	@ExtendedAttributeDefinition(
-		descriptionArguments = "https://cloud.google.com/iam/docs/creating-managing-service-account-keys",
-		requiredInput = true
+		descriptionArguments = "https://cloud.google.com/iam/docs/creating-managing-service-account-keys"
 	)
 	@Meta.AD(
 		description = "service-account-key-help", name = "service-account-key"
