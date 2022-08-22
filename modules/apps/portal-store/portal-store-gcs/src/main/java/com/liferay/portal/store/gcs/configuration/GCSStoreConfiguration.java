@@ -33,7 +33,8 @@ public interface GCSStoreConfiguration {
 		descriptionArguments = "https://cloud.google.com/iam/docs/creating-managing-service-account-keys"
 	)
 	@Meta.AD(
-		description = "service-account-key-help", name = "service-account-key"
+		description = "service-account-key-help", name = "service-account-key",
+		required = false
 	)
 	public String serviceAccountKey();
 
