@@ -315,6 +315,27 @@ public class GCSStore implements Store {
 			fileName, StringPool.SLASH, versionLabel);
 	}
 
+	private GoogleCredentials _getGoogleCredentials() throws IOException {
+		String serviceAccountKey = _gcsStoreConfiguration.serviceAccountKey();
+
+		if (Validator.isBlank(serviceAccountKey)) {
+			if (_log.isInfoEnabled()) {
+				_log.info(
+					"No credentials set for GCS Store. Library will default " +
+						"to using Application Default Credentials or " +
+							"Workload Identity for auth");
+			}
+
+			return ServiceAccountCredentials.getApplicationDefault();
+		}
+
+		try (InputStream inputStream = new ByteArrayInputStream(
+				serviceAccountKey.getBytes())) {
+
+			return ServiceAccountCredentials.fromStream(inputStream);
+		}
+	}
+
 	private String _getHeadVersionLabel(
 		long companyId, long repositoryId, String fileName,
 		String versionLabel) {
@@ -386,59 +407,37 @@ public class GCSStore implements Store {
 	}
 
 	private void _initGCSStore() throws PortalException {
-		String serviceAccountKey = _gcsStoreConfiguration.serviceAccountKey();
-
-		if (Validator.isNotNull(serviceAccountKey)) {
-			try (InputStream inputStream = new ByteArrayInputStream(
-					serviceAccountKey.getBytes())) {
-
-				_googleCredentials = ServiceAccountCredentials.fromStream(
-					inputStream);
-			}
-			catch (IOException ioException) {
-				throw new PortalException(
-					"Unable to authenticate with GCS", ioException);
-			}
+		try {
+			_googleCredentials = _getGoogleCredentials();
+		}
+		catch (IOException ioException) {
+			throw new PortalException(
+				"Unable to authenticate with GCS", ioException);
 		}
 
-		StorageOptions.Builder storageOptionsBuilder =
-			StorageOptions.newBuilder(
-			).setRetrySettings(
-				RetrySettings.newBuilder(
-				).setInitialRetryDelay(
-					Duration.ofMillis(
-						_gcsStoreConfiguration.initialRetryDelay())
-				).setInitialRpcTimeout(
-					Duration.ofMillis(
-						_gcsStoreConfiguration.initialRPCTimeout())
-				).setJittered(
-					_gcsStoreConfiguration.retryJitter()
-				).setMaxAttempts(
-					_gcsStoreConfiguration.maxRetryAttempts()
-				).setMaxRetryDelay(
-					Duration.ofMillis(_gcsStoreConfiguration.maxRetryDelay())
-				).setMaxRpcTimeout(
-					Duration.ofMillis(_gcsStoreConfiguration.maxRPCTimeout())
-				).setRetryDelayMultiplier(
-					_gcsStoreConfiguration.retryDelayMultiplier()
-				).setRpcTimeoutMultiplier(
-					_gcsStoreConfiguration.rpcTimeoutMultiplier()
-				).build()
-			);
-
-		if (_googleCredentials != null) {
-			storageOptionsBuilder.setCredentials(_googleCredentials);
-		}
-		else {
-			if (_log.isInfoEnabled()) {
-				_log.info(
-					"No credentials set for GCS Store. Library will default " +
-						"to using Application Default Credentials or " +
-							"Workload Identity for auth");
-			}
-		}
-
-		StorageOptions storageOptions = storageOptionsBuilder.build();
+		StorageOptions storageOptions = StorageOptions.newBuilder(
+		).setCredentials(
+			_googleCredentials
+		).setRetrySettings(
+			RetrySettings.newBuilder(
+			).setInitialRetryDelay(
+				Duration.ofMillis(_gcsStoreConfiguration.initialRetryDelay())
+			).setInitialRpcTimeout(
+				Duration.ofMillis(_gcsStoreConfiguration.initialRPCTimeout())
+			).setJittered(
+				_gcsStoreConfiguration.retryJitter()
+			).setMaxAttempts(
+				_gcsStoreConfiguration.maxRetryAttempts()
+			).setMaxRetryDelay(
+				Duration.ofMillis(_gcsStoreConfiguration.maxRetryDelay())
+			).setMaxRpcTimeout(
+				Duration.ofMillis(_gcsStoreConfiguration.maxRPCTimeout())
+			).setRetryDelayMultiplier(
+				_gcsStoreConfiguration.retryDelayMultiplier()
+			).setRpcTimeoutMultiplier(
+				_gcsStoreConfiguration.rpcTimeoutMultiplier()
+			).build()
+		).build();
 
 		_gcsStore = storageOptions.getService();
 	}
