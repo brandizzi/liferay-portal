@@ -388,17 +388,28 @@ public class GCSStore implements Store {
 	private void _initGCSStore() throws PortalException {
 		String serviceAccountKey = _gcsStoreConfiguration.serviceAccountKey();
 
-		if (Validator.isNotNull(serviceAccountKey)) {
-			try (InputStream inputStream = new ByteArrayInputStream(
-					serviceAccountKey.getBytes())) {
+		try (InputStream inputStream = new ByteArrayInputStream(
+				serviceAccountKey.getBytes())) {
 
+			if (Validator.isNotNull(serviceAccountKey)) {
 				_googleCredentials = ServiceAccountCredentials.fromStream(
 					inputStream);
 			}
-			catch (IOException ioException) {
-				throw new PortalException(
-					"Unable to authenticate with GCS", ioException);
+			else {
+				if (_log.isInfoEnabled()) {
+					_log.info(
+						"No credentials set for GCS Store. Library will " +
+							"default to using Application Default " +
+								"Credentials or Workload Identity for auth");
+				}
+
+				_googleCredentials =
+					ServiceAccountCredentials.getApplicationDefault();
 			}
+		}
+		catch (IOException ioException) {
+			throw new PortalException(
+				"Unable to authenticate with GCS", ioException);
 		}
 
 		StorageOptions.Builder storageOptionsBuilder =
@@ -426,17 +437,7 @@ public class GCSStore implements Store {
 				).build()
 			);
 
-		if (_googleCredentials != null) {
-			storageOptionsBuilder.setCredentials(_googleCredentials);
-		}
-		else {
-			if (_log.isInfoEnabled()) {
-				_log.info(
-					"No credentials set for GCS Store. Library will default " +
-						"to using Application Default Credentials or " +
-							"Workload Identity for auth");
-			}
-		}
+		storageOptionsBuilder.setCredentials(_googleCredentials);
 
 		StorageOptions storageOptions = storageOptionsBuilder.build();
 
