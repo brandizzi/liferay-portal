@@ -1,4 +1,6 @@
 dependencies {
+	testIntegrationCompile group: "com.google.auth", name: "google-auth-library-credentials", version: "0.24.1"
+	testIntegrationCompile group: "com.google.auth", name: "google-auth-library-oauth2-http", version: "0.24.1"
 	testIntegrationCompile group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "default"
 	testIntegrationCompile group: "org.osgi", name: "org.osgi.service.cm", version: "1.6.0"
 	testIntegrationCompile project(":apps:portal-configuration:portal-configuration-test-util")
