@@ -321,9 +321,8 @@ public class GCSStore implements Store {
 		if (Validator.isBlank(serviceAccountKey)) {
 			if (_log.isInfoEnabled()) {
 				_log.info(
-					"No credentials set for GCS Store. Library will default " +
-						"to using Application Default Credentials or " +
-							"Workload Identity for auth");
+					"No credentials set for GCS Store. Library will use " +
+						"Application Default Credentials.");
 			}
 
 			return ServiceAccountCredentials.getApplicationDefault();
